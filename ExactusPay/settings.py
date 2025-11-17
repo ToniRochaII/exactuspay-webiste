@@ -14,8 +14,11 @@ ALLOWED_HOSTS = [
     "localhost",
     "exactuspay.onrender.com",
     "payroll.exactuspay.com",
-    os.environ.get("RENDER_EXTERNAL_HOSTNAME"),
 ]
+
+render_host = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+if render_host:
+    ALLOWED_HOSTS.append(render_host)
 
 INSTALLED_APPS = [
     'django.contrib.admin',
