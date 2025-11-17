@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}Regulations | ExactusPay{% endblock %}
+{% block page_title %}Regulations{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'home' %}">Dashboard</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Regulations</li>
+  </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">Regulations</h5>
+  </div>
+
+  <div class="card-body">
+    {% if regulations %}
+      <!-- Search and Show entries controls -->
+      <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+        <div class="d-flex align-items-center gap-2">
+          <label for="entries" class="form-label mb-0">Show</label>
+          <select id="entries" class="form-select form-select-sm w-auto">
+            <option value="10" selected>10</option>
+            <option value="25">25</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+          <span>entries</span>
+        </div>
+
+        <div class="d-flex align-items-center">
+          <label for="searchBox" class="form-label mb-0 me-2">Search:</label>
+          <input type="text" id="searchBox" class="form-control form-control-sm" placeholder="Search regulations..." style="max-width: 250px;">
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="table-responsive">
+        <table id="regulationsTable" class="table table-striped align-middle">
+          <thead class="table-light">
+            <tr>
+              <th scope="col">Country</th>
+              <th scope="col">Fiscal Year</th>
+              <th scope="col">Effective Date</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for regulations in regulations %}
+              <tr>
+                <td>{{ regulations.country }}</td>
+                <td>{{ regulations.fiscal_year }}</td>
+                <td>{{ regulations.effective_date }}</td>
+                <td>
+                  <div class="d-flex gap-2">
+                    <a href="{% url 'regulations:regulations_edit' country_slug regulations.id %}" class="btn btn-primary">
+                      <i class="bi bi-pencil"></i> Edit
+                    </a>
+                    <a href="{% url 'regulations:regulations_delete' country_slug regulations.id %}" class="btn btn-danger">
+                      <i class="bi bi-trash"></i> Delete
+                    </a>
+                    <a href="" class="btn btn-primary">
+                      <i class="bi bi-arrow-right-circle"></i> Enter
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="text-center py-5">
+        <p class="text-muted mb-3">No regulations found.</p>
+        <a href="{% url 'regulations:regulations_create' country.slug %}" class="btn btn-primary">
+          <i class="bi bi-plus-circle"></i> Add First Regulation
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Simple JS for search + entries control -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const table = document.querySelector("#regulationsTable tbody");
+  const rows = Array.from(table.querySelectorAll("tr"));
+  const searchBox = document.querySelector("#searchBox");
+  const entriesSelect = document.querySelector("#entries");
+
+  function filterTable() {
+    const term = searchBox.value.toLowerCase();
+    let visibleRows = 0;
+    rows.forEach(row => {
+      const text = row.textContent.toLowerCase();
+      const matches = text.includes(term);
+      row.style.display = matches ? "" : "none";
+      if (matches) visibleRows++;
+    });
+  }
+
+  function updateEntries() {
+    const limit = parseInt(entriesSelect.value);
+    rows.forEach((row, i) => {
+      row.style.display = i < limit ? "" : "none";
+    });
+  }
+
+  searchBox.addEventListener("input", filterTable);
+  entriesSelect.addEventListener("change", updateEntries);
+  updateEntries();
+});
+</script>
+{% endblock %}

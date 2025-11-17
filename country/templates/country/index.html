@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load role_filters %}
+{% load static %}
+
+{% block title %}Countries | ExactusPay{% endblock %}
+{% block page_title %}Countries{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="">Dashboard</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Countries</li>
+  </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">Countries</h5>
+  </div>
+  <p> 
+    {% if user|has_role:"EXEC" %}
+    <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a> 
+    <a href="{% url 'country:country_delete' %}"">Recover Country</a>
+    {% endif %}
+    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
+    <a href="{% url 'dashboard' %}">Dashboard</a> 
+    <a href="{% url 'country:country_create' %}"">Add country</a>
+    {% endif %}
+  </p>
+
+    {% if countries %}
+      <div class="table-responsive">
+        <table id="datatable-countries" class="table table-striped align-middle table-hover" style="width:100%">
+          <thead class="table-light">
+            <tr>
+              <th scope="col">Flag</th>
+              <th scope="col">Country</th>
+              <th scope="col">Language</th>
+              <th scope="col">Currency Code</th>
+              <th scope="col">Currency Name</th>
+              <th scope="col">Companies</th>
+              <th scope="col">Status</th>
+              <th scope="col" class="text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for country in countries %}
+              <tr>
+                <td>
+                  <img src="{% static 'dis/img/flags/' %}{{ country.iso2_code|lower }}.png" alt="{{ country.name }} flag" width="40" height="25" class="me-2 rounded border">
+                </td>
+                <td>{{ country.name }}</td>
+                <td>{{ country.official_language }}</td>
+                <td>{{ country.currency_code }}</td>
+                <td>{{ country.currency_name }}</td>
+                <td>{{ country.companies.count }}</td>
+                <td>{{ country.status }}</td>
+                <td class="text-end">
+                  <div class="d-flex justify-content-end gap-2">
+                    <a href="{% url 'companies:company' country.slug %}" class="btn btn-primary">
+                      <i class="bi bi-arrow-right-circle"></i> Enter
+                    <a href="{% url 'country:country_edit' country.slug %}" class="btn btn-primary">
+                      <i class="bi bi-arrow-right-circle"></i> Edit
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="text-center py-5">
+        <p class="text-muted mb-3">No countries found.</p>
+        <a href="{% url 'country:country_create' %}" class="btn btn-primary">
+          <i class="bi bi-plus-circle"></i> Add First Country
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    $("#datatable-countries").DataTable({
+      responsive: true,
+      pageLength: 10,
+      order: [[1, "asc"]],
+      language: {
+        search: "Search:",
+        lengthMenu: "Show _MENU_ countries",
+        zeroRecords: "No matching countries found.",
+        info: "Showing _START_–_END_ of _TOTAL_ countries",
+        infoEmpty: "No countries to display",
+        paginate: {
+          previous: "‹",
+          next: "›"
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}

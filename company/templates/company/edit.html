@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% load static %}
+{% load role_filters %}
+
+
+{% block title %}Edit Company — {{ form.instance.trade_name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="card shadow-sm border-0">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Edit Company — {{ form.instance.trade_name }}</h5>
+      <a href="{% url 'country:country_edit' country.slug %}" class="btn btn-light btn-sm">
+        <i class="bi bi-arrow-left"></i> Back to Companies
+      </a>
+    </div>
+
+    <div class="card-body">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <div class="row">
+          <!-- Column 1 -->
+          <div class="col-md-6">
+            <div class="mb-3">
+              {{ form.company_code.label_tag }} {{ form.company_code }}
+              {% for error in form.company_code.errors %}
+                <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+
+            <div class="mb-3">
+              {{ form.company_number.label_tag }} {{ form.company_number }}
+              {% for error in form.company_number.errors %}
+                <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+
+            <div class="mb-3">
+              {{ form.trade_name.label_tag }} {{ form.trade_name }}
+              {% for error in form.trade_name.errors %}
+                <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+
+            <div class="mb-3">
+              {{ form.legal_name.label_tag }} {{ form.legal_name }}
+              {% for error in form.legal_name.errors %}
+                <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+
+            <div class="mb-3">
+              {{ form.building_name.label_tag }} {{ form.building_name }}
+              {% for error in form.building_name.errors %}
+                <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+
+            <div class="mb-3">
+              {{ form.road_name_1.label_tag }} {{ form.road_name_1 }}
+              {% for error in form.road_name_1.errors %}
+                <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+
+            <div class="mb-3">
+              {{ form.road_name_2.label_tag }} {{ form.road_name_2 }}
+              {% for error in form.road_name_2.errors %}
+                <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+
+            <div class="mb-3">
+              {{ form.town.label_tag }} {{ form.town }}
+              {% for error in form.town.errors %}
+                <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+
+            <div class="mb-3">
+              {{ form.post_code.label_tag }} {{ form.post_code }}
+              {% for error in form.post_code.errors %}
+                <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+          </div>
+
+         <!-- Column 2 -->
+        <div class="col-md-6">
+
+          <div class="mb-3">
+            {{ form.tax_id_1.label_tag }} {{ form.tax_id_1 }}
+            {% for error in form.tax_id_1.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="mb-3">
+            {{ form.tax_id_2.label_tag }} {{ form.tax_id_2 }}
+            {% for error in form.tax_id_2.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="mb-3">
+            {{ form.tax_id_3.label_tag }} {{ form.tax_id_3 }}
+            {% for error in form.tax_id_3.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="mb-3">
+            {{ form.tax_id_4.label_tag }} {{ form.tax_id_4 }}
+            {% for error in form.tax_id_4.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="mb-3">
+            {{ form.tax_id_5.label_tag }} {{ form.tax_id_5 }}
+            {% for error in form.tax_id_5.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="mb-3">
+            {{ form.tax_id_6.label_tag }} {{ form.tax_id_6 }}
+            {% for error in form.tax_id_6.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="mb-3">
+            {{ form.tax_id_7.label_tag }} {{ form.tax_id_7 }}
+            {% for error in form.tax_id_7.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="mb-3">
+            {{ form.tax_id_8.label_tag }} {{ form.tax_id_8 }}
+            {% for error in form.tax_id_8.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="mb-3">
+            {{ form.tax_id_9.label_tag }} {{ form.tax_id_9 }}
+            {% for error in form.tax_id_9.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="mb-3">
+            {{ form.tax_id_10.label_tag }} {{ form.tax_id_10 }}
+            {% for error in form.tax_id_10.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="mb-3">
+            {{ form.rti_user_id.label_tag }} {{ form.rti_user_id }}
+            {% for error in form.rti_user_id.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="mb-3">
+            {{ form.rti_password.label_tag }} {{ form.rti_password }}
+            {% for error in form.rti_password.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="mb-3">
+            {{ form.account_status.label_tag }} {{ form.account_status }}
+            {% for error in form.account_status.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+         </div>
+        </div>
+      </form>
+{% endblock %}

@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+{% load role_filters %}
+{% load static %}
+{% load acl %}
+{% load dict_extras %}
+
+{% block title %}Role Management | ExactusPay{% endblock %}
+
+{% block content %}
+  <div class="container-fluid py-4">
+    <p> 
+      {% if user|has_role:"EXEC" %}
+      <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a> 
+      {% endif %}
+      {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
+      <a href="{% url 'dashboard' %}">Dashboard</a> 
+      <a href="{% url 'user_list' %}"">Accounts</a>
+      <a href="{% url 'role_management' %}"">Role Management</a>
+      {% endif %}
+      {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
+      <a href="{% url 'profile' %}"">Profile</a>
+      <a href="{% url 'user_detail' user.id %}"> User Details</a>
+      {% endif %}
+
+      <a href="{% url 'password_reset' %}">Reset password</a>
+    </p>  
+
+  <h3 class="mb-4 fw-semibold">Role Management</h3>
+  <p class="text-muted mb-4">Manage role permissions, templates, and user access levels across the ExactusPay platform.</p>
+
+  <!-- =======================
+       ALERT MESSAGES
+  ======================== -->
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- =======================
+       PERMISSION MATRIX
+  ======================== -->
+  <div class="card shadow-sm mb-5">
+    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Permission Matrix</h5>
+      <small class="text-muted">Toggle access for each <strong>Role × Domain × Action</strong></small>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive" style="max-height: 70vh; overflow-y: auto;">
+        <table class="table table-bordered table-sm align-middle mb-0">
+          <thead class="table-light sticky-top">
+            <tr>
+              <th class="text-center" style="width: 10%;">Role</th>
+              <th class="text-center" style="width: 10%;">Domain</th>
+              {% for action in actions %}
+                <th class="text-center">{{ action }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for role in roles %}
+              {% for domain in domains %}
+                <tr>
+                  {% if forloop.first %}
+                    <td rowspan="{{ domains|length }}" class="fw-bold align-middle text-center bg-light">{{ role }}</td>
+                  {% endif %}
+                  <td class="fw-medium text-muted text-center">{{ domain }}</td>
+
+                  {% for action in actions %}
+                    <td class="text-center">
+                      <form method="post" class="d-inline">
+                        {% csrf_token %}
+                        <input type="hidden" name="role" value="{{ role }}">
+                        <input type="hidden" name="domain" value="{{ domain }}">
+                        <input type="hidden" name="action" value="{{ action }}">
+                        {% with matrix_role=matrix|default:"{}"|dict_get:role %}
+                        {% with matrix_domain=matrix_role|default:"{}"|dict_get:domain %}
+                            {% with allowed_value=matrix_domain|default:"{}"|dict_get:action %}
+                            <input class="form-check-input"
+                                    type="checkbox"
+                                    name="allowed"
+                                    onchange="this.form.submit()"
+                                    {% if allowed_value %}checked{% endif %}>
+                            {% endwith %}
+                        {% endwith %}
+                        {% endwith %}
+                      </form>
+                    </td>
+                  {% endfor %}
+                </tr>
+              {% endfor %}
+            {% endfor %}
+          </tbody>
+        </table>
+        <hr class="my-5">
+
+<h4 class="mb-3">Role Hierarchy</h4>
+<p class="text-muted">
+  This section visualizes how roles relate to each other hierarchically.  
+  Higher roles supervise or inherit from the ones below.
+</p>
+
+        <div class="card shadow-sm">
+          <div class="card-body">
+            {% if hierarchy %}
+              <ul class="list-group">
+                {% for parent, children in hierarchy.items %}
+                  <li class="list-group-item">
+                    <strong>{{ parent }}</strong>
+                    {% if children %}
+                      <ul class="mt-2 ms-4 text-muted">
+                        {% for child in children %}
+                          <li>{{ child }}</li>
+                        {% endfor %}
+                      </ul>
+                    {% endif %}
+                  </li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <p class="text-muted mb-0">No hierarchy relationships defined yet.</p>
+            {% endif %}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================
+       ROLE TEMPLATES
+  ======================== -->
+  <div class="card shadow-sm mb-5">
+    <div class="card-header bg-light">
+      <h5 class="mb-0">Role Templates</h5>
+      <small class="text-muted">Apply a predefined permission template to any role.</small>
+    </div>
+    <div class="card-body">
+      <form method="post" class="row g-3 align-items-end">
+        {% csrf_token %}
+        <input type="hidden" name="reset_template" value="1">
+
+        <div class="col-md-4">
+          <label for="role" class="form-label">Select Role</label>
+          <select class="form-select" id="role" name="role" required>
+            <option value="" disabled selected>Choose role...</option>
+            {% for r in roles %}
+              <option value="{{ r }}">{{ r }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-md-5">
+          <label for="template_id" class="form-label">Select Template</label>
+          <select class="form-select" id="template_id" name="template_id" required>
+            <option value="" disabled selected>Choose template...</option>
+            {% for template in templates %}
+              <option value="{{ template.id }}">{{ template.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <button type="submit" class="btn btn-outline-success w-100">
+            Apply Template
+          </button>
+        </div>
+      </form>
+
+      <div class="mt-4">
+        <small class="text-muted">
+          Manage or create templates directly in 
+          <a href="/admin/accounts/roletemplate/" target="_blank">Admin → Role Templates</a>.
+        </small>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================
+       USER ACCESS LEVEL CONTROL
+  ======================== -->
+  <div class="card shadow-sm mb-5">
+    <div class="card-header bg-light">
+      <h5 class="mb-0">User Access Level Control</h5>
+      <small class="text-muted">Promote or demote user access level within role hierarchy.</small>
+    </div>
+    <div class="card-body">
+      <form method="post" class="row g-3 align-items-end">
+        {% csrf_token %}
+        <input type="hidden" name="adjust_user_access" value="1">
+
+        <div class="col-md-5">
+          <label for="user" class="form-label">User</label>
+          <select class="form-select" name="user_id" id="user" required>
+            <option value="" disabled selected>Select user...</option>
+            {% for u in users %}
+              <option value="{{ u.id }}">{{ u.username }} ({{ u.role }})</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-md-3">
+          <label for="action" class="form-label">Action</label>
+          <select class="form-select" name="adjust_action" id="action" required>
+            <option value="promote">Increase Access (Promote)</option>
+            <option value="demote">Decrease Access (Demote)</option>
+          </select>
+        </div>
+
+        <div class="col-md-2">
+          <button type="submit" class="btn btn-outline-primary w-100">Apply</button>
+        </div>
+      </form>
+
+      <div class="mt-3">
+        <small class="text-muted">Promotion and demotion adjust the user’s role automatically according to the defined hierarchy.</small>
+      </div>
+    </div>
+  </div>
+  <p> 
+    {% if user|has_role:"EXEC" %}
+    <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a> 
+    {% endif %}
+    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
+    <a href="{% url 'dashboard' %}">Dashboard</a> 
+    <a href="{% url 'user_list' %}"">Accounts</a>
+    <a href="{% url 'role_management' %}"">Role Management</a>
+    {% endif %}
+    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
+    <a href="{% url 'profile' %}"">Profile</a>
+    <a href="{% url 'user_detail' user.id %}"> User Details</a>
+    {% endif %}
+
+    <a href="{% url 'password_reset' %}">Reset password</a>
+  </p>
+</div>
+{% endblock %}

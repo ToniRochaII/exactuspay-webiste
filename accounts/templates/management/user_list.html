@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% load role_filters %}
+{% block title %}User Management | ExactusPay{% endblock %}
+{% block content %}
+
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold">User Management</h3>
+    <div>
+      <a href="{% url 'register' %}" class="btn btn-primary">+ New User</a>
+      <a href="{% url 'export_users_csv' %}" class="btn btn-outline-secondary">Export CSV</a>
+    </div>
+  </div>
+  <p> 
+    {% if user|has_role:"EXEC" %}
+    <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a> 
+    {% endif %}
+    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
+    <a href="{% url 'dashboard' %}">Dashboard</a> 
+    <a href="{% url 'user_list' %}"">Accounts</a>
+    <a href="{% url 'role_management' %}"">Role Management</a>
+    {% endif %}
+    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
+    <a href="{% url 'profile' %}"">Profile</a>
+    <a href="{% url 'user_detail' user.id %}"> User Details</a>
+    {% endif %}
+
+    <a href="{% url 'password_reset' %}">Reset password</a>
+  </p>
+
+  <!-- Search & Filters -->
+  <form method="get" class="row g-2 mb-3">
+    <div class="col-md-4">
+      <input type="text" name="q" placeholder="Search by username or email" value="{{ search_query }}" class="form-control">
+    </div>
+    <div class="col-md-3">
+      <select name="role" class="form-select">
+        <option value="ALL" {% if role_filter == "ALL" %}selected{% endif %}>All Roles</option>
+        {% for key, value in roles %}
+        <option value="{{ key }}" {% if role_filter == key %}selected{% endif %}>{{ value }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <button type="submit" class="btn btn-secondary w-100">Filter</button>
+    </div>
+  </form>
+
+    <!-- Table -->
+    <div class="table-responsive shadow-sm">
+      <table class="table table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th><input type="checkbox" id="select-all"></th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Date Joined</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in users %}
+          <tr>
+            <td><input type="checkbox" name="selected_users" value="{{ user.id }}"></td>
+            
+            <!-- ✅ Link to detail page -->
+            <td>
+              <a href="{% url 'user_detail' user.id %}" class="text-decoration-none fw-semibold">
+                {{ user.username }}
+              </a>
+            </td>
+
+            <td>{{ user.email }}</td>
+            <td><span class="badge bg-info text-dark">{{ user.role }}</span></td>
+            <td>
+              {% if user.is_active %}
+              <span class="badge bg-success">Active</span>
+              {% else %}
+              <span class="badge bg-secondary">Inactive</span>
+              {% endif %}
+            </td>
+            <td>{{ user.date_joined|date:"Y-m-d" }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="6" class="text-center text-muted">No users found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </form>  <p> 
+    {% if user|has_role:"EXEC" %}
+    <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a> 
+    {% endif %}
+    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
+    <a href="{% url 'dashboard' %}">Dashboard</a> 
+    <a href="{% url 'user_list' %}"">Accounts</a>
+    <a href="{% url 'role_management' %}"">Role Management</a>
+    {% endif %}
+    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
+    <a href="{% url 'profile' %}"">Profile</a>
+    <a href="{% url 'user_detail' user.id %}"> User Details</a>
+    {% endif %}
+
+    <a href="{% url 'password_reset' %}">Reset password</a>
+  </p>
+</div>
+
+<script>
+  // Select/Deselect All
+  document.getElementById('select-all')?.addEventListener('change', function() {
+    document.querySelectorAll('input[name="selected_users"]').forEach(cb => cb.checked = this.checked);
+  });
+</script>
+
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load role_filters %}
+{% block title %}Edit User | ExactusPay{% endblock %}
+{% block content %}
+
+<div class="container mt-4">
+  <div class="card shadow-sm">
+    <div class="card-header bg-primary text-white">
+      <h4 class="mb-0">Edit User — {{ user_obj.username }}</h4>
+    </div>
+    <div class="card-body">
+      <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label class="form-label">Username</label>
+          {{ form.username }}
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          {{ form.email }}
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Role</label>
+          {{ form.role }}
+        </div>
+        <div class="form-check mb-2">
+          {{ form.is_active }} <label class="form-check-label">Active</label>
+        </div>
+        <div class="form-check mb-3">
+          {{ form.is_staff }} <label class="form-check-label">Staff Permissions</label>
+        </div>
+        <button type="submit" class="btn btn-success">Save Changes</button>
+        <a href="{% url 'user_detail' user_obj.id %}" class="btn btn-outline-secondary">Cancel</a>
+      </form>
+    </div>
+  </div>  <p> 
+    {% if user|has_role:"EXEC" %}
+    <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a> 
+    {% endif %}
+    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
+    <a href="{% url 'dashboard' %}">Dashboard</a> 
+    <a href="{% url 'user_list' %}"">Accounts</a>
+    <a href="{% url 'role_management' %}"">Role Management</a>
+    {% endif %}
+    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
+    <a href="{% url 'profile' %}"">Profile</a>
+    <a href="{% url 'user_detail' user.id %}"> User Details</a>
+    {% endif %}
+
+    <a href="{% url 'password_reset' %}">Reset password</a>
+  </p>
+</div>
+
+{% endblock %}

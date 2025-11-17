@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Edit Regulation | ExactusPay{% endblock %}
+{% block page_title %}Edit Regulation{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'regulations:regulations' country.slug %}">Regulations</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Edit Regulation</li>
+  </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">Edit Regulation</h5>
+  </div>
+
+  <div class="card-body">
+    <form method="post" novalidate class="needs-validation">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+
+      <!-- First Row (two columns side by side) -->
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="{{ form.fiscal_year.id_for_label }}" class="form-label fw-semibold">
+            {{ form.fiscal_year.label }}
+            {% if form.fiscal_year.field.required %}
+              <span class="text-danger">*</span>
+            {% endif %}
+          </label>
+          {{ form.fiscal_year }}
+          {% if form.fiscal_year.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.fiscal_year.errors|join:", " }}
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="col-md-6">
+          <label for="{{ form.effective_date.id_for_label }}" class="form-label fw-semibold">
+            {{ form.effective_date.label }}
+            {% if form.effective_date.field.required %}
+              <span class="text-danger">*</span>
+            {% endif %}
+          </label>
+          {{ form.effective_date }}
+          {% if form.effective_date.errors %}
+            <div class="invalid-feedback d-block">
+              {{ form.effective_date.errors|join:", " }}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Add other fields below in similar rows if needed -->
+
+      <div class="text-end mt-4">
+        <button type="submit" class="btn btn-primary">
+          <i class="bi bi-check-circle"></i> Save Changes
+        </button>
+        <a href="{% url 'regulations:regulations' country.slug %}" class="btn btn-danger ms-2">
+          <i class="bi bi-x-circle"></i> Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% load static %}
+{% load role_filters %}
+  
+{% block title %}Country Form{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="card shadow-sm border-0">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">
+        {% if form.instance.pk %}
+          Edit Country — {{ form.instance.name }}
+        {% else %}
+          Add New Country
+        {% endif %}
+      </h5>
+      <a href="{% url 'country:country' %}" class="btn btn-primary">Back to List</a>
+    </div>
+
+    <div class="card-body">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger">
+            {{ form.non_field_errors }}
+          </div>
+        {% endif %}
+  <p> 
+    {% if user|has_role:"EXEC" %}
+    <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a> 
+    {% endif %}
+    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
+    <a href="{% url 'dashboard' %}">Dashboard</a> 
+    <a href="{% url 'country:country' %}"">Countries</a>
+    {% endif %}
+  </p>
+
+        <div class="row">
+          <!-- Left column -->
+            <div class="col-md-12">
+              <div class="row">
+                <div class="mb-3 col-md-2">
+                  {{ form.iso2_code.label_tag }} {{ form.iso2_code }}
+                  {% for error in form.iso2_code.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                  {% endfor %}
+                </div>
+                <div class="mb-3 col-md-2">
+                  {{ form.iso3_code.label_tag }} {{ form.iso3_code }}
+                  {% for error in form.iso3_code.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                  {% endfor %}
+                </div>
+                <div class="mb-3 col-md-6">
+                  {{ form.name.label_tag }} {{ form.name }}
+                  {% for error in form.name.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                  {% endfor %}
+                </div>
+                <div class="mb-3 col-md-2">
+                  {{ form.status.label_tag }} {{ form.status }}
+                  {% for error in form.status.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                  {% endfor %}
+                </div>
+              </div>
+            
+              <div class="row">
+                <div class="mb-3 col-md-3">
+                  {{ form.official_language.label_tag }} {{ form.official_language }}
+                  {% for error in form.official_language.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                  {% endfor %}
+                </div>
+                <div class="mb-3 col-md-3">
+                  {{ form.currency_name.label_tag }} {{ form.currency_name }}
+                  {% for error in form.currency_name.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                  {% endfor %}
+                </div>
+                <div class="mb-3 col-md-2">
+                  {{ form.currency_code.label_tag }} {{ form.currency_code }}
+                  {% for error in form.currency_code.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                  {% endfor %}
+                </div>
+                <div class="mb-3 col-md-2">
+                  {{ form.fiscal_year_start.label_tag }} {{ form.fiscal_year_start }}
+                  {% for error in form.fiscal_year_start.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                  {% endfor %}
+                </div>
+                <div class="mb-3 col-md-2">
+                  {{ form.fiscal_year_end.label_tag }} {{ form.fiscal_year_end }}
+                  {% for error in form.fiscal_year_end.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                  {% endfor %}
+                </div>
+              </div>
+              <div class="row">
+                <div class="mb-3 col-md-3">
+                  {{ form.numbering_format.label_tag }} {{ form.numbering_format }}
+                  {% for error in form.numbering_format.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                  {% endfor %}
+                </div>
+                <div class="mb-3 col-md-3">
+                  {{ form.currency_position.label_tag }} {{ form.currency_position }}
+                  {% for error in form.currency_position.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                  {% endfor %}
+                </div>
+                <div class="mb-3 col-md-2">
+                  {{ form.date_format.label_tag }} {{ form.date_format }}
+                  {% for error in form.date_format.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                  {% endfor %}
+                </div>
+                <div class="mb-3 col-md-2">
+                  {{ form.decimals.label_tag }} {{ form.decimals }}
+                  {% for error in form.decimals.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                  {% endfor %}
+                </div>
+                <div class="mb-3 col-md-2">
+                  {{ form.archive.label_tag }} {{ form.archive }}
+                  {% for error in form.archive.errors %}
+                    <div class="text-danger small">{{ error }}</div>
+                    {% endfor %}
+                </div>
+              </div>
+          </div>
+        </div>
+        <div class="text-end mt-4 d-flex justify-content-end gap-2">
+          <button type="submit" class="btn btn-primary">
+            {% if form.instance.pk %}Update{% else %}Save{% endif %}
+          </button>
+          <a href="{% url 'country:country' %}" class="btn btn-primary">Cancel
+          </a>
+        </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

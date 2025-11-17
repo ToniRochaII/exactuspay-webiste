@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load role_filters %}
+{% load crispy_forms_tags %}
+{% block title %}Profile | ExactusPay{% endblock %}
+{% block content %}
+
+
+  <p> 
+    {% if user|has_role:"EXEC" %}
+    <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a> 
+    {% endif %}
+    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
+    <a href="{% url 'dashboard' %}">Dashboard</a> 
+    <a href="{% url 'user_list' %}"">Accounts</a>
+    <a href="{% url 'role_management' %}"">Role Management</a>
+    {% endif %}
+    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
+    <a href="{% url 'profile' %}"">Profile</a>
+    <a href="{% url 'user_detail' user.id %}"> User Details</a>
+    {% endif %}
+
+    <a href="{% url 'password_reset' %}">Reset password</a>
+  </p>
+<div class="container mt-5">
+  <h2>My Profile</h2>
+  <form method="POST" enctype="multipart/form-data" class="mt-4">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
+    <button type="cancel" class="btn btn-danger mt-3">Cancel</button>
+  </form>
+
+  {% if user.userprofile.avatar %}
+    <div class="mt-4">
+      <img src="{{ user.userprofile.avatar.url }}" alt="Avatar" class="img-thumbnail" width="150">
+    </div>
+  {% endif %}  
+  <p> 
+    {% if user|has_role:"EXEC" %}
+    <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a> 
+    {% endif %}
+    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
+    <a href="{% url 'dashboard' %}">Dashboard</a> 
+    <a href="{% url 'user_list' %}"">Accounts</a>
+    <a href="{% url 'role_management' %}"">Role Management</a>
+    {% endif %}
+    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
+    <a href="{% url 'profile' %}"">Profile</a>
+    <a href="{% url 'user_detail' user.id %}"> User Details</a>
+    {% endif %}
+
+    <a href="{% url 'password_reset' %}">Reset password</a>
+  </p>
+  
+</div>
+{% endblock %}
