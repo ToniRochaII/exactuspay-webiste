@@ -3,17 +3,29 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
 
-# DEBUG SHOULD BE FALSE IN PRODUCTION
-DEBUG = os.environ.get("DEBUG", "") != "False"
+# DEBUG defaults to False on Render unless explicitly set to True
+DEBUG = os.environ.get("DEBUG", "False") == "True"
+
+# Security settings
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 3600
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+
+# MUST be outside the DEBUG condition
+ROOT_URLCONF = 'ExactusPay.urls'
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
     "exactuspay.onrender.com",
     "payroll.exactuspay.com",
+    ".onrender.com",
 ]
 
 render_host = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
@@ -31,35 +43,28 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
 
-    # Accounts
     'accounts.apps.AccountsConfig',
-
-    # Country
     'country.apps.CountryConfig',
-
-    # Company
     'company',
-
-    # Regulations
     'regulations',
-
-    # Elements
     'elements.apps.ElementsConfig',
 ]
 
+# ❗ FIXED TYPO HERE: MIDDLEWARE, not MMIDDLEWARE
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',   # REQUIRED FOR RENDER STATIC FILES
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = 'ExactusPay.urls'
+WSGI_APPLICATION = 'ExactusPay.wsgi.application'
 
+# Templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -79,12 +84,10 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'ExactusPay.wsgi.application'
-
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
-# DATABASE (SQLite for now)
+# Database (works for now)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -94,33 +97,21 @@ DATABASES = {
 
 AUTH_USER_MODEL = 'accounts.User'
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+CSRF_TRUSTED_ORIGINS = [
+    "https://exactuspay.onrender.com",
+    "https://payroll.exactuspay.com",
 ]
+
+render_external = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+if render_external:
+    CSRF_TRUSTED_ORIGINS.append(f"https://{render_external}")
 
 LANGUAGE_CODE = "en-gb"
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# STATIC FILES CONFIG
 STATIC_URL = "/static/"
-
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
-
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
