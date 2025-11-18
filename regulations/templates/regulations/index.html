@@ -64,7 +64,7 @@
                     <a href="{% url 'regulations:regulations_delete' country_slug regulations.id %}" class="btn btn-danger">
                       <i class="bi bi-trash"></i> Delete
                     </a>
-                    <a href="" class="btn btn-primary">
+                    <a href="{% url 'calculationbase:regulations' country_slug regulations.id %}" class="btn btn-primary">
                       <i class="bi bi-arrow-right-circle"></i> Enter
                     </a>
                   </div>
