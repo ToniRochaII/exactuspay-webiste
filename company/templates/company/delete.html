@@ -3,71 +3,169 @@
 {% load role_filters %}
 
 
-{% block title %}Delete Company | ExactusPay{% endblock %}
-{% block page_title %}Delete Company{% endblock %}
-
-{% block breadcrumbs %}
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'home' %}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'companies:company' country_slug %}">{{ country.name }}</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Delete Company</li>
-  </ol>
-</nav>
-{% endblock %}
+{% block title %}Edit Company — {{ form.instance.trade_name }}{% endblock %}
 
 {% block content %}
-<div class="card shadow-sm border-danger">
-  <div class="card-header text-white d-flex justify-content-between align-items-center">
-    <h5 class="mb-0">
-      <i class="bi bi-exclamation-triangle-fill me-2"></i> Delete Company
-    </h5>
-    <a href="{% url 'companies:company' country_slug %}" class="btn btn-light btn-sm">
-      <i class="bi bi-arrow-left"></i> Back to List
-    </a>
-  </div>
+<div class="container py-4">
+  <div class="card shadow-sm border-0">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Edit Company — {{ form.instance.trade_name }}</h5>
+      <a href="{% url 'companies:company' country_slug %}" class="btn btn-light btn-sm">
+        <i class="bi bi-arrow-left"></i> Back to Companies
+      </a>
+    </div>
 
-  <div class="card-body">
-    <div class="text-center py-4">
-      <i class="fas fa-exclamation-triangle text-warning fa-3x mb-3"></i>
-      <h5 class="fw-bold text-danger mt-3">
-        Are you sure you want to permanently delete this company?
-      </h5>
-
-      <div class="border rounded p-3 bg-light mt-4 mx-auto" style="max-width: 700px;">
-        <div class="row text-start">
-          <div class="col-md-6">
-            <p class="mb-1"><strong>Company Code:</strong></p>
-            <p class="text-muted">{{ company.company_code }}</p>
-          </div>
-          <div class="col-md-6">
-            <p class="mb-1"><strong>Trade Name:</strong></p>
-            <p class="text-muted">{{ company.trade_name }}</p>
-          </div>
-          <div class="col-md-6">
-            <p class="mb-1"><strong>Legal Name:</strong></p>
-            <p class="text-muted">{{ company.legal_name }}</p>
-          </div>
-          <div class="col-md-6">
-            <p class="mb-1"><strong>Account Status:</strong></p>
-            <p class="text-muted">{{company.account_status}}</p>
-          </div>
-        </div>
-      </div>
-
-      <form method="post" class="mt-4">
+    <div class="card-body">
+      <form method="post" novalidate>
         {% csrf_token %}
-        <div class="d-flex justify-content-center gap-3">
-          <button type="submit" class="btn btn-danger px-4">
-            <i class="bi bi-trash"></i> Confirm Delete
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <div class="row">
+          <!-- Column 1 -->
+          <div class="col-md-6">
+            <div class="mb-3">
+              {{ form.company_code.label_tag }} {{ form.company_code }}
+              {% for error in form.company_code.errors %}
+                <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+
+            <div class="mb-3">
+              {{ form.company_number.label_tag }} {{ form.company_number }}
+              {% for error in form.company_number.errors %}
+                <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+
+            <div class="mb-3">
+              {{ form.trade_name.label_tag }} {{ form.trade_name }}
+              {% for error in form.trade_name.errors %}
+                <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+
+            <div class="mb-3">
+              {{ form.legal_name.label_tag }} {{ form.legal_name }}
+              {% for error in form.legal_name.errors %}
+                <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+
+            <div class="mb-3">
+              {{ form.building_name.label_tag }} {{ form.building_name }}
+              {% for error in form.building_name.errors %}
+                <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+
+            <div class="mb-3">
+              {{ form.road_name_1.label_tag }} {{ form.road_name_1 }}
+              {% for error in form.road_name_1.errors %}
+                <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+
+            <div class="mb-3">
+              {{ form.road_name_2.label_tag }} {{ form.road_name_2 }}
+              {% for error in form.road_name_2.errors %}
+                <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+
+            <div class="mb-3">
+              {{ form.town.label_tag }} {{ form.town }}
+              {% for error in form.town.errors %}
+                <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+
+            <div class="mb-3">
+              {{ form.post_code.label_tag }} {{ form.post_code }}
+              {% for error in form.post_code.errors %}
+                <div class="text-danger small">{{ error }}</div>
+              {% endfor %}
+            </div>
+
+            <div class="mb-3">
+              {{ form.account_status.label_tag }} {{ form.account_status }}
+              {% for error in form.account_status.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="mb-3">
+              {{ form.account_archive.label_tag }} {{ form.account_archive }}
+              {% for error in form.account_archive.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+            </div>
+          </div>
+
+         <!-- Column 2 -->
+        <div class="col-md-6">
+
+          <div class="mb-3">
+            {{ form.tax_id_1.label_tag }} {{ form.tax_id_1 }}
+            {% for error in form.tax_id_1.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="mb-3">
+            {{ form.tax_id_2.label_tag }} {{ form.tax_id_2 }}
+            {% for error in form.tax_id_2.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="mb-3">
+            {{ form.tax_id_3.label_tag }} {{ form.tax_id_3 }}
+            {% for error in form.tax_id_3.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="mb-3">
+            {{ form.tax_id_4.label_tag }} {{ form.tax_id_4 }}
+            {% for error in form.tax_id_4.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="mb-3">
+            {{ form.tax_id_5.label_tag }} {{ form.tax_id_5 }}
+            {% for error in form.tax_id_5.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="mb-3">
+            {{ form.tax_id_6.label_tag }} {{ form.tax_id_6 }}
+            {% for error in form.tax_id_6.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="mb-3">
+            {{ form.tax_id_7.label_tag }} {{ form.tax_id_7 }}
+            {% for error in form.tax_id_7.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="mb-3">
+            {{ form.tax_id_8.label_tag }} {{ form.tax_id_8 }}
+            {% for error in form.tax_id_8.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="mb-3">
+            {{ form.tax_id_9.label_tag }} {{ form.tax_id_9 }}
+            {% for error in form.tax_id_9.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="mb-3">
+            {{ form.tax_id_10.label_tag }} {{ form.tax_id_10 }}
+            {% for error in form.tax_id_10.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="mb-3">
+            {{ form.rti_user_id.label_tag }} {{ form.rti_user_id }}
+            {% for error in form.rti_user_id.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+
+          <div class="mb-3">
+            {{ form.rti_password.label_tag }} {{ form.rti_password }}
+            {% for error in form.rti_password.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+          </div>
+         </div>
+        </div>
+        <div class="text-end mt-4">
+          <button type="submit" class="btn btn-success px-4">
+            <i class="bi bi-save"></i>Save Company
           </button>
-          <a href="{% url 'companies:company' country_slug %}" class="btn btn-outline-secondary px-4">
-            <i class="bi bi-x-circle"></i> Cancel
-          </a>
         </div>
       </form>
-    </div>
-  </div>
-</div>
 {% endblock %}
