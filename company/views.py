@@ -46,7 +46,7 @@ def company_create(request, country_slug):
             company.country = country
             company.save()
             messages.success(request, f"Company '{company.trade_name}' added successfully.")
-            return redirect("company:company", country_slug=country.slug)
+            return redirect("companies:company", country_slug=country.slug)
     else:
         form = CompanyForm()
 
@@ -68,7 +68,7 @@ def company_edit(request, country_slug, company_id):
         form = CompanyForm(request.POST, instance=company)
         if form.is_valid():
             form.save()
-            return redirect("company:company", country_slug=country.slug)
+            return redirect("companies:company", country_slug=country.slug)
     else:
         form = CompanyForm(instance=company)
 
