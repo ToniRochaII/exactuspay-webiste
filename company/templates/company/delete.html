@@ -10,8 +10,8 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{% url 'home' %}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'country' %}">Countries</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'company' country.id %}">{{ country.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'company:company' country_slug %}">{{ country.name }}</a></li>
     <li class="breadcrumb-item active" aria-current="page">Delete Company</li>
   </ol>
 </nav>
@@ -23,7 +23,7 @@
     <h5 class="mb-0">
       <i class="bi bi-exclamation-triangle-fill me-2"></i> Delete Company
     </h5>
-    <a href="{% url 'company' country.id %}" class="btn btn-light btn-sm">
+    <a href="{% url 'company:company' country_slug %}" class="btn btn-light btn-sm">
       <i class="bi bi-arrow-left"></i> Back to List
     </a>
   </div>
@@ -62,7 +62,7 @@
           <button type="submit" class="btn btn-danger px-4">
             <i class="bi bi-trash"></i> Confirm Delete
           </button>
-          <a href="{% url 'company' country.id %}" class="btn btn-outline-secondary px-4">
+          <a href="{% url 'company:company' country_slug %}" class="btn btn-outline-secondary px-4">
             <i class="bi bi-x-circle"></i> Cancel
           </a>
         </div>
