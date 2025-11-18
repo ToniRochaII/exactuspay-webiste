@@ -77,14 +77,14 @@ def company_edit(request, country_slug, company_id):
 
 @login_required
 @role_required("ADMIN", "MANAGER")
-def company_delete(request, pk, company_id):
-    country = get_object_or_404(Country, pk=pk)
-    company = get_object_or_404(Company, pk=company_id, country=country)
+def company_delete(request, country_slug, company_id):
+    country = get_object_or_404(Country, slug=country_slug)
+    company = get_object_or_404(Company, company_id=company_id, country=country)
     if request.method == "POST":
         company.delete()
         messages.success(request, f"Company '{company.trade_name}' deleted successfully.")
-        return redirect("company", pk=country.pk)
-    return render(request, "company/delete.html", {"company": company, "country": country})
+        return redirect("companies:company", country_slug=country.slug)
+    return render(request, "company/delete.html", {"company": company, "country": country, "country_slug":country_slug})
 
 
 
