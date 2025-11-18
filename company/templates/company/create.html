@@ -59,6 +59,14 @@
               {{ form.road_name_2.label_tag }} {{ form.road_name_2 }}
               {% for error in form.road_name_2.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
             </div>
+            <div class="mb-3">
+              {{ form.account_status.label_tag }} {{ form.account_status }}
+              {% for error in form.account_status.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="mb-3">
+              {{ form.account_archive.label_tag }} {{ form.account_archive }}
+              {% for error in form.account_archive.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+            </div>
           </div>
 
           <!-- Column 2 -->
@@ -96,11 +104,6 @@
             <div class="mb-3">
               {{ form.rti_password.label_tag }} {{ form.rti_password }}
               {% for error in form.rti_password.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-            </div>
-
-            <div class="mb-3">
-              {{ form.account_status.label_tag }} {{ form.account_status }}
-              {% for error in form.account_status.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
             </div>
           </div>
         </div>
