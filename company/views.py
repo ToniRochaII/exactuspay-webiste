@@ -29,7 +29,7 @@ def is_admin(user):
 @role_required("ADMIN", "MANAGER")
 def company(request, country_slug):
     country = get_object_or_404(Country, slug=country_slug)
-    companies = Company.objects.filter(country=country, accounts_archive="N").order_by("trade_name")
+    companies = Company.objects.filter(country=country, account_archive="N").order_by("trade_name")
     return render(request, "company/index.html", {"country": country, "companies": companies, "country_slug": country.slug})
 
 
@@ -79,7 +79,7 @@ def company_edit(request, country_slug, company_id):
 @role_required("ADMIN", "MANAGER")
 def company_delete(request, country_slug):
     country = get_object_or_404(Country, slug=country_slug)
-    companies = Company.objects.filter(country=country, accounts_archive="Y").order_by("trade_name")
+    companies = Company.objects.filter(country=country, account_archive="Y").order_by("trade_name")
     return render(request, "company/index.html", {"country": country, "companies": companies, "country_slug": country.slug})
 
 
