@@ -10,7 +10,7 @@
   <div class="card shadow-sm border-0">
     <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
       <h5 class="mb-0">Edit Company — {{ form.instance.trade_name }}</h5>
-      <a href="{% url 'country:country_edit' country.slug %}" class="btn btn-light btn-sm">
+      <a href="{% url 'country:country' country.slug %}" class="btn btn-light btn-sm">
         <i class="bi bi-arrow-left"></i> Back to Companies
       </a>
     </div>
@@ -87,8 +87,15 @@
                 <div class="text-danger small">{{ error }}</div>
               {% endfor %}
             </div>
+            <div class="mb-3">
+              {{ form.account_status.label_tag }} {{ form.account_status }}
+              {% for error in form.account_status.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="mb-3">
+              {{ form.account_archive.label_tag }} {{ form.account_archive }}
+              {% for error in form.account_archive.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+            </div>
           </div>
-
          <!-- Column 2 -->
         <div class="col-md-6">
 
@@ -151,16 +158,11 @@
             {{ form.rti_password.label_tag }} {{ form.rti_password }}
             {% for error in form.rti_password.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
           </div>
-
-          <div class="mb-3">
-            {{ form.account_status.label_tag }} {{ form.account_status }}
-            {% for error in form.account_status.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-          </div>
          </div>
         </div>
         <div class="text-end mt-4">
           <button type="submit" class="btn btn-success px-4">
-            <i class="bi bi-save"></i> Save Company
+            <i class="bi bi-save"></i>Save Company
           </button>
         </div>
       </form>

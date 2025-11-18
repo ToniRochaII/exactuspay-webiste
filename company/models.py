@@ -8,6 +8,12 @@ class Company(models.Model):
         ("INACTIVE", "Inactive"),
     ]
 
+
+    ACCOUNT_ARCHIVE_CHOICES = [
+        ("Y", "YES"),
+        ("N", "NO"),
+    ]
+
     company_id = models.AutoField(primary_key=True)
     company_code = models.CharField("Company Code", max_length=20, unique=False)
     company_number = models.CharField("Company Number", max_length=50, blank=True, null=True)
@@ -36,6 +42,10 @@ class Company(models.Model):
 
     account_status = models.CharField(
         "Account Status", max_length=10, choices=ACCOUNT_STATUS_CHOICES, default="ACTIVE"
+    )
+
+    account_archive = models.CharField(
+        "Account Archive", max_length=10, choices=ACCOUNT_ARCHIVE_CHOICES, default="N"
     )
 
     class Meta:
