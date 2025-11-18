@@ -10,8 +10,8 @@ from .forms import CalculationBaseForm
 
 
 @login_required
-def calculationbase_list(request, country_id, regulations_id):
-    country = get_object_or_404(Country, pk=country_id)
+def calculationbase_list(request, country_slug, regulations_id):
+    country = get_object_or_404(Country, country_slug=country_slug)
     regulations = get_object_or_404(Regulations, pk=regulations_id, country=country)
 
     bases = CalculationBase.objects.filter(
@@ -21,13 +21,13 @@ def calculationbase_list(request, country_id, regulations_id):
     return render(
         request,
         "calculationbase/index.html",
-        {"country": country, "regulations": regulations, "bases": bases},
+        {"country": country, "regulations": regulations, "bases": bases, "country_slug":country_slug},
     )
 
 
 @login_required
-def calculationbase_create(request, country_id, regulations_id):
-    country = get_object_or_404(Country, pk=country_id)
+def calculationbase_create(request, country_slug, regulations_id):
+    country = get_object_or_404(Country, country_slug=country_slug)
     regulations = get_object_or_404(Regulations, pk=regulations_id, country=country)
 
     if request.method == "POST":
@@ -38,11 +38,11 @@ def calculationbase_create(request, country_id, regulations_id):
             cb.regulations = regulations
             cb.save()
             messages.success(request, "Calculation Base created successfully.")
-            return redirect("calculationbase:list", country_id=country.id, regulations_id=regulations.id)
+            return redirect("calculationbase:calculationbase_list", country_slug=country_slug, regulations_id=regulations_id)
     else:
         form = CalculationBaseForm(country=country, regulations=regulations)
 
-    return render(request, "calculationbase/form.html", {"form": form, "country": country, "regulations": regulations})
+    return render(request, "calculationbase/form.html", {"form": form, "country": country, "regulations": regulations, "country_slug":country_slug})
 
 
 @login_required
