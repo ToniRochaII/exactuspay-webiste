@@ -76,7 +76,7 @@ def company_edit(request, country_slug, company_id):
 
 
 @login_required
-@role_required("ADMIN", "MANAGER")
+@role_required("ADMIN", "EXEC")
 def company_delete(request, country_slug):
     country = get_object_or_404(Country, slug=country_slug)
     companies = Company.objects.filter(country=country, account_archive="Y").order_by("trade_name")
