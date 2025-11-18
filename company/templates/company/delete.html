@@ -3,169 +3,119 @@
 {% load role_filters %}
 
 
-{% block title %}Edit Company — {{ form.instance.trade_name }}{% endblock %}
+{% block title %}Companies — {{ country.name }} | ExactusPay{% endblock %}
+{% block page_title %}Companies — {{ country.name }}{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Companies — {{ country.name }}</li>
+  </ol>
+</nav>
+{% endblock %}
 
 {% block content %}
-<div class="container py-4">
-  <div class="card shadow-sm border-0">
-    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-      <h5 class="mb-0">Edit Company — {{ form.instance.trade_name }}</h5>
-      <a href="{% url 'companies:company' country_slug %}" class="btn btn-light btn-sm">
-        <i class="bi bi-arrow-left"></i> Back to Companies
-      </a>
-    </div>
+<div class="card shadow-sm">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">Companies in {{ country.name }}</h5>
 
-    <div class="card-body">
-      <form method="post" novalidate>
-        {% csrf_token %}
-        {% if form.non_field_errors %}
-          <div class="alert alert-danger">{{ form.non_field_errors }}</div>
-        {% endif %}
+  <p> 
+    {% if user|has_role:"EXEC" %}
+    <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a> 
+    {% endif %}
+    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
+    <a href="{% url 'dashboard' %}">Dashboard</a>
+    <a href="{% url 'country:country' %}"">Countries</a>
+    <a href="{% url 'companies:company_create' country_slug %}"">Add company</a>
+    <a href="{% url 'regulations:regulations' country_slug %}"">Regulations</a>
+    {% endif %}
+  </p>
+  </div>
 
-        <div class="row">
-          <!-- Column 1 -->
-          <div class="col-md-6">
-            <div class="mb-3">
-              {{ form.company_code.label_tag }} {{ form.company_code }}
-              {% for error in form.company_code.errors %}
-                <div class="text-danger small">{{ error }}</div>
-              {% endfor %}
-            </div>
-
-            <div class="mb-3">
-              {{ form.company_number.label_tag }} {{ form.company_number }}
-              {% for error in form.company_number.errors %}
-                <div class="text-danger small">{{ error }}</div>
-              {% endfor %}
-            </div>
-
-            <div class="mb-3">
-              {{ form.trade_name.label_tag }} {{ form.trade_name }}
-              {% for error in form.trade_name.errors %}
-                <div class="text-danger small">{{ error }}</div>
-              {% endfor %}
-            </div>
-
-            <div class="mb-3">
-              {{ form.legal_name.label_tag }} {{ form.legal_name }}
-              {% for error in form.legal_name.errors %}
-                <div class="text-danger small">{{ error }}</div>
-              {% endfor %}
-            </div>
-
-            <div class="mb-3">
-              {{ form.building_name.label_tag }} {{ form.building_name }}
-              {% for error in form.building_name.errors %}
-                <div class="text-danger small">{{ error }}</div>
-              {% endfor %}
-            </div>
-
-            <div class="mb-3">
-              {{ form.road_name_1.label_tag }} {{ form.road_name_1 }}
-              {% for error in form.road_name_1.errors %}
-                <div class="text-danger small">{{ error }}</div>
-              {% endfor %}
-            </div>
-
-            <div class="mb-3">
-              {{ form.road_name_2.label_tag }} {{ form.road_name_2 }}
-              {% for error in form.road_name_2.errors %}
-                <div class="text-danger small">{{ error }}</div>
-              {% endfor %}
-            </div>
-
-            <div class="mb-3">
-              {{ form.town.label_tag }} {{ form.town }}
-              {% for error in form.town.errors %}
-                <div class="text-danger small">{{ error }}</div>
-              {% endfor %}
-            </div>
-
-            <div class="mb-3">
-              {{ form.post_code.label_tag }} {{ form.post_code }}
-              {% for error in form.post_code.errors %}
-                <div class="text-danger small">{{ error }}</div>
-              {% endfor %}
-            </div>
-
-            <div class="mb-3">
-              {{ form.account_status.label_tag }} {{ form.account_status }}
-              {% for error in form.account_status.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-            </div>
-            <div class="mb-3">
-              {{ form.account_archive.label_tag }} {{ form.account_archive }}
-              {% for error in form.account_archive.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-            </div>
-          </div>
-
-         <!-- Column 2 -->
-        <div class="col-md-6">
-
-          <div class="mb-3">
-            {{ form.tax_id_1.label_tag }} {{ form.tax_id_1 }}
-            {% for error in form.tax_id_1.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-          </div>
-
-          <div class="mb-3">
-            {{ form.tax_id_2.label_tag }} {{ form.tax_id_2 }}
-            {% for error in form.tax_id_2.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-          </div>
-
-          <div class="mb-3">
-            {{ form.tax_id_3.label_tag }} {{ form.tax_id_3 }}
-            {% for error in form.tax_id_3.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-          </div>
-
-          <div class="mb-3">
-            {{ form.tax_id_4.label_tag }} {{ form.tax_id_4 }}
-            {% for error in form.tax_id_4.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-          </div>
-
-          <div class="mb-3">
-            {{ form.tax_id_5.label_tag }} {{ form.tax_id_5 }}
-            {% for error in form.tax_id_5.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-          </div>
-
-          <div class="mb-3">
-            {{ form.tax_id_6.label_tag }} {{ form.tax_id_6 }}
-            {% for error in form.tax_id_6.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-          </div>
-
-          <div class="mb-3">
-            {{ form.tax_id_7.label_tag }} {{ form.tax_id_7 }}
-            {% for error in form.tax_id_7.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-          </div>
-
-          <div class="mb-3">
-            {{ form.tax_id_8.label_tag }} {{ form.tax_id_8 }}
-            {% for error in form.tax_id_8.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-          </div>
-
-          <div class="mb-3">
-            {{ form.tax_id_9.label_tag }} {{ form.tax_id_9 }}
-            {% for error in form.tax_id_9.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-          </div>
-
-          <div class="mb-3">
-            {{ form.tax_id_10.label_tag }} {{ form.tax_id_10 }}
-            {% for error in form.tax_id_10.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-          </div>
-
-          <div class="mb-3">
-            {{ form.rti_user_id.label_tag }} {{ form.rti_user_id }}
-            {% for error in form.rti_user_id.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-          </div>
-
-          <div class="mb-3">
-            {{ form.rti_password.label_tag }} {{ form.rti_password }}
-            {% for error in form.rti_password.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-          </div>
-         </div>
+  <div class="card-body">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-        <div class="text-end mt-4">
-          <button type="submit" class="btn btn-success px-4">
-            <i class="bi bi-save"></i>Save Company
-          </button>
-        </div>
-      </form>
+      {% endfor %}
+    {% endif %}
+
+    {% if companies %}
+      <div class="table-responsive">
+        <table id="datatable-companies" class="table table-striped align-middle table-hover" style="width:100%">
+          <thead class="table-light">
+            <tr>
+              <th>Number</th>
+              <th>Code</th>
+              <th>Trade Name</th>
+              <th>Legal Name</th>
+              <th>Town</th>
+              <th>Employees</th>
+              <th>Account Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for company in companies %}
+              <tr>
+                <td>{{ company.company_number }}</td>
+                <td>{{ company.company_code }}</td>
+                <td>{{ company.trade_name }}</td>
+                <td>{{ company.legal_name }}</td>
+                <td>{{ company.town|default:"—" }}</td>
+                <td>{{ company.employees.count }}</td>
+                <td>{{ company.account_status }}</td>
+                <td>
+                  <div class="d-flex justify-content gap-2">
+                    <a href="{% url 'companies:company' country_slug %}" class="btn btn-primary">
+                      <i class="bi bi-arrow-right-circle"></i> Enter
+                    </a>
+                    <a href="{% url 'companies:company_edit' country_slug company.company_id %}" class="btn btn-primary">
+                      <i class="bi bi-pencil"></i> Edit
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="text-center py-5">
+        <p class="text-muted mb-3">No companies found for {{ country.name }}.</p>
+        <a href="{% url 'companies:company_create' country_slug %}" class="btn btn-primary">
+          <i class="bi bi-plus-circle"></i> Add First Company
+        </a>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    $("#datatable-companies").DataTable({
+      responsive: true,
+      pageLength: 10,
+      order: [[2, "asc"]],
+      language: {
+        search: "Search:",
+        lengthMenu: "Show _MENU_ companies",
+        zeroRecords: "No companies found.",
+        info: "Showing _START_–_END_ of _TOTAL_ companies",
+        infoEmpty: "No companies to display",
+        paginate: {
+          previous: "‹",
+          next: "›"
+        }
+      }
+    });
+  });
+</script>
 {% endblock %}
