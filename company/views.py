@@ -80,7 +80,7 @@ def company_edit(request, country_slug, company_id):
 def company_delete(request, country_slug):
     country = get_object_or_404(Country, slug=country_slug)
     companies = Company.objects.filter(country=country, account_archive="Y").order_by("trade_name")
-    return render(request, "company/index.html", {"country": country, "companies": companies, "country_slug": country.slug})
+    return render(request, "company/delete.html", {"country": country, "companies": companies, "country_slug": country.slug})
 
 
 

@@ -10,8 +10,8 @@ class Company(models.Model):
 
 
     ACCOUNT_ARCHIVE_CHOICES = [
-        ("Y", "YES"),
         ("N", "NO"),
+        ("Y", "YES"),
     ]
 
     company_id = models.AutoField(primary_key=True)
