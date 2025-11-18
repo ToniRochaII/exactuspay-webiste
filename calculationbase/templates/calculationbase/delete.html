@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Delete Calculation Base{% endblock %}
+
+{% block content %}
+<div class="container mt200">
+  <h3>Are you sure you want to delete this Calculation Base?</h3>
+
+  <p><strong>ID:</strong> {{ cb.id }}</p>
+  <p><strong>Element:</strong> {{ cb.element.element_name }}</p>
+
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Yes, delete</button>
+    <a href="{% url 'calculationbase:list' country.id regulations.id %}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+{% endblock %}

@@ -32,6 +32,16 @@ ALLOWED_HOSTS = [
     ".onrender.com",
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://exactuspay.onrender.com",
+    "https://payroll.exactuspay.com",
+]
+
+render_external = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+if render_external:
+    CSRF_TRUSTED_ORIGINS.append(f"https://{render_external}")
+
+
 render_host = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
 if render_host:
     ALLOWED_HOSTS.append(render_host)
@@ -52,6 +62,7 @@ INSTALLED_APPS = [
     'company',
     'regulations',
     'elements.apps.ElementsConfig',
+    'calculationbase.apps.CalculationbaseConfig',
 ]
 
 # ❗ FIXED TYPO HERE: MIDDLEWARE, not MMIDDLEWARE
@@ -109,14 +120,7 @@ else:
 
 AUTH_USER_MODEL = 'accounts.User'
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://exactuspay.onrender.com",
-    "https://payroll.exactuspay.com",
-]
 
-render_external = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
-if render_external:
-    CSRF_TRUSTED_ORIGINS.append(f"https://{render_external}")
 
 LANGUAGE_CODE = "en-gb"
 TIME_ZONE = 'UTC'
