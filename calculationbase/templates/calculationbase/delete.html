@@ -11,7 +11,7 @@
   <form method="post">
     {% csrf_token %}
     <button type="submit" class="btn btn-danger">Yes, delete</button>
-    <a href="{% url 'calculationbase:list' country.id regulations.id %}" class="btn btn-secondary">Cancel</a>
+    <a href="{% url 'calculationbase:list' country.slug regulations.id %}" class="btn btn-secondary">Cancel</a>
   </form>
 </div>
 {% endblock %}

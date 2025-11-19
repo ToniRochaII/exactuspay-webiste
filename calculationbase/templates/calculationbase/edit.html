@@ -23,7 +23,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary mt-3">Save</button>
-        <a href="{% url 'calculationbase:list' country.id regulations.id %}" class="btn btn-secondary mt-3">Cancel</a>
+        <a href="{% url 'calculationbase:list' country.slug regulations.id %}" class="btn btn-secondary mt-3">Cancel</a>
       </form>
     </div>
   </div>
