@@ -5,8 +5,8 @@ app_name = "employee"
 
 urlpatterns = [
 
-    path("<slug:country_slug>/", views.employee_list, name="employee"),
-    path("<slug:country_slug>/create/", views.employee_create, name="employee_create"),
-    path("<slug:country_slug>/edit/<int:employee_id>/", views.employee_edit, name="employee_edit"),
+    path("<int:company_id>/", views.employee_list, name="employee"),
+    path("<int:company_id>/create/", views.employee_create, name="employee_create"),
+    path("<int:company_id>/edit/<int:employee_id>/", views.employee_edit, name="employee_edit"),
 
 ]
