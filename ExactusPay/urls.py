@@ -25,5 +25,6 @@ urlpatterns = [
     path('',include('company.urls')),
     path('',include('regulations.urls')),
     path('',include('elements.urls')),
+    path('',include('calculationbase.urls')),
     
 ]

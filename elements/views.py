@@ -37,7 +37,7 @@ def element_create(request, country_slug):
 
         messages.success(
             request,
-            f"Element '{element.element_code} {element.element_name}' created successfully."
+            f"Element '{element.element_code} – {element.element_name}' created successfully."
         )
         return redirect("elements:elements", country_slug=country.slug)
 

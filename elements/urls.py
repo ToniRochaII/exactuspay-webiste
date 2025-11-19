@@ -11,3 +11,5 @@ urlpatterns = [
     path("<slug:country_slug>/elements/delete/<int:element_code>/", views.element_delete, name="element_delete"),
 
 ]
+
+
