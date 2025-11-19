@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+{% if employee %}
+Edit Employee — {{ employee.employee_name }} {{ employee.employee_surname }} | ExactusPay
+{% else %}
+Add Employee — {{ company.trade_name }} | ExactusPay
+{% endif %}
+{% endblock %}
+
+{% block page_title %}
+{% if employee %}Edit Employee{% else %}Add Employee{% endif %}
+{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'home' %}">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'company' country.id %}">Companies</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'employee_list' country.id company.company_id %}">Employees — {{ company.trade_name }}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{% if employee %}Edit Employee{% else %}Add Employee{% endif %}</li>
+  </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">
+      {% if employee %}
+        <i class="bi bi-pencil"></i> Edit Employee — {{ employee.employee_name }} {{ employee.employee_surname }}
+      {% else %}
+        <i class="bi bi-plus-circle"></i> Add Employee
+      {% endif %}
+    </h5>
+  </div>
+
+  <div class="card-body">
+    <form method="post" class="needs-validation" novalidate>
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+
+      <!-- Personal Info -->
+      <h6 class="fw-bold border-bottom pb-2 mb-3">Personal Information</h6>
+      <div class="row mb-3">
+        <div class="col-md-4">
+          {{ form.employee_id.label_tag }} {{ form.employee_id }}
+        </div>
+        <div class="col-md-4">
+          {{ form.employee_number.label_tag }} {{ form.employee_number }}
+        </div>
+        <div class="col-md-4">
+          {{ form.employee_code.label_tag }} {{ form.employee_code }}
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          {{ form.employee_name.label_tag }} {{ form.employee_name }}
+        </div>
+        <div class="col-md-6">
+          {{ form.employee_surname.label_tag }} {{ form.employee_surname }}
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-4">
+          {{ form.gender.label_tag }} {{ form.gender }}
+        </div>
+        <div class="col-md-4">
+          {{ form.date_of_birth.label_tag }} {{ form.date_of_birth }}
+        </div>
+        <div class="col-md-4">
+          {{ form.marital_status.label_tag }} {{ form.marital_status }}
+        </div>
+      </div>
+
+      <!-- Address Info -->
+      <h6 class="fw-bold border-bottom pb-2 mb-3 mt-4">Address Information</h6>
+      <div class="row mb-3">
+        <div class="col-md-4">
+          {{ form.employee_address_type.label_tag }} {{ form.employee_address_type }}
+        </div>
+        <div class="col-md-8">
+          {{ form.employee_address_01.label_tag }} {{ form.employee_address_01 }}
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          {{ form.employee_address_02.label_tag }} {{ form.employee_address_02 }}
+        </div>
+        <div class="col-md-6">
+          {{ form.employee_address_03.label_tag }} {{ form.employee_address_03 }}
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-4">
+          {{ form.employee_address_04.label_tag }} {{ form.employee_address_04 }}
+        </div>
+        <div class="col-md-4">
+          {{ form.employee_address_05.label_tag }} {{ form.employee_address_05 }}
+        </div>
+        <div class="col-md-4">
+          {{ form.employee_address_06.label_tag }} {{ form.employee_address_06 }}
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-12">
+          {{ form.employee_address_07.label_tag }} {{ form.employee_address_07 }}
+        </div>
+      </div>
+
+      <!-- Bank Info -->
+      <h6 class="fw-bold border-bottom pb-2 mb-3 mt-4">Bank Information</h6>
+      <div class="row mb-3">
+        <div class="col-md-4">{{ form.bank_01.label_tag }} {{ form.bank_01 }}</div>
+        <div class="col-md-4">{{ form.bank_02.label_tag }} {{ form.bank_02 }}</div>
+        <div class="col-md-4">{{ form.bank_03.label_tag }} {{ form.bank_03 }}</div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-4">{{ form.bank_04.label_tag }} {{ form.bank_04 }}</div>
+        <div class="col-md-4">{{ form.bank_05.label_tag }} {{ form.bank_05 }}</div>
+        <div class="col-md-4">{{ form.bank_06.label_tag }} {{ form.bank_06 }}</div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-4">{{ form.bank_07.label_tag }} {{ form.bank_07 }}</div>
+        <div class="col-md-4">{{ form.bank_08.label_tag }} {{ form.bank_08 }}</div>
+        <div class="col-md-4">{{ form.bank_09.label_tag }} {{ form.bank_09 }}</div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-4">{{ form.bank_10.label_tag }} {{ form.bank_10 }}</div>
+      </div>
+
+      <!-- Job / Payroll Info -->
+      <h6 class="fw-bold border-bottom pb-2 mb-3 mt-4">Job / Payroll Information</h6>
+      <div class="row mb-3">
+        <div class="col-md-4">{{ form.department.label_tag }} {{ form.department }}</div>
+        <div class="col-md-4">{{ form.cost_centre.label_tag }} {{ form.cost_centre }}</div>
+        <div class="col-md-4">{{ form.job_title.label_tag }} {{ form.job_title }}</div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-6">{{ form.position_number.label_tag }} {{ form.position_number }}</div>
+        <div class="col-md-6">{{ form.fte.label_tag }} {{ form.fte }}</div>
+      </div>
+
+      <!-- Tax Info -->
+      <h6 class="fw-bold border-bottom pb-2 mb-3 mt-4">Tax Information</h6>
+      <div class="row mb-3">
+        <div class="col-md-4">{{ form.tax_info_01.label_tag }} {{ form.tax_info_01 }}</div>
+        <div class="col-md-4">{{ form.tax_info_02.label_tag }} {{ form.tax_info_02 }}</div>
+        <div class="col-md-4">{{ form.tax_info_03.label_tag }} {{ form.tax_info_03 }}</div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-4">{{ form.tax_info_04.label_tag }} {{ form.tax_info_04 }}</div>
+        <div class="col-md-4">{{ form.tax_info_05.label_tag }} {{ form.tax_info_05 }}</div>
+        <div class="col-md-4">{{ form.tax_info_06.label_tag }} {{ form.tax_info_06 }}</div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-4">{{ form.tax_info_07.label_tag }} {{ form.tax_info_07 }}</div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="text-end mt-4">
+        <button type="submit" class="btn btn-primary">
+          <i class="bi bi-save"></i> Save
+        </button>
+        <a href="{% url 'employee_list' country.id company.company_id %}" class="btn btn-danger ms-2">
+          <i class="bi bi-x-circle"></i> Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
