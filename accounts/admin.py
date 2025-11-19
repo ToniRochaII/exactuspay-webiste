@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, UserProfile, PermissionMatrix, RoleTemplate, RoleHierarchy, PermissionBulkUpdate, CustomRole
+from .models import  User, UserProfile, PermissionMatrix, RoleTemplate, RoleHierarchy, PermissionBulkUpdate, CustomRole
 
 
 @admin.register(User)
