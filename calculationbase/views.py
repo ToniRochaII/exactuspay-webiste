@@ -23,7 +23,7 @@ def calculationbase_list(request, country_slug, regulations_id):
     return render(
         request,
         "calculationbase/index.html",
-        {"country": country, "regulations": regulations, "bases": bases},
+        {"country": country, "regulations": regulations, "bases": bases, "country_slug":country_slug,},
     )
 
 
