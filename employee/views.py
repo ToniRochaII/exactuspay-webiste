@@ -52,6 +52,7 @@ def employee_create(request, country_slug,company_id):
             "form": form,
             "company": company,
             "country":country  # ← this line MUST be present
+            ,"country_slug":country_slug  # ← this line MUST be present
         },
     )
 
