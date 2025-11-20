@@ -61,7 +61,7 @@ def employee_create(request, country_slug,company_id):
 @login_required
 @role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE")
 def employee_edit(request, country_slug, company_id, employee_id):
-    country = get_object_or_404(Country, country_slug=country_slug)
+    country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
     employee = get_object_or_404(Employee, pk=employee_id, company=company)
     if request.method == "POST":
