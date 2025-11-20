@@ -79,7 +79,7 @@
     {% else %}
       <div class="text-center py-5">
         <p class="text-muted mb-3">No pdcodes found for {{ company.trade_name }}.</p>
-        <a href="{% url 'pdcodes:pdcode_create' country_slug %}" class="btn btn-primary">
+        <a href="{% url 'pdcodes:pdcode_create' country_slug company.company_id %}" class="btn btn-primary">
           <i class="bi bi-plus-circle"></i> Add your first P & D code
         </a>
       </div>

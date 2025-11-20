@@ -9,7 +9,7 @@
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="">Dashboard</a></li>
     <li class="breadcrumb-item"><a href="{% url 'company:company' country_slug%}">companies</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'pdcodes:pdcodes' company.company_id %}">Elements — {{ company.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'pdcodes:pdcodes' country_slug company.company_id %}">Elements — {{ company.name }}</a></li>
     <li class="breadcrumb-item active" aria-current="page">Add Element</li>
   </ol>
 </nav>
