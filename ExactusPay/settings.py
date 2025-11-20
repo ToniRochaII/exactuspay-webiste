@@ -8,20 +8,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
 
 # DEBUG defaults to False on Render unless explicitly set to True
-DEBUG = os.environ.get("DEBUG", "True") == "True"
+DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 # Security settings
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-    SECURE_HSTS_SECONDS = 3600
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
-
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = 'DENY'
+    USE_X_FORWARDED_HOST = True
 
-    
 # MUST be outside the DEBUG condition
 ROOT_URLCONF = 'ExactusPay.urls'
 
@@ -38,14 +40,10 @@ CSRF_TRUSTED_ORIGINS = [
     "https://payroll.exactuspay.com",
 ]
 
-render_external = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
-if render_external:
-    CSRF_TRUSTED_ORIGINS.append(f"https://{render_external}")
-
-
 render_host = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
 if render_host:
     ALLOWED_HOSTS.append(render_host)
+    CSRF_TRUSTED_ORIGINS.append(f"https://{render_host}")
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -68,7 +66,6 @@ INSTALLED_APPS = [
     'utils',  
 ]
 
-# ❗ FIXED TYPO HERE: MIDDLEWARE, not MMIDDLEWARE
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -105,14 +102,19 @@ TEMPLATES = [
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
-# Database (works for now)
+# Database configuration
 if "DATABASE_URL" in os.environ:
     DATABASES = {
         "default": dj_database_url.config(
+            default=os.environ["DATABASE_URL"],
             conn_max_age=600,
+            conn_health_checks=True,
             ssl_require=True,
         )
     }
+    
+    # Ensure we're using PostgreSQL engine
+    DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql'
 else:
     DATABASES = {
         "default": {
@@ -122,8 +124,6 @@ else:
     }
 
 AUTH_USER_MODEL = 'accounts.User'
-
-
 
 LANGUAGE_CODE = "en-gb"
 TIME_ZONE = 'UTC'
@@ -139,4 +139,3 @@ STATICFILES_DIRS = [
 ]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
