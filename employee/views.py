@@ -29,7 +29,8 @@ def employee_list(request, country_slug,company_id):
 
 @login_required
 @role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE")
-def employee_create(request,  company_id):
+def employee_create(request, country_slug,company_id):
+    country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
 
     if request.method == "POST":
@@ -39,7 +40,7 @@ def employee_create(request,  company_id):
             employee.company = company
             employee.save()
             messages.success(request, f"Employee '{employee.employee_name} {employee.employee_surname}' added successfully.")
-            return redirect("employee_list", company_id=company.pk)
+            return redirect("employee_list", slug=country_slug company_id=company.pk)
     else:
         form = EmployeeForm()
 
@@ -49,7 +50,8 @@ def employee_create(request,  company_id):
         "employee/create.html",
         {
             "form": form,
-            "company": company,  # ← this line MUST be present
+            "company": company,
+            "country":country  # ← this line MUST be present
         },
     )
 
@@ -57,7 +59,8 @@ def employee_create(request,  company_id):
 
 @login_required
 @role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE")
-def employee_edit(request, company_id, employee_id):
+def employee_edit(request, country_slug, company_id, employee_id):
+    country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
     employee = get_object_or_404(Employee, pk=employee_id, company=company)
     if request.method == "POST":
@@ -65,22 +68,23 @@ def employee_edit(request, company_id, employee_id):
         if form.is_valid():
             form.save()
             messages.success(request, f"Employee '{employee.employee_name} {employee.employee_surname}' updated successfully.")
-            return redirect("employee_list", company_id=company.pk)
+            return redirect("employee_list", slug=country_slug company_id=company.pk)
     else:
         form = EmployeeForm(instance=employee)
-    return render(request, "employee/edit.html", {"form": form, "company": company, "employee": employee})
+    return render(request, "employee/edit.html", {"form": form, "company": company, "employee": employee, "country": country, "country_slug":country_slug})
 
 
 @login_required
 @role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE")
-def employee_delete(request, pk, company_id, employee_id):
+def employee_delete(request, country_slug, company_id, employee_id):
+    country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
     employee = get_object_or_404(Employee, pk=employee_id, company=company)
     if request.method == "POST":
         employee.delete()
         messages.success(request, f"Employee '{employee.employee_name} {employee.employee_surname}' deleted successfully.")
-        return redirect("employee_list", company_id=company.pk)
-    return render(request, "employee/delete.html", {"employee": employee, "company": company})
+        return redirect("employee_list", slug=country_slug company_id=company.pk)
+    return render(request, "employee/delete.html", {"employee": employee, "company": company, "country": country, "country_slug":country_slug})
 
 
 
