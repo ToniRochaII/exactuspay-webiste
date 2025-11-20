@@ -1,32 +1,31 @@
-from django.contrib import messages
-from django.shortcuts import redirect
 from functools import wraps
+from django.shortcuts import redirect
+from django.contrib import messages
 
-
-def role_required(*roles):
+def role_required(*allowed_roles):
     def decorator(view_func):
+
         @wraps(view_func)
         def wrapper(request, *args, **kwargs):
-            user = request.user
 
-            # 1. Allow superusers always
-            if user.is_superuser:
-                return view_func(request, *args, **kwargs)
+            if not request.user.is_authenticated:
+                return redirect("login")
 
-            # 2. Check if user has a role
-            if not hasattr(user, "role") or not user.role:
+            # Normalize both sides
+            user_role = getattr(request.user, "role", None)
+            if user_role:
+                user_role = user_role.upper()
+            allowed = [r.upper() for r in allowed_roles]
+
+            if user_role not in allowed:
                 messages.error(request, "Access denied — insufficient permissions.")
-                return redirect("country:country") # or your preferred landing page
 
-            # 3. Normalize role to uppercase for matching
-            user_role = user.role.upper()
-            allowed_roles = [r.upper() for r in roles]
+                country_slug = kwargs.get("country_slug")
+                if country_slug:
+                    return redirect("companies:company", country_slug=country_slug)
 
-            if user_role not in allowed_roles:
-                messages.error(request, "Access denied — insufficient permissions.")
                 return redirect("country:country")
 
-            # 4. User allowed
             return view_func(request, *args, **kwargs)
 
         return wrapper
