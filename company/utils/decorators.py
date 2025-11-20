@@ -16,7 +16,7 @@ def role_required(*roles):
             # 2. Check if user has a role
             if not hasattr(user, "role") or not user.role:
                 messages.error(request, "Access denied — insufficient permissions.")
-                return redirect("country:country")  # or your preferred landing page
+                return redirect("companies:company" country_slug=country_slug)  # or your preferred landing page
 
             # 3. Normalize role to uppercase for matching
             user_role = user.role.upper()
@@ -24,7 +24,7 @@ def role_required(*roles):
 
             if user_role not in allowed_roles:
                 messages.error(request, "Access denied — insufficient permissions.")
-                return redirect("country:country")
+                return redirect("companies:company" country_slug=country_slug)
 
             # 4. User allowed
             return view_func(request, *args, **kwargs)
