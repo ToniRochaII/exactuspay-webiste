@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Company, Employee
+from country.models import Country
 from .forms import EmployeeForm
 from utils.decorators import role_required
 
@@ -11,14 +12,17 @@ from utils.decorators import role_required
 
 @login_required
 @role_required("ADMIN","EXEC")
-def employee_list(request, company_id):
+def employee_list(request, pk,company_id):
+    country = get_object_or_404(Country, pk=pk)
     company = get_object_or_404(Company, pk=company_id)
     employees = Employee.objects.filter(company=company).order_by("employee_id")
     return render(
         request,
         "employee/list.html",
-        {"company": company, 
-         "employees": employees,
+        {
+            "company": company, 
+            "employees": employees,
+            "country": country,
         },
     )
 
