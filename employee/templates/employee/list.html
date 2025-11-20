@@ -64,7 +64,7 @@
               <td>{{ employee.department|default:"—" }}</td>
               <td>
                 <div class="d-flex gap-2">
-                  <a href="{% url 'employee:employee_edit' company.company_id employee.id %}" class="btn btn-primary">
+                  <a href="{% url 'employee:employee_edit' country_slug company.company_id employee.id %}" class="btn btn-primary">
                     <i class="bi bi-pencil"></i>Enter
                   </a>
                 </div>
