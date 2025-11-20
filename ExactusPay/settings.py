@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'elements.apps.ElementsConfig',
     'calculationbase.apps.CalculationbaseConfig',
     'employee',
+    'utils',  
 ]
 
 # ❗ FIXED TYPO HERE: MIDDLEWARE, not MMIDDLEWARE
