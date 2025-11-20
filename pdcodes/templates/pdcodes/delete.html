@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Delete Element | ExactusPay{% endblock %}
+{% block page_title %}Delete Element{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'company:company' country_slug %}">companies</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'pdcodes:pdcodes' company.company_id %}">Elements — {{ company.trade_name }}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Delete Element</li>
+  </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">
+      <i class="bi bi-exclamation-triangle"></i> Delete Element
+    </h5>
+  </div>
+
+  <div class="card-body">
+    <p class="lead">
+      Are you sure you want to permanently delete this pdcode from
+      <strong>{{ company.trade_name }}</strong>?
+    </p>
+
+    <div class="border rounded p-3 bg-light mb-4">
+      <div class="row g-2">
+        <div class="col-md-4">
+          <p class="mb-1"><strong>Code:</strong></p>
+          <p class="text-muted">{{ pdcode.pdcode_code|default:"—" }}</p>
+        </div>
+        <div class="col-md-4">
+          <p class="mb-1"><strong>Name:</strong></p>
+          <p class="text-muted">{{ pdcode.pdcode_name }}</p>
+        </div>
+        <div class="col-md-4">
+          <p class="mb-1"><strong>Description:</strong></p>
+          <p class="text-muted">{{ pdcode.pdcode_description|default:"—" }}</p>
+        </div>
+      </div>
+      <div class="row g-2 mt-2">
+        <div class="col-md-6">
+          <p class="mb-1"><strong>Category:</strong></p>
+          <p class="text-muted">{{ pdcode.pdcode_category|default:"—" }}</p>
+        </div>
+        <div class="col-md-6">
+          <p class="mb-1"><strong>Status:</strong></p>
+          <p class="text-muted">{{ pdcode.pdcode_status|default:"—" }}</p>
+        </div>
+      </div>
+    </div>
+
+    <form method="post" class="text-end">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger">
+        <i class="bi bi-trash"></i> Confirm Delete
+      </button>
+      <a href="{% url 'pdcodes:pdcodes' company.company_id %}" class="btn btn-primary ms-2">
+        <i class="bi bi-x-circle"></i> Cancel
+      </a>
+    </form>
+  </div>
+</div>
+{% endblock %}

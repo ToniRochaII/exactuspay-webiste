@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Add Element — {{ company.name }} | ExactusPay{% endblock %}
+{% block page_title %}Add Element{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'company:company' country_slug%}">companies</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'pdcodes:pdcodes' company.company_id %}">Elements — {{ company.name }}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Add Element</li>
+  </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">
+      <i class="bi bi-plus-circle"></i> Add New Element — {{ company.name }}
+    </h5>
+  </div>
+
+  <div class="card-body">
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="post" class="needs-validation" novalidate>
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+
+      <!-- ─────────── Element Details ─────────── -->
+      <h6 class="fw-bold border-bottom pb-2 mb-3 text-secondary">Element Details</h6>
+      <div class="row mb-3">
+        <div class="col-md-4">{{ form.element_code.label_tag }} {{ form.element_code }}</div>
+        <div class="col-md-4">{{ form.element_name.label_tag }} {{ form.element_name }}</div>
+        <div class="col-md-4">{{ form.element_description.label_tag }} {{ form.element_description }}</div>
+      </div>
+
+      <!-- ─────────── Classification ─────────── -->
+      <h6 class="fw-bold border-bottom pb-2 mb-3 text-secondary">Classification</h6>
+      <div class="row mb-3">
+        <div class="col-md-3">{{ form.element_status.label_tag }} {{ form.element_status }}</div>
+        <div class="col-md-3">{{ form.element_frequency.label_tag }} {{ form.element_frequency }}</div>
+        <div class="col-md-3">{{ form.element_type.label_tag }} {{ form.element_type }}</div>
+        <div class="col-md-3">{{ form.element_class.label_tag }} {{ form.element_class }}</div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-4">{{ form.element_category.label_tag }} {{ form.element_category }}</div>
+        <div class="col-md-4">{{ form.element_categorytype.label_tag }} {{ form.element_categorytype }}</div>
+      </div>
+
+      <!-- ─────────── Accounting ─────────── -->
+      <h6 class="fw-bold border-bottom pb-2 mb-3 text-secondary">Accounting</h6>
+      <div class="row mb-3">
+        <div class="col-md-4">{{ form.element_account.label_tag }} {{ form.element_account }}</div>
+        <div class="col-md-4">{{ form.element_map_code.label_tag }} {{ form.element_map_code }}</div>
+        <div class="col-md-4">{{ form.element_gl_account.label_tag }} {{ form.element_gl_account }}</div>
+      </div>
+
+      <!-- ─────────── Flags ─────────── -->
+      <h6 class="fw-bold border-bottom pb-2 mb-3 text-secondary">Taxation</h6>
+      <div class="row mb-3">
+        <div class="col-md-2">{{ form.element_taxable.label_tag }} {{ form.element_taxable }}</div>
+        <div class="col-md-2">{{ form.element_tax_flat.label_tag }} {{ form.element_tax_flat }}</div>
+        <div class="col-md-2">{{ form.element_tax_irregular.label_tag }} {{ form.element_tax_irregular }}</div>
+        <div class="col-md-2">{{ form.element_social_securitable.label_tag }} {{ form.element_social_securitable }}</div>
+        <div class="col-md-2">{{ form.element_pensionable.label_tag }} {{ form.element_pensionable }}</div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-2">{{ form.element_payable.label_tag }} {{ form.element_payable }}</div>
+        <div class="col-md-2">{{ form.element_calculate.label_tag }} {{ form.element_calculate }}</div>
+      </div>
+
+      <!-- ─────────── Buttons ─────────── -->
+      <div class="text-end mt-4">
+        <button type="submit" class="btn btn-primary">
+          <i class="bi bi-save"></i> Save
+        </button>
+        <a href="" class="btn btn-danger ms-2">
+          <i class="bi bi-x-circle"></i> Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
