@@ -16,9 +16,9 @@ Add Employee — {{ company.trade_name }} | ExactusPay
 {% block breadcrumbs %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'home' %}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'company' country.id %}">Companies</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'employee_list' country.id company.company_id %}">Employees — {{ company.trade_name }}</a></li>
+    <li class="breadcrumb-item"><a href="">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'company:company' country.id %}">Companies</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'employee:employee_list' country_slug company.company_id %}">Employees — {{ company.trade_name }}</a></li>
     <li class="breadcrumb-item active" aria-current="page">{% if employee %}Edit Employee{% else %}Add Employee{% endif %}</li>
   </ol>
 </nav>
@@ -165,7 +165,7 @@ Add Employee — {{ company.trade_name }} | ExactusPay
         <button type="submit" class="btn btn-primary">
           <i class="bi bi-save"></i> Save
         </button>
-        <a href="{% url 'employee_list' country.id company.company_id %}" class="btn btn-danger ms-2">
+        <a href="{% url 'employee:employee_list' country_slug company.company_id %}" class="btn btn-danger ms-2">
           <i class="bi bi-x-circle"></i> Cancel
         </a>
       </div>
