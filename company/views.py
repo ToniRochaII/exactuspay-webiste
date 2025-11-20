@@ -26,7 +26,7 @@ def is_admin(user):
 
 
 @login_required
-@role_required("ADMIN", "EXEC")
+@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE")
 def company(request, country_slug):
     country = get_object_or_404(Country, slug=country_slug)
     companies = Company.objects.filter(country=country).order_by("trade_name")
@@ -34,7 +34,7 @@ def company(request, country_slug):
 
 
 @login_required
-@role_required("ADMIN", "EXEC")
+@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE")
 def company_create(request, country_slug):
     country = get_object_or_404(Country, slug=country_slug)
 
@@ -59,7 +59,7 @@ def company_create(request, country_slug):
 
 
 @login_required
-@role_required("ADMIN", "EXEC")
+@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE")
 def company_edit(request, country_slug, company_id):
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, company_id=company_id, country=country)
@@ -76,7 +76,7 @@ def company_edit(request, country_slug, company_id):
 
 
 @login_required
-@role_required("ADMIN", "EXEC")
+@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE")
 def company_delete(request, country_slug):
     country = get_object_or_404(Country, slug=country_slug)
     companies = Company.objects.filter(country=country).order_by("trade_name")

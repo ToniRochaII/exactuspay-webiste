@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from .utils.decorators import role_required
 from .models import Country, Element
 from .forms import ElementForm
 
@@ -9,6 +10,7 @@ from .forms import ElementForm
 # LIST ELEMENTS
 # ────────────────────────────────────────────────────────────────
 @login_required
+@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
 def element(request, country_slug):
     """
     List all elements for a specific country.
@@ -25,6 +27,7 @@ def element(request, country_slug):
 # CREATE ELEMENT
 # ────────────────────────────────────────────────────────────────
 @login_required
+@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
 def element_create(request, country_slug):
     country = get_object_or_404(Country, slug=country_slug)
 
@@ -57,6 +60,7 @@ def element_create(request, country_slug):
 # EDIT ELEMENT
 # ────────────────────────────────────────────────────────────────
 @login_required
+@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
 def element_edit(request, country_slug, element_code):
     """
     Edit an existing element.
@@ -84,6 +88,7 @@ def element_edit(request, country_slug, element_code):
 # DELETE ELEMENT
 # ────────────────────────────────────────────────────────────────
 @login_required
+@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
 def element_delete(request, country_slug, element_code):
     """
     Edit an existing element.

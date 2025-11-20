@@ -2,6 +2,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from .utils.decorators import role_required
 
 from country.models import Country
 from .models import Regulations
@@ -12,6 +13,7 @@ from .forms import RegulationsForm
 # LIST REGULATIONS
 # ────────────────────────────────────────────────────────────────
 @login_required
+@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
 def regulations(request, country_slug):
     country = get_object_or_404(Country, slug=country_slug)
     regulations = Regulations.objects.filter(country=country).order_by("-effective_date")
@@ -26,6 +28,7 @@ def regulations(request, country_slug):
 # CREATE REGULATION
 # ────────────────────────────────────────────────────────────────
 @login_required
+@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
 def regulations_create(request, country_slug):
     """
     Create a new regulation for a specific country.
@@ -57,6 +60,7 @@ def regulations_create(request, country_slug):
 # EDIT REGULATION
 # ────────────────────────────────────────────────────────────────
 @login_required
+@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
 def regulations_edit(request, country_slug, regulations_id):
     country = get_object_or_404(Country, slug=country_slug)
     regulations = get_object_or_404(Regulations, pk=regulations_id, country=country)
@@ -83,6 +87,7 @@ def regulations_edit(request, country_slug, regulations_id):
 # ──────────────────────
 
 @login_required
+@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
 def regulations_delete(request, country_slug, regulations_id):
 
     country = get_object_or_404(Country, slug=country_slug)

@@ -11,7 +11,7 @@ from utils.decorators import role_required
 # ────────────────────────────────────────────────
 
 @login_required
-@role_required("ADMIN","EXEC")
+@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE")
 def employee_list(request, pk,company_id):
     country = get_object_or_404(Country, pk=pk)
     company = get_object_or_404(Company, pk=company_id)
@@ -27,7 +27,7 @@ def employee_list(request, pk,company_id):
     )
 
 @login_required
-@role_required("ADMIN","EXEC")
+@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE")
 def employee_create(request,  company_id):
     company = get_object_or_404(Company, pk=company_id)
 
@@ -55,7 +55,7 @@ def employee_create(request,  company_id):
 
 
 @login_required
-@role_required("ADMIN","EXEC")
+@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE")
 def employee_edit(request, company_id, employee_id):
     company = get_object_or_404(Company, pk=company_id)
     employee = get_object_or_404(Employee, pk=employee_id, company=company)
@@ -71,7 +71,7 @@ def employee_edit(request, company_id, employee_id):
 
 
 @login_required
-@role_required("ADMIN","EXEC")
+@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE")
 def employee_delete(request, pk, company_id, employee_id):
     company = get_object_or_404(Company, pk=company_id)
     employee = get_object_or_404(Employee, pk=employee_id, company=company)
