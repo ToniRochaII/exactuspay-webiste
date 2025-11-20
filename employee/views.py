@@ -4,7 +4,7 @@ from django.contrib import messages
 from .models import Company, Employee
 from country.models import Country
 from .forms import EmployeeForm
-from utils.decorators import role_required
+from .utils.decorators import role_required
 
 # ────────────────────────────────────────────────
 # EMPLOYEE CRUD

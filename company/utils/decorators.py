@@ -24,7 +24,7 @@ def role_required(*allowed_roles):
                 if country_slug:
                     return redirect("companies:company", country_slug=country_slug)
 
-                return redirect("country:country")
+                return redirect("dashboard")
 
             return view_func(request, *args, **kwargs)
 

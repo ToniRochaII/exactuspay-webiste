@@ -17,12 +17,10 @@ from django.views.decorators.http import require_http_methods
 
 from .forms import UserEditForm, UserRegistrationForm, LoginForm, UserProfileForm
 from .models import (
-    PermissionBulkUpdate,
     RoleHierarchy,
     User,
     PermissionMatrix,
     RoleTemplate,
-    CustomRole,
 )
 from .utils.permissions import has_permission
 from .utils.role_hierarchy import promote_role, demote_role
