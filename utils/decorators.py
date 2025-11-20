@@ -12,7 +12,7 @@ def role_required(*roles):
         def wrapper(request, *args, **kwargs):
             if not hasattr(request.user, "profile") or request.user.profile.role not in roles:
                 messages.error(request, "Access denied — insufficient permissions.")
-                return redirect("home")
+                return redirect("country:country")
             return view_func(request, *args, **kwargs)
         return wrapper
     return decorator
