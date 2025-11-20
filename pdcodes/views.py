@@ -4,7 +4,7 @@ from django.contrib import messages
 from utils.decorators import role_required
 from .models import Company, PDcode
 from country.models import Country
-from forms import PDcodeForm
+from .forms import PDcodeForm
 
 
 # ────────────────────────────────────────────────────────────────
