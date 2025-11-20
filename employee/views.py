@@ -12,8 +12,8 @@ from .utils.decorators import role_required
 
 @login_required
 @role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE")
-def employee_list(request, pk,company_id):
-    country = get_object_or_404(Country, pk=pk)
+def employee_list(request, country_slug,company_id):
+    country = get_object_or_404(Country, country_slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
     employees = Employee.objects.filter(company=company).order_by("employee_id")
     return render(
@@ -23,6 +23,7 @@ def employee_list(request, pk,company_id):
             "company": company, 
             "employees": employees,
             "country": country,
+            "country_slug": country_slug,
         },
     )
 
