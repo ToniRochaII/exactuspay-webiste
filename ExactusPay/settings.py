@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'calculationbase.apps.CalculationbaseConfig',
     'employee',
     'utils',  
+    'pdcodes',  
 ]
 
 MIDDLEWARE = [

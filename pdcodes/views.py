@@ -19,7 +19,7 @@ def pdcode(request, country_slug,company_id):
     return render(
         request,
         "pdcodes/index.html",
-        {"company": company, "pdcodes": pdcodes, "company_id":company_id, "country":country, "country_slug":country_slug},
+        {"company": company, "pdcodes": pdcodes, "country":country, "country_slug":country_slug},
     )
 
 # ────────────────────────────────────────────────────────────────
