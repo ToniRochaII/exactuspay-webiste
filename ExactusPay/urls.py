@@ -26,5 +26,6 @@ urlpatterns = [
     path('',include('regulations.urls')),
     path('',include('elements.urls')),
     path('',include('calculationbase.urls')),
+    path('',include('employee.urls')),
     
 ]
