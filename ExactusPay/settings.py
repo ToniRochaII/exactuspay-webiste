@@ -104,6 +104,7 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # Database configuration
 if "DATABASE_URL" in os.environ:
+    # Use Render's DATABASE_URL environment variable
     DATABASES = {
         "default": dj_database_url.config(
             default=os.environ["DATABASE_URL"],
@@ -112,14 +113,19 @@ if "DATABASE_URL" in os.environ:
             ssl_require=True,
         )
     }
-    
-    # Ensure we're using PostgreSQL engine
-    DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql'
 else:
+    # Fallback for local development
     DATABASES = {
         "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / 'db.sqlite3'
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": "exactuspay_db",
+            "USER": "exactuspay_db_user",
+            "PASSWORD": "PhjN7vTmTch7tOLtvYtgqVUJO2xcbRly",
+            "HOST": "dpg-d4fjqrumcj7s73apke3g-a.oregon-postgres.render.com",
+            "PORT": "5432",
+            "OPTIONS": {
+                'sslmode': 'require',
+            }
         }
     }
 
