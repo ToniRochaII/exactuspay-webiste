@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Company, Employee
 from .forms import EmployeeForm
-from ..utils.decorators import role_required
+from utils.decorators import role_required
 
 # ────────────────────────────────────────────────
 # EMPLOYEE CRUD
