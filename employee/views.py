@@ -40,7 +40,7 @@ def employee_create(request, country_slug,company_id):
             employee.company = company
             employee.save()
             messages.success(request, f"Employee '{employee.employee_name} {employee.employee_surname}' added successfully.")
-            return redirect("employee", slug=country_slug, company_id=company.pk)
+            return redirect('employee:employee', slug=country_slug, company_id=company.pk)
     else:
         form = EmployeeForm()
 
@@ -69,7 +69,7 @@ def employee_edit(request, country_slug, company_id, employee_id):
         if form.is_valid():
             form.save()
             messages.success(request, f"Employee '{employee.employee_name} {employee.employee_surname}' updated successfully.")
-            return redirect('employee:employee', slug=country_slug, company_id=company_id)
+            return redirect('employee:employee', slug=country_slug, company_id=company.company_id)
     else:
         form = EmployeeForm(instance=employee)
     return render(request, "employee/edit.html", {"form": form, "company": company, "employee": employee, "country": country, "country_slug":country_slug})
