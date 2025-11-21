@@ -28,5 +28,6 @@ urlpatterns = [
     path('',include('calculationbase.urls')),
     path('',include('employee.urls')),
     path('',include('pdcodes.urls')),
+    path('payregister/', include('payregister.urls')),
     
 ]

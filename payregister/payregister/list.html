@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load payregister_role_filters %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2 class="mb-3">
+        Pay Register — {{ employee.first_name }} {{ employee.last_name }}
+    </h2>
+
+    <div class="mb-3">
+        <a href="{% url 'payregister_create' employee.id %}" class="btn btn-primary">
+            + Add Entry
+        </a>
+    </div>
+
+    {% if entries %}
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>Code</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Start</th>
+                    <th>End</th>
+                    <th>Entry Date</th>
+                    <th>Created</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in entries %}
+                    <tr>
+                        <td>{{ item.pd_code.code }}</td>
+                        <td>{{ item.pd_code.description }}</td>
+                        <td>{{ item.get_category_display }}</td>
+                        <td>{{ item.amount }}</td>
+
+                        <td>{{ item.start_date|default:"-" }}</td>
+                        <td>{{ item.end_date|default:"-" }}</td>
+                        <td>{{ item.entry_date|default:"-" }}</td>
+
+                        <td>{{ item.created_at|date:"Y-m-d H:i" }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info">
+            No pay register entries found for this employee.
+        </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}
