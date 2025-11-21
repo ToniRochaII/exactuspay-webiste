@@ -1,44 +1,146 @@
-from django import forms
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+
+from utils.decorators import role_required
 from .models import PDcode
+from company.models import Company
+from country.models import Country
+from .forms import PDcodeForm
 
 
-class PDcodeForm(forms.ModelForm):
-    """
-    Form for creating/updating PD codes.
-    - Excludes company (set in the view)
-    - Validates that pdcode_code is unique per company
-    """
+# ─────────────────────────────────────────
+# LIST
+# ─────────────────────────────────────────
+@login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION", "OPERATION")
+def pdcode_list(request, country_slug, company_id):
+    country = get_object_or_404(Country, slug=country_slug)
+    company = get_object_or_404(Company, company_id=company_id)
+    pdcodes = PDcode.objects.filter(company=company).order_by("pdcode_code")
 
-    def __init__(self, *args, **kwargs):
-        self.company = kwargs.pop("company", None)
-        super().__init__(*args, **kwargs)
+    return render(
+        request,
+        "pdcodes/index.html",
+        {
+            "country": country,
+            "country_slug": country_slug,
+            "company": company,
+            "company_id": company_id,
+            "pdcodes": pdcodes,
+        },
+    )
 
-    class Meta:
-        model = PDcode
-        exclude = ["company", "slug"]
-        widgets = {
-            "pdcode_status": forms.Select(attrs={"class": "form-select"}),
-            "pdcode_frequency": forms.Select(attrs={"class": "form-select"}),
-            "pdcode_type": forms.Select(attrs={"class": "form-select"}),
-            "pdcode_class": forms.Select(attrs={"class": "form-select"}),
-            "pdcode_category": forms.Select(attrs={"class": "form-select"}),
-            "pdcode_categorytype": forms.Select(attrs={"class": "form-select"}),
-        }
 
-    def clean_pdcode_code(self):
-        code = self.cleaned_data.get("pdcode_code")
+# ─────────────────────────────────────────
+# CREATE
+# ─────────────────────────────────────────
+@login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION", "OPERATION")
+def pdcode_create(request, country_slug, company_id):
+    country = get_object_or_404(Country, slug=country_slug)
+    company = get_object_or_404(Company, company_id=company_id)
 
-        # No company passed → skip custom validation (shouldn't happen in our views)
-        if not self.company or not code:
-            return code
+    if request.method == "POST":
+        form = PDcodeForm(request.POST, company=company)
+        if form.is_valid():
+            pdcode = form.save(commit=False)
+            pdcode.company = company
+            pdcode.save()
 
-        qs = PDcode.objects.filter(company=self.company, pdcode_code=code)
-        if self.instance.pk:
-            qs = qs.exclude(pk=self.instance.pk)
-
-        if qs.exists():
-            raise forms.ValidationError(
-                "This PD Code already exists for this company."
+            messages.success(
+                request,
+                f"PDcode '{pdcode.pdcode_code} – {pdcode.pdcode_name}' created successfully.",
             )
+            return redirect(
+                "pdcodes:pdcodes",
+                country_slug=country_slug,
+                company_id=company_id,
+            )
+    else:
+        form = PDcodeForm(company=company)
 
-        return code
+    return render(
+        request,
+        "pdcodes/create.html",
+        {
+            "country": country,
+            "country_slug": country_slug,
+            "company": company,
+            "company_id": company_id,
+            "form": form,
+        },
+    )
+
+
+# ─────────────────────────────────────────
+# EDIT
+# ─────────────────────────────────────────
+@login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION", "OPERATION")
+def pdcode_edit(request, country_slug, company_id, pdcode_code):
+    country = get_object_or_404(Country, slug=country_slug)
+    company = get_object_or_404(Company, company_id=company_id)
+    pdcode = get_object_or_404(PDcode, company=company, pdcode_code=pdcode_code)
+
+    if request.method == "POST":
+        form = PDcodeForm(request.POST, instance=pdcode, company=company)
+        if form.is_valid():
+            pdcode = form.save()
+            messages.success(
+                request,
+                f"PDcode '{pdcode.pdcode_code} | {pdcode.pdcode_name}' updated successfully.",
+            )
+            return redirect(
+                "pdcodes:pdcodes",
+                country_slug=country_slug,
+                company_id=company_id,
+            )
+    else:
+        form = PDcodeForm(instance=pdcode, company=company)
+
+    return render(
+        request,
+        "pdcodes/edit.html",
+        {
+            "country": country,
+            "country_slug": country_slug,
+            "company": company,
+            "company_id": company_id,
+            "pdcode": pdcode,
+            "form": form,
+        },
+    )
+
+
+# ─────────────────────────────────────────
+# DELETE
+# ─────────────────────────────────────────
+@login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION", "OPERATION")
+def pdcode_delete(request, country_slug, company_id, pdcode_code):
+    country = get_object_or_404(Country, slug=country_slug)
+    company = get_object_or_404(Company, company_id=company_id)
+    pdcode = get_object_or_404(PDcode, company=company, pdcode_code=pdcode_code)
+
+    if request.method == "POST":
+        name = f"{pdcode.pdcode_code} – {pdcode.pdcode_name}"
+        pdcode.delete()
+        messages.success(request, f"PDcode '{name}' deleted successfully.")
+        return redirect(
+            "pdcodes:pdcodes",
+            country_slug=country_slug,
+            company_id=company_id,
+        )
+
+    return render(
+        request,
+        "pdcodes/delete.html",
+        {
+            "country": country,
+            "country_slug": country_slug,
+            "company": company,
+            "company_id": company_id,
+            "pdcode": pdcode,
+        },
+    )
