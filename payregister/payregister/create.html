@@ -16,7 +16,31 @@
 
     <div class="card shadow-sm">
         <div class="card-body">
+            <p> 
+                {% if user|has_role:"EXEC" %}
+                <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a>
+                {% endif %}
+                {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
+                <a href="{% url 'dashboard' %}">Dashboard</a> 
+                <a href="{% url 'user_list' %}"">Accounts</a>
+                <a href="{% url 'role_management' %}"">Role Management</a>
+                <a href="{% url 'regulations:regulations' country_slug %}"">Regulations</a>
+                <a href="{% url 'country:country' %}">Countries</a>
+                <a href="{% url 'country:country_create' %}"> Add Country</a>
+                <a href="{% url 'elements:elements' country_slug %}"">Elements</a>
+                <a href="{% url 'elements:elements_create' country_slug %}"">Add Elements</a>
+                {% endif %}
+                ||||
+                {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
+                <a href="{% url 'profile' %}"">Profile</a>
+                <a href="{% url 'companies:company' country_slug %}"">Elements</a>
+                <a href="{% url 'employee:employee' country_slug company.company_id %}">Employees</a>
+                <a href="{% url 'pdcodes:pdcodes' country_slug company.company_id %}">P&D Code</a>
+                <a href="{% url 'payregister_list' employee.id %}" class="btn btn-primary">Pay Register</a>
+                {% endif %}
 
+                <a href="{% url 'password_reset' %}">Reset password</a>
+            </p>
             <form method="POST">
                 {% csrf_token %}
                 {{ form|crispy }}
