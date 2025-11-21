@@ -10,7 +10,7 @@
         Add Pay Register Entry — {{ employee.first_name }} {{ employee.last_name }}
     </h2>
 
-    <a href="{% url 'payregister_list' employee.id %}" class="btn btn-secondary mb-3">
+    <a href="{% url 'payregister:payregister_list' country_slug company.company_id employee.employee_id %}" class="btn btn-secondary mb-3">
         ← Back to Pay Register
     </a>
 

@@ -10,7 +10,7 @@
     </h2>
 
     <div class="mb-3">
-        <a href="{% url 'payregister_create' employee.id %}" class="btn btn-primary">
+        <a href="{% url 'payregister:payregister_create' country_slug company.company_id employee.employee_id %}" class="btn btn-primary">
             + Add Entry
         </a>
     </div>
