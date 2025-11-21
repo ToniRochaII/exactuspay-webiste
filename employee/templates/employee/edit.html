@@ -51,6 +51,7 @@ Add Employee — {{ company.trade_name }} | ExactusPay
         <a href="{% url 'regulations:regulations' country_slug %}"">Regulations</a>
         <a href="{% url 'elements:elements' country_slug %}"">elements</a>
         {% endif %}
+        ||||
         {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
         <a href="{% url 'profile' %}"">Profile</a>
         <a href="{% url 'country:country' %}">Countries</a>
