@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from employee.models import Employee
-from pdcodes.models import PDCode
+from pdcodes.models import PDcode
 
 User = get_user_model()
 
@@ -14,7 +14,7 @@ class PayRegister(models.Model):
     ]
 
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='payregister_entries')
-    pd_code = models.ForeignKey(PDCode, on_delete=models.PROTECT)
+    pd_code = models.ForeignKey(PDcode, on_delete=models.PROTECT)
 
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES)
 
