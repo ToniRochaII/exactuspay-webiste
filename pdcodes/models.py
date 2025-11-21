@@ -71,7 +71,7 @@ class PDcode(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            base = f"{self.company.id}-{self.pdcode_code or self.pdcode_name}"
+            base = f"{self.company.company_id}-{self.pdcode_code or self.pdcode_name}"
             self.slug = slugify(base)
         super().save(*args, **kwargs)
 
