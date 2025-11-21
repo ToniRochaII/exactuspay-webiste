@@ -5,10 +5,10 @@ from payregister.forms import PayRegisterForm
 from company.models import  Company
 from country.models import Country
 
-def list_entries(request, country_slug, company_id, employee_id):
+def list_entries(request, country_slug, company_id, id):
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
-    employee = get_object_or_404(Employee, id=employee_id)
+    employee = get_object_or_404(Employee, id=id)
     entries = employee.payregister_entries.all()
     return render(request, 'payregister/list.html', {
         'employee': employee,
@@ -19,10 +19,10 @@ def list_entries(request, country_slug, company_id, employee_id):
         
     })
 
-def create_entry(request, country_slug, company_id, employee_id):
+def create_entry(request, country_slug, company_id,id):
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
-    employee = get_object_or_404(Employee, id=employee_id)
+    employee = get_object_or_404(Employee, id=id)
 
     if request.method == 'POST':
         form = PayRegisterForm(request.POST)

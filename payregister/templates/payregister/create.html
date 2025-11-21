@@ -10,7 +10,7 @@
         Add Pay Register Entry — {{ employee.first_name }} {{ employee.last_name }}
     </h2>
 
-    <a href="{% url 'payregister:payregister_list' country_slug company.company_id employee.employee_id %}" class="btn btn-secondary mb-3">
+    <a href="{% url 'payregister:payregister_list' country_slug company.company_id employee.id %}" class="btn btn-secondary mb-3">
         ← Back to Pay Register
     </a>
 
@@ -36,7 +36,7 @@
                 <a href="{% url 'companies:company' country_slug %}"">Elements</a>
                 <a href="{% url 'employee:employee' country_slug company.company_id %}">Employees</a>
                 <a href="{% url 'pdcodes:pdcodes' country_slug company.company_id %}">P&D Code</a>
-                <a href="{% url 'payregister:payregister_list' country_slug company.company_id employee.employee_id %}" class="btn btn-primary">Pay Register</a>
+                <a href="{% url 'payregister:payregister_list' country_slug company.company_id employee.id %}" class="btn btn-primary">Pay Register</a>
                 {% endif %}
 
                 <a href="{% url 'password_reset' %}">Reset password</a>
