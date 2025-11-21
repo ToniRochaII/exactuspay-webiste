@@ -31,7 +31,7 @@ def create_entry(request, country_slug, company_id,id):
             obj.employee = employee
             obj.created_by = request.user
             obj.save()
-            return redirect('payregister:payregister_list', country_slug=country_slug, company_id=company.company_id, employee_id=employee.employee_id)
+            return redirect('payregister:payregister_list', country_slug=country_slug, company_id=company.company_id, id=id)
     else:
         form = PayRegisterForm()
 
