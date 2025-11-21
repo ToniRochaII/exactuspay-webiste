@@ -18,7 +18,27 @@
     <h5 class="mb-0">Regulations</h5>
   </div>
 
-  <div class="card-body">
+  <div class="card-body">      <p> 
+        {% if user|has_role:"EXEC" %}
+        ||||
+        <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a> 
+        {% endif %}
+        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
+        <a href="{% url 'dashboard' %}">Dashboard</a> 
+        <a href="{% url 'user_list' %}"">Accounts</a>
+        <a href="{% url 'role_management' %}"">Role Management</a>
+        <a href="{% url 'regulations:regulations' country_slug %}"">Regulations</a>
+        <a href="{% url 'elements:elements' country_slug %}"">elements</a>
+        {% endif %}
+        ||||
+        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
+        <a href="{% url 'profile' %}"">Profile</a>
+        <a href="{% url 'country:country' %}">Countries</a>
+        <a href="{% url 'companies:company' country_slug %}">Companies</a>
+        {% endif %}
+
+        <a href="{% url 'password_reset' %}">Reset password</a>
+      </p>
     {% if regulations %}
       <!-- Search and Show entries controls -->
       <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
