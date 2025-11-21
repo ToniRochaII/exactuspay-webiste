@@ -38,7 +38,7 @@
       <a href="{% url 'profile' %}"">Profile</a>
       <a href="{% url 'user_detail' user.id %}"> User Details</a>
       <a href="{% url 'country:country' %}">Countries</a>
-      <a href="{% url 'companies:company' country_slug %}">Countries</a>
+      <a href="{% url 'companies:company' country_slug %}">Companies</a>
       {% endif %}
 
       <a href="{% url 'password_reset' %}">Reset password</a>

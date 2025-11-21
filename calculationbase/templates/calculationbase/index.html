@@ -13,24 +13,24 @@
     </div>
 
     <div class="card-body">
-      <p> 
-        {% if user|has_role:"EXEC" %}
-        <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a> 
-        {% endif %}
-        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
-        <a href="{% url 'dashboard' %}">Dashboard</a> 
-        <a href="{% url 'user_list' %}"">Accounts</a>
-        <a href="{% url 'role_management' %}"">Role Management</a>
-        {% endif %}
-        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
-        <a href="{% url 'profile' %}"">Profile</a>
-        <a href="{% url 'user_detail' user.id %}"> User Details</a>
-        <a href="{% url 'country:country' %}">Countries</a>
-        <a href="{% url 'companies:company' country_slug %}">Countries</a>
-        {% endif %}
+    <p> 
+      {% if user|has_role:"EXEC" %}
+      <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a> 
+      {% endif %}
+      {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
+      <a href="{% url 'dashboard' %}">Dashboard</a> 
+      <a href="{% url 'user_list' %}"">Accounts</a>
+      <a href="{% url 'role_management' %}"">Role Management</a>
+      {% endif %}
+      {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
+      <a href="{% url 'profile' %}"">Profile</a>
+      <a href="{% url 'user_detail' user.id %}"> User Details</a>
+      <a href="{% url 'country:country' %}">Countries</a>
+      <a href="{% url 'companies:company' country_slug %}">Companies</a>
+      {% endif %}
 
-        <a href="{% url 'password_reset' %}">Reset password</a>
-      </p>
+      <a href="{% url 'password_reset' %}">Reset password</a>
+    </p>
       {% if bases %}
       <div class="table-responsive">
         <table class="table table-striped align-middle">
