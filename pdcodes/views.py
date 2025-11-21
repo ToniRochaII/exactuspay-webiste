@@ -43,7 +43,11 @@ def pdcode_create(request, country_slug,company_id):
             request,
             f"PDcode '{pdcode.pdcode_code} – {pdcode.pdcode_name}' created successfully."
         )
-        return redirect("pdcodes:pdcodes", company_id=company.company_id)
+        return redirect(
+            "pdcodes:pdcodes",
+            country_slug=country_slug,
+            company_id=company_id
+        )
 
     return render(
         request,
@@ -74,7 +78,11 @@ def pdcode_edit(request, country_slug, company_id, pdcode_code):
         if form.is_valid():
             form.save()
             messages.success(request, f"PDcode '{pdcode.pdcode_code} | {pdcode.pdcode_name}' updated successfully.")
-            return redirect("pdcodes:pdcodes", company_id=company.company_id)
+            return redirect(
+                "pdcodes:pdcodes",
+                country_slug=country_slug,
+                company_id=company_id
+            )
     else:
         form = PDcodeForm(instance=pdcode)
 
@@ -99,7 +107,11 @@ def pdcode_delete(request, country_slug, company_id, pdcode_code):
         name = pdcode.pdcode_name
         pdcode.delete()
         messages.success(request, f"PDcode '{pdcode_code}' deleted successfully.")
-        return redirect("pdcodes:pdcodes", company_id=company.company_id)
+        return redirect(
+            "pdcodes:pdcodes",
+            country_slug=country_slug,
+            company_id=company_id
+        )
 
     return render(
         request,
