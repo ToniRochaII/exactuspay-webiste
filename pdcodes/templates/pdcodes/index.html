@@ -63,10 +63,10 @@
                 <td>{{ e.pdcode_status }}</td>
                 <td>
                   <div class="d-flex gap-2">
-                    <a href="{% url 'pdcodes:pdcode_edit' country_slug e.pdcode_code %}" class="btn btn-primary">
+                    <a href="{% url 'pdcodes:pdcode_edit' country_slug company.comapny_id e.pdcode_code %}" class="btn btn-primary">
                       <i class="bi bi-pencil"></i> Edit
                     </a>
-                    <a href="{% url 'pdcodes:pdcode_delete' country_slug e.pdcode_code %}" class="btn btn-danger">
+                    <a href="{% url 'pdcodes:pdcode_delete' country_slug company.comapny_id e.pdcode_code %}" class="btn btn-danger">
                       <i class="bi bi-trash"></i> Delete
                     </a>
                   </div>
