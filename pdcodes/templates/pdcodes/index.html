@@ -6,43 +6,33 @@
 {% block breadcrumbs %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url '' %}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'company:company' country_slug %}">Countries</a></li>
-    <li class="breadcrumb-item active" aria-current="page">PDcodes — {{ company.trade_name }}</li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'dashboard' %}">Dashboard</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'company' country_slug %}">{{ country.name }} companies</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      PDcodes — {{ company.trade_name }}
+    </li>
   </ol>
 </nav>
 {% endblock %}
 
 {% block content %}
 <div class="card shadow-sm">
-  <div class="card-header d-flex justify-content-between align-items-center">
-    <h5 class="mb-0">PDcodes for {{ company.trade_name }}</h5>
-  </div>
-
   <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="mb-0">Payroll & Deduction Codes</h5>
+      <a href="{% url 'pdcodes:pdcode_create' country_slug company_id %}"
+         class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Add PDcode
+      </a>
+    </div>
+
     {% if pdcodes %}
-      <!-- Show entries & Search controls -->
-      <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-        <div class="d-flex align-items-center gap-2">
-          <label for="entries" class="form-label mb-0">Show</label>
-          <select id="entries" class="form-select form-select-sm w-auto">
-            <option value="10" selected>10</option>
-            <option value="25">25</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-          </select>
-          <span>entries</span>
-        </div>
-
-        <div class="d-flex align-items-center">
-          <label for="searchBox" class="form-label mb-0 me-2">Search:</label>
-          <input type="text" id="searchBox" class="form-control form-control-sm" placeholder="Search pdcodes..." style="max-width: 250px;">
-        </div>
-      </div>
-
-      <!-- Table -->
       <div class="table-responsive">
-        <table id="pdcodesTable" class="table table-striped align-middle">
+        <table class="table table-striped align-middle">
           <thead class="table-light">
             <tr>
               <th scope="col">Code</th>
@@ -50,7 +40,7 @@
               <th scope="col">Description</th>
               <th scope="col">Category</th>
               <th scope="col">Status</th>
-              <th scope="col">Actions</th>
+              <th scope="col" class="text-end">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -59,14 +49,16 @@
                 <td>{{ e.pdcode_code }}</td>
                 <td>{{ e.pdcode_name }}</td>
                 <td>{{ e.pdcode_description }}</td>
-                <td>{{ e.pdcode_category }}</td>
-                <td>{{ e.pdcode_status }}</td>
-                <td>
-                  <div class="d-flex gap-2">
-                    <a href="" class="btn btn-primary">
+                <td>{{ e.pdcode_category|default:"—" }}</td>
+                <td>{{ e.pdcode_status|default:"—" }}</td>
+                <td class="text-end">
+                  <div class="btn-group" role="group">
+                    <a href="{% url 'pdcodes:pdcode_edit' country_slug company_id e.pdcode_code %}"
+                       class="btn btn-sm btn-outline-primary">
                       <i class="bi bi-pencil"></i> Edit
                     </a>
-                    <a href="" class="btn btn-danger">
+                    <a href="{% url 'pdcodes:pdcode_delete' country_slug company_id e.pdcode_code %}"
+                       class="btn btn-sm btn-outline-danger">
                       <i class="bi bi-trash"></i> Delete
                     </a>
                   </div>
@@ -78,39 +70,15 @@
       </div>
     {% else %}
       <div class="text-center py-5">
-        <p class="text-muted mb-3">No pdcodes found for {{ company.trade_name }}.</p>
-        <a href="{% url 'pdcodes:pdcode_create' country_slug company.company_id %}" class="btn btn-primary">
-          <i class="bi bi-plus-circle"></i> Add your first P & D code
+        <p class="text-muted mb-3">
+          No PDcodes found for {{ company.trade_name }}.
+        </p>
+        <a href="{% url 'pdcodes:pdcode_create' country_slug company_id %}"
+           class="btn btn-primary">
+          <i class="bi bi-plus-circle"></i> Add your first PDcode
         </a>
       </div>
     {% endif %}
   </div>
 </div>
-
-
-<!-- JS for Search & Entries -->
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  const table = document.querySelector("#pdcodesTable tbody");
-  const rows = Array.from(table.querySelectorAll("tr"));
-  const searchBox = document.querySelector("#searchBox");
-  const entriesSelect = document.querySelector("#entries");
-
-  function filterTable() {
-    const term = searchBox.value.toLowerCase();
-    rows.forEach(row => {
-      row.style.display = row.textContent.toLowerCase().includes(term) ? "" : "none";
-    });
-  }
-
-  function updateEntries() {
-    const limit = parseInt(entriesSelect.value);
-    rows.forEach((row, i) => row.style.display = i < limit ? "" : "none");
-  }
-
-  searchBox.addEventListener("input", filterTable);
-  entriesSelect.addEventListener("change", updateEntries);
-  updateEntries();
-});
-</script>
 {% endblock %}

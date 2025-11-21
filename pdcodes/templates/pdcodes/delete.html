@@ -7,33 +7,36 @@
 {% block breadcrumbs %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'company:company' country_slug %}">companies</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'pdcodes:pdcodes' country_slug company.company_id %}">PDcodes — {{ company.trade_name }}</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Delete PDcode</li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'dashboard' %}">Dashboard</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'company' country_slug %}">{{ country.name }} companies</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'pdcodes:pdcodes' country_slug company_id %}">
+        PDcodes — {{ company.trade_name }}
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      Delete PDcode
+    </li>
   </ol>
 </nav>
 {% endblock %}
 
 {% block content %}
 <div class="card shadow-sm">
-  <div class="card-header d-flex justify-content-between align-items-center">
-    <h5 class="mb-0">
-      <i class="bi bi-exclamation-triangle"></i> Delete PDcode
-    </h5>
-  </div>
-
   <div class="card-body">
-    <p class="lead">
-      Are you sure you want to permanently delete this pdcode from
-      <strong>{{ company.trade_name }}</strong>?
-    </p>
+    <h5 class="mb-3 text-danger">Confirm deletion</h5>
 
-    <div class="border rounded p-3 bg-light mb-4">
+    <p>Are you sure you want to delete this PDcode?</p>
+
+    <div class="border rounded p-3 mb-4 bg-light">
       <div class="row g-2">
         <div class="col-md-4">
           <p class="mb-1"><strong>Code:</strong></p>
-          <p class="text-muted">{{ pdcode.pdcode_code|default:"—" }}</p>
+          <p class="text-muted">{{ pdcode.pdcode_code }}</p>
         </div>
         <div class="col-md-4">
           <p class="mb-1"><strong>Name:</strong></p>
@@ -61,7 +64,8 @@
       <button type="submit" class="btn btn-danger">
         <i class="bi bi-trash"></i> Confirm Delete
       </button>
-      <a href="{% url 'pdcodes:pdcodes' country_slug company.company_id %}" class="btn btn-primary ms-2">
+      <a href="{% url 'pdcodes:pdcodes' country_slug company_id %}"
+         class="btn btn-outline-secondary ms-2">
         <i class="bi bi-x-circle"></i> Cancel
       </a>
     </form>
