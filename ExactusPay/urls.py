@@ -28,6 +28,7 @@ urlpatterns = [
     path('',include('calculationbase.urls')),
     path('',include('employee.urls')),
     path('',include('pdcodes.urls')),
-    path('',include('payregister.urls')),
+    
+    path('', include(('payregister.urls', 'payregister'), namespace='payregister')),
     
 ]
