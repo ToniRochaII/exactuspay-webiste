@@ -1,3 +1,21 @@
 from django.db import models
+from country.models import Country
+from company.models import Company
+from regulations.models import Regulations
 
-# Create your models here.
+class Payroll(models.Model):
+    country = models.ForeignKey(Country, on_delete=models.CASCADE)
+    regulations = models.ForeignKey(Regulations, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+
+    FREQUENCY_CHOICES = [
+        ('Annually', 'Annually'),
+        ('Monthly', 'Monthly'),
+        ('Semi-Monthly', 'Semi-Monthly'),
+        ('Fortnightly', 'Fortnightly'),
+        ('Weekly', 'Weekly'),
+    ]
+    payroll_frequency = models.CharField(max_length=15, choices=FREQUENCY_CHOICES, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.regulations} - {self.payroll_frequency}"
