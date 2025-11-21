@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from utils.decorators import role_required
-from .models import Company, PDcode
+from .models import PDcode
+from company.models import Company
 from country.models import Country
 from .forms import PDcodeForm
 
@@ -19,7 +20,7 @@ def pdcode(request, country_slug,company_id):
     return render(
         request,
         "pdcodes/index.html",
-        {"company": company, "pdcodes": pdcodes, "country":country, "country_slug":country_slug},
+        {"company": company, "pdcodes": pdcodes,  "country":country, "country_slug":country_slug},
     )
 
 # ────────────────────────────────────────────────────────────────

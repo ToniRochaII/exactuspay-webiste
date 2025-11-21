@@ -1,6 +1,5 @@
 from django.utils.text import slugify
 from django.db import models
-from company.models import Company
 
 class PDcode(models.Model):
     company= models.ForeignKey(
