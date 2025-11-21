@@ -41,6 +41,7 @@ Add Employee — {{ company.trade_name }} | ExactusPay
 
       <p> 
         {% if user|has_role:"EXEC" %}
+        ||||
         <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a> 
         {% endif %}
         {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
@@ -54,7 +55,8 @@ Add Employee — {{ company.trade_name }} | ExactusPay
         <a href="{% url 'profile' %}"">Profile</a>
         <a href="{% url 'country:country' %}">Countries</a>
         <a href="{% url 'companies:company' country_slug %}">Companies</a>
-        <a href="{% url 'employee:employee' country_slug company.company_id %}">Companies</a>
+        <a href="{% url 'employee:employee' country_slug company.company_id %}">Employees</a>
+        <a href="{% url 'employee:employee_create' country_slug company.company_id %}">Add Employee</a>
         {% endif %}
 
         <a href="{% url 'password_reset' %}">Reset password</a>
