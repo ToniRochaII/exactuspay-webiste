@@ -31,3 +31,7 @@ class PayRegisterForm(forms.ModelForm):
                 raise forms.ValidationError("Variable entries cannot have start/end date.")
 
         return cleaned
+
+
+
+

@@ -58,3 +58,6 @@ class PayRegister(models.Model):
             return today == self.entry_date
 
         return False
+
+
+

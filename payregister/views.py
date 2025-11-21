@@ -41,3 +41,9 @@ def create_entry(request, country_slug, company_id, employee_id):
         ,'country': country
         ,'country_slug': country_slug
     })
+
+
+
+
+
+

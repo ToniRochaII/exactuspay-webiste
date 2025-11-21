@@ -10,3 +10,6 @@ urlpatterns = [
     path("<slug:country_slug>/<int:company_id>/edit/<int:employee_id>/", views.employee_edit, name="employee_edit"),
 
 ]
+
+
+

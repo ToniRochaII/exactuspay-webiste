@@ -5,12 +5,12 @@ app_name = "payregister"
 
 urlpatterns = [
     path(
-        "payregister/<int:employee_id>/",
+        "<slug:country_slug>/<int:company_id>/payregister/<int:employee_id>/",
         views.list_entries,
         name="payregister_list",
     ),
     path(
-        "payregister/<int:employee_id>/create/",
+        "<slug:country_slug>/<int:company_id>/payregister/<int:employee_id>/create/",
         views.create_entry,
         name="payregister_create",
     ),
