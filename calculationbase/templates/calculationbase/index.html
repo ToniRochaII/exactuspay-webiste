@@ -21,6 +21,8 @@
       <a href="{% url 'dashboard' %}">Dashboard</a> 
       <a href="{% url 'user_list' %}"">Accounts</a>
       <a href="{% url 'role_management' %}"">Role Management</a>
+      <a href="{% url 'regulations:regulations' country_slug %}""></a>
+      <a href="{% url 'elements:elements' country_slug %}""></a>
       {% endif %}
       {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
       <a href="{% url 'profile' %}"">Profile</a>
