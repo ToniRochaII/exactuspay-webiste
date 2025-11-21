@@ -24,6 +24,27 @@
   </div>
 
   <div class="card-body">
+      <p> 
+        {% if user|has_role:"EXEC" %}
+        <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a>
+        {% endif %}
+        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
+        <a href="{% url 'dashboard' %}">Dashboard</a> 
+        <a href="{% url 'user_list' %}"">Accounts</a>
+        <a href="{% url 'role_management' %}"">Role Management</a>
+        <a href="{% url 'regulations:regulations' country_slug %}"">Regulations</a>
+        <a href="{% url 'country:country' %}">Countries</a>
+        <a href="{% url 'country:country_create' %}"> Add Country</a>
+        <a href="{% url 'elements:elements' country_slug %}"">Elements</a>
+        <a href="{% url 'elements:elements_create' country_slug %}"">Add Elements</a>
+        {% endif %}
+        ||||
+        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
+        <a href="{% url 'profile' %}"">Profile</a>
+        {% endif %}
+
+        <a href="{% url 'password_reset' %}">Reset password</a>
+      </p>
     {% if messages %}
       {% for message in messages %}
         <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">

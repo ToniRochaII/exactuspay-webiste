@@ -16,19 +16,30 @@
 
 {% block content %}
 <div class="card">
+
+      <p> 
+        {% if user|has_role:"EXEC" %}
+        <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a>
+        {% endif %}
+        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
+        <a href="{% url 'dashboard' %}">Dashboard</a> 
+        <a href="{% url 'user_list' %}"">Accounts</a>
+        <a href="{% url 'role_management' %}"">Role Management</a>
+        <a href="{% url 'regulations:regulations' country_slug %}"">Regulations</a>
+        <a href="{% url 'country:country' %}">Countries</a>
+        <a href="{% url 'country:country_create' %}"> Add Country</a>
+        <a href="{% url 'elements:elements' country_slug %}"">elements</a>
+        {% endif %}
+        ||||
+        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
+        <a href="{% url 'profile' %}"">Profile</a>
+        {% endif %}
+
+        <a href="{% url 'password_reset' %}">Reset password</a>
+      </p>
   <div class="card-header d-flex justify-content-between align-items-center">
     <h5 class="mb-0">Countries</h5>
   </div>
-  <p> 
-    {% if user|has_role:"EXEC" %}
-    <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a> 
-    <a href="{% url 'country:country_delete' %}"">Recover Country</a>
-    {% endif %}
-    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
-    <a href="{% url 'dashboard' %}">Dashboard</a> 
-    <a href="{% url 'country:country_create' %}"">Add country</a>
-    {% endif %}
-  </p>
 
     {% if countries %}
       <div class="table-responsive">
