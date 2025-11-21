@@ -1,71 +1,91 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Add PDcode — {{ company.trade_name }} | ExactusPay{% endblock %}
+{% block title %}Add PDcode — {{ company.name }} | ExactusPay{% endblock %}
 {% block page_title %}Add PDcode{% endblock %}
 
 {% block breadcrumbs %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item">
-      <a href="{% url 'dashboard' %}">Dashboard</a>
-    </li>
-    <li class="breadcrumb-item">
-      <a href="{% url 'company' country_slug %}">{{ country.name }} companies</a>
-    </li>
-    <li class="breadcrumb-item">
-      <a href="{% url 'pdcodes:pdcodes' country_slug company_id %}">
-        PDcodes — {{ company.trade_name }}
-      </a>
-    </li>
-    <li class="breadcrumb-item active" aria-current="page">
-      Add PDcode
-    </li>
+    <li class="breadcrumb-item"><a href="">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'company:company' country_slug%}">companies</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'pdcodes:pdcodes' country_slug company.company_id %}">PDcodes — {{ company.name }}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Add PDcode</li>
   </ol>
 </nav>
 {% endblock %}
 
 {% block content %}
 <div class="card shadow-sm">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <h5 class="mb-0">
+      <i class="bi bi-plus-circle"></i> Add New PDcode — {{ company.name }}
+    </h5>
+  </div>
+
   <div class="card-body">
-    <h5 class="mb-3">New PDcode for {{ company.trade_name }}</h5>
-
-    <form method="post" novalidate>
-      {% csrf_token %}
-      {% if form.non_field_errors %}
-        <div class="alert alert-danger">
-          {{ form.non_field_errors }}
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-      {% endif %}
+      {% endfor %}
+    {% endif %}
 
-      <div class="row g-3">
-        {% for field in form %}
-          <div class="col-md-6">
-            <div class="mb-2">
-              <label class="form-label" for="{{ field.id_for_label }}">
-                {{ field.label }}
-                {% if field.field.required %}
-                  <span class="text-danger">*</span>
-                {% endif %}
-              </label>
-              {{ field }}
-              {% if field.help_text %}
-                <div class="form-text">{{ field.help_text }}</div>
-              {% endif %}
-              {% for error in field.errors %}
-                <div class="text-danger small">{{ error }}</div>
-              {% endfor %}
-            </div>
-          </div>
-        {% endfor %}
+    <form method="post" class="needs-validation" novalidate>
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+
+      <!-- ─────────── PDcode Details ─────────── -->
+      <h6 class="fw-bold border-bottom pb-2 mb-3 text-secondary">PDcode Details</h6>
+      <div class="row mb-3">
+        <div class="col-md-4">{{ form.pdcode_code.label_tag }} {{ form.pdcode_code }}</div>
+        <div class="col-md-4">{{ form.pdcode_name.label_tag }} {{ form.pdcode_name }}</div>
+        <div class="col-md-4">{{ form.pdcode_description.label_tag }} {{ form.pdcode_description }}</div>
       </div>
 
+      <!-- ─────────── Classification ─────────── -->
+      <h6 class="fw-bold border-bottom pb-2 mb-3 text-secondary">Classification</h6>
+      <div class="row mb-3">
+        <div class="col-md-3">{{ form.pdcode_status.label_tag }} {{ form.pdcode_status }}</div>
+        <div class="col-md-3">{{ form.pdcode_frequency.label_tag }} {{ form.pdcode_frequency }}</div>
+        <div class="col-md-3">{{ form.pdcode_type.label_tag }} {{ form.pdcode_type }}</div>
+        <div class="col-md-3">{{ form.pdcode_class.label_tag }} {{ form.pdcode_class }}</div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-4">{{ form.pdcode_category.label_tag }} {{ form.pdcode_category }}</div>
+        <div class="col-md-4">{{ form.pdcode_categorytype.label_tag }} {{ form.pdcode_categorytype }}</div>
+      </div>
+
+      <!-- ─────────── Accounting ─────────── -->
+      <h6 class="fw-bold border-bottom pb-2 mb-3 text-secondary">Accounting</h6>
+      <div class="row mb-3">
+        <div class="col-md-4">{{ form.pdcode_account.label_tag }} {{ form.pdcode_account }}</div>
+        <div class="col-md-4">{{ form.pdcode_map_code.label_tag }} {{ form.pdcode_map_code }}</div>
+        <div class="col-md-4">{{ form.pdcode_gl_account.label_tag }} {{ form.pdcode_gl_account }}</div>
+      </div>
+
+      <!-- ─────────── Flags ─────────── -->
+      <h6 class="fw-bold border-bottom pb-2 mb-3 text-secondary">Taxation</h6>
+      <div class="row mb-3">
+        <div class="col-md-2">{{ form.pdcode_taxable.label_tag }} {{ form.pdcode_taxable }}</div>
+        <div class="col-md-2">{{ form.pdcode_tax_flat.label_tag }} {{ form.pdcode_tax_flat }}</div>
+        <div class="col-md-2">{{ form.pdcode_tax_irregular.label_tag }} {{ form.pdcode_tax_irregular }}</div>
+        <div class="col-md-2">{{ form.pdcode_social_securitable.label_tag }} {{ form.pdcode_social_securitable }}</div>
+        <div class="col-md-2">{{ form.pdcode_pensionable.label_tag }} {{ form.pdcode_pensionable }}</div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-2">{{ form.pdcode_payable.label_tag }} {{ form.pdcode_payable }}</div>
+        <div class="col-md-2">{{ form.pdcode_calculate.label_tag }} {{ form.pdcode_calculate }}</div>
+      </div>
+
+      <!-- ─────────── Buttons ─────────── -->
       <div class="text-end mt-4">
         <button type="submit" class="btn btn-primary">
           <i class="bi bi-save"></i> Save
         </button>
-        <a href="{% url 'pdcodes:pdcodes' country_slug company_id %}"
-           class="btn btn-outline-secondary ms-2">
+        <a href="" class="btn btn-danger ms-2">
           <i class="bi bi-x-circle"></i> Cancel
         </a>
       </div>
