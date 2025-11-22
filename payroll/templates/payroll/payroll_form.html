@@ -13,7 +13,7 @@
       {% csrf_token %}
       {{ form.as_p }}
       <button type="submit" class="btn btn-success">Save</button>
-      <a href="{% url 'payroll_list' country.id company.company_id %}" class="btn btn-secondary">Cancel</a>
+      <a href="{% url 'payroll:payroll' country_slug company.company_id %}" class="btn btn-secondary">Cancel</a>
     </form>
   </div>
 </div>
