@@ -30,7 +30,7 @@ def payroll_create(request, country_slug, company_id):
             payroll.company = company
             payroll.save()
             messages.success(request, 'Payroll created successfully.')
-            return redirect('payroll', country_slug=country_slug, company_id=company.company_id)
+            return redirect('payroll:payroll', country_slug=country_slug, company_id=company.company_id)
     else:
         form = PayrollForm()
     return render(request, 'payroll/payroll_form.html', {'form': form, 'country': country, 'company': company, "country_slug": country_slug })
@@ -45,7 +45,7 @@ def payroll_edit(request, country_slug, pk, company_id):
         if form.is_valid():
             form.save()
             messages.success(request, 'Payroll updated successfully.')
-            return redirect('payroll', country_slug=country_slug, company_id=company.company_id, pk=payroll.pk)
+            return redirect('payroll:payroll', country_slug=country_slug, company_id=company.company_id, pk=payroll.pk)
     else:
         form = PayrollForm(instance=payroll)
     return render(request, 'payroll/payroll_form.html', {'form': form, 'country': country, 'company': company, 'payroll': payroll, "country_slug": country_slug })
@@ -58,5 +58,5 @@ def payroll_delete(request, country_slug, pk, company_id):
     if request.method == 'POST':
         payroll.delete()
         messages.success(request, 'Payroll deleted successfully.')
-        return redirect('payroll', country_slug=country_slug, company_id=company.company_id, pk=payroll.pk)
+        return redirect('payroll:payroll', country_slug=country_slug, company_id=company.company_id, pk=payroll.pk)
     return render(request, 'payroll/payroll_confirm_delete.html', {'country': country, 'company': company, 'payroll': payroll, "country_slug": country_slug })
