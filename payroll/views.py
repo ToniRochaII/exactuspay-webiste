@@ -7,7 +7,7 @@ from .forms import PayrollForm
 from django.contrib.auth.decorators import login_required
 
 @login_required
-def payroll_list(request, country_id, company_id):
+def payroll(request, country_id, company_id):
     country = get_object_or_404(Country, id=country_id)
     company = get_object_or_404(Company, company_id=company_id)
     payrolls = Payroll.objects.filter(company=company)
