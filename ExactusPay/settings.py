@@ -66,6 +66,7 @@ INSTALLED_APPS = [
     'utils',  
     'pdcodes',  
     'payregister.apps.PayregisterConfig',
+    'payroll',
 ]
 
 MIDDLEWARE = [
