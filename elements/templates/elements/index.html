@@ -33,7 +33,7 @@
         <a href="{% url 'country:country' %}">Countries</a>
         <a href="{% url 'country:country_create' %}"> Add Country</a>
         <a href="{% url 'elements:elements' country_slug %}"">Elements</a>
-        <a href="{% url 'elements:elements_create' country_slug %}"">Add Elements</a>
+        <a href="{% url 'elements:element_create' country_slug %}"">Add Elements</a>
         {% endif %}
         ||||
         {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
