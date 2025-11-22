@@ -11,7 +11,7 @@ class Regulations(models.Model):
     def save(self, *args, **kwargs):
         # Always generate a slug if missing or empty
         if not self.slug:
-            base = slugify(self.name) if self.name else ""
+            base = slugify(self.country) if self.fiscal_year else ""
 
             # If name is blank or slugify returns empty, fallback to random id
             if not base:
