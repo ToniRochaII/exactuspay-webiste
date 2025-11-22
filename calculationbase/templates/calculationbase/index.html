@@ -29,7 +29,7 @@
         {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
         <a href="{% url 'profile' %}"">Profile</a>
         <a href="{% url 'companies:company' country_slug %}">Companies</a>
-        <a href="{% url 'calculationbase:calculationbase' country_slug regulation.id %}">Calculation Base</a>
+        <a href="{% url 'calculationbase:calculationbase' country_slug regulations.id %}">Calculation Base</a>
         {% endif %}
 
         <a href="{% url 'password_reset' %}">Reset password</a>
