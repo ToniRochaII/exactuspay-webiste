@@ -108,3 +108,94 @@ def regulations_delete(request, country_slug, regulations_id):
 
 
 
+
+
+# regulations/views.py (add these imports and views)
+from django.contrib.admin.views.decorators import staff_member_required
+from django.http import HttpResponse
+import csv
+from .utils.csv_importer import import_from_csv
+from .forms import RegulationsUploadForm
+
+# Add these views to your existing regulations/views.py
+
+@staff_member_required
+def regulations_upload_view(request, country_slug=None):
+    """
+    Upload regulations via CSV. Can be country-specific or global.
+    """
+    country = None
+    if country_slug:
+        country = get_object_or_404(Country, slug=country_slug)
+
+    if request.method == "POST":
+        form = RegulationsUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            dry_run = form.cleaned_data.get('dry_run', False)
+            
+            try:
+                result = import_from_csv("regulations", request.FILES["file"], dry_run=dry_run)
+                request.session["upload_result"] = result
+                
+                if country_slug:
+                    return redirect("regulations:regulations_upload_result", country_slug=country_slug)
+                else:
+                    return redirect("regulations:regulations_upload_result")
+                    
+            except Exception as e:
+                messages.error(request, f"Upload error: {str(e)}")
+    else:
+        form = RegulationsUploadForm()
+
+    context = {
+        "form": form,
+        "country": country,
+    }
+    if country:
+        context["country_slug"] = country_slug
+        
+    return render(request, "regulations/upload_form.html", context)
+
+@staff_member_required
+def regulations_upload_result_view(request, country_slug=None):
+    """
+    Display upload results.
+    """
+    result = request.session.get("upload_result", {})
+    country = None
+    if country_slug:
+        country = get_object_or_404(Country, slug=country_slug)
+    
+    context = {
+        "result": result,
+        "country": country,
+    }
+    if country:
+        context["country_slug"] = country_slug
+        
+    return render(request, "regulations/upload_result.html", context)
+
+@staff_member_required
+def download_regulations_template(request, country_slug=None):
+    """Download a CSV template for regulations imports"""
+    response = HttpResponse(content_type='text/csv')
+    filename = "regulations_import_template.csv"
+    if country_slug:
+        country = get_object_or_404(Country, slug=country_slug)
+        filename = f"regulations_{country.iso2_code}_template.csv"
+    
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
+    
+    writer = csv.writer(response)
+    
+    # Header row
+    writer.writerow([
+        'country_code', 'fiscal_year', 'effective_date', 'archive'
+    ])
+    
+    # Sample data rows
+    writer.writerow(['US', '2024', '2024-01-01', 'N'])
+    writer.writerow(['GB', '2024', '2024-04-06', 'N'])
+    writer.writerow(['FR', '2024', '2024-01-01', 'N'])
+    
+    return response
