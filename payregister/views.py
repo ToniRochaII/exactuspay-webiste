@@ -25,7 +25,7 @@ def create_entry(request, country_slug, company_id,id):
     employee = get_object_or_404(Employee, id=id)
 
     if request.method == 'POST':
-        form = PayRegisterForm(request.POST)
+        form = PayRegisterForm(request.POST, country=country)
         if form.is_valid():
             obj = form.save(commit=False)
             obj.employee = employee
@@ -33,7 +33,7 @@ def create_entry(request, country_slug, company_id,id):
             obj.save()
             return redirect('payregister:payregister_list', country_slug=country_slug, company_id=company.company_id, id=id)
     else:
-        form = PayRegisterForm()
+        form = PayRegisterForm(country=country)
 
     return render(request, 'payregister/create.html', {
         'employee': employee,

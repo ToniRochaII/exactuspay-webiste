@@ -9,10 +9,21 @@ class PayRegisterForm(forms.ModelForm):
             'pd_code', 'category', 'amount',
             'start_date', 'end_date', 'entry_date'
         ]
+        
+    def __init__(self, *args, **kwargs):
+        country = kwargs.pop("country", None)
+        super().__init__(*args, **kwargs)
+
+        if country:
+            self.fields["pd_code"].queryset = PDcode.objects.filter(
+                country=country
+            ).order_by("pdcode_code")
 
     def clean(self):
         cleaned = super().clean()
         cat = cleaned.get('category')
+    
+    
 
         if cat == 'PERMANENT':
             if cleaned.get('entry_date'):
@@ -31,6 +42,8 @@ class PayRegisterForm(forms.ModelForm):
                 raise forms.ValidationError("Variable entries cannot have start/end date.")
 
         return cleaned
+
+        
 
 
 
