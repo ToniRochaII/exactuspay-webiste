@@ -17,7 +17,7 @@ from .forms import PDcodeForm
 def pdcode_list(request, country_slug, company_id):
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, company_id=company_id)
-    pdcodes = PDcode.objects.order_by("pdcode_code").filter(company_id=company.id)
+    pdcodes = PDcode.objects.order_by("pdcode_code").filter(company=company)
 
     return render(
         request,
@@ -40,6 +40,7 @@ def pdcode_list(request, country_slug, company_id):
 def pdcode_create(request, country_slug, company_id):
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, company_id=company_id)
+    pdcodes = PDcode.objects.order_by("pdcode_code").filter(company=company)
 
     if request.method == "POST":
         form = PDcodeForm(request.POST, company=company)
@@ -69,6 +70,7 @@ def pdcode_create(request, country_slug, company_id):
             "company": company,
             "company_id": company_id,
             "form": form,
+            "pdcodes": pdcodes,
         },
     )
 
