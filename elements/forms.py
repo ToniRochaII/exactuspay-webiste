@@ -5,24 +5,24 @@ from .models import Element
 class ElementForm(forms.ModelForm):
     class Meta:
         model = Element
-        exclude = ["country"]
-        widgets = {
-            "element_status": forms.Select(attrs={"class": "form-select"}),
-            "element_frequency": forms.Select(attrs={"class": "form-select"}),
-            "element_type": forms.Select(attrs={"class": "form-select"}),
-            "element_class": forms.Select(attrs={"class": "form-select"}),
-            "element_category": forms.Select(attrs={"class": "form-select"}),
-            "element_categorytype": forms.Select(attrs={"class": "form-select"}),
-        }
+        fields = '__all__'
+        exclude = ['country']  # Country is set in the view
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Add Bootstrap classes to form fields
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
 
 class ElementUploadForm(forms.Form):
-    file = forms.FileField(
-        label="CSV File",
-        help_text="Upload a CSV file with payroll elements data"
+    csv_file = forms.FileField(
+        label='CSV File',
+        help_text='Upload a CSV file with element data'
     )
-    dry_run = forms.BooleanField(
-        required=False,
-        initial=False,
-        label="Dry Run",
-        help_text="Check to validate without saving to database"
-    )
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['csv_file'].widget.attrs.update({
+            'class': 'form-control',
+            'accept': '.csv'
+        })
