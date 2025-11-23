@@ -76,8 +76,8 @@ def country_upload_view(request):
     if request.method == "POST":
         form = CountryUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            result = import_from_csv("country",request.FILES["file"],dry_run=form.cleaned_data["dry_run"])
-            
+            result = import_from_csv("country",request.FILES["file"])
+
             return render(request, "country/upload_result.html", {"result": result})
     else:
         form = CountryUploadForm()
