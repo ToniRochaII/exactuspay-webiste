@@ -1,10 +1,11 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-
+from django.contrib.admin.views.decorators import staff_member_required
+from utils.csv_importer import import_from_csv
 from .utils.decorators import role_required
 from .models import Country
-from .forms import CountryForm
+from .forms import CountryForm, CountryUploadForm
 
 
 # ────────────────────────────────────────────────
@@ -75,11 +76,8 @@ def country_upload_view(request):
     if request.method == "POST":
         form = CountryUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            result = import_from_csv(
-                "country",
-                request.FILES["file"],
-                dry_run=form.cleaned_data["dry_run"]
-            )
+            result = import_from_csv("country",request.FILES["file"],dry_run=form.cleaned_data["dry_run"])
+            
             return render(request, "country/upload_result.html", {"result": result})
     else:
         form = CountryUploadForm()
