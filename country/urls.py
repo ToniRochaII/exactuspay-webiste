@@ -12,6 +12,6 @@ urlpatterns = [
 
     path("upload/", views.country_upload_view, name="country_upload"),
     path("upload/result/", views.country_upload_result_view, name="country_upload_result"),
-
+    path("upload/template/", views.download_csv_template, name="download_csv_template"),
 
 ]

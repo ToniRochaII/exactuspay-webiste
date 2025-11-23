@@ -96,3 +96,33 @@ def country_upload_view(request):
 def country_upload_result_view(request):
     result = request.session.get("upload_result")
     return render(request, "country/upload_result.html", {"result": result})
+
+
+@staff_member_required
+def download_csv_template(request):
+    """Download a CSV template for country imports"""
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="country_import_template.csv"'
+    
+    writer = csv.writer(response)
+    
+    # Header row
+    writer.writerow([
+        'iso2_code', 'iso3_code', 'name', 'status', 'official_language',
+        'currency_name', 'currency_code', 'fiscal_year_start', 'fiscal_year_end',
+        'numbering_format', 'currency_position', 'date_format', 'decimals', 'archive'
+    ])
+    
+    # Sample data rows
+    writer.writerow([
+        'US', 'USA', 'United States', 'ACTIVE', 'English',
+        'US Dollar', 'USD', 'January', 'December',
+        '1,000.00', 'BEFORE', 'MM/DD/YYYY', '2', 'N'
+    ])
+    writer.writerow([
+        'GB', 'GBR', 'United Kingdom', 'ACTIVE', 'English',
+        'British Pound', 'GBP', 'April', 'March',
+        '1,000.00', 'BEFORE', 'DD/MM/YYYY', '2', 'N'
+    ])
+    
+    return response
