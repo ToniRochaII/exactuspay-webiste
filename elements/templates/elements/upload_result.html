@@ -1,4 +1,7 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
+{{ form.file|as_crispy_field }}
+{{ form.dry_run|as_crispy_field }}
 
 {% block title %}Upload Results - ExactusPay{% endblock %}
 
