@@ -56,6 +56,7 @@ def calculationbase_create(request, country_slug, regulations_id):
             "country": country,
             "regulations": regulations,
             "title": "Create Calculation Base",
+            "country_slug": country_slug,
         },
     )
 
@@ -92,6 +93,7 @@ def calculationbase_edit(request, country_slug, regulations_id, pk):
             "country": country,
             "regulations": regulations,
             "title": "Edit Calculation Base",
+            "country_slug": country_slug,
         },
     )
 
@@ -114,5 +116,5 @@ def calculationbase_delete(request, country_slug, regulations_id, pk):
     return render(
         request,
         "calculationbase/delete.html",
-        {"cb": cb, "country": country, "regulations": regulations},
+        {"cb": cb, "country": country, "regulations": regulation, "country_slug":country_slug,},
     )
