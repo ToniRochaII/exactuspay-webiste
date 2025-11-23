@@ -15,9 +15,11 @@ class ElementForm(forms.ModelForm):
             field.widget.attrs['class'] = 'form-control'
 
 class ElementUploadForm(forms.Form):
-    csv_file = forms.FileField(
-        label='CSV File',
-        help_text='Upload a CSV file with element data'
+    file = forms.FileField(label="CSV File")
+    dry_run = forms.BooleanField(
+        required=False,
+        initial=False,
+        label="Dry run (validate only)",
     )
     
     def __init__(self, *args, **kwargs):
