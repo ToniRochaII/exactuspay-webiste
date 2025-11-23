@@ -17,7 +17,7 @@ from .forms import PDcodeForm
 def pdcode_list(request, country_slug, company_id):
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, company_id=company_id)
-    pdcodes = PDcode.objects.filter(company=company).order_by("pdcode_code")
+    pdcodes = PDcode.objects.filter(company=company).order_by("pdcode_code").filter(country=country)
 
     return render(
         request,

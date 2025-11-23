@@ -116,5 +116,5 @@ def calculationbase_delete(request, country_slug, regulations_id, pk):
     return render(
         request,
         "calculationbase/delete.html",
-        {"cb": cb, "country": country, "regulations": regulation, "country_slug":country_slug,},
+        {"cb": cb, "country": country, "regulations": regulations, "country_slug":country_slug,},
     )
