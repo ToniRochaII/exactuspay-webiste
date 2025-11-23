@@ -14,9 +14,10 @@ class ElementForm(forms.ModelForm):
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
 
+
 class ElementUploadForm(forms.Form):
     file = forms.FileField(
-        label="CSV File"
+        label="CSV File",
         widget=forms.ClearableFileInput(attrs={
             "class": "form-control",
             "accept": ".csv",
