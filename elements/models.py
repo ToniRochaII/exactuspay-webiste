@@ -1,3 +1,4 @@
+# elements/models.py
 from django.utils.text import slugify
 from django.db import models
 from country.models import Country
@@ -69,6 +70,11 @@ class Element(models.Model):
     element_categorytype = models.CharField(max_length=50, choices=CALCBASETYPE_CHOICES, blank=True, null=True)
 
     slug = models.SlugField(max_length=100, unique=True, blank=True)
+    archive = models.CharField(
+        max_length=1,
+        choices=[("Y", "YES"), ("N", "NO")],
+        default="N",
+    )
 
     def save(self, *args, **kwargs):
         if not self.slug:
