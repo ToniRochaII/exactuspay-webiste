@@ -17,7 +17,8 @@ def element(request, country_slug):
     elements = Element.objects.filter(country=country)
     return render(request, 'elements/index.html', {
         'elements': elements,
-        'country': country
+        'country': country,
+        'country_slug': country_slug
     })
 
 @login_required
@@ -35,7 +36,8 @@ def element_create(request, country_slug):
         form = ElementForm()
     return render(request, 'elements/create.html', {
         'form': form,
-        'country': country
+        'country': country,
+        'country_slug': country_slug
     })
 
 @login_required
@@ -53,7 +55,8 @@ def element_edit(request, country_slug, element_code):
     return render(request, 'elements/edit.html', {
         'form': form,
         'element': element,
-        'country': country
+        'country': country,
+        'country_slug': country_slug
     })
 
 @login_required
@@ -66,7 +69,8 @@ def element_delete(request, country_slug, element_code):
         return redirect('elements:elements', country_slug=country_slug)
     return render(request, 'elements/delete.html', {
         'element': element,
-        'country': country
+        'country': country,
+        'country_slug': country_slug
     })
 
 @login_required
@@ -116,7 +120,8 @@ def element_upload_view(request, country_slug=None):
     
     return render(request, 'elements/upload_form.html', {
         'form': form,
-        'country': country
+        'country': country,
+        'country_slug': country_slug
     })
 
 @login_required
@@ -141,7 +146,8 @@ def element_upload_result_view(request, country_slug=None):
         'success_count': upload_results.get('success_count', 0),
         'error_count': upload_results.get('error_count', 0),
         'errors': upload_results.get('errors', []),
-        'country': country
+        'country': country,
+        'country_slug': country_slug
     })
 
 @login_required
@@ -177,7 +183,7 @@ def download_elements_template(request, country_slug=None):
     # Add example rows based on country if provided
     if country:
         writer.writerow([
-            country.code, '6000', 'Income Tax', 'Income Tax Description',
+            country.iso2_code, '6000', 'Income Tax', 'Income Tax Description',
             'Visible', '6000', '6000', '6000', 'Recurring', 'Regular',
             'statutory', 'Deduction', 'FALSE', 'FALSE', 'FALSE', 'FALSE',
             'FALSE', 'TRUE', 'TRUE', 'Bracketable', 'N'
