@@ -64,9 +64,6 @@ def import_from_csv(model_key: str, file_obj, dry_run: bool = False):
             except Exception as e:
                 errors.append({"line": line_num, "row": row, "error": str(e)})
 
-        if dry_run:
-            transaction.set_rollback(True)
-
     _execute()
 
     return {
