@@ -1,0 +1,13 @@
+<h1>Upload Results</h1>
+
+<p>Created: {{ result.created }}</p>
+<p>Updated: {{ result.updated }}</p>
+
+{% if result.errors %}
+  <h2>Errors</h2>
+  <ul>
+  {% for e in result.errors %}
+    <li>Line {{ e.line }}: {{ e.error }}</li>
+  {% endfor %}
+  </ul>
+{% endif %}

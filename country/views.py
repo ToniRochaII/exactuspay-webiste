@@ -70,3 +70,23 @@ def country_edit(request, slug):
 
 
 
+@staff_member_required
+def country_upload_view(request):
+    if request.method == "POST":
+        form = CountryUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            result = import_from_csv(
+                "country",
+                request.FILES["file"],
+                dry_run=form.cleaned_data["dry_run"]
+            )
+            return render(request, "country/upload_result.html", {"result": result})
+    else:
+        form = CountryUploadForm()
+
+    return render(request, "country/upload_form.html", {"form": form})
+
+@staff_member_required
+def country_upload_result_view(request):
+    result = request.session.get("upload_result")
+    return render(request, "country/upload_result.html", {"result": result})

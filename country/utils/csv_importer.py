@@ -33,3 +33,30 @@ def import_from_csv(file, model, field_map, required_fields=None):
             errors.append(f"Row {i}: {e}")
 
     return (created, updated, errors)
+
+
+from country.models import Country
+
+IMPORT_CONFIGS = {
+    "country": ModelImportConfig(
+        model=Country,
+        natural_key_fields=["iso2_code"],
+        field_mapping={
+            "iso2_code": "iso2_code",
+            "iso3_code": "iso3_code",
+            "name": "name",
+            "status": "status",
+            "official_language": "official_language",
+            "currency_name": "currency_name",
+            "currency_code": "currency_code",
+            "fiscal_year_start": "fiscal_year_start",
+            "fiscal_year_end": "fiscal_year_end",
+            "numbering_format": "numbering_format",
+            "currency_position": "currency_position",
+            "date_format": "date_format",
+            "decimals": "decimals",
+            "archive": "archive",
+        },
+        fk_mappings=[]
+    ),
+}

@@ -71,3 +71,8 @@ class CountryForm(forms.ModelForm):
             raise ValidationError("Fiscal year start and end cannot be the same.")
 
         return cleaned
+
+
+class CountryUploadForm(forms.Form):
+    file = forms.FileField()
+    dry_run = forms.BooleanField(required=False)

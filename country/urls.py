@@ -10,7 +10,8 @@ urlpatterns = [
     path("delete/", views.country_delete, name="country_delete"),
     path("<slug:slug>/edit/", views.country_edit, name="country_edit"),
 
-
+    path("upload/", views.country_upload_view, name="country_upload"),
+    path("upload/result/", views.country_upload_result_view, name="country_upload_result"),
 
 
 ]
