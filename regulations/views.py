@@ -20,7 +20,7 @@ def regulations(request, country_slug):
     return render(
         request,
         "regulations/index.html",
-        {"country": country, "regulations": regulations, "country_slug":country.slug},
+        {"country": country, "regulations": regulations, "country_slug":country_slug},
     )
 
 
