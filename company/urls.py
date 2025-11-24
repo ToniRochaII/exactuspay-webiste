@@ -16,7 +16,7 @@ urlpatterns = [
     path("<slug:country_slug>/upload/template/", views.download_companies_template, name="download_companies_template"),
     
     # Global upload routes (optional)
-    path("upload/", views.company_upload_view, name="company_upload_global"),
-    path("upload/result/", views.company_upload_result_view, name="company_upload_result_global"),
-    path("upload/template/", views.download_companies_template, name="download_companies_template_global"),
+    path("company/upload/", views.company_upload_view, name="company_upload_global"),
+    path("company/upload/result/", views.company_upload_result_view, name="company_upload_result_global"),
+    path("company/upload/template/", views.download_companies_template, name="download_companies_template_global"),
 ]
