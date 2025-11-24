@@ -1,185 +1,133 @@
-<!-- employee/upload_form.html -->
+<!-- templates/employee/upload_form.html -->
 {% extends "base.html" %}
-{% load crispy_forms_tags %}
-
-{% block title %}Upload Employees - ExactusPay{% endblock %}
+{% load static %}
 
 {% block content %}
-<div class="container-fluid py-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header pb-0">
-                    <div class="d-flex align-items-center">
-                        <h4>Upload Employees - {{ company.trade_name }}</h4>
-                        <a href="{% url 'employee:employee' country_slug company.company_id %}" 
-                           class="btn btn-outline-secondary btn-sm ms-auto">
-                            <i class="fas fa-arrow-left me-2"></i>Back to Employees
-                        </a>
+<div class="container mt-4">
+    <h1>Upload Employees - {{ company.trade_name }}</h1>
+    
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Upload CSV File</h5>
+        </div>
+        <div class="card-body">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
-                    <p class="text-sm mb-0">Upload employees via CSV file for {{ company.trade_name }}</p>
+                {% endfor %}
+            {% endif %}
+            
+            <form method="post" enctype="multipart/form-data" id="uploadForm">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    {{ form.file.label_tag }}
+                    {{ form.file }}
+                    {% if form.file.errors %}
+                        <div class="text-danger">
+                            {{ form.file.errors }}
+                        </div>
+                    {% endif %}
+                    <div class="form-text">{{ form.file.help_text }}</div>
                 </div>
-                <div class="card-body">
-                    <!-- Progress Bar (Initially Hidden) -->
-                    <div id="uploadProgress" class="card mb-4" style="display: none;">
-                        <div class="card-header">
-                            <h5 class="mb-0">Upload Progress</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="progress mb-3" style="height: 25px;">
-                                <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" 
-                                     role="progressbar" style="width: 0%" 
-                                     aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-                                    <span id="progressText">0%</span>
-                                </div>
-                            </div>
-                            <div id="progressDetails" class="text-center">
-                                <small class="text-muted" id="progressStatus">Starting upload...</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Instructions -->
-                    <div class="alert alert-info">
-                        <h6 class="alert-heading">
-                            <i class="fas fa-info-circle me-2"></i>CSV Format Requirements
-                        </h6>
-                        <hr>
-                        <ul class="mb-1">
-                            <li>File must be in CSV format (comma-separated values)</li>
-                            <li>First row must contain column headers</li>
-                            <li>Required columns: <strong>company_code, employee_number, employee_code, employee_name, employee_surname</strong></li>
-                            <li>company_code must match: <strong>{{ company.company_code }}</strong></li>
-                            <li>Optional columns can be left empty</li>
-                        </ul>
-                    </div>
-
-                    <!-- CSV Template Download -->
-                    <div class="alert alert-warning">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <strong>Need a template?</strong> Download our CSV template to ensure proper formatting.
-                            </div>
-                            <a href="{% url 'employee:download_employees_template' country_slug company.company_id %}" 
-                               class="btn btn-sm btn-outline-primary">
-                                <i class="fas fa-download me-2"></i>Download Template
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Upload Form -->
-                    <div class="card mt-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Upload CSV File</h5>
-                        </div>
-                        <div class="card-body">
-                            <form method="post" enctype="multipart/form-data" id="uploadForm">
-                                {% csrf_token %}
-                                <input type="hidden" name="progress_id" id="progressId" value="">
-                                
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        {{ form.file|as_crispy_field }}
-                                    </div>
-                                    <div class="col-md-4">
-                                        {{ form.dry_run|as_crispy_field }}
-                                        <small class="form-text text-muted">
-                                            Check this to validate the file without saving to database.
-                                        </small>
-                                    </div>
-                                </div>
-
-                                <div class="mt-4">
-                                    <button type="submit" class="btn btn-primary" id="uploadBtn">
-                                        <i class="fas fa-upload me-2"></i>Upload Employees
-                                    </button>
-                                    <a href="{% url 'employee:employee' country_slug company.company_id %}" 
-                                       class="btn btn-outline-secondary">
-                                        Cancel
-                                    </a>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                
+                <div class="mb-3 form-check">
+                    {{ form.dry_run }}
+                    {{ form.dry_run.label_tag }}
+                    <div class="form-text">{{ form.dry_run.help_text }}</div>
                 </div>
+                
+                <button type="submit" class="btn btn-primary" id="uploadButton">
+                    <span id="uploadText">Upload File</span>
+                    <div id="uploadSpinner" class="spinner-border spinner-border-sm d-none" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </button>
+                
+                <a href="{% url 'employee:download_employees_template' country_slug=country_slug company_id=company.company_id %}" 
+                   class="btn btn-outline-secondary">
+                    Download Template
+                </a>
+            </form>
+            
+            <!-- Progress Bar -->
+            <div id="progressContainer" class="mt-4 d-none">
+                <div class="progress mb-2">
+                    <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                </div>
+                <div id="progressText" class="text-center small">Starting upload...</div>
             </div>
+        </div>
+    </div>
+    
+    <!-- Upload Instructions -->
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="mb-0">File Format Instructions</h5>
+        </div>
+        <div class="card-body">
+            <h6>Required Fields:</h6>
+            <ul>
+                <li><code>company_code</code> - Must match the company code ({{ company.company_code }})</li>
+                <li><code>employee_number</code> - Unique employee number (integer)</li>
+                <li><code>employee_code</code> - Employee code (integer)</li>
+                <li><code>employee_name</code> - First name</li>
+                <li><code>employee_surname</code> - Last name</li>
+            </ul>
+            
+            <h6>Optional Fields:</h6>
+            <p>gender, date_of_birth, marital_status, employee_address_type, employee_address_01 to 07, 
+               bank_01 to 10, department, cost_centre, job_title, position_number, fte, tax_info_01 to 07</p>
         </div>
     </div>
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('uploadForm');
-    const uploadBtn = document.getElementById('uploadBtn');
-    const progressSection = document.getElementById('uploadProgress');
+document.getElementById('uploadForm').addEventListener('submit', function(e) {
+    const uploadButton = document.getElementById('uploadButton');
+    const uploadText = document.getElementById('uploadText');
+    const uploadSpinner = document.getElementById('uploadSpinner');
+    const progressContainer = document.getElementById('progressContainer');
     const progressBar = document.getElementById('progressBar');
     const progressText = document.getElementById('progressText');
-    const progressStatus = document.getElementById('progressStatus');
-    const progressIdInput = document.getElementById('progressId');
     
-    // Generate unique progress ID
-    progressIdInput.value = 'progress_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    // Show loading state
+    uploadButton.disabled = true;
+    uploadText.textContent = 'Uploading...';
+    uploadSpinner.classList.remove('d-none');
+    progressContainer.classList.remove('d-none');
     
-    form.addEventListener('submit', function() {
-        // Show progress bar
-        progressSection.style.display = 'block';
-        
-        // Disable upload button
-        uploadBtn.disabled = true;
-        uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Uploading...';
-        
-        // Start polling for progress
-        const progressId = progressIdInput.value;
-        let progressInterval = setInterval(function() {
-            fetch(`{% url 'employee:upload_progress' %}?progress_id=${progressId}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.percent !== undefined) {
-                        // Update progress bar
-                        progressBar.style.width = data.percent + '%';
-                        progressBar.setAttribute('aria-valuenow', data.percent);
-                        progressText.textContent = data.percent + '%';
-                        
-                        // Update status
-                        if (data.status) {
-                            progressStatus.textContent = data.status;
-                        }
-                        
-                        // Change color based on progress
-                        if (data.percent < 50) {
-                            progressBar.className = 'progress-bar progress-bar-striped progress-bar-animated bg-warning';
-                        } else if (data.percent < 100) {
-                            progressBar.className = 'progress-bar progress-bar-striped progress-bar-animated bg-info';
-                        } else {
-                            progressBar.className = 'progress-bar progress-bar-striped bg-success';
-                            progressStatus.textContent = 'Upload complete! Redirecting...';
-                            clearInterval(progressInterval);
-                        }
-                    }
+    // Start progress polling
+    const progressId = Date.now().toString();
+    const progressInterval = setInterval(() => {
+        fetch(`/employee/upload/progress/?progress_id=${progressId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.percent !== undefined) {
+                    progressBar.style.width = data.percent + '%';
+                    progressBar.setAttribute('aria-valuenow', data.percent);
+                    progressText.textContent = data.status || `Progress: ${data.percent}%`;
                     
-                    // Handle errors
-                    if (data.error) {
-                        progressBar.className = 'progress-bar bg-danger';
-                        progressStatus.textContent = 'Error: ' + data.error;
+                    if (data.percent >= 100) {
                         clearInterval(progressInterval);
+                        progressText.textContent = 'Processing complete!';
                     }
-                })
-                .catch(error => {
-                    console.error('Progress check failed:', error);
-                });
-        }, 1000); // Check every second
-    });
+                }
+            })
+            .catch(error => {
+                console.error('Progress check failed:', error);
+            });
+    }, 1000);
+    
+    // Add progress ID to form data if needed
+    const progressInput = document.createElement('input');
+    progressInput.type = 'hidden';
+    progressInput.name = 'progress_id';
+    progressInput.value = progressId;
+    this.appendChild(progressInput);
 });
 </script>
-
-<style>
-.progress-bar-animated {
-    animation: progress-bar-stripes 1s linear infinite;
-}
-
-@keyframes progress-bar-stripes {
-    0% { background-position: 1rem 0; }
-    100% { background-position: 0 0; }
-}
-</style>
 {% endblock %}

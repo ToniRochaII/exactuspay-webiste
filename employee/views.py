@@ -96,10 +96,7 @@ from .utils.csv_importer import import_from_csv
 from .forms import EmployeeUploadForm
 
 
-# employee/views.py - Updated with progress tracking
-import time
-import math
-from .utils.progress import UploadProgressMixin
+
 
 
 @staff_member_required
@@ -168,20 +165,53 @@ def upload_progress(request):
     return get_upload_progress(request)
 
 
-# employee/views.py - Fix the function call
-@staff_member_required
-def employee_upload_view(request, country_slug, company_id):
-    """
-    Upload employees via CSV for a specific company with progress tracking.
-    """
-    country = get_object_or_404(Country, slug=country_slug)
-    company = get_object_or_404(Company, pk=company_id)
+# employee/views.py - Add this class to your existing views
+from django.views import View
+from django.utils.decorators import method_decorator
+from django.contrib.admin.views.decorators import staff_member_required
 
-    if request.method == "POST":
+class EmployeeUploadView(View):
+    """
+    Class-based view for handling employee CSV uploads with progress tracking
+    """
+    
+    @method_decorator(staff_member_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+    
+    def get(self, request, country_slug, company_id):
+        """Display the upload form"""
+        from django.shortcuts import get_object_or_404
+        from country.models import Country
+        from .models import Company
+        from .forms import EmployeeUploadForm
+        
+        country = get_object_or_404(Country, slug=country_slug)
+        company = get_object_or_404(Company, pk=company_id)
+        form = EmployeeUploadForm()
+        
+        return render(request, "employee/upload_form.html", {
+            "form": form,
+            "company": company,
+            "country": country,
+            "country_slug": country_slug
+        })
+    
+    def post(self, request, country_slug, company_id):
+        """Handle file upload and processing"""
+        from django.shortcuts import get_object_or_404, redirect
+        from django.contrib import messages
+        from country.models import Country
+        from .models import Company, Employee
+        from .forms import EmployeeUploadForm
+        from .utils.csv_importer import import_from_csv_with_progress
+        
+        country = get_object_or_404(Country, slug=country_slug)
+        company = get_object_or_404(Company, pk=company_id)
         form = EmployeeUploadForm(request.POST, request.FILES)
+        
         if form.is_valid():
             dry_run = form.cleaned_data.get('dry_run', False)
-            progress_id = request.POST.get('progress_id')
             
             try:
                 # Define the field mapping for employees
@@ -230,29 +260,53 @@ def employee_upload_view(request, country_slug, company_id):
                 # Define required fields
                 required_fields = ['company_code', 'employee_number', 'employee_code', 'employee_name', 'employee_surname']
                 
-                # Call import_from_csv (not import_from_csv_with_progress)
-                from employee.models import Employee
-                result = import_from_csv(
+                # Generate progress ID
+                import uuid
+                progress_id = str(uuid.uuid4())
+                
+                # Call import_from_csv_with_progress
+                result = import_from_csv_with_progress(
                     file=request.FILES["file"],
                     model=Employee,
                     field_map=employee_field_map,
                     required_fields=required_fields,
-                    dry_run=dry_run
+                    dry_run=dry_run,
+                    request=request,
+                    progress_id=progress_id
                 )
                 
                 # Store result in session
                 request.session["upload_result"] = result
+                
+                # Show appropriate message
+                if dry_run:
+                    messages.success(request, 
+                        f"Dry run completed: {result['created']} to create, {result['updated']} to update. "
+                        f"{len(result['errors'])} errors found."
+                    )
+                else:
+                    messages.success(request, 
+                        f"Upload completed: {result['created']} created, {result['updated']} updated. "
+                        f"{len(result['errors'])} errors."
+                    )
+                
                 # Redirect to result page
                 return redirect("employee:employee_upload_result", country_slug=country_slug, company_id=company_id)
                     
             except Exception as e:
                 messages.error(request, f"Upload error: {str(e)}")
-    else:
-        form = EmployeeUploadForm()
-
-    return render(request, "employee/upload_form.html", {
-        "form": form,
-        "company": company,
-        "country": country,
-        "country_slug": country_slug
-    })
+                return render(request, "employee/upload_form.html", {
+                    "form": form,
+                    "company": company,
+                    "country": country,
+                    "country_slug": country_slug
+                })
+        
+        else:
+            messages.error(request, "Please correct the errors below.")
+            return render(request, "employee/upload_form.html", {
+                "form": form,
+                "company": company,
+                "country": country,
+                "country_slug": country_slug
+            })
