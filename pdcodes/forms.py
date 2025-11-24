@@ -46,11 +46,11 @@ class PDcodeForm(forms.ModelForm):
         return code
 
 
-# pdcodes/forms.py - Add these forms
+# pdcodes/forms.py - Update the PDcodeCountryUploadForm
 class PDcodeUploadForm(forms.Form):
     file = forms.FileField(
         label="CSV File",
-        help_text="Upload a CSV file with PD code data"
+        help_text="Upload a CSV file with PD code data - will be applied to ALL companies in this country"
     )
     dry_run = forms.BooleanField(
         required=False,
@@ -62,8 +62,24 @@ class PDcodeUploadForm(forms.Form):
         required=False,
         initial=True,
         label="Update Existing",
-        help_text="Update existing PD codes if found"
+        help_text="Update existing PD codes if found in each company"
     )
+    company_filter = forms.MultipleChoiceField(
+        required=False,
+        label="Filter Companies",
+        help_text="Select specific companies to apply to (leave empty for all companies)",
+        widget=forms.CheckboxSelectMultiple,
+        choices=[]  # Will be populated in __init__
+    )
+    
+    def __init__(self, *args, **kwargs):
+        self.country = kwargs.pop('country', None)
+        super().__init__(*args, **kwargs)
+        
+        if self.country:
+            companies = Company.objects.filter(country=self.country, is_active=True)
+            company_choices = [(c.company_id, f"{c.trade_name} ({c.company_code})") for c in companies]
+            self.fields['company_filter'].choices = company_choices
 
 # pdcodes/forms.py - Add this form
 class PDcodeCountryUploadForm(forms.Form):

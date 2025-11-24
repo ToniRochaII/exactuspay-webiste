@@ -310,23 +310,25 @@ from django.db import transaction
 from django.http import JsonResponse
 
 # Add these views after your existing upload views
+# pdcodes/views.py - Update the pdcode_upload_country_view
 @staff_member_required
 def pdcode_upload_country_view(request, country_slug):
     """
     Upload PD codes to ALL companies in a country
     """
     country = get_object_or_404(Country, slug=country_slug)
-    companies = Company.objects.filter(
-        country=country,
-        account_status="Active",
-        account_archive=False
-    )
+    companies = Company.objects.filter(country=country, is_active=True)
     
     if request.method == "POST":
-        form = PDcodeUploadForm(request.POST, request.FILES)
+        form = PDcodeUploadForm(request.POST, request.FILES, country=country)
         if form.is_valid():
             dry_run = form.cleaned_data.get('dry_run', False)
             update_existing = form.cleaned_data.get('update_existing', True)
+            selected_companies = form.cleaned_data.get('company_filter', [])
+            
+            # Filter companies if specific ones are selected
+            if selected_companies:
+                companies = companies.filter(company_id__in=selected_companies)
             
             try:
                 # Define field mapping
@@ -368,9 +370,9 @@ def pdcode_upload_country_view(request, country_slug):
                 request.session["pdcode_country_upload_result"] = results
                 
                 # Show summary message
-                total_created = sum(r['created'] for r in results.values())
-                total_updated = sum(r['updated'] for r in results.values())
-                total_errors = sum(len(r['errors']) for r in results.values())
+                total_created = sum(r['created'] for r in results.values() if isinstance(r, dict))
+                total_updated = sum(r['updated'] for r in results.values() if isinstance(r, dict))
+                total_errors = sum(len(r['errors']) for r in results.values() if isinstance(r, dict))
                 
                 if dry_run:
                     messages.success(request, 
@@ -390,12 +392,13 @@ def pdcode_upload_country_view(request, country_slug):
             except Exception as e:
                 messages.error(request, f"Upload error: {str(e)}")
     else:
-        form = PDcodeUploadForm()
+        form = PDcodeUploadForm(country=country)
 
     return render(request, "pdcodes/upload_country_form.html", {
         "form": form,
         "country": country,
         "country_slug": country_slug,
+        "companies": companies,  # Make sure companies are passed to template
         "companies_count": companies.count()
     })
 
@@ -417,3 +420,55 @@ def pdcode_upload_country_result_view(request, country_slug):
 
 
 
+# pdcodes/views.py - Add this function
+@staff_member_required
+def download_pdcodes_country_template(request, country_slug):
+    """Download a CSV template for country-wide PD codes imports"""
+    country = get_object_or_404(Country, slug=country_slug)
+    companies = Company.objects.filter(country=country, is_active=True)
+    
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename="pdcodes_{country.slug}_country_template.csv"'
+    
+    writer = csv.writer(response)
+    
+    # Header row with all possible fields
+    writer.writerow([
+        'pdcode_code', 'pdcode_name', 'pdcode_description', 'pdcode_status',
+        'pdcode_account', 'pdcode_map_code', 'pdcode_gl_account', 'pdcode_frequency',
+        'pdcode_type', 'pdcode_class', 'pdcode_category', 'pdcode_taxable',
+        'pdcode_tax_flat', 'pdcode_tax_irregular', 'pdcode_social_securitable',
+        'pdcode_pensionable', 'pdcode_payable', 'pdcode_calculate', 'pdcode_categorytype'
+    ])
+    
+    # Sample data for country-wide template
+    writer.writerow([
+        'BASIC', 'Basic Salary', 'Regular basic salary payment', 'Visible',
+        '5001', '1001', '2001', 'Recurring',
+        'Regular', 'Standard', 'Payment', 'True',
+        'False', 'False', 'True',
+        'True', 'True', 'True', 'Base'
+    ])
+    writer.writerow([
+        'BONUS', 'Annual Bonus', 'Year-end performance bonus', 'Visible',
+        '5002', '1002', '2002', 'Non-recurring',
+        'Irregular', 'Standard', 'Payment', 'True',
+        'False', 'True', 'True',
+        'True', 'True', 'True', 'Base'
+    ])
+    writer.writerow([
+        'TAX', 'Income Tax', 'Employee income tax deduction', 'Visible',
+        '6001', '2001', '3001', 'Recurring',
+        'Regular', 'Statutory', 'Deduction', 'False',
+        'False', 'False', 'False',
+        'False', 'False', 'True', 'Bracketable'
+    ])
+    writer.writerow([
+        'PENSION', 'Pension Contribution', 'Employee pension contribution', 'Visible',
+        '6002', '2002', '3002', 'Recurring',
+        'Regular', 'Statutory', 'Deduction', 'False',
+        'False', 'False', 'True',
+        'True', 'False', 'True', 'Pension'
+    ])
+    
+    return response
