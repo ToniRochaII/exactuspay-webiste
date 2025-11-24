@@ -101,6 +101,74 @@ import time
 import math
 from .utils.progress import UploadProgressMixin
 
+
+@staff_member_required
+def employee_upload_result_view(request, country_slug, company_id):
+    """
+    Display upload results for a specific company.
+    """
+    country = get_object_or_404(Country, slug=country_slug)
+    company = get_object_or_404(Company, pk=company_id)
+    result = request.session.get("upload_result", {})
+    
+    return render(request, "employee/upload_result.html", {
+        "result": result,
+        "company": company,
+        "country": country,
+        "country_slug": country_slug
+    })
+
+@staff_member_required
+def download_employees_template(request, country_slug, company_id):
+    """Download a CSV template for employees imports"""
+    country = get_object_or_404(Country, slug=country_slug)
+    company = get_object_or_404(Company, pk=company_id)
+    
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename="employees_{company.company_code}_template.csv"'
+    
+    writer = csv.writer(response)
+    
+    # Header row
+    writer.writerow([
+        'company_code', 'employee_id', 'employee_number', 'employee_code', 'employee_name', 'employee_surname',
+        'gender', 'date_of_birth', 'marital_status', 'employee_address_type',
+        'employee_address_01', 'employee_address_02', 'employee_address_03', 'employee_address_04', 
+        'employee_address_05', 'employee_address_06', 'employee_address_07',
+        'bank_01', 'bank_02', 'bank_03', 'bank_04', 'bank_05', 'bank_06', 'bank_07', 'bank_08', 'bank_09', 'bank_10',
+        'department', 'cost_centre', 'job_title', 'position_number', 'fte',
+        'tax_info_01', 'tax_info_02', 'tax_info_03', 'tax_info_04', 'tax_info_05', 'tax_info_06', 'tax_info_07'
+    ])
+    
+    # Sample data for the specific company
+    writer.writerow([
+        company.company_code, 'EMP001', '1001', '1001', 'John', 'Smith',
+        'Male', '1985-05-15', 'Married', 'Residential',
+        '123 Main Street', 'Apt 4B', 'Downtown', 'New York', 'NY', '10001', 'USA',
+        'Bank of America', '123456789', 'Checking', '', '', '', '', '', '', '',
+        'Sales', 'SALES001', 'Sales Manager', 'POS001', '1.0',
+        '123-45-6789', '', '', '', '', '', ''
+    ])
+    writer.writerow([
+        company.company_code, 'EMP002', '1002', '1002', 'Maria', 'Garcia',
+        'Female', '1990-08-22', 'Single', 'Residential',
+        '456 Oak Avenue', '', 'Uptown', 'Los Angeles', 'CA', '90210', 'USA',
+        'Chase Bank', '987654321', 'Savings', '', '', '', '', '', '', '',
+        'Marketing', 'MKT001', 'Marketing Specialist', 'POS002', '1.0',
+        '987-65-4321', '', '', '', '', '', ''
+    ])
+    
+    return response
+
+
+# Add progress endpoint
+@staff_member_required
+def upload_progress(request):
+    from .utils.progress import get_upload_progress
+    return get_upload_progress(request)
+
+
+# employee/views.py - Fix the function call
 @staff_member_required
 def employee_upload_view(request, country_slug, company_id):
     """
@@ -162,25 +230,18 @@ def employee_upload_view(request, country_slug, company_id):
                 # Define required fields
                 required_fields = ['company_code', 'employee_number', 'employee_code', 'employee_name', 'employee_surname']
                 
-                # Call import_from_csv with progress tracking
+                # Call import_from_csv (not import_from_csv_with_progress)
                 from employee.models import Employee
-                result = import_from_csv_with_progress(
+                result = import_from_csv(
                     file=request.FILES["file"],
                     model=Employee,
                     field_map=employee_field_map,
                     required_fields=required_fields,
-                    dry_run=dry_run,
-                    request=request,
-                    progress_id=progress_id
+                    dry_run=dry_run
                 )
                 
                 # Store result in session
                 request.session["upload_result"] = result
-                # Clear progress data
-                if progress_id:
-                    if f'upload_progress_{progress_id}' in request.session:
-                        del request.session[f'upload_progress_{progress_id}']
-                
                 # Redirect to result page
                 return redirect("employee:employee_upload_result", country_slug=country_slug, company_id=company_id)
                     
@@ -195,71 +256,3 @@ def employee_upload_view(request, country_slug, company_id):
         "country": country,
         "country_slug": country_slug
     })
-
-# Add progress tracking URL
-def upload_progress(request):
-    from .utils.progress import get_upload_progress
-    return get_upload_progress(request)
-
-
-
-@staff_member_required
-def employee_upload_result_view(request, country_slug, company_id):
-    """
-    Display upload results for a specific company.
-    """
-    country = get_object_or_404(Country, slug=country_slug)
-    company = get_object_or_404(Company, pk=company_id)
-    result = request.session.get("upload_result", {})
-    
-    return render(request, "employee/upload_result.html", {
-        "result": result,
-        "company": company,
-        "country": country,
-        "country_slug": country_slug
-    })
-
-@staff_member_required
-def download_employees_template(request, country_slug, company_id):
-    """Download a CSV template for employees imports"""
-    country = get_object_or_404(Country, slug=country_slug)
-    company = get_object_or_404(Company, pk=company_id)
-    
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = f'attachment; filename="employees_{company.company_code}_template.csv"'
-    
-    writer = csv.writer(response)
-    
-    # Header row
-    writer.writerow([
-        'company_code', 'employee_id', 'employee_number', 'employee_code', 'employee_name', 'employee_surname',
-        'gender', 'date_of_birth', 'marital_status', 'employee_address_type',
-        'employee_address_01', 'employee_address_02', 'employee_address_03', 'employee_address_04', 
-        'employee_address_05', 'employee_address_06', 'employee_address_07',
-        'bank_01', 'bank_02', 'bank_03', 'bank_04', 'bank_05', 'bank_06', 'bank_07', 'bank_08', 'bank_09', 'bank_10',
-        'department', 'cost_centre', 'job_title', 'position_number', 'fte',
-        'tax_info_01', 'tax_info_02', 'tax_info_03', 'tax_info_04', 'tax_info_05', 'tax_info_06', 'tax_info_07'
-    ])
-    
-    # Sample data for the specific company
-    writer.writerow([
-        company.company_code, 'EMP001', '1001', '1001', 'John', 'Smith',
-        'Male', '1985-05-15', 'Married', 'Residential',
-        '123 Main Street', 'Apt 4B', 'Downtown', 'New York', 'NY', '10001', 'USA',
-        'Bank of America', '123456789', 'Checking', '', '', '', '', '', '', '',
-        'Sales', 'SALES001', 'Sales Manager', 'POS001', '1.0',
-        '123-45-6789', '', '', '', '', '', ''
-    ])
-    writer.writerow([
-        company.company_code, 'EMP002', '1002', '1002', 'Maria', 'Garcia',
-        'Female', '1990-08-22', 'Single', 'Residential',
-        '456 Oak Avenue', '', 'Uptown', 'Los Angeles', 'CA', '90210', 'USA',
-        'Chase Bank', '987654321', 'Savings', '', '', '', '', '', '', '',
-        'Marketing', 'MKT001', 'Marketing Specialist', 'POS002', '1.0',
-        '987-65-4321', '', '', '', '', '', ''
-    ])
-    
-    return response
-
-
-
