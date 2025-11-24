@@ -96,6 +96,7 @@ from .utils.csv_importer import import_from_csv
 from .forms import EmployeeUploadForm
 
 # Add these views to the existing employee/views.py
+# employee/views.py - Quick fix
 @staff_member_required
 def employee_upload_view(request, country_slug, company_id):
     """
@@ -107,10 +108,9 @@ def employee_upload_view(request, country_slug, company_id):
     if request.method == "POST":
         form = EmployeeUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            dry_run = form.cleaned_data.get('dry_run', False)
-            
+            # Remove dry_run parameter for now
             try:
-                result = import_from_csv("employees", request.FILES["file"], dry_run=dry_run)
+                result = import_from_csv("employees", request.FILES["file"])
                 # Store result in session
                 request.session["upload_result"] = result
                 # Redirect to result page WITH country_slug and company_id
@@ -127,6 +127,10 @@ def employee_upload_view(request, country_slug, company_id):
         "country": country,
         "country_slug": country_slug
     })
+
+
+
+
 
 @staff_member_required
 def employee_upload_result_view(request, country_slug, company_id):
