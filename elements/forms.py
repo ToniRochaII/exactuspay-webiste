@@ -32,10 +32,3 @@ class ElementUploadForm(forms.Form):
             "class": "form-check-input",
         })
     )
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['csv_file'].widget.attrs.update({
-            'class': 'form-control',
-            'accept': '.csv'
-        })
