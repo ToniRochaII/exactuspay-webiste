@@ -92,7 +92,7 @@
                         </div>
 
                         <div class="d-flex justify-content-between">
-                            <a href="{% url 'download_pdcodes_template' country_slug company_id=companies.0.company_id %}"
+                            <a href="{% url 'pdcodes:download_pdcodes_template' country_slug=country.slug company_id=companies.0.company_id %}"
                                class="btn btn-outline-info btn-sm"
                                {% if not companies %}disabled{% endif %}>
                                 <i class="fas fa-download me-1"></i>
