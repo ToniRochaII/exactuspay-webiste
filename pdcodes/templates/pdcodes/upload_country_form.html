@@ -9,7 +9,7 @@
     <!-- Breadcrumb -->
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
             <li class="breadcrumb-item"><a href="{% url 'country:country_list' %}">Countries</a></li>
             <li class="breadcrumb-item"><a href="{% url 'country:country_detail' country_slug=country.slug %}">{{ country.name }}</a></li>
             <li class="breadcrumb-item active">Upload PD Codes to All Companies</li>
