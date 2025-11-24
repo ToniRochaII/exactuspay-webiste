@@ -131,6 +131,14 @@ else:
             }
         }
     }
+# settings.py
+# File upload settings
+FILE_UPLOAD_HANDLERS = [
+    'django.core.files.uploadhandler.TemporaryFileUploadHandler',
+]
+
+# Progress bar session key
+PROGRESS_SESSION_KEY = 'upload_progress'
 
 AUTH_USER_MODEL = 'accounts.User'
 

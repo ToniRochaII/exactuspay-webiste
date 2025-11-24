@@ -96,11 +96,15 @@ from .utils.csv_importer import import_from_csv
 from .forms import EmployeeUploadForm
 
 
-# employee/views.py - Updated upload view
+# employee/views.py - Updated with progress tracking
+import time
+import math
+from .utils.progress import UploadProgressMixin
+
 @staff_member_required
 def employee_upload_view(request, country_slug, company_id):
     """
-    Upload employees via CSV for a specific company.
+    Upload employees via CSV for a specific company with progress tracking.
     """
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
@@ -109,6 +113,7 @@ def employee_upload_view(request, country_slug, company_id):
         form = EmployeeUploadForm(request.POST, request.FILES)
         if form.is_valid():
             dry_run = form.cleaned_data.get('dry_run', False)
+            progress_id = request.POST.get('progress_id')
             
             try:
                 # Define the field mapping for employees
@@ -157,19 +162,26 @@ def employee_upload_view(request, country_slug, company_id):
                 # Define required fields
                 required_fields = ['company_code', 'employee_number', 'employee_code', 'employee_name', 'employee_surname']
                 
-                # Call import_from_csv with the correct signature
+                # Call import_from_csv with progress tracking
                 from employee.models import Employee
-                result = import_from_csv(
+                result = import_from_csv_with_progress(
                     file=request.FILES["file"],
                     model=Employee,
                     field_map=employee_field_map,
                     required_fields=required_fields,
-                    dry_run=dry_run
+                    dry_run=dry_run,
+                    request=request,
+                    progress_id=progress_id
                 )
                 
                 # Store result in session
                 request.session["upload_result"] = result
-                # Redirect to result page WITH country_slug and company_id
+                # Clear progress data
+                if progress_id:
+                    if f'upload_progress_{progress_id}' in request.session:
+                        del request.session[f'upload_progress_{progress_id}']
+                
+                # Redirect to result page
                 return redirect("employee:employee_upload_result", country_slug=country_slug, company_id=company_id)
                     
             except Exception as e:
@@ -184,7 +196,10 @@ def employee_upload_view(request, country_slug, company_id):
         "country_slug": country_slug
     })
 
-
+# Add progress tracking URL
+def upload_progress(request):
+    from .utils.progress import get_upload_progress
+    return get_upload_progress(request)
 
 
 

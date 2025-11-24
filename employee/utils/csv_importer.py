@@ -1,24 +1,34 @@
 # employee/utils/csv_importer.py
 import csv
+import time
 from io import TextIOWrapper
 from django.db import transaction
 from company.models import Company
 
-def import_from_csv(file, model, field_map, required_fields=None, dry_run=False):
+def import_from_csv_with_progress(file, model, field_map, required_fields=None, dry_run=False, request=None, progress_id=None):
     """
-    Generic CSV importer for employees
-    Args:
-        file: Uploaded CSV file
-        model: Django model class
-        field_map: Dict mapping CSV headers → model field names
-        required_fields: Optional list of fields that must exist
-        dry_run: If True, validate but don't save changes
-    Returns:
-        dict: {created, updated, errors, dry_run}
+    Enhanced CSV importer with progress tracking
     """
     created, updated, errors = 0, 0, []
 
-    reader = csv.DictReader(TextIOWrapper(file, encoding='utf-8'))
+    # Read file and count rows
+    file_content = file.read().decode('utf-8-sig')
+    file_obj = TextIOWrapper(file.open('rb') if hasattr(file, 'open') else file, encoding='utf-8')
+    
+    reader = csv.DictReader(TextIOWrapper(file.open('rb') if hasattr(file, 'open') else file, encoding='utf-8'))
+    rows = list(reader)
+    total_rows = len(rows)
+    
+    if request and progress_id:
+        # Initialize progress
+        request.session[f'upload_progress_{progress_id}'] = {
+            'current': 0,
+            'total': total_rows,
+            'percent': 0,
+            'status': 'starting'
+        }
+        request.session.modified = True
+
     missing_fields = [f for f in required_fields or [] if f not in reader.fieldnames]
     if missing_fields:
         return {
@@ -32,8 +42,19 @@ def import_from_csv(file, model, field_map, required_fields=None, dry_run=False)
     def run_import():
         nonlocal created, updated
         
-        for i, row in enumerate(reader, start=1):
+        for i, row in enumerate(rows, start=1):
             try:
+                # Update progress
+                if request and progress_id:
+                    percent = int((i / total_rows) * 100)
+                    request.session[f'upload_progress_{progress_id}'] = {
+                        'current': i,
+                        'total': total_rows,
+                        'percent': percent,
+                        'status': f'Processing row {i} of {total_rows}'
+                    }
+                    request.session.modified = True
+                
                 # Handle company foreign key separately
                 data = {}
                 for csv_col, model_field in field_map.items():
@@ -58,9 +79,13 @@ def import_from_csv(file, model, field_map, required_fields=None, dry_run=False)
                                 data[model_field] = row[csv_col]
                 
                 if not errors or not any(error.startswith(f"Row {i}:") for error in errors):
+                    # Create lookup for update_or_create
+                    lookup_fields = {k: v for k, v in data.items() if k in ['employee_number', 'company']}
+                    defaults = {k: v for k, v in data.items() if k not in ['employee_number', 'company']}
+                    
                     obj, created_flag = model.objects.update_or_create(
-                        **{k: v for k, v in data.items() if k != 'company'},
-                        company=data.get('company')
+                        **lookup_fields,
+                        defaults=defaults
                     )
                     if created_flag:
                         created += 1
@@ -76,9 +101,23 @@ def import_from_csv(file, model, field_map, required_fields=None, dry_run=False)
 
     run_import()
 
+    # Final progress update
+    if request and progress_id:
+        request.session[f'upload_progress_{progress_id}'] = {
+            'current': total_rows,
+            'total': total_rows,
+            'percent': 100,
+            'status': 'complete'
+        }
+        request.session.modified = True
+
     return {
         "created": created,
         "updated": updated,
         "errors": errors,
         "dry_run": dry_run,
     }
+
+# Keep the original function for backward compatibility
+def import_from_csv(file, model, field_map, required_fields=None, dry_run=False):
+    return import_from_csv_with_progress(file, model, field_map, required_fields, dry_run)
