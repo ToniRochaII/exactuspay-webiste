@@ -5,18 +5,21 @@ from . import views
 app_name = "elements"
 
 urlpatterns = [
-    path("<slug:country_slug>/elements/", views.element, name="elements"),
-    path("<slug:country_slug>/elements/create/", views.element_create, name="element_create"),
-    path("<slug:country_slug>/elements/edit/<str:element_code>/", views.element_edit, name="element_edit"),
-    path("<slug:country_slug>/elements/delete/<str:element_code>/", views.element_delete, name="element_delete"),
-    
-    # Upload routes - country specific
+    # Listing, CRUD
+    path("<slug:country_slug>/", views.element, name="elements"),
+    path("<slug:country_slug>/create/", views.element_create, name="element_create"),
+    path("<slug:country_slug>/<str:element_code>/edit/", views.element_edit, name="element_edit"),
+    path("<slug:country_slug>/<str:element_code>/delete/", views.element_delete, name="element_delete"),
+
+    # Upload
     path("<slug:country_slug>/elements/upload/", views.element_upload_view, name="elements_upload"),
-    path("<slug:country_slug>/elements/upload/result/", views.element_upload_result_view, name="elements_upload_result"),
-    path("<slug:country_slug>/elements/upload/template/", views.download_elements_template, name="download_elements_template"),
-    
-    # Global upload routes (optional)
     path("elements/upload/", views.element_upload_view, name="elements_upload_global"),
+
+    # Upload results
+    path("<slug:country_slug>/elements/upload/result/", views.element_upload_result_view, name="elements_upload_result"),
     path("elements/upload/result/", views.element_upload_result_view, name="elements_upload_result_global"),
+
+    # Template download
+    path("<slug:country_slug>/elements/upload/template/", views.download_elements_template, name="download_elements_template"),
     path("elements/upload/template/", views.download_elements_template, name="download_elements_template_global"),
 ]

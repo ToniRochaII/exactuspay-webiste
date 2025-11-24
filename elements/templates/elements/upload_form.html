@@ -1,152 +1,167 @@
-{# elements/templates/elements/upload_form.html #}
+<!-- elements/templates/elements/upload_form.html -->
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 
 {% block title %}Upload Elements - CSV Import{% endblock %}
 
 {% block content %}
-<div class="container-fluid py-4">
+<div class="container-fluid">
     <div class="row">
         <div class="col-12">
             <div class="page-title-box">
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item">
-                            <a href="{% url 'dashboard' %}">Dashboard</a>
-                        </li>
-                        <li class="breadcrumb-item">
-                            {# your country list view name is 'country:country' #}
-                            <a href="{% url 'country:country' %}">Countries</a>
-                        </li>
+                        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
                         {% if country %}
-                            <li class="breadcrumb-item">
-                                <a href="{% url 'elements:elements' country.slug %}">
-                                    {{ country.name }} Elements
-                                </a>
-                            </li>
+                        <li class="breadcrumb-item"><a href="{% url 'elements:elements' country_slug=country.slug %}">{{ country.name }} Elements</a></li>
                         {% endif %}
                         <li class="breadcrumb-item active">Upload Elements</li>
                     </ol>
                 </div>
                 <h4 class="page-title">
                     {% if country %}
-                        Upload Elements - {{ country.name }}
+                    Upload Elements - {{ country.name }}
                     {% else %}
-                        Upload Elements (Global)
+                    Upload Elements
                     {% endif %}
                 </h4>
             </div>
         </div>
     </div>
 
-    {# Messages #}
     <div class="row">
         <div class="col-12">
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <div class="card">
+                <div class="card-body">
+                    <!-- Instructions -->
+                    <div class="alert alert-info">
+                        <h5 class="alert-heading">Instructions</h5>
+                        <ul class="mb-0">
+                            <li>Download the template below to ensure proper formatting</li>
+                            <li>Required columns: country_code, element_code, element_name, element_description</li>
+                            <li>Supported boolean values: TRUE/FALSE (case insensitive)</li>
+                            <li>File must be in CSV format with UTF-8 encoding</li>
+                        </ul>
                     </div>
-                {% endfor %}
-            {% endif %}
-        </div>
-    </div>
 
-    <div class="row">
-        <div class="col-xl-8">
-            <div class="card mt-3">
-                <div class="card-header">
-                    <h5 class="mb-0">Upload CSV File</h5>
-                </div>
-                <div class="card-body">
-                    <form method="post" enctype="multipart/form-data" id="uploadForm">
-                        {% csrf_token %}
-                        <div class="row mb-3">
-                            <div class="col-md-8">
-                                {{ form.csv_file|as_crispy_field }}
-                            </div>
-                            <div class="col-md-4">
-                                {{ form.dry_run|as_crispy_field }}
-                                <small class="form-text text-muted">
-                                    Tick this to validate the file without saving to the database.
-                                </small>
-                            </div>
+                    <!-- Upload Form -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Upload CSV File</h5>
                         </div>
+                        <div class="card-body">
+                            <form method="post" enctype="multipart/form-data" id="uploadForm">
+                                {% csrf_token %}
+                                
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        {{ form.csv_file|as_crispy_field }}
+                                    </div>
+                                </div>
 
-                        <div class="mb-3">
-                            <p class="text-muted mb-1">
-                                <strong>Instructions:</strong>
-                            </p>
-                            <ul class="text-muted mb-0">
-                                {% if country %}
-                                    <li>Country is fixed: <strong>{{ country.name }}</strong>. The CSV may omit
-                                        the <code>country_code</code> column or use {{ country.iso2_code }}.</li>
-                                {% else %}
-                                    <li>The CSV must include a <code>country_code</code> column with ISO2 codes
-                                        (e.g., <code>AR</code>, <code>BR</code>, <code>GB</code>).</li>
-                                {% endif %}
-                                <li>Use the template to ensure correct column names and order.</li>
-                            </ul>
+                                <!-- Sample Data Preview -->
+                                <div class="mt-4">
+                                    <h6>Expected CSV Format:</h6>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>country_code</th>
+                                                    <th>element_code</th>
+                                                    <th>element_name</th>
+                                                    <th>element_description</th>
+                                                    <th>element_status</th>
+                                                    <th>element_account</th>
+                                                    <th>element_map_code</th>
+                                                    <th>element_gl_account</th>
+                                                    <th>element_frequency</th>
+                                                    <th>element_type</th>
+                                                    <th>element_class</th>
+                                                    <th>element_category</th>
+                                                    <th>element_taxable</th>
+                                                    <th>element_tax_flat</th>
+                                                    <th>element_tax_irregular</th>
+                                                    <th>element_social_securitable</th>
+                                                    <th>element_pensionable</th>
+                                                    <th>element_payable</th>
+                                                    <th>element_calculate</th>
+                                                    <th>element_categorytype</th>
+                                                    <th>archive</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>AR</td>
+                                                    <td>6000</td>
+                                                    <td>Income Tax</td>
+                                                    <td>Income Tax</td>
+                                                    <td>Visible</td>
+                                                    <td>6000</td>
+                                                    <td>6000</td>
+                                                    <td>6000</td>
+                                                    <td>Recurring</td>
+                                                    <td>Regular</td>
+                                                    <td>statutory</td>
+                                                    <td>Deduction</td>
+                                                    <td>FALSE</td>
+                                                    <td>FALSE</td>
+                                                    <td>FALSE</td>
+                                                    <td>FALSE</td>
+                                                    <td>FALSE</td>
+                                                    <td>TRUE</td>
+                                                    <td>TRUE</td>
+                                                    <td>Bracketable</td>
+                                                    <td>N</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="mt-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-upload me-1"></i> Upload and Process
+                                    </button>
+                                    <a href="{% if country %}{% url 'elements:elements' country_slug=country.slug %}{% else %}{% url 'dashboard' %}{% endif %}" 
+                                       class="btn btn-secondary">Cancel</a>
+                                    
+                                    <!-- Download Template Button -->
+                                    <a href="{% if country %}{% url 'elements:download_elements_template' country_slug=country.slug %}{% else %}{% url 'elements:download_elements_template_global' %}{% endif %}" 
+                                       class="btn btn-outline-primary float-end">
+                                        <i class="fas fa-download me-1"></i> Download Template
+                                    </a>
+                                </div>
+                            </form>
                         </div>
-
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-upload me-2"></i>Upload
-                                </button>
-                                {% if country %}
-                                    <a href="{% url 'elements:elements' country.slug %}" class="btn btn-outline-secondary ms-2">
-                                        <i class="fas fa-list me-2"></i>Back to Elements
-                                    </a>
-                                {% else %}
-                                    <a href="{% url 'country:country' %}" class="btn btn-outline-secondary ms-2">
-                                        <i class="fas fa-list me-2"></i>Back to Countries
-                                    </a>
-                                {% endif %}
-                            </div>
-                            <div>
-                                {% if country %}
-                                    <a href="{% url 'elements:download_elements_template' country.slug %}"
-                                       class="btn btn-outline-info">
-                                        <i class="fas fa-download me-2"></i>Download Template
-                                    </a>
-                                {% else %}
-                                    <a href="{% url 'elements:download_elements_template' %}"
-                                       class="btn btn-outline-info">
-                                        <i class="fas fa-download me-2"></i>Download Template
-                                    </a>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-        {# Optional side card with info #}
-        <div class="col-xl-4">
-            <div class="card mt-3">
-                <div class="card-header">
-                    <h5 class="mb-0">Template Overview</h5>
-                </div>
-                <div class="card-body">
-                    <p class="text-muted">
-                        The CSV file must contain at least the following columns:
-                    </p>
-                    <ul class="text-muted small">
-                        <li><code>country_code</code> (ISO2) – required for global uploads</li>
-                        <li><code>element_code</code></li>
-                        <li><code>element_name</code></li>
-                        <li><code>element_description</code></li>
-                        <li>Other optional config fields (status, frequency, type, flags, etc.)</li>
-                    </ul>
-                    <p class="text-muted mb-0">
-                        Boolean fields accept values like: <code>TRUE/FALSE</code>, <code>YES/NO</code>, <code>1/0</code>.
-                    </p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    // Add file validation
+    $('#uploadForm').on('submit', function() {
+        const fileInput = $('#id_csv_file');
+        if (fileInput[0].files.length === 0) {
+            alert('Please select a CSV file to upload.');
+            return false;
+        }
+        
+        const fileName = fileInput[0].files[0].name;
+        if (!fileName.toLowerCase().endsWith('.csv')) {
+            alert('Please select a CSV file.');
+            return false;
+        }
+        
+        // Show loading state
+        $('button[type="submit"]').prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> Processing...');
+    });
+});
+</script>
 {% endblock %}
