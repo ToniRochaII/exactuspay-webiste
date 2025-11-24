@@ -305,7 +305,109 @@ def download_pdcodes_template(request, country_slug, company_id):
 
 
 
+# pdcodes/views.py - Add these imports
+from django.db import transaction
+from django.http import JsonResponse
 
+# Add these views after your existing upload views
+@staff_member_required
+def pdcode_upload_country_view(request, country_slug):
+    """
+    Upload PD codes to ALL companies in a country
+    """
+    country = get_object_or_404(Country, slug=country_slug)
+    companies = Company.objects.filter(country=country, is_active=True)
+    
+    if request.method == "POST":
+        form = PDcodeUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            dry_run = form.cleaned_data.get('dry_run', False)
+            update_existing = form.cleaned_data.get('update_existing', True)
+            
+            try:
+                # Define field mapping
+                pdcode_field_map = {
+                    "pdcode_code": "pdcode_code",
+                    "pdcode_name": "pdcode_name",
+                    "pdcode_description": "pdcode_description",
+                    "pdcode_status": "pdcode_status",
+                    "pdcode_account": "pdcode_account",
+                    "pdcode_map_code": "pdcode_map_code",
+                    "pdcode_gl_account": "pdcode_gl_account",
+                    "pdcode_frequency": "pdcode_frequency",
+                    "pdcode_type": "pdcode_type",
+                    "pdcode_class": "pdcode_class",
+                    "pdcode_category": "pdcode_category",
+                    "pdcode_taxable": "pdcode_taxable",
+                    "pdcode_tax_flat": "pdcode_tax_flat",
+                    "pdcode_tax_irregular": "pdcode_tax_irregular",
+                    "pdcode_social_securitable": "pdcode_social_securitable",
+                    "pdcode_pensionable": "pdcode_pensionable",
+                    "pdcode_payable": "pdcode_payable",
+                    "pdcode_calculate": "pdcode_calculate",
+                    "pdcode_categorytype": "pdcode_categorytype",
+                }
+                
+                required_fields = ['pdcode_code', 'pdcode_name']
+                
+                # Process upload for all companies
+                results = import_pdcodes_to_all_companies(
+                    file=request.FILES["file"],
+                    companies=companies,
+                    field_map=pdcode_field_map,
+                    required_fields=required_fields,
+                    dry_run=dry_run,
+                    update_existing=update_existing
+                )
+                
+                # Store results in session
+                request.session["pdcode_country_upload_result"] = results
+                
+                # Show summary message
+                total_created = sum(r['created'] for r in results.values())
+                total_updated = sum(r['updated'] for r in results.values())
+                total_errors = sum(len(r['errors']) for r in results.values())
+                
+                if dry_run:
+                    messages.success(request, 
+                        f"Dry run completed for {len(companies)} companies: "
+                        f"{total_created} to create, {total_updated} to update. "
+                        f"{total_errors} errors found."
+                    )
+                else:
+                    messages.success(request, 
+                        f"Upload completed for {len(companies)} companies: "
+                        f"{total_created} created, {total_updated} updated. "
+                        f"{total_errors} errors."
+                    )
+                
+                return redirect("pdcodes:pdcode_upload_country_result", country_slug=country_slug)
+                    
+            except Exception as e:
+                messages.error(request, f"Upload error: {str(e)}")
+    else:
+        form = PDcodeUploadForm()
+
+    return render(request, "pdcodes/upload_country_form.html", {
+        "form": form,
+        "country": country,
+        "country_slug": country_slug,
+        "companies_count": companies.count()
+    })
+
+@staff_member_required
+def pdcode_upload_country_result_view(request, country_slug):
+    """
+    Display country-wide upload results
+    """
+    country = get_object_or_404(Country, slug=country_slug)
+    results = request.session.get("pdcode_country_upload_result", {})
+    
+    return render(request, "pdcodes/upload_country_result.html", {
+        "results": results,
+        "country": country,
+        "country_slug": country_slug
+    })
 
 
 
