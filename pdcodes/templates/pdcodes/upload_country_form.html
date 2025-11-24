@@ -11,7 +11,7 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="">Home</a></li>
             <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
-            <li class="breadcrumb-item"><a href="{% url 'country:country_detail' slug=country.slug %}">{{ country.name }}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'country:country_detail' country_slug %}">{{ country.name }}</a></li>
             <li class="breadcrumb-item active">Upload PD Codes to All Companies</li>
         </ol>
     </nav>
