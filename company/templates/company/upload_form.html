@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Upload Companies - ExactusPay{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header pb-0">
+                    <div class="d-flex align-items-center">
+                        <h4>
+                            {% if country %}
+                                Upload Companies - {{ country.name }}
+                            {% else %}
+                                Upload Companies
+                            {% endif %}
+                        </h4>
+                        <a href="{% if country %}{% url 'companies:company' country.slug %}{% else %}{% url 'country:country' %}{% endif %}" 
+                           class="btn btn-outline-secondary btn-sm ms-auto">
+                            <i class="fas fa-arrow-left me-2"></i>Back
+                        </a>
+                    </div>
+                    <p class="text-sm mb-0">Upload companies via CSV file</p>
+                </div>
+                <div class="card-body">
+                    <!-- Instructions -->
+                    <div class="alert alert-info">
+                        <h6 class="alert-heading">
+                            <i class="fas fa-info-circle me-2"></i>CSV Format Requirements
+                        </h6>
+                        <hr>
+                        <ul class="mb-1">
+                            <li>File must be in CSV format (comma-separated values)</li>
+                            <li>First row must contain column headers</li>
+                            <li>Required columns: <strong>country_code, company_code, trade_name, legal_name</strong></li>
+                            <li>country_code must match existing country ISO2 codes (US, GB, FR, etc.)</li>
+                            <li>Optional columns can be left empty</li>
+                        </ul>
+                    </div>
+
+                    <!-- CSV Template Download -->
+                    <div class="alert alert-warning">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>Need a template?</strong> Download our CSV template to ensure proper formatting.
+                            </div>
+                            <a href="{% if country %}{% url 'companies:download_companies_template' country.slug %}{% else %}{% url 'companies:download_companies_template_global' %}{% endif %}" 
+                               class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-download me-2"></i>Download Template
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Upload Form -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Upload CSV File</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" enctype="multipart/form-data" id="uploadForm">
+                                {% csrf_token %}
+                                
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        {{ form.file|as_crispy_field }}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{ form.dry_run|as_crispy_field }}
+                                        <small class="form-text text-muted">
+                                            Check this to validate the file without saving to database.
+                                        </small>
+                                    </div>
+                                </div>
+
+                                <!-- Sample Data Preview -->
+                                <div class="mt-4">
+                                    <h6>Expected CSV Format:</h6>
+                                    <div class="table-responsive">
+                                        <table class="table table-sm table-bordered">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>country_code</th>
+                                                    <th>company_code</th>
+                                                    <th>trade_name</th>
+                                                    <th>legal_name</th>
+                                                    <th>account_status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>US</td>
+                                                    <td>COMP001</td>
+                                                    <td>Tech Solutions Inc</td>
+                                                    <td>Tech Solutions Incorporated</td>
+                                                    <td>ACTIVE</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>GB</td>
+                                                    <td>COMP002</td>
+                                                    <td>London Trading Co</td>
+                                                    <td>London Trading Company Ltd</td>
+                                                    <td>ACTIVE</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="mt-4">
+                                    <button type="submit" class="btn btn-primary" id="uploadBtn">
+                                        <i class="fas fa-upload me-2"></i>Upload Companies
+                                    </button>
+                                    <a href="{% if country %}{% url 'companies:company' country.slug %}{% else %}{% url 'country:country' %}{% endif %}" 
+                                       class="btn btn-outline-secondary">
+                                        Cancel
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Field Reference -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Field Reference</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-sm table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Field</th>
+                                            <th>Required</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>country_code</strong></td>
+                                            <td>Yes</td>
+                                            <td>Text</td>
+                                            <td>ISO2 country code (must exist in system)</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>company_code</strong></td>
+                                            <td>Yes</td>
+                                            <td>Text</td>
+                                            <td>Unique company code per country</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>trade_name</strong></td>
+                                            <td>Yes</td>
+                                            <td>Text</td>
+                                            <td>Company trade name</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>legal_name</strong></td>
+                                            <td>Yes</td>
+                                            <td>Text</td>
+                                            <td>Company legal name</td>
+                                        </tr>
+                                        <tr>
+                                            <td>company_number</td>
+                                            <td>No</td>
+                                            <td>Text</td>
+                                            <td>Company registration number</td>
+                                        </tr>
+                                        <tr>
+                                            <td>account_status</td>
+                                            <td>No</td>
+                                            <td>Choice</td>
+                                            <td>ACTIVE, SUSPENDED, INACTIVE (default: ACTIVE)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>account_archive</td>
+                                            <td>No</td>
+                                            <td>Choice</td>
+                                            <td>Y, N (default: N)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('uploadForm').addEventListener('submit', function() {
+    const btn = document.getElementById('uploadBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Uploading...';
+});
+</script>
+{% endblock %}
