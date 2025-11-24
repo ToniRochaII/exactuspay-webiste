@@ -95,8 +95,8 @@ import csv
 from .utils.csv_importer import import_from_csv
 from .forms import EmployeeUploadForm
 
-# Add these views to the existing employee/views.py
-# employee/views.py - Quick fix
+
+# employee/views.py - Updated upload view
 @staff_member_required
 def employee_upload_view(request, country_slug, company_id):
     """
@@ -108,9 +108,65 @@ def employee_upload_view(request, country_slug, company_id):
     if request.method == "POST":
         form = EmployeeUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            # Remove dry_run parameter for now
+            dry_run = form.cleaned_data.get('dry_run', False)
+            
             try:
-                result = import_from_csv("employees", request.FILES["file"])
+                # Define the field mapping for employees
+                employee_field_map = {
+                    "company_code": "company",
+                    "employee_id": "employee_id",
+                    "employee_number": "employee_number",
+                    "employee_code": "employee_code",
+                    "employee_name": "employee_name",
+                    "employee_surname": "employee_surname",
+                    "gender": "gender",
+                    "date_of_birth": "date_of_birth",
+                    "marital_status": "marital_status",
+                    "employee_address_type": "employee_address_type",
+                    "employee_address_01": "employee_address_01",
+                    "employee_address_02": "employee_address_02",
+                    "employee_address_03": "employee_address_03",
+                    "employee_address_04": "employee_address_04",
+                    "employee_address_05": "employee_address_05",
+                    "employee_address_06": "employee_address_06",
+                    "employee_address_07": "employee_address_07",
+                    "bank_01": "bank_01",
+                    "bank_02": "bank_02",
+                    "bank_03": "bank_03",
+                    "bank_04": "bank_04",
+                    "bank_05": "bank_05",
+                    "bank_06": "bank_06",
+                    "bank_07": "bank_07",
+                    "bank_08": "bank_08",
+                    "bank_09": "bank_09",
+                    "bank_10": "bank_10",
+                    "department": "department",
+                    "cost_centre": "cost_centre",
+                    "job_title": "job_title",
+                    "position_number": "position_number",
+                    "fte": "fte",
+                    "tax_info_01": "tax_info_01",
+                    "tax_info_02": "tax_info_02",
+                    "tax_info_03": "tax_info_03",
+                    "tax_info_04": "tax_info_04",
+                    "tax_info_05": "tax_info_05",
+                    "tax_info_06": "tax_info_06",
+                    "tax_info_07": "tax_info_07",
+                }
+                
+                # Define required fields
+                required_fields = ['company_code', 'employee_number', 'employee_code', 'employee_name', 'employee_surname']
+                
+                # Call import_from_csv with the correct signature
+                from employee.models import Employee
+                result = import_from_csv(
+                    file=request.FILES["file"],
+                    model=Employee,
+                    field_map=employee_field_map,
+                    required_fields=required_fields,
+                    dry_run=dry_run
+                )
+                
                 # Store result in session
                 request.session["upload_result"] = result
                 # Redirect to result page WITH country_slug and company_id
