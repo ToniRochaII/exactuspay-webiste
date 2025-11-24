@@ -47,6 +47,7 @@ class PDcodeForm(forms.ModelForm):
 
 
 # pdcodes/forms.py - Update the PDcodeCountryUploadForm
+# pdcodes/forms.py - Update the PDcodeUploadForm
 class PDcodeUploadForm(forms.Form):
     file = forms.FileField(
         label="CSV File",
@@ -77,7 +78,8 @@ class PDcodeUploadForm(forms.Form):
         super().__init__(*args, **kwargs)
         
         if self.country:
-            companies = Company.objects.filter(country=self.country, is_active=True)
+            # Remove is_active filter
+            companies = Company.objects.filter(country=self.country)
             company_choices = [(c.company_id, f"{c.trade_name} ({c.company_code})") for c in companies]
             self.fields['company_filter'].choices = company_choices
 

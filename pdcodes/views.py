@@ -311,13 +311,16 @@ from django.http import JsonResponse
 
 # Add these views after your existing upload views
 # pdcodes/views.py - Update the pdcode_upload_country_view
+# pdcodes/views.py - Update the pdcode_upload_country_view
 @staff_member_required
 def pdcode_upload_country_view(request, country_slug):
     """
     Upload PD codes to ALL companies in a country
     """
     country = get_object_or_404(Country, slug=country_slug)
-    companies = Company.objects.filter(country=country, is_active=True)
+    
+    # Remove is_active filter since it doesn't exist in your Company model
+    companies = Company.objects.filter(country=country)
     
     if request.method == "POST":
         form = PDcodeUploadForm(request.POST, request.FILES, country=country)
@@ -398,34 +401,18 @@ def pdcode_upload_country_view(request, country_slug):
         "form": form,
         "country": country,
         "country_slug": country_slug,
-        "companies": companies,  # Make sure companies are passed to template
+        "companies": companies,
         "companies_count": companies.count()
     })
 
-@staff_member_required
-def pdcode_upload_country_result_view(request, country_slug):
-    """
-    Display country-wide upload results
-    """
-    country = get_object_or_404(Country, slug=country_slug)
-    results = request.session.get("pdcode_country_upload_result", {})
-    
-    return render(request, "pdcodes/upload_country_result.html", {
-        "results": results,
-        "country": country,
-        "country_slug": country_slug
-    })
-
-
-
-
-
-# pdcodes/views.py - Add this function
+# Also update the template download view
 @staff_member_required
 def download_pdcodes_country_template(request, country_slug):
     """Download a CSV template for country-wide PD codes imports"""
     country = get_object_or_404(Country, slug=country_slug)
-    companies = Company.objects.filter(country=country, is_active=True)
+    
+    # Remove is_active filter
+    companies = Company.objects.filter(country=country)
     
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = f'attachment; filename="pdcodes_{country.slug}_country_template.csv"'
@@ -472,3 +459,63 @@ def download_pdcodes_country_template(request, country_slug):
     ])
     
     return response
+
+@staff_member_required
+def pdcode_upload_country_result_view(request, country_slug):
+    """
+    Display country-wide upload results
+    """
+    country = get_object_or_404(Country, slug=country_slug)
+    results = request.session.get("pdcode_country_upload_result", {})
+    
+    return render(request, "pdcodes/upload_country_result.html", {
+        "results": results,
+        "country": country,
+        "country_slug": country_slug
+    })
+
+
+
+# country/views.py - Update your country_detail view
+from django.db.models import Count, Avg
+from employee.models import Employee
+from pdcodes.models import PDcode
+
+def country_detail(request, country_slug):
+    country = get_object_or_404(Country, slug=country_slug)
+    companies = Company.objects.filter(country=country)
+    
+    # Calculate statistics
+    total_pdcodes = PDcode.objects.filter(company__country=country).count()
+    employees_count = Employee.objects.filter(company__country=country).count()
+    
+    # Calculate average PD codes per company
+    if companies.exists():
+        avg_pdcodes_per_company = PDcode.objects.filter(company__in=companies).count() / companies.count()
+        avg_pdcodes_per_company = round(avg_pdcodes_per_company, 1)
+    else:
+        avg_pdcodes_per_company = 0
+    
+    # Get recent activity (you might want to create a model for this)
+    recent_pdcode_uploads = [
+        {
+            'date': '2024-01-15',
+            'description': 'Bulk PD code upload',
+            'status': 'Completed',
+            'status_color': 'success'
+        },
+        # Add more recent activities as needed
+    ]
+    
+    context = {
+        'country': country,
+        'companies': companies,
+        'total_pdcodes': total_pdcodes,
+        'employees_count': employees_count,
+        'avg_pdcodes_per_company': avg_pdcodes_per_company,
+        'recent_uploads': len(recent_pdcode_uploads),
+        'recent_pdcode_uploads': recent_pdcode_uploads,
+        'last_updated': 'Just now',  # You can make this dynamic
+    }
+    
+    return render(request, 'country/country_detail.html', context)

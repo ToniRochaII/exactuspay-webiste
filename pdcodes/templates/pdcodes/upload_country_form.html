@@ -27,7 +27,7 @@
                 <div class="card-body">
                     <div class="alert alert-info">
                         <strong><i class="fas fa-info-circle"></i> Important:</strong> 
-                        This will upload PD codes to all {{ companies_count }} active companies in {{ country.name }}.
+                        This will upload PD codes to all {{ companies_count }} companies in {{ country.name }}.
                         Each PD code will be created/updated for every company listed below.
                     </div>
 
@@ -131,7 +131,7 @@
                                     <strong class="d-block">{{ company.trade_name }}</strong>
                                     <small class="text-muted">Code: {{ company.company_code }}</small>
                                     <br>
-                                    <span class="badge bg-{% if company.is_active %}success{% else %}secondary{% endif %}">
+                                    <span class="badge bg-info">
                                         {{ company.pdcodes.count }} PD codes
                                     </span>
                                 </div>
@@ -142,7 +142,7 @@
                     {% else %}
                     <div class="alert alert-warning">
                         <i class="fas fa-exclamation-triangle"></i>
-                        No active companies found in {{ country.name }}.
+                        No companies found in {{ country.name }}.
                     </div>
                     {% endif %}
                 </div>
