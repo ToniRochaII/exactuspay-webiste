@@ -12,7 +12,7 @@
             <li class="breadcrumb-item"><a href="">Home</a></li>
             <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
             <li class="breadcrumb-item"><a href="{% url 'country:country_detail' country_slug=country.slug %}">{{ country.name }}</a></li>
-            <li class="breadcrumb-item"><a href="{% url 'pdcodes:pdcode_upload_country' country_slug=country.slug %}">Upload PD Codes</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'pdcodes:pdcode_upload_country' slug=country.slug %}">Upload PD Codes</a></li>
             <li class="breadcrumb-item active">Upload Results</li>
         </ol>
     </nav>
