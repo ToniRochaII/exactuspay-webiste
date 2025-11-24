@@ -1,167 +1,143 @@
+{# elements/templates/elements/upload_result.html #}
 {% extends "base.html" %}
-{% load crispy_forms_tags %}
 
-{% block title %}Upload Results - ExactusPay{% endblock %}
+{% block title %}Upload Results - Elements{% endblock %}
 
 {% block content %}
 <div class="container-fluid py-4">
     <div class="row">
         <div class="col-12">
-            <div class="card">
-                <div class="card-header pb-0">
-                    <div class="d-flex align-items-center">
-                        <h4>Upload Results - Elements</h4>
-                        <div class="ms-auto">
-                            {% if country %}
-                                <a href="{% url 'elements:elements_upload' country.slug %}" class="btn btn-outline-primary btn-sm">
-                                    <i class="fas fa-upload me-2"></i>Upload Another
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'dashboard' %}">Dashboard</a>
+                        </li>
+                        <li class="breadcrumb-item">
+                            <a href="{% url 'country:country' %}">Countries</a>
+                        </li>
+                        {% if country %}
+                            <li class="breadcrumb-item">
+                                <a href="{% url 'elements:elements' country.slug %}">
+                                    {{ country.name }} Elements
                                 </a>
-                                <a href="{% url 'elements:elements' country.slug %}" class="btn btn-outline-secondary btn-sm">
-                                    <i class="fas fa-list me-2"></i>View Elements
-                                </a>
-                            {% else %}
-                                <a href="{% url 'elements:elements_upload_global' %}" class="btn btn-outline-primary btn-sm">
-                                    <i class="fas fa-upload me-2"></i>Upload Another
-                                </a>
-                                <a href="{% url 'country:country' %}" class="btn btn-outline-secondary btn-sm">
-                                    <i class="fas fa-list me-2"></i>View Countries
-                                </a>
-                            {% endif %}
-                        </div>
-                    </div>
+                            </li>
+                        {% endif %}
+                        <li class="breadcrumb-item active">Upload Results</li>
+                    </ol>
                 </div>
-                <div class="card-body">
-                    <!-- Summary -->
-                    <div class="row mb-4">
-                        <div class="col-md-4">
-                            <div class="card bg-success text-white">
-                                <div class="card-body text-center">
-                                    <h3>{{ result.created }}</h3>
-                                    <p class="mb-0">Elements Created</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card bg-primary text-white">
-                                <div class="card-body text-center">
-                                    <h3>{{ result.updated }}</h3>
-                                    <p class="mb-0">Elements Updated</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="card {% if result.errors %}bg-danger{% else %}bg-secondary{% endif %} text-white">
-                                <div class="card-body text-center">
-                                    <h3>{{ result.errors|length }}</h3>
-                                    <p class="mb-0">Errors</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <h4 class="page-title">Upload Results - Elements</h4>
+            </div>
+        </div>
+    </div>
 
-                    <!-- Dry Run Notice -->
-                    {% if result.dry_run %}
-                    <div class="alert alert-warning">
-                        <h5 class="alert-heading">
-                            <i class="fas fa-exclamation-triangle me-2"></i>
-                            Dry Run Completed
-                        </h5>
-                        <p class="mb-0">This was a dry run - no changes were saved to the database.</p>
-                    </div>
-                    {% endif %}
-
-                    <!-- Errors Display -->
-                    {% if result.errors %}
-                    <div class="alert alert-danger">
-                        <h5 class="alert-heading">
-                            <i class="fas fa-exclamation-triangle me-2"></i>
-                            Import Errors ({{ result.errors|length }})
-                        </h5>
-                        <hr>
-                        <div class="table-responsive">
-                            <table class="table table-sm table-bordered">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th style="width: 80px;">Line #</th>
-                                        <th>Error</th>
-                                        <th>Row Data</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for error in result.errors %}
-                                    <tr>
-                                        <td class="text-center">
-                                            <strong>{{ error.line }}</strong>
-                                        </td>
-                                        <td>
-                                            <span class="text-danger">{{ error.error }}</span>
-                                        </td>
-                                        <td>
-                                            <small class="text-muted">
-                                                {% for key, value in error.row.items %}
-                                                    <strong>{{ key }}:</strong> {{ value }}{% if not forloop.last %}, {% endif %}
-                                                {% endfor %}
-                                            </small>
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    {% else %}
-                    <div class="alert alert-success">
-                        <h5 class="alert-heading">
-                            <i class="fas fa-check-circle me-2"></i>
-                            Import Completed Successfully!
-                        </h5>
-                        <p class="mb-0">All elements were processed without errors.</p>
-                    </div>
-                    {% endif %}
-
-                    <!-- Success Message -->
-                    {% if result.created or result.updated %}
-                    <div class="alert alert-info">
-                        <h5 class="alert-heading">Import Summary</h5>
-                        <ul class="mb-0">
-                            {% if result.created %}
-                            <li><strong>{{ result.created }}</strong> new elements were created</li>
-                            {% endif %}
-                            {% if result.updated %}
-                            <li><strong>{{ result.updated }}</strong> existing elements were updated</li>
-                            {% endif %}
-                        </ul>
-                    </div>
-                    {% endif %}
-
-                    <!-- Actions -->
-                    <div class="mt-4">
-                        <div class="d-flex gap-2">
-                            {% if country %}
-                                <a href="{% url 'elements:elements_upload' country.slug %}" class="btn btn-primary">
-                                    <i class="fas fa-upload me-2"></i>Upload Another File
-                                </a>
-                                <a href="{% url 'elements:elements' country.slug %}" class="btn btn-outline-secondary">
-                                    <i class="fas fa-list me-2"></i>View Elements
-                                </a>
-                            {% else %}
-                                <a href="{% url 'elements:elements_upload_global' %}" class="btn btn-primary">
-                                    <i class="fas fa-upload me-2"></i>Upload Another File
-                                </a>
-                                <a href="{% url 'country:country' %}" class="btn btn-outline-secondary">
-                                    <i class="fas fa-list me-2"></i>View Countries
-                                </a>
-                            {% endif %}
-                            {% if result.errors %}
-                            <a href="{% if country %}{% url 'elements:download_elements_template' country.slug %}{% else %}{% url 'elements:download_elements_template_global' %}{% endif %}" 
-                               class="btn btn-outline-info">
-                                <i class="fas fa-download me-2"></i>Download Template
-                            </a>
-                            {% endif %}
-                        </div>
-                    </div>
+    {# Summary cards #}
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card bg-success text-white">
+                <div class="card-body text-center">
+                    <h3 class="mb-1">{{ success_count }}</h3>
+                    <p class="mb-0">Rows Processed Successfully</p>
                 </div>
             </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-danger text-white">
+                <div class="card-body text-center">
+                    <h3 class="mb-1">{{ error_count }}</h3>
+                    <p class="mb-0">Rows with Errors</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card {% if dry_run %}bg-warning{% else %}bg-secondary{% endif %} text-white">
+                <div class="card-body text-center">
+                    {% if dry_run %}
+                        <h3 class="mb-1">Dry Run</h3>
+                        <p class="mb-0">No changes were saved</p>
+                    {% else %}
+                        <h3 class="mb-1">Committed</h3>
+                        <p class="mb-0">Changes saved to database</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Messages #}
+    <div class="row">
+        <div class="col-12">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    {# Errors table or success notice #}
+    <div class="row">
+        <div class="col-12">
+            {% if errors %}
+                <div class="card">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="mb-0">
+                            Import Errors ({{ errors|length }})
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">
+                            The following rows could not be processed:
+                        </p>
+                        <ul class="text-danger small mb-0">
+                            {# each entry is a string like "Row 2: <error>" #}
+                            {% for error in errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-success">
+                    <h5 class="alert-heading">
+                        <i class="fas fa-check-circle me-2"></i>
+                        Import Completed Successfully!
+                    </h5>
+                    <p class="mb-0">
+                        All rows were processed without errors.
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {# Actions #}
+    <div class="row mt-4">
+        <div class="col-12 d-flex flex-wrap gap-2">
+            {% if country %}
+                <a href="{% url 'elements:elements_upload' country.slug %}" class="btn btn-primary">
+                    <i class="fas fa-upload me-2"></i>Upload Another File
+                </a>
+                <a href="{% url 'elements:elements' country.slug %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-list me-2"></i>View Elements
+                </a>
+                <a href="{% url 'elements:download_elements_template' country.slug %}" class="btn btn-outline-info">
+                    <i class="fas fa-download me-2"></i>Download Template
+                </a>
+            {% else %}
+                <a href="{% url 'elements:elements_upload_global' %}" class="btn btn-primary">
+                    <i class="fas fa-upload me-2"></i>Upload Another File
+                </a>
+                <a href="{% url 'country:country' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-list me-2"></i>View Countries
+                </a>
+                <a href="{% url 'elements:download_elements_template' %}" class="btn btn-outline-info">
+                    <i class="fas fa-download me-2"></i>Download Template
+                </a>
+            {% endif %}
         </div>
     </div>
 </div>
