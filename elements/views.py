@@ -143,7 +143,8 @@ def element_upload_result_view(request, country_slug=None):
         'success_count': upload_results.get('success_count', 0),
         'error_count': upload_results.get('error_count', 0),
         'errors': upload_results.get('errors', []),
-        'country': country
+        'country': country,
+        'country_slug': upload_results.get('country_slug')
     })
 
 @login_required
