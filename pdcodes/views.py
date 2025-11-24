@@ -316,7 +316,11 @@ def pdcode_upload_country_view(request, country_slug):
     Upload PD codes to ALL companies in a country
     """
     country = get_object_or_404(Country, slug=country_slug)
-    companies = Company.objects.filter(country=country, is_active=True)
+    companies = Company.objects.filter(
+        country=country,
+        account_status="Active",
+        account_archive=False
+    )
     
     if request.method == "POST":
         form = PDcodeUploadForm(request.POST, request.FILES)
