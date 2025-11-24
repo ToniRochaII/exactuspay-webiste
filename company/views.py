@@ -122,6 +122,7 @@ def company_upload_view(request, country_slug=None):
     context = {
         "form": form,
         "country": country,
+        'country_slug': country_slug
     }
     if country:
         context["country_slug"] = country_slug
@@ -141,6 +142,7 @@ def company_upload_result_view(request, country_slug=None):
     context = {
         "result": result,
         "country": country,
+        'country_slug': country_slug
     }
     if country:
         context["country_slug"] = country_slug
