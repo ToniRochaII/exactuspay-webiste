@@ -17,7 +17,8 @@ def element(request, country_slug):
     elements = Element.objects.filter(country=country)
     return render(request, 'elements/index.html', {
         'elements': elements,
-        'country': country
+        'country': country,
+        'country_slug': country_slug
     })
 
 @login_required
@@ -35,7 +36,8 @@ def element_create(request, country_slug):
         form = ElementForm()
     return render(request, 'elements/create.html', {
         'form': form,
-        'country': country
+        'country': country,
+        'country_slug': country_slug,
     })
 
 @login_required
@@ -53,7 +55,8 @@ def element_edit(request, country_slug, element_code):
     return render(request, 'elements/edit.html', {
         'form': form,
         'element': element,
-        'country': country
+        'country': country,
+        'country_slug': country_slug,
     })
 
 @login_required
@@ -66,7 +69,8 @@ def element_delete(request, country_slug, element_code):
         return redirect('elements:elements', country_slug=country_slug)
     return render(request, 'elements/delete.html', {
         'element': element,
-        'country': country
+        'country': country,
+        'country_slug': country_slug,
     })
 
 @login_required
@@ -102,7 +106,7 @@ def element_upload_view(request, country_slug=None):
                 'success_count': success_count,
                 'error_count': error_count,
                 'errors': errors,
-                'country_slug': country_slug
+                'country_slug': country_slug,
             }
             
             # Redirect to results page with proper country_slug
@@ -118,7 +122,8 @@ def element_upload_view(request, country_slug=None):
     
     return render(request, 'elements/upload_form.html', {
         'form': form,
-        'country': country
+        'country': country,
+        'country_slug': country_slug,
     })
 
 @login_required
