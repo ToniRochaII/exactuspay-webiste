@@ -13,4 +13,6 @@ urlpatterns = [
     path("<slug:country_slug>/<int:company_id>/upload/", views.employee_upload_view, name="employee_upload"),
     path("<slug:country_slug>/<int:company_id>/upload/result/", views.employee_upload_result_view, name="employee_upload_result"),
     path("<slug:country_slug>/<int:company_id>/upload/template/", views.download_employees_template, name="download_employees_template"),
+
+     path("employee/upload/progress/", views.upload_progress, name="upload_progress"),
 ]
