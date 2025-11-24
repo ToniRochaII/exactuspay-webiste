@@ -144,3 +144,170 @@ def pdcode_delete(request, country_slug, company_id, pdcode_code):
             "pdcode": pdcode,
         },
     )
+
+
+# pdcodes/views.py - Add these imports at the top
+from django.contrib.admin.views.decorators import staff_member_required
+from django.http import HttpResponse
+import csv
+from .utils.csv_importer import import_pdcodes_from_csv
+from .forms import PDcodeUploadForm
+
+# Add these views after your existing CRUD views
+@staff_member_required
+def pdcode_upload_view(request, country_slug, company_id):
+    """
+    Upload PD codes via CSV for a specific company
+    """
+    country = get_object_or_404(Country, slug=country_slug)
+    company = get_object_or_404(Company, company_id=company_id)
+
+    if request.method == "POST":
+        form = PDcodeUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            dry_run = form.cleaned_data.get('dry_run', False)
+            update_existing = form.cleaned_data.get('update_existing', True)
+            
+            try:
+                # Define the field mapping for PD codes
+                pdcode_field_map = {
+                    "pdcode_code": "pdcode_code",
+                    "pdcode_name": "pdcode_name",
+                    "pdcode_description": "pdcode_description",
+                    "pdcode_status": "pdcode_status",
+                    "pdcode_account": "pdcode_account",
+                    "pdcode_map_code": "pdcode_map_code",
+                    "pdcode_gl_account": "pdcode_gl_account",
+                    "pdcode_frequency": "pdcode_frequency",
+                    "pdcode_type": "pdcode_type",
+                    "pdcode_class": "pdcode_class",
+                    "pdcode_category": "pdcode_category",
+                    "pdcode_taxable": "pdcode_taxable",
+                    "pdcode_tax_flat": "pdcode_tax_flat",
+                    "pdcode_tax_irregular": "pdcode_tax_irregular",
+                    "pdcode_social_securitable": "pdcode_social_securitable",
+                    "pdcode_pensionable": "pdcode_pensionable",
+                    "pdcode_payable": "pdcode_payable",
+                    "pdcode_calculate": "pdcode_calculate",
+                    "pdcode_categorytype": "pdcode_categorytype",
+                }
+                
+                # Define required fields
+                required_fields = ['pdcode_code', 'pdcode_name']
+                
+                # Call import function
+                result = import_pdcodes_from_csv(
+                    file=request.FILES["file"],
+                    company=company,
+                    field_map=pdcode_field_map,
+                    required_fields=required_fields,
+                    dry_run=dry_run,
+                    update_existing=update_existing
+                )
+                
+                # Store result in session
+                request.session["pdcode_upload_result"] = result
+                
+                # Show appropriate message
+                if dry_run:
+                    messages.success(request, 
+                        f"Dry run completed: {result['created']} to create, {result['updated']} to update. "
+                        f"{len(result['errors'])} errors found."
+                    )
+                else:
+                    messages.success(request, 
+                        f"Upload completed: {result['created']} created, {result['updated']} updated. "
+                        f"{len(result['errors'])} errors."
+                    )
+                
+                # Redirect to result page
+                return redirect("pdcodes:pdcode_upload_result", country_slug=country_slug, company_id=company_id)
+                    
+            except Exception as e:
+                messages.error(request, f"Upload error: {str(e)}")
+    else:
+        form = PDcodeUploadForm()
+
+    return render(request, "pdcodes/upload_form.html", {
+        "form": form,
+        "company": company,
+        "country": country,
+        "country_slug": country_slug
+    })
+
+@staff_member_required
+def pdcode_upload_result_view(request, country_slug, company_id):
+    """
+    Display upload results for PD codes
+    """
+    country = get_object_or_404(Country, slug=country_slug)
+    company = get_object_or_404(Company, company_id=company_id)
+    result = request.session.get("pdcode_upload_result", {})
+    
+    return render(request, "pdcodes/upload_result.html", {
+        "result": result,
+        "company": company,
+        "country": country,
+        "country_slug": country_slug
+    })
+
+@staff_member_required
+def download_pdcodes_template(request, country_slug, company_id):
+    """Download a CSV template for PD codes imports"""
+    country = get_object_or_404(Country, slug=country_slug)
+    company = get_object_or_404(Company, company_id=company_id)
+    
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename="pdcodes_{company.company_code}_template.csv"'
+    
+    writer = csv.writer(response)
+    
+    # Header row with all possible fields
+    writer.writerow([
+        'pdcode_code', 'pdcode_name', 'pdcode_description', 'pdcode_status',
+        'pdcode_account', 'pdcode_map_code', 'pdcode_gl_account', 'pdcode_frequency',
+        'pdcode_type', 'pdcode_class', 'pdcode_category', 'pdcode_taxable',
+        'pdcode_tax_flat', 'pdcode_tax_irregular', 'pdcode_social_securitable',
+        'pdcode_pensionable', 'pdcode_payable', 'pdcode_calculate', 'pdcode_categorytype'
+    ])
+    
+    # Sample data
+    writer.writerow([
+        'BASIC', 'Basic Salary', 'Regular basic salary payment', 'Visible',
+        '5001', '1001', '2001', 'Recurring',
+        'Regular', 'Standard', 'Payment', 'True',
+        'False', 'False', 'True',
+        'True', 'True', 'True', 'Base'
+    ])
+    writer.writerow([
+        'BONUS', 'Annual Bonus', 'Year-end performance bonus', 'Visible',
+        '5002', '1002', '2002', 'Non-recurring',
+        'Irregular', 'Standard', 'Payment', 'True',
+        'False', 'True', 'True',
+        'True', 'True', 'True', 'Base'
+    ])
+    writer.writerow([
+        'TAX', 'Income Tax', 'Employee income tax deduction', 'Visible',
+        '6001', '2001', '3001', 'Recurring',
+        'Regular', 'Statutory', 'Deduction', 'False',
+        'False', 'False', 'False',
+        'False', 'False', 'True', 'Bracketable'
+    ])
+    writer.writerow([
+        'PENSION', 'Pension Contribution', 'Employee pension contribution', 'Visible',
+        '6002', '2002', '3002', 'Recurring',
+        'Regular', 'Statutory', 'Deduction', 'False',
+        'False', 'False', 'True',
+        'True', 'False', 'True', 'Pension'
+    ])
+    
+    return response
+
+
+
+
+
+
+
+
+

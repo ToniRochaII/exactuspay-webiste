@@ -42,3 +42,23 @@ class PDcodeForm(forms.ModelForm):
             )
 
         return code
+
+
+# pdcodes/forms.py - Add these forms
+class PDcodeUploadForm(forms.Form):
+    file = forms.FileField(
+        label="CSV File",
+        help_text="Upload a CSV file with PD code data"
+    )
+    dry_run = forms.BooleanField(
+        required=False,
+        initial=False,
+        label="Dry Run",
+        help_text="Check to validate without saving to database"
+    )
+    update_existing = forms.BooleanField(
+        required=False,
+        initial=True,
+        label="Update Existing",
+        help_text="Update existing PD codes if found"
+    )

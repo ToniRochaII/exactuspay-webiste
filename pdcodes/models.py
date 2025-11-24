@@ -120,8 +120,9 @@ class PDcode(models.Model):
 
         super().save(*args, **kwargs)
 
-    def __str__(self):
-        return f"{self.pdcode_code} {self.pdcode_description} ({self.company})"
+    def get_company_code(self):
+        """Helper method for CSV imports"""
+        return self.company.company_code if self.company else ""
 
     class Meta:
         ordering = ["pdcode_code"]
