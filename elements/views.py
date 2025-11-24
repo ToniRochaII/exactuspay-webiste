@@ -17,8 +17,7 @@ def element(request, country_slug):
     elements = Element.objects.filter(country=country)
     return render(request, 'elements/index.html', {
         'elements': elements,
-        'country': country,
-        'country_slug': country_slug
+        'country': country
     })
 
 @login_required
@@ -36,8 +35,7 @@ def element_create(request, country_slug):
         form = ElementForm()
     return render(request, 'elements/create.html', {
         'form': form,
-        'country': country,
-        'country_slug': country_slug
+        'country': country
     })
 
 @login_required
@@ -55,8 +53,7 @@ def element_edit(request, country_slug, element_code):
     return render(request, 'elements/edit.html', {
         'form': form,
         'element': element,
-        'country': country,
-        'country_slug': country_slug
+        'country': country
     })
 
 @login_required
@@ -69,8 +66,7 @@ def element_delete(request, country_slug, element_code):
         return redirect('elements:elements', country_slug=country_slug)
     return render(request, 'elements/delete.html', {
         'element': element,
-        'country': country,
-        'country_slug': country_slug
+        'country': country
     })
 
 @login_required
@@ -114,14 +110,15 @@ def element_upload_view(request, country_slug=None):
                 return redirect(reverse('elements:elements_upload_result', kwargs={'country_slug': country_slug}))
             else:
                 return redirect(reverse('elements:elements_upload_result_global'))
+        else:
+            messages.error(request, 'Please correct the errors below.')
     
     else:
         form = ElementUploadForm()
     
     return render(request, 'elements/upload_form.html', {
         'form': form,
-        'country': country,
-        'country_slug': country_slug
+        'country': country
     })
 
 @login_required
@@ -146,8 +143,7 @@ def element_upload_result_view(request, country_slug=None):
         'success_count': upload_results.get('success_count', 0),
         'error_count': upload_results.get('error_count', 0),
         'errors': upload_results.get('errors', []),
-        'country': country,
-        'country_slug': country_slug
+        'country': country
     })
 
 @login_required
@@ -162,7 +158,7 @@ def download_elements_template(request, country_slug=None):
     response = HttpResponse(content_type='text/csv')
     
     if country:
-        filename = f'elements_template_{country.code}.csv'
+        filename = f'elements_template_{country.iso2_code}.csv'
     else:
         filename = 'elements_template.csv'
         

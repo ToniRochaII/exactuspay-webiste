@@ -1,58 +1,48 @@
+<!-- elements/templates/elements/upload_form.html -->
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
-{{ form.file|as_crispy_field }}
-{{ form.dry_run|as_crispy_field }}
 
-{% block title %}Upload Elements - ExactusPay{% endblock %}
+{% block title %}Upload Elements - CSV Import{% endblock %}
 
 {% block content %}
-<div class="container-fluid py-4">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'country:country_list' %}">Countries</a></li>
+                        {% if country %}
+                        <li class="breadcrumb-item"><a href="{% url 'elements:elements' country_slug=country.slug %}">{{ country.name }} Elements</a></li>
+                        {% endif %}
+                        <li class="breadcrumb-item active">Upload Elements</li>
+                    </ol>
+                </div>
+                <h4 class="page-title">
+                    {% if country %}
+                    Upload Elements - {{ country.name }}
+                    {% else %}
+                    Upload Elements
+                    {% endif %}
+                </h4>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-12">
             <div class="card">
-                <div class="card-header pb-0">
-                    <div class="d-flex align-items-center">
-                        <h4>
-                            {% if country %}
-                                Upload Elements - {{ country.name }}
-                            {% else %}
-                                Upload Elements
-                            {% endif %}
-                        </h4>
-                        <a href="{% if country %}{% url 'elements:elements' country.slug %}{% else %}{% url 'country:country' %}{% endif %}" 
-                           class="btn btn-outline-secondary btn-sm ms-auto">
-                            <i class="fas fa-arrow-left me-2"></i>Back
-                        </a>
-                    </div>
-                    <p class="text-sm mb-0">Upload payroll elements via CSV file</p>
-                </div>
                 <div class="card-body">
                     <!-- Instructions -->
                     <div class="alert alert-info">
-                        <h6 class="alert-heading">
-                            <i class="fas fa-info-circle me-2"></i>CSV Format Requirements
-                        </h6>
-                        <hr>
-                        <ul class="mb-1">
-                            <li>File must be in CSV format (comma-separated values)</li>
-                            <li>First row must contain column headers</li>
-                            <li>Required columns: <strong>country_code, element_code, element_name, element_description</strong></li>
-                            <li>country_code must match existing country ISO2 codes (US, GB, FR, etc.)</li>
-                            <li>Boolean fields: Use TRUE/FALSE, YES/NO, or 1/0</li>
+                        <h5 class="alert-heading">Instructions</h5>
+                        <ul class="mb-0">
+                            <li>Download the template below to ensure proper formatting</li>
+                            <li>Required columns: country_code, element_code, element_name, element_description</li>
+                            <li>Supported boolean values: TRUE/FALSE (case insensitive)</li>
+                            <li>File must be in CSV format with UTF-8 encoding</li>
                         </ul>
-                    </div>
-
-                    <!-- CSV Template Download -->
-                    <div class="alert alert-warning">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <strong>Need a template?</strong> Download our CSV template to ensure proper formatting.
-                            </div>
-                            <a href="{% if country %}{% url 'elements:download_elements_template' country.slug %}{% else %}{% url 'elements:download_elements_template_global' %}{% endif %}" 
-                               class="btn btn-sm btn-outline-primary">
-                                <i class="fas fa-download me-2"></i>Download Template
-                            </a>
-                        </div>
                     </div>
 
                     <!-- Upload Form -->
@@ -65,14 +55,8 @@
                                 {% csrf_token %}
                                 
                                 <div class="row">
-                                    <div class="col-md-8">
-                                        {{ form.file|as_crispy_field }}
-                                    </div>
-                                    <div class="col-md-4">
-                                        {{ form.dry_run|as_crispy_field }}
-                                        <small class="form-text text-muted">
-                                            Check this to validate the file without saving to database.
-                                        </small>
+                                    <div class="col-md-12">
+                                        {{ form.csv_file|as_crispy_field }}
                                     </div>
                                 </div>
 
@@ -80,30 +64,55 @@
                                 <div class="mt-4">
                                     <h6>Expected CSV Format:</h6>
                                     <div class="table-responsive">
-                                        <table class="table table-sm table-bordered">
-                                            <thead class="table-light">
+                                        <table class="table table-bordered table-sm">
+                                            <thead>
                                                 <tr>
                                                     <th>country_code</th>
                                                     <th>element_code</th>
                                                     <th>element_name</th>
+                                                    <th>element_description</th>
                                                     <th>element_status</th>
+                                                    <th>element_account</th>
+                                                    <th>element_map_code</th>
+                                                    <th>element_gl_account</th>
+                                                    <th>element_frequency</th>
+                                                    <th>element_type</th>
+                                                    <th>element_class</th>
                                                     <th>element_category</th>
+                                                    <th>element_taxable</th>
+                                                    <th>element_tax_flat</th>
+                                                    <th>element_tax_irregular</th>
+                                                    <th>element_social_securitable</th>
+                                                    <th>element_pensionable</th>
+                                                    <th>element_payable</th>
+                                                    <th>element_calculate</th>
+                                                    <th>element_categorytype</th>
+                                                    <th>archive</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td>US</td>
-                                                    <td>BASIC</td>
-                                                    <td>Basic Salary</td>
-                                                    <td>Visible</td>
-                                                    <td>Payment</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>US</td>
-                                                    <td>TAX</td>
+                                                    <td>AR</td>
+                                                    <td>6000</td>
+                                                    <td>Income Tax</td>
                                                     <td>Income Tax</td>
                                                     <td>Visible</td>
+                                                    <td>6000</td>
+                                                    <td>6000</td>
+                                                    <td>6000</td>
+                                                    <td>Recurring</td>
+                                                    <td>Regular</td>
+                                                    <td>statutory</td>
                                                     <td>Deduction</td>
+                                                    <td>FALSE</td>
+                                                    <td>FALSE</td>
+                                                    <td>FALSE</td>
+                                                    <td>FALSE</td>
+                                                    <td>FALSE</td>
+                                                    <td>TRUE</td>
+                                                    <td>TRUE</td>
+                                                    <td>Bracketable</td>
+                                                    <td>N</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -111,86 +120,19 @@
                                 </div>
 
                                 <div class="mt-4">
-                                    <button type="submit" class="btn btn-primary" id="uploadBtn">
-                                        <i class="fas fa-upload me-2"></i>Upload Elements
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-upload me-1"></i> Upload and Process
                                     </button>
-                                    <a href="{% if country %}{% url 'elements:elements' country.slug %}{% else %}{% url 'country:country' %}{% endif %}" 
-                                       class="btn btn-outline-secondary">
-                                        Cancel
+                                    <a href="{% if country %}{% url 'elements:elements' country_slug=country.slug %}{% else %}{% url 'dashboard' %}{% endif %}" 
+                                       class="btn btn-secondary">Cancel</a>
+                                    
+                                    <!-- Download Template Button -->
+                                    <a href="{% if country %}{% url 'elements:download_elements_template' country_slug=country.slug %}{% else %}{% url 'elements:download_elements_template_global' %}{% endif %}" 
+                                       class="btn btn-outline-primary float-end">
+                                        <i class="fas fa-download me-1"></i> Download Template
                                     </a>
                                 </div>
                             </form>
-                        </div>
-                    </div>
-
-                    <!-- Field Reference -->
-                    <div class="card mt-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Field Reference</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-sm table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Field</th>
-                                            <th>Required</th>
-                                            <th>Type</th>
-                                            <th>Allowed Values</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><strong>country_code</strong></td>
-                                            <td>Yes</td>
-                                            <td>Text</td>
-                                            <td>Existing country ISO2 codes</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>element_code</strong></td>
-                                            <td>Yes</td>
-                                            <td>Text</td>
-                                            <td>Unique code per country</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>element_name</strong></td>
-                                            <td>Yes</td>
-                                            <td>Text</td>
-                                            <td>Element display name</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>element_description</strong></td>
-                                            <td>Yes</td>
-                                            <td>Text</td>
-                                            <td>Element description</td>
-                                        </tr>
-                                        <tr>
-                                            <td>element_status</td>
-                                            <td>No</td>
-                                            <td>Choice</td>
-                                            <td>Visible, Hidden</td>
-                                        </tr>
-                                        <tr>
-                                            <td>element_category</td>
-                                            <td>No</td>
-                                            <td>Choice</td>
-                                            <td>Payment, Deduction, Notional, Base, Gross up, ER Contribution, ER Cost</td>
-                                        </tr>
-                                        <tr>
-                                            <td>element_taxable</td>
-                                            <td>No</td>
-                                            <td>Boolean</td>
-                                            <td>TRUE/FALSE</td>
-                                        </tr>
-                                        <tr>
-                                            <td>archive</td>
-                                            <td>No</td>
-                                            <td>Text</td>
-                                            <td>Y, N (default: N)</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -198,12 +140,28 @@
         </div>
     </div>
 </div>
+{% endblock %}
 
+{% block extra_js %}
 <script>
-document.getElementById('uploadForm').addEventListener('submit', function() {
-    const btn = document.getElementById('uploadBtn');
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Uploading...';
+$(document).ready(function() {
+    // Add file validation
+    $('#uploadForm').on('submit', function() {
+        const fileInput = $('#id_csv_file');
+        if (fileInput[0].files.length === 0) {
+            alert('Please select a CSV file to upload.');
+            return false;
+        }
+        
+        const fileName = fileInput[0].files[0].name;
+        if (!fileName.toLowerCase().endsWith('.csv')) {
+            alert('Please select a CSV file.');
+            return false;
+        }
+        
+        // Show loading state
+        $('button[type="submit"]').prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> Processing...');
+    });
 });
 </script>
 {% endblock %}
