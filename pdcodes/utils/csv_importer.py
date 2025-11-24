@@ -1,110 +1,132 @@
-# pdcodes/utils/csv_importer.py
 import csv
 from io import TextIOWrapper
-from django.db import transaction
-from company.models import Company
-from ..models import PDcode
 
-def import_pdcodes_from_csv(file, company, field_map, required_fields=None, dry_run=False, update_existing=True):
-    """
-    Import PD codes from CSV for a specific company
-    """
-    created, updated, errors = 0, 0, []
 
+def clean_value(value):
+    """Safely convert CSV cell values without executing code."""
+    if value is None:
+        return None
+
+    value = str(value).strip()
+
+    # Empty value → None
+    if value == "":
+        return None
+
+    # Boolean conversion
+    lowered = value.lower()
+    if lowered in ["true", "yes", "1"]:
+        return True
+    if lowered in ["false", "no", "0"]:
+        return False
+
+    # Integer conversion
+    if value.isdigit():
+        return int(value)
+
+    # Float conversion
     try:
-        # Read file
-        file_obj = TextIOWrapper(file, encoding='utf-8-sig')
-        reader = csv.DictReader(file_obj)
-        rows = list(reader)
-        
-        if not rows:
-            return {
-                "created": 0,
-                "updated": 0,
-                "errors": ["CSV file is empty"],
-                "dry_run": dry_run
-            }
+        float_val = float(value)
+        return float_val
+    except ValueError:
+        pass
+
+    # Leave all other values as strings
+    return value
+
+
+def import_pdcodes_from_csv(
+    file,
+    company,
+    field_map: dict,
+    required_fields: list = None,
+    dry_run: bool = False,
+    update_existing: bool = True,
+):
+    """
+    Generic CSV importer for PD Codes.
+    - Performs safe value conversion (no eval)
+    - Validates required fields
+    - Creates or updates objects
+    - Supports dry run mode
+    """
+
+    required_fields = required_fields or []
+    result = {
+        "created": 0,
+        "updated": 0,
+        "errors": [],
+        "rows": [],
+    }
+
+    # Read CSV safely
+    decoded = TextIOWrapper(file, encoding="utf-8")
+    reader = csv.DictReader(decoded)
+
+    from pdcodes.models import PDcode  # safe import inside function
+
+    for row_number, row in enumerate(reader, start=2):  # header = row 1
+        row_errors = []
+
+        # Build PDcode data dict
+        data = {}
+
+        for csv_field, model_field in field_map.items():
+
+            raw_value = row.get(csv_field, "").strip()
+
+            cleaned = clean_value(raw_value)
+            data[model_field] = cleaned
 
         # Validate required fields
-        missing_fields = [f for f in required_fields or [] if f not in reader.fieldnames]
-        if missing_fields:
-            return {
-                "created": 0,
-                "updated": 0,
-                "errors": [f"Missing required fields: {', '.join(missing_fields)}"],
-                "dry_run": dry_run
-            }
+        for req in required_fields:
+            if not data.get(req):
+                row_errors.append(f"Missing required field: {req}")
 
-        @transaction.atomic
-        def run_import():
-            nonlocal created, updated
-            
-            for i, row in enumerate(rows, start=1):
-                try:
-                    # Skip empty rows
-                    if not any(row.values()):
+        if row_errors:
+            result["errors"].append(
+                f"Row {row_number}: " + "; ".join(row_errors)
+            )
+            continue
+
+        # Check if PDcode exists
+        existing = PDcode.objects.filter(
+            company=company,
+            pdcode_code=data.get("pdcode_code")
+        ).first()
+
+        if existing:
+            if update_existing:
+                # Update existing
+                for k, v in data.items():
+                    setattr(existing, k, v)
+                if not dry_run:
+                    try:
+                        existing.save()
+                    except Exception as e:
+                        result["errors"].append(
+                            f"Row {row_number}: failed to update — {str(e)}"
+                        )
                         continue
-                    
-                    # Prepare data for PDcode
-                    data = {}
-                    for csv_col, model_field in field_map.items():
-                        if csv_col in row and row[csv_col] not in [None, ""]:
-                            # Handle boolean fields
-                            if model_field.startswith('pdcode_') and hasattr(PDcode, model_field):
-                                field = PDcode._meta.get_field(model_field)
-                                if isinstance(field, models.BooleanField):
-                                    data[model_field] = str(row[csv_col]).lower() in ('true', 'yes', '1', 'y')
-                                else:
-                                    data[model_field] = row[csv_col]
-                            else:
-                                data[model_field] = row[csv_col]
-                    
-                    # Get PD code for lookup
-                    pdcode_code = data.get('pdcode_code')
-                    if not pdcode_code:
-                        errors.append(f"Row {i}: PD Code is required")
-                        continue
-                    
-                    # Check if PD code already exists for this company
-                    existing_pdcode = PDcode.objects.filter(
-                        company=company, 
-                        pdcode_code=pdcode_code
-                    ).first()
-                    
-                    if existing_pdcode:
-                        if update_existing:
-                            # Update existing PD code
-                            for field, value in data.items():
-                                if field != 'pdcode_code':  # Don't update the code itself
-                                    setattr(existing_pdcode, field, value)
-                            existing_pdcode.save()
-                            updated += 1
-                        else:
-                            errors.append(f"Row {i}: PD Code '{pdcode_code}' already exists and update_existing is False")
-                    else:
-                        # Create new PD code
-                        pdcode = PDcode(company=company, **data)
-                        pdcode.full_clean()
-                        pdcode.save()
-                        created += 1
-                        
-                except Exception as e:
-                    errors.append(f"Row {i}: {str(e)}")
+                result["updated"] += 1
+            else:
+                result["rows"].append(
+                    f"Row {row_number}: skipped (already exists)"
+                )
+            continue
 
-            # Rollback if dry run
-            if dry_run:
-                transaction.set_rollback(True)
-                created, updated = 0, 0  # Reset counts for dry run
+        # Create new PDcode
+        new_obj = PDcode(company=company, **data)
 
-        run_import()
+        if not dry_run:
+            try:
+                new_obj.save()
+            except Exception as e:
+                result["errors"].append(
+                    f"Row {row_number}: failed to create — {str(e)}"
+                )
+                continue
 
-    except Exception as e:
-        errors.append(f"File processing error: {str(e)}")
+        result["created"] += 1
 
-    return {
-        "created": created,
-        "updated": updated,
-        "errors": errors,
-        "dry_run": dry_run,
-        "total_processed": len(rows)
-    }
+    return result
