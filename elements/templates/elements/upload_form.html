@@ -12,7 +12,7 @@
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="{% url 'country:country_list' %}">Countries</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
                         {% if country %}
                         <li class="breadcrumb-item"><a href="{% url 'elements:elements' country_slug=country.slug %}">{{ country.name }} Elements</a></li>
                         {% endif %}
