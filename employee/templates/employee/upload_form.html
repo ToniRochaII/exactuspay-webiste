@@ -1,0 +1,204 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Upload Employees - ExactusPay{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header pb-0">
+                    <div class="d-flex align-items-center">
+                        <h4>Upload Employees - {{ company.trade_name }}</h4>
+                        <a href="{% url 'employee:employee' country_slug company.company_id %}" 
+                           class="btn btn-outline-secondary btn-sm ms-auto">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Employees
+                        </a>
+                    </div>
+                    <p class="text-sm mb-0">Upload employees via CSV file for {{ company.trade_name }}</p>
+                </div>
+                <div class="card-body">
+                    <!-- Instructions -->
+                    <div class="alert alert-info">
+                        <h6 class="alert-heading">
+                            <i class="fas fa-info-circle me-2"></i>CSV Format Requirements
+                        </h6>
+                        <hr>
+                        <ul class="mb-1">
+                            <li>File must be in CSV format (comma-separated values)</li>
+                            <li>First row must contain column headers</li>
+                            <li>Required columns: <strong>company_code, employee_number, employee_code, employee_name, employee_surname</strong></li>
+                            <li>company_code must match: <strong>{{ company.company_code }}</strong></li>
+                            <li>Optional columns can be left empty</li>
+                        </ul>
+                    </div>
+
+                    <!-- CSV Template Download -->
+                    <div class="alert alert-warning">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>Need a template?</strong> Download our CSV template to ensure proper formatting.
+                            </div>
+                            <a href="{% url 'employee:download_employees_template' country_slug company.company_id %}" 
+                               class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-download me-2"></i>Download Template
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Upload Form -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Upload CSV File</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" enctype="multipart/form-data" id="uploadForm">
+                                {% csrf_token %}
+                                
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        {{ form.file|as_crispy_field }}
+                                    </div>
+                                    <div class="col-md-4">
+                                        {{ form.dry_run|as_crispy_field }}
+                                        <small class="form-text text-muted">
+                                            Check this to validate the file without saving to database.
+                                        </small>
+                                    </div>
+                                </div>
+
+                                <!-- Sample Data Preview -->
+                                <div class="mt-4">
+                                    <h6>Expected CSV Format:</h6>
+                                    <div class="table-responsive">
+                                        <table class="table table-sm table-bordered">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th>company_code</th>
+                                                    <th>employee_number</th>
+                                                    <th>employee_name</th>
+                                                    <th>employee_surname</th>
+                                                    <th>department</th>
+                                                    <th>job_title</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>{{ company.company_code }}</td>
+                                                    <td>1001</td>
+                                                    <td>John</td>
+                                                    <td>Smith</td>
+                                                    <td>Sales</td>
+                                                    <td>Sales Manager</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>{{ company.company_code }}</td>
+                                                    <td>1002</td>
+                                                    <td>Maria</td>
+                                                    <td>Garcia</td>
+                                                    <td>Marketing</td>
+                                                    <td>Marketing Specialist</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="mt-4">
+                                    <button type="submit" class="btn btn-primary" id="uploadBtn">
+                                        <i class="fas fa-upload me-2"></i>Upload Employees
+                                    </button>
+                                    <a href="{% url 'employee:employee' country_slug company.company_id %}" 
+                                       class="btn btn-outline-secondary">
+                                        Cancel
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Field Reference -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Field Reference</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-sm table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Field</th>
+                                            <th>Required</th>
+                                            <th>Type</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><strong>company_code</strong></td>
+                                            <td>Yes</td>
+                                            <td>Text</td>
+                                            <td>Must be: {{ company.company_code }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>employee_number</strong></td>
+                                            <td>Yes</td>
+                                            <td>Number</td>
+                                            <td>Unique employee number</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>employee_code</strong></td>
+                                            <td>Yes</td>
+                                            <td>Number</td>
+                                            <td>Employee code</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>employee_name</strong></td>
+                                            <td>Yes</td>
+                                            <td>Text</td>
+                                            <td>First name</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>employee_surname</strong></td>
+                                            <td>Yes</td>
+                                            <td>Text</td>
+                                            <td>Last name</td>
+                                        </tr>
+                                        <tr>
+                                            <td>gender</td>
+                                            <td>No</td>
+                                            <td>Choice</td>
+                                            <td>Male, Female</td>
+                                        </tr>
+                                        <tr>
+                                            <td>department</td>
+                                            <td>No</td>
+                                            <td>Text</td>
+                                            <td>Employee department</td>
+                                        </tr>
+                                        <tr>
+                                            <td>job_title</td>
+                                            <td>No</td>
+                                            <td>Text</td>
+                                            <td>Employee job title</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('uploadForm').addEventListener('submit', function() {
+    const btn = document.getElementById('uploadBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Uploading...';
+});
+</script>
+{% endblock %}
