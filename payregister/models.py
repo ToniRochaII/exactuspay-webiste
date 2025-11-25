@@ -34,7 +34,13 @@ class PayRegister(models.Model):
         ordering = ['employee', '-created_at']
 
     def __str__(self):
-        return f"{self.employee} - {self.pd_code.code} ({self.category})"
+            if self.pdcode_code and self.pdcode_name:
+                return f"{self.pdcode_code} – {self.pdcode_name}"
+            elif self.pdcode_code:
+                return self.pdcode_code
+            elif self.pdcode_name:
+                return self.pdcode_name
+            return "Unnamed PD Code"
 
     @property
     def is_active(self):
