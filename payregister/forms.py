@@ -29,10 +29,6 @@ class PayRegisterForm(forms.ModelForm):
         company = kwargs.pop("company", None)
         super().__init__(*args, **kwargs)
 
-        if company is not None:
-            self.fields["pd_code"].queryset = PDcode.objects.filter(
-                company=company
-            ).order_by("pdcode_code")
 
     def clean(self):
         cleaned = super().clean()
