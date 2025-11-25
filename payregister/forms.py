@@ -14,14 +14,6 @@ class PayRegisterForm(forms.ModelForm):
             "end_date",
             "entry_date",
         ]
-    def __str__(self):
-        if self.pdcode_code and self.pdcode_name:
-            return f"{self.pdcode_code} – {self.pdcode_name}"
-        elif self.pdcode_code:
-            return self.pdcode_code
-        elif self.pdcode_name:
-            return self.pdcode_name
-        return "Unnamed PD Code"
 
 
     def __init__(self, *args, **kwargs):
@@ -51,3 +43,7 @@ class PayRegisterForm(forms.ModelForm):
                 raise forms.ValidationError("Variable entries cannot have start/end date.")
 
         return cleaned
+
+class PayRegisterUploadForm(forms.Form):
+    file = forms.FileField(label="CSV File")
+    dry_run = forms.BooleanField(required=False, initial=False, help_text="Validate only, do not save.")

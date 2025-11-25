@@ -55,6 +55,87 @@ def create_entry(request, country_slug, company_id, id):
 
 
 
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
+from company.models import Company
+from country.models import Country
+from .utils.csv_importer import import_payregister_csv
+from .forms import PayRegisterUploadForm
+
+
+@staff_member_required
+def payregister_upload_view(request, country_slug, company_id):
+    country = get_object_or_404(Country, slug=country_slug)
+    company = get_object_or_404(Company, pk=company_id)
+
+    if request.method == "POST":
+        form = PayRegisterUploadForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            dry_run = form.cleaned_data.get("dry_run")
+            file = request.FILES["file"]
+
+            result = import_payregister_csv(
+                file=file,
+                company=company,
+                created_by=request.user,
+                dry_run=dry_run
+            )
+
+            request.session["payregister_upload_result"] = result
+            messages.success(request, "Upload completed." if not dry_run else "Dry run completed.")
+            return redirect("payregister:payregister_upload_result",
+                            country_slug=country_slug, company_id=company_id)
+
+    else:
+        form = PayRegisterUploadForm()
+
+    return render(request, "payregister/upload_form.html", {
+        "form": form,
+        "country": country,
+        "company": company
+    })
+
+
+@staff_member_required
+def payregister_upload_result_view(request, country_slug, company_id):
+    result = request.session.get("payregister_upload_result", {})
+    country = get_object_or_404(Country, slug=country_slug)
+    company = get_object_or_404(Company, pk=company_id)
+
+    return render(request, "payregister/upload_result.html", {
+        "result": result,
+        "country": country,
+        "company": company,
+    })
+
+
+@staff_member_required
+def download_payregister_template(request, country_slug, company_id):
+    import csv
+    from django.http import HttpResponse
+
+    company = get_object_or_404(Company, pk=company_id)
+
+    response = HttpResponse(content_type="text/csv")
+    response['Content-Disposition'] = f'attachment; filename="payregister_template_{company.company_code}.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow([
+        "employee_number",
+        "pd_code",
+        "category",
+        "amount",
+        "start_date",
+        "end_date",
+        "entry_date",
+    ])
+
+    writer.writerow(["12345", "BASIC", "PERMANENT", "2500.00", "2025-01-01", "", ""])
+    writer.writerow(["12345", "OT1", "VARIABLE", "30.00", "", "", "2025-02-05"])
+
+    return response
 
 
 
