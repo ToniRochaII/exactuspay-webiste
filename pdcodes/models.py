@@ -1,16 +1,9 @@
+# pdcodes/models.py
 from django.utils.text import slugify
 from django.db import models
 
 
 class PDcode(models.Model):
-    """
-    Payroll / Deduction code belonging to a specific company.
-
-    Uniqueness rules:
-    - (company, pdcode_code) must be unique
-    - slug is also unique for clean URLs and admin usage
-    """
-
     company = models.ForeignKey(
         "company.Company",
         on_delete=models.CASCADE,
@@ -90,8 +83,13 @@ class PDcode(models.Model):
         max_length=50, choices=CALCBASETYPE_CHOICES, blank=True, null=True
     )
 
-    # Unique slug for clean URLs / admin usage
     slug = models.SlugField(max_length=100, unique=True, blank=True)
+
+    def __str__(self):
+        """Dropdown and admin representation."""
+        if self.pdcode_code and self.pdcode_name:
+            return f"{self.pdcode_code} – {self.pdcode_name}"
+        return self.pdcode_code or self.pdcode_name or "PD Code"
 
     def _build_base_slug(self) -> str:
         base = f"{self.company.company_id}-"
@@ -104,13 +102,10 @@ class PDcode(models.Model):
         return slugify(base)
 
     def save(self, *args, **kwargs):
-        # Robust slug generation that avoids unique collisions
         if not self.slug:
             base_slug = self._build_base_slug()
             slug_candidate = base_slug
             counter = 2
-
-            from .models import PDcode  # safe self-import in method
 
             while PDcode.objects.filter(slug=slug_candidate).exclude(pk=self.pk).exists():
                 slug_candidate = f"{base_slug}-{counter}"
@@ -119,10 +114,6 @@ class PDcode(models.Model):
             self.slug = slug_candidate
 
         super().save(*args, **kwargs)
-
-    def get_company_code(self):
-        """Helper method for CSV imports"""
-        return self.company.company_code if self.company else ""
 
     class Meta:
         ordering = ["pdcode_code"]
