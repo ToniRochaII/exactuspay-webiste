@@ -43,7 +43,6 @@ class CalculationBase(models.Model):
     element_base = models.ForeignKey(
         Element,
         related_name="base_calculation_bases",
-        limit_choices_to={"element_categorytype": "Base"},
         on_delete=models.CASCADE,
         null=True,
         blank=True
