@@ -55,6 +55,7 @@
 
                 <!-- SIDEBAR NAVIGATION -->
                 <ul class="sidebar-nav">
+                    {% if user.is_authenticated %}
                     <li class="sidebar-item">
                         <a class="sidebar-link" href="{% url 'dashboard' %}">
                             <i class="align-middle me-2 fas fa-fw fa-home"></i><span class="align-middle">Dashboard</span>
@@ -63,7 +64,6 @@
 
                     <li class="sidebar-header">Modules</li>
                     
-                    {% if user.is_authenticated %}
                         {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
                             {% if countries %}  
                                 <li class="sidebar-item">
