@@ -2,11 +2,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .utils.decorators import role_required
+from Exactus.utils.decorators import role_required
 
-from country.models import Country
-from .models import Regulations
-from .forms import RegulationsForm
+from Exactus.country.models import Country
+from Exactus.regulations.models import Regulations
+from Exactus.regulations.forms import RegulationsForm
 
 
 # ────────────────────────────────────────────────────────────────

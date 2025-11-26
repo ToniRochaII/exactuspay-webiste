@@ -5,10 +5,10 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 
-from company.models import  Company 
-from country.models import Country
-from company.forms import CompanyForm
-from .utils.decorators import role_required 
+from Exactus.company.models import  Company 
+from Exactus.country.models import Country
+from Exactus.company.forms import CompanyForm
+from Exactus.country.utils.decorators import role_required 
 
 
 # ────────────────────────────────────────────────────────────────

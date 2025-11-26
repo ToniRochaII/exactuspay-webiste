@@ -1,7 +1,7 @@
 from django.db import models
-from country.models import Country
-from company.models import Company
-from regulations.models import Regulations
+from Exactus.country.models import Country
+from Exactus.company.models import Company
+from Exactus.regulations.models import Regulations
 
 class Payroll(models.Model):
     country = models.ForeignKey(Country, on_delete=models.CASCADE)

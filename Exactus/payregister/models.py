@@ -1,8 +1,8 @@
 # payregister/models.py
 from django.db import models
 from django.contrib.auth import get_user_model
-from employee.models import Employee
-from pdcodes.models import PDcode
+from Exactus.employee.models import Employee
+from Exactus.pdcodes.models import PDcode
 
 User = get_user_model()
 

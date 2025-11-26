@@ -3,10 +3,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from utils.decorators import role_required
-from .models import PDcode
-from company.models import Company
-from country.models import Country
-from .forms import PDcodeForm
+from Exactus.pdcodes.models import PDcode
+from Exactus.company.models import Company
+from Exactus.country.models import Country
+from Exactus.pdcodes.forms import PDcodeForm
 
 
 # ─────────────────────────────────────────

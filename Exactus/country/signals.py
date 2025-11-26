@@ -1,6 +1,6 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import Country
+from Exactus.country.models import Country
 
 @receiver(post_save, sender=Country)
 def country_saved(sender, instance, created, **kwargs):

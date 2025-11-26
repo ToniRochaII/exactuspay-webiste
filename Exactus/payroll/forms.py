@@ -1,6 +1,6 @@
 from django import forms
-from .models import Payroll
-from regulations.models import Regulations
+from Exactus.payroll.models import Payroll
+from Exactus.regulations.models import Regulations
 
 class PayrollForm(forms.ModelForm):
     class Meta:

@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from .models import Company, Employee
-from country.models import Country
-from .forms import EmployeeForm
-from .utils.decorators import role_required
+from Exactus.company.models import Company
+from Exactus.employee.models import Employee
+from Exactus.country.models import Country
+from Exactus.employee.forms import EmployeeForm
+from Exactus.utils.decorators import role_required
 
 # ────────────────────────────────────────────────
 # EMPLOYEE CRUD

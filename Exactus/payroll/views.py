@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from .models import Payroll
-from .models import Country, Company
-from regulations.models import Regulations
-from .forms import PayrollForm
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from Exactus.payroll.models import Payroll
+from Exactus.country.models import Country
+from Exactus.company.models import Company
+from Exactus.regulations.models import Regulations
+from Exactus.payroll.forms import PayrollForm
 
 @login_required
 def payroll(request, country_slug, company_id):
@@ -60,3 +61,5 @@ def payroll_delete(request, country_slug, pk, company_id):
         messages.success(request, 'Payroll deleted successfully.')
         return redirect('payroll:payroll', country_slug=country_slug, company_id=company.company_id)
     return render(request, 'payroll/payroll_confirm_delete.html', {'country': country, 'company': company, 'payroll': payroll, "country_slug": country_slug })
+
+

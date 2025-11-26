@@ -1,6 +1,6 @@
 # elements/forms.py
 from django import forms
-from .models import Element
+from Exactus.elements.models import Element
 
 
 class ElementForm(forms.ModelForm):

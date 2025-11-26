@@ -1,6 +1,6 @@
 # regulations/forms.py
 from django import forms
-from .models import Regulations
+from Exactus.regulations.models import Regulations
 
 class RegulationsForm(forms.ModelForm):
     class Meta:

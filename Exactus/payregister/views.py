@@ -1,9 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from employee.models import Employee
-from payregister.models import PayRegister
-from payregister.forms import PayRegisterForm
-from company.models import  Company
-from country.models import Country
+from Exactus.employee.models import Employee
+from Exactus.payregister.models import PayRegister
+from Exactus.payregister.forms import PayRegisterForm
+from Exactus.company.models import  Company
+from Exactus.country.models import Country
 
 def list_entries(request, country_slug, company_id, id):
     country = get_object_or_404(Country, slug=country_slug)

@@ -1,7 +1,7 @@
 # elements/models.py
 from django.utils.text import slugify
 from django.db import models
-from country.models import Country
+from Exactus.country.models import Country
 
 class Element(models.Model):
     country = models.ForeignKey(

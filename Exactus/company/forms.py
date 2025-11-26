@@ -1,5 +1,5 @@
 from django import forms
-from company.models import Company
+from Exactus.company.models import Company
 
 class CompanyForm(forms.ModelForm):
     class Meta:

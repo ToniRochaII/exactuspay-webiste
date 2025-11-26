@@ -2,9 +2,9 @@ from django.db import models
 import datetime
 from django.utils.translation import gettext_lazy as _views
 
-from country.models import Country
-from elements.models import Element
-from regulations.models import Regulations
+from Exactus.country.models import Country
+from Exactus.elements.models import Element
+from Exactus.regulations.models import Regulations
 
 class CalculationBase(models.Model):
 

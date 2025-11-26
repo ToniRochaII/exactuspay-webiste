@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from country.models import Country
+from Exactus.country.models import Country
 
 
 class CountryForm(forms.ModelForm):

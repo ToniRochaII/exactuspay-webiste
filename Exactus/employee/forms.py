@@ -1,6 +1,6 @@
 # employee/forms.py
 from django import forms
-from .models import Employee
+from Exactus.employee.models import Employee
 
 class EmployeeForm(forms.ModelForm):
     class Meta:

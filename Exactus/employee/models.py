@@ -1,5 +1,5 @@
 from django.db import models
-from company.models import Company
+from Exactus.company.models import Company
 
 
 # Employee

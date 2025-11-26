@@ -1,6 +1,6 @@
 from django import forms
-from elements.models import Element
-from .models import CalculationBase
+from Exactus.elements.models import Element
+from Exactus.calculationbase.models import CalculationBase
 
 class CalculationBaseForm(forms.ModelForm):
     class Meta:

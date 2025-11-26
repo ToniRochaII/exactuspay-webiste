@@ -1,6 +1,6 @@
 from django import forms
-from .models import PayRegister
-from pdcodes.models import PDcode   # ✅ IMPORT THIS
+from Exactus.payregister.models import PayRegister
+from Exactus.pdcodes.models import PDcode
 
 
 class PayRegisterForm(forms.ModelForm):

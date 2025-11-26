@@ -22,8 +22,8 @@ from Exactus.accounts.models import (
     PermissionMatrix,
     RoleTemplate,
 )
-from .utils.permissions import has_permission
-from .utils.role_hierarchy import promote_role, demote_role
+from Exactus.accounts.utils.permissions import has_permission
+from Exactus.accounts.utils.role_hierarchy import promote_role, demote_role
 
 
 User = get_user_model()

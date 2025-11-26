@@ -8,10 +8,10 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 
-from .models import Element
-from country.models import Country
-from .forms import ElementForm, ElementUploadForm
-from .utils.csv_importer import import_elements_from_csv
+from Exactus.elements.models import Element
+from Exactus.country.models import Country
+from Exactus.elements.forms import ElementForm, ElementUploadForm
+from Exactus.elements.utils.csv_importer import import_elements_from_csv
 
 
 @login_required
