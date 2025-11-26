@@ -3,4 +3,4 @@ from django.apps import AppConfig
 
 class PayregisterConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'payregister'
+    name = 'Exactus.payregister'

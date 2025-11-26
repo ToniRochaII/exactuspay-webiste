@@ -53,8 +53,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'crispy_forms',
-    'crispy_bootstrap5',
+    'Exactus.crispy_forms',
+    'Exactus.crispy_bootstrap5',
 
     'Exactus.accounts.apps.AccountsConfig',
     'Exactus.country.apps.CountryConfig',
