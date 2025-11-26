@@ -53,29 +53,29 @@
         <a class="sidebar-link" href="{% url 'country:country' %}"><i class="align-middle me-2 fas fa-flag"></i>Countries</a>
     </li>
     <li class="sidebar-item">
-        <a class="sidebar-link" href="{% url 'companies:company' %}"><i class="align-middle me-2 fas fa-building"></i>Companies</a>
+        <a class="sidebar-link" href="{% url 'companies:company' country_slug %}"><i class="align-middle me-2 fas fa-building"></i>Companies</a>
     </li>
     <li class="sidebar-item">
-        <a class="sidebar-link" href="{% url 'employee:employee' %}"><i class="align-middle me-2 fas fa-users"></i>Employees</a>
+        <a class="sidebar-link" href="{% url 'employee:employee' company.company_id country_slug  %}"><i class="align-middle me-2 fas fa-users"></i>Employees</a>
     </li>
 
     <li class="sidebar-header">Payroll Configuration</li>
     <li class="sidebar-item">
-        <a class="sidebar-link" href="{% url 'regulations:regulations' %}"><i class="align-middle me-2 fas fa-gavel"></i>Regulations</a>
+        <a class="sidebar-link" href="{% url 'regulations:regulations' country_slug %}"><i class="align-middle me-2 fas fa-gavel"></i>Regulations</a>
     </li>
     <li class="sidebar-item">
-        <a class="sidebar-link" href="{% url 'elements:elements' %}"><i class="align-middle me-2 fas fa-puzzle-piece"></i>Elements</a>
+        <a class="sidebar-link" href="{% url 'elements:elements' country_slug %}"><i class="align-middle me-2 fas fa-puzzle-piece"></i>Elements</a>
     </li>
     <li class="sidebar-item">
-        <a class="sidebar-link" href="{% url 'calculationbase:list' %}"><i class="align-middle me-2 fas fa-cogs"></i>Calculation Base</a>
+        <a class="sidebar-link" href="{% url 'calculationbase:list' country_slug regulations_regulations_id %}"><i class="align-middle me-2 fas fa-cogs"></i>Calculation Base</a>
     </li>
     <li class="sidebar-item">
-        <a class="sidebar-link" href="{% url 'pdcodes:pdcodes' %}"><i class="align-middle me-2 fas fa-code"></i>PD Codes</a>
+        <a class="sidebar-link" href="{% url 'pdcodes:pdcodes' company.company_id country_slug %}"><i class="align-middle me-2 fas fa-code"></i>PD Codes</a>
     </li>
 
     <li class="sidebar-header">Payroll</li>
     <li class="sidebar-item">
-        <a class="sidebar-link" href="{% url 'payregister:payregister_list' %}"><i class="align-middle me-2 fas fa-file-invoice-dollar"></i>Pay Register</a>
+        <a class="sidebar-link" href="{% url 'payregister:payregister_list'  company.company_id country_slug employee.employee_id %}"><i class="align-middle me-2 fas fa-file-invoice-dollar"></i>Pay Register</a>
     </li>
     <li class="sidebar-item">
         <a class="sidebar-link" href="{% url 'payroll:payroll' %}"><i class="align-middle me-2 fas fa-calculator"></i>Payroll Engine</a>
