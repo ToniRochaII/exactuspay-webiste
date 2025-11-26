@@ -15,8 +15,8 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 
-from .forms import UserEditForm, UserRegistrationForm, LoginForm, UserProfileForm
-from .models import (
+from Exactus.accounts.forms import UserEditForm, UserRegistrationForm, LoginForm, UserProfileForm
+from Exactus.accounts.models import (
     RoleHierarchy,
     User,
     PermissionMatrix,

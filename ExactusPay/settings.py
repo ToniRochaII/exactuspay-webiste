@@ -56,17 +56,17 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
 
-    'accounts.apps.AccountsConfig',
-    'country.apps.CountryConfig',
-    'company',
-    'regulations',
-    'elements.apps.ElementsConfig',
-    'calculationbase.apps.CalculationbaseConfig',
-    'employee',
-    'utils',  
-    'pdcodes',  
-    'payregister.apps.PayregisterConfig',
-    'payroll',
+    'Exactus.accounts.apps.AccountsConfig',
+    'Exactus.country.apps.CountryConfig',
+    'Exactus.company',
+    'Exactus.regulations',
+    'Exactus.elements.apps.ElementsConfig',
+    'Exactus.calculationbase.apps.CalculationbaseConfig',
+    'Exactus.employee',
+    'Exactus.utils',  
+    'Exactus.pdcodes',  
+    'Exactus.payregister.apps.PayregisterConfig',
+    'Exactus.payroll',
 ]
 
 MIDDLEWARE = [
