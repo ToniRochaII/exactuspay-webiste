@@ -80,15 +80,24 @@
                                             </li>
                                     </ul>
                                 </li>
-                            {% else %}
-                                <li class="sidebar-item">
-                                    <a class="sidebar-link disabled" href="#">
-                                        <i class="align-middle me-2 fas fa-flag"></i>Countries
+                                <liclass="sidebar-item">
+                                    <a data-bs-target="#regulations" data-bs-toggle="collapse" class="sidebar-link" class="sidebar-link" href="">
+                                        <i class="align-middle me-2 fas fa-gavel"></i>Regulations
                                     </a>
+                                    <ul>
+                                        <li id="country" class="sidebar-dropdown list-unstyled collapse show" data-bs-parent="#sidebar">
+                                            <li class="sidebar-item">
+                                                <a class="sidebar-link" href="{% url 'regulations:regulations' country_slug %}">Regulations</a>
+                                            </li>
+                                            <li class="sidebar-item">
+                                                <a class="sidebar-link" href="{% url 'regulations:regulations_create' country_slug %}">Add regulations</a>
+                                            </li>
+                                    </ul>
+
                                 </li>
                                 <li class="sidebar-item">
-                                    <a class="sidebar-link disabled" href="#">
-                                        <i class="align-middle me-2 fas fa-building"></i>Companies
+                                    <a class="sidebar-link" href="">
+                                        <i class="align-middle me-2 fas fa-puzzle-piece"></i>Elements
                                     </a>
                                 </li>
                             {% endif %}
