@@ -71,11 +71,6 @@
                                         <i class="align-middle me-2 fas fa-flag"></i>Countries
                                     </a>
                                 </li>
-                                <li class="sidebar-item">
-                                    <a class="sidebar-link" href="">
-                                        <i class="align-middle me-2 fas fa-building"></i>Companies
-                                    </a>
-                                </li>
                             {% else %}
                                 <li class="sidebar-item">
                                     <a class="sidebar-link disabled" href="#">
@@ -92,6 +87,11 @@
 
                         {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
                             {% if companies %}
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="">
+                                        <i class="align-middle me-2 fas fa-building"></i>Companies
+                                    </a>
+                                </li>
                                 <li class="sidebar-item">
                                     <a class="sidebar-link" href="{% url 'employee:employee' country_slug company.company_id %}">
                                         <i class="align-middle me-2 fas fa-users"></i>Employees
