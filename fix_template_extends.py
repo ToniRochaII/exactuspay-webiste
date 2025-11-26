@@ -11,8 +11,8 @@ def fix_template_extends(file_path):
         
         # Fix the extends path
         content = re.sub(
-            r'\{%\s*extends\s+["\']Exactus/templates/base\.html["\']\s*%\}',
-            r'{% extends "../../templates/base.html" %}',
+            r'\{%\s*extends\s+["\']../../templates/base\.html["\']\s*%\}',
+            r'{% extends "../../../templates/base.html" %}',
             content
         )
         
