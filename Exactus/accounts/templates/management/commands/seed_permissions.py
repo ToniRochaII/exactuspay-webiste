@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from accounts.models import PermissionMatrix
+from Exactus.accounts.models import PermissionMatrix
 
 BASE = {
     "ADMIN": [("ALL", "ALL")],
