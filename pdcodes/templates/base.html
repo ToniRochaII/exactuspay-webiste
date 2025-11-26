@@ -14,7 +14,7 @@
     <link href="{% static 'dis/css/modern.css' %}" rel="stylesheet">
 
     <style>body { opacity: 0; }</style>
-    <script src="{% static 'js/settings.js' %}"></script>
+    <script src="{% static 'dis/js/settings.js' %}"></script>
 
     {% block extra_head %}{% endblock %}
 </head>
@@ -31,7 +31,7 @@
 
             <div class="sidebar-content">
                 <div class="sidebar-user">
-                    <img src="{% static 'img/avatars/default.jpg' %}" class="img-fluid rounded-circle mb-2">
+                    <img src="{% static 'dis/img/avatars/default.jpg' %}" class="img-fluid rounded-circle mb-2">
                     {% if user.is_authenticated %}
                         <div class="fw-bold">{{ user.username }}</div>
                         <small>Logged in</small>
