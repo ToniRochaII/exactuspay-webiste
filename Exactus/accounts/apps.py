@@ -5,4 +5,4 @@ class AccountsConfig(AppConfig):
     name = "Exactus.accounts"
 
     def ready(self):
-        import accounts.signals  # ✅ safer explicit import
+        import Exactus.accounts.signals
