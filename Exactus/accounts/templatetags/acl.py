@@ -1,5 +1,5 @@
 from django import template
-from accounts.utils.permissions import has_permission
+from Exactus.accounts.utils.permissions import has_permission
 
 register = template.Library()
 
