@@ -67,9 +67,18 @@
                         {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
                             {% if countries %}  
                                 <li class="sidebar-item">
-                                    <a class="sidebar-link" href="{% url 'country:country' %}">
-                                        <i class="align-middle me-2 fas fa-flag"></i>Country
+                                    <a data-bs-target="#country" data-bs-toggle="collapse" class="sidebar-link" href="{% url 'country:country' %}">
+                                        <i class="align-middle me-2 fas fa-globe"></i>Country
                                     </a>
+                                    <ul>
+                                        <li id="country" class="sidebar-dropdown list-unstyled collapse show" data-bs-parent="#sidebar">
+                                            <li class="sidebar-item">
+                                                <a class="sidebar-link" href="{% url 'country:country' %}">Countries</a>
+                                            </li>
+                                            <li class="sidebar-item">
+                                                <a class="sidebar-link" href="{% url 'country:country_create' %}">Add Country</a>
+                                            </li>
+                                    </ul>
                                 </li>
                             {% else %}
                                 <li class="sidebar-item">
