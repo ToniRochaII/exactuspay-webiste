@@ -60,11 +60,12 @@
                         {% endif %}
                         {% endif %}
 
-                    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
-                    {% if companies %}
+                        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
+                        {% if companies %}
                     <li class="sidebar-item"><a class="sidebar-link" href="/employees/"><i class="align-middle me-2 fas fa-users"></i>Employees</a></li>
                     <li class="sidebar-item"><a class="sidebar-link" href="/payroll/"><i class="align-middle me-2 fas fa-calculator"></i>Payroll Engine</a></li>
-
+                        {% endif %}
+                        {% endif %}
                     {% endif %}
                 </ul>
             </div>
