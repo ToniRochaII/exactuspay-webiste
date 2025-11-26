@@ -65,7 +65,7 @@
                     
                     {% if user.is_authenticated %}
                         {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
-                            {% if countries %}
+                            {% if countries and regulations and elements %}
                                 <li class="sidebar-item">
                                     <a data-bs-target="#country" data-bs-toggle="collapse" class="sidebar-link" href="{% url 'country:country' %}">
                                         <i class="align-middle me-2 fas fa-globe"></i>Country
@@ -75,8 +75,6 @@
                                         <li class="sidebar-item"><a class="sidebar-link" href="{% url 'country:country_create' %}">Add Country</a></li>
                                     </ul>
                                 </li>
-                            {% endif %}
-                            {% if regulations %}
                                 <li class="sidebar-item">
                                     <a data-bs-target="#regulations" data-bs-toggle="collapse" class="sidebar-link" class="sidebar-link" href="">
                                         <i class="align-middle me-2 fas fa-gavel"></i>Regulations
@@ -86,7 +84,6 @@
                                         <li class="sidebar-item"><a class="sidebar-link" href="">Add regulations</a></li>
                                     </ul>
                                 </li>
-                            {% if elements %}
                                 <li class="sidebar-item">
                                     <a data-bs-target="#elements" data-bs-toggle="collapse" class="sidebar-link" class="sidebar-link" href="">
                                         <i class="align-middle me-2 fas fa-gavel"></i>Elements
@@ -96,7 +93,6 @@
                                         <li class="sidebar-item"><a class="sidebar-link" href="">Add elements</a></li>
                                     </ul>
                                 </li>
-                            {% endif %}
                             {% endif %}
                         {% endif %}
 
