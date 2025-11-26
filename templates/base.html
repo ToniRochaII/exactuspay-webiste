@@ -75,6 +75,7 @@
                                         <li class="sidebar-item"><a class="sidebar-link" href="{% url 'country:country_create' %}">Add Country</a></li>
                                     </ul>
                                 </li>
+                            {% endif %}
                             {% if regulations %}
                                 <li class="sidebar-item">
                                     <a data-bs-target="#regulations" data-bs-toggle="collapse" class="sidebar-link" class="sidebar-link" href="">
@@ -85,7 +86,6 @@
                                         <li class="sidebar-item"><a class="sidebar-link" href="">Add regulations</a></li>
                                     </ul>
                                 </li>
-                            {% endif %}
                             {% if elements %}
                                 <li class="sidebar-item">
                                     <a data-bs-target="#elements" data-bs-toggle="collapse" class="sidebar-link" class="sidebar-link" href="">
@@ -96,7 +96,6 @@
                                         <li class="sidebar-item"><a class="sidebar-link" href="">Add elements</a></li>
                                     </ul>
                                 </li>
-                            {% endif %}
                             {% endif %}
                             {% endif %}
                         {% endif %}
