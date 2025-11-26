@@ -1,8 +1,8 @@
-from accounts.models import PermissionMatrix
+from Exactus.accounts.models import PermissionMatrix
 from functools import wraps
 from django.shortcuts import redirect
 from django.contrib import messages
-from accounts.models import AccessControl
+from Exactus.accounts.models import AccessControl
 
 def has_permission(user, domain, action):
     if not user.is_authenticated:
