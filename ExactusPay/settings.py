@@ -141,7 +141,7 @@ FILE_UPLOAD_HANDLERS = [
 # Progress bar session key
 PROGRESS_SESSION_KEY = 'upload_progress'
 
-AUTH_USER_MODEL = 'Exactus.accounts.User'
+AUTH_USER_MODEL = 'accounts.User'
 
 LANGUAGE_CODE = "en-gb"
 TIME_ZONE = 'UTC'
