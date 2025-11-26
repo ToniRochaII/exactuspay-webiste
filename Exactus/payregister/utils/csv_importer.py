@@ -1,8 +1,8 @@
 import csv
 from datetime import datetime
-from payregister.models import PayRegister
-from employee.models import Employee
-from pdcodes.models import PDcode
+from Exactus.payregister.models import PayRegister
+from Exactus.employee.models import Employee
+from Exactus.pdcodes.models import PDcode
 
 
 def import_payregister_csv(file, company, created_by, dry_run=False):

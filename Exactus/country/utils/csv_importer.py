@@ -30,7 +30,7 @@ class ModelImportConfig:
 # COUNTRY IMPORT CONFIGURATION
 # ---------------------------------------------------------
 
-from country.models import Country
+from Exactus.country.models import Country
 
 
 def validate_country_row(row):

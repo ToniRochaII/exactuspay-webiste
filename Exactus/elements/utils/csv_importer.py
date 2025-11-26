@@ -2,8 +2,8 @@
 import csv
 from typing import Tuple, List
 
-from country.models import Country
-from elements.models import Element
+from Exactus.country.models import Country
+from Exactus.elements.models import Element
 
 
 def _to_bool(value, default=False) -> bool:

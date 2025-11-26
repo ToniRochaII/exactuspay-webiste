@@ -3,7 +3,7 @@ import csv
 import time
 from io import TextIOWrapper
 from django.db import transaction
-from company.models import Company
+from Exactus.company.models import Company
 
 def import_from_csv_with_progress(file, model, field_map, required_fields=None, dry_run=False, request=None, progress_id=None):
     """

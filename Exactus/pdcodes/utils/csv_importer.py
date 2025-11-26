@@ -63,7 +63,7 @@ def import_pdcodes_from_csv(
     decoded = TextIOWrapper(file, encoding="utf-8")
     reader = csv.DictReader(decoded)
 
-    from pdcodes.models import PDcode  # safe import inside function
+    from Exactus.pdcodes.models import PDcode  # safe import inside function
 
     for row_number, row in enumerate(reader, start=2):  # header = row 1
         row_errors = []

@@ -4,8 +4,8 @@ from dataclasses import dataclass, field
 from typing import Callable, Dict, List, Optional, Any
 from io import StringIO
 from django.db import transaction
-from country.models import Country
-from company.models import Company
+from Exactus.country.models import Country
+from Exactus.company.models import Company
 
 @dataclass
 class ForeignKeyMapping:
