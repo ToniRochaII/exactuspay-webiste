@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from Exactus.country import views
 
 app_name = "country"
 

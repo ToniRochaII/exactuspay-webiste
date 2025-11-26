@@ -1,6 +1,6 @@
 # pdcodes/urls.py - Update the urlpatterns
 from django.urls import path
-from . import views
+from Exactus.pdcodes import views
 
 app_name = "pdcodes"
 

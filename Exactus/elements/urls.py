@@ -1,6 +1,6 @@
 # elements/urls.py
 from django.urls import path
-from . import views
+from Exactus.elements import views
 
 app_name = "elements"
 

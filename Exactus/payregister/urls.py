@@ -1,6 +1,6 @@
 # payregister/urls.py
 from django.urls import path
-from . import views
+from Exactus.payregister import views
 
 app_name = "payregister"
 

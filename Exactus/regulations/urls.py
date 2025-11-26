@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views
+from Exactus.regulations import views
 
 app_name = "regulations"
 

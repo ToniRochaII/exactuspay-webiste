@@ -1,6 +1,6 @@
 # employee/urls.py - Update the upload route
 from django.urls import path
-from . import views
+from Exactus.employee import views
 
 app_name = "employee"
 

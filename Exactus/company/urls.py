@@ -1,6 +1,6 @@
 # company/urls.py
 from django.urls import path
-from . import views
+from Exactus.company import views
 
 app_name = "companies"
 
