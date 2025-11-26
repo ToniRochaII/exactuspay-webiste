@@ -4,6 +4,11 @@ from Exactus.payregister.models import PayRegister
 from Exactus.payregister.forms import PayRegisterForm
 from Exactus.company.models import  Company
 from Exactus.country.models import Country
+from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
+from Exactus.payregister.utils.csv_importer import import_payregister_csv
+from Exactus.payregister.forms import PayRegisterUploadForm
+
 
 def list_entries(request, country_slug, company_id, id):
     country = get_object_or_404(Country, slug=country_slug)
@@ -55,13 +60,7 @@ def create_entry(request, country_slug, company_id, id):
 
 
 
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib import messages
-from django.contrib.admin.views.decorators import staff_member_required
-from company.models import Company
-from country.models import Country
-from .utils.csv_importer import import_payregister_csv
-from .forms import PayRegisterUploadForm
+
 
 
 @staff_member_required
