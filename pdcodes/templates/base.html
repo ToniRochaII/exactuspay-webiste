@@ -11,10 +11,10 @@
     <title>{% block title %}ExactusPay{% endblock %}</title>
 
     <!-- CORE STYLES -->
-    <link href="{% static 'css/modern.css' %}" rel="stylesheet">
+    <link href="{% static 'dis/css/modern.css' %}" rel="stylesheet">
 
     <style>body { opacity: 0; }</style>
-    <script src="{% static 'js/settings.js' %}"></script>
+    <script src="{% static 'dis/js/settings.js' %}"></script>
 
     {% block extra_head %}{% endblock %}
 </head>
@@ -31,7 +31,7 @@
 
             <div class="sidebar-content">
                 <div class="sidebar-user">
-                    <img src="{% static 'img/avatars/default.jpg' %}" class="img-fluid rounded-circle mb-2">
+                    <img src="{% static 'dis/img/avatars/default.jpg' %}" class="img-fluid rounded-circle mb-2">
                     {% if user.is_authenticated %}
                         <div class="fw-bold">{{ user.username }}</div>
                         <small>Logged in</small>
@@ -50,35 +50,35 @@
 
     <li class="sidebar-header">Core Modules</li>
     <li class="sidebar-item">
-        <a class="sidebar-link" href="{% url 'country_list' %}"><i class="align-middle me-2 fas fa-flag"></i>Countries</a>
+        <a class="sidebar-link" href="{% url 'country:country' %}"><i class="align-middle me-2 fas fa-flag"></i>Countries</a>
     </li>
     <li class="sidebar-item">
-        <a class="sidebar-link" href="{% url 'company_list' %}"><i class="align-middle me-2 fas fa-building"></i>Companies</a>
+        <a class="sidebar-link" href="{% url 'companies:company' %}"><i class="align-middle me-2 fas fa-building"></i>Companies</a>
     </li>
     <li class="sidebar-item">
-        <a class="sidebar-link" href="{% url 'employee_list' %}"><i class="align-middle me-2 fas fa-users"></i>Employees</a>
+        <a class="sidebar-link" href="{% url 'employee:employee' %}"><i class="align-middle me-2 fas fa-users"></i>Employees</a>
     </li>
 
     <li class="sidebar-header">Payroll Configuration</li>
     <li class="sidebar-item">
-        <a class="sidebar-link" href="{% url 'regulation_list' %}"><i class="align-middle me-2 fas fa-gavel"></i>Regulations</a>
+        <a class="sidebar-link" href="{% url 'regulations:regulations' %}"><i class="align-middle me-2 fas fa-gavel"></i>Regulations</a>
     </li>
     <li class="sidebar-item">
-        <a class="sidebar-link" href="{% url 'elements_list' %}"><i class="align-middle me-2 fas fa-puzzle-piece"></i>Elements</a>
+        <a class="sidebar-link" href="{% url 'elements:elements' %}"><i class="align-middle me-2 fas fa-puzzle-piece"></i>Elements</a>
     </li>
     <li class="sidebar-item">
-        <a class="sidebar-link" href="{% url 'calcbase_list' %}"><i class="align-middle me-2 fas fa-cogs"></i>Calculation Base</a>
+        <a class="sidebar-link" href="{% url 'calculationbase:list' %}"><i class="align-middle me-2 fas fa-cogs"></i>Calculation Base</a>
     </li>
     <li class="sidebar-item">
-        <a class="sidebar-link" href="{% url 'pdcodes_list' %}"><i class="align-middle me-2 fas fa-code"></i>PD Codes</a>
+        <a class="sidebar-link" href="{% url 'pdcodes:pdcodes' %}"><i class="align-middle me-2 fas fa-code"></i>PD Codes</a>
     </li>
 
     <li class="sidebar-header">Payroll</li>
     <li class="sidebar-item">
-        <a class="sidebar-link" href="{% url 'payregister_home' %}"><i class="align-middle me-2 fas fa-file-invoice-dollar"></i>Pay Register</a>
+        <a class="sidebar-link" href="{% url 'payregister:payregister_list' %}"><i class="align-middle me-2 fas fa-file-invoice-dollar"></i>Pay Register</a>
     </li>
     <li class="sidebar-item">
-        <a class="sidebar-link" href="{% url 'payroll_home' %}"><i class="align-middle me-2 fas fa-calculator"></i>Payroll Engine</a>
+        <a class="sidebar-link" href="{% url 'payroll:payroll' %}"><i class="align-middle me-2 fas fa-calculator"></i>Payroll Engine</a>
     </li>
 </ul>
             </div>
@@ -159,7 +159,7 @@
     </svg>
 
     <!-- CORE JS -->
-    <script src="{% static 'js/app.js' %}"></script>
+    <script src="{% static 'dis/js/app.js' %}"></script>
 
     {% block extra_js %}{% endblock %}
 </body>
