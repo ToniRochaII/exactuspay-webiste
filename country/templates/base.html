@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {% load static %}
+{% load accounts_role_filters %}
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -13,7 +14,18 @@
     <!-- CORE STYLES -->
     <link href="{% static 'dis/css/modern.css' %}" rel="stylesheet">
 
-    <style>body { opacity: 0; }</style>
+    <style>
+        body { opacity: 0; }
+        .sidebar-link.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+            cursor: not-allowed;
+        }
+        .sidebar-link.disabled:hover {
+            background-color: transparent;
+            color: var(--bs-gray-600);
+        }
+    </style>
     <script src="{% static 'dis/js/settings.js' %}"></script>
 
     {% block extra_head %}{% endblock %}
@@ -43,75 +55,173 @@
 
                 <!-- SIDEBAR NAVIGATION -->
                 <ul class="sidebar-nav">
-                    <li class="sidebar-header">Navigation</li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link" href="{% url 'dashboard' %}"><i class="align-middle me-2 fas fa-home"></i>Dashboard</a>
+                        <a class="sidebar-link" href="/">
+                            <i class="align-middle me-2 fas fa-fw fa-home"></i><span class="align-middle">Dashboard</span>
+                        </a>
                     </li>
 
-                    <li class="sidebar-header">Core Modules</li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="{% url 'country:country' %}"><i class="align-middle me-2 fas fa-flag"></i>Countries</a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="{% url 'companies:company' country_slug %}"><i class="align-middle me-2 fas fa-building"></i>Companies</a>
-                    </li>
-                    <li class="sidebar-item">
-                        {% if company and company.company_id %}
-                            <a class="sidebar-link" href="{% url 'employee:employee' company.company_id country_slug %}">
+                    <li class="sidebar-header">Modules</li>
+                    
+                    {% if user.is_authenticated %}
+                        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
+                            {% if countries %}
+                                <li class="sidebar-item">
+                                    <a data-bs-target="#country" data-bs-toggle="collapse" class="sidebar-link" href="{% url 'country:country' %}">
+                                        <i class="align-middle me-2 fas fa-globe"></i>Country
+                                    </a>
+                                    <ul id="country" class="sidebar-dropdown list-unstyled collapse show" data-bs-parent="#sidebar">
+                                        <li class="sidebar-item"><a class="sidebar-link" href="{% url 'country:country' %}">Countries</a></li>
+                                        <li class="sidebar-item"><a class="sidebar-link" href="{% url 'country:country_create' %}">Add Country</a></li>
+                                    </ul>
+                                </li>
+                            {% endif %}
+                            {% if regulations %}
+                                <li class="sidebar-item">
+                                    <a data-bs-target="#regulations" data-bs-toggle="collapse" class="sidebar-link" class="sidebar-link" href="">
+                                        <i class="align-middle me-2 fas fa-gavel"></i>Regulations
+                                    </a>
+                                    <ul id="country" class="sidebar-dropdown list-unstyled collapse show" data-bs-parent="#sidebar">
+                                        <li class="sidebar-item"><a class="sidebar-link" href="">Regulations</a></li>
+                                        <li class="sidebar-item"><a class="sidebar-link" href="">Add regulations</a></li>
+                                    </ul>
+                                </li>
+                            {% endif %}
+                            {% if elements %}
+                                <li class="sidebar-item">
+                                    <a data-bs-target="#elements" data-bs-toggle="collapse" class="sidebar-link" class="sidebar-link" href="">
+                                        <i class="align-middle me-2 fas fa-gavel"></i>Elements
+                                    </a>
+                                    <ul id="country" class="sidebar-dropdown list-unstyled collapse show" data-bs-parent="#sidebar">
+                                        <li class="sidebar-item"><a class="sidebar-link" href="">Elements</a></li>
+                                        <li class="sidebar-item"><a class="sidebar-link" href="">Add elements</a></li>
+                                    </ul>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+
+                        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
+                            {% if companies %}
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="">
+                                        <i class="align-middle me-2 fas fa-building"></i>Companies
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="">
+                                        <i class="align-middle me-2 fas fa-users"></i>Employees
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="">
+                                        <i class="align-middle me-2 fas fa-calculator"></i>Payroll Engine
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link disabled" href="#">
+                                        <i class="align-middle me-2 fas fa-users"></i>Employees
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link disabled" href="#">
+                                        <i class="align-middle me-2 fas fa-calculator"></i>Payroll Engine
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+
+                        <!-- Additional modules for specific roles -->
+                        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,OPERATION" %}
+                            {% if companies %}
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="">
+                                        <i class="align-middle me-2 fas fa-gavel"></i>Regulations
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="">
+                                        <i class="align-middle me-2 fas fa-puzzle-piece"></i>Elements
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link disabled" href="#">
+                                        <i class="align-middle me-2 fas fa-gavel"></i>Regulations
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link disabled" href="#">
+                                        <i class="align-middle me-2 fas fa-puzzle-piece"></i>Elements
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+
+                        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,OPERATION,SPECIALIST" %}
+                            {% if companies %}
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="">
+                                        <i class="align-middle me-2 fas fa-cogs"></i>Calculation Base
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="">
+                                        <i class="align-middle me-2 fas fa-code"></i>PD Codes
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link disabled" href="#">
+                                        <i class="align-middle me-2 fas fa-cogs"></i>Calculation Base
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link disabled" href="#">
+                                        <i class="align-middle me-2 fas fa-code"></i>PD Codes
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+
+                        {% if user|has_role:"EXEC,ADMIN,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
+                            {% if companies %}
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="">
+                                        <i class="align-middle me-2 fas fa-file-invoice-dollar"></i>Pay Register
+                                    </a>
+                                </li>
+                            {% else %}
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link disabled" href="#">
+                                        <i class="align-middle me-2 fas fa-file-invoice-dollar"></i>Pay Register
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endif %}
+                    {% else %}
+                        <!-- Show disabled links for non-authenticated users -->
+                        <li class="sidebar-item">
+                            <a class="sidebar-link disabled" href="#">
+                                <i class="align-middle me-2 fas fa-flag"></i>Countries
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link disabled" href="#">
+                                <i class="align-middle me-2 fas fa-building"></i>Companies
+                            </a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link disabled" href="#">
                                 <i class="align-middle me-2 fas fa-users"></i>Employees
                             </a>
-                        {% else %}
+                        </li>
+                        <li class="sidebar-item">
                             <a class="sidebar-link disabled" href="#">
-                                <i class="align-middle me-2 fas fa-users"></i>Employees
+                                <i class="align-middle me-2 fas fa-calculator"></i>Payroll Engine
                             </a>
-                        {% endif %}
-                    </li>
-
-                    <li class="sidebar-header">Payroll Configuration</li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="{% url 'regulations:regulations' country_slug %}"><i class="align-middle me-2 fas fa-gavel"></i>Regulations</a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="{% url 'elements:elements' country_slug %}"><i class="align-middle me-2 fas fa-puzzle-piece"></i>Elements</a>
-                    </li>
-                    <li class="sidebar-item">
-                        {% if regulations_regulations_id %}
-                            <a class="sidebar-link" href="{% url 'calculationbase:list' country_slug regulations_regulations_id %}">
-                                <i class="align-middle me-2 fas fa-cogs"></i>Calculation Base
-                            </a>
-                        {% else %}
-                            <a class="sidebar-link disabled" href="#">
-                                <i class="align-middle me-2 fas fa-cogs"></i>Calculation Base
-                            </a>
-                        {% endif %}
-                    </li>
-                    <li class="sidebar-item">
-                        {% if company and company.company_id %}
-                            <a class="sidebar-link" href="{% url 'pdcodes:pdcodes' company.company_id country_slug %}">
-                                <i class="align-middle me-2 fas fa-code"></i>PD Codes
-                            </a>
-                        {% else %}
-                            <a class="sidebar-link disabled" href="#">
-                                <i class="align-middle me-2 fas fa-code"></i>PD Codes
-                            </a>
-                        {% endif %}
-                    </li>
-
-                    <li class="sidebar-header">Payroll</li>
-                    <li class="sidebar-item">
-                        {% if company and company.company_id and employee and employee.employee_id %}
-                            <a class="sidebar-link" href="{% url 'payregister:payregister_list' company.company_id country_slug employee.employee_id %}">
-                                <i class="align-middle me-2 fas fa-file-invoice-dollar"></i>Pay Register
-                            </a>
-                        {% else %}
-                            <a class="sidebar-link disabled" href="#">
-                                <i class="align-middle me-2 fas fa-file-invoice-dollar"></i>Pay Register
-                            </a>
-                        {% endif %}
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="{% url 'payroll:payroll' %}"><i class="align-middle me-2 fas fa-calculator"></i>Payroll Engine</a>
-                    </li>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </nav>
@@ -135,10 +245,16 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-end">
                                 {% if user.is_authenticated %}
-                                    <a class="dropdown-item" href="/accounts/profile/"><i class="fas fa-user me-1"></i>Profile</a>
-                                    <a class="dropdown-item" href="/accounts/logout/"><i class="fas fa-arrow-alt-circle-right me-1"></i>Logout</a>
+                                    <a class="dropdown-item" href="/accounts/profile/">
+                                        <i class="fas fa-user me-1"></i>Profile
+                                    </a>
+                                    <a class="dropdown-item" href="/accounts/logout/">
+                                        <i class="fas fa-arrow-alt-circle-right me-1"></i>Logout
+                                    </a>
                                 {% else %}
-                                    <a class="dropdown-item" href="/accounts/login/"><i class="fas fa-sign-in-alt me-1"></i>Login</a>
+                                    <a class="dropdown-item" href="/accounts/login/">
+                                        <i class="fas fa-sign-in-alt me-1"></i>Login
+                                    </a>
                                 {% endif %}
                             </div>
                         </li>
@@ -149,14 +265,12 @@
             <!-- PAGE CONTENT -->
             <main class="content">
                 <div class="container-fluid">
-
                     <div class="header">
                         <h1 class="header-title">{% block page_title %}{% endblock %}</h1>
                         {% block breadcrumbs %}{% endblock %}
                     </div>
 
                     {% block content %}{% endblock %}
-
                 </div>
             </main>
 
