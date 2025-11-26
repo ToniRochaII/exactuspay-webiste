@@ -70,7 +70,7 @@
                                     <a data-bs-target="#country" data-bs-toggle="collapse" class="sidebar-link" href="{% url 'country:country' %}">
                                         <i class="align-middle me-2 fas fa-globe"></i>Country
                                     </a>
-                                    <ul>
+                                    <ul id="country" class="sidebar-dropdown list-unstyled collapse show" data-bs-parent="#sidebar">
                                         <li id="country" class="sidebar-dropdown list-unstyled collapse show" data-bs-parent="#sidebar">
                                             <a class="sidebar-link" href="{% url 'country:country' %}">Countries</a>
                                         </li>
@@ -84,14 +84,12 @@
                                     <a data-bs-target="#regulations" data-bs-toggle="collapse" class="sidebar-link" class="sidebar-link" href="">
                                         <i class="align-middle me-2 fas fa-gavel"></i>Regulations
                                     </a>
-                                    <ul>
-                                        <li id="country" class="sidebar-dropdown list-unstyled collapse show" data-bs-parent="#sidebar">
-                                            <li class="sidebar-item">
-                                                <a class="sidebar-link" href="">Regulations</a>
-                                            </li>
-                                            <li class="sidebar-item">
-                                                <a class="sidebar-link" href="">Add regulations</a>
-                                            </li>
+                                    <ul id="country" class="sidebar-dropdown list-unstyled collapse show" data-bs-parent="#sidebar"></ul>
+                                        <li class="sidebar-item">
+                                            <a class="sidebar-link" href="">Regulations</a>
+                                        </li>
+                                        <li class="sidebar-item">
+                                            <a class="sidebar-link" href="">Add regulations</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -100,14 +98,12 @@
                                     <a class="sidebar-link" href="">
                                         <i class="align-middle me-2 fas fa-puzzle-piece"></i>Elements
                                     </a>
-                                    <ul>
-                                        <li id="elements" class="sidebar-dropdown list-unstyled collapse show" data-bs-parent="#sidebar">
-                                            <li class="sidebar-item">
-                                                <a class="sidebar-link" href="">Regulations</a>
-                                            </li>
-                                            <li class="sidebar-item">
-                                                <a class="sidebar-link" href="">Add regulations</a>
-                                            </li>
+                                    <ul id="elements" class="sidebar-dropdown list-unstyled collapse show" data-bs-parent="#sidebar">
+                                        <li class="sidebar-item">
+                                            <a class="sidebar-link" href="">Regulations</a>
+                                        </li>
+                                        <li class="sidebar-item">
+                                            <a class="sidebar-link" href="">Add regulations</a>
                                         </li>
                                     </ul>
                                 </li>
