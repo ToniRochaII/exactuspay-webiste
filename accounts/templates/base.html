@@ -55,20 +55,20 @@
 
                 <!-- SIDEBAR NAVIGATION -->
                 <ul class="sidebar-nav">
-                    {% if user.is_authenticated %}
                     <li class="sidebar-item">
-                        <a class="sidebar-link" href="{% url 'dashboard' %}">
+                        <a class="sidebar-link" href="/">
                             <i class="align-middle me-2 fas fa-fw fa-home"></i><span class="align-middle">Dashboard</span>
                         </a>
                     </li>
 
                     <li class="sidebar-header">Modules</li>
                     
+                    {% if user.is_authenticated %}
                         {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
                             {% if countries %}  
                                 <li class="sidebar-item">
-                                    <a class="sidebar-link" href="{% url 'country:country' %}">
-                                        <i class="align-middle me-2 fas fa-fw fa-flag"></i><span class="align-middle">Countries</span>
+                                    <a class="sidebar-link" href="/countries/">
+                                        <i class="align-middle me-2 fas fa-flag"></i>Countries
                                     </a>
                                 </li>
                                 <li class="sidebar-item">
