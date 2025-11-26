@@ -8,7 +8,7 @@
 {% block breadcrumbs %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'home' %}">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
     <li class="breadcrumb-item"><a href="{% url 'country' %}">Countries</a></li>
     <li class="breadcrumb-item"><a href="{% url 'elements:elements' country_slug %}">Elements — {{ country.name }}</a></li>
     <li class="breadcrumb-item active" aria-current="page">Delete Element</li>
