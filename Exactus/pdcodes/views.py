@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db.models import Count, Avg
 
-from utils.decorators import role_required
+from Exactus.pdcodes.utils.decorators import role_required
+from Exactus.employee.models import Employee
 from Exactus.pdcodes.models import PDcode
 from Exactus.company.models import Company
 from Exactus.country.models import Country
@@ -477,9 +479,6 @@ def pdcode_upload_country_result_view(request, country_slug):
 
 
 # country/views.py - Update your country_detail view
-from django.db.models import Count, Avg
-from employee.models import Employee
-from pdcodes.models import PDcode
 
 def country_detail(request, country_slug):
     country = get_object_or_404(Country, slug=country_slug)
