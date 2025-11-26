@@ -6,4 +6,4 @@ class CountryConfig(AppConfig):
     name = 'Exactus.country'
 
     def ready(self):
-        import country.signals
+        import Exactus.country.signals
