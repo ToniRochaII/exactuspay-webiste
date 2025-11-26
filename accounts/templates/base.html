@@ -65,7 +65,7 @@
                     
                     {% if user.is_authenticated %}
                         {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
-                            {% if countries %}  
+                            {% if countries %}
                                 <li class="sidebar-item">
                                     <a data-bs-target="#country" data-bs-toggle="collapse" class="sidebar-link" href="{% url 'country:country' %}">
                                         <i class="align-middle me-2 fas fa-globe"></i>Country
@@ -79,7 +79,8 @@
                                         </li>
                                     </ul>
                                 </li>
-                                <liclass="sidebar-item">
+
+                                <li class="sidebar-item">
                                     <a data-bs-target="#regulations" data-bs-toggle="collapse" class="sidebar-link" class="sidebar-link" href="">
                                         <i class="align-middle me-2 fas fa-gavel"></i>Regulations
                                     </a>
@@ -91,14 +92,26 @@
                                             <li class="sidebar-item">
                                                 <a class="sidebar-link" href="">Add regulations</a>
                                             </li>
+                                        </li>
                                     </ul>
-
                                 </li>
-                                <li class="sidebar-item">
+
+                                <li data-bs-target="#elements" data-bs-toggle="collapse" class="sidebar-link" class="sidebar-item">
                                     <a class="sidebar-link" href="">
                                         <i class="align-middle me-2 fas fa-puzzle-piece"></i>Elements
                                     </a>
+                                    <ul>
+                                        <li id="elements" class="sidebar-dropdown list-unstyled collapse show" data-bs-parent="#sidebar">
+                                            <li class="sidebar-item">
+                                                <a class="sidebar-link" href="">Regulations</a>
+                                            </li>
+                                            <li class="sidebar-item">
+                                                <a class="sidebar-link" href="">Add regulations</a>
+                                            </li>
+                                        </li>
+                                    </ul>
                                 </li>
+
                             {% endif %}
                         {% endif %}
 
