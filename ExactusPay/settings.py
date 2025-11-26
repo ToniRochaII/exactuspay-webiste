@@ -53,9 +53,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # Correct
     'crispy_forms',
     'crispy_bootstrap5',
 
+    # Your app modules
     'Exactus.accounts.apps.AccountsConfig',
     'Exactus.country.apps.CountryConfig',
     'Exactus.company',
@@ -63,8 +65,8 @@ INSTALLED_APPS = [
     'Exactus.elements.apps.ElementsConfig',
     'Exactus.calculationbase.apps.CalculationbaseConfig',
     'Exactus.employee',
-    'Exactus.utils',  
-    'Exactus.pdcodes',  
+    'Exactus.utils',
+    'Exactus.pdcodes',
     'Exactus.payregister.apps.PayregisterConfig',
     'Exactus.payroll',
 ]
