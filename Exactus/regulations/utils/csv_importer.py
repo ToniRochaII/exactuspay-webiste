@@ -22,29 +22,6 @@ class ModelImportConfig:
     fk_mappings: List[ForeignKeyMapping] = field(default_factory=list)
     validator: Optional[Callable[[Dict[str, str]], None]] = None
 
-# ⚠️ REMOVE THIS ENTIRE CLASS DEFINITION ⚠️
-# class Regulations(models.Model):
-#     country = models.ForeignKey("country.Country", on_delete=models.CASCADE, related_name="regulations")
-#     fiscal_year = models.IntegerField()
-#     effective_date = models.DateField()
-#     slug = models.SlugField(unique=True, blank=True)
-#     archive = models.CharField(
-#         "Archive",
-#         max_length=1,
-#         choices=[("Y", "YES"), ("N", "NO")],
-#         default="N",
-#     )
-# 
-#     def save(self, *args, **kwargs):
-#         # ... remove all this
-# 
-#     class Meta:
-#         verbose_name = "Regulation"
-#         verbose_name_plural = "Regulations"
-#         ordering = ["country__name", "-fiscal_year"]
-# 
-#     def __str__(self):
-#         return f"{self.country.name} - {self.fiscal_year}"
 
 def validate_regulations_row(row):
     """Strict validation rules for Regulations imports."""
