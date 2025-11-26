@@ -11,7 +11,7 @@
       <a href="{% url 'dashboard' %}">Dashboard</a>
     </li>
     <li class="breadcrumb-item">
-      <a href="{% url 'company' country_slug %}">{{ country.name }} companies</a>
+      <a href="{% url 'companies:company' country_slug %}">{{ country.name }} companies</a>
     </li>
     <li class="breadcrumb-item active" aria-current="page">
       PDcodes — {{ company.trade_name }}

@@ -9,7 +9,7 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'company:company' country_slug %}">Countries</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'companies:company' country_slug %}">Countries</a></li>
     <li class="breadcrumb-item"><a href="{% url 'pdcodes:pdcodes' country_slug company.company_id %}">PDcodes — {{ company.trade_name }}</a></li>
     <li class="breadcrumb-item active" aria-current="page">Edit PDcode</li>
   </ol>
