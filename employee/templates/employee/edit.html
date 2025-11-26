@@ -18,7 +18,7 @@ Add Employee — {{ company.trade_name }} | ExactusPay
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'company:company' country.id %}">Companies</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'companies:company' country.id %}">Companies</a></li>
     <li class="breadcrumb-item"><a href="{% url 'employee:employee' country_slug company.company_id %}">Employees — {{ company.trade_name }}</a></li>
     <li class="breadcrumb-item active" aria-current="page">{% if employee %}Edit Employee{% else %}Add Employee{% endif %}</li>
   </ol>
