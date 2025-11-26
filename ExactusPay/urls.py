@@ -20,16 +20,16 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('',include('accounts.urls')),
-    path('',include('country.urls')),
-    path('',include('company.urls')),
-    path('',include('regulations.urls')),
-    path('',include('elements.urls')),
-    path('',include('calculationbase.urls')),
-    path('',include('employee.urls')),
-    path('',include('pdcodes.urls')),
+    path('',include('Exactus.accounts.urls')),
+    path('',include('Exactus.country.urls')),
+    path('',include('Exactus.company.urls')),
+    path('',include('Exactus.regulations.urls')),
+    path('',include('Exactus.elements.urls')),
+    path('',include('Exactus.calculationbase.urls')),
+    path('',include('Exactus.employee.urls')),
+    path('',include('Exactus.pdcodes.urls')),
     
-    path('',include(('payregister.urls', 'payregister'), namespace='payregister')),
-    path('',include('payroll.urls')),
+    path('',include(('Exactus.payregister.urls', 'payregister'), namespace='payregister')),
+    path('',include('Exactus.payroll.urls')),
     
 ]
