@@ -68,7 +68,7 @@
                             {% if countries %}  
                                 <li class="sidebar-item">
                                     <a class="sidebar-link" href="{% url 'country:country' %}">
-                                        <i class="align-middle me-2 fas fa-flag"></i>Countries
+                                        <i class="align-middle me-2 fas fa-flag"></i>Country
                                     </a>
                                 </li>
                             {% else %}
@@ -93,12 +93,12 @@
                                     </a>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a class="sidebar-link" href="{% url 'employee:employee' country_slug company.company_id %}">
+                                    <a class="sidebar-link" href="">
                                         <i class="align-middle me-2 fas fa-users"></i>Employees
                                     </a>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a class="sidebar-link" href="{% url 'payroll:payroll' country_slug company.company_id %}">
+                                    <a class="sidebar-link" href="">
                                         <i class="align-middle me-2 fas fa-calculator"></i>Payroll Engine
                                     </a>
                                 </li>
@@ -120,12 +120,12 @@
                         {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,OPERATION" %}
                             {% if companies %}
                                 <li class="sidebar-item">
-                                    <a class="sidebar-link" href="{% url 'regulations:regulations' country_slug %}">
+                                    <a class="sidebar-link" href="">
                                         <i class="align-middle me-2 fas fa-gavel"></i>Regulations
                                     </a>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a class="sidebar-link" href="{% url 'elements:elements' country_slug %}">
+                                    <a class="sidebar-link" href="">
                                         <i class="align-middle me-2 fas fa-puzzle-piece"></i>Elements
                                     </a>
                                 </li>
@@ -146,12 +146,12 @@
                         {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,OPERATION,SPECIALIST" %}
                             {% if companies %}
                                 <li class="sidebar-item">
-                                    <a class="sidebar-link" href="{% url 'calculationbase:list' country_slug regulations.regulations_id %}">
+                                    <a class="sidebar-link" href="">
                                         <i class="align-middle me-2 fas fa-cogs"></i>Calculation Base
                                     </a>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a class="sidebar-link" href="{% url 'pdcodes:pdcodes' country_slug company.company_id %}">
+                                    <a class="sidebar-link" href="">
                                         <i class="align-middle me-2 fas fa-code"></i>PD Codes
                                     </a>
                                 </li>
@@ -172,7 +172,7 @@
                         {% if user|has_role:"EXEC,ADMIN,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
                             {% if companies %}
                                 <li class="sidebar-item">
-                                    <a class="sidebar-link" href="{% url 'payregister:payregister' country_slug company.company_id employee.employee_id %}">
+                                    <a class="sidebar-link" href="">
                                         <i class="align-middle me-2 fas fa-file-invoice-dollar"></i>Pay Register
                                     </a>
                                 </li>
