@@ -143,6 +143,10 @@ PROGRESS_SESSION_KEY = 'upload_progress'
 
 AUTH_USER_MODEL = 'accounts.User'
 
+LOGIN_URL = "/login/"
+LOGIN_REDIRECT_URL = "/dashboard/"
+LOGOUT_REDIRECT_URL = "/login/"
+
 LANGUAGE_CODE = "en-gb"
 TIME_ZONE = 'UTC'
 USE_I18N = True
