@@ -112,35 +112,47 @@
                             {% endif %}
                         </ul>
                     </li>
-
                     <!-- ELEMENTS -->
-                     {% if country_slug %}
+                    {% if country_slug %}
                     <li class="sidebar-item">
                         <a data-bs-target="#elements" data-bs-toggle="collapse" class="sidebar-link" href="javascript:void(0)">
                             <i class="align-middle me-2 fas fa-gavel"></i>Elements
                         </a>
+
                         <ul id="elements" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'elements:elements' country_slug %}">Elements</a></li>
-                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'elements:element_create' country_slug %}">Add elements</a></li>
-                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'elements:elements_upload' country_slug %}">Upload elements</a></li>
-                            {% endif %}
-                            {% if elements.id %}
-                                <li class="sidebar-item">
-                                    <a class="sidebar-link" href="{% url 'elements:element_edit' country_slug elements.id %}">
-                                        Edit element
-                                    </a>
-                                </li>
-                            {% endif %}
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{% url 'elements:elements' country_slug %}">Elements</a>
+                            </li>
+
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{% url 'elements:element_create' country_slug %}">
+                                    Add elements
+                                </a>
+                            </li>
+
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{% url 'elements:elements_upload' country_slug %}">
+                                    Upload elements
+                                </a>
+                            </li>
+
+                            {% if elements %}
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{% url 'elements:element_edit' country_slug elements.id %}">
+                                    Edit element
+                                </a>
+                            </li>
                             {% endif %}
                         </ul>
                     </li>
+
                     {% else %}
-                        {# No country selected: show disabled menu item, no reversing with country_slug #}
-                        <li class="sidebar-item">
-                            <a class="sidebar-link disabled" href="#">
-                                <i class="align-middle me-2 fas fa-gavel"></i>Elements
-                            </a>
-                        </li>
+
+                    <li class="sidebar-item">
+                        <a class="sidebar-link disabled" href="#">
+                            <i class="align-middle me-2 fas fa-gavel"></i>Elements
+                        </a>
+                    </li>
                     {% endif %}
                     <!-- COMPANIES -->
                      {% if country_slug %}
