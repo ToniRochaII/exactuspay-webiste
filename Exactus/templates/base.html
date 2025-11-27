@@ -171,27 +171,14 @@
                             {% if c.company_id %}
                             <!-- View Employees -->
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'employee:employee' country_slug c.company_id %}">
-                                    View Employees
-                                </a>
+                                <a class="sidebar-link" href="{% url 'employee:employee' country_slug c.company_id %}">View Employees</a>
+                                <a class="sidebar-link" href="{% url 'employee:employee_create' country_slug c.company_id %}">Add Employee</a>
+                                <a class="sidebar-link" href="{% url 'employee:employee_upload' country_slug c.company_id %}">Add Employee</a>
                             </li>
                             {% else %}
                             <!-- Skip broken company entries -->
                             {% endif %}
                         {% endfor %}
-                            <!-- Add Employee -->
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="">
-                                    Add Employee
-                                </a>
-                            </li>
-                            
-                            <!-- Upload Employees -->
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="">
-                                    Bulk Upload
-                                </a>
-                            </li>
                             
                             <!-- Edit Current Employee (if in context) -->
                             {% if employee and employee.id %}
