@@ -169,8 +169,8 @@
                         <ul id="employees" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'employee:employee' country_slug %}">
-                                    {{ c.trade_name }}
+                                <a class="sidebar-link" href="{% url 'employee:employee' country_slug company.company_id %}">
+                                    {{ company.trade_name }}
                                 </a>
                             </li>
                         </ul>
