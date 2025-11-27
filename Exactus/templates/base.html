@@ -123,6 +123,7 @@
                             <li class="sidebar-item"><a class="sidebar-link" href="{% url 'elements:elements' country_slug %}">Elements</a></li>
                             <li class="sidebar-item"><a class="sidebar-link" href="{% url 'elements:element_create' country_slug %}">Add elements</a></li>
                             <li class="sidebar-item"><a class="sidebar-link" href="{% url 'elements:elements_upload' country_slug %}">Upload elements</a></li>
+                            {% endif %}
                             {% if elements.id %}
                                 <li class="sidebar-item">
                                     <a class="sidebar-link" href="{% url 'elements:element_edit' country_slug elements.id %}">
@@ -132,14 +133,26 @@
                             {% endif %}
                         </ul>
                     </li>
-                    {% endif %}
                     <!-- COMPANIES -->
+                     {% if country_slug %}
                     <li class="sidebar-item">
-                        <a class="sidebar-link" href="">
+                        <a data-bs-target="#company" data-bs-toggle="collapse" class="sidebar-link" href="javascript:void(0)">
                             <i class="align-middle me-2 fas fa-building"></i>Companies
                         </a>
+                        <ul id="company" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'elements:elements' country_slug %}">Elements</a></li>
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'elements:element_create' country_slug %}">Add elements</a></li>
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'elements:elements_upload' country_slug %}">Upload elements</a></li>
+                            {% endif %}
+                            {% if elements.id %}
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="{% url 'elements:element_edit' country_slug elements.id %}">
+                                        Edit element
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
                     </li>
-
                     <!-- EMPLOYEES -->
                     <li class="sidebar-item">
                         <a class="sidebar-link" href="">
@@ -147,7 +160,6 @@
                         </a>
                     </li>
 
-                    {% endif %}
 
                     <!-- PAYROLL ENGINE (ACCESSIBLE TO ALL AUTHENTICATED USERS WHO’RE NOT ABOVE) -->
                     <li class="sidebar-item">
@@ -156,6 +168,7 @@
                         </a>
                     </li>
 
+                    {% endif %}
                     {% endif %}
                 </ul>
             </div>
