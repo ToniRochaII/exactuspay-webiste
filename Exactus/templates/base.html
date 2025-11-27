@@ -149,7 +149,7 @@
 
                             {% if company %}
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'companies:company_edit' country_slug company.company_id %}">Edit company</a>
+                                <a class="sidebar-link" href="{% url 'companies:company_edit' country_slug company.company_id %}">Edit {{ company.trade_name }}</a>
                             </li>
                             {% endif %}
                         </ul>
