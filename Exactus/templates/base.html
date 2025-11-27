@@ -99,8 +99,17 @@
                                         Regulations
                                     </a>
                                 </li>
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'regulations:regulations_create' country_slug %}">Add regulations</a></li>
+                            
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'regulations:regulation_upload' country_slug %}">Upload regulations</a></li>
                             {% endif %}
-                            <li class="sidebar-item"><a class="sidebar-link" href="">Add Regulations</a></li>
+                            {% if regulations.id %}
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="{% url 'regulations:regulations_edit' country_slug regulations.id %}">
+                                        Edit Regulation
+                                    </a>
+                                </li>
+                            {% endif %}
                         </ul>
                     </li>
 
