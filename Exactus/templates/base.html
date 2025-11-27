@@ -142,15 +142,7 @@
                         </a>
 
                         <ul id="company" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-
-                           
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'companies:company' country_slug %}">
-                                    {{ company.trade_name }}
-                                </a>
-                            </li>
-                            
-
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'companies:company' country_slug %}">Companies</a></li>
                             <li class="sidebar-item"><a class="sidebar-link" href="{% url 'companies:company_create' country_slug %}">Add company</a></li>
                             <li class="sidebar-item"><a class="sidebar-link" href="{% url 'companies:company_upload' country_slug %}">Upload companies</a></li>
 
