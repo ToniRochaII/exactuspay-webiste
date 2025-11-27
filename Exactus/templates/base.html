@@ -161,9 +161,9 @@
                             <i class="align-middle me-2 fas fa-building"></i>Companies
                         </a>
                         <ul id="company" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'companies:company' country_slug %}">Elements</a></li>
-                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'companies:company_create' country_slug %}">Add elements</a></li>
-                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'companies:company_upload' country_slug %}">Upload elements</a></li>
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'companies:company' country_slug %}">Companies</a></li>
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'companies:company_create' country_slug %}">Add company</a></li>
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'companies:company_upload' country_slug %}">Upload companies</a></li>
                             {% endif %}
                             {% if company.company_id %}
                                 <li class="sidebar-item">
