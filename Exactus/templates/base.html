@@ -147,7 +147,7 @@
                             <li class="sidebar-item"><a class="sidebar-link" href="{% url 'companies:company_create' country_slug %}">Add company</a></li>
                             <li class="sidebar-item"><a class="sidebar-link" href="{% url 'companies:company_upload' country_slug %}">Upload companies</a></li>
 
-                            {% if company %}
+                            {% if company.id %}
                             <li class="sidebar-item">
                                 <a class="sidebar-link" href="{% url 'companies:company_edit' country_slug company.company_id %}">Edit {{ company.trade_name }}</a>
                             </li>
