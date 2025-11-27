@@ -178,12 +178,12 @@
                         <ul id="company" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 
                             <li class="sidebar-item"><a class="sidebar-link" href="{% url 'employee:employee' country_slug company.company.id %}">Companies</a></li>
-                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'employee:employee_create' country_slug company.company.id %}">Add company</a></li>
-                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'employee:employee_upload' country_slug company.company.id %}">Upload companies</a></li>
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'employee:employee_create' country_slug company.company_id %}">Add company</a></li>
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'employee:employee_upload' country_slug company.company_id %}">Upload companies</a></li>
 
                             {% if employee %}
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'employee:employee_edit' country_slug company.company_id  %}">Edit {{ company.trade_name }}</a>
+                                <a class="sidebar-link" href="{% url 'employee:employee_edit' country_slug company.company_id employee.id  %}">Edit {{ company.trade_name }}</a>
                             </li>
                             {% endif %}
                         </ul>
