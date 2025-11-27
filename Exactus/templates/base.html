@@ -175,16 +175,7 @@
                             </li>
 
                         {% endfor %}
-                            
-                            <!-- Edit Current Employee (if in context) -->
-                            {% if employee and employee.id %}
-                            <li class="sidebar-divider"></li>
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="">
-                                    Edit {{ employee.name }}
-                                </a>
-                            </li>
-                            {% endif %}
+
                         </ul>
                     </li>
                     {% else %}
