@@ -72,6 +72,8 @@
                                 <li class="sidebar-item"><a class="sidebar-link" href="{% url 'country:country' %}">Countries</a></li>
                                 <li class="sidebar-item"><a class="sidebar-link" href="{% url 'country:country_create' %}">Add Country</a></li>
                                 <li class="sidebar-item"><a class="sidebar-link" href="{% url 'country:country_upload' %}">Country upload</a></li>
+                                {% if countries %}
+                                <li class="sidebar-item"><a class="sidebar-link" href="{% url 'country:country_edit' country_slug %}">Edit {country.name}</a></li>
                             </ul>
                         </li>
                         <li class="sidebar-item">
