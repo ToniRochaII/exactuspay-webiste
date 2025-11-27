@@ -93,16 +93,13 @@
                                         <li class="sidebar-item"><a class="sidebar-link" href="">Add elements</a></li>
                                     </ul>
                                 </li>
-                                {% endif %}
 
-                        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
                           
                                 <li class="sidebar-item">
                                     <a class="sidebar-link" href="">
                                         <i class="align-middle me-2 fas fa-building"></i>Companies
                                     </a>
                                 </li>
-                                {% if companies %}
                                 <li class="sidebar-item">
                                     <a class="sidebar-link" href="">
                                         <i class="align-middle me-2 fas fa-users"></i>Employees
@@ -113,20 +110,8 @@
                                         <i class="align-middle me-2 fas fa-calculator"></i>Payroll Engine
                                     </a>
                                 </li>
-                            {% else %}
-                                <li class="sidebar-item">
-                                    <a class="sidebar-link disabled" href="#">
-                                        <i class="align-middle me-2 fas fa-users"></i>Employees
-                                    </a>
-                                </li>
-                                <li class="sidebar-item">
-                                    <a class="sidebar-link disabled" href="#">
-                                        <i class="align-middle me-2 fas fa-calculator"></i>Payroll Engine
-                                    </a>
-                                </li>
-                            {% endif %}
-                        {% endif %}
-
+                                {% endif %}
+                                {% endif %}
                         <!-- Additional modules for specific roles -->
                         {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,OPERATION" %}
 
