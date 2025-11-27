@@ -26,6 +26,7 @@
             color: var(--bs-gray-600);
         }
     </style>
+
     <script src="{% static 'dis/js/settings.js' %}"></script>
 
     {% block extra_head %}{% endblock %}
@@ -54,6 +55,7 @@
 
                 <!-- SIDEBAR NAVIGATION -->
                 <ul class="sidebar-nav">
+
                     <li class="sidebar-item">
                         <a class="sidebar-link" href="{% url 'dashboard' %}">
                             <i class="align-middle me-2 fas fa-fw fa-home"></i><span class="align-middle">Dashboard</span>
@@ -61,64 +63,89 @@
                     </li>
 
                     <li class="sidebar-header">Modules</li>
-                    
-                        {% if user.is_authenticated %}
-                        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
-                        <li class="sidebar-item">
-                            <a data-bs-target="#country" data-bs-toggle="collapse" class="sidebar-link" href="{% url 'country:country' %}">
-                                <i class="align-middle me-2 fas fa-globe"></i>Country
-                            </a>
-                            <ul id="country" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                                <li class="sidebar-item"><a class="sidebar-link" href="{% url 'country:country' %}">Countries</a></li>
-                                <li class="sidebar-item"><a class="sidebar-link" href="{% url 'country:country_create' %}">Add Country</a></li>
-                                <li class="sidebar-item"><a class="sidebar-link" href="{% url 'country:country_upload' %}">Country upload</a></li>
-                                {% if countries %}
-                                <li class="sidebar-item"><a class="sidebar-link" href="{% url 'country:country_edit' country_slug %}">Edit {country.name}</a></li>
-                            </ul>
-                        </li>
-                        <li class="sidebar-item">
-                            <a data-bs-target="#regulations" data-bs-toggle="collapse" class="sidebar-link" class="sidebar-link" href="">
-                                <i class="align-middle me-2 fas fa-gavel"></i>Regulations
-                            </a>
-                            <ul id="regulations" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                                <li class="sidebar-item"><a class="sidebar-link" href="">Regulations</a></li>
-                                <li class="sidebar-item"><a class="sidebar-link" href="">Add regulations</a></li>
-                                <li class="sidebar-item"><a class="sidebar-link" href=""><i class="align-middle me-2 fas fa-cogs"></i>Calculation Settings</a></li>
-                            </ul>
-                        </li>
-                        <li class="sidebar-item">
-                            <a data-bs-target="#elements" data-bs-toggle="collapse" class="sidebar-link" class="sidebar-link" href="">
-                                <i class="align-middle me-2 fas fa-gavel"></i>Elements
-                            </a>
-                            <ul id="elements" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                                <li class="sidebar-item"><a class="sidebar-link" href="">Elements</a></li>
-                                <li class="sidebar-item"><a class="sidebar-link" href="">Add elements</a></li>
-                            </ul>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="">
-                                <i class="align-middle me-2 fas fa-building"></i>Companies
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="">
-                                <i class="align-middle me-2 fas fa-users"></i>Employees
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link" href="">
-                                <i class="align-middle me-2 fas fa-calculator"></i>Payroll Engine
-                            </a>
-                        </li>
-                        {% endif %}
-                        {% endif %}
+
+                    {% if user.is_authenticated %}
+                    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
+
+                    <!-- COUNTRY -->
+                    <li class="sidebar-item">
+                        <a data-bs-target="#country" data-bs-toggle="collapse" class="sidebar-link" href="javascript:void(0)">
+                            <i class="align-middle me-2 fas fa-globe"></i>Country
+                        </a>
+                        <ul id="country" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'country:country' %}">Countries</a></li>
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'country:country_create' %}">Add Country</a></li>
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'country:country_upload' %}">Country Upload</a></li>
+
+                            {% if countries and country_slug %}
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="{% url 'country:country_edit' country_slug %}">
+                                        Edit {{ countries|get_current_country_name }}
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
                     </li>
+
+                    <!-- REGULATIONS -->
+                    <li class="sidebar-item">
+                        <a data-bs-target="#regulations" data-bs-toggle="collapse" class="sidebar-link" href="javascript:void(0)">
+                            <i class="align-middle me-2 fas fa-gavel"></i>Regulations
+                        </a>
+                        <ul id="regulations" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                            {% if country_slug %}
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link" href="{% url 'regulations:regulations' country_slug %}">
+                                        Regulations
+                                    </a>
+                                </li>
+                            {% endif %}
+                            <li class="sidebar-item"><a class="sidebar-link" href="">Add Regulations</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- ELEMENTS -->
+                    <li class="sidebar-item">
+                        <a data-bs-target="#elements" data-bs-toggle="collapse" class="sidebar-link" href="javascript:void(0)">
+                            <i class="align-middle me-2 fas fa-gavel"></i>Elements
+                        </a>
+                        <ul id="elements" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                            <li class="sidebar-item"><a class="sidebar-link" href="">Elements</a></li>
+                            <li class="sidebar-item"><a class="sidebar-link" href="">Add Elements</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- COMPANIES -->
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="">
+                            <i class="align-middle me-2 fas fa-building"></i>Companies
+                        </a>
+                    </li>
+
+                    <!-- EMPLOYEES -->
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="">
+                            <i class="align-middle me-2 fas fa-users"></i>Employees
+                        </a>
+                    </li>
+
+                    {% endif %}
+
+                    <!-- PAYROLL ENGINE (ACCESSIBLE TO ALL AUTHENTICATED USERS WHO’RE NOT ABOVE) -->
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="">
+                            <i class="align-middle me-2 fas fa-calculator"></i>Payroll Engine
+                        </a>
+                    </li>
+
+                    {% endif %}
                 </ul>
             </div>
         </nav>
 
         <!-- MAIN CONTENT WRAPPER -->
         <div class="main">
+
             <!-- NAVBAR -->
             <nav class="navbar navbar-expand navbar-theme">
                 <a class="sidebar-toggle d-flex me-2"><i class="hamburger align-self-center"></i></a>
@@ -129,23 +156,16 @@
 
                 <div class="navbar-collapse collapse">
                     <ul class="navbar-nav ms-auto">
-                        <!-- USER MENU -->
                         <li class="nav-item dropdown ms-lg-2">
                             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                                 <i class="align-middle fas fa-cog"></i>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end">
                                 {% if user.is_authenticated %}
-                                    <a class="dropdown-item" href="/accounts/profile/">
-                                        <i class="fas fa-user me-1"></i>Profile
-                                    </a>
-                                    <a class="dropdown-item" href="/accounts/logout/">
-                                        <i class="fas fa-arrow-alt-circle-right me-1"></i>Logout
-                                    </a>
+                                    <a class="dropdown-item" href="/accounts/profile/"><i class="fas fa-user me-1"></i>Profile</a>
+                                    <a class="dropdown-item" href="/accounts/logout/"><i class="fas fa-arrow-alt-circle-right me-1"></i>Logout</a>
                                 {% else %}
-                                    <a class="dropdown-item" href="/accounts/login/">
-                                        <i class="fas fa-sign-in-alt me-1"></i>Login
-                                    </a>
+                                    <a class="dropdown-item" href="/accounts/login/"><i class="fas fa-sign-in-alt me-1"></i>Login</a>
                                 {% endif %}
                             </div>
                         </li>
@@ -178,11 +198,12 @@
                             </ul>
                         </div>
                         <div class="col-4 text-end">
-                            <p class="mb-0">&copy; {{ now|date:'Y' }} ExactusPay</p>
+                            <p class="mb-0">&copy; {% now "Y" %} ExactusPay</p>
                         </div>
                     </div>
                 </div>
             </footer>
+
         </div>
     </div>
 
