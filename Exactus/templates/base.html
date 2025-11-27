@@ -167,7 +167,7 @@
                             <i class="align-middle me-2 fas fa-users"></i>Employees
                         </a>
                         <ul id="employees" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                            {% for c in companies %}
+                        {% for c in companies %}
                             {% if c.company_id %}
                             <!-- View Employees -->
                             <li class="sidebar-item">
@@ -177,8 +177,7 @@
                             </li>
                             {% else %}
                             <!-- Skip broken company entries -->
-                            {% endif %}
-                        {% endfor %}
+                        {% endif %}
                             
                             <!-- Edit Current Employee (if in context) -->
                             {% if employee and employee.id %}
@@ -197,6 +196,8 @@
                             <i class="fas fa-users me-2"></i>Employees
                         </a>
                     </li>
+
+                    {% endfor %}
                     {% endif %}
                     {% endif %}
                     {% endif %}  {# CLOSE AUTH + ROLE CHECK #}
