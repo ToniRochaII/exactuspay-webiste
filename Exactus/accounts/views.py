@@ -103,21 +103,33 @@ def register(request):
     return render(request, 'auth/register.html', {'form': form})
 
 def custom_login(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+    
     if request.method == 'POST':
-        form = LoginForm(request, data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            from django.contrib.auth import login
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        remember_me = request.POST.get('remember_me')
+        
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
             login(request, user)
-            return redirect("dashboard")  # or redirect('dashboard_admin') if that exists
-    else:
-        form = LoginForm(request)
-    return render(request, 'auth/login.html', {'form': form})
-
-def custom_logout(request):
-    logout(request)
-    messages.info(request, 'You have been logged out')
-    return redirect('login')
+            
+            # Handle "Remember me" functionality
+            if not remember_me:
+                # Session will expire when browser closes
+                request.session.set_expiry(0)
+            
+            messages.success(request, f'Welcome back, {user.username}!')
+            
+            # Redirect to next parameter or dashboard
+            next_url = request.GET.get('next', 'dashboard')
+            return redirect(next_url)
+        else:
+            messages.error(request, 'Invalid username or password.')
+    
+    return render(request, 'accounts/login.html')
 
 @login_required
 def profile(request):
