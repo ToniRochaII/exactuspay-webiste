@@ -143,13 +143,13 @@
 
                         <ul id="company" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 
-                            {% for c in companies %}
+                           
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'employee:employee' country_slug c.company_id %}">
-                                    {{ c.trade_name }}
+                                <a class="sidebar-link" href="{% url 'employee:employee' country_slug company.company_id %}">
+                                    {{ company.trade_name }}
                                 </a>
                             </li>
-                            {% endfor %}
+                            
 
                             <li class="sidebar-item"><a class="sidebar-link" href="{% url 'companies:company_create' country_slug %}">Add company</a></li>
                             <li class="sidebar-item"><a class="sidebar-link" href="{% url 'companies:company_upload' country_slug %}">Upload companies</a></li>
