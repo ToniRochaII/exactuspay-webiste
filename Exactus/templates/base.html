@@ -80,7 +80,7 @@
                             {% if countries and country_slug %}
                                 <li class="sidebar-item">
                                     <a class="sidebar-link" href="{% url 'country:country_edit' country_slug %}">
-                                        Edit {{ countries|get_current_country_name }}
+                                        Edit {{ country.name }}
                                     </a>
                                 </li>
                             {% endif %}
