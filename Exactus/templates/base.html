@@ -123,7 +123,6 @@
                             <li class="sidebar-item"><a class="sidebar-link" href="{% url 'elements:elements' country_slug %}">Elements</a></li>
                             <li class="sidebar-item"><a class="sidebar-link" href="{% url 'elements:element_create' country_slug %}">Add elements</a></li>
                             <li class="sidebar-item"><a class="sidebar-link" href="{% url 'elements:elements_upload' country_slug %}">Upload elements</a></li>
-                            {% endif %}
                             {% if elements.id %}
                                 <li class="sidebar-item">
                                     <a class="sidebar-link" href="{% url 'elements:element_edit' country_slug elements.id %}">
@@ -133,6 +132,14 @@
                             {% endif %}
                         </ul>
                     </li>
+                    {% else %}
+                        {# No country selected: show disabled menu item, no reversing with country_slug #}
+                        <li class="sidebar-item">
+                            <a class="sidebar-link disabled" href="#">
+                                <i class="align-middle me-2 fas fa-gavel"></i>Elements
+                            </a>
+                        </li>
+                    {% endif %}
                     <!-- COMPANIES -->
                      {% if country_slug %}
                     <li class="sidebar-item">
@@ -140,9 +147,9 @@
                             <i class="align-middle me-2 fas fa-building"></i>Companies
                         </a>
                         <ul id="company" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'elements:elements' country_slug %}">Elements</a></li>
-                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'elements:element_create' country_slug %}">Add elements</a></li>
-                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'elements:elements_upload' country_slug %}">Upload elements</a></li>
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'companies:company' country_slug %}">Elements</a></li>
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'companies:company_create' country_slug %}">Add elements</a></li>
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'companies:company_upload' country_slug %}">Upload elements</a></li>
                             {% endif %}
                             {% if elements.id %}
                                 <li class="sidebar-item">
