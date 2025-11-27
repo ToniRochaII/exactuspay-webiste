@@ -143,26 +143,36 @@
 
                         <ul id="company" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 
-                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'employee:employee' country_slug company.company_id %}">Companies</a></li>
-                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'employee:employee_create' country_slug company.company_id %}">Add company</a></li>
-                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'employee:employee_upload' country_slug company.company_id %}">Upload companies</a></li>
-
-                            {% if employee %}
+                            {% for c in companies %}
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'employee:employee_edit' country_slug company.company_id employee.employee_id %}">Edit {{ company.trade_name }}</a>
+                                <a class="sidebar-link" href="{% url 'employee:employee' country_slug c.company_id %}">
+                                    {{ c.trade_name }}
+                                </a>
+                            </li>
+                            {% endfor %}
+
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'companies:company_create' country_slug %}">Add company</a></li>
+                            <li class="sidebar-item"><a class="sidebar-link" href="{% url 'companies:company_upload' country_slug %}">Upload companies</a></li>
+
+                            {% if company %}
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{% url 'companies:company_edit' country_slug company.company_id %}">Edit {{ company.trade_name }}</a>
                             </li>
                             {% endif %}
+
                         </ul>
                     </li>
                     {% else %}
                     <li class="sidebar-item">
-                        <a class="sidebar-link disabled" href="#"><i class="align-middle me-2 fas fa-building"></i>Companies</a>
+                        <a class="sidebar-link disabled"><i class="fas fa-building me-2"></i>Companies</a>
                     </li>
                     {% endif %}
+
+
                     {% if country_slug %}
                     <li class="sidebar-item">
                         <a data-bs-target="#company" data-bs-toggle="collapse" class="sidebar-link" href="javascript:void(0)">
-                            <i class="align-middle me-2 fas fa-building"></i>Companies
+                            <i class="align-middle me-2 fas fa-building"></i>Employee
                         </a>
 
                         <ul id="company" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
