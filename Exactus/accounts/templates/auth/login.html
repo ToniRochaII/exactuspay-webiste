@@ -462,8 +462,9 @@
                 <p>Enter your credentials to access the platform</p>
             </div>
             
-            {% csrf_token %}
-            <form class="login-form" id="loginForm">
+
+            <form class="login-form" id="loginForm">            
+                {% csrf_token %}
                 <div class="form-group fade-in">
                     <label for="text" class="form-label">username</label>
                     <div class="input-group">
