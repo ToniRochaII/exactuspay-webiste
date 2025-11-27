@@ -102,7 +102,7 @@
 
                             {% if regulations %}
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'regulations:regulations_edit' country_slug regulations.id %}">Edit Regulation</a>
+                                <a class="sidebar-link" href="{% url 'regulations:regulations_edit' country_slug regulations.regulations_id %}">Edit Regulation</a>
                             </li>
                             {% endif %}
                         </ul>
@@ -169,7 +169,7 @@
                         <ul id="employees" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                             <!-- View Employees -->
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'employees:employee' country_slug company_id %}">
+                                <a class="sidebar-link" href="{% url 'employee:employee' country_slug company_id %}">
                                     View Employees
                                 </a>
                             </li>
