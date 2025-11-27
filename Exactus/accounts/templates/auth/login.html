@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Secure Login - ExactusPay{% endblock %}</title>
+    <title>Secure Login - ExactusPay</title>
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -13,18 +13,16 @@
     
     <style>
         :root {
-            --primary: #4361ee;
-            --primary-dark: #3a56d4;
-            --secondary: #7209b7;
-            --success: #4cc9f0;
-            --danger: #f72585;
-            --warning: #f8961e;
-            --dark: #212529;
-            --light: #f8f9fa;
-            --gray: #6c757d;
-            --gray-light: #e9ecef;
+            --navy: #001f3f;
+            --dark-blue: #003366;
+            --medium-blue: #00509e;
+            --blue: #0074D9;
+            --light-blue: #7FDBFF;
+            --sky-blue: #89CFF0;
+            --white: #ffffff;
+            --light-gray: #f8f9fa;
             --border-radius: 12px;
-            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s ease;
         }
         
@@ -36,13 +34,13 @@
         
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--navy) 0%, var(--dark-blue) 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
-            color: var(--dark);
+            color: var(--white);
             line-height: 1.6;
         }
         
@@ -50,7 +48,7 @@
             display: flex;
             max-width: 1000px;
             width: 100%;
-            background: white;
+            background: var(--white);
             border-radius: var(--border-radius);
             overflow: hidden;
             box-shadow: var(--box-shadow);
@@ -59,8 +57,8 @@
         
         .login-left {
             flex: 1;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
+            background: linear-gradient(135deg, var(--dark-blue) 0%, var(--blue) 100%);
+            color: var(--white);
             padding: 40px;
             display: flex;
             flex-direction: column;
@@ -86,6 +84,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            background: var(--white);
         }
         
         .brand {
@@ -97,13 +96,13 @@
         .brand-logo {
             width: 50px;
             height: 50px;
-            background: white;
+            background: var(--white);
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             margin-right: 15px;
-            color: var(--primary);
+            color: var(--blue);
             font-size: 24px;
             font-weight: bold;
         }
@@ -111,6 +110,7 @@
         .brand-text {
             font-size: 24px;
             font-weight: 700;
+            color: var(--white);
         }
         
         .welcome-text {
@@ -120,6 +120,7 @@
         .welcome-text h1 {
             font-size: 32px;
             margin-bottom: 10px;
+            color: var(--white);
         }
         
         .welcome-text p {
@@ -158,12 +159,12 @@
         
         .form-header h2 {
             font-size: 28px;
-            color: var(--dark);
+            color: var(--navy);
             margin-bottom: 10px;
         }
         
         .form-header p {
-            color: var(--gray);
+            color: var(--dark-blue);
         }
         
         .form-group {
@@ -175,7 +176,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
-            color: var(--dark);
+            color: var(--navy);
         }
         
         .input-group {
@@ -185,18 +186,18 @@
         .form-control {
             width: 100%;
             padding: 15px 15px 15px 45px;
-            border: 1px solid var(--gray-light);
+            border: 1px solid var(--light-blue);
             border-radius: var(--border-radius);
             font-size: 16px;
             transition: var(--transition);
-            background-color: #fafafa;
+            background-color: var(--light-gray);
         }
         
         .form-control:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.15);
-            background-color: white;
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(0, 116, 217, 0.15);
+            background-color: var(--white);
         }
         
         .input-icon {
@@ -204,7 +205,7 @@
             left: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--gray);
+            color: var(--medium-blue);
         }
         
         .password-toggle {
@@ -214,7 +215,7 @@
             transform: translateY(-50%);
             background: none;
             border: none;
-            color: var(--gray);
+            color: var(--medium-blue);
             cursor: pointer;
         }
         
@@ -228,21 +229,23 @@
         .remember-me {
             display: flex;
             align-items: center;
+            color: var(--dark-blue);
         }
         
         .remember-me input {
             margin-right: 8px;
+            accent-color: var(--blue);
         }
         
         .forgot-password {
-            color: var(--primary);
+            color: var(--blue);
             text-decoration: none;
             font-weight: 500;
             transition: var(--transition);
         }
         
         .forgot-password:hover {
-            color: var(--primary-dark);
+            color: var(--dark-blue);
             text-decoration: underline;
         }
         
@@ -260,21 +263,21 @@
         }
         
         .btn-primary {
-            background: var(--primary);
-            color: white;
+            background: var(--blue);
+            color: var(--white);
         }
         
         .btn-primary:hover {
-            background: var(--primary-dark);
+            background: var(--dark-blue);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 116, 217, 0.3);
         }
         
         .divider {
             text-align: center;
             margin: 25px 0;
             position: relative;
-            color: var(--gray);
+            color: var(--medium-blue);
         }
         
         .divider::before {
@@ -284,12 +287,12 @@
             left: 0;
             right: 0;
             height: 1px;
-            background: var(--gray-light);
+            background: var(--light-blue);
             z-index: 1;
         }
         
         .divider span {
-            background: white;
+            background: var(--white);
             padding: 0 15px;
             position: relative;
             z-index: 2;
@@ -304,9 +307,9 @@
         .social-btn {
             flex: 1;
             padding: 12px;
-            border: 1px solid var(--gray-light);
+            border: 1px solid var(--light-blue);
             border-radius: var(--border-radius);
-            background: white;
+            background: var(--white);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -315,7 +318,7 @@
         }
         
         .social-btn:hover {
-            border-color: var(--primary);
+            border-color: var(--blue);
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
@@ -340,11 +343,11 @@
         .signup-link {
             text-align: center;
             margin-top: 20px;
-            color: var(--gray);
+            color: var(--medium-blue);
         }
         
         .signup-link a {
-            color: var(--primary);
+            color: var(--blue);
             text-decoration: none;
             font-weight: 500;
         }
@@ -354,17 +357,19 @@
         }
         
         .security-notice {
-            background: var(--gray-light);
+            background: var(--light-gray);
             padding: 15px;
             border-radius: var(--border-radius);
             margin-top: 25px;
             font-size: 14px;
             display: flex;
             align-items: flex-start;
+            color: var(--dark-blue);
+            border-left: 3px solid var(--blue);
         }
         
         .security-notice i {
-            color: var(--primary);
+            color: var(--blue);
             margin-right: 10px;
             margin-top: 2px;
         }
@@ -462,7 +467,7 @@
                     <label for="text" class="form-label">username</label>
                     <div class="input-group">
                         <i class="fas fa-envelope input-icon"></i>
-                        <input type="email" id="email" class="form-control" placeholder="name@company.com" required>
+                        <input type="username" id="username" class="form-control" placeholder="username" required>
                     </div>
                 </div>
                 
