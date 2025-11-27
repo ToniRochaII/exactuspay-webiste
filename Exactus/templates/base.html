@@ -36,8 +36,7 @@
     <div class="wrapper">
         <!-- SIDEBAR -->
         <nav id="sidebar" class="sidebar">
-            <a class="sidebar-brand" href="/">
-                <svg><use xlink:href="#ion-ios-pulse-strong"></use></svg>
+            <a class="sidebar-brand" href="{% url 'dashboard' %}">
                 ExactusPay
             </a>
 
@@ -127,17 +126,6 @@
                                         <i class="align-middle me-2 fas fa-code"></i>PD Codes
                                     </a>
                                 </li>
-                            {% else %}
-                                <li class="sidebar-item">
-                                    <a class="sidebar-link disabled" href="#">
-                                        <i class="align-middle me-2 fas fa-cogs"></i>Calculation Base
-                                    </a>
-                                </li>
-                                <li class="sidebar-item">
-                                    <a class="sidebar-link disabled" href="#">
-                                        <i class="align-middle me-2 fas fa-code"></i>PD Codes
-                                    </a>
-                                </li>
                             {% endif %}
                         {% endif %}
 
@@ -148,37 +136,8 @@
                                         <i class="align-middle me-2 fas fa-file-invoice-dollar"></i>Pay Register
                                     </a>
                                 </li>
-                            {% else %}
-                                <li class="sidebar-item">
-                                    <a class="sidebar-link disabled" href="#">
-                                        <i class="align-middle me-2 fas fa-file-invoice-dollar"></i>Pay Register
-                                    </a>
-                                </li>
-                            {% endif %}
                             {% endif %}
                         {% endif %}
-                    {% else %}
-                        <!-- Show disabled links for non-authenticated users -->
-                        <li class="sidebar-item">
-                            <a class="sidebar-link disabled" href="#">
-                                <i class="align-middle me-2 fas fa-flag"></i>Countries
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link disabled" href="#">
-                                <i class="align-middle me-2 fas fa-building"></i>Companies
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link disabled" href="#">
-                                <i class="align-middle me-2 fas fa-users"></i>Employees
-                            </a>
-                        </li>
-                        <li class="sidebar-item">
-                            <a class="sidebar-link disabled" href="#">
-                                <i class="align-middle me-2 fas fa-calculator"></i>Payroll Engine
-                            </a>
-                        </li>
                     {% endif %}
                 </ul>
             </div>
