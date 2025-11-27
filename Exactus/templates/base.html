@@ -145,7 +145,7 @@
 
                            
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'companies:company' country_slug company.company_id %}">
+                                <a class="sidebar-link" href="{% url 'companies:company' country_slug %}">
                                     {{ company.trade_name }}
                                 </a>
                             </li>
@@ -174,17 +174,13 @@
                         <a data-bs-target="#employees" data-bs-toggle="collapse" class="sidebar-link" href="javascript:void(0)">
                             <i class="align-middle me-2 fas fa-users"></i>Employees
                         </a>
-
                         <ul id="employees" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 
-                            {% for c in companies %}
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'employee:employee' country_slug c.company_id %}">
+                                <a class="sidebar-link" href="{% url 'employee:employee' country_slug company.company_id %}">
                                     {{ c.trade_name }}
                                 </a>
                             </li>
-                            {% endfor %}
-
                         </ul>
                     </li>
                     {% else %}
