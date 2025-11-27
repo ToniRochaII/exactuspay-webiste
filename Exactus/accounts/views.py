@@ -129,7 +129,7 @@ def custom_login(request):
         else:
             messages.error(request, 'Invalid username or password.')
     
-    return render(request, 'accounts/login.html')
+    return render(request, 'auth/login.html')
 
 @login_required
 def profile(request):
