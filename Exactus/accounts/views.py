@@ -5,7 +5,7 @@ from datetime import timedelta
 from django.apps import apps
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import get_user_model, logout, views as auth_views
+from django.contrib.auth import get_user_model, logout, authenticate, login, views as auth_views
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.db.models import Q
