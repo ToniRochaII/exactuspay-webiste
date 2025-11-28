@@ -158,7 +158,7 @@ def dashboard(request):
         "user": request.user,
     }
     # Always return something
-    return render(request, "accounts/dashboard.html", context)
+    return render(request, "dashboard/index.html", context)
 
 @login_required
 def dashboard_admin(request):
