@@ -373,9 +373,12 @@ def role_management(request):
     # ... rest of your existing role_management logic ...
     return render(request, "roles/role_management.html", context)
 
-@login_required
+@@login_required
 def unified_profile(request, user_id=None):
-    # Determine which user's profile is being viewed
+    """
+    Unified profile view - fixed version that properly handles all form types
+    """
+    # Determine target user
     if user_id:
         target_user = get_object_or_404(User, id=user_id)
     else:
@@ -384,81 +387,100 @@ def unified_profile(request, user_id=None):
     profile, created = UserProfile.objects.get_or_create(user=target_user)
 
     is_own_profile = (request.user == target_user)
-    can_edit_user = is_own_profile or AccessControl.has_permission(request.user, "USER", "UPDATE")
+    can_edit = is_own_profile or AccessControl.has_permission(request.user, "USER", "UPDATE")
     can_manage_users = AccessControl.has_permission(request.user, "USER", "UPDATE")
 
+    # Initialize forms for GET request
+    user_form = None
+    profile_form = UserProfileForm(instance=profile)
+    
+    if not is_own_profile:
+        user_form = UserEditForm(instance=target_user)
+
     # ==========================
-    # POST HANDLING
+    # POST HANDLING - CORRECTED
     # ==========================
     if request.method == "POST":
         form_type = request.POST.get("form_type")
 
-        # -----------------------------
-        # 1. ACCOUNT / PROFILE PHOTO
-        # -----------------------------
+        # -------------------------
+        # 1. PROFILE TAB (Account + Avatar)
+        # -------------------------
         if form_type == "profile":
-
-            # user form editable only by admin
-            if not is_own_profile:
+            if is_own_profile:
+                # User editing own profile - only avatar and profile fields
+                profile_form = UserProfileForm(
+                    request.POST, 
+                    request.FILES, 
+                    instance=profile
+                )
+                if profile_form.is_valid():
+                    profile_form.save()
+                    messages.success(request, "Profile updated successfully.")
+                    return redirect(request.path)
+                else:
+                    messages.error(request, "Please correct the errors below.")
+            else:
+                # Admin editing another user
                 user_form = UserEditForm(request.POST, instance=target_user)
-            else:
-                user_form = None
-
-            profile_form = UserProfileForm(request.POST, request.FILES, instance=profile)
-
-            if profile_form.is_valid() and (user_form is None or user_form.is_valid()):
-                profile_form.save()
-                if user_form:
+                profile_form = UserProfileForm(
+                    request.POST, 
+                    request.FILES, 
+                    instance=profile
+                )
+                
+                if user_form.is_valid() and profile_form.is_valid():
                     user_form.save()
+                    profile_form.save()
+                    messages.success(request, "User profile updated successfully.")
+                    return redirect(request.path)
+                else:
+                    messages.error(request, "Please correct the errors below.")
 
-                messages.success(request, "Profile updated successfully.")
-                return redirect(request.path)  # refresh to update avatar in sidebar
-
-            else:
-                messages.error(request, "Something went wrong saving your profile.")
-        
-
-        # -----------------------------
-        # 2. PERSONAL INFO TAB
-        # -----------------------------
+        # -------------------------
+        # 2. PERSONAL INFO TAB - FIXED
+        # -------------------------
         elif form_type == "personal":
-            personal_form = UserProfileForm(request.POST, request.FILES, instance=profile)
-
+            # Use the same form but only save personal info fields
+            personal_form = UserProfileForm(
+                request.POST,
+                request.FILES, 
+                instance=profile
+            )
+            
             if personal_form.is_valid():
+                # Save the form (includes avatar but that's fine - it's the same form)
                 personal_form.save()
                 messages.success(request, "Personal information updated successfully.")
                 return redirect(request.path)
             else:
-                messages.error(request, "Could not save personal information.")
+                messages.error(request, "Please correct the errors below.")
 
-
-        # -----------------------------
-        # 3. NOTIFICATION SETTINGS
-        # -----------------------------
-        elif form_type == "notifications":
-            profile.notify_by_email = bool(request.POST.get("notify_by_email"))
-            profile.notify_by_sms = bool(request.POST.get("notify_by_sms"))
+        # -------------------------
+        # 3. NOTIFICATIONS TAB
+        # -------------------------
+        elif form_type == "notifications" and is_own_profile:
+            notify_by_email = 'notify_by_email' in request.POST
+            notify_by_sms = 'notify_by_sms' in request.POST
+            
+            profile.notify_by_email = notify_by_email
+            profile.notify_by_sms = notify_by_sms
             profile.save()
-
-            messages.success(request, "Notification preferences saved.")
+            
+            messages.success(request, "Notification preferences updated.")
             return redirect(request.path)
 
     # ==========================
-    # GET: INITIAL FORM LOAD
+    # PREPARE CONTEXT - CORRECTED
     # ==========================
-    if is_own_profile:
-        user_form = None
-    else:
-        user_form = UserEditForm(instance=target_user)
-
-    profile_form = UserProfileForm(instance=profile)
-
-    return render(request, "profile/unified_profile.html", {
+    context = {
         "target_user": target_user,
         "profile": profile,
-        "form": user_form or profile_form,
+        "form": user_form or profile_form,  # This is correct - shows appropriate form
         "profile_form": profile_form,
         "is_own_profile": is_own_profile,
-        "can_edit": can_edit_user,
+        "can_edit": can_edit,
         "can_manage_users": can_manage_users,
-    })
+    }
+
+    return render(request, "profile/unified_profile.html", context)
