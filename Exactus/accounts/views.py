@@ -149,9 +149,16 @@ def profile(request):
 
 @login_required
 def dashboard(request):
-    if request.user.role not in {"EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION", "DIRECTOR","MANAGER","SPECIALIST","FINANCE","EMPLOYEE"}:
-        messages.error(request, "Access denied.")
-        return render(request, 'dashboard/index.html')
+    """
+    Main dashboard view.
+    Must ALWAYS return an HttpResponse.
+    """
+    # Example: simple context – you can extend this later
+    context = {
+        "user": request.user,
+    }
+    # Always return something
+    return render(request, "accounts/dashboard.html", context)
 
 @login_required
 def dashboard_admin(request):
