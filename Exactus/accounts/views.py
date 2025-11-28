@@ -375,7 +375,7 @@ def role_management(request):
 
 @login_required
 def unified_profile(request, user_id=None):
-    # Determine target user
+    # Determine which user's profile is being viewed
     if user_id:
         target_user = get_object_or_404(User, id=user_id)
     else:
@@ -384,55 +384,81 @@ def unified_profile(request, user_id=None):
     profile, created = UserProfile.objects.get_or_create(user=target_user)
 
     is_own_profile = (request.user == target_user)
-    can_edit = is_own_profile or AccessControl.has_permission(request.user, "USER", "UPDATE")
+    can_edit_user = is_own_profile or AccessControl.has_permission(request.user, "USER", "UPDATE")
+    can_manage_users = AccessControl.has_permission(request.user, "USER", "UPDATE")
 
+    # ==========================
+    # POST HANDLING
+    # ==========================
     if request.method == "POST":
         form_type = request.POST.get("form_type")
 
-        # -------------------------
-        # PROFILE PHOTO UPDATE HERE
-        # -------------------------
+        # -----------------------------
+        # 1. ACCOUNT / PROFILE PHOTO
+        # -----------------------------
         if form_type == "profile":
-            # Must pass BOTH POST and FILES
+
+            # user form editable only by admin
+            if not is_own_profile:
+                user_form = UserEditForm(request.POST, instance=target_user)
+            else:
+                user_form = None
+
             profile_form = UserProfileForm(request.POST, request.FILES, instance=profile)
-            user_form = UserEditForm(request.POST, instance=target_user) if not is_own_profile else None
 
-            if profile_form.is_valid() and (is_own_profile or user_form.is_valid()):
+            if profile_form.is_valid() and (user_form is None or user_form.is_valid()):
                 profile_form.save()
-
                 if user_form:
                     user_form.save()
 
                 messages.success(request, "Profile updated successfully.")
-                return redirect(request.path)  # Force reload so avatar updates
+                return redirect(request.path)  # refresh to update avatar in sidebar
 
-        # Personal Info
+            else:
+                messages.error(request, "Something went wrong saving your profile.")
+        
+
+        # -----------------------------
+        # 2. PERSONAL INFO TAB
+        # -----------------------------
         elif form_type == "personal":
             personal_form = UserProfileForm(request.POST, request.FILES, instance=profile)
+
             if personal_form.is_valid():
                 personal_form.save()
-                messages.success(request, "Personal info updated.")
+                messages.success(request, "Personal information updated successfully.")
                 return redirect(request.path)
+            else:
+                messages.error(request, "Could not save personal information.")
 
-        # Notifications
+
+        # -----------------------------
+        # 3. NOTIFICATION SETTINGS
+        # -----------------------------
         elif form_type == "notifications":
-            profile.notify_by_email = "notify_by_email" in request.POST
-            profile.notify_by_sms = "notify_by_sms" in request.POST
+            profile.notify_by_email = bool(request.POST.get("notify_by_email"))
+            profile.notify_by_sms = bool(request.POST.get("notify_by_sms"))
             profile.save()
-            messages.success(request, "Notification settings updated.")
+
+            messages.success(request, "Notification preferences saved.")
             return redirect(request.path)
 
-    # GET request --------------------------
+    # ==========================
+    # GET: INITIAL FORM LOAD
+    # ==========================
+    if is_own_profile:
+        user_form = None
+    else:
+        user_form = UserEditForm(instance=target_user)
 
-    form = UserEditForm(instance=target_user) if not is_own_profile else None
     profile_form = UserProfileForm(instance=profile)
 
     return render(request, "profile/unified_profile.html", {
         "target_user": target_user,
-        "profile": profile,               # <<< IMPORTANT
-        "form": form or profile_form,     # correct binding
+        "profile": profile,
+        "form": user_form or profile_form,
         "profile_form": profile_form,
         "is_own_profile": is_own_profile,
-        "can_edit": can_edit,
-        "can_manage_users": AccessControl.has_permission(request.user, "USER", "UPDATE"),
+        "can_edit": can_edit_user,
+        "can_manage_users": can_manage_users,
     })
