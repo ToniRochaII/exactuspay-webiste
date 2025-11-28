@@ -27,29 +27,18 @@ class LoginForm(AuthenticationForm):
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'})
     )
 
+
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
-        fields = [
-            'avatar',
-            'name',
-            'surname',
-            'phone_number',
-            'address',
-            'city',
-            'country',
-            'notify_by_email',
-            'notify_by_sms'
-        ]
+        fields = ['avatar', 'name', 'surname', 'phone_number', 'country', 'address', 'city', 'notify_by_email', 'notify_by_sms']
         widgets = {
             'name': forms.TextInput(attrs={'class': 'form-control'}),
             'surname': forms.TextInput(attrs={'class': 'form-control'}),
             'phone_number': forms.TextInput(attrs={'class': 'form-control'}),
-            'address': forms.TextInput(attrs={'class': 'form-control'}),
+            'country': forms.Select(attrs={'class': 'form-control'}),
+            'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'city': forms.TextInput(attrs={'class': 'form-control'}),
-            'country': forms.TextInput(attrs={'class': 'form-control'}),
-            'notify_by_email': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-            'notify_by_sms': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
 
 class UserEditForm(forms.ModelForm):
