@@ -424,9 +424,18 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-end">
                                 {% if user.is_authenticated %}
-                                    <a class="dropdown-item" href="{% url '{% url 'unified_profile_view' user.id %}' %}">
-                                        <i class="fas fa-user me-2"></i>Profile
+                                    <!-- ✅ FIXED: Simple profile link for own profile -->
+                                    <a class="dropdown-item" href="{% url 'profile' %}">
+                                        <i class="fas fa-user me-2"></i>My Profile
                                     </a>
+                                    
+                                    <!-- Optional: Add link to user management for admins -->
+                                    {% if user|can:"USER:READ" %}
+                                    <a class="dropdown-item" href="{% url 'user_list' %}">
+                                        <i class="fas fa-users me-2"></i>User Management
+                                    </a>
+                                    {% endif %}
+                                    
                                     <div class="dropdown-divider"></div>
                                     <form action="{% url 'logout' %}" method="post" class="d-inline">
                                         {% csrf_token %}
