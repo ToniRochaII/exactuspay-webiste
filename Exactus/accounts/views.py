@@ -1,16 +1,19 @@
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.http import HttpResponse
+
 from collections import defaultdict
 import csv
 from datetime import timedelta
 
 from django.apps import apps
 from django.conf import settings
-from django.contrib import messages
 from django.contrib.auth import get_user_model, logout, authenticate, login, views as auth_views
-from django.contrib.auth.decorators import login_required
+
 from django.db import transaction
 from django.db.models import Q
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, redirect, get_object_or_404
+
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
@@ -137,49 +140,8 @@ def custom_login(request):
 
 @login_required
 def profile(request):
-    """
-    User profile management with comprehensive error handling.
-    """
-    user = request.user
-    
-    # Ensure profile exists with multiple fallback methods
-    try:
-        profile = user.userprofile
-    except UserProfile.DoesNotExist:
-        # Method 1: Try to get or create
-        try:
-            profile, created = UserProfile.objects.get_or_create(user=user)
-            if created:
-                messages.info(request, "Your profile has been created automatically.")
-        except Exception as e:
-            # Method 2: Emergency creation as fallback
-            try:
-                profile = UserProfile(user=user)
-                profile.save()
-                messages.info(request, "Your profile has been created.")
-            except Exception as e:
-                messages.error(request, "Could not access your profile. Please contact administrator.")
-                return redirect('dashboard')
-    
-    # Handle form submission
-    if request.method == 'POST':
-        form = UserProfileForm(request.POST, request.FILES, instance=profile)
-        if form.is_valid():
-            try:
-                form.save()
-                messages.success(request, 'Your profile has been updated successfully!')
-                return redirect('dashboard')
-            except Exception as e:
-                messages.error(request, f"Error saving profile: {str(e)}")
-        else:
-            messages.error(request, "Please correct the errors below.")
-    else:
-        form = UserProfileForm(instance=profile)
-    
-    return render(request, 'profile/index.html', {
-        'form': form,
-        'profile': profile
-    })
+    """User's own profile - now uses unified template"""
+    return unified_profile(request, user_id=None)
 
 @login_required
 def dashboard(request):
@@ -347,31 +309,8 @@ def export_users_csv(request):
 
 @login_required
 def user_detail(request, user_id):
-    """View detailed information about a specific user."""
-    if request.user.role not in {"EXEC","ADMIN","BILLING","IMPLEMENTATION","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE"}:
-        messages.error(request, "Access denied.")
-        return redirect("dashboard")
-
-    user = get_object_or_404(User, id=user_id)
-
-    # Example data - replace with your actual relations later
-    activity_log = [
-        {"action": "Logged in", "timestamp": "2025-11-09 09:32"},
-        {"action": "Edited profile", "timestamp": "2025-11-08 14:11"},
-        {"action": "Viewed payroll report", "timestamp": "2025-11-07 10:44"},
-    ]
-
-    associated_companies = [
-        {"name": "Exactus Global Ltd", "role": "Payroll Manager"},
-        {"name": "ExactusPay France", "role": "Viewer"},
-    ]
-
-    context = {
-        "user_obj": user,
-        "activity_log": activity_log,
-        "associated_companies": associated_companies,
-    }
-    return render(request, "management/user_detail.html", context)
+    """User detail view - now uses unified template"""
+    return unified_profile(request, user_id=user_id)
 
 @login_required
 def user_edit(request, user_id):
@@ -433,3 +372,83 @@ def role_management(request):
     
     # ... rest of your existing role_management logic ...
     return render(request, "roles/role_management.html", context)
+
+@login_required
+def unified_profile(request, user_id=None):
+    """
+    Unified profile page that handles both:
+    - Users viewing/editing their own profile
+    - Admins viewing/editing other users' profiles
+    """
+    # Determine which user we're working with
+    if user_id:
+        # Admin viewing another user's profile
+        target_user = get_object_or_404(User, id=user_id)
+        is_own_profile = (request.user == target_user)
+        can_edit = (is_own_profile or AccessControl.has_permission(request.user, "USER", "UPDATE"))
+    else:
+        # User viewing their own profile
+        target_user = request.user
+        is_own_profile = True
+        can_edit = True
+    
+    # Get or create user profile
+    try:
+        profile = target_user.userprofile
+    except UserProfile.DoesNotExist:
+        profile = UserProfile.objects.create(user=target_user)
+        if is_own_profile:
+            messages.info(request, "Your profile has been created. Please complete your information.")
+    
+    # Activity log data (placeholder - replace with real data)
+    activity_log = [
+        {"action": "Logged in", "timestamp": timezone.now() - timedelta(hours=2)},
+        {"action": "Updated profile", "timestamp": timezone.now() - timedelta(days=1)},
+    ]
+    
+    # Associated companies (placeholder - replace with real data)
+    associated_companies = [
+        {"name": "Exactus Global Ltd", "role": "Payroll Manager"},
+        {"name": "ExactusPay France", "role": "Viewer"},
+    ]
+    
+    # Handle form submission
+    form = None
+    if request.method == 'POST' and can_edit:
+        if is_own_profile:
+            # Users can only edit their profile, not their user account
+            form = UserProfileForm(request.POST, request.FILES, instance=profile)
+        else:
+            # Admins can edit user account details
+            form = UserEditForm(request.POST, instance=target_user)
+        
+        if form and form.is_valid():
+            form.save()
+            action = "updated" if not form.instance._state.adding else "created"
+            messages.success(request, f"Profile {action} successfully!")
+            
+            # Redirect appropriately
+            if is_own_profile:
+                return redirect('accounts:unified_profile')
+            else:
+                return redirect('accounts:unified_profile_view', user_id=target_user.id)
+    
+    # Prepare appropriate form for GET request
+    if not form:
+        if is_own_profile:
+            form = UserProfileForm(instance=profile)
+        else:
+            form = UserEditForm(instance=target_user)
+    
+    context = {
+        'target_user': target_user,
+        'profile': profile,
+        'form': form,
+        'is_own_profile': is_own_profile,
+        'can_edit': can_edit,
+        'activity_log': activity_log,
+        'associated_companies': associated_companies,
+        'can_manage_users': AccessControl.has_permission(request.user, "USER", "READ"),
+    }
+    
+    return render(request, 'accounts/profile/unified_profile.html', context)

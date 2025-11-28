@@ -424,7 +424,7 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-end">
                                 {% if user.is_authenticated %}
-                                    <a class="dropdown-item" href="{% url 'profile' %}">
+                                    <a class="dropdown-item" href="{% url '{% url 'unified_profile_view' user.id %}' %}">
                                         <i class="fas fa-user me-2"></i>Profile
                                     </a>
                                     <div class="dropdown-divider"></div>

@@ -29,6 +29,7 @@ urlpatterns = [
     path('roles/', views.role_management, name='role_management'),
 
     path('register/', views.register, name='register'),
+    path('users/<int:user_id>/unified/', views.unified_profile, name='unified_profile_view'),
 
 
 ]

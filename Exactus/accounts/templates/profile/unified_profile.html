@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    {% if is_own_profile %}My Profile{% else %}{{ target_user.username }} - Profile{% endif %} | ExactusPay
+{% endblock %}
+
+{% block page_title %}
+    {% if is_own_profile %}
+        <i class="fas fa-user me-2"></i>My Profile
+    {% else %}
+        <i class="fas fa-user-cog me-2"></i>User Profile: {{ target_user.username }}
+        <small class="text-muted">({{ target_user.get_role_display }})</small>
+    {% endif %}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    {% if is_own_profile %}
+        <li class="breadcrumb-item active">My Profile</li>
+    {% else %}
+        <li class="breadcrumb-item"><a href="{% url 'user_list' %}">User Management</a></li>
+        <li class="breadcrumb-item active">{{ target_user.username }}</li>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <!-- Left Column - Profile Information -->
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-id-card me-2"></i>
+                    {% if is_own_profile %}My Information{% else %}User Information{% endif %}
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if can_edit %}
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    {% if is_own_profile %}
+                        <!-- User editing their own profile (Profile form) -->
+                        <div class="row">
+                            <div class="col-md-3 text-center mb-4">
+                                {% if profile.avatar %}
+                                    <img src="{{ profile.avatar.url }}" class="img-fluid rounded-circle mb-3" style="max-width: 150px;" alt="Profile Picture">
+                                {% else %}
+                                    <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 150px; height: 150px;">
+                                        <i class="fas fa-user fa-3x text-muted"></i>
+                                    </div>
+                                {% endif %}
+                                {{ form.avatar|as_crispy_field }}
+                            </div>
+                            <div class="col-md-9">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        {{ form.name|as_crispy_field }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{ form.surname|as_crispy_field }}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        {{ form.phone_number|as_crispy_field }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{ form.country|as_crispy_field }}
+                                    </div>
+                                </div>
+                                {{ form.address|as_crispy_field }}
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        {{ form.city|as_crispy_field }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{ form.notify_by_email|as_crispy_field }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <!-- Admin editing another user (User edit form) -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form.username|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.email|as_crispy_field }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form.role|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.is_active|as_crispy_field }}
+                            </div>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>Save Changes
+                        </button>
+                        {% if not is_own_profile %}
+                        <a href="{% url 'user_list' %}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Users
+                        </a>
+                        {% endif %}
+                    </div>
+                </form>
+                {% else %}
+                <!-- Read-only view -->
+                <div class="row">
+                    <div class="col-md-3 text-center mb-4">
+                        {% if profile.avatar %}
+                            <img src="{{ profile.avatar.url }}" class="img-fluid rounded-circle mb-3" style="max-width: 150px;" alt="Profile Picture">
+                        {% else %}
+                            <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 150px; height: 150px;">
+                                <i class="fas fa-user fa-3x text-muted"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-9">
+                        <dl class="row">
+                            <dt class="col-sm-3">Username:</dt>
+                            <dd class="col-sm-9">{{ target_user.username }}</dd>
+                            
+                            <dt class="col-sm-3">Email:</dt>
+                            <dd class="col-sm-9">{{ target_user.email }}</dd>
+                            
+                            <dt class="col-sm-3">Role:</dt>
+                            <dd class="col-sm-9">
+                                <span class="badge bg-primary">{{ target_user.get_role_display }}</span>
+                            </dd>
+                            
+                            {% if profile.name %}
+                            <dt class="col-sm-3">Full Name:</dt>
+                            <dd class="col-sm-9">{{ profile.name }} {{ profile.surname }}</dd>
+                            {% endif %}
+                            
+                            {% if profile.phone_number %}
+                            <dt class="col-sm-3">Phone:</dt>
+                            <dd class="col-sm-9">{{ profile.phone_number }}</dd>
+                            {% endif %}
+                            
+                            {% if profile.address %}
+                            <dt class="col-sm-3">Address:</dt>
+                            <dd class="col-sm-9">{{ profile.address }}, {{ profile.city }}, {{ profile.country }}</dd>
+                            {% endif %}
+                        </dl>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Right Column - Additional Information -->
+    <div class="col-lg-4">
+        <!-- User Status Card -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="card-title mb-0"><i class="fas fa-info-circle me-2"></i>Account Status</h6>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <strong>Status:</strong>
+                    {% if target_user.is_active %}
+                        <span class="badge bg-success">Active</span>
+                    {% else %}
+                        <span class="badge bg-danger">Inactive</span>
+                    {% endif %}
+                </div>
+                <div class="mb-3">
+                    <strong>Member since:</strong><br>
+                    {{ target_user.date_joined|date:"M j, Y" }}
+                </div>
+                <div class="mb-3">
+                    <strong>Last login:</strong><br>
+                    {{ target_user.last_login|date:"M j, Y g:i A"|default:"Never" }}
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions Card -->
+        {% if not is_own_profile and can_manage_users %}
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0"><i class="fas fa-bolt me-2"></i>Quick Actions</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'unified_profile_view' target_user.id %}" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-edit me-1"></i>Edit User
+                    </a>
+                    <a href="{% url 'user_list' %}" class="btn btn-outline-secondary btn-sm">
+                        <i class="fas fa-list me-1"></i>View All Users
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Activity Log Section -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0"><i class="fas fa-history me-2"></i>Recent Activity</h5>
+            </div>
+            <div class="card-body">
+                {% if activity_log %}
+                <div class="list-group list-group-flush">
+                    {% for activity in activity_log %}
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-circle text-success me-2" style="font-size: 0.5rem;"></i>
+                            {{ activity.action }}
+                        </div>
+                        <small class="text-muted">{{ activity.timestamp|date:"M j, Y g:i A" }}</small>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted mb-0">No recent activity to display.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
