@@ -420,11 +420,11 @@ def unified_profile(request, user_id=None):
                 messages.success(request, "Notification preferences updated!")
         
         # Redirect to maintain tab state
-        redirect_url = 'accounts:profile' if is_own_profile else 'accounts:user_detail'
+        redirect_url = 'profile' if is_own_profile else 'user_detail'
         if is_own_profile:
-            return redirect('accounts:profile')
+            return redirect('profile')
         else:
-            return redirect('accounts:user_detail', user_id=target_user.id)
+            return redirect('user_detail', user_id=target_user.id)
     
     # Prepare forms for GET request
     user_form = UserEditForm(instance=target_user) if not is_own_profile else None
@@ -444,4 +444,4 @@ def unified_profile(request, user_id=None):
         ],
     }
     
-    return render(request, 'accounts/profile/unified_profile.html', context)
+    return render(request, 'profile/unified_profile.html', context)
