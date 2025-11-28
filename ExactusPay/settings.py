@@ -13,8 +13,6 @@ DEBUG = os.environ.get("DEBUG", "True") == "True"
 # Security settings
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
     SECURE_HSTS_SECONDS = 31536000  # 1 year
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
@@ -23,6 +21,28 @@ if not DEBUG:
     SECURE_CONTENT_TYPE_NOSNIFF = True
     X_FRAME_OPTIONS = 'DENY'
     USE_X_FORWARDED_HOST = True
+
+# Security settings
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SECURE = True  # Enable in production
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SAMESITE = 'Lax'
+
+# Cache configuration for permissions
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',
+    }
+}
+
+# Or for development:
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'exactus-permissions',
+    }
+}
 
 # MUST be outside the DEBUG condition
 ROOT_URLCONF = 'ExactusPay.urls'

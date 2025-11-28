@@ -101,23 +101,6 @@ class PermissionBulkUpdate(models.Model):
     class Meta:
         ordering = ["-applied_at"]
     
-    
-class AccessControl:
-    @staticmethod
-    def has_permission(user, domain, action):
-        # Admin override
-        if user.role == "ADMIN":
-            return True
-
-        return PermissionMatrix.objects.filter(
-            role=user.role,
-            domain__in=["ALL", domain],
-            action__in=["ALL", action],
-            allowed=True
-        ).exists()
-    
-
-
 
 class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -252,3 +235,16 @@ class AuditLog(models.Model):
     def __str__(self):
         return f"[{self.created_at:%Y-%m-%d %H:%M}] {self.user} - {self.action}"
 
+
+class PermissionMatrix(models.Model):
+    # ... existing fields ...
+    
+    class Meta:
+        unique_together = ('role', 'domain', 'action')
+        ordering = ['role', 'domain', 'action']
+        verbose_name_plural = "Permission Matrices"
+        indexes = [
+            models.Index(fields=['role', 'domain', 'action', 'allowed']),
+            models.Index(fields=['role', 'allowed']),
+            models.Index(fields=['domain', 'action']),
+        ]

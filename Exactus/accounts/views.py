@@ -15,6 +15,9 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 
+from Exactus.accounts.utils.access_control import AccessControl
+from Exactus.accounts.utils.permissions import permission_required
+
 from Exactus.accounts.forms import UserEditForm, UserRegistrationForm, LoginForm, UserProfileForm
 from Exactus.accounts.models import (
     RoleHierarchy,
@@ -355,125 +358,16 @@ def user_edit(request, user_id):
     context = {"form": form, "user_obj": user_obj}
     return render(request, "management/user_edit.html", context)
 
-@login_required
+@permission_required("ROLE", "READ")
 def role_management(request):
     """
-    Role Management dashboard:
-    - View & toggle permissions per Role/Domain/Action.
-    - Reset roles from RoleTemplate.
-    - Promote/Demote users' access levels.
-    - Display Role Hierarchy tree.
+    Enhanced role management with effective permission display
     """
-    # ✅ Gatekeeper: only Admins (or ALL/ALL) can access this page
-    if not has_permission(request.user, "EXEC","EXEC"):
-        messages.error(request, "Access denied.")
-        return redirect("dashboard")
-
-    # Get all roles, domains, and actions from PermissionMatrix
     roles = [r for r, _ in PermissionMatrix.ROLE_CHOICES]
     domains = [d for d, _ in PermissionMatrix.DOMAIN_CHOICES]
     actions = [a for a, _ in PermissionMatrix.ACTION_CHOICES]
 
-    # ---------------------------------------------------------------------------------
-    # 🔹 FEATURE 1: RESET ROLE PERMISSIONS FROM TEMPLATE
-    # ---------------------------------------------------------------------------------
-    if "reset_template" in request.POST:
-        role = request.POST.get("role")
-        template_id = request.POST.get("template_id")
-
-        if not (role and template_id):
-            messages.error(request, "Invalid template reset request.")
-            return redirect("role_management")
-
-        try:
-            template = RoleTemplate.objects.get(id=template_id)
-        except RoleTemplate.DoesNotExist:
-            messages.error(request, "Selected template does not exist.")
-            return redirect("role_management")
-
-        # Delete existing permissions for that role
-        PermissionMatrix.objects.filter(role=role).delete()
-
-        # Apply permissions from template.rules (list of [domain, action])
-        created = 0
-        for domain, action in template.rules:
-            PermissionMatrix.objects.create(role=role, domain=domain, action=action, allowed=True)
-            created += 1
-
-        messages.success(
-            request,
-            f"✅ Reset {role} permissions using template '{template.name}' ({created} rules applied)."
-        )
-        return redirect("role_management")
-
-    # ---------------------------------------------------------------------------------
-    # 🔹 FEATURE 2: TOGGLE ROLE PERMISSION
-    # ---------------------------------------------------------------------------------
-    if (
-        request.method == "POST"
-        and "reset_template" not in request.POST
-        and "adjust_user_access" not in request.POST
-    ):
-        role = request.POST.get("role")
-        domain = request.POST.get("domain")
-        action = request.POST.get("action")
-        allowed = request.POST.get("allowed") == "on"
-
-        if not (role and domain and action):
-            messages.error(request, "Invalid permission toggle request.")
-            return redirect("role_management")
-
-        obj, created = PermissionMatrix.objects.get_or_create(
-            role=role, domain=domain, action=action,
-            defaults={"allowed": allowed}
-        )
-
-        if not created and obj.allowed != allowed:
-            obj.allowed = allowed
-            obj.save(update_fields=["allowed"])
-            messages.success(request, f"Updated {role} / {domain} / {action}")
-        elif created:
-            messages.success(request, f"Created {role} / {domain} / {action}")
-
-        return redirect("role_management")
-
-    # ---------------------------------------------------------------------------------
-    # 🔹 FEATURE 3: ADJUST USER ACCESS LEVEL (PROMOTE / DEMOTE)
-    # ---------------------------------------------------------------------------------
-    if "adjust_user_access" in request.POST:
-        user_id = request.POST.get("user_id")
-        action = request.POST.get("adjust_action")  # 'promote' or 'demote'
-
-        try:
-            user = User.objects.get(id=user_id)
-        except User.DoesNotExist:
-            messages.error(request, "User not found.")
-            return redirect("role_management")
-
-        current_role = user.role
-        if action == "promote":
-            new_role = promote_role(current_role)
-        elif action == "demote":
-            new_role = demote_role(current_role)
-        else:
-            messages.error(request, "Invalid action.")
-            return redirect("role_management")
-
-        if new_role != current_role:
-            user.role = new_role
-            user.save(update_fields=["role"])
-            messages.success(request, f"✅ {user.username} promoted from {current_role} → {new_role}")
-        else:
-            messages.info(
-                request,
-                f"{user.username} is already at the {'top' if action == 'promote' else 'bottom'} level."
-            )
-
-        return redirect("role_management")
-
-    # ---------------------------------------------------------------------------------
-    # 🔹 FEATURE 4: BUILD PERMISSION MATRIX FOR DISPLAY
-    # ---------------------------------------------------------------------------------
+    # Build permission matrix
     matrix = {
         r: {d: {a: False for a in actions} for d in domains}
         for r in roles
@@ -483,30 +377,21 @@ def role_management(request):
         if row.role in matrix and row.domain in matrix[row.role]:
             matrix[row.role][row.domain][row.action] = row.allowed
 
-    # Fetch all templates and users
-    templates = RoleTemplate.objects.all().order_by("name")
-    users = User.objects.all().order_by("username")
+    # Get effective permissions for each role (for UI display)
+    effective_permissions = {}
+    for role in roles:
+        effective_permissions[role] = AccessControl.get_effective_permissions(role)
 
-    # ---------------------------------------------------------------------------------
-    # 🔹 FEATURE 5: ROLE HIERARCHY DISPLAY
-    # ---------------------------------------------------------------------------------
-
-
-    hierarchy = defaultdict(list)
-    for rel in RoleHierarchy.objects.all():
-        hierarchy[rel.parent].append(rel.child)
-
-    hierarchy = dict(hierarchy)
-
-    # ---------------------------------------------------------------------------------
-    # 🔹 RENDER CONTEXT
-    # ---------------------------------------------------------------------------------
-    return render(request, "roles/role_management.html", {
+    context = {
         "roles": roles,
         "domains": domains,
         "actions": actions,
         "matrix": matrix,
-        "templates": templates,
-        "users": users,
-        "hierarchy": hierarchy,  # ✅ Added for Role Hierarchy tree
-    })
+        "effective_permissions": effective_permissions,  # NEW: Show expanded perms
+        "templates": RoleTemplate.objects.all().order_by("name"),
+        "users": User.objects.all().order_by("username"),
+        "hierarchy": dict(RoleHierarchy.objects.values_list('parent', 'child')),
+    }
+    
+    # ... rest of your existing role_management logic ...
+    return render(request, "roles/role_management.html", context)
