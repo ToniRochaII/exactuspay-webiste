@@ -248,7 +248,7 @@
                                     <a class="dropdown-item" href="/accounts/profile/">
                                         <i class="fas fa-user me-1"></i>Profile
                                     </a>
-                                    <form action="{% url 'accounts:logout' %}" method="post">
+                                    <form action="{% url 'logout' %}" method="post">
                                         {% csrf_token %}
                                         <button type="submit" class="dropdown-item text-danger" data-bs-dismiss="dropdown">
                                             <i class="fas fa-arrow-alt-circle-right me-1"></i> Logout
