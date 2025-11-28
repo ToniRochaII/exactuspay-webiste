@@ -149,7 +149,8 @@ def profile(request):
 
 @login_required
 def dashboard(request):
-    return render(request, 'dashboard/index.html')
+    if request.user.role not in {"EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION", "DIRECTOR","MANAGER","SPECIALIST","FINANCE","EMPLOYEE"}:
+        return render(request, 'dashboard/index.html')
 
 @login_required
 def dashboard_admin(request):
