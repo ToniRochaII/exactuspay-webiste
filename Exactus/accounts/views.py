@@ -149,8 +149,6 @@ def profile(request):
 
 @login_required
 def dashboard(request):
-    if request.user.role not in {"EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION","DIRECTOR","MANAGER"}:
-        # Example: simple context – you can extend this later
         context = {
             "user": request.user,
         }
