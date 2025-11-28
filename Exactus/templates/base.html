@@ -89,21 +89,21 @@
                         <ul id="nav-accounts" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                             {% if can_view_users %}
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'accounts:user_list' %}">
+                                <a class="sidebar-link" href="{% url 'user_list' %}">
                                     <i class="fas fa-users me-2"></i>User Management
                                 </a>
                             </li>
                             {% endif %}
                             {% if user|can:"USER:CREATE" %}
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'accounts:register' %}">
+                                <a class="sidebar-link" href="{% url 'register' %}">
                                     <i class="fas fa-user-plus me-2"></i>Create User
                                 </a>
                             </li>
                             {% endif %}
                             {% if can_view_roles %}
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'accounts:role_management' %}">
+                                <a class="sidebar-link" href="{% url 'role_management' %}">
                                     <i class="fas fa-user-shield me-2"></i>Role Management
                                 </a>
                             </li>
