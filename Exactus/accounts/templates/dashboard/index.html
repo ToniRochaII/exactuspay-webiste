@@ -27,7 +27,12 @@
       <a href="{% url 'country:country' %}">Countries</a>
       <a href="{% url 'password_reset' %}">Reset password</a>
     </p>
-    <a href="{% url 'logout' %}" class="btn btn-outline-danger">Logout</a>
+    <form action="{% url 'logout' %}" method="post" style="display:inline;">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-outline-danger">
+        Logout
+    </button>
+</form>
   </div>
 </div>
 {% endblock %}
