@@ -133,7 +133,7 @@ def custom_login(request):
         else:
             messages.error(request, 'Invalid username or password.')
     
-    return render(request, 'accounts/login.html')
+    return render(request, 'login.html')
 
 @login_required
 def profile(request):
@@ -176,7 +176,7 @@ def profile(request):
     else:
         form = UserProfileForm(instance=profile)
     
-    return render(request, 'accounts/profile/index.html', {
+    return render(request, 'profile/index.html', {
         'form': form,
         'profile': profile
     })
