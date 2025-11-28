@@ -18,3 +18,16 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
     profile, created_profile = UserProfile.objects.get_or_create(user=instance)
     if not created_profile:
         profile.save()
+
+        
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
+
+from Exactus.accounts.models import PermissionMatrix
+from Exactus.accounts.utils.access_control import AccessControl
+
+
+@receiver(post_save, sender=PermissionMatrix)
+@receiver(post_delete, sender=PermissionMatrix)
+def clear_permission_cache(sender, **kwargs):
+    AccessControl.purge_cache()

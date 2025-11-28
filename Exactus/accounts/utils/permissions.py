@@ -17,24 +17,31 @@ def has_permission(user, domain, action):
         allowed=True
     ).exists()
 
+from functools import wraps
+from django.contrib import messages
+from django.shortcuts import redirect
+
+from Exactus.accounts.utils.access_control import AccessControl
+
+
 def permission_required(domain, action):
+    """
+    Decorator enforcing permission checks using AccessControl.
+    """
+
     def decorator(view_func):
         @wraps(view_func)
         def wrapper(request, *args, **kwargs):
 
             if not request.user.is_authenticated:
-                return redirect("login")
+                return redirect("accounts:login")
 
-            # Superadmin override
-            if request.user.role in ["EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE"]:
-                return view_func(request, *args, **kwargs)
-
-            # Check Permission Matrix
             if not AccessControl.has_permission(request.user, domain, action):
                 messages.error(request, "Access denied — insufficient permissions.")
-                return redirect("dashboard")
+                return redirect("accounts:dashboard")
 
             return view_func(request, *args, **kwargs)
 
         return wrapper
+
     return decorator
