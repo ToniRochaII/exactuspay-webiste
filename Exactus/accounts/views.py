@@ -451,4 +451,4 @@ def unified_profile(request, user_id=None):
         'can_manage_users': AccessControl.has_permission(request.user, "USER", "READ"),
     }
     
-    return render(request, 'accounts/profile/unified_profile.html', context)
+    return render(request, 'profile/unified_profile.html', context)
