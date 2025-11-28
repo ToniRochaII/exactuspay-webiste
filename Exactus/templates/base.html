@@ -43,7 +43,7 @@
     <div class="wrapper">
         <!-- SIDEBAR -->
         <nav id="sidebar" class="sidebar">
-            <a class="sidebar-brand" href="{% url 'accounts:dashboard' %}">
+            <a class="sidebar-brand" href="{% url 'dashboard' %}">
                 <i class="fas fa-calculator me-2"></i>ExactusPay
             </a>
 
@@ -66,7 +66,7 @@
 
                     <!-- DASHBOARD -->
                     <li class="sidebar-item">
-                        <a class="sidebar-link" href="{% url 'accounts:dashboard' %}">
+                        <a class="sidebar-link" href="{% url 'dashboard' %}">
                             <i class="align-middle me-2 fas fa-fw fa-home"></i>Dashboard
                         </a>
                     </li>
@@ -390,7 +390,7 @@
                 <!-- Breadcrumb Navigation -->
                 <nav aria-label="breadcrumb" class="d-none d-md-block">
                     <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item"><a href="{% url 'accounts:dashboard' %}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
                         {% block breadcrumbs %}{% endblock %}
                     </ol>
                 </nav>
@@ -424,18 +424,18 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-end">
                                 {% if user.is_authenticated %}
-                                    <a class="dropdown-item" href="{% url 'accounts:profile' %}">
+                                    <a class="dropdown-item" href="{% url 'profile' %}">
                                         <i class="fas fa-user me-2"></i>Profile
                                     </a>
                                     <div class="dropdown-divider"></div>
-                                    <form action="{% url 'accounts:logout' %}" method="post" class="d-inline">
+                                    <form action="{% url 'logout' %}" method="post" class="d-inline">
                                         {% csrf_token %}
                                         <button type="submit" class="dropdown-item">
                                             <i class="fas fa-sign-out-alt me-2"></i>Logout
                                         </button>
                                     </form>
                                 {% else %}
-                                    <a class="dropdown-item" href="{% url 'accounts:login' %}">
+                                    <a class="dropdown-item" href="{% url 'login' %}">
                                         <i class="fas fa-sign-in-alt me-2"></i>Login
                                     </a>
                                 {% endif %}
@@ -487,7 +487,7 @@
                                 <div class="card-body">
                                     <p>Global payroll platform for efficient payroll management.</p>
                                     {% if not user.is_authenticated %}
-                                    <a href="{% url 'accounts:login' %}" class="btn btn-primary">Login to Continue</a>
+                                    <a href="{% url 'login' %}" class="btn btn-primary">Login to Continue</a>
                                     {% endif %}
                                 </div>
                             </div>
