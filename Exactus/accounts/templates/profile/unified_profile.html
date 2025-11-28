@@ -16,11 +16,11 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-    <li class="breadcrumb-item"><a href="{% url 'accounts:dashboard' %}">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
     {% if is_own_profile %}
         <li class="breadcrumb-item active">My Profile</li>
     {% else %}
-        <li class="breadcrumb-item"><a href="{% url 'accounts:user_list' %}">User Management</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'user_list' %}">User Management</a></li>
         <li class="breadcrumb-item active">{{ target_user.username }}</li>
     {% endif %}
 {% endblock %}
@@ -174,7 +174,7 @@
                                     <i class="fas fa-save me-2"></i>Save Changes
                                 </button>
                                 {% if not is_own_profile %}
-                                <a href="{% url 'accounts:user_list' %}" class="btn btn-secondary">
+                                <a href="{% url 'user_list' %}" class="btn btn-secondary">
                                     <i class="fas fa-arrow-left me-2"></i>Back to Users
                                 </a>
                                 {% endif %}

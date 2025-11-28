@@ -31,6 +31,10 @@
             color: var(--bs-gray-600);
             margin-top: -2px;
         }
+        .sidebar-badge {
+            font-size: 0.65rem;
+            margin-left: auto;
+        }
     </style>
 
     <script src="{% static 'dis/js/settings.js' %}"></script>
@@ -72,21 +76,23 @@
                     </li>
 
                     {% if user.is_authenticated %}
-                    <li class="sidebar-header">Core Modules</li>
+                    
+                    <!-- ========================================================= -->
+                    <!-- ADMINISTRATION (Exec/Admin/Compliance only) -->
+                    <!-- ========================================================= -->
+                    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE" %}
+                    <li class="sidebar-header">Administration</li>
 
-                    <!-- ========================================================= -->
-                    <!-- ACCOUNTS & SETTINGS (Admin/Management) -->
-                    <!-- ========================================================= -->
+                    <!-- Settings -->
                     {% check_permission user "USER" "READ" as can_view_users %}
                     {% check_permission user "ROLE" "READ" as can_view_roles %}
                     
                     {% if can_view_users or can_view_roles %}
                     <li class="sidebar-item">
-                        <a data-bs-target="#nav-accounts" data-bs-toggle="collapse" class="sidebar-link collapsed" href="#">
-                            <i class="align-middle me-2 fas fa-cog"></i>Settings
-                            <span class="sidebar-badge badge bg-primary">Admin</span>
+                        <a data-bs-target="#nav-admin" data-bs-toggle="collapse" class="sidebar-link collapsed" href="#">
+                            <i class="align-middle me-2 fas fa-cog"></i>System Settings
                         </a>
-                        <ul id="nav-accounts" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                        <ul id="nav-admin" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                             {% if can_view_users %}
                             <li class="sidebar-item">
                                 <a class="sidebar-link" href="{% url 'user_list' %}">
@@ -112,14 +118,11 @@
                     </li>
                     {% endif %}
 
-                    <!-- ========================================================= -->
-                    <!-- COUNTRY MANAGEMENT -->
-                    <!-- ========================================================= -->
+                    <!-- Country Management -->
                     {% if user|can:"COMPANY:READ" %}
                     <li class="sidebar-item">
                         <a data-bs-target="#nav-country" data-bs-toggle="collapse" class="sidebar-link collapsed" href="#">
-                            <i class="align-middle me-2 fas fa-globe"></i>Countries
-                            <span class="sidebar-badge badge bg-info">{{ country_slug|default:"Global" }}</span>
+                            <i class="align-middle me-2 fas fa-globe"></i>Country Setup
                         </a>
                         <ul id="nav-country" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                             <li class="sidebar-item">
@@ -139,11 +142,47 @@
                                 </a>
                             </li>
                             {% endif %}
-                            {% if country and country_slug and user|can:"COMPANY:UPDATE" %}
+                        </ul>
+                    </li>
+                    {% endif %}
+                    {% endif %}
+
+                    <!-- ========================================================= -->
+                    <!-- PAYROLL OPERATIONS (Always visible for Director, Manager, Specialist, Finance) -->
+                    <!-- ========================================================= -->
+                    {% if user.is_authenticated and user|has_role:"DIRECTOR,MANAGER,SPECIALIST,FINANCE,EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
+                    <li class="sidebar-header">Payroll Operations</li>
+
+                    <!-- Companies - Always visible for payroll roles -->
+                    {% if country_slug %}
+                    <li class="sidebar-item">
+                        <a data-bs-target="#nav-companies" data-bs-toggle="collapse" class="sidebar-link collapsed" href="#">
+                            <i class="align-middle me-2 fas fa-building"></i>Companies
+                            <span class="sidebar-badge badge bg-success">{{ country_slug }}</span>
+                        </a>
+                        <ul id="nav-companies" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{% url 'companies:company' country_slug %}">
+                                    <i class="fas fa-list me-2"></i>All Companies
+                                </a>
+                            </li>
+                            {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,EXEC,ADMIN" %}
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{% url 'companies:company_create' country_slug %}">
+                                    <i class="fas fa-plus me-2"></i>Add Company
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{% url 'companies:company_upload' country_slug %}">
+                                    <i class="fas fa-upload me-2"></i>Upload Companies
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if company %}
                             <li class="sidebar-divider"></li>
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'country:country_edit' country_slug %}">
-                                    <i class="fas fa-edit me-2"></i>Edit {{ country.name }}
+                                <a class="sidebar-link" href="{% url 'companies:company_edit' country_slug company.company_id %}">
+                                    <i class="fas fa-edit me-2"></i>Edit {{ company.trade_name }}
                                 </a>
                             </li>
                             {% endif %}
@@ -151,14 +190,152 @@
                     </li>
                     {% endif %}
 
+                    <!-- Employees - Always visible when company is selected -->
+                    {% if country_slug and company %}
+                    <li class="sidebar-item">
+                        <a data-bs-target="#nav-employees" data-bs-toggle="collapse" class="sidebar-link collapsed" href="#">
+                            <i class="align-middle me-2 fas fa-users"></i>Employees
+                            <span class="sidebar-badge badge bg-primary">{{ company.trade_name }}</span>
+                        </a>
+                        <ul id="nav-employees" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{% url 'employee:employee' country_slug company.company_id %}">
+                                    <i class="fas fa-list me-2"></i>All Employees
+                                </a>
+                            </li>
+                            {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,EXEC,ADMIN" %}
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{% url 'employee:employee_create' country_slug company.company_id %}">
+                                    <i class="fas fa-plus me-2"></i>Add Employee
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{% url 'employee:employee_upload' country_slug company.company_id %}">
+                                    <i class="fas fa-upload me-2"></i>Upload Employees
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if employee %}
+                            <li class="sidebar-divider"></li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{% url 'employee:employee_edit' country_slug company.company_id employee.id %}">
+                                    <i class="fas fa-edit me-2"></i>Edit Employee
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                    {% endif %}
+
+                    <!-- PD Codes - Always visible when company is selected -->
+                    {% if country_slug and company %}
+                    <li class="sidebar-item">
+                        <a data-bs-target="#nav-pdcodes" data-bs-toggle="collapse" class="sidebar-link collapsed" href="#">
+                            <i class="align-middle me-2 fas fa-code"></i>PD Codes
+                            <span class="sidebar-badge badge bg-info">{{ company.trade_name }}</span>
+                        </a>
+                        <ul id="nav-pdcodes" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{% url 'pdcodes:pdcodes' country_slug company.company_id %}">
+                                    <i class="fas fa-list me-2"></i>All PD Codes
+                                </a>
+                            </li>
+                            {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,EXEC,ADMIN" %}
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{% url 'pdcodes:pdcode_create' country_slug company.company_id %}">
+                                    <i class="fas fa-plus me-2"></i>Add PD Code
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{% url 'pdcodes:pdcode_upload' country_slug company.company_id %}">
+                                    <i class="fas fa-upload me-2"></i>Upload PD Codes
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if pdcode and pdcode_code %}
+                            <li class="sidebar-divider"></li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{% url 'pdcodes:pdcode_edit' country_slug company.company_id pdcode_code %}">
+                                    <i class="fas fa-edit me-2"></i>Edit PD Code
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                    {% endif %}
+
+                    <!-- Payroll - Always visible when company is selected -->
+                    {% if country_slug and company %}
+                    <li class="sidebar-item">
+                        <a data-bs-target="#nav-payroll" data-bs-toggle="collapse" class="sidebar-link collapsed" href="#">
+                            <i class="align-middle me-2 fas fa-money-check-alt"></i>Payroll
+                            <span class="sidebar-badge badge bg-success">{{ company.trade_name }}</span>
+                        </a>
+                        <ul id="nav-payroll" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{% url 'payroll:payroll' country_slug company.company_id %}">
+                                    <i class="fas fa-list me-2"></i>Payroll Records
+                                </a>
+                            </li>
+                            {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,EXEC,ADMIN" %}
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{% url 'payroll:payroll_create' country_slug company.company_id %}">
+                                    <i class="fas fa-plus me-2"></i>Create Payroll
+                                </a>
+                            </li>
+                            {% endif %}
+                            {% if payroll_id %}
+                            <li class="sidebar-divider"></li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{% url 'payroll:payroll_edit' country_slug company.company_id payroll_id %}">
+                                    <i class="fas fa-edit me-2"></i>Edit Payroll
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                    {% endif %}
+
+                    <!-- Pay Register - Always visible when employee is selected -->
+                    {% if employee and employee.id and country_slug and company and company.id %}
+                    <li class="sidebar-item">
+                        <a data-bs-target="#payregister-nav" data-bs-toggle="collapse" class="sidebar-link collapsed" href="#">
+                            <i class="align-middle me-2 fas fa-file-invoice-dollar"></i>Pay Register
+                        </a>
+                        <ul id="payregister-nav" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{% url 'payregister:payregister_list' country_slug company.id employee.id %}">
+                                    Earnings / Pay Register Entries
+                                </a>
+                            </li>
+                            {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,EXEC,ADMIN" %}
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{% url 'payregister:payregister_create' country_slug company.id employee.id %}">
+                                    Add Pay Register Entry
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{% url 'payregister:payregister_upload' country_slug company.id %}">
+                                    Bulk Upload Pay Register
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                    {% endif %}
+                    {% endif %}
+
                     <!-- ========================================================= -->
-                    <!-- ELEMENTS (Country-specific) -->
+                    <!-- SYSTEM CONFIGURATION (Technical roles only) -->
                     <!-- ========================================================= -->
+                    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
+                    <li class="sidebar-header">System Configuration</li>
+
+                    <!-- Elements -->
                     {% if country_slug and user|can:"PAYROLL:READ" %}
                     <li class="sidebar-item">
                         <a data-bs-target="#nav-elements" data-bs-toggle="collapse" class="sidebar-link collapsed" href="#">
                             <i class="align-middle me-2 fas fa-cube"></i>Elements
-                            <span class="sidebar-badge badge bg-secondary">{{ country_slug }}</span>
                         </a>
                         <ul id="nav-elements" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                             <li class="sidebar-item">
@@ -178,33 +355,15 @@
                                 </a>
                             </li>
                             {% endif %}
-                            {% if user|can:"PAYROLL:UPDATE" %}
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'elements:elements_upload_global' %}">
-                                    <i class="fas fa-globe me-2"></i>Global Upload
-                                </a>
-                            </li>
-                            {% endif %}
-                            {% if element and element_code and user|can:"PAYROLL:UPDATE" %}
-                            <li class="sidebar-divider"></li>
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'elements:element_edit' country_slug element_code %}">
-                                    <i class="fas fa-edit me-2"></i>Edit {{ element.element_name }}
-                                </a>
-                            </li>
-                            {% endif %}
                         </ul>
                     </li>
                     {% endif %}
 
-                    <!-- ========================================================= -->
-                    <!-- REGULATIONS (Country-specific) -->
-                    <!-- ========================================================= -->
+                    <!-- Regulations -->
                     {% if country_slug and user|can:"RULE:READ" %}
                     <li class="sidebar-item">
                         <a data-bs-target="#nav-regulations" data-bs-toggle="collapse" class="sidebar-link collapsed" href="#">
                             <i class="align-middle me-2 fas fa-gavel"></i>Regulations
-                            <span class="sidebar-badge badge bg-warning text-dark">{{ country_slug }}</span>
                         </a>
                         <ul id="nav-regulations" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                             <li class="sidebar-item">
@@ -224,156 +383,32 @@
                                 </a>
                             </li>
                             {% endif %}
-                            {% if user|can:"RULE:UPDATE" %}
+                        </ul>
+                    </li>
+                    {% endif %}
+
+                    <!-- Calculation Base -->
+                    {% if country_slug and regulation_id %}
+                    <li class="sidebar-item">
+                        <a data-bs-target="#nav-calculationbase" data-bs-toggle="collapse" class="sidebar-link collapsed" href="#">
+                            <i class="align-middle me-2 fas fa-calculator"></i>Calculation Base
+                        </a>
+                        <ul id="nav-calculationbase" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'regulations:regulations_upload_global' %}">
-                                    <i class="fas fa-globe me-2"></i>Global Upload
+                                <a class="sidebar-link" href="{% url 'calculationbase:list' country_slug regulation_id %}">
+                                    Calculation Bases
                                 </a>
                             </li>
-                            {% endif %}
-                            {% if regulation and regulation_id and user|can:"RULE:UPDATE" %}
-                            <li class="sidebar-divider"></li>
+                            {% if user|can:"RULE:CREATE" %}
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'regulations:regulations_edit' country_slug regulation_id %}">
-                                    <i class="fas fa-edit me-2"></i>Edit {{ regulation.title }}
+                                <a class="sidebar-link" href="{% url 'calculationbase:create' country_slug regulation_id %}">
+                                    Add Calculation Base
                                 </a>
                             </li>
                             {% endif %}
                         </ul>
                     </li>
                     {% endif %}
-
-                    <li class="sidebar-header">Payroll Operations</li>
-
-                    <!-- ========================================================= -->
-                    <!-- COMPANIES (Country-specific) -->
-                    <!-- ========================================================= -->
-                    {% if country_slug and user|can:"COMPANY:READ" %}
-                    <li class="sidebar-item">
-                        <a data-bs-target="#nav-companies" data-bs-toggle="collapse" class="sidebar-link collapsed" href="#">
-                            <i class="align-middle me-2 fas fa-building"></i>Companies
-                            <span class="sidebar-badge badge bg-success">{{ country_slug }}</span>
-                        </a>
-                        <ul id="nav-companies" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'companies:company' country_slug %}">
-                                    <i class="fas fa-list me-2"></i>All Companies
-                                </a>
-                            </li>
-                            {% if user|can:"COMPANY:CREATE" %}
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'companies:company_create' country_slug %}">
-                                    <i class="fas fa-plus me-2"></i>Add Company
-                                </a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'companies:company_upload' country_slug %}">
-                                    <i class="fas fa-upload me-2"></i>Upload Companies
-                                </a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'companies:company_upload_global' %}">
-                                    <i class="fas fa-globe me-2"></i>Global Upload
-                                </a>
-                            </li>
-                            {% endif %}
-                            {% if company and user|can:"COMPANY:UPDATE" %}
-                            <li class="sidebar-divider"></li>
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'companies:company_edit' country_slug company.company_id %}">
-                                    <i class="fas fa-edit me-2"></i>Edit {{ company.trade_name }}
-                                </a>
-                            </li>
-                            {% if user|can:"COMPANY:DELETE" %}
-                            <li class="sidebar-item">
-                                <a class="sidebar-link text-danger" href="{% url 'companies:company_delete' country_slug company.company_id %}">
-                                    <i class="fas fa-trash me-2"></i>Delete Company
-                                </a>
-                            </li>
-                            {% endif %}
-                            {% endif %}
-                        </ul>
-                    </li>
-                    {% endif %}
-
-                    <!-- ========================================================= -->
-                    <!-- EMPLOYEES (Company-specific) -->
-                    <!-- ========================================================= -->
-                    {% if country_slug and company and user|can:"EMPLOYEE:READ" %}
-                    <li class="sidebar-item">
-                        <a data-bs-target="#nav-employees" data-bs-toggle="collapse" class="sidebar-link collapsed" href="#">
-                            <i class="align-middle me-2 fas fa-users"></i>Employees
-                            <span class="sidebar-badge badge bg-primary">{{ company.trade_name }}</span>
-                        </a>
-                        <ul id="nav-employees" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'employee:employee' country_slug company.company_id %}">
-                                    <i class="fas fa-list me-2"></i>All Employees
-                                </a>
-                            </li>
-                            {% if user|can:"EMPLOYEE:CREATE" %}
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'employee:employee_create' country_slug company.company_id %}">
-                                    <i class="fas fa-plus me-2"></i>Add Employee
-                                </a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'employee:employee_upload' country_slug company.company_id %}">
-                                    <i class="fas fa-upload me-2"></i>Upload Employees
-                                </a>
-                            </li>
-                            {% endif %}
-                            {% if employee and user|can:"EMPLOYEE:UPDATE" %}
-                            <li class="sidebar-divider"></li>
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'employee:employee_edit' country_slug company.company_id employee.id %}">
-                                    <i class="fas fa-edit me-2"></i>Edit Employee
-                                </a>
-                            </li>
-                            {% endif %}
-                        </ul>
-                    </li>
-                    {% endif %}
-
-                    <!-- ========================================================= -->
-                    <!-- PAYROLL PROCESSING -->
-                    <!-- ========================================================= -->
-                    {% if country_slug and company and user|can:"PAYROLL:READ" %}
-                    <li class="sidebar-item">
-                        <a data-bs-target="#nav-payroll" data-bs-toggle="collapse" class="sidebar-link collapsed" href="#">
-                            <i class="align-middle me-2 fas fa-money-check-alt"></i>Payroll
-                            <span class="sidebar-badge badge bg-success">{{ company.trade_name }}</span>
-                        </a>
-                        <ul id="nav-payroll" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'payroll:payroll' country_slug company.company_id %}">
-                                    <i class="fas fa-list me-2"></i>Payroll Records
-                                </a>
-                            </li>
-                            {% if user|can:"PAYROLL:CREATE" %}
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'payroll:payroll_create' country_slug company.company_id %}">
-                                    <i class="fas fa-plus me-2"></i>Create Payroll
-                                </a>
-                            </li>
-                            {% endif %}
-                            {% if payroll_id and user|can:"PAYROLL:UPDATE" %}
-                            <li class="sidebar-divider"></li>
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'payroll:payroll_edit' country_slug company.company_id payroll_id %}">
-                                    <i class="fas fa-edit me-2"></i>Edit Payroll
-                                </a>
-                            </li>
-                            {% if user|can:"PAYROLL:DELETE" %}
-                            <li class="sidebar-item">
-                                <a class="sidebar-link text-danger" href="{% url 'payroll:payroll_delete' country_slug company.company_id payroll_id %}">
-                                    <i class="fas fa-trash me-2"></i>Delete Payroll
-                                </a>
-                            </li>
-                            {% endif %}
-                            {% endif %}
-                        </ul>
-                    </li>
                     {% endif %}
 
                     {% endif %} <!-- End authenticated user check -->
@@ -397,25 +432,6 @@
 
                 <div class="navbar-collapse collapse">
                     <ul class="navbar-nav ms-auto">
-                        <!-- Notifications -->
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                                <i class="align-middle fas fa-bell"></i>
-                                {% if messages %}
-                                <span class="badge bg-danger rounded-pill">{{ messages|length }}</span>
-                                {% endif %}
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-end">
-                                {% for message in messages %}
-                                <div class="dropdown-item {% if message.tags %}alert-{{ message.tags }}{% endif %}">
-                                    <small>{{ message }}</small>
-                                </div>
-                                {% empty %}
-                                <span class="dropdown-item-text">No notifications</span>
-                                {% endfor %}
-                            </div>
-                        </li>
-
                         <!-- User Menu -->
                         <li class="nav-item dropdown ms-lg-2">
                             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
@@ -424,13 +440,12 @@
                             </a>
                             <div class="dropdown-menu dropdown-menu-end">
                                 {% if user.is_authenticated %}
-                                    <!-- ✅ FIXED: Simple profile link for own profile -->
                                     <a class="dropdown-item" href="{% url 'profile' %}">
                                         <i class="fas fa-user me-2"></i>My Profile
                                     </a>
                                     
-                                    <!-- Optional: Add link to user management for admins -->
-                                    {% if user|can:"USER:READ" %}
+                                    <!-- User Management for admins -->
+                                    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE" %}
                                     <a class="dropdown-item" href="{% url 'user_list' %}">
                                         <i class="fas fa-users me-2"></i>User Management
                                     </a>
@@ -548,12 +563,6 @@
     <!-- INITIALIZATION -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize tooltips
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
-            });
-
             // Auto-hide alerts after 5 seconds
             setTimeout(function() {
                 var alerts = document.querySelectorAll('.alert');
