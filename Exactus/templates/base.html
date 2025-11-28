@@ -62,32 +62,6 @@
                         </a>
                     </li>
 
-                    {% if user.is_authenticated %}
-                    <li class="sidebar-header">Modules</li>
-
-                    <!-- ========================================================= -->
-                    <!-- 1. Settings (Visible only to high-tier admin roles) -->
-                    <!-- ========================================================= -->
-                    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER" %}
-                    <li class="sidebar-item">
-                        <a data-bs-target="#nav-accounts" data-bs-toggle="collapse" class="sidebar-link" href="#">
-                            <i class="align-middle me-2 fas fa-settings"></i>Settings
-                        </a>
-                        <ul id="nav-accounts" class="sidebar-dropdown collapse list-unstyled" data-bs-parent="#sidebar">
-
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'user_list' %}">Users</a>
-                            </li>
-
-                            <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'register' %}">Users</a>
-                            </li>
-                        </ul>
-                    </li>
-                    {% endif %}
-
-
-
                     <!-- ========================================================= -->
                     <!-- 1. COUNTRY (Visible only to high-tier admin roles) -->
                     <!-- ========================================================= -->
@@ -120,6 +94,7 @@
                             {% endif %}
                         </ul>
                     </li>
+                    {% endif %}
                     {% endif %}
 
 
