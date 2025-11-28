@@ -88,7 +88,7 @@ def get_pending_regulation_updates():
 @login_required
 def register(request):
     # Only admins can access this view
-    if request.user.role not in {"EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE"}:
+    if request.user.role not in {"EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION","DIRECTOR","MANAGER"}:
         messages.error(request, "Access denied: only administrators can create new users.")
         return redirect("dashboard")
 
@@ -149,16 +149,13 @@ def profile(request):
 
 @login_required
 def dashboard(request):
-    """
-    Main dashboard view.
-    Must ALWAYS return an HttpResponse.
-    """
-    # Example: simple context – you can extend this later
-    context = {
-        "user": request.user,
-    }
-    # Always return something
-    return render(request, "dashboard/index.html", context)
+    if request.user.role not in {"EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION","DIRECTOR","MANAGER"}:
+        # Example: simple context – you can extend this later
+        context = {
+            "user": request.user,
+        }
+            # Always return something
+        return render(request, "dashboard/index.html", context)
 
 @login_required
 def dashboard_admin(request):
@@ -253,7 +250,7 @@ class CustomPasswordResetCompleteView(auth_views.PasswordResetCompleteView):
 @login_required
 def user_list(request):
     """Admin-only user list with filtering, search and bulk actions."""
-    if request.user.role not in ["EXEC","ADMIN","BILLING","IMPLEMENTATION","OPERATION"]:
+    if request.user.role not in ["EXEC","ADMIN","BILLING","IMPLEMENTATION","OPERATION", "DIRECTOR","MANAGER"]:
         return redirect("dashboard")
 
     users = User.objects.all()
