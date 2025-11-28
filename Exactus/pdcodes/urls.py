@@ -19,40 +19,5 @@ urlpatterns = [
     path("<slug:country_slug>/pdcodes/upload/country/",views.pdcode_upload_country_view, name="pdcode_upload_country",),
     path("<slug:country_slug>/pdcodes/upload/country/result/", views.pdcode_upload_country_result_view, name="pdcode_upload_country_result",),
 
-path(
-        "<slug:country_slug>/<int:company_id>/pdcodes/upload/",
-        views.pdcode_upload_view,
-        name="pdcode_upload",
-    ),
-    path(
-        "<slug:country_slug>/<int:company_id>/pdcodes/upload/result/",
-        views.pdcode_upload_result_view,
-        name="pdcode_upload_result",
-    ),
-    path(
-        "<slug:country_slug>/<int:company_id>/pdcodes/upload/template/",
-        views.download_pdcodes_template,
-        name="download_pdcodes_template",
-    ),
-    
-    # Country-wide upload routes (NEW)
-    path(
-        "<slug:country_slug>/pdcodes/upload/country/",
-        views.pdcode_upload_country_view,
-        name="pdcode_upload_country",
-    ),
-    path(
-        "<slug:country_slug>/pdcodes/upload/country/result/",
-        views.pdcode_upload_country_result_view,
-        name="pdcode_upload_country_result",
-    ),
-    path(
-        "<slug:country_slug>/pdcodes/upload/country/template/",
-        views.download_pdcodes_country_template,
-        name="download_pdcodes_country_template",  # NEW pattern for country-wide
-    ),
-
-
-
 
 ]
