@@ -22,6 +22,10 @@ def sidebar_context(request):
     ctx = {var: request.resolver_match.kwargs.get(var, None)
            if request.resolver_match else None
            for var in vars}
+    
+    ctx['has_employee_context'] = bool(
+    ctx.get('employee') and getattr(ctx['employee'], 'id', None)
+)
 
     # For URLs that pass company_id instead of company
     if request.resolver_match:

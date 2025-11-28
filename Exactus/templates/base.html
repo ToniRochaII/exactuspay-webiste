@@ -408,39 +408,41 @@
                     <!-- ========================================================= -->
                     <!-- 8. PAY REGISTER -->
                     <!-- ========================================================= -->
-                    {% if country_slug and company %}
+                    {% if employee and employee.id and country_slug and company and company.id %}
                     <li class="sidebar-item">
-                        <a data-bs-target="#nav-payregister" data-bs-toggle="collapse" class="sidebar-link" href="#">
+                        <a data-bs-target="#payregister-nav" data-bs-toggle="collapse" class="sidebar-link" href="javascript:void(0)">
                             <i class="align-middle me-2 fas fa-file-invoice-dollar"></i>Pay Register
                         </a>
-                        <ul id="nav-payregister" class="sidebar-dropdown collapse list-unstyled" data-bs-parent="#sidebar">
 
-                            {% if payregister_id %}
-                            <li class="sidebar-item">
-                                <a class="sidebar-link"
-                                href="{% url 'payregister:payregister_list' country_slug company.company_id payregister_id %}">
-                                    Pay Register Entries
-                                </a>
-                            </li>
-                            <li class="sidebar-item">
-                                <a class="sidebar-link"
-                                href="{% url 'payregister:payregister_create' country_slug company.company_id payregister_id %}">
-                                    Add Entry
-                                </a>
-                            </li>
-                            {% endif %}
+                        <ul id="payregister-nav" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
 
+                            <!-- View employee pay register -->
                             <li class="sidebar-item">
                                 <a class="sidebar-link"
-                                href="{% url 'payregister:payregister_upload' country_slug company.company_id %}">
-                                    Upload Pay Register
+                                href="{% url 'payregister:payregister_list' country_slug company.id employee.id %}">
+                                    Earnings / Pay Register Entries
                                 </a>
                             </li>
+
+                            <!-- Create new entry -->
+                            <li class="sidebar-item">
+                                <a class="sidebar-link"
+                                href="{% url 'payregister:payregister_create' country_slug company.id employee.id %}">
+                                    Add Pay Register Entry
+                                </a>
+                            </li>
+
+                            <!-- Bulk upload (still allowed at the company level) -->
+                            <li class="sidebar-item">
+                                <a class="sidebar-link"
+                                href="{% url 'payregister:payregister_upload' country_slug company.id %}">
+                                    Bulk Upload Pay Register
+                                </a>
+                            </li>
+
                         </ul>
                     </li>
                     {% endif %}
-
-
 
                     <!-- ========================================================= -->
                     <!-- 9. PAYROLL -->
