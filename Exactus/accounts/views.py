@@ -376,18 +376,14 @@ def role_management(request):
 @login_required
 def unified_profile(request, user_id=None):
     """
-    Unified profile page that handles both:
-    - Users viewing/editing their own profile
-    - Admins viewing/editing other users' profiles
+    Unified profile page with tabbed interface
     """
     # Determine which user we're working with
     if user_id:
-        # Admin viewing another user's profile
         target_user = get_object_or_404(User, id=user_id)
         is_own_profile = (request.user == target_user)
         can_edit = (is_own_profile or AccessControl.has_permission(request.user, "USER", "UPDATE"))
     else:
-        # User viewing their own profile
         target_user = request.user
         is_own_profile = True
         can_edit = True
@@ -400,55 +396,52 @@ def unified_profile(request, user_id=None):
         if is_own_profile:
             messages.info(request, "Your profile has been created. Please complete your information.")
     
-    # Activity log data (placeholder - replace with real data)
-    activity_log = [
-        {"action": "Logged in", "timestamp": timezone.now() - timedelta(hours=2)},
-        {"action": "Updated profile", "timestamp": timezone.now() - timedelta(days=1)},
-    ]
-    
-    # Associated companies (placeholder - replace with real data)
-    associated_companies = [
-        {"name": "Exactus Global Ltd", "role": "Payroll Manager"},
-        {"name": "ExactusPay France", "role": "Viewer"},
-    ]
-    
     # Handle form submission
-    form = None
     if request.method == 'POST' and can_edit:
-        if is_own_profile:
-            # Users can only edit their profile, not their user account
-            form = UserProfileForm(request.POST, request.FILES, instance=profile)
-        else:
-            # Admins can edit user account details
-            form = UserEditForm(request.POST, instance=target_user)
+        form_type = request.POST.get('form_type', 'profile')
         
-        if form and form.is_valid():
-            form.save()
-            action = "updated" if not form.instance._state.adding else "created"
-            messages.success(request, f"Profile {action} successfully!")
-            
-            # Redirect appropriately
-            if is_own_profile:
-                return redirect('accounts:unified_profile')
-            else:
-                return redirect('accounts:unified_profile_view', user_id=target_user.id)
-    
-    # Prepare appropriate form for GET request
-    if not form:
+        if form_type == 'profile' and not is_own_profile:
+            # Admin editing user account
+            form = UserEditForm(request.POST, instance=target_user)
+            if form.is_valid():
+                form.save()
+                messages.success(request, f"User account updated successfully!")
+        elif form_type == 'personal' or (form_type == 'profile' and is_own_profile):
+            # User editing personal info or profile with avatar
+            form = UserProfileForm(request.POST, request.FILES, instance=profile)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Profile updated successfully!")
+        elif form_type == 'notifications' and is_own_profile:
+            # User updating notifications
+            form = UserProfileForm(request.POST, instance=profile)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Notification preferences updated!")
+        
+        # Redirect to maintain tab state
+        redirect_url = 'accounts:profile' if is_own_profile else 'accounts:user_detail'
         if is_own_profile:
-            form = UserProfileForm(instance=profile)
+            return redirect('accounts:profile')
         else:
-            form = UserEditForm(instance=target_user)
+            return redirect('accounts:user_detail', user_id=target_user.id)
+    
+    # Prepare forms for GET request
+    user_form = UserEditForm(instance=target_user) if not is_own_profile else None
+    profile_form = UserProfileForm(instance=profile)
     
     context = {
         'target_user': target_user,
         'profile': profile,
-        'form': form,
+        'form': profile_form,  # Default form for personal info
+        'user_form': user_form,  # Form for admin user editing
         'is_own_profile': is_own_profile,
         'can_edit': can_edit,
-        'activity_log': activity_log,
-        'associated_companies': associated_companies,
         'can_manage_users': AccessControl.has_permission(request.user, "USER", "READ"),
+        'activity_log': [
+            {"action": "Logged in", "timestamp": timezone.now() - timedelta(hours=2)},
+            {"action": "Updated profile", "timestamp": timezone.now() - timedelta(days=1)},
+        ],
     }
     
-    return render(request, 'profile/unified_profile.html', context)
+    return render(request, 'accounts/profile/unified_profile.html', context)
