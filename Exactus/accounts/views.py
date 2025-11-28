@@ -24,6 +24,7 @@ from Exactus.accounts.models import (
     User,
     PermissionMatrix,
     RoleTemplate,
+    UserProfile,
 )
 from Exactus.accounts.utils.permissions import has_permission
 from Exactus.accounts.utils.role_hierarchy import promote_role, demote_role
@@ -136,16 +137,49 @@ def custom_login(request):
 
 @login_required
 def profile(request):
-    profile = request.user.userprofile
+    """
+    User profile management with comprehensive error handling.
+    """
+    user = request.user
+    
+    # Ensure profile exists with multiple fallback methods
+    try:
+        profile = user.userprofile
+    except UserProfile.DoesNotExist:
+        # Method 1: Try to get or create
+        try:
+            profile, created = UserProfile.objects.get_or_create(user=user)
+            if created:
+                messages.info(request, "Your profile has been created automatically.")
+        except Exception as e:
+            # Method 2: Emergency creation as fallback
+            try:
+                profile = UserProfile(user=user)
+                profile.save()
+                messages.info(request, "Your profile has been created.")
+            except Exception as e:
+                messages.error(request, "Could not access your profile. Please contact administrator.")
+                return redirect('accounts:dashboard')
+    
+    # Handle form submission
     if request.method == 'POST':
         form = UserProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Your profile has been updated successfully!')
-            return redirect('dashboard')
+            try:
+                form.save()
+                messages.success(request, 'Your profile has been updated successfully!')
+                return redirect('accounts:dashboard')
+            except Exception as e:
+                messages.error(request, f"Error saving profile: {str(e)}")
+        else:
+            messages.error(request, "Please correct the errors below.")
     else:
         form = UserProfileForm(instance=profile)
-    return render(request, 'profile/index.html', {'form': form})
+    
+    return render(request, 'accounts/profile/index.html', {
+        'form': form,
+        'profile': profile
+    })
 
 @login_required
 def dashboard(request):
