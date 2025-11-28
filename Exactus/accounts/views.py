@@ -373,7 +373,7 @@ def role_management(request):
     # ... rest of your existing role_management logic ...
     return render(request, "roles/role_management.html", context)
 
-@@login_required
+@login_required
 def unified_profile(request, user_id=None):
     """
     Unified profile view - fixed version that properly handles all form types
