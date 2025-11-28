@@ -375,73 +375,64 @@ def role_management(request):
 
 @login_required
 def unified_profile(request, user_id=None):
-    """
-    Unified profile page with tabbed interface
-    """
-    # Determine which user we're working with
+    # Determine target user
     if user_id:
         target_user = get_object_or_404(User, id=user_id)
-        is_own_profile = (request.user == target_user)
-        can_edit = (is_own_profile or AccessControl.has_permission(request.user, "USER", "UPDATE"))
     else:
         target_user = request.user
-        is_own_profile = True
-        can_edit = True
-    
-    # Get or create user profile
-    try:
-        profile = target_user.userprofile
-    except UserProfile.DoesNotExist:
-        profile = UserProfile.objects.create(user=target_user)
-        if is_own_profile:
-            messages.info(request, "Your profile has been created. Please complete your information.")
-    
-    # Handle form submission
-    if request.method == 'POST' and can_edit:
-        form_type = request.POST.get('form_type', 'profile')
-        
-        if form_type == 'profile' and not is_own_profile:
-            # Admin editing user account
-            form = UserEditForm(request.POST, instance=target_user)
-            if form.is_valid():
-                form.save()
-                messages.success(request, f"User account updated successfully!")
-        elif form_type == 'personal' or (form_type == 'profile' and is_own_profile):
-            # User editing personal info or profile with avatar
-            form = UserProfileForm(request.POST, request.FILES, instance=profile)
-            if form.is_valid():
-                form.save()
-                messages.success(request, "Profile updated successfully!")
-        elif form_type == 'notifications' and is_own_profile:
-            # User updating notifications
-            form = UserProfileForm(request.POST, instance=profile)
-            if form.is_valid():
-                form.save()
-                messages.success(request, "Notification preferences updated!")
-        
-        # Redirect to maintain tab state
-        redirect_url = 'profile' if is_own_profile else 'user_detail'
-        if is_own_profile:
-            return redirect('profile')
-        else:
-            return redirect('user_detail', user_id=target_user.id)
-    
-    # Prepare forms for GET request
-    user_form = UserEditForm(instance=target_user) if not is_own_profile else None
+
+    profile, created = UserProfile.objects.get_or_create(user=target_user)
+
+    is_own_profile = (request.user == target_user)
+    can_edit = is_own_profile or AccessControl.has_permission(request.user, "USER", "UPDATE")
+
+    if request.method == "POST":
+        form_type = request.POST.get("form_type")
+
+        # -------------------------
+        # PROFILE PHOTO UPDATE HERE
+        # -------------------------
+        if form_type == "profile":
+            # Must pass BOTH POST and FILES
+            profile_form = UserProfileForm(request.POST, request.FILES, instance=profile)
+            user_form = UserEditForm(request.POST, instance=target_user) if not is_own_profile else None
+
+            if profile_form.is_valid() and (is_own_profile or user_form.is_valid()):
+                profile_form.save()
+
+                if user_form:
+                    user_form.save()
+
+                messages.success(request, "Profile updated successfully.")
+                return redirect(request.path)  # Force reload so avatar updates
+
+        # Personal Info
+        elif form_type == "personal":
+            personal_form = UserProfileForm(request.POST, request.FILES, instance=profile)
+            if personal_form.is_valid():
+                personal_form.save()
+                messages.success(request, "Personal info updated.")
+                return redirect(request.path)
+
+        # Notifications
+        elif form_type == "notifications":
+            profile.notify_by_email = "notify_by_email" in request.POST
+            profile.notify_by_sms = "notify_by_sms" in request.POST
+            profile.save()
+            messages.success(request, "Notification settings updated.")
+            return redirect(request.path)
+
+    # GET request --------------------------
+
+    form = UserEditForm(instance=target_user) if not is_own_profile else None
     profile_form = UserProfileForm(instance=profile)
-    
-    context = {
-        'target_user': target_user,
-        'profile': profile,
-        'form': profile_form,  # Default form for personal info
-        'user_form': user_form,  # Form for admin user editing
-        'is_own_profile': is_own_profile,
-        'can_edit': can_edit,
-        'can_manage_users': AccessControl.has_permission(request.user, "USER", "READ"),
-        'activity_log': [
-            {"action": "Logged in", "timestamp": timezone.now() - timedelta(hours=2)},
-            {"action": "Updated profile", "timestamp": timezone.now() - timedelta(days=1)},
-        ],
-    }
-    
-    return render(request, 'profile/unified_profile.html', context)
+
+    return render(request, "profile/unified_profile.html", {
+        "target_user": target_user,
+        "profile": profile,               # <<< IMPORTANT
+        "form": form or profile_form,     # correct binding
+        "profile_form": profile_form,
+        "is_own_profile": is_own_profile,
+        "can_edit": can_edit,
+        "can_manage_users": AccessControl.has_permission(request.user, "USER", "UPDATE"),
+    })
