@@ -159,7 +159,7 @@ def profile(request):
                 messages.info(request, "Your profile has been created.")
             except Exception as e:
                 messages.error(request, "Could not access your profile. Please contact administrator.")
-                return redirect('accounts:dashboard')
+                return redirect('dashboard')
     
     # Handle form submission
     if request.method == 'POST':
@@ -168,7 +168,7 @@ def profile(request):
             try:
                 form.save()
                 messages.success(request, 'Your profile has been updated successfully!')
-                return redirect('accounts:dashboard')
+                return redirect('dashboard')
             except Exception as e:
                 messages.error(request, f"Error saving profile: {str(e)}")
         else:
