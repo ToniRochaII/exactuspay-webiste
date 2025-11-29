@@ -483,7 +483,7 @@ def get_safety_warnings(matrix):
 # accounts/views.py
 from django.views.decorators.cache import cache_page
 from Exactus.accounts.services.permission_resolver import permission_resolver
-from xactus.accounts.services.conflict_detector import PermissionConflictDetector
+from Exactus.accounts.services.conflict_detector import PermissionConflictDetector
 
 @cache_page(60)  # Cache entire page for 1 minute
 def role_management_view(request):

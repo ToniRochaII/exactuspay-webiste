@@ -1,9 +1,0 @@
-.content {
-  flex: 1;
-  margin-top: ($spacer * 3);
-  padding: 0 ($spacer * 0.5);
-
-  @include media-breakpoint-up(lg) {
-    padding: 0 ($spacer * 1.5);
-  }
-}
