@@ -460,3 +460,21 @@ def unified_profile(request, user_id=None):
         "can_edit": can_edit,
     }
     return render(request, "profile/unified_profile.html", context)
+
+
+def get_safety_warnings(matrix):
+    warnings = []
+    
+    # Finance must be read-only for payroll
+    payroll_domains = ['PAYRUN', 'PAYREGISTER', 'CALCULATION', 'COMPANY', 'EMPLOYEE']
+    for domain in payroll_domains:
+        if matrix.get('FINANCE', {}).get(domain, {}).get('CREATE'):
+            warnings.append(f"FINANCE has CREATE access to {domain} - violates read-only policy")
+        if matrix.get('FINANCE', {}).get(domain, {}).get('DELETE'):
+            warnings.append(f"FINANCE has DELETE access to {domain} - violates read-only policy")
+    
+    # Exec must have full system access
+    if not matrix.get('EXEC', {}).get('USER', {}).get('MANAGE'):
+        warnings.append("EXEC missing USER.MANAGE permission - system administration compromised")
+    
+    return warnings
