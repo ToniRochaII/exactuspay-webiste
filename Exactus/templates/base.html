@@ -58,7 +58,6 @@
                     {% if user.is_authenticated %}
                         <div class="fw-bold">{{ user.username }}</div>
                         <div class="sidebar-user-role">{{ user.get_role_display }}</div>
-                        <small>Last login: {% now "M j, Y" %}</small>
                     {% else %}
                         <div class="fw-bold">Guest</div>
                         <small>Not logged in</small>
