@@ -8,24 +8,6 @@
 
     
 <div class="row g-3 mb-4">
-
-    <p> 
-      {% if user|has_role:"EXEC" %}
-      <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a> 
-      {% endif %}
-      {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
-      <a href="{% url 'dashboard' %}">Dashboard</a> 
-      <a href="{% url 'user_list' %}"">Accounts</a>
-      <a href="{% url 'role_management' %}"">Role Management</a>
-      {% endif %}
-      {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
-      <a href="{% url 'profile' %}"">Profile</a>
-      <a href="{% url 'user_detail' user.id %}"> User Details</a>
-      {% endif %}
-
-      <a href="{% url 'country:country' %}">Countries</a>
-      <a href="{% url 'password_reset' %}">Reset password</a>
-    </p>
   <div class="col-md-3">
     <div class="card shadow-sm h-100">
       <div class="card-body">

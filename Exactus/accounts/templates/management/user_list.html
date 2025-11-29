@@ -1,116 +1,239 @@
 {% extends "base.html" %}
+{% load static %}
 {% load accounts_role_filters %}
+
 {% block title %}User Management | ExactusPay{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item active" aria-current="page">Users</li>
+{% endblock %}
+
+{% block page_title %}User Management{% endblock %}
+
+{% block page_actions %}
+    {% if user|can:"USER:CREATE" %}
+    <a href="{% url 'register' %}" class="btn btn-primary">
+        <i class="fas fa-user-plus me-2"></i>New User
+    </a>
+    {% endif %}
+    <a href="{% url 'export_users_csv' %}" class="btn btn-outline-secondary">
+        <i class="fas fa-download me-2"></i>Export CSV
+    </a>
+{% endblock %}
+
 {% block content %}
-
-<div class="container">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h3 class="fw-bold">User Management</h3>
-    <div>
-      <a href="{% url 'register' %}" class="btn btn-primary">+ New User</a>
-      <a href="{% url 'export_users_csv' %}" class="btn btn-outline-secondary">Export CSV</a>
-    </div>
-  </div>
-  <p> 
-    {% if user|has_role:"EXEC" %}
-    <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a> 
-    {% endif %}
-    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
-    <a href="{% url 'dashboard' %}">Dashboard</a> 
-    <a href="{% url 'user_list' %}"">Accounts</a>
-    <a href="{% url 'role_management' %}"">Role Management</a>
-    {% endif %}
-    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
-    <a href="{% url 'profile' %}"">Profile</a>
-    <a href="{% url 'user_detail' user.id %}"> User Details</a>
-    {% endif %}
-
-    <a href="{% url 'password_reset' %}">Reset password</a>
-  </p>
-
-  <!-- Search & Filters -->
-  <form method="get" class="row g-2 mb-3">
-    <div class="col-md-4">
-      <input type="text" name="q" placeholder="Search by username or email" value="{{ search_query }}" class="form-control">
-    </div>
-    <div class="col-md-3">
-      <select name="role" class="form-select">
-        <option value="ALL" {% if role_filter == "ALL" %}selected{% endif %}>All Roles</option>
-        {% for key, value in roles %}
-        <option value="{{ key }}" {% if role_filter == key %}selected{% endif %}>{{ value }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div class="col-md-2">
-      <button type="submit" class="btn btn-secondary w-100">Filter</button>
-    </div>
-  </form>
-
-    <!-- Table -->
-    <div class="table-responsive shadow-sm">
-      <table class="table table-hover align-middle">
-        <thead class="table-light">
-          <tr>
-            <th><input type="checkbox" id="select-all"></th>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Status</th>
-            <th>Date Joined</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for user in users %}
-          <tr>
-            <td><input type="checkbox" name="selected_users" value="{{ user.id }}"></td>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">User Management</h5>
+                <h6 class="card-subtitle text-muted">
+                    Manage system users and their permissions. 
+                    <a href="https://docs.exactuspay.com/user-management" target="_blank" rel="noopener noreferrer nofollow">View documentation</a>.
+                </h6>
+            </div>
             
-            <!-- ✅ Link to detail page -->
-            <td>
-              <a href="{% url 'user_detail' user.id %}" class="text-decoration-none fw-semibold">
-                {{ user.username }}
-              </a>
-            </td>
+            <div class="card-body">
+                <!-- Search & Filters -->
+                <form method="get" class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <input type="text" name="q" placeholder="Search by username or email" 
+                               value="{{ search_query|default:'' }}" class="form-control">
+                    </div>
+                    <div class="col-md-3">
+                        <select name="role" class="form-select">
+                            <option value="ALL" {% if role_filter == "ALL" or not role_filter %}selected{% endif %}>All Roles</option>
+                            {% for key, value in roles %}
+                            <option value="{{ key }}" {% if role_filter == key %}selected{% endif %}>{{ value }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-secondary w-100">
+                            <i class="fas fa-filter me-2"></i>Filter
+                        </button>
+                    </div>
+                    <div class="col-md-3 text-end">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="select-all">
+                            <label class="form-check-label" for="select-all">Select All</label>
+                        </div>
+                    </div>
+                </form>
 
-            <td>{{ user.email }}</td>
-            <td><span class="badge bg-info text-dark">{{ user.role }}</span></td>
-            <td>
-              {% if user.is_active %}
-              <span class="badge bg-success">Active</span>
-              {% else %}
-              <span class="badge bg-secondary">Inactive</span>
-              {% endif %}
-            </td>
-            <td>{{ user.date_joined|date:"Y-m-d" }}</td>
-          </tr>
-          {% empty %}
-          <tr><td colspan="6" class="text-center text-muted">No users found.</td></tr>
-          {% endfor %}
-        </tbody>
-      </table>
+                <!-- DataTable -->
+                <div class="table-responsive">
+                    <table id="datatables-users" class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Last Login</th>
+                                <th>Date Joined</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user_obj in users %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="{% if user_obj.userprofile.avatar %}{{ user_obj.userprofile.avatar.url }}{% else %}{% static 'dis/img/avatars/default.jpg' %}{% endif %}" 
+                                             class="avatar img-fluid rounded-circle me-3" alt="{{ user_obj.username }}"
+                                             width="32" height="32">
+                                        <div>
+                                            <a href="{% url 'user_detail' user_obj.id %}" class="fw-bold text-decoration-none">
+                                                {{ user_obj.username }}
+                                            </a>
+                                            {% if user_obj == user %}
+                                            <span class="badge bg-primary ms-1">You</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{ user_obj.email|default:"—" }}</td>
+                                <td>
+                                    <span class="badge {% if user_obj.role == 'ADMIN' %}bg-danger{% elif user_obj.role == 'EXEC' %}bg-warning text-dark{% else %}bg-info text-dark{% endif %}">
+                                        {{ user_obj.get_role_display }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if user_obj.is_active %}
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-check-circle me-1"></i>Active
+                                    </span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">
+                                        <i class="fas fa-times-circle me-1"></i>Inactive
+                                    </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if user_obj.last_login %}
+                                    <span class="text-muted" data-bs-toggle="tooltip" title="{{ user_obj.last_login|date:'M j, Y H:i' }}">
+                                        {{ user_obj.last_login|timesince }} ago
+                                    </span>
+                                    {% else %}
+                                    <span class="text-muted">Never</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ user_obj.date_joined|date:"M j, Y" }}</td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{% url 'user_detail' user_obj.id %}" class="btn btn-outline-primary" 
+                                           data-bs-toggle="tooltip" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        {% if user|can:"USER:UPDATE" and user_obj != user %}
+                                        <a href="{% url 'user_edit' user_obj.id %}" class="btn btn-outline-secondary"
+                                           data-bs-toggle="tooltip" title="Edit User">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        {% endif %}
+                                        {% if user|can:"USER:DELETE" and user_obj != user %}
+                                        <a href="{% url 'user_delete' user_obj.id %}" class="btn btn-outline-danger"
+                                           data-bs-toggle="tooltip" title="Delete User">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="7" class="text-center py-5">
+                                    <div class="text-muted">
+                                        <i class="fas fa-users fa-3x mb-3 opacity-50"></i>
+                                        <h5>No users found</h5>
+                                        <p class="mb-3">{% if search_query or role_filter and role_filter != "ALL" %}Try adjusting your search criteria{% else %}Get started by creating your first user{% endif %}</p>
+                                        {% if user|can:"USER:CREATE" and not search_query and not role_filter %}
+                                        <a href="{% url 'register' %}" class="btn btn-primary">
+                                            <i class="fas fa-user-plus me-2"></i>Add First User
+                                        </a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-  </form>  <p> 
-    {% if user|has_role:"EXEC" %}
-    <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a> 
-    {% endif %}
-    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
-    <a href="{% url 'dashboard' %}">Dashboard</a> 
-    <a href="{% url 'user_list' %}"">Accounts</a>
-    <a href="{% url 'role_management' %}"">Role Management</a>
-    {% endif %}
-    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
-    <a href="{% url 'profile' %}"">Profile</a>
-    <a href="{% url 'user_detail' user.id %}"> User Details</a>
-    {% endif %}
-
-    <a href="{% url 'password_reset' %}">Reset password</a>
-  </p>
 </div>
+{% endblock %}
 
+{% block extra_js %}
 <script>
-  // Select/Deselect All
-  document.getElementById('select-all')?.addEventListener('change', function() {
-    document.querySelectorAll('input[name="selected_users"]').forEach(cb => cb.checked = this.checked);
-  });
+document.addEventListener("DOMContentLoaded", function() {
+    // Initialize DataTable
+    const table = $("#datatables-users").DataTable({
+        responsive: true,
+        dom: '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rt<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+        language: {
+            search: "_INPUT_",
+            searchPlaceholder: "Search users...",
+            lengthMenu: "_MENU_"
+        },
+        pageLength: 25,
+        order: [[5, "desc"]], // Sort by Date Joined descending
+        columnDefs: [
+            { 
+                orderable: false, 
+                targets: [6] // Disable sorting on actions column
+            },
+            {
+                responsivePriority: 1,
+                targets: [0] // Username column - highest priority for mobile
+            },
+            {
+                responsivePriority: 2,
+                targets: [2] // Role column
+            },
+            {
+                responsivePriority: 3,
+                targets: [3] // Status column
+            }
+        ]
+    });
+
+    // Select All functionality
+    document.getElementById('select-all')?.addEventListener('change', function() {
+        const checkboxes = document.querySelectorAll('input[name="selected_users"]');
+        checkboxes.forEach(cb => cb.checked = this.checked);
+    });
+
+    // Initialize tooltips
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+
+    // Integrate Django filter with DataTable search
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchQuery = urlParams.get('q');
+    if (searchQuery) {
+        table.search(searchQuery).draw();
+    }
+});
 </script>
 
+<style>
+.avatar {
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+}
+.btn-group-sm > .btn {
+    padding: 0.25rem 0.5rem;
+}
+/* Ensure proper responsive behavior */
+table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child::before {
+    top: 50%;
+    transform: translateY(-50%);
+}
+</style>
 {% endblock %}
