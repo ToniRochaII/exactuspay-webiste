@@ -478,3 +478,107 @@ def get_safety_warnings(matrix):
         warnings.append("EXEC missing USER.MANAGE permission - system administration compromised")
     
     return warnings
+
+
+# accounts/views.py
+from django.views.decorators.cache import cache_page
+from Exactus.accounts.services.permission_resolver import permission_resolver
+from xactus.accounts.services.conflict_detector import PermissionConflictDetector
+
+@cache_page(60)  # Cache entire page for 1 minute
+def role_management_view(request):
+    """Enhanced role management view with caching and conflict detection"""
+    
+    # Resolve permissions using service layer
+    effective_permissions = permission_resolver.resolve_permissions()
+    
+    # Detect permission conflicts in real-time
+    conflict_detector = PermissionConflictDetector(effective_permissions)
+    safety_warnings = conflict_detector.detect_conflicts()
+    operational_risks = conflict_detector.detect_operational_risks()
+    
+    context = {
+        'effective_permissions': effective_permissions,
+        'safety_warnings': safety_warnings,
+        'operational_risks': operational_risks,
+        'conflict_summary': conflict_detector.get_conflict_summary(),
+        # ... rest of your existing context
+    }
+    
+    return render(request, 'role_management.html', context)
+
+def compute_effective_permissions(matrix, hierarchy, protected_rules):
+    """Compute final resolved permissions after all rules"""
+    effective = {}
+    
+    for role in matrix.keys():
+        effective[role] = {}
+        
+        # 1. Start with explicit permissions
+        for domain, actions in matrix[role].items():
+            effective[role][domain] = actions.copy()
+        
+        # 2. Apply hierarchy inheritance
+        parent_role = hierarchy.get(role)
+        if parent_role and parent_role in matrix:
+            for domain, actions in matrix[parent_role].items():
+                if domain not in effective[role]:
+                    effective[role][domain] = {}
+                for action, allowed in actions.items():
+                    if allowed and not effective[role][domain].get(action):
+                        effective[role][domain][action] = True
+        
+        # 3. Apply business logic protections
+        apply_business_logic_protections(effective[role], role)
+    
+    return effective
+
+def apply_business_logic_protections(permissions, role):
+    """Apply ExactusPay-specific business logic rules"""
+    payroll_domains = ['PAYRUN', 'PAYREGISTER', 'CALCULATION', 'COMPANY', 'EMPLOYEE', 'PDCODES']
+    
+    if role == 'FINANCE':
+        # FINANCE is read-only for payroll operations
+        for domain in payroll_domains:
+            if domain in permissions:
+                for action in ['CREATE', 'DELETE', 'UPDATE']:
+                    permissions[domain][action] = False
+    
+    elif role in ['EXEC', 'ADMIN']:
+        # EXEC/ADMIN must have full system access
+        system_domains = ['USER', 'ROLE', 'SYSTEM']
+        for domain in system_domains:
+            if domain in permissions:
+                permissions[domain]['MANAGE'] = True
+                permissions[domain]['READ'] = True
+
+# template_filters.py (new custom filters)
+@register.filter
+def calculate_permission_count(effective_perms, actions):
+    """Calculate total number of granted permissions"""
+    count = 0
+    for domain, perms in effective_perms.items():
+        for action in actions:
+            if perms.get(action):
+                count += 1
+    return count
+
+@register.filter
+def calculate_manage_permissions(effective_perms):
+    """Calculate number of MANAGE permissions"""
+    count = 0
+    for domain, perms in effective_perms.items():
+        if perms.get('MANAGE'):
+            count += 1
+    return count
+
+@register.filter
+def calculate_payroll_permissions(effective_perms, payroll_domains):
+    """Calculate payroll-related permissions"""
+    count = 0
+    for domain in payroll_domains:
+        if domain in effective_perms:
+            for action, allowed in effective_perms[domain].items():
+                if allowed:
+                    count += 1
+    return count
