@@ -36,3 +36,17 @@ def calculate_payroll_permissions(effective_perms, payroll_domains):
 def dict_get(value, arg):
     """Template filter to get dictionary value by key"""
     return value.get(arg) if value else None
+
+@register.filter
+def get_permission(value, key):
+    """Get permission value from nested dict"""
+    if isinstance(value, dict):
+        return value.get(key, {})
+    return {}
+
+@register.filter
+def dict_key(value, key):
+    """Get value from dictionary by key"""
+    if isinstance(value, dict):
+        return value.get(key)
+    return None
