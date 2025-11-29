@@ -96,3 +96,22 @@ class PermissionConflictDetector:
             'critical_issues': len([c for c in conflicts if 'violates' in c or 'compromised' in c]),
             'operational_blockers': len([r for r in risks if 'fail' in r or 'cannot' in r])
         }
+    
+# Exactus/accounts/services/conflict_detector.py
+class PermissionConflictDetector:
+    def __init__(self, effective_permissions):
+        self.effective_permissions = effective_permissions
+
+    def detect_conflicts(self):
+        return []
+
+    def detect_operational_risks(self):
+        return []
+
+    def get_conflict_summary(self):
+        return {
+            "total_conflicts": 0,
+            "total_risks": 0,
+            "critical_issues": 0,
+            "operational_blockers": 0,
+        }
