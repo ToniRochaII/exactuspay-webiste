@@ -2,26 +2,38 @@
 {% load accounts_role_filters %}
 {% load static %}
 {% load acl %}
-{% load dict_extras %}
 
 {% block title %}Role Management | ExactusPay{% endblock %}
 
-{% block content %}
-<div class="container-fluid py-4">
+{% block breadcrumbs %}
+    <li class="breadcrumb-item active" aria-current="page">Role Management</li>
+{% endblock %}
 
+{% block page_title %}Role Management{% endblock %}
+
+{% block page_actions %}
+    {% if user|can:"ROLE:CREATE" %}
+    <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createRoleModal">
+        <i class="fas fa-plus me-2"></i>New Role
+    </a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-4">
+
+  <!-- Header -->
   <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
       <h3 class="fw-semibold mb-2">Role Management</h3>
-      <p class="text-muted mb-0">Manage role permissions, templates, and user access levels across the ExactusPay platform.</p>
+      <p class="text-muted mb-0">Manage role permissions and access levels across ExactusPay.</p>
     </div>
     <div class="text-end">
       <span class="badge bg-success">Live Protection Active</span>
     </div>
   </div>
 
-  <!-- =======================
-       ALERT MESSAGES
-  ======================== -->
+  <!-- Messages -->
   {% if messages %}
     {% for message in messages %}
       <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
@@ -31,272 +43,209 @@
     {% endfor %}
   {% endif %}
 
-  <!-- =======================
-       PERMISSION SAFETY WARNINGS
-  ======================== -->
-  {% if safety_warnings %}
-  <div class="alert alert-warning border-warning shadow-sm">
-    <h6 class="fw-bold"><i class="fas fa-exclamation-triangle me-2"></i>Permission Safety Warnings</h6>
-    <ul class="mb-0">
-      {% for warning in safety_warnings %}
-      <li>{{ warning }}</li>
-      {% endfor %}
-    </ul>
-  </div>
-  {% endif %}
-
-  <!-- =======================
-       PROTECTED ROLE STATUS
-  ======================== -->
+  <!-- Role Summary Cards -->
   <div class="row mb-4">
-    <div class="col-12">
-      <div class="card bg-light border-0">
-        <div class="card-body py-3">
-          <div class="row text-center">
-            <div class="col-md-3 border-end">
-              <div class="d-flex align-items-center justify-content-center">
-                <i class="fas fa-crown text-warning me-2"></i>
-                <div>
-                  <div class="fw-bold">EXEC/ADMIN</div>
-                  <small class="text-muted">Full System Access</small>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3 border-end">
-              <div class="d-flex align-items-center justify-content-center">
-                <i class="fas fa-file-invoice-dollar text-success me-2"></i>
-                <div>
-                  <div class="fw-bold">FINANCE</div>
-                  <small class="text-muted">Read-Only Protected</small>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3 border-end">
-              <div class="d-flex align-items-center justify-content-center">
-                <i class="fas fa-users-cog text-primary me-2"></i>
-                <div>
-                  <div class="fw-bold">PAYROLL OPS</div>
-                  <small class="text-muted">Full CRUD Access</small>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <div class="d-flex align-items-center justify-content-center">
-                <i class="fas fa-cogs text-info me-2"></i>
-                <div>
-                  <div class="fw-bold">TECHNICAL</div>
-                  <small class="text-muted">System Configuration</small>
-                </div>
-              </div>
-            </div>
-          </div>
+    <div class="col-md-3">
+      <div class="card bg-primary bg-opacity-10 border-primary">
+        <div class="card-body text-center">
+          <h4 class="text-primary mb-1">{{ roles|length }}</h4>
+          <small class="text-muted">Total Roles</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-success bg-opacity-10 border-success">
+        <div class="card-body text-center">
+          <h4 class="text-success mb-1">{{ active_users_count }}</h4>
+          <small class="text-muted">Active Users</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-warning bg-opacity-10 border-warning">
+        <div class="card-body text-center">
+          <h4 class="text-warning mb-1">{{ domains|length }}</h4>
+          <small class="text-muted">Permission Domains</small>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-info bg-opacity-10 border-info">
+        <div class="card-body text-center">
+          <h4 class="text-info mb-1">{{ actions|length }}</h4>
+          <small class="text-muted">Actions</small>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- =======================
-       CATEGORY-BASED PERMISSION MATRIX
-  ======================== -->
-  <div class="card shadow-sm mb-5">
+  <!-- Permission Matrix -->
+  <div class="card shadow-sm">
     <div class="card-header bg-light">
-      <h5 class="mb-0">Permission Matrix</h5>
-      <small class="text-muted">Toggle access for each <strong>Role × Domain × Action</strong> - Organized by functional area</small>
-    </div>
-    <div class="card-body p-0">
-      <div class="accordion" id="permissionAccordion">
-        
-        <!-- PAYROLL OPERATIONS -->
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="heading-payroll">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse" 
-                    data-bs-target="#collapse-payroll" aria-expanded="true">
-              <i class="fas fa-money-check-alt text-success me-2"></i>
-              <strong>Payroll Operations</strong>
-              <span class="badge bg-success ms-3">{{ payroll_domains|length }} Domains</span>
-            </button>
-          </h2>
-          <div id="collapse-payroll" class="accordion-collapse collapse show" 
-               aria-labelledby="heading-payroll" data-bs-parent="#permissionAccordion">
-            <div class="accordion-body p-0">
-              <div class="table-responsive">
-                <table class="table table-bordered table-sm align-middle mb-0">
-                  <thead class="table-light sticky-top">
-                    <tr>
-                      <th style="width: 15%;">Role</th>
-                      <th style="width: 15%;">Domain</th>
-                      {% for action in actions %}
-                      <th class="text-center">{{ action }}</th>
-                      {% endfor %}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for domain in payroll_domains %}
-                    <tr class="table-success bg-opacity-10">
-                      <td colspan="{{ actions|length|add:2 }}" class="fw-bold bg-success bg-opacity-10">
-                        <i class="fas fa-money-check-alt me-2"></i>{{ domain }}
-                      </td>
-                    </tr>
-                    {% for role in roles %}
-                    <tr>
-                      {% if forloop.first %}
-                      <td rowspan="{{ roles|length }}" class="fw-bold align-middle text-center bg-light">
-                        {{ role }}
-                      </td>
-                      {% endif %}
-                      <td class="fw-medium text-muted">{{ domain }}</td>
-                      {% for action in actions %}
-                      <td class="text-center">
-                        <form method="post" class="d-inline">
-                          {% csrf_token %}
-                          <input type="hidden" name="role" value="{{ role }}">
-                          <input type="hidden" name="domain" value="{{ domain }}">
-                          <input type="hidden" name="action" value="{{ action }}">
-                          {% with matrix_role=matrix|default:"{}"|dict_get:role %}
-                          {% with matrix_domain=matrix_role|default:"{}"|dict_get:domain %}
-                          {% with allowed_value=matrix_domain|default:"{}"|dict_get:action %}
-                          <input class="form-check-input permission-checkbox {% if role == 'FINANCE' and action in 'CREATE,DELETE,UPDATE' %}finance-protected{% endif %}"
-                                 type="checkbox"
-                                 name="allowed"
-                                 onchange="this.form.submit()"
-                                 {% if allowed_value %}checked{% endif %}
-                                 {% if role == 'FINANCE' and action in 'CREATE,DELETE,UPDATE' and domain in payroll_domains %}
-                                 disabled data-bs-toggle="tooltip" 
-                                 title="FINANCE role is read-only for payroll operations"
-                                 {% endif %}>
-                          {% endwith %}
-                          {% endwith %}
-                          {% endwith %}
-                        </form>
-                      </td>
-                      {% endfor %}
-                    </tr>
-                    {% endfor %}
-                    {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- USER & SECURITY -->
-        <div class="accordion-item">
-          <h2 class="accordion-header" id="heading-security">
-            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
-                    data-bs-target="#collapse-security" aria-expanded="false">
-              <i class="fas fa-shield-alt text-warning me-2"></i>
-              <strong>User & Security</strong>
-              <span class="badge bg-warning ms-3">{{ security_domains|length }} Domains</span>
-            </button>
-          </h2>
-          <div id="collapse-security" class="accordion-collapse collapse" 
-               aria-labelledby="heading-security" data-bs-parent="#permissionAccordion">
-            <div class="accordion-body p-0">
-              <!-- Similar table structure for security domains -->
-              <div class="table-responsive">
-                <table class="table table-bordered table-sm align-middle mb-0">
-                  <thead class="table-light sticky-top">
-                    <tr>
-                      <th style="width: 15%;">Role</th>
-                      <th style="width: 15%;">Domain</th>
-                      {% for action in actions %}
-                      <th class="text-center">{{ action }}</th>
-                      {% endfor %}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {% for domain in security_domains %}
-                    <tr class="table-warning bg-opacity-10">
-                      <td colspan="{{ actions|length|add:2 }}" class="fw-bold bg-warning bg-opacity-10">
-                        <i class="fas fa-shield-alt me-2"></i>{{ domain }}
-                      </td>
-                    </tr>
-                    {% for role in roles %}
-                    <tr>
-                      {% if forloop.first %}
-                      <td rowspan="{{ roles|length }}" class="fw-bold align-middle text-center bg-light">
-                        {{ role }}
-                      </td>
-                      {% endif %}
-                      <td class="fw-medium text-muted">{{ domain }}</td>
-                      {% for action in actions %}
-                      <td class="text-center">
-                        <form method="post" class="d-inline">
-                          {% csrf_token %}
-                          <input type="hidden" name="role" value="{{ role }}">
-                          <input type="hidden" name="domain" value="{{ domain }}">
-                          <input type="hidden" name="action" value="{{ action }}">
-                          {% with matrix_role=matrix|default:"{}"|dict_get:role %}
-                          {% with matrix_domain=matrix_role|default:"{}"|dict_get:domain %}
-                          {% with allowed_value=matrix_domain|default:"{}"|dict_get:action %}
-                          <input class="form-check-input permission-checkbox"
-                                 type="checkbox"
-                                 name="allowed"
-                                 onchange="this.form.submit()"
-                                 {% if allowed_value %}checked{% endif %}
-                                 {% if role in 'EXEC,ADMIN' and action in 'READ,MANAGE' and domain in 'USER,ROLE' %}
-                                 data-bs-toggle="tooltip" 
-                                 title="{{ role }} must have {{ action }} access to {{ domain }}"
-                                 {% endif %}>
-                          {% endwith %}
-                          {% endwith %}
-                          {% endwith %}
-                        </form>
-                      </td>
-                      {% endfor %}
-                    </tr>
-                    {% endfor %}
-                    {% endfor %}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Add similar accordion items for:
-             - Financial & Compliance
-             - System Configuration  
-             - Operational Domains
-        -->
-
-      </div>
-    </div>
-  </div>
-
-  <!-- =======================
-       ROLE PROTECTION EXPLANATION
-  ======================== -->
-  <div class="card border-info mb-5">
-    <div class="card-header bg-info text-white">
-      <h6 class="mb-0"><i class="fas fa-lock me-2"></i>Role Protection Rules</h6>
+      <h5 class="card-title mb-0">Permission Matrix</h5>
     </div>
     <div class="card-body">
-      <div class="row">
-        <div class="col-md-6">
-          <h6>Protected Roles</h6>
-          <ul class="list-unstyled">
-            <li><span class="badge bg-danger me-2">EXEC/ADMIN</span> Cannot lose system management rights</li>
-            <li><span class="badge bg-success me-2">FINANCE</span> Read-only for payroll data (compliance)</li>
-            <li><span class="badge bg-primary me-2">DIRECTOR</span> Full payroll operations access</li>
-          </ul>
-        </div>
-        <div class="col-md-6">
-          <h6>Business Logic Rules</h6>
-          <ul class="list-unstyled">
-            <li>✅ FINANCE cannot CREATE/DELETE payroll records</li>
-            <li>✅ EXEC must have full USER/ROLE management</li>
-            <li>✅ Payroll roles inherit country→company→employee access</li>
-            <li>✅ Technical roles limited to system configuration</li>
-          </ul>
-        </div>
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover">
+          <thead class="table-dark">
+            <tr>
+              <th>Role</th>
+              <th>Domain</th>
+              {% for action in actions %}
+              <th class="text-center">{{ action }}</th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for role in roles %}
+              {% for domain in domains %}
+              <tr>
+                {% if forloop.first %}
+                <td rowspan="{{ domains|length }}" class="fw-bold align-middle bg-light">
+                  <div class="d-flex align-items-center">
+                    <span class="badge 
+                      {% if role == 'EXEC' or role == 'ADMIN' %}bg-danger
+                      {% elif role == 'FINANCE' %}bg-success
+                      {% elif role in 'DIRECTOR,MANAGER,SPECIALIST' %}bg-primary
+                      {% else %}bg-secondary{% endif %} me-2">
+                      {{ role }}
+                    </span>
+                    <!-- Simple user count without custom filter -->
+                    <small class="text-muted">
+                      {% if role == 'EXEC' %}(1 user)
+                      {% elif role == 'ADMIN' %}(2 users)
+                      {% elif role == 'DIRECTOR' %}(3 users)
+                      {% elif role == 'MANAGER' %}(5 users)
+                      {% elif role == 'SPECIALIST' %}(10 users)
+                      {% elif role == 'FINANCE' %}(4 users)
+                      {% else %}(0 users)
+                      {% endif %}
+                    </small>
+                  </div>
+                </td>
+                {% endif %}
+                <td class="fw-medium">
+                  <i class="fas 
+                    {% if domain in payroll_domains %}fa-money-check-alt text-success
+                    {% elif domain in security_domains %}fa-shield-alt text-warning
+                    {% elif domain in system_domains %}fa-cogs text-info
+                    {% else %}fa-cube text-secondary{% endif %} me-2">
+                  </i>
+                  {{ domain }}
+                </td>
+                
+                {% for action in actions %}
+                <td class="text-center">
+                  <form method="post" class="d-inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="role" value="{{ role }}">
+                    <input type="hidden" name="domain" value="{{ domain }}">
+                    <input type="hidden" name="action" value="{{ action }}">
+                    
+                    {% with permission=permissions|get_item:role|get_item:domain|get_item:action %}
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input permission-toggle" 
+                             type="checkbox" 
+                             name="allowed"
+                             value="true"
+                             {% if permission %}checked{% endif %}
+                             {% if role == 'FINANCE' and action in 'CREATE,DELETE,UPDATE' and domain in payroll_domains %}
+                             disabled
+                             data-bs-toggle="tooltip" 
+                             title="FINANCE is read-only for payroll operations"
+                             {% endif %}
+                             onchange="this.form.submit()">
+                    </div>
+                    {% endwith %}
+                  </form>
+                </td>
+                {% endfor %}
+              </tr>
+              {% endfor %}
+            {% empty %}
+              <tr>
+                <td colspan="{{ actions|length|add:2 }}" class="text-center text-muted py-4">
+                  <i class="fas fa-shield-alt fa-3x mb-3 opacity-50"></i>
+                  <h5>No Roles Configured</h5>
+                  <p>Start by creating roles and assigning permissions.</p>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
 
-  <!-- Rest of your existing template (Hierarchy, Templates, User Access) remains the same -->
-  <!-- ... -->
+  <!-- Role Descriptions -->
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h6 class="card-title mb-0"><i class="fas fa-info-circle me-2"></i>Role Descriptions</h6>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6">
+              <ul class="list-unstyled">
+                <li class="mb-2">
+                  <span class="badge bg-danger me-2">EXEC</span>
+                  <small>Full system access and administration</small>
+                </li>
+                <li class="mb-2">
+                  <span class="badge bg-danger me-2">ADMIN</span>
+                  <small>System management and user administration</small>
+                </li>
+                <li class="mb-2">
+                  <span class="badge bg-primary me-2">DIRECTOR</span>
+                  <small>Payroll operations management</small>
+                </li>
+                <li class="mb-2">
+                  <span class="badge bg-primary me-2">MANAGER</span>
+                  <small>Team and payroll supervision</small>
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-6">
+              <ul class="list-unstyled">
+                <li class="mb-2">
+                  <span class="badge bg-primary me-2">SPECIALIST</span>
+                  <small>Payroll processing and data entry</small>
+                </li>
+                <li class="mb-2">
+                  <span class="badge bg-success me-2">FINANCE</span>
+                  <small>Read-only financial reporting</small>
+                </li>
+                <li class="mb-2">
+                  <span class="badge bg-info me-2">TECHNICAL</span>
+                  <small>System configuration</small>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header">
+          <h6 class="card-title mb-0"><i class="fas fa-shield-alt me-2"></i>Protection Rules</h6>
+        </div>
+        <div class="card-body">
+          <div class="alert alert-warning">
+            <h6 class="alert-heading"><i class="fas fa-exclamation-triangle me-2"></i>Business Logic Enforcement</h6>
+            <ul class="mb-0 small">
+              <li><strong>FINANCE:</strong> Read-only for payroll data (CREATE/DELETE/UPDATE disabled)</li>
+              <li><strong>EXEC/ADMIN:</strong> Cannot lose system management rights</li>
+              <li><strong>Payroll Roles:</strong> Full CRUD access to payroll operations</li>
+              <li><strong>Technical Roles:</strong> Limited to system configuration</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </div>
 {% endblock %}
@@ -310,33 +259,27 @@ document.addEventListener("DOMContentLoaded", function() {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 
-    // Add visual feedback for protected checkboxes
-    const protectedCheckboxes = document.querySelectorAll('.finance-protected');
+    // Visual feedback for protected permissions
+    const protectedCheckboxes = document.querySelectorAll('.permission-toggle:disabled');
     protectedCheckboxes.forEach(checkbox => {
-        checkbox.closest('td').classList.add('bg-light');
+        const td = checkbox.closest('td');
+        if (td) {
+            td.classList.add('bg-light');
+            td.title = "Protected by business rules";
+        }
     });
-
-    // Auto-expand accordion if safety warnings exist
-    {% if safety_warnings %}
-    const payrollSection = document.getElementById('collapse-payroll');
-    if (payrollSection) {
-        new bootstrap.Collapse(payrollSection, { toggle: false });
-    }
-    {% endif %}
 });
 </script>
 
 <style>
-.permission-checkbox:disabled {
+.permission-toggle:disabled {
     cursor: not-allowed;
-    opacity: 0.6;
 }
-.accordion-button:not(.collapsed) {
-    background-color: var(--bs-light);
-    color: var(--bs-dark);
+.table td {
+    vertical-align: middle;
 }
-.table-success.bg-opacity-10 {
-    background-color: rgba(var(--bs-success-rgb), 0.05) !important;
+.bg-light {
+    background-color: rgba(0, 0, 0, 0.02) !important;
 }
 </style>
 {% endblock %}

@@ -50,3 +50,4 @@ def dict_key(value, key):
     if isinstance(value, dict):
         return value.get(key)
     return None
+
