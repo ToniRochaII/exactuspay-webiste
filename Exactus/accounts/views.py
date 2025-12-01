@@ -145,11 +145,12 @@ def profile(request):
 
 @login_required
 def dashboard(request):
-        context = {
-            "user": request.user,
-        }
-            # Always return something
-        return render(request, "dashboard/index.html", context)
+    role_user_counts = [(role, count) for role, count in role_users.items()]
+    context = {
+        # ... existing context ...
+        'role_user_counts': role_user_counts,
+    }
+    return render(request, "dashboard/index.html", context)
 
 @login_required
 def dashboard_admin(request):
