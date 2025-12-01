@@ -1,16 +1,24 @@
 {% extends "base.html" %}
-{% block title %}Register | ExactusPay{% endblock %}
+{% block title %}Create User | ExactusPay{% endblock %}
 {% block content %}
 
 <div class="container-fluid">
-    <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
-            <!-- Header -->
-            <div class="text-center mb-5">
-                <h1 class="h2 mb-2">Create Your Account</h1>
-                <p class="text-muted">Join ExactusPay to streamline your global payroll management</p>
-            </div>
+    <!-- Header -->
+    <div class="header">
+        <h1 class="header-title">
+            Create New User
+        </h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'user_list' %}">Users</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Create User</li>
+            </ol>
+        </nav>
+    </div>
 
+    <div class="row">
+        <div class="col-12 col-lg-8 col-xl-6">
             <!-- Display form errors -->
             {% if form.errors %}
             <div class="alert alert-danger alert-dismissible" role="alert">
@@ -34,6 +42,7 @@
                     {% if message.tags == 'success' %}
                     <div class="alert alert-success alert-dismissible" role="alert">
                         <div class="alert-message">
+                            <i class="fas fa-check-circle me-2"></i>
                             {{ message }}
                         </div>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -42,17 +51,20 @@
                 {% endfor %}
             {% endif %}
 
-            <!-- Registration Form -->
+            <!-- User Creation Form -->
             <div class="card">
-                <div class="card-body p-4">
-                    <form method="POST" novalidate id="registrationForm">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">User Details</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" novalidate id="createUserForm">
                         {% csrf_token %}
                         
-                        <!-- Personal Information -->
+                        <!-- Basic Information -->
                         <div class="mb-4">
                             <h6 class="mb-3 text-primary">
                                 <i class="fas fa-user me-2"></i>
-                                Personal Information
+                                Basic Information
                             </h6>
                             
                             <div class="row">
@@ -101,19 +113,36 @@
                                        placeholder="Enter email address" 
                                        required
                                        value="{{ form.email.value|default:'' }}">
+                                <div class="form-text">This will be used for login and notifications</div>
                                 {% if form.email.errors %}
                                 <div class="invalid-feedback d-block">
                                     {{ form.email.errors.0 }}
                                 </div>
                                 {% endif %}
                             </div>
+
+                            <div class="mb-3">
+                                <label for="id_phone" class="form-label">
+                                    Phone Number
+                                </label>
+                                <input type="tel" class="form-control" 
+                                       id="id_phone" 
+                                       name="phone" 
+                                       placeholder="Enter phone number"
+                                       value="{{ form.phone.value|default:'' }}">
+                                {% if form.phone.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.phone.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
                         </div>
                         
-                        <!-- Account Setup -->
+                        <!-- Account Information -->
                         <div class="mb-4">
                             <h6 class="mb-3 text-primary">
                                 <i class="fas fa-key me-2"></i>
-                                Account Setup
+                                Account Information
                             </h6>
                             
                             <div class="mb-3">
@@ -126,7 +155,7 @@
                                        placeholder="Choose username" 
                                        required
                                        value="{{ form.username.value|default:'' }}">
-                                <div class="form-text">This will be your login username</div>
+                                <div class="form-text">Used for system login</div>
                                 {% if form.username.errors %}
                                 <div class="invalid-feedback d-block">
                                     {{ form.username.errors.0 }}
@@ -134,120 +163,233 @@
                                 {% endif %}
                             </div>
                             
-                            <div class="row">
-                                <div class="mb-3 col-md-6">
-                                    <label for="id_password1" class="form-label">
-                                        Password <span class="text-danger">*</span>
+                            <!-- Password Generation Options -->
+                            <div class="mb-4">
+                                <label class="form-label">Password Setup</label>
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" type="radio" name="password_option" id="autoGenerate" value="auto" checked>
+                                    <label class="form-check-label" for="autoGenerate">
+                                        Generate password automatically
+                                        <small class="text-muted d-block">System will generate a secure password and email it to the user</small>
                                     </label>
-                                    <div class="input-group">
-                                        <input type="password" class="form-control" 
-                                               id="id_password1" 
-                                               name="password1" 
-                                               placeholder="Create password" 
-                                               required>
-                                        <button class="btn btn-outline-secondary" type="button" id="togglePassword1">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                    </div>
-                                    <small class="form-text text-muted">
-                                        Minimum 8 characters with uppercase, lowercase, and numbers
-                                    </small>
-                                    {% if form.password1.errors %}
-                                    <div class="invalid-feedback d-block">
-                                        {{ form.password1.errors.0 }}
-                                    </div>
-                                    {% endif %}
-                                    <div class="password-strength mt-2">
-                                        <div class="progress" style="height: 4px;">
-                                            <div class="progress-bar bg-danger" id="passwordStrengthBar" style="width: 0%"></div>
-                                        </div>
-                                        <small id="passwordStrengthText" class="text-muted">Password strength</small>
-                                    </div>
                                 </div>
-
-                                <div class="mb-3 col-md-6">
-                                    <label for="id_password2" class="form-label">
-                                        Confirm Password <span class="text-danger">*</span>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="password_option" id="manualSet" value="manual">
+                                    <label class="form-check-label" for="manualSet">
+                                        Set password manually
                                     </label>
-                                    <div class="input-group">
-                                        <input type="password" class="form-control" 
-                                               id="id_password2" 
-                                               name="password2" 
-                                               placeholder="Confirm password" 
-                                               required>
-                                        <button class="btn btn-outline-secondary" type="button" id="togglePassword2">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
+                                </div>
+                            </div>
+
+                            <!-- Manual Password Fields (hidden by default) -->
+                            <div id="manualPasswordFields" class="d-none">
+                                <div class="row">
+                                    <div class="mb-3 col-md-6">
+                                        <label for="id_password1" class="form-label">
+                                            Password
+                                        </label>
+                                        <div class="input-group">
+                                            <input type="password" class="form-control" 
+                                                   id="id_password1" 
+                                                   name="password1" 
+                                                   placeholder="Set password">
+                                            <button class="btn btn-outline-secondary" type="button" id="togglePassword1">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
+                                        <small class="form-text text-muted">
+                                            Minimum 8 characters with uppercase, lowercase, and numbers
+                                        </small>
+                                        {% if form.password1.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.password1.errors.0 }}
+                                        </div>
+                                        {% endif %}
+                                        <div class="password-strength mt-2">
+                                            <div class="progress" style="height: 4px;">
+                                                <div class="progress-bar bg-danger" id="passwordStrengthBar" style="width: 0%"></div>
+                                            </div>
+                                            <small id="passwordStrengthText" class="text-muted">Password strength</small>
+                                        </div>
                                     </div>
-                                    {% if form.password2.errors %}
-                                    <div class="invalid-feedback d-block">
-                                        {{ form.password2.errors.0 }}
+
+                                    <div class="mb-3 col-md-6">
+                                        <label for="id_password2" class="form-label">
+                                            Confirm Password
+                                        </label>
+                                        <div class="input-group">
+                                            <input type="password" class="form-control" 
+                                                   id="id_password2" 
+                                                   name="password2" 
+                                                   placeholder="Confirm password">
+                                            <button class="btn btn-outline-secondary" type="button" id="togglePassword2">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
+                                        {% if form.password2.errors %}
+                                        <div class="invalid-feedback d-block">
+                                            {{ form.password2.errors.0 }}
+                                        </div>
+                                        {% endif %}
+                                        <div id="passwordMatchMessage" class="mt-2"></div>
                                     </div>
-                                    {% endif %}
-                                    <div id="passwordMatchMessage" class="mt-2"></div>
                                 </div>
                             </div>
                         </div>
                         
-                        <!-- Terms & Agreements -->
+                        <!-- User Role and Permissions -->
                         <div class="mb-4">
                             <h6 class="mb-3 text-primary">
-                                <i class="fas fa-file-contract me-2"></i>
-                                Terms & Agreements
+                                <i class="fas fa-user-shield me-2"></i>
+                                Role & Permissions
+                            </h6>
+                            
+                            <div class="mb-3">
+                                <label for="id_role" class="form-label">
+                                    User Role <span class="text-danger">*</span>
+                                </label>
+                                <select class="form-control" id="id_role" name="role" required>
+                                    <option value="">Select role</option>
+                                    <option value="admin" {% if form.role.value == "admin" %}selected{% endif %}>Administrator</option>
+                                    <option value="manager" {% if form.role.value == "manager" %}selected{% endif %}>Manager</option>
+                                    <option value="staff" {% if form.role.value == "staff" %}selected{% endif %}>Staff</option>
+                                    <option value="viewer" {% if form.role.value == "viewer" %}selected{% endif %}>Viewer</option>
+                                </select>
+                                <div class="form-text">
+                                    <small>
+                                        <strong>Administrator:</strong> Full system access<br>
+                                        <strong>Manager:</strong> Manage teams and reports<br>
+                                        <strong>Staff:</strong> Basic access to assigned modules<br>
+                                        <strong>Viewer:</strong> Read-only access
+                                    </small>
+                                </div>
+                                {% if form.role.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.role.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Additional Permissions</label>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" id="id_can_approve" name="can_approve">
+                                            <label class="form-check-label" for="id_can_approve">
+                                                Can approve payments
+                                            </label>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" id="id_can_export" name="can_export">
+                                            <label class="form-check-label" for="id_can_export">
+                                                Can export data
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" id="id_can_manage_users" name="can_manage_users">
+                                            <label class="form-check-label" for="id_can_manage_users">
+                                                Can manage users
+                                            </label>
+                                        </div>
+                                        <div class="form-check mb-2">
+                                            <input class="form-check-input" type="checkbox" id="id_can_view_reports" name="can_view_reports">
+                                            <label class="form-check-label" for="id_can_view_reports">
+                                                Can view reports
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- User Settings -->
+                        <div class="mb-4">
+                            <h6 class="mb-3 text-primary">
+                                <i class="fas fa-cog me-2"></i>
+                                Settings
                             </h6>
                             
                             <div class="mb-3">
                                 <div class="form-check">
-                                    <input class="form-check-input" 
-                                           type="checkbox" 
-                                           id="id_terms" 
-                                           name="terms" 
-                                           required>
-                                    <label class="form-check-label" for="id_terms">
-                                        I agree to the <a href="#" target="_blank">Terms of Service</a> and <a href="#" target="_blank">Privacy Policy</a>
-                                        <span class="text-danger">*</span>
+                                    <input class="form-check-input" type="checkbox" id="id_is_active" name="is_active" checked>
+                                    <label class="form-check-label" for="id_is_active">
+                                        Account is active
+                                        <small class="text-muted d-block">User can login immediately</small>
                                     </label>
-                                    {% if form.terms.errors %}
-                                    <div class="invalid-feedback d-block">
-                                        {{ form.terms.errors.0 }}
-                                    </div>
-                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="id_send_welcome_email" name="send_welcome_email" checked>
+                                    <label class="form-check-label" for="id_send_welcome_email">
+                                        Send welcome email
+                                        <small class="text-muted d-block">User will receive login instructions</small>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="id_force_password_change" name="force_password_change">
+                                    <label class="form-check-label" for="id_force_password_change">
+                                        Force password change on first login
+                                    </label>
                                 </div>
                             </div>
                         </div>
                         
-                        <!-- Submit Button -->
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary btn-lg">
-                                <span id="submitText">Create Account</span>
-                                <span id="loadingSpinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
-                            </button>
-                            
-                            <div class="text-center mt-3">
-                                <p class="text-muted mb-0">
-                                    Already have an account? 
-                                    <a href="{% url 'login' %}" class="text-decoration-none">Sign in here</a>
-                                </p>
+                        <!-- Action Buttons -->
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'user_list' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>
+                                Back to Users
+                            </a>
+                            <div>
+                                <button type="submit" class="btn btn-primary">
+                                    <span id="submitText">Create User</span>
+                                    <span id="loadingSpinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+                                </button>
                             </div>
                         </div>
                     </form>
                 </div>
-            </div>
-
-            <!-- Security Notice -->
-            <div class="text-center mt-4">
-                <small class="text-muted">
-                    <i class="fas fa-shield-alt me-1"></i>
-                    Your data is protected with bank-level encryption
-                </small>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+    // Toggle password generation options
+    const autoGenerateRadio = document.getElementById('autoGenerate');
+    const manualSetRadio = document.getElementById('manualSet');
+    const manualPasswordFields = document.getElementById('manualPasswordFields');
+    
+    function togglePasswordFields() {
+        if (manualSetRadio.checked) {
+            manualPasswordFields.classList.remove('d-none');
+            // Make password fields required
+            document.getElementById('id_password1').required = true;
+            document.getElementById('id_password2').required = true;
+        } else {
+            manualPasswordFields.classList.add('d-none');
+            // Remove required attribute
+            document.getElementById('id_password1').required = false;
+            document.getElementById('id_password2').required = false;
+        }
+    }
+    
+    autoGenerateRadio.addEventListener('change', togglePasswordFields);
+    manualSetRadio.addEventListener('change', togglePasswordFields);
+    
+    // Initialize on page load
+    togglePasswordFields();
+
     // Password visibility toggle
-    document.getElementById('togglePassword1').addEventListener('click', function() {
+    document.getElementById('togglePassword1')?.addEventListener('click', function() {
         const passwordInput = document.getElementById('id_password1');
         const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
         passwordInput.setAttribute('type', type);
@@ -255,7 +397,7 @@
         icon.className = type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
     });
 
-    document.getElementById('togglePassword2').addEventListener('click', function() {
+    document.getElementById('togglePassword2')?.addEventListener('click', function() {
         const passwordInput = document.getElementById('id_password2');
         const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
         passwordInput.setAttribute('type', type);
@@ -316,18 +458,24 @@
     const passwordMatchMessage = document.getElementById('passwordMatchMessage');
     
     function checkPasswordMatch() {
-        if (password1.value && password2.value) {
+        if (password1 && password2 && password1.value && password2.value) {
             if (password1.value !== password2.value) {
                 password2.classList.add('is-invalid');
-                passwordMatchMessage.innerHTML = '<small class="text-danger"><i class="fas fa-times-circle me-1"></i>Passwords do not match</small>';
+                if (passwordMatchMessage) {
+                    passwordMatchMessage.innerHTML = '<small class="text-danger"><i class="fas fa-times-circle me-1"></i>Passwords do not match</small>';
+                }
             } else {
                 password2.classList.remove('is-invalid');
                 password2.classList.add('is-valid');
-                passwordMatchMessage.innerHTML = '<small class="text-success"><i class="fas fa-check-circle me-1"></i>Passwords match</small>';
+                if (passwordMatchMessage) {
+                    passwordMatchMessage.innerHTML = '<small class="text-success"><i class="fas fa-check-circle me-1"></i>Passwords match</small>';
+                }
             }
-        } else {
+        } else if (password2) {
             password2.classList.remove('is-invalid', 'is-valid');
-            passwordMatchMessage.innerHTML = '';
+            if (passwordMatchMessage) {
+                passwordMatchMessage.innerHTML = '';
+            }
         }
     }
     
@@ -337,13 +485,13 @@
     }
 
     // Form submission loading state
-    document.getElementById('registrationForm').addEventListener('submit', function(e) {
+    document.getElementById('createUserForm').addEventListener('submit', function(e) {
         const submitBtn = this.querySelector('button[type="submit"]');
         const submitText = document.getElementById('submitText');
         const loadingSpinner = document.getElementById('loadingSpinner');
         
         submitBtn.disabled = true;
-        submitText.textContent = 'Creating Account...';
+        submitText.textContent = 'Creating User...';
         loadingSpinner.classList.remove('d-none');
     });
 
