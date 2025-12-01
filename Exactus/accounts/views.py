@@ -182,18 +182,18 @@ def dashboard_admin(request):
     
     # Country metrics
     country_stats = Country.objects.aggregate(
-        active_countries=Count('country_id', filter=Q(status='ACTIVE')),
-        implementing_countries=Count('country_id', filter=Q(status='IMPLEMENTING')),
-        inactive_countries=Count('country_id', filter=Q(status='INACTIVE')),
-        total_countries=Count('country_id')
+        active_countries=Count('country.id', filter=Q(status='ACTIVE')),
+        implementing_countries=Count('country.id', filter=Q(status='IMPLEMENTING')),
+        inactive_countries=Count('country.id', filter=Q(status='INACTIVE')),
+        total_countries=Count('country.id')
     )
     
     # Company metrics
     company_stats = Company.objects.aggregate(
-        active_companies=Count('company_id', filter=Q(account_status='ACTIVE')),
-        suspended_companies=Count('company_id', filter=Q(account_status='SUSPENDED')),
-        inactive_companies=Count('company_id', filter=Q(account_status='INACTIVE')),
-        total_companies=Count('company_id')
+        active_companies=Count('company.id', filter=Q(account_status='ACTIVE')),
+        suspended_companies=Count('company.id', filter=Q(account_status='SUSPENDED')),
+        inactive_companies=Count('company.id', filter=Q(account_status='INACTIVE')),
+        total_companies=Count('company.id')
     )
     
     # Employee metric
