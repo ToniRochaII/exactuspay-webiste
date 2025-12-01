@@ -2,734 +2,379 @@
 {% block title %}Register | ExactusPay{% endblock %}
 {% block content %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<meta name="description" content="Modern, flexible and responsive Bootstrap 5 admin &amp; dashboard template">
-	<meta name="author" content="ExactusPay">
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <!-- Header -->
+            <div class="text-center mb-5">
+                <h1 class="h2 mb-2">Create Your Account</h1>
+                <p class="text-muted">Join ExactusPay to streamline your global payroll management</p>
+            </div>
 
-	<title>Register | ExactusPay</title>
+            <!-- Display form errors -->
+            {% if form.errors %}
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <div class="alert-message">
+                    <strong>Please correct the following errors:</strong>
+                    <ul class="mt-2 mb-0">
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li>{{ field|title }}: {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endif %}
 
-	<!-- BEGIN SETTINGS -->
-	<style>
-		body {
-			opacity: 0;
-		}
-		
-		/* Custom styles for registration */
-		.registration-container {
-			max-width: 800px;
-			margin: 0 auto;
-		}
-		
-		.feature-icon {
-			width: 48px;
-			height: 48px;
-			background: linear-gradient(135deg, #0066CC, #004C99);
-			border-radius: 12px;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			color: white;
-			font-size: 1.2rem;
-			margin-right: 1rem;
-		}
-		
-		.feature-card {
-			border-left: 4px solid #0066CC;
-			background-color: #f8f9fa;
-			transition: transform 0.2s ease;
-		}
-		
-		.feature-card:hover {
-			transform: translateY(-2px);
-			box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-		}
-	</style>
-	<!-- END SETTINGS -->
-</head>
-<!-- SET YOUR THEME -->
-<body class="theme-blue">
-	<div class="splash active">
-		<div class="splash-icon"></div>
-	</div>
+            <!-- Display success messages -->
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == 'success' %}
+                    <div class="alert alert-success alert-dismissible" role="alert">
+                        <div class="alert-message">
+                            {{ message }}
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
 
-	<div class="wrapper">
-		<nav id="sidebar" class="sidebar">
-			<a class="sidebar-brand" href="index.html">
-				<svg>
-					<use xlink:href="#ion-ios-pulse-strong"></use>
-				</svg>
-				ExactusPay
-			</a>
-			<div class="sidebar-content">
-				<div class="sidebar-user">
-					<div class="fw-bold">Create Account</div>
-					<small>Join our platform</small>
-				</div>
+            <!-- Registration Form -->
+            <div class="card">
+                <div class="card-body p-4">
+                    <form method="POST" novalidate id="registrationForm">
+                        {% csrf_token %}
+                        
+                        <!-- Personal Information -->
+                        <div class="mb-4">
+                            <h6 class="mb-3 text-primary">
+                                <i class="fas fa-user me-2"></i>
+                                Personal Information
+                            </h6>
+                            
+                            <div class="row">
+                                <div class="mb-3 col-md-6">
+                                    <label for="id_first_name" class="form-label">
+                                        First Name <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="form-control" 
+                                           id="id_first_name" 
+                                           name="first_name" 
+                                           placeholder="Enter first name" 
+                                           required
+                                           value="{{ form.first_name.value|default:'' }}">
+                                    {% if form.first_name.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.first_name.errors.0 }}
+                                    </div>
+                                    {% endif %}
+                                </div>
 
-				<ul class="sidebar-nav">
-					<li class="sidebar-header">
-						Registration
-					</li>
-					<li class="sidebar-item active">
-						<a class="sidebar-link" href="#personal-info">
-							<i class="align-middle me-2 fas fa-fw fa-user"></i> 
-							<span class="align-middle">Personal Info</span>
-						</a>
-					</li>
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="#account-info">
-							<i class="align-middle me-2 fas fa-fw fa-key"></i> 
-							<span class="align-middle">Account Setup</span>
-						</a>
-					</li>
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="#company-info">
-							<i class="align-middle me-2 fas fa-fw fa-building"></i> 
-							<span class="align-middle">Company Info</span>
-						</a>
-					</li>
-					<li class="sidebar-item">
-						<a class="sidebar-link" href="#terms">
-							<i class="align-middle me-2 fas fa-fw fa-file-contract"></i> 
-							<span class="align-middle">Terms</span>
-						</a>
-					</li>
-				</ul>
-				
-				<div class="mt-4 px-3">
-					<div class="card bg-primary text-white">
-						<div class="card-body">
-							<h6 class="card-title">Need Help?</h6>
-							<p class="card-text small">Contact our support team for assistance</p>
-							<a href="#" class="btn btn-light btn-sm">Contact Support</a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</nav>
-		
-		<div class="main">
-			<nav class="navbar navbar-expand navbar-theme">
-				<a class="sidebar-toggle d-flex me-2">
-					<i class="hamburger align-self-center"></i>
-				</a>
+                                <div class="mb-3 col-md-6">
+                                    <label for="id_last_name" class="form-label">
+                                        Last Name <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="text" class="form-control" 
+                                           id="id_last_name" 
+                                           name="last_name" 
+                                           placeholder="Enter last name" 
+                                           required
+                                           value="{{ form.last_name.value|default:'' }}">
+                                    {% if form.last_name.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.last_name.errors.0 }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="id_email" class="form-label">
+                                    Email Address <span class="text-danger">*</span>
+                                </label>
+                                <input type="email" class="form-control" 
+                                       id="id_email" 
+                                       name="email" 
+                                       placeholder="Enter email address" 
+                                       required
+                                       value="{{ form.email.value|default:'' }}">
+                                {% if form.email.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.email.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Account Setup -->
+                        <div class="mb-4">
+                            <h6 class="mb-3 text-primary">
+                                <i class="fas fa-key me-2"></i>
+                                Account Setup
+                            </h6>
+                            
+                            <div class="mb-3">
+                                <label for="id_username" class="form-label">
+                                    Username <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" class="form-control" 
+                                       id="id_username" 
+                                       name="username" 
+                                       placeholder="Choose username" 
+                                       required
+                                       value="{{ form.username.value|default:'' }}">
+                                <div class="form-text">This will be your login username</div>
+                                {% if form.username.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.username.errors.0 }}
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="row">
+                                <div class="mb-3 col-md-6">
+                                    <label for="id_password1" class="form-label">
+                                        Password <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="password" class="form-control" 
+                                               id="id_password1" 
+                                               name="password1" 
+                                               placeholder="Create password" 
+                                               required>
+                                        <button class="btn btn-outline-secondary" type="button" id="togglePassword1">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                    <small class="form-text text-muted">
+                                        Minimum 8 characters with uppercase, lowercase, and numbers
+                                    </small>
+                                    {% if form.password1.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.password1.errors.0 }}
+                                    </div>
+                                    {% endif %}
+                                    <div class="password-strength mt-2">
+                                        <div class="progress" style="height: 4px;">
+                                            <div class="progress-bar bg-danger" id="passwordStrengthBar" style="width: 0%"></div>
+                                        </div>
+                                        <small id="passwordStrengthText" class="text-muted">Password strength</small>
+                                    </div>
+                                </div>
 
-				<div class="navbar-collapse collapse">
-					<ul class="navbar-nav ms-auto">
-						<li class="nav-item">
-							<a class="nav-link" href="{% url 'login' %}">
-								<i class="align-middle me-1 fas fa-sign-in-alt"></i>
-								Already have an account?
-							</a>
-						</li>
-					</ul>
-				</div>
-			</nav>
-			
-			<main class="content">
-				<div class="container-fluid registration-container">
-					<div class="header">
-						<h1 class="header-title">
-							Create Your ExactusPay Account
-						</h1>
-						<nav aria-label="breadcrumb">
-							<ol class="breadcrumb">
-								<li class="breadcrumb-item"><a href="#">Home</a></li>
-								<li class="breadcrumb-item"><a href="#">Authentication</a></li>
-								<li class="breadcrumb-item active" aria-current="page">Register</li>
-							</ol>
-						</nav>
-					</div>
-					
-					<!-- Display form errors -->
-					{% if form.errors %}
-					<div class="alert alert-danger alert-dismissible" role="alert">
-						<div class="alert-message">
-							<strong>Please correct the following errors:</strong>
-							<ul class="mt-2 mb-0">
-								{% for field, errors in form.errors.items %}
-									{% for error in errors %}
-										<li>{{ field|title }}: {{ error }}</li>
-									{% endfor %}
-								{% endfor %}
-							</ul>
-						</div>
-						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-					</div>
-					{% endif %}
+                                <div class="mb-3 col-md-6">
+                                    <label for="id_password2" class="form-label">
+                                        Confirm Password <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="password" class="form-control" 
+                                               id="id_password2" 
+                                               name="password2" 
+                                               placeholder="Confirm password" 
+                                               required>
+                                        <button class="btn btn-outline-secondary" type="button" id="togglePassword2">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                    {% if form.password2.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.password2.errors.0 }}
+                                    </div>
+                                    {% endif %}
+                                    <div id="passwordMatchMessage" class="mt-2"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Terms & Agreements -->
+                        <div class="mb-4">
+                            <h6 class="mb-3 text-primary">
+                                <i class="fas fa-file-contract me-2"></i>
+                                Terms & Agreements
+                            </h6>
+                            
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" 
+                                           type="checkbox" 
+                                           id="id_terms" 
+                                           name="terms" 
+                                           required>
+                                    <label class="form-check-label" for="id_terms">
+                                        I agree to the <a href="#" target="_blank">Terms of Service</a> and <a href="#" target="_blank">Privacy Policy</a>
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    {% if form.terms.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.terms.errors.0 }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <span id="submitText">Create Account</span>
+                                <span id="loadingSpinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
+                            </button>
+                            
+                            <div class="text-center mt-3">
+                                <p class="text-muted mb-0">
+                                    Already have an account? 
+                                    <a href="{% url 'login' %}" class="text-decoration-none">Sign in here</a>
+                                </p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
 
-					<!-- Display success messages -->
-					{% if messages %}
-						{% for message in messages %}
-							{% if message.tags == 'success' %}
-							<div class="alert alert-success alert-dismissible" role="alert">
-								<div class="alert-message">
-									{{ message }}
-								</div>
-								<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-							</div>
-							{% endif %}
-						{% endfor %}
-					{% endif %}
-					
-					<div class="row">
-						<div class="col-md-8">
-							<div class="card">
-								<div class="card-header">
-									<h5 class="card-title mb-0">Account Information</h5>
-								</div>
-								<div class="card-body">
-									<form method="POST" novalidate id="registrationForm">
-										{% csrf_token %}
-										
-										<div class="mb-4" id="personal-info">
-											<h6 class="mb-3 text-primary">
-												<i class="fas fa-user me-2"></i>
-												Personal Information
-											</h6>
-											
-											<div class="row">
-												<div class="mb-3 col-md-6">
-													<label for="id_first_name" class="form-label">
-														First Name <span class="text-danger">*</span>
-													</label>
-													<input type="text" class="form-control" 
-														   id="id_first_name" 
-														   name="first_name" 
-														   placeholder="Enter first name" 
-														   required
-														   value="{{ form.first_name.value|default:'' }}">
-													{% if form.first_name.errors %}
-													<div class="invalid-feedback d-block">
-														{{ form.first_name.errors.0 }}
-													</div>
-													{% endif %}
-												</div>
+            <!-- Security Notice -->
+            <div class="text-center mt-4">
+                <small class="text-muted">
+                    <i class="fas fa-shield-alt me-1"></i>
+                    Your data is protected with bank-level encryption
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
 
-												<div class="mb-3 col-md-6">
-													<label for="id_last_name" class="form-label">
-														Last Name <span class="text-danger">*</span>
-													</label>
-													<input type="text" class="form-control" 
-														   id="id_last_name" 
-														   name="last_name" 
-														   placeholder="Enter last name" 
-														   required
-														   value="{{ form.last_name.value|default:'' }}">
-													{% if form.last_name.errors %}
-													<div class="invalid-feedback d-block">
-														{{ form.last_name.errors.0 }}
-													</div>
-													{% endif %}
-												</div>
-											</div>
-											
-											<div class="row">
-												<div class="mb-3 col-md-6">
-													<label for="id_email" class="form-label">
-														Email Address <span class="text-danger">*</span>
-													</label>
-													<input type="email" class="form-control" 
-														   id="id_email" 
-														   name="email" 
-														   placeholder="Enter email address" 
-														   required
-														   value="{{ form.email.value|default:'' }}">
-													{% if form.email.errors %}
-													<div class="invalid-feedback d-block">
-														{{ form.email.errors.0 }}
-													</div>
-													{% endif %}
-												</div>
+<script>
+    // Password visibility toggle
+    document.getElementById('togglePassword1').addEventListener('click', function() {
+        const passwordInput = document.getElementById('id_password1');
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        const icon = this.querySelector('i');
+        icon.className = type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+    });
 
-												<div class="mb-3 col-md-6">
-													<label for="id_phone" class="form-label">
-														Phone Number
-													</label>
-													<input type="tel" class="form-control" 
-														   id="id_phone" 
-														   name="phone" 
-														   placeholder="Enter phone number"
-														   value="{{ form.phone.value|default:'' }}">
-													{% if form.phone.errors %}
-													<div class="invalid-feedback d-block">
-														{{ form.phone.errors.0 }}
-													</div>
-													{% endif %}
-												</div>
-											</div>
-										</div>
-										
-										<hr class="my-4">
-										
-										<div class="mb-4" id="account-info">
-											<h6 class="mb-3 text-primary">
-												<i class="fas fa-key me-2"></i>
-												Account Setup
-											</h6>
-											
-											<div class="row">
-												<div class="mb-3 col-md-6">
-													<label for="id_username" class="form-label">
-														Username <span class="text-danger">*</span>
-													</label>
-													<input type="text" class="form-control" 
-														   id="id_username" 
-														   name="username" 
-														   placeholder="Choose username" 
-														   required
-														   value="{{ form.username.value|default:'' }}">
-													<div class="form-text">This will be your login username</div>
-													{% if form.username.errors %}
-													<div class="invalid-feedback d-block">
-														{{ form.username.errors.0 }}
-													</div>
-													{% endif %}
-												</div>
-												
-												<div class="mb-3 col-md-6">
-													<label class="form-label">
-														&nbsp;
-													</label>
-													<div class="alert alert-light">
-														<small>
-															<i class="fas fa-info-circle text-primary"></i>
-															Username must be 4-20 characters, letters and numbers only
-														</small>
-													</div>
-												</div>
-											</div>
-											
-											<div class="row">
-												<div class="mb-3 col-md-6">
-													<label for="id_password1" class="form-label">
-														Password <span class="text-danger">*</span>
-													</label>
-													<div class="input-group">
-														<input type="password" class="form-control" 
-															   id="id_password1" 
-															   name="password1" 
-															   placeholder="Create password" 
-															   required>
-														<button class="btn btn-outline-secondary" type="button" id="togglePassword1">
-															<i class="fas fa-eye"></i>
-														</button>
-													</div>
-													<small class="form-text text-muted">
-														Minimum 8 characters with uppercase, lowercase, and numbers
-													</small>
-													{% if form.password1.errors %}
-													<div class="invalid-feedback d-block">
-														{{ form.password1.errors.0 }}
-													</div>
-													{% endif %}
-													<div class="password-strength mt-2">
-														<div class="progress" style="height: 4px;">
-															<div class="progress-bar bg-danger" id="passwordStrengthBar" style="width: 0%"></div>
-														</div>
-														<small id="passwordStrengthText" class="text-muted">Password strength</small>
-													</div>
-												</div>
+    document.getElementById('togglePassword2').addEventListener('click', function() {
+        const passwordInput = document.getElementById('id_password2');
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        const icon = this.querySelector('i');
+        icon.className = type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+    });
 
-												<div class="mb-3 col-md-6">
-													<label for="id_password2" class="form-label">
-														Confirm Password <span class="text-danger">*</span>
-													</label>
-													<div class="input-group">
-														<input type="password" class="form-control" 
-															   id="id_password2" 
-															   name="password2" 
-															   placeholder="Confirm password" 
-															   required>
-														<button class="btn btn-outline-secondary" type="button" id="togglePassword2">
-															<i class="fas fa-eye"></i>
-														</button>
-													</div>
-													{% if form.password2.errors %}
-													<div class="invalid-feedback d-block">
-														{{ form.password2.errors.0 }}
-													</div>
-													{% endif %}
-													<div id="passwordMatchMessage" class="mt-2"></div>
-												</div>
-											</div>
-										</div>
-										
-										<hr class="my-4">
-										
-										<div class="mb-4" id="company-info">
-											<h6 class="mb-3 text-primary">
-												<i class="fas fa-building me-2"></i>
-												Company Information (Optional)
-											</h6>
-											
-											<div class="row">
-												<div class="mb-3 col-md-6">
-													<label for="id_company" class="form-label">
-														Company Name
-													</label>
-													<input type="text" class="form-control" 
-														   id="id_company" 
-														   name="company" 
-														   placeholder="Enter company name"
-														   value="{{ form.company.value|default:'' }}">
-												</div>
-												
-												<div class="mb-3 col-md-6">
-													<label for="id_company_size" class="form-label">
-														Company Size
-													</label>
-													<select class="form-control" id="id_company_size" name="company_size">
-														<option value="">Select size</option>
-														<option value="1-10" {% if form.company_size.value == "1-10" %}selected{% endif %}>1-10 employees</option>
-														<option value="11-50" {% if form.company_size.value == "11-50" %}selected{% endif %}>11-50 employees</option>
-														<option value="51-200" {% if form.company_size.value == "51-200" %}selected{% endif %}>51-200 employees</option>
-														<option value="201-500" {% if form.company_size.value == "201-500" %}selected{% endif %}>201-500 employees</option>
-														<option value="500+" {% if form.company_size.value == "500+" %}selected{% endif %}>500+ employees</option>
-													</select>
-												</div>
-											</div>
-											
-											<div class="mb-3">
-												<label for="id_industry" class="form-label">
-													Industry
-												</label>
-												<input type="text" class="form-control" 
-													   id="id_industry" 
-													   name="industry" 
-													   placeholder="Enter industry"
-													   value="{{ form.industry.value|default:'' }}">
-											</div>
-										</div>
-										
-										<hr class="my-4">
-										
-										<div class="mb-4" id="terms">
-											<h6 class="mb-3 text-primary">
-												<i class="fas fa-file-contract me-2"></i>
-												Terms & Agreements
-											</h6>
-											
-											<div class="mb-3">
-												<div class="form-check">
-													<input class="form-check-input" 
-														   type="checkbox" 
-														   id="id_terms" 
-														   name="terms" 
-														   required>
-													<label class="form-check-label" for="id_terms">
-														I agree to the <a href="#" target="_blank">Terms of Service</a> and <a href="#" target="_blank">Privacy Policy</a>
-														<span class="text-danger">*</span>
-													</label>
-													{% if form.terms.errors %}
-													<div class="invalid-feedback d-block">
-														{{ form.terms.errors.0 }}
-													</div>
-													{% endif %}
-												</div>
-											</div>
+    // Password strength indicator
+    const passwordInput = document.getElementById('id_password1');
+    const passwordStrengthBar = document.getElementById('passwordStrengthBar');
+    const passwordStrengthText = document.getElementById('passwordStrengthText');
+    
+    if (passwordInput && passwordStrengthBar) {
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            let strength = 0;
+            
+            // Check password strength
+            if (password.length >= 8) strength++;
+            if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
+            if (password.match(/\d/)) strength++;
+            if (password.match(/[^a-zA-Z\d]/)) strength++;
+            
+            // Update strength bar and text
+            let width = 0;
+            let text = 'Password strength';
+            let colorClass = 'bg-danger';
+            
+            if (password.length === 0) {
+                width = 0;
+            } else if (strength <= 1) {
+                width = 25;
+                text = 'Weak';
+                colorClass = 'bg-danger';
+            } else if (strength === 2) {
+                width = 50;
+                text = 'Fair';
+                colorClass = 'bg-warning';
+            } else if (strength === 3) {
+                width = 75;
+                text = 'Good';
+                colorClass = 'bg-info';
+            } else {
+                width = 100;
+                text = 'Strong';
+                colorClass = 'bg-success';
+            }
+            
+            passwordStrengthBar.style.width = width + '%';
+            passwordStrengthBar.className = 'progress-bar ' + colorClass;
+            passwordStrengthText.textContent = text;
+        });
+    }
 
-											<div class="mb-3">
-												<div class="form-check">
-													<input class="form-check-input" 
-														   type="checkbox" 
-														   id="id_marketing_consent" 
-														   name="marketing_consent">
-													<label class="form-check-label" for="id_marketing_consent">
-														I'd like to receive updates, tips, and offers from ExactusPay
-													</label>
-												</div>
-											</div>
-										</div>
-										
-										<div class="d-grid gap-2">
-											<button type="submit" class="btn btn-primary btn-lg">
-												<span id="submitText">Create Account</span>
-												<span id="loadingSpinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
-											</button>
-											
-											<div class="text-center mt-3">
-												<p class="text-muted">
-													Already have an account? 
-													<a href="{% url 'login' %}" class="text-decoration-none">Sign in here</a>
-												</p>
-											</div>
-										</div>
-									</form>
-								</div>
-							</div>
-						</div>
-						
-						<div class="col-md-4">
-							<div class="card">
-								<div class="card-body">
-									<h5 class="card-title">Why Join ExactusPay?</h5>
-									
-									<div class="feature-card p-3 mb-3">
-										<div class="d-flex align-items-start">
-											<div class="feature-icon">
-												<i class="fas fa-shield-alt"></i>
-											</div>
-											<div>
-												<h6 class="mb-1">Enterprise Security</h6>
-												<p class="mb-0 small text-muted">Bank-level encryption and compliance</p>
-											</div>
-										</div>
-									</div>
-									
-									<div class="feature-card p-3 mb-3">
-										<div class="d-flex align-items-start">
-											<div class="feature-icon">
-												<i class="fas fa-globe"></i>
-											</div>
-											<div>
-												<h6 class="mb-1">Global Payroll</h6>
-												<p class="mb-0 small text-muted">Manage payroll across multiple countries</p>
-											</div>
-										</div>
-									</div>
-									
-									<div class="feature-card p-3 mb-3">
-										<div class="d-flex align-items-start">
-											<div class="feature-icon">
-												<i class="fas fa-chart-line"></i>
-											</div>
-											<div>
-												<h6 class="mb-1">Real-time Analytics</h6>
-												<p class="mb-0 small text-muted">Comprehensive reports and insights</p>
-											</div>
-										</div>
-									</div>
-									
-									<div class="feature-card p-3 mb-3">
-										<div class="d-flex align-items-start">
-											<div class="feature-icon">
-												<i class="fas fa-headset"></i>
-											</div>
-											<div>
-												<h6 class="mb-1">24/7 Support</h6>
-												<p class="mb-0 small text-muted">Dedicated customer success team</p>
-											</div>
-										</div>
-									</div>
-									
-									<div class="mt-4">
-										<div class="alert alert-info">
-											<h6 class="alert-heading">
-												<i class="fas fa-info-circle me-2"></i>
-												Need help?
-											</h6>
-											<p class="mb-0 small">Contact our support team at support@exactuspays.com or call +1 (555) 123-4567</p>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</main>
-			
-			<footer class="footer">
-				<div class="container-fluid">
-					<div class="row text-muted">
-						<div class="col-8 text-start">
-							<ul class="list-inline">
-								<li class="list-inline-item">
-									<a class="text-muted" href="#">Support</a>
-								</li>
-								<li class="list-inline-item">
-									<a class="text-muted" href="#">Privacy</a>
-								</li>
-								<li class="list-inline-item">
-									<a class="text-muted" href="#">Terms of Service</a>
-								</li>
-								<li class="list-inline-item">
-									<a class="text-muted" href="#">Contact</a>
-								</li>
-							</ul>
-						</div>
-						<div class="col-4 text-end">
-							<p class="mb-0">
-								&copy; 2024 - <a href="dashboard-default.html" class="text-muted">ExactusPay</a>
-							</p>
-						</div>
-					</div>
-				</div>
-			</footer>
-		</div>
-	</div>
+    // Password match validation
+    const password1 = document.getElementById('id_password1');
+    const password2 = document.getElementById('id_password2');
+    const passwordMatchMessage = document.getElementById('passwordMatchMessage');
+    
+    function checkPasswordMatch() {
+        if (password1.value && password2.value) {
+            if (password1.value !== password2.value) {
+                password2.classList.add('is-invalid');
+                passwordMatchMessage.innerHTML = '<small class="text-danger"><i class="fas fa-times-circle me-1"></i>Passwords do not match</small>';
+            } else {
+                password2.classList.remove('is-invalid');
+                password2.classList.add('is-valid');
+                passwordMatchMessage.innerHTML = '<small class="text-success"><i class="fas fa-check-circle me-1"></i>Passwords match</small>';
+            }
+        } else {
+            password2.classList.remove('is-invalid', 'is-valid');
+            passwordMatchMessage.innerHTML = '';
+        }
+    }
+    
+    if (password1 && password2) {
+        password1.addEventListener('input', checkPasswordMatch);
+        password2.addEventListener('input', checkPasswordMatch);
+    }
 
-	<script>
-		// Password visibility toggle
-		document.getElementById('togglePassword1').addEventListener('click', function() {
-			const passwordInput = document.getElementById('id_password1');
-			const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-			passwordInput.setAttribute('type', type);
-			const icon = this.querySelector('i');
-			icon.className = type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
-		});
+    // Form submission loading state
+    document.getElementById('registrationForm').addEventListener('submit', function(e) {
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const submitText = document.getElementById('submitText');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        
+        submitBtn.disabled = true;
+        submitText.textContent = 'Creating Account...';
+        loadingSpinner.classList.remove('d-none');
+    });
 
-		document.getElementById('togglePassword2').addEventListener('click', function() {
-			const passwordInput = document.getElementById('id_password2');
-			const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-			passwordInput.setAttribute('type', type);
-			const icon = this.querySelector('i');
-			icon.className = type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
-		});
+    // Real-time validation for required fields
+    const requiredFields = document.querySelectorAll('input[required], select[required]');
+    requiredFields.forEach(field => {
+        field.addEventListener('blur', function() {
+            if (!this.value.trim()) {
+                this.classList.add('is-invalid');
+            } else {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            }
+        });
+        
+        field.addEventListener('input', function() {
+            if (this.value.trim()) {
+                this.classList.remove('is-invalid');
+                this.classList.add('is-valid');
+            }
+        });
+    });
 
-		// Password strength indicator
-		const passwordInput = document.getElementById('id_password1');
-		const passwordStrengthBar = document.getElementById('passwordStrengthBar');
-		const passwordStrengthText = document.getElementById('passwordStrengthText');
-		
-		if (passwordInput && passwordStrengthBar) {
-			passwordInput.addEventListener('input', function() {
-				const password = this.value;
-				let strength = 0;
-				
-				// Check password strength
-				if (password.length >= 8) strength++;
-				if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
-				if (password.match(/\d/)) strength++;
-				if (password.match(/[^a-zA-Z\d]/)) strength++;
-				
-				// Update strength bar and text
-				let width = 0;
-				let text = 'Password strength';
-				let colorClass = 'bg-danger';
-				
-				if (password.length === 0) {
-					width = 0;
-				} else if (strength <= 1) {
-					width = 25;
-					text = 'Weak';
-					colorClass = 'bg-danger';
-				} else if (strength === 2) {
-					width = 50;
-					text = 'Fair';
-					colorClass = 'bg-warning';
-				} else if (strength === 3) {
-					width = 75;
-					text = 'Good';
-					colorClass = 'bg-info';
-				} else {
-					width = 100;
-					text = 'Strong';
-					colorClass = 'bg-success';
-				}
-				
-				passwordStrengthBar.style.width = width + '%';
-				passwordStrengthBar.className = 'progress-bar ' + colorClass;
-				passwordStrengthText.textContent = text;
-			});
-		}
-
-		// Password match validation
-		const password1 = document.getElementById('id_password1');
-		const password2 = document.getElementById('id_password2');
-		const passwordMatchMessage = document.getElementById('passwordMatchMessage');
-		
-		function checkPasswordMatch() {
-			if (password1.value && password2.value) {
-				if (password1.value !== password2.value) {
-					password2.classList.add('is-invalid');
-					passwordMatchMessage.innerHTML = '<small class="text-danger"><i class="fas fa-times-circle me-1"></i>Passwords do not match</small>';
-				} else {
-					password2.classList.remove('is-invalid');
-					password2.classList.add('is-valid');
-					passwordMatchMessage.innerHTML = '<small class="text-success"><i class="fas fa-check-circle me-1"></i>Passwords match</small>';
-				}
-			} else {
-				password2.classList.remove('is-invalid', 'is-valid');
-				passwordMatchMessage.innerHTML = '';
-			}
-		}
-		
-		if (password1 && password2) {
-			password1.addEventListener('input', checkPasswordMatch);
-			password2.addEventListener('input', checkPasswordMatch);
-		}
-
-		// Form submission loading state
-		document.getElementById('registrationForm').addEventListener('submit', function(e) {
-			const submitBtn = this.querySelector('button[type="submit"]');
-			const submitText = document.getElementById('submitText');
-			const loadingSpinner = document.getElementById('loadingSpinner');
-			
-			// Validate required fields
-			const requiredFields = this.querySelectorAll('[required]');
-			let isValid = true;
-			
-			requiredFields.forEach(field => {
-				if (!field.value.trim()) {
-					field.classList.add('is-invalid');
-					isValid = false;
-				}
-			});
-			
-			if (!isValid) {
-				e.preventDefault();
-				// Scroll to first invalid field
-				const firstInvalid = this.querySelector('.is-invalid');
-				if (firstInvalid) {
-					firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
-				}
-				return;
-			}
-			
-			submitBtn.disabled = true;
-			submitText.textContent = 'Creating Account...';
-			loadingSpinner.classList.remove('d-none');
-		});
-
-		// Real-time validation for required fields
-		const requiredFields = document.querySelectorAll('input[required], select[required]');
-		requiredFields.forEach(field => {
-			field.addEventListener('blur', function() {
-				if (!this.value.trim()) {
-					this.classList.add('is-invalid');
-				} else {
-					this.classList.remove('is-invalid');
-					this.classList.add('is-valid');
-				}
-			});
-			
-			field.addEventListener('input', function() {
-				if (this.value.trim()) {
-					this.classList.remove('is-invalid');
-					this.classList.add('is-valid');
-				}
-			});
-		});
-
-		// Auto-remove alerts after 5 seconds
-		setTimeout(() => {
-			const alerts = document.querySelectorAll('.alert');
-			alerts.forEach(alert => {
-				const bsAlert = new bootstrap.Alert(alert);
-				bsAlert.close();
-			});
-		}, 5000);
-		
-		// Sidebar navigation smooth scroll
-		document.querySelectorAll('.sidebar-link[href^="#"]').forEach(anchor => {
-			anchor.addEventListener('click', function(e) {
-				e.preventDefault();
-				const targetId = this.getAttribute('href');
-				const targetElement = document.querySelector(targetId);
-				if (targetElement) {
-					targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-				}
-			});
-		});
-	</script>
-
-</body>
-</html>
+    // Auto-remove alerts after 5 seconds
+    setTimeout(() => {
+        const alerts = document.querySelectorAll('.alert');
+        alerts.forEach(alert => {
+            const bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+        });
+    }, 5000);
+</script>
 
 {% endblock %}
