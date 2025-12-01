@@ -19,3 +19,14 @@ def dict_key(dictionary, key):
     if isinstance(dictionary, dict):
         return dictionary.get(key, 0)
     return 0
+
+@register.filter(name="get_permission")
+def get_permission(data, key):
+    """
+    Safely get nested permission data.
+    Usage: permissions|get_permission:role|get_permission:domain|get_permission:action
+    """
+    try:
+        return data.get(key, {}) if isinstance(data, dict) else {}
+    except (AttributeError, KeyError):
+        return {}
