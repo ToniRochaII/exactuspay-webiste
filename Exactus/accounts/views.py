@@ -143,17 +143,24 @@ def profile(request):
     """User's own profile - now uses unified template"""
     return unified_profile(request, user_id=None)
 
-@login_required
 def dashboard(request):
-    role_users = {
-    role: users.count()
-    for role, users in role_user_mapping.items()
-    }
-
-    role_user_counts = [(role, count) for role, count in role_users.items()]
-    context["role_users"] = role_users
+    # ... your existing code ...
     
-
+    # Ensure this exists BEFORE you try to use role_users
+    role_users = {
+        role: users.count()
+        for role, users in role_user_mapping.items()
+    }
+    
+    # If you want both formats
+    role_user_counts = [(role, count) for role, count in role_users.items()]
+    
+    context = {
+        # ... your other context variables ...
+        'role_users': role_users,  # This is critical for the template
+        'role_user_counts': role_user_counts,
+    }
+    
     return render(request, "dashboard/index.html", context)
 
 @login_required
