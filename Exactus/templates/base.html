@@ -153,7 +153,7 @@
                       {% else %}bg-secondary{% endif %} me-2">
                       {{ role }}
                     </span>
-                    <small class="text-muted">({{ role_users|dict_key:role|default:0 }} users)</small>
+                    <small class="text-muted">({{ role_users|dict_key:role }} users)</small>
                   </div>
                 </td>
                 {% endif %}
