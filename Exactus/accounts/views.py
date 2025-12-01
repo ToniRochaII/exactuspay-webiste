@@ -138,6 +138,8 @@ def profile(request):
     return unified_profile(request, user_id=None)
 
 
+
+
 # accounts/views.py
 from django.utils import timezone
 from django.db.models import Count
@@ -543,8 +545,6 @@ def dashboard(request):
     cache.set(cache_key, context, 900)
     
     return render(request, 'dashboard/index.html', context)
-
-
 
 
 class CustomPasswordResetView(auth_views.PasswordResetView):
