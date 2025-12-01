@@ -143,25 +143,64 @@ def profile(request):
     """User's own profile - now uses unified template"""
     return unified_profile(request, user_id=None)
 
+
+from django.contrib.auth import get_user_model
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+
+@login_required
 def dashboard(request):
-    # ... your existing code ...
+    User = get_user_model()
     
-    # Ensure this exists BEFORE you try to use role_users
-    role_users = {
-        role: users.count()
-        for role, users in role_user_mapping.items()
-    }
+    # Get all users and build role mapping
+    all_users = User.objects.all()
     
-    # If you want both formats
+    # Define roles based on your system
+    # Adjust these based on your actual ROLE_CHOICES or available roles
+    available_roles = ['EXEC', 'ADMIN', 'FINANCE', 'DIRECTOR', 'MANAGER', 'SPECIALIST', 'USER']
+    
+    # Build role_user_mapping
+    role_user_mapping = {}
+    for role in available_roles:
+        role_user_mapping[role] = User.objects.filter(role=role)
+    
+    # Build role_users count dictionary
+    role_users = {}
+    for role, users in role_user_mapping.items():
+        role_users[role] = users.count()
+    
+    # Optional: Convert to list of tuples
     role_user_counts = [(role, count) for role, count in role_users.items()]
     
+    # Get user's permissions/domains (adjust based on your actual logic)
+    # These are example values - replace with your actual logic
+    payroll_domains = ['payroll', 'payregister']
+    security_domains = ['admin', 'auth', 'permissions']
+    system_domains = ['settings', 'config']
+    
+    # Build context
     context = {
-        # ... your other context variables ...
-        'role_users': role_users,  # This is critical for the template
+        'user': request.user,
+        'all_users': all_users,
+        'role_user_mapping': role_user_mapping,
+        'role_users': role_users,  # This is what the template needs!
         'role_user_counts': role_user_counts,
+        'payroll_domains': payroll_domains,
+        'security_domains': security_domains,
+        'system_domains': system_domains,
+        
+        # Add domains for the current user (example)
+        'domains': get_user_domains(request.user),  # You need to implement this
     }
     
     return render(request, "dashboard/index.html", context)
+
+# Helper function - you need to implement this based on your actual domain logic
+def get_user_domains(user):
+    """Return list of domains the user has access to."""
+    # This is a placeholder - replace with your actual domain logic
+    # Example: return user.permissions.values_list('domain', flat=True)
+    return []
 
 @login_required
 def dashboard_admin(request):
