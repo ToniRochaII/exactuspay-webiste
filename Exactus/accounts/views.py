@@ -148,11 +148,12 @@ def dashboard(request):
     role_users = {
     role: users.count()
     for role, users in role_user_mapping.items()
-}
-    context = {
-        # ... existing context ...
-        'role_user_counts': role_user_counts,
     }
+
+    role_user_counts = [(role, count) for role, count in role_users.items()]
+    context["role_users"] = role_users
+    
+
     return render(request, "dashboard/index.html", context)
 
 @login_required
