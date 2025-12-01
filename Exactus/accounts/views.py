@@ -2,25 +2,19 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.http import HttpResponse
-
 from collections import defaultdict
 import csv
 from datetime import timedelta
-
 from django.apps import apps
 from django.conf import settings
 from django.contrib.auth import get_user_model, logout, authenticate, login, views as auth_views
-
 from django.db import transaction
 from django.db.models import Q
-
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
-
 from Exactus.accounts.utils.access_control import AccessControl
 from Exactus.accounts.utils.permissions import permission_required
-
 from Exactus.accounts.forms import UserEditForm, UserRegistrationForm, LoginForm, UserProfileForm
 from Exactus.accounts.models import (
     RoleHierarchy,
@@ -144,172 +138,26 @@ def profile(request):
     return unified_profile(request, user_id=None)
 
 
-# Exactus/accounts/views.py
-from datetime import timedelta
+# accounts/views.py
 from django.utils import timezone
-from django.db.models import Q, Count, Max
-from django.core.cache import cache
-from Exactus.country.models import Country
-from Exactus.company.models import Company
-from Exactus.employee.models import Employee
-from Exactus.payregister.models import PayRegister
-from .models import UserPermissionHelper, Notification, UserCompany
-from django.core.cache import cache
-
-@login_required
-def dashboard(request):
-    """Regular user dashboard with real multi-tenant data"""
-    
-    cache_key = f'dashboard_{request.user.id}_{timezone.now().strftime("%Y%m%d")}'
-    cached_data = cache.get(cache_key)
-    
-    if cached_data and not request.GET.get('refresh'):
-        return render(request, 'dashboard/index.html', cached_data)
-    
-    now = timezone.now()
-    
-    # Get user's companies using helper
-    user_companies = UserPermissionHelper.get_user_companies(request.user)
-    user_companies_count = user_companies.count()
-    
-    # Get employees for user's companies
-    if user_companies_count > 0:
-        company_ids = user_companies.values_list('id', flat=True)
-        from Exactus.employee.models import Employee
-        user_employees_count = Employee.objects.filter(
-            company_id__in=company_ids
-        ).count()
-        
-        # Get recent payslips
-        from Exactus.payregister.models import PayRegister
-        recent_payslips = (
-            PayRegister.objects
-            .filter(employee__company_id__in=company_ids)
-            .select_related('employee', 'employee__company')
-            .order_by('-created_at')[:8]
-        )
-    else:
-        user_employees_count = 0
-        recent_payslips = []
-    
-    # Get real notifications
-    notifications = Notification.objects.filter(
-        user=request.user,
-        archived=False
-    ).order_by('-created_at')[:10]
-    
-    # Get pending approvals (notifications of type APPROVAL)
-    pending_approvals_count = Notification.objects.filter(
-        user=request.user,
-        notification_type='APPROVAL',
-        read=False,
-        archived=False
-    ).count()
-    
-    # Platform stats (cached)
-    platform_stats_key = f'platform_stats_{now.strftime("%Y%m%d")}'
-    platform_stats = cache.get(platform_stats_key)
-    
-    if not platform_stats:
-        from Exactus.country.models import Country
-        from Exactus.company.models import Company
-        from Exactus.employee.models import Employee
-        from Exactus.payregister.models import PayRegister
-        
-        platform_stats = {
-            'active_countries_count': Country.objects.filter(status='ACTIVE').count(),
-            'active_companies_count': Company.objects.filter(account_status='ACTIVE').count(),
-            'total_employees_count': Employee.objects.count(),
-            'payslips_30d_count': PayRegister.objects.filter(
-                created_at__gte=now - timedelta(days=30)
-            ).count(),
-        }
-        cache.set(platform_stats_key, platform_stats, 3600)
-    
-    # Get current month payroll runs for user's companies
-    if user_companies_count > 0:
-        from Exactus.payroll.models import Payroll
-        current_month_payrolls_count = Payroll.objects.filter(
-            company_id__in=company_ids,
-            created_at__month=now.month,
-            created_at__year=now.year
-        ).count()
-    else:
-        current_month_payrolls_count = 0
-    
-    # Upcoming deadlines (example - in production, calculate from payroll schedules)
-    upcoming_deadlines = []
-    # TODO: Implement actual deadline calculation based on payroll schedules
-    
-    context = {
-        # User-specific data
-        'user_companies_count': user_companies_count,
-        'user_employees_count': user_employees_count,
-        'current_month_payrolls_count': current_month_payrolls_count,
-        'pending_approvals_count': pending_approvals_count,
-        
-        # Platform stats
-        'active_countries_count': platform_stats['active_countries_count'],
-        'active_companies_count': platform_stats['active_companies_count'],
-        'total_employees_count': platform_stats['total_employees_count'],
-        'payslips_30d_count': platform_stats['payslips_30d_count'],
-        
-        # Activity feeds
-        'recent_payslips': recent_payslips,
-        'notifications': notifications,
-        'upcoming_deadlines': upcoming_deadlines,
-        
-        # User info
-        'user_role': request.user.get_role_display(),
-        'cache_timestamp': now.isoformat(),
-        
-        # Companies list for quick access
-        'user_companies': user_companies[:5],  # Show first 5
-    }
-    
-    # Cache for 15 minutes
-    cache.set(cache_key, context, 900)
-    
-    return render(request, 'dashboard/index.html', context)
-
-
-# Exactus/accounts/views.py
-from datetime import timedelta
-import json
-from django.utils import timezone
-from django.db.models import Count, Q, F, Subquery, OuterRef
-from django.db.models.functions import TruncMonth, Coalesce
+from django.db.models import Count
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.core.cache import cache
-from django.db import connection
-from Exactus.country.models import Country
-from Exactus.company.models import Company
-from Exactus.employee.models import Employee
-from Exactus.payregister.models import PayRegister
-from Exactus.payroll.models import Payroll
-
-def get_payroll_frequency_choices():
-    """Safely get payroll frequency choices from model"""
-    try:
-        from Exactus.payroll.models import PAYROLL_FREQUENCY_CHOICES
-        return PAYROLL_FREQUENCY_CHOICES
-    except ImportError:
-        # Fallback: get choices from the field definition
-        field = Payroll._meta.get_field('payroll_frequency')
-        return field.choices if hasattr(field, 'choices') else []
+from datetime import timedelta
+import json
 
 @login_required
 def dashboard_admin(request):
-    """Admin/Executive dashboard with platform analytics and caching"""
+    """Admin/Executive dashboard with platform analytics"""
     
     # Check if user has admin/exec permissions
     if not hasattr(request.user, 'role') or request.user.role not in ['EXEC', 'ADMIN']:
         messages.error(request, "You don't have permission to access the admin dashboard.")
         return redirect('dashboard')
     
-    # Generate cache key based on user and current month
+    # Generate cache key
     cache_key = f'dashboard_admin_{request.user.id}_{timezone.now().strftime("%Y%m")}'
     cached_data = cache.get(cache_key)
     
@@ -321,52 +169,54 @@ def dashboard_admin(request):
     start_of_month = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
     thirty_days_ago = now - timedelta(days=30)
     
-    # ──────────────── KPIs (Optimized Queries) ────────────────
+    # Import models here to avoid circular imports
+    from Exactus.country.models import Country
+    from Exactus.company.models import Company
+    from Exactus.employee.models import Employee
+    from Exactus.payregister.models import PayRegister
+    from Exactus.payroll.models import Payroll
     
-    # Country metrics - single query with aggregation
+    # ──────────────── KPIs ────────────────
+    
+    # Country metrics
     country_stats = Country.objects.aggregate(
-        active_countries=Count('id', filter=Q(status='ACTIVE')),
-        implementing_countries=Count('id', filter=Q(status='IMPLEMENTING')),
-        inactive_countries=Count('id', filter=Q(status='INACTIVE')),
-        total_countries=Count('id')
+        active_countries=Count('country_id', filter=Q(status='ACTIVE')),
+        implementing_countries=Count('country_id', filter=Q(status='IMPLEMENTING')),
+        inactive_countries=Count('country_id', filter=Q(status='INACTIVE')),
+        total_countries=Count('country_id')
     )
     
-    # Company metrics - single query
+    # Company metrics
     company_stats = Company.objects.aggregate(
-        active_companies=Count('id', filter=Q(account_status='ACTIVE')),
-        suspended_companies=Count('id', filter=Q(account_status='SUSPENDED')),
-        inactive_companies=Count('id', filter=Q(account_status='INACTIVE')),
-        total_companies=Count('id')
+        active_companies=Count('company_id', filter=Q(account_status='ACTIVE')),
+        suspended_companies=Count('company_id', filter=Q(account_status='SUSPENDED')),
+        inactive_companies=Count('company_id', filter=Q(account_status='INACTIVE')),
+        total_companies=Count('company_id')
     )
     
-    # Employee metric - cached separately if large
+    # Employee metric
     total_employees = cache.get('total_employees')
     if total_employees is None:
         total_employees = Employee.objects.count()
-        cache.set('total_employees', total_employees, 3600)  # 1 hour cache
+        cache.set('total_employees', total_employees, 3600)
     
     # Payroll metrics
     total_payrolls = Payroll.objects.count()
     
     # Get payroll frequency choices safely
-    payroll_choices = get_payroll_frequency_choices()
-    monthly_patterns = ['monthly', 'semi-monthly', 'bi-weekly', 'biweekly']
+    try:
+        PAYROLL_FREQUENCY_CHOICES = getattr(Payroll, 'PAYROLL_FREQUENCY_CHOICES', [])
+        if PAYROLL_FREQUENCY_CHOICES:
+            monthly_codes = [code for code, _ in PAYROLL_FREQUENCY_CHOICES 
+                           if any(pattern in code.lower().replace('_', '-') 
+                                 for pattern in ['monthly', 'semi-monthly', 'bi-weekly'])]
+            monthly_payrolls = Payroll.objects.filter(payroll_frequency__in=monthly_codes).count()
+        else:
+            monthly_payrolls = 0
+    except:
+        monthly_payrolls = 0
     
-    if payroll_choices:
-        monthly_codes = [
-            code for code, _ in payroll_choices 
-            if any(pattern in code.lower().replace('_', '-') for pattern in monthly_patterns)
-        ]
-        monthly_payrolls = Payroll.objects.filter(payroll_frequency__in=monthly_codes).count()
-    else:
-        # Fallback to string matching
-        monthly_payrolls = Payroll.objects.filter(
-            Q(payroll_frequency__icontains='month') |
-            Q(payroll_frequency__icontains='bi') |
-            Q(payroll_frequency__icontains='semi')
-        ).count()
-    
-    # Payslip metrics with optimized queries
+    # Payslip metrics
     payslip_stats = {
         'payslips_total': PayRegister.objects.count(),
         'payslips_this_month': PayRegister.objects.filter(
@@ -384,19 +234,17 @@ def dashboard_admin(request):
     unique_employees_processed_total = cache.get('unique_employees_processed')
     if unique_employees_processed_total is None:
         unique_employees_processed_total = PayRegister.objects.values('employee').distinct().count()
-        cache.set('unique_employees_processed', unique_employees_processed_total, 1800)  # 30 min cache
+        cache.set('unique_employees_processed', unique_employees_processed_total, 1800)
     
-    # ──────────────── Charts Data (Optimized) ────────────────
+    # ──────────────── Charts Data ────────────────
     
-    # Monthly payslips for last 12 months - using raw SQL for performance
+    # Monthly payslips for last 12 months
     one_year_ago = now - timedelta(days=365)
-    
-    # Using Django's ORM for compatibility
     payslips_monthly = (
         PayRegister.objects.filter(created_at__gte=one_year_ago)
         .annotate(month=TruncMonth('created_at'))
         .values('month')
-        .annotate(count=Count('id'))
+        .annotate(count=Count('payregister_id'))
         .order_by('month')
     )
     
@@ -407,26 +255,14 @@ def dashboard_admin(request):
         month_values.append(entry['count'])
     
     # Payroll by frequency with fallback
-    if payroll_choices:
-        frequency_data = {}
-        for code, name in payroll_choices:
-            count = Payroll.objects.filter(payroll_frequency=code).count()
-            if count > 0:
-                display_name = name or code.replace('-', ' ').title()
-                frequency_data[display_name] = count
-        
-        frequency_labels = list(frequency_data.keys())
-        frequency_values = list(frequency_data.values())
-    else:
-        # Fallback: group by existing values
-        payroll_counts = (
-            Payroll.objects.values('payroll_frequency')
-            .annotate(count=Count('id'))
-            .order_by('-count')
-        )
-        frequency_labels = [item['payroll_frequency'].replace('-', ' ').title() 
-                           for item in payroll_counts]
-        frequency_values = [item['count'] for item in payroll_counts]
+    payroll_counts = (
+        Payroll.objects.values('payroll_frequency')
+        .annotate(count=Count('payroll_id'))
+        .order_by('-count')
+    )
+    frequency_labels = [item['payroll_frequency'].replace('-', ' ').title() 
+                       for item in payroll_counts]
+    frequency_values = [item['count'] for item in payroll_counts]
     
     # ──────────────── Map Data ────────────────
     
@@ -446,7 +282,7 @@ def dashboard_admin(request):
         )
         .values('employee__company__country__iso2_code')
         .annotate(
-            count=Count('id'),
+            count=Count('payregister_id'),
             country_name=F('employee__company__country__name')
         )
         .order_by('-count')
@@ -462,22 +298,20 @@ def dashboard_admin(request):
                 'value': item['count']
             })
     
-    # ──────────────── Top Companies (Optimized with Subquery) ────────────────
+    # ──────────────── Top Companies (Optimized) ────────────────
     
     # Get company IDs with most payslips first
     top_company_ids = (
         PayRegister.objects.filter(created_at__gte=start_of_year)
-        .values('employee__company')
-        .annotate(payslips_ytd=Count('id'))
+        .values('employee__company__company_id')
+        .annotate(payslips_ytd=Count('payregister_id'))
         .order_by('-payslips_ytd')
-        .values_list('employee__company', flat=True)[:10]
+        .values_list('employee__company__company_id', flat=True)[:10]
     )
     
-    # Get company details in a single query
-    from django.db.models import Subquery, OuterRef
-    top_companies_qs = Company.objects.filter(id__in=top_company_ids)
+    # Get company details
+    top_companies_qs = Company.objects.filter(company_id__in=top_company_ids)
     
-    # Annotate with additional data
     top_companies = []
     for company in top_companies_qs:
         payslips_ytd = PayRegister.objects.filter(
@@ -488,7 +322,7 @@ def dashboard_admin(request):
         total_employees = company.employees.count()
         
         top_companies.append({
-            'id': company.id,
+            'company_id': company.company_id,
             'trade_name': company.trade_name or 'N/A',
             'country_name': company.country.name if company.country else 'N/A',
             'account_status': company.account_status,
@@ -501,7 +335,6 @@ def dashboard_admin(request):
     
     # ──────────────── Recent Activity ────────────────
     
-    # Optimized with select_related and prefetch_related
     recent_payslips = (
         PayRegister.objects
         .select_related('employee', 'employee__company', 'employee__company__country')
@@ -561,6 +394,158 @@ def dashboard_admin(request):
     cache.set(cache_key, context, 300)
     
     return render(request, 'dashboard/admin.html', context)
+
+
+@login_required
+def dashboard(request):
+    """Regular user dashboard with multi-tenant data"""
+    
+    # Generate cache key
+    cache_key = f'dashboard_{request.user.id}_{timezone.now().strftime("%Y%m%d")}'
+    cached_data = cache.get(cache_key)
+    
+    if cached_data and not request.GET.get('refresh'):
+        return render(request, 'dashboard/index.html', cached_data)
+    
+    now = timezone.now()
+    thirty_days_ago = now - timedelta(days=30)
+    start_of_month = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    
+    # Import models
+    from Exactus.country.models import Country
+    from Exactus.company.models import Company
+    from Exactus.employee.models import Employee
+    from Exactus.payregister.models import PayRegister
+    from Exactus.payroll.models import Payroll
+    
+    # Check if user is global admin (platform admin)
+    is_global_admin = request.user.role in ['EXEC', 'ADMIN']
+    
+    # ──────────────── Get User's Companies ────────────────
+    
+    if is_global_admin:
+        # Platform admins can see all companies
+        user_companies = Company.objects.all()
+    else:
+        # Check if UserCompany model exists
+        try:
+            from .models import UserCompany
+            user_companies = Company.objects.filter(
+                authorized_users__user=request.user,
+                authorized_users__is_active=True
+            ).distinct()
+        except:
+            # Fallback: companies created by user
+            user_companies = Company.objects.filter(created_by=request.user)
+    
+    user_companies_count = user_companies.count()
+    
+    # ──────────────── User-Specific Counts ────────────────
+    
+    if user_companies_count > 0:
+        # Get company IDs (using company_id, not id)
+        company_ids = user_companies.values_list('company_id', flat=True)
+        
+        # Count employees in user's companies
+        user_employees_count = Employee.objects.filter(
+            company_id__in=company_ids
+        ).count()
+        
+        # Get recent payslips
+        recent_payslips = (
+            PayRegister.objects
+            .filter(employee__company_id__in=company_ids)
+            .select_related('employee', 'employee__company')
+            .order_by('-created_at')[:8]
+        )
+        
+        # Count current month payrolls
+        current_month_payrolls_count = Payroll.objects.filter(
+            company_id__in=company_ids,
+            created_at__year=now.year,
+            created_at__month=now.month
+        ).count()
+    else:
+        user_employees_count = 0
+        recent_payslips = []
+        current_month_payrolls_count = 0
+    
+    # ──────────────── Notifications ────────────────
+    
+    try:
+        from .models import Notification
+        notifications = Notification.objects.filter(
+            user=request.user,
+            archived=False
+        ).order_by('-created_at')[:10]
+        
+        # Count pending approvals
+        pending_approvals_count = Notification.objects.filter(
+            user=request.user,
+            notification_type='APPROVAL',
+            read=False,
+            archived=False
+        ).count()
+    except:
+        notifications = []
+        pending_approvals_count = 0
+    
+    # ──────────────── Platform Stats (Cached) ────────────────
+    
+    platform_stats_key = f'platform_stats_{now.strftime("%Y%m%d")}'
+    platform_stats = cache.get(platform_stats_key)
+    
+    if not platform_stats:
+        platform_stats = {
+            'active_countries_count': Country.objects.filter(status='ACTIVE').count(),
+            'active_companies_count': Company.objects.filter(account_status='ACTIVE').count(),
+            'total_employees_count': Employee.objects.count(),
+            'payslips_30d_count': PayRegister.objects.filter(
+                created_at__gte=thirty_days_ago
+            ).count(),
+        }
+        cache.set(platform_stats_key, platform_stats, 3600)
+    
+    # ──────────────── Upcoming Deadlines ────────────────
+    
+    # TODO: Calculate from actual payroll schedules
+    upcoming_deadlines = []
+    
+    # ──────────────── Prepare Context ────────────────
+    
+    context = {
+        # User-specific data
+        'user_companies_count': user_companies_count,
+        'user_employees_count': user_employees_count,
+        'current_month_payrolls_count': current_month_payrolls_count,
+        'pending_approvals_count': pending_approvals_count,
+        
+        # Platform stats
+        'active_countries_count': platform_stats['active_countries_count'],
+        'active_companies_count': platform_stats['active_companies_count'],
+        'total_employees_count': platform_stats['total_employees_count'],
+        'payslips_30d_count': platform_stats['payslips_30d_count'],
+        
+        # Activity feeds
+        'recent_payslips': recent_payslips,
+        'notifications': notifications,
+        'upcoming_deadlines': upcoming_deadlines,
+        
+        # User info
+        'user_role': request.user.get_role_display(),
+        'cache_timestamp': now.isoformat(),
+        
+        # Companies list for quick access
+        'user_companies': user_companies[:5],  # Show first 5
+    }
+    
+    # Cache for 15 minutes
+    cache.set(cache_key, context, 900)
+    
+    return render(request, 'dashboard/index.html', context)
+
+
+
 
 class CustomPasswordResetView(auth_views.PasswordResetView):
     template_name = 'auth/password_reset.html'
