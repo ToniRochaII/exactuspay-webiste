@@ -1,164 +1,689 @@
 {% extends "base.html" %}
-{% load accounts_role_filters %} 
+{% load static %}
 {% block title %}Admin Dashboard | ExactusPay{% endblock %}
-{% block content %}
 
-<!-- Top KPIs -->
-
-
-    
-<div class="row g-3 mb-4">
-  <div class="col-md-3">
-    <div class="card shadow-sm h-100">
-      <div class="card-body">
-        <h6 class="text-muted mb-1">Total Users</h6>
-        <h3 class="mb-0">{{ total_users }}</h3>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="card shadow-sm h-100">
-      <div class="card-body">
-        <h6 class="text-muted mb-1">Active Staff</h6>
-        <h3 class="mb-0">{{ active_staff }}</h3>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="card shadow-sm h-100">
-      <div class="card-body">
-        <h6 class="text-muted mb-1">New (30 days)</h6>
-        <h3 class="mb-0">{{ new_users_30d }}</h3>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="card shadow-sm h-100">
-      <div class="card-body">
-        <h6 class="text-muted mb-1">Compliance Status</h6>
-        <span class="badge {% if compliance_summary.status == 'Green' %}bg-success{% elif compliance_summary.status == 'Amber' %}bg-warning text-dark{% else %}bg-danger{% endif %}">
-          {{ compliance_summary.status }}
-        </span>
-        <div class="small text-muted mt-2">
-          Countries: {{ compliance_summary.countries_configured }} • Pending: {{ compliance_summary.pending_updates }}
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Charts -->
-<div class="row g-3 mb-4">
-  <div class="col-lg-6">
-    <div class="card shadow-sm h-100">
-      <div class="card-body">
-        <h6 class="card-title mb-3">Users by Role</h6>
-        <canvas id="rolesChart"></canvas>
-      </div>
-    </div>
-  </div>
-  <div class="col-lg-6">
-    <div class="card shadow-sm h-100">
-      <div class="card-body">
-        <h6 class="card-title mb-3">Signups (7 days)</h6>
-        <canvas id="signupsChart"></canvas>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Management panels -->
-<div class="row g-3">
-  <div class="col-lg-6">
-    <div class="card shadow-sm h-100">
-      <div class="card-body">
-        <h5 class="card-title">User Management</h5>
-        <p class="text-muted">Create, deactivate and assign roles.</p>
-        <a class="btn btn-primary" href="{% url 'register' %}">Create User</a>
-        <a class="btn btn-outline-secondary" href="/admin/accounts/user/">Open Admin</a>
-      </div>
-    </div>
-  </div>
-  <div class="col-lg-6">
-    <div class="card shadow-sm h-100">
-      <div class="card-body">
-        <h5 class="card-title">Billing Overview</h5>
-        <div class="row">
-          <div class="col-4"><div class="text-muted small">MRR</div><div class="fw-bold">£{{ billing_overview.mrr }}</div></div>
-          <div class="col-4"><div class="text-muted small">AR Overdue</div><div class="fw-bold">£{{ billing_overview.ar_overdue }}</div></div>
-          <div class="col-4"><div class="text-muted small">Invoices</div><div class="fw-bold">{{ billing_overview.invoices_this_month }}</div></div>
-        </div>
-        <div class="mt-3">
-          <a class="btn btn-outline-primary" href="#">Go to Billing</a>
-        </div>
-      </div>
-    </div>
-  </div>
-  <p> 
-  {% if user|has_role:"EXEC" %}
-  <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a> 
-  {% endif %}
-  {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
-  <a href="{% url 'dashboard' %}">Dashboard</a> 
-  <a href="{% url 'user_list' %}"">Accounts</a>
-  <a href="{% url 'role_management' %}"">Role Management</a>
-  {% endif %}
-  {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
-  <a href="{% url 'profile' %}"">Profile</a>
-  <a href="{% url 'user_detail' user.id %}"> User Details</a>
-  {% endif %}
-
-  <a href="{% url 'country:country' %}">Countries</a>
-  <a href="{% url 'password_reset' %}">Reset password</a>
-</p>
-</div>
-
-<!-- Chart.js (CDN) -->
+{% block extra_head %}
+<!-- jsVectorMap CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap/dist/css/jsvectormap.min.css">
+<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-  // Users by Role (Pie)
-  const rolesData = {
-    labels: [ "EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE","EMPLOYEE" ],
-    datasets: [{
-      data: [
-        {{ users_by_role.EXEC|default:0 }},
-        {{ users_by_role.ADMIN|default:0 }},
-        {{ users_by_role.COMPLIANCE|default:0 }},
-        {{ users_by_role.BILLING|default:0 }},
-        {{ users_by_role.IMPLEMENTATION|default:0 }},
-        {{ users_by_role.OPERATION|default:0 }},
-        {{ users_by_role.DIRECTOR|default:0 }},
-        {{ users_by_role.MANAGER|default:0 }},
-        {{ users_by_role.SPECIALIST|default:0 }},
-        {{ users_by_role.FINANCE|default:0 }},
-        {{ users_by_role.EMPLOYEE|default:0 }},
-      ]
-    }]
-  };
-  new Chart(document.getElementById('rolesChart'), {
-    type: 'pie',
-    data: rolesData,
-    options: { plugins: { legend: { position: 'bottom' } } }
-  });
-
-  // Signups (Last 7 Days) (Line)
-  const signupLabels = [{% for d in signups_last_7_days %}"{{ d.day }}",{% endfor %}];
-  const signupCounts = [{% for d in signups_last_7_days %}{{ d.count }},{% endfor %}];
-
-  new Chart(document.getElementById('signupsChart'), {
-    type: 'line',
-    data: {
-      labels: signupLabels,
-      datasets: [{
-        label: "New Users",
-        data: signupCounts,
-        tension: 0.3
-      }]
-    },
-    options: {
-      plugins: { legend: { display: false } },
-      scales: { y: { beginAtZero: true, precision: 0 } }
+<style>
+    .chart-container {
+        height: 300px;
+        position: relative;
     }
-  });
+    #world-map {
+        height: 100%;
+        min-height: 350px;
+    }
+    .stat {
+        font-size: 1.5rem;
+        opacity: 0.8;
+    }
+    .card-action {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="header">
+        <h1 class="header-title">
+            Platform Analytics Dashboard
+        </h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="#">Analytics</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Platform Overview</li>
+            </ol>
+        </nav>
+        <div class="text-end small text-muted">
+            <i class="fas fa-sync-alt me-1"></i>
+            Cached: {{ cache_timestamp|date:"g:i A" }}
+            <a href="?refresh=true" class="ms-2 text-decoration-none">
+                <i class="fas fa-redo"></i> Refresh
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats Row 1: Platform Coverage -->
+    <div class="row">
+        <div class="col-sm-6 col-xl-3">
+            <div class="card card-action">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col mt-0">
+                            <h5 class="card-title">Active Countries</h5>
+                        </div>
+                        <div class="col-auto">
+                            <div class="stat text-primary">
+                                <i class="fas fa-globe-europe"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="mt-1 mb-3">{{ active_countries }}</h1>
+                    <div class="mb-0">
+                        <span class="text-muted">
+                            <i class="fas fa-arrow-down-right"></i> 
+                            {{ total_countries }} total countries
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="card card-action">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col mt-0">
+                            <h5 class="card-title">Active Companies</h5>
+                        </div>
+                        <div class="col-auto">
+                            <div class="stat text-primary">
+                                <i class="fas fa-building"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="mt-1 mb-3">{{ active_companies }}</h1>
+                    <div class="mb-0">
+                        <span class="text-success">
+                            <i class="fas fa-arrow-up-right"></i> 
+                            {{ total_companies }} total companies
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="card card-action">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col mt-0">
+                            <h5 class="card-title">Total Employees</h5>
+                        </div>
+                        <div class="col-auto">
+                            <div class="stat text-primary">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="mt-1 mb-3">{{ total_employees|floatformat:0 }}</h1>
+                    <div class="mb-0">
+                        <span class="text-muted">
+                            <i class="fas fa-arrow-down-right"></i> 
+                            Across all companies
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="card card-action">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col mt-0">
+                            <h5 class="card-title">Payslips YTD</h5>
+                        </div>
+                        <div class="col-auto">
+                            <div class="stat text-primary">
+                                <i class="fas fa-file-invoice-dollar"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="mt-1 mb-3">{{ payslips_ytd|floatformat:0 }}</h1>
+                    <div class="mb-0">
+                        <span class="text-success">
+                            <i class="fas fa-arrow-up-right"></i> 
+                            {{ payslips_this_month }} this month
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Row 2: Activity Metrics -->
+    <div class="row">
+        <div class="col-sm-6 col-xl-3">
+            <div class="card card-action">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col mt-0">
+                            <h5 class="card-title">Implementing</h5>
+                        </div>
+                        <div class="col-auto">
+                            <div class="stat text-warning">
+                                <i class="fas fa-tools"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="mt-1 mb-3">{{ implementing_countries }}</h1>
+                    <div class="mb-0">
+                        <span class="text-warning">
+                            <i class="fas fa-arrow-right"></i> 
+                            Countries in setup
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="card card-action">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col mt-0">
+                            <h5 class="card-title">Suspended</h5>
+                        </div>
+                        <div class="col-auto">
+                            <div class="stat text-danger">
+                                <i class="fas fa-pause-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="mt-1 mb-3">{{ suspended_companies }}</h1>
+                    <div class="mb-0">
+                        <span class="text-danger">
+                            <i class="fas fa-exclamation-triangle"></i> 
+                            Companies suspended
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="card card-action">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col mt-0">
+                            <h5 class="card-title">Payroll Configs</h5>
+                        </div>
+                        <div class="col-auto">
+                            <div class="stat text-info">
+                                <i class="fas fa-cogs"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="mt-1 mb-3">{{ total_payrolls }}</h1>
+                    <div class="mb-0">
+                        <span class="text-info">
+                            <i class="fas fa-arrow-right"></i> 
+                            {{ monthly_payrolls }} monthly
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="card card-action">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col mt-0">
+                            <h5 class="card-title">30 Day Activity</h5>
+                        </div>
+                        <div class="col-auto">
+                            <div class="stat text-success">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="mt-1 mb-3">{{ payslips_last_30d|floatformat:0 }}</h1>
+                    <div class="mb-0">
+                        <span class="text-success">
+                            <i class="fas fa-arrow-up-right"></i> 
+                            Last 30 days
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Row -->
+    <div class="row">
+        <!-- Left Column: Charts -->
+        <div class="col-12 col-lg-8">
+            <!-- World Map -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Global Coverage Map</h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info mb-3">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Active countries are highlighted in blue. Hover over countries to see payslip volumes.
+                    </div>
+                    <div id="world-map"></div>
+                </div>
+            </div>
+
+            <!-- Monthly Activity Chart -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">Monthly Payslip Activity</h5>
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                Last 12 Months
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="#">Last 6 Months</a>
+                                <a class="dropdown-item" href="#">Last 12 Months</a>
+                                <a class="dropdown-item" href="#">Year to Date</a>
+                                <a class="dropdown-item" href="#">All Time</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="monthlyPayslipsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Tables & Info -->
+        <div class="col-12 col-lg-4">
+            <!-- Payroll Frequency Distribution -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Payroll Frequency</h5>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="payrollFrequencyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Recent Payslip Activity</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Company</th>
+                                    <th>Employee</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for payslip in recent_payslips %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="flex-shrink-0">
+                                                <div class="bg-light rounded-2 p-2">
+                                                    <i class="fas fa-building text-primary"></i>
+                                                </div>
+                                            </div>
+                                            <div class="flex-grow-1 ms-2">
+                                                <strong>{{ payslip.employee.company.trade_name|default:"N/A" }}</strong>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {{ payslip.employee.first_name }} {{ payslip.employee.last_name|slice:":1" }}.
+                                    </td>
+                                    <td>
+                                        <small>{{ payslip.created_at|date:"M d" }}</small>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted py-3">
+                                        No recent activity
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Companies Table -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Top Companies by Payslip Volume (YTD)</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Company</th>
+                                    <th>Country</th>
+                                    <th>Status</th>
+                                    <th>Employees</th>
+                                    <th>Payslips YTD</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for company in top_companies %}
+                                <tr>
+                                    <td>
+                                        <span class="badge bg-primary">#{{ forloop.counter }}</span>
+                                    </td>
+                                    <td>
+                                        <strong>{{ company.trade_name }}</strong>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-light text-dark">
+                                            {{ company.country_name }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if company.account_status == "ACTIVE" %}
+                                            <span class="badge bg-success">Active</span>
+                                        {% elif company.account_status == "SUSPENDED" %}
+                                            <span class="badge bg-warning">Suspended</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Inactive</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {{ company.total_employees|default:0 }}
+                                    </td>
+                                    <td>
+                                        <strong>{{ company.payslips_ytd }}</strong>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted py-4">
+                                        No company data available
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Include jsVectorMap -->
+<script src="https://cdn.jsdelivr.net/npm/jsvectormap"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsvectormap/dist/maps/world.js"></script>
+
+<script>
+// Data from Django
+const activeCountryCodes = {{ active_country_codes_json|safe }};
+const mapCountryData = {{ map_country_data_json|safe }};
+const monthLabels = {{ month_labels_json|safe }};
+const monthValues = {{ month_values_json|safe }};
+const frequencyLabels = {{ frequency_labels_json|safe }};
+const frequencyValues = {{ frequency_values_json|safe }};
+
+// Helper function to find country data
+function findCountryData(code) {
+    if (!code) return null;
+    const upperCode = code.toUpperCase();
+    return mapCountryData.find(c => c.code.toUpperCase() === upperCode) || null;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    // ──────────────── World Map ────────────────
+    const worldMapElement = document.getElementById('world-map');
+    if (worldMapElement) {
+        try {
+            const map = new jsVectorMap({
+                map: 'world',
+                selector: '#world-map',
+                zoomOnScroll: true,
+                zoomButtons: true,
+                selectedRegions: activeCountryCodes,
+                regionStyle: {
+                    initial: {
+                        fill: '#e9ecef',
+                        fillOpacity: 1,
+                        stroke: 'none',
+                        strokeWidth: 0,
+                        strokeOpacity: 0
+                    },
+                    hover: {
+                        fillOpacity: 0.8,
+                        cursor: 'pointer'
+                    },
+                    selected: {
+                        fill: '#3b7ddd'
+                    },
+                    selectedHover: {
+                        fill: '#306cce'
+                    }
+                },
+                regionLabelStyle: {
+                    initial: {
+                        fontSize: '12px',
+                        fontWeight: 500,
+                        fill: '#495057'
+                    },
+                    hover: {
+                        cursor: 'pointer'
+                    }
+                },
+                labels: {
+                    regions: {
+                        render: function(code) {
+                            const country = findCountryData(code);
+                            return country ? `${country.name}: ${country.value.toLocaleString()} payslips` : '';
+                        }
+                    }
+                },
+                onRegionTooltipShow: function(event, label, code) {
+                    const country = findCountryData(code);
+                    if (country) {
+                        label.html(`
+                            <div class="p-2">
+                                <strong>${country.name}</strong><br>
+                                <span class="text-muted">${country.value.toLocaleString()} payslips YTD</span>
+                            </div>
+                        `);
+                    }
+                },
+                onRegionClick: function(event, code) {
+                    const country = findCountryData(code);
+                    if (country) {
+                        // Optional: Navigate to country details or filter
+                        console.log('Country clicked:', country);
+                    }
+                }
+            });
+
+            // Handle window resize for maps
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    try {
+                        map.updateSize();
+                    } catch (e) {
+                        console.warn('Map resize error:', e);
+                    }
+                }, 250);
+            });
+            
+            // Initial size update
+            setTimeout(() => map.updateSize(), 100);
+            
+        } catch (error) {
+            console.error('Error initializing world map:', error);
+            worldMapElement.innerHTML = `
+                <div class="alert alert-warning m-3">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Could not load world map. Please refresh the page.
+                </div>
+            `;
+        }
+    }
+
+    // ──────────────── Monthly Payslips Chart ────────────────
+    const monthlyCanvas = document.getElementById('monthlyPayslipsChart');
+    if (monthlyCanvas) {
+        try {
+            const monthlyCtx = monthlyCanvas.getContext('2d');
+            new Chart(monthlyCtx, {
+                type: 'line',
+                data: {
+                    labels: monthLabels,
+                    datasets: [{
+                        label: 'Payslips',
+                        data: monthValues,
+                        backgroundColor: 'rgba(59, 125, 221, 0.1)',
+                        borderColor: '#3b7ddd',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.3,
+                        pointBackgroundColor: '#3b7ddd',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleFont: {
+                                size: 12
+                            },
+                            bodyFont: {
+                                size: 13
+                            },
+                            callbacks: {
+                                label: function(context) {
+                                    return `Payslips: ${context.parsed.y.toLocaleString()}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                borderDash: [2]
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value.toLocaleString();
+                                },
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        } catch (error) {
+            console.error('Error initializing monthly chart:', error);
+        }
+    }
+
+    // ──────────────── Payroll Frequency Chart ────────────────
+    const frequencyCanvas = document.getElementById('payrollFrequencyChart');
+    if (frequencyCanvas) {
+        try {
+            const frequencyCtx = frequencyCanvas.getContext('2d');
+            new Chart(frequencyCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: frequencyLabels,
+                    datasets: [{
+                        data: frequencyValues,
+                        backgroundColor: [
+                            '#3b7ddd', '#10b981', '#f59e0b', '#ef4444', 
+                            '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'
+                        ],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+                                    return `${label}: ${value} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        } catch (error) {
+            console.error('Error initializing frequency chart:', error);
+        }
+    }
+    
+    // Initialize Bootstrap tooltips
+    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+    });
+});
 </script>
 {% endblock %}
