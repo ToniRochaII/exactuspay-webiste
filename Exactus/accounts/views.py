@@ -145,7 +145,10 @@ def profile(request):
 
 @login_required
 def dashboard(request):
-    role_user_counts = [(role, count) for role, count in role_users.items()]
+    role_users = {
+    role: users.count()
+    for role, users in role_user_mapping.items()
+}
     context = {
         # ... existing context ...
         'role_user_counts': role_user_counts,
