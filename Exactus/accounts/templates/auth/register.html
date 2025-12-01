@@ -1,14 +1,874 @@
 {% extends "base.html" %}
 {% block title %}Register | ExactusPay{% endblock %}
 {% block content %}
-<div class="row justify-content-center">
-  <div class="col-md-6">
-    <h2 class="mb-3 text-center">Create Account</h2>
-    <form method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit" class="btn btn-success w-100">Register</button>
-    </form>
-  </div>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | ExactusPay</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ---------- VARIABLES ---------- */
+        :root {
+            --primary: #0066CC;
+            --primary-dark: #004C99;
+            --primary-light: #E6F2FF;
+            --secondary: #1A365D;
+            --accent: #00C9B1;
+            --success: #10B981;
+            --white: #FFFFFF;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-500: #6B7280;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            --radius: 12px;
+            --shadow-lg: 0 15px 40px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+        }
+
+        /* ---------- RESET ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Inter", sans-serif;
+            background: linear-gradient(135deg, var(--secondary), #2D3748);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        /* ---------- CONTAINER ---------- */
+        .register-container {
+            display: flex;
+            max-width: 1100px;
+            width: 100%;
+            background: var(--white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ---------- LEFT (HERO) ---------- */
+        .register-hero {
+            flex: 1;
+            padding: 3rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .register-hero::after {
+            content: "";
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            transform: rotate(25deg);
+        }
+
+        .brand {
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .brand-logo {
+            width: 55px;
+            height: 55px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+
+        .brand-text {
+            margin-left: 12px;
+            font-size: 1.9rem;
+            font-weight: 700;
+        }
+
+        .hero-content h1 {
+            font-size: 2.3rem;
+            margin-bottom: 1rem;
+            z-index: 2;
+            position: relative;
+        }
+
+        .hero-content p {
+            margin-bottom: 1.8rem;
+            opacity: 0.95;
+            z-index: 2;
+            position: relative;
+            font-size: 1.1rem;
+        }
+
+        .features {
+            list-style: none;
+            padding: 0;
+            z-index: 2;
+            position: relative;
+        }
+
+        .features li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .features i {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: rgba(255,255,255,0.25);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 12px;
+            font-size: 0.9rem;
+        }
+
+        /* ---------- RIGHT (FORM) ---------- */
+        .register-form-section {
+            flex: 1.2;
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow-y: auto;
+            max-height: 90vh;
+        }
+
+        .form-header h2 {
+            font-size: 1.9rem;
+            margin-bottom: 0.3rem;
+            color: var(--gray-900);
+        }
+
+        .form-header p {
+            color: var(--gray-500);
+            margin-bottom: 2rem;
+        }
+
+        /* Two column layout for form fields */
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .form-group.full-width {
+            flex: 0 0 100%;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.4rem;
+            color: var(--gray-700);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .form-label.required::after {
+            content: " *";
+            color: #ef4444;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.85rem 1rem 0.85rem 2.8rem;
+            border-radius: var(--radius);
+            border: 1.5px solid var(--gray-200);
+            background: var(--white);
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .form-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0,102,204,0.12);
+            outline: none;
+        }
+
+        .form-input.error {
+            border-color: #ef4444;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-500);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: var(--gray-500);
+            transition: var(--transition);
+            z-index: 3;
+        }
+
+        .password-toggle:hover {
+            color: var(--primary);
+        }
+
+        /* Error messages */
+        .error-message {
+            color: #ef4444;
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .error-box {
+            background: #ffe5e5;
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            color: #cc0000;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #cc0000;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .success-message {
+            background: #e8f5e8;
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            color: #2d5016;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #4caf50;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        /* Terms and conditions */
+        .terms-container {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: var(--gray-50);
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-200);
+        }
+
+        .terms-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .terms-checkbox input {
+            margin-top: 0.25rem;
+            accent-color: var(--primary);
+        }
+
+        .terms-text {
+            font-size: 0.9rem;
+            color: var(--gray-700);
+            line-height: 1.5;
+        }
+
+        .terms-text a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .terms-text a:hover {
+            text-decoration: underline;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            width: 100%;
+            padding: 0.9rem;
+            background: var(--primary);
+            border: none;
+            border-radius: var(--radius);
+            color: var(--white);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 1rem;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 5px 15px rgba(0, 102, 204, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 0.9rem;
+            background: var(--white);
+            border: 1.5px solid var(--gray-200);
+            border-radius: var(--radius);
+            color: var(--gray-700);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-300);
+        }
+
+        /* Login link */
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: var(--gray-500);
+            font-size: 0.95rem;
+        }
+
+        .login-link a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            margin-left: 0.25rem;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Security notice */
+        .security-notice {
+            background: var(--primary-light);
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            color: var(--primary-dark);
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        .security-notice i {
+            margin-top: 0.1rem;
+        }
+
+        /* Password strength indicator */
+        .password-strength {
+            margin-top: 0.5rem;
+            height: 4px;
+            background: var(--gray-200);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            width: 0%;
+            background: #ef4444;
+            transition: width 0.3s ease;
+        }
+
+        .password-strength-bar.weak {
+            width: 25%;
+            background: #ef4444;
+        }
+
+        .password-strength-bar.fair {
+            width: 50%;
+            background: #f59e0b;
+        }
+
+        .password-strength-bar.good {
+            width: 75%;
+            background: #10b981;
+        }
+
+        .password-strength-bar.strong {
+            width: 100%;
+            background: #059669;
+        }
+
+        /* Loading state */
+        .btn-loading {
+            position: relative;
+            color: transparent;
+        }
+
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin-left: -10px;
+            margin-top: -10px;
+            border: 2px solid transparent;
+            border-radius: 50%;
+            border-top-color: currentColor;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 900px) {
+            .register-container {
+                flex-direction: column;
+                max-width: 600px;
+            }
+
+            .register-hero {
+                text-align: center;
+                padding: 2rem;
+            }
+
+            .register-form-section {
+                padding: 2rem;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 1.4rem;
+            }
+
+            .form-group {
+                margin-bottom: 0;
+            }
+
+            .hero-content p,
+            .features li {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 1rem;
+            }
+
+            .register-hero,
+            .register-form-section {
+                padding: 1.5rem;
+            }
+
+            .brand-text {
+                font-size: 1.5rem;
+            }
+
+            .hero-content h1 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="register-container">
+
+        <!-- HERO SECTION -->
+        <div class="register-hero">
+            <div class="brand">
+                <div class="brand-logo">EP</div>
+                <div class="brand-text">ExactusPay</div>
+            </div>
+
+            <div class="hero-content">
+                <h1>Join ExactusPay</h1>
+                <p>Create your account to streamline global payroll and workforce management.</p>
+
+                <ul class="features">
+                    <li><i class="fas fa-shield-alt"></i>Enterprise-grade security</li>
+                    <li><i class="fas fa-globe"></i>Global compliance coverage</li>
+                    <li><i class="fas fa-chart-line"></i>Real-time analytics dashboard</li>
+                    <li><i class="fas fa-headset"></i>24/7 dedicated support</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- REGISTRATION FORM -->
+        <div class="register-form-section">
+            <div class="form-header">
+                <h2>Create Account</h2>
+                <p>Fill in your details to get started</p>
+            </div>
+
+            <form method="POST" novalidate id="registerForm">
+                {% csrf_token %}
+
+                <!-- Display form errors -->
+                {% if form.errors %}
+                <div class="error-box">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <div>
+                        Please correct the following errors:
+                        <ul style="margin: 0.5rem 0 0 1rem; padding: 0;">
+                            {% for field, errors in form.errors.items %}
+                                {% for error in errors %}
+                                    <li>{{ field|title }}: {{ error }}</li>
+                                {% endfor %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Display success messages -->
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if message.tags == 'success' %}
+                        <div class="success-message">
+                            <i class="fas fa-check-circle"></i>
+                            {{ message }}
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+
+                <!-- NAME FIELDS -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="id_first_name" class="form-label required">First Name</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user input-icon"></i>
+                            <input type="text" name="first_name" id="id_first_name" class="form-input" 
+                                   placeholder="Enter first name" required
+                                   value="{{ form.first_name.value|default:'' }}">
+                        </div>
+                        {% if form.first_name.errors %}
+                        <div class="error-message">
+                            <i class="fas fa-exclamation-circle"></i>
+                            {{ form.first_name.errors.0 }}
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_last_name" class="form-label required">Last Name</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user input-icon"></i>
+                            <input type="text" name="last_name" id="id_last_name" class="form-input" 
+                                   placeholder="Enter last name" required
+                                   value="{{ form.last_name.value|default:'' }}">
+                        </div>
+                        {% if form.last_name.errors %}
+                        <div class="error-message">
+                            <i class="fas fa-exclamation-circle"></i>
+                            {{ form.last_name.errors.0 }}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- EMAIL -->
+                <div class="form-group">
+                    <label for="id_email" class="form-label required">Email Address</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="email" name="email" id="id_email" class="form-input" 
+                               placeholder="Enter email address" required
+                               value="{{ form.email.value|default:'' }}">
+                    </div>
+                    {% if form.email.errors %}
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-circle"></i>
+                        {{ form.email.errors.0 }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- USERNAME -->
+                <div class="form-group">
+                    <label for="id_username" class="form-label required">Username</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-at input-icon"></i>
+                        <input type="text" name="username" id="id_username" class="form-input" 
+                               placeholder="Choose username" required
+                               value="{{ form.username.value|default:'' }}">
+                    </div>
+                    {% if form.username.errors %}
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-circle"></i>
+                        {{ form.username.errors.0 }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- PASSWORD -->
+                <div class="form-group">
+                    <label for="id_password1" class="form-label required">Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" name="password1" id="id_password1" class="form-input" 
+                               placeholder="Create password" required>
+                        <button type="button" class="password-toggle" data-target="id_password1">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="password-strength">
+                        <div class="password-strength-bar" id="passwordStrengthBar"></div>
+                    </div>
+                    {% if form.password1.errors %}
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-circle"></i>
+                        {{ form.password1.errors.0 }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- CONFIRM PASSWORD -->
+                <div class="form-group">
+                    <label for="id_password2" class="form-label required">Confirm Password</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" name="password2" id="id_password2" class="form-input" 
+                               placeholder="Confirm password" required>
+                        <button type="button" class="password-toggle" data-target="id_password2">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    {% if form.password2.errors %}
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-circle"></i>
+                        {{ form.password2.errors.0 }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- COMPANY NAME (Optional) -->
+                <div class="form-group">
+                    <label for="id_company" class="form-label">Company Name (Optional)</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-building input-icon"></i>
+                        <input type="text" name="company" id="id_company" class="form-input" 
+                               placeholder="Enter company name"
+                               value="{{ form.company.value|default:'' }}">
+                    </div>
+                </div>
+
+                <!-- TERMS AND CONDITIONS -->
+                <div class="terms-container">
+                    <div class="terms-checkbox">
+                        <input type="checkbox" name="terms" id="id_terms" required>
+                        <label for="id_terms" class="terms-text">
+                            I agree to the <a href="#" target="_blank">Terms of Service</a> and <a href="#" target="_blank">Privacy Policy</a>. 
+                            I understand that ExactusPay may contact me regarding my account and services.
+                        </label>
+                    </div>
+                    {% if form.terms.errors %}
+                    <div class="error-message">
+                        <i class="fas fa-exclamation-circle"></i>
+                        {{ form.terms.errors.0 }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- MARKETING CONSENT (Optional) -->
+                <div class="form-group full-width">
+                    <div class="terms-checkbox">
+                        <input type="checkbox" name="marketing_consent" id="id_marketing_consent">
+                        <label for="id_marketing_consent" class="terms-text">
+                            I'd like to receive updates, tips, and offers from ExactusPay via email. 
+                            You can unsubscribe at any time.
+                        </label>
+                    </div>
+                </div>
+
+                <!-- SUBMIT BUTTON -->
+                <button type="submit" class="btn-primary" id="registerBtn">
+                    Create Account
+                </button>
+
+                <!-- OR DIVIDER -->
+                <div style="text-align: center; margin: 1.5rem 0; color: var(--gray-500); font-size: 0.9rem;">
+                    or
+                </div>
+
+                <!-- LOGIN LINK -->
+                <div class="login-link">
+                    Already have an account? 
+                    <a href="{% url 'login' %}">Sign in here</a>
+                </div>
+
+                <!-- SECURITY NOTICE -->
+                <div class="security-notice">
+                    <i class="fas fa-shield-alt"></i>
+                    <div>Your data is protected with bank-level encryption. We never share your personal information with third parties.</div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Password visibility toggle
+        document.querySelectorAll('.password-toggle').forEach(button => {
+            button.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const passwordInput = document.getElementById(targetId);
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+            });
+        });
+
+        // Password strength indicator
+        const passwordInput = document.getElementById('id_password1');
+        const strengthBar = document.getElementById('passwordStrengthBar');
+        
+        if (passwordInput && strengthBar) {
+            passwordInput.addEventListener('input', function() {
+                const password = this.value;
+                let strength = 0;
+                
+                // Check password strength
+                if (password.length >= 8) strength++;
+                if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
+                if (password.match(/\d/)) strength++;
+                if (password.match(/[^a-zA-Z\d]/)) strength++;
+                
+                // Update strength bar
+                strengthBar.className = 'password-strength-bar';
+                if (password.length === 0) {
+                    strengthBar.style.width = '0%';
+                } else if (strength <= 1) {
+                    strengthBar.className += ' weak';
+                } else if (strength === 2) {
+                    strengthBar.className += ' fair';
+                } else if (strength === 3) {
+                    strengthBar.className += ' good';
+                } else {
+                    strengthBar.className += ' strong';
+                }
+            });
+        }
+
+        // Form submission loading state
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            const registerBtn = document.getElementById('registerBtn');
+            registerBtn.classList.add('btn-loading');
+            registerBtn.disabled = true;
+            registerBtn.innerHTML = 'Creating Account...';
+        });
+
+        // Auto-remove messages after 5 seconds
+        setTimeout(() => {
+            const messages = document.querySelectorAll('.error-box, .success-message');
+            messages.forEach(message => {
+                message.style.opacity = '0';
+                message.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => message.remove(), 500);
+            });
+        }, 5000);
+
+        // Real-time password match validation
+        const password1 = document.getElementById('id_password1');
+        const password2 = document.getElementById('id_password2');
+        
+        function checkPasswordMatch() {
+            if (password1.value && password2.value) {
+                if (password1.value !== password2.value) {
+                    password2.classList.add('error');
+                    // Add error message if not already present
+                    if (!document.querySelector('.password-match-error')) {
+                        const errorDiv = document.createElement('div');
+                        errorDiv.className = 'error-message password-match-error';
+                        errorDiv.innerHTML = '<i class="fas fa-exclamation-circle"></i> Passwords do not match';
+                        password2.parentNode.parentNode.appendChild(errorDiv);
+                    }
+                } else {
+                    password2.classList.remove('error');
+                    const errorDiv = document.querySelector('.password-match-error');
+                    if (errorDiv) errorDiv.remove();
+                }
+            }
+        }
+        
+        if (password1 && password2) {
+            password1.addEventListener('input', checkPasswordMatch);
+            password2.addEventListener('input', checkPasswordMatch);
+        }
+
+        // Terms checkbox validation
+        const termsCheckbox = document.getElementById('id_terms');
+        const registerBtn = document.getElementById('registerBtn');
+        
+        if (termsCheckbox && registerBtn) {
+            function validateTerms() {
+                registerBtn.disabled = !termsCheckbox.checked;
+            }
+            
+            termsCheckbox.addEventListener('change', validateTerms);
+            // Initial validation
+            validateTerms();
+        }
+    </script>
+
+</body>
+</html>
 {% endblock %}
