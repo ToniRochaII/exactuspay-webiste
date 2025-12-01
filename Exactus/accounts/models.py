@@ -22,9 +22,9 @@ class User(AbstractUser):
     ]
     role = models.CharField(max_length=50, choices=ROLE_CHOICES, default="EMPLOYEE")
     
-    # Add fields for multi-tenant support
-    is_global_admin = models.BooleanField(default=False, 
-                                         help_text="Has access to all companies regardless of UserCompany assignments")
+    # TEMPORARILY COMMENT THIS OUT or provide a default value
+    # is_global_admin = models.BooleanField(default=False, 
+    #                                      help_text="Has access to all companies regardless of UserCompany assignments")
     
     def __str__(self):
         return f"{self.username} ({self.get_role_display()})"
@@ -36,6 +36,12 @@ class User(AbstractUser):
     @property
     def is_platform_admin(self):
         return self.role in ["EXEC", "ADMIN"]
+    
+    # TEMPORARY: Add property that doesn't require database field
+    @property
+    def is_global_admin(self):
+        # For now, platform admins are global admins
+        return self.is_platform_admin
     
     def get_companies(self):
         """Get all companies this user can access"""

@@ -1,19 +1,128 @@
+<!-- dashboard/index.html - Safe version -->
 {% extends "base.html" %}
-{% load accounts_role_filters %} 
+{% load static %}
 {% block title %}Dashboard | ExactusPay{% endblock %}
+
 {% block content %}
-<div class="card shadow-sm">
-  <div class="card-body">
-    <h3 class="card-title">Welcome, {{ user.username }}!</h3>
-    <p class="card-text">
-      Role: <strong>{{ user.role }}</strong>
-    </p>
-    <form action="{% url 'logout' %}" method="post" style="display:inline;">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-outline-danger">
-        Logout
-    </button>
-</form>
-  </div>
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="header">
+        <h1 class="header-title">
+            Welcome back, {{ user.get_full_name|default:user.username }}!
+        </h1>
+        <p class="header-subtitle">
+            Role: <strong class="text-primary">{{ user_role }}</strong>
+        </p>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row">
+        <div class="col-sm-6 col-xl-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col mt-0">
+                            <h5 class="card-title">My Companies</h5>
+                        </div>
+                        <div class="col-auto">
+                            <div class="stat text-primary">
+                                <i class="fas fa-building"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="mt-1 mb-3">{{ user_companies_count|default:"0" }}</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col mt-0">
+                            <h5 class="card-title">My Employees</h5>
+                        </div>
+                        <div class="col-auto">
+                            <div class="stat text-success">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="mt-1 mb-3">{{ user_employees_count|default:"0" }}</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col mt-0">
+                            <h5 class="card-title">Active Companies</h5>
+                        </div>
+                        <div class="col-auto">
+                            <div class="stat text-info">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="mt-1 mb-3">{{ active_companies_count|default:"0" }}</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col mt-0">
+                            <h5 class="card-title">Total Employees</h5>
+                        </div>
+                        <div class="col-auto">
+                            <div class="stat text-warning">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="mt-1 mb-3">{{ total_employees_count|default:"0" }}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Simple Content -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <a href="#" class="btn btn-primary w-100 mb-2">
+                                <i class="fas fa-plus me-2"></i>Add Employee
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="#" class="btn btn-success w-100 mb-2">
+                                <i class="fas fa-file-invoice-dollar me-2"></i>Run Payroll
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="#" class="btn btn-info w-100 mb-2">
+                                <i class="fas fa-chart-bar me-2"></i>View Reports
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="#" class="btn btn-secondary w-100 mb-2">
+                                <i class="fas fa-cog me-2"></i>Settings
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
