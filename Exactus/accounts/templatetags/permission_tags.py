@@ -1,9 +1,7 @@
-# Exactus/accounts/templatetags/permission_tags.py
 from django import template
 from Exactus.accounts.utils.access_control import AccessControl
 
 register = template.Library()
-
 
 @register.filter
 def can(user, permission_string):
@@ -16,7 +14,6 @@ def can(user, permission_string):
     except (ValueError, AttributeError):
         return False
 
-
 @register.simple_tag
 def check_permission(user, domain, action):
     """
@@ -24,7 +21,6 @@ def check_permission(user, domain, action):
     {% check_permission user "USER" "READ" as can_read %}
     """
     return AccessControl.has_permission(user, domain, action)
-
 
 @register.filter
 def get_effective_permissions(role):

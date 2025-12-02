@@ -3,6 +3,9 @@
 {% load static %}
 {% load accounts_role_filters %}
 {% load acl %}
+{% load permission_tags %}  <!-- ADD THIS LINE -->
+{% load dict_extras %}      <!-- Add if you use dict_get filter -->
+{% load role_tags %}        <!-- Add if you use has_role filter -->
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
