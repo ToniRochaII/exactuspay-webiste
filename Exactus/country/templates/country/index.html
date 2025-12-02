@@ -48,7 +48,7 @@
                                  class="rounded border shadow-sm">
                         </td>
 
-                        <td class="fw-semibold">{{ country.name }}</td>
+                        <td><strong>{{ country.name }}</strong></td>
 
                         <td>{{ country.official_language }}</td>
 
@@ -57,14 +57,10 @@
                             <small class="text-muted">{{ country.currency_name }}</small>
                         </td>
 
-                        <td><span class="badge bg-info text-dark">{{ country.companies.count }}</span></td>
+                        <td>{{ country.companies.count }}</td>
 
                         <td>
-                            {% if country.status == "Active" %}
-                                <span class="badge bg-success">Active</span>
-                            {% else %}
-                                <span class="badge bg-secondary">Inactive</span>
-                            {% endif %}
+                            {{ country.status }}
                         </td>
 
                         <td class="text-end">

@@ -71,14 +71,6 @@ class Country(models.Model):
         "Currency Code",
         max_length=3,
     )
-    fiscal_year_start = models.CharField(
-        "Fiscal Year Starts",
-        max_length=20,
-    )
-    fiscal_year_end = models.CharField(
-        "Fiscal Year Ends",
-        max_length=20,
-    )
     slug = models.SlugField(
         max_length=100,
         unique=True,

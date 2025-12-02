@@ -3,9 +3,9 @@
 {% load static %}
 {% load accounts_role_filters %}
 {% load acl %}
-{% load permission_tags %}  <!-- ADD THIS LINE -->
-{% load dict_extras %}      <!-- Add if you use dict_get filter -->
-{% load role_tags %}        <!-- Add if you use has_role filter -->
+{% load permission_tags %}
+{% load dict_extras %}
+{% load role_tags %}
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -37,17 +37,17 @@
         .sidebar-badge {
             font-size: 0.65rem;
             margin-left: auto;
-        }    
+        }
         .avatar-img {
-        width: 64px;
-        height: 64px;
-        object-fit: cover;
-        object-position: center;
-        border-radius: 50%;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-    }
+            width: 64px;
+            height: 64px;
+            object-fit: cover;
+            object-position: center;
+            border-radius: 50%;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
     </style>
 
     <script src="{% static 'dis/js/settings.js' %}"></script>
@@ -104,7 +104,6 @@
                     {% if user|has_role:"EXEC,ADMIN,COMPLIANCE" %}
                     <li class="sidebar-header">Administration</li>
 
-                    {# Pre-calc permissions to keep logic clean #}
                     {% check_permission user "USER" "READ" as can_view_users %}
                     {% check_permission user "ROLE" "READ" as can_view_roles %}
 
@@ -149,8 +148,6 @@
 
                     <!-- ========================================================= -->
                     <!-- PAYROLL OPERATIONS                                        -->
-                    <!-- Director/Manager/Specialist/Finance/Exec/Admin/...       -->
-                    <!-- FINANCE: VIEW ONLY (no create/upload/edit)               -->
                     <!-- ========================================================= -->
                     {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,FINANCE,EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
                     <li class="sidebar-header">Payroll Operations</li>
@@ -176,7 +173,6 @@
                                     <i class="fas fa-list me-2"></i>All Companies
                                 </a>
                             </li>
-                            {# CREATE / UPLOAD: only non-FINANCE operational roles #}
                             {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,EXEC,ADMIN" %}
                             <li class="sidebar-item">
                                 <a class="sidebar-link"
@@ -225,7 +221,6 @@
                                     <i class="fas fa-list me-2"></i>All Employees
                                 </a>
                             </li>
-                            {# CREATE / UPLOAD: only non-FINANCE operational roles #}
                             {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,EXEC,ADMIN" %}
                             <li class="sidebar-item">
                                 <a class="sidebar-link"
@@ -274,7 +269,6 @@
                                     <i class="fas fa-list me-2"></i>All PD Codes
                                 </a>
                             </li>
-                            {# CREATE / UPLOAD: only non-FINANCE operational roles #}
                             {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,EXEC,ADMIN" %}
                             <li class="sidebar-item">
                                 <a class="sidebar-link"
@@ -323,7 +317,6 @@
                                     <i class="fas fa-list me-2"></i>Payroll Records
                                 </a>
                             </li>
-                            {# CREATE: only non-FINANCE operational roles #}
                             {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,EXEC,ADMIN" %}
                             <li class="sidebar-item">
                                 <a class="sidebar-link"
@@ -363,7 +356,6 @@
                                     Earnings / Pay Register Entries
                                 </a>
                             </li>
-                            {# CREATE / UPLOAD: only non-FINANCE operational roles #}
                             {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,EXEC,ADMIN" %}
                             <li class="sidebar-item">
                                 <a class="sidebar-link"
@@ -386,8 +378,6 @@
 
                     <!-- ========================================================= -->
                     <!-- SYSTEM CONFIGURATION                                      -->
-                    <!-- (Exec/Admin/Compliance/Billing/Implementation/Operation) -->
-                    <!-- Country + Elements + Regulations together                 -->
                     <!-- ========================================================= -->
                     {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
                     <li class="sidebar-header">System Configuration</li>
@@ -400,6 +390,11 @@
                            class="sidebar-link collapsed"
                            href="#">
                             <i class="align-middle me-2 fas fa-globe"></i>Country Setup
+                            {% if country or country_slug %}
+                                <span class="sidebar-badge badge bg-secondary">
+                                    {{ country.name|default:country_slug }}
+                                </span>
+                            {% endif %}
                         </a>
                         <ul id="nav-config-country"
                             class="sidebar-dropdown list-unstyled collapse"
@@ -410,6 +405,7 @@
                                     <i class="fas fa-list me-2"></i>All Countries
                                 </a>
                             </li>
+
                             {% if user|can:"COMPANY:CREATE" %}
                             <li class="sidebar-item">
                                 <a class="sidebar-link"
@@ -421,6 +417,19 @@
                                 <a class="sidebar-link"
                                    href="{% url 'country:country_upload' %}">
                                     <i class="fas fa-upload me-2"></i>Upload Countries
+                                </a>
+                            </li>
+                            {% endif %}
+
+                            {# ⭐ CONTEXTUAL EDIT COUNTRY OPTION ⭐ #}
+                            {% if user|can:"COMPANY:CREATE" and (country or country_slug) %}
+                            <li class="sidebar-divider"></li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link"
+                                   href="{% if country %}{% url 'country:country_edit' country.slug %}
+                                      {% else %}{% url 'country:country_edit' country_slug %}{% endif %}">
+                                    <i class="fas fa-edit me-2"></i>
+                                    Edit {{ country.name|default:"Country" }}
                                 </a>
                             </li>
                             {% endif %}
@@ -686,7 +695,7 @@
         </div>
     </div>
 
-    <!-- ICONS (kept minimal; you can expand as needed) -->
+    <!-- ICONS -->
     <svg width="0" height="0" style="position:absolute">
         <defs>
             <symbol id="ion-ios-pulse-strong" viewBox="0 0 512 512">
