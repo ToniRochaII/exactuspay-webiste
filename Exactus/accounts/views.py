@@ -87,7 +87,7 @@ def get_pending_regulation_updates():
 
 @login_required
 def register(request):
-    # Only admins can access this view
+    """Admin-only user registration view."""
     if request.user.role not in {"EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION","DIRECTOR","MANAGER"}:
         messages.error(request, "Access denied: only administrators can create new users.")
         return redirect("dashboard")
@@ -97,7 +97,7 @@ def register(request):
         if form.is_valid():
             user = form.save()
             messages.success(request, f"User '{user.username}' created successfully.")
-            return redirect("dashboard")  # or redirect('dashboard_admin') if that exists
+            return redirect("dashboard")
         else:
             messages.error(request, "Please correct the errors below.")
     else:
@@ -107,6 +107,7 @@ def register(request):
 
 
 def custom_login(request):
+    """Custom login view with remember me functionality."""
     if request.user.is_authenticated:
         return redirect('dashboard')
     
@@ -138,14 +139,13 @@ def custom_login(request):
 
 @login_required
 def profile(request):
-    """User's own profile - now uses unified template"""
+    """User's own profile - uses unified template."""
     return unified_profile(request, user_id=None)
 
 
 @login_required
 def dashboard_admin(request):
-    """Admin/Executive dashboard with platform analytics"""
-    
+    """Admin/Executive dashboard with platform analytics."""
     # Check if user has admin/exec permissions
     if not hasattr(request.user, 'role') or request.user.role not in ['EXEC', 'ADMIN']:
         messages.error(request, "You don't have permission to access the admin dashboard.")
@@ -189,13 +189,13 @@ def dashboard_admin(request):
         total_companies=Count('company_id')
     )
     
-    # Employee metric - Employee uses 'employee_id' as PK
+    # Employee metric
     total_employees = cache.get('total_employees')
     if total_employees is None:
         total_employees = Employee.objects.count()
         cache.set('total_employees', total_employees, 3600)
     
-    # Payroll metrics - Payroll uses 'payroll_id' as PK
+    # Payroll metrics
     total_payrolls = Payroll.objects.count()
     
     # Get payroll frequency choices safely
@@ -211,7 +211,7 @@ def dashboard_admin(request):
     except Exception:
         monthly_payrolls = 0
     
-    # Payslip metrics - PayRegister uses 'payregister_id' as PK
+    # Payslip metrics
     payslip_stats = {
         'payslips_total': PayRegister.objects.count(),
         'payslips_this_month': PayRegister.objects.filter(
@@ -233,12 +233,12 @@ def dashboard_admin(request):
     
     # ──────────────── Charts Data ────────────────
     
-    # Monthly payslips for last 12 months - PayRegister uses 'payregister_id' as PK
+    # Monthly payslips for last 12 months
     payslips_monthly = (
         PayRegister.objects.filter(created_at__gte=one_year_ago)
         .annotate(month=TruncMonth('created_at'))
         .values('month')
-        .annotate(count=Count('payregister_id'))  # CORRECT PK
+        .annotate(count=Count('payregister_id'))
         .order_by('month')
     )
     
@@ -248,10 +248,10 @@ def dashboard_admin(request):
         month_labels.append(entry['month'].strftime('%b %Y'))
         month_values.append(entry['count'])
     
-    # Payroll by frequency with fallback - Payroll uses 'payroll_id' as PK
+    # Payroll by frequency with fallback
     payroll_counts = (
         Payroll.objects.values('payroll_frequency')
-        .annotate(count=Count('payroll_id'))  # CORRECT PK
+        .annotate(count=Count('payroll_id'))
         .order_by('-count')
     )
     frequency_labels = []
@@ -280,7 +280,7 @@ def dashboard_admin(request):
         )
         .values('employee__company__country__iso2_code')
         .annotate(
-            count=Count('payregister_id'),  # CORRECT PK
+            count=Count('payregister_id'),
             country_name=F('employee__company__country__name')
         )
         .order_by('-count')
@@ -298,16 +298,16 @@ def dashboard_admin(request):
     
     # ──────────────── Top Companies (Optimized) ────────────────
     
-    # Get company IDs with most payslips first - Company uses 'company_id' as PK
+    # Get company IDs with most payslips first
     top_company_ids = (
         PayRegister.objects.filter(created_at__gte=start_of_year)
-        .values('employee__company__company_id')  # CORRECT PK field
+        .values('employee__company__company_id')
         .annotate(payslips_ytd=Count('payregister_id'))
         .order_by('-payslips_ytd')
         .values_list('employee__company__company_id', flat=True)[:10]
     )
     
-    # Get company details - filter by 'company_id' PK
+    # Get company details
     top_companies_qs = Company.objects.filter(company_id__in=top_company_ids)
     
     top_companies = []
@@ -320,7 +320,7 @@ def dashboard_admin(request):
         total_employees = company.employees.count()
         
         top_companies.append({
-            'company_id': company.company_id,  # CORRECT PK field
+            'company_id': company.company_id,
             'trade_name': company.trade_name or 'N/A',
             'country_name': company.country.name if company.country else 'N/A',
             'account_status': company.account_status,
@@ -396,8 +396,7 @@ def dashboard_admin(request):
 
 @login_required
 def dashboard(request):
-    """Regular user dashboard with multi-tenant data"""
-    
+    """Regular user dashboard with multi-tenant data."""
     # Generate cache key
     cache_key = f'dashboard_{request.user.id}_{timezone.now().strftime("%Y%m%d")}'
     cached_data = cache.get(cache_key)
@@ -407,7 +406,6 @@ def dashboard(request):
     
     now = timezone.now()
     thirty_days_ago = now - timedelta(days=30)
-    start_of_month = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
     
     # Import models
     from Exactus.country.models import Country
@@ -441,7 +439,7 @@ def dashboard(request):
     # ──────────────── User-Specific Counts ────────────────
     
     if user_companies_count > 0:
-        # Get company IDs - Company uses 'company_id' as PK
+        # Get company IDs
         company_ids = user_companies.values_list('company_id', flat=True)
         
         # Count employees in user's companies
@@ -528,7 +526,7 @@ def dashboard(request):
         'cache_timestamp': now.isoformat(),
         
         # Companies list for quick access
-        'user_companies': user_companies[:5],  # Show first 5
+        'user_companies': user_companies[:5],
     }
     
     # Cache for 15 minutes
@@ -538,6 +536,7 @@ def dashboard(request):
 
 
 class CustomPasswordResetView(auth_views.PasswordResetView):
+    """Custom password reset view."""
     template_name = 'auth/password_reset.html'
     email_template_name = 'auth/password_reset_email.html'
     success_url = reverse_lazy('auth/password_reset_done')
@@ -548,10 +547,12 @@ class CustomPasswordResetView(auth_views.PasswordResetView):
 
 
 class CustomPasswordResetDoneView(auth_views.PasswordResetDoneView):
+    """Custom password reset done view."""
     template_name = 'auth/password_reset_done.html'
 
 
 class CustomPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+    """Custom password reset confirm view."""
     template_name = 'auth/password_reset_confirm.html'
     success_url = reverse_lazy('auth/password_reset_complete')
 
@@ -561,6 +562,7 @@ class CustomPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
 
 
 class CustomPasswordResetCompleteView(auth_views.PasswordResetCompleteView):
+    """Custom password reset complete view."""
     template_name = 'auth/password_reset_complete.html'
 
 
@@ -572,7 +574,7 @@ def user_list(request):
 
     users = User.objects.all()
 
-    # --- Filtering ---
+    # Filtering
     role_filter = request.GET.get("role")
     search_query = request.GET.get("q")
 
@@ -585,7 +587,7 @@ def user_list(request):
             | Q(email__icontains=search_query)
         )
 
-    # --- Bulk actions (optional future hook) ---
+    # Bulk actions
     if request.method == "POST":
         action = request.POST.get("action")
         selected = request.POST.getlist("selected_users")
@@ -631,7 +633,7 @@ def export_users_csv(request):
 
 @login_required
 def user_detail(request, user_id):
-    """User detail view - now uses unified template"""
+    """User detail view - uses unified template."""
     return unified_profile(request, user_id=user_id)
 
 
@@ -661,9 +663,7 @@ def user_edit(request, user_id):
 
 @permission_required("ROLE", "READ")
 def role_management(request):
-    """
-    Enhanced role management with effective permission display
-    """
+    """Enhanced role management with effective permission display."""
     roles = [r for r, _ in PermissionMatrix.ROLE_CHOICES]
     domains = [d for d, _ in PermissionMatrix.DOMAIN_CHOICES]
     actions = [a for a, _ in PermissionMatrix.ACTION_CHOICES]
@@ -678,7 +678,7 @@ def role_management(request):
         if row.role in matrix and row.domain in matrix[row.role]:
             matrix[row.role][row.domain][row.action] = row.allowed
 
-    # Get effective permissions for each role (for UI display)
+    # Get effective permissions for each role
     effective_permissions = {}
     for role in roles:
         effective_permissions[role] = AccessControl.get_effective_permissions(role)
@@ -688,7 +688,7 @@ def role_management(request):
         "domains": domains,
         "actions": actions,
         "matrix": matrix,
-        "effective_permissions": effective_permissions,  # NEW: Show expanded perms
+        "effective_permissions": effective_permissions,
         "templates": RoleTemplate.objects.all().order_by("name"),
         "users": User.objects.all().order_by("username"),
         "hierarchy": dict(RoleHierarchy.objects.values_list('parent', 'child')),
@@ -699,9 +699,7 @@ def role_management(request):
 
 @login_required
 def unified_profile(request, user_id=None):
-    """
-    Debugging version to identify exactly where the issue is
-    """
+    """Unified profile view for viewing/editing user profiles."""
     # Determine target user
     if user_id:
         target_user = get_object_or_404(User, id=user_id)
@@ -720,9 +718,7 @@ def unified_profile(request, user_id=None):
     if not is_own_profile:
         user_form = UserEditForm(instance=target_user)
 
-    # ==========================
-    # POST HANDLING - DEBUG
-    # ==========================
+    # POST handling
     if request.method == "POST":
         form_type = request.POST.get("form_type")
 
@@ -753,9 +749,7 @@ def unified_profile(request, user_id=None):
             messages.success(request, "Notification preferences updated.")
             return redirect(request.path)
 
-    # ==========================
-    # RENDER
-    # ==========================
+    # Render
     context = {
         "target_user": target_user,
         "profile": profile,
@@ -768,6 +762,7 @@ def unified_profile(request, user_id=None):
 
 
 def get_safety_warnings(matrix):
+    """Generate safety warnings for permission matrix."""
     warnings = []
     
     # Finance must be read-only for payroll
@@ -785,35 +780,8 @@ def get_safety_warnings(matrix):
     return warnings
 
 
-# accounts/views.py
-from django.views.decorators.cache import cache_page
-from Exactus.accounts.services.permission_resolver import permission_resolver
-from Exactus.accounts.services.conflict_detector import PermissionConflictDetector
-
-@cache_page(60)  # Cache entire page for 1 minute
-def role_management_view(request):
-    """Enhanced role management view with caching and conflict detection"""
-    
-    # Resolve permissions using service layer
-    effective_permissions = permission_resolver.resolve_permissions()
-    
-    # Detect permission conflicts in real-time
-    conflict_detector = PermissionConflictDetector(effective_permissions)
-    safety_warnings = conflict_detector.detect_conflicts()
-    operational_risks = conflict_detector.detect_operational_risks()
-    
-    context = {
-        'effective_permissions': effective_permissions,
-        'safety_warnings': safety_warnings,
-        'operational_risks': operational_risks,
-        'conflict_summary': conflict_detector.get_conflict_summary(),
-    }
-    
-    return render(request, 'role_management.html', context)
-
-
 def compute_effective_permissions(matrix, hierarchy, protected_rules):
-    """Compute final resolved permissions after all rules"""
+    """Compute final resolved permissions after all rules."""
     effective = {}
     
     for role in matrix.keys():
@@ -840,7 +808,7 @@ def compute_effective_permissions(matrix, hierarchy, protected_rules):
 
 
 def apply_business_logic_protections(permissions, role):
-    """Apply ExactusPay-specific business logic rules"""
+    """Apply ExactusPay-specific business logic rules."""
     payroll_domains = ['PAYRUN', 'PAYREGISTER', 'CALCULATION', 'COMPANY', 'EMPLOYEE', 'PDCODES']
     
     if role == 'FINANCE':
