@@ -32,3 +32,10 @@ def get_effective_permissions(role):
     {{ "MANAGER"|get_effective_permissions }}
     """
     return AccessControl.get_effective_permissions(role)
+
+
+
+
+
+
+
