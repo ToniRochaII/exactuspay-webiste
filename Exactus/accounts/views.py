@@ -149,6 +149,44 @@ import json
 from datetime import timedelta
 from django.utils import timezone
 
+# accounts/views.py (FULLY CORRECTED VERSION)
+
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.http import HttpResponse
+from collections import defaultdict
+import csv
+from datetime import timedelta
+from django.apps import apps
+from django.conf import settings
+from django.contrib.auth import get_user_model, logout, authenticate, login, views as auth_views
+from django.db import transaction
+from django.db.models import Q, Count, F
+from django.db.models.functions import TruncMonth
+from django.urls import reverse_lazy
+from django.utils import timezone
+from django.views.decorators.http import require_http_methods
+from django.core.cache import cache
+import json
+
+from Exactus.accounts.utils.access_control import AccessControl
+from Exactus.accounts.utils.permissions import permission_required
+from Exactus.accounts.forms import UserEditForm, UserRegistrationForm, LoginForm, UserProfileForm
+from Exactus.accounts.models import (
+    RoleHierarchy,
+    User,
+    PermissionMatrix,
+    RoleTemplate,
+    UserProfile,
+)
+from Exactus.accounts.utils.permissions import has_permission
+from Exactus.accounts.utils.role_hierarchy import promote_role, demote_role
+
+
+# Remove duplicate User import - keep only one
+# User = get_user_model()  # REMOVE THIS - already imported from models
+
 @login_required
 def dashboard_admin(request):
     """Admin/Executive dashboard with platform analytics"""
@@ -180,7 +218,7 @@ def dashboard_admin(request):
     
     # ──────────────── KPIs ────────────────
     
-    # Country metrics - FIXED: removed 'country.' prefix
+    # Country metrics - CORRECT: Country uses 'id' as PK
     country_stats = Country.objects.aggregate(
         active_countries=Count('id', filter=Q(status='ACTIVE')),
         implementing_countries=Count('id', filter=Q(status='IMPLEMENTING')),
@@ -188,21 +226,21 @@ def dashboard_admin(request):
         total_countries=Count('id')
     )
     
-    # Company metrics - FIXED: removed 'company.' prefix
+    # Company metrics - CORRECT: Company uses 'company_id' as PK
     company_stats = Company.objects.aggregate(
-        active_companies=Count('id', filter=Q(account_status='ACTIVE')),
-        suspended_companies=Count('id', filter=Q(account_status='SUSPENDED')),
-        inactive_companies=Count('id', filter=Q(account_status='INACTIVE')),
-        total_companies=Count('id')
+        active_companies=Count('company_id', filter=Q(account_status='ACTIVE')),
+        suspended_companies=Count('company_id', filter=Q(account_status='SUSPENDED')),
+        inactive_companies=Count('company_id', filter=Q(account_status='INACTIVE')),
+        total_companies=Count('company_id')
     )
     
-    # Employee metric
+    # Employee metric - CORRECT: Employee uses 'employee_id' as PK
     total_employees = cache.get('total_employees')
     if total_employees is None:
         total_employees = Employee.objects.count()
         cache.set('total_employees', total_employees, 3600)
     
-    # Payroll metrics
+    # Payroll metrics - CORRECT: Payroll uses 'payroll_id' as PK
     total_payrolls = Payroll.objects.count()
     
     # Get payroll frequency choices safely
@@ -218,7 +256,7 @@ def dashboard_admin(request):
     except Exception:
         monthly_payrolls = 0
     
-    # Payslip metrics - FIXED: using correct field name
+    # Payslip metrics - CORRECT: PayRegister uses 'payregister_id' as PK
     payslip_stats = {
         'payslips_total': PayRegister.objects.count(),
         'payslips_this_month': PayRegister.objects.filter(
@@ -232,7 +270,7 @@ def dashboard_admin(request):
         ).count(),
     }
     
-    # Unique employees processed
+    # Unique employees processed - CORRECT: uses 'employee' foreign key
     unique_employees_processed_total = cache.get('unique_employees_processed')
     if unique_employees_processed_total is None:
         unique_employees_processed_total = PayRegister.objects.values('employee').distinct().count()
@@ -240,12 +278,12 @@ def dashboard_admin(request):
     
     # ──────────────── Charts Data ────────────────
     
-    # Monthly payslips for last 12 months - FIXED: Using correct field name
+    # Monthly payslips for last 12 months - CORRECT: PayRegister uses 'payregister_id' as PK
     payslips_monthly = (
         PayRegister.objects.filter(created_at__gte=one_year_ago)
         .annotate(month=TruncMonth('created_at'))
         .values('month')
-        .annotate(count=Count('id'))  # FIXED: using 'id' instead of 'payregister_id'
+        .annotate(count=Count('payregister_id'))  # CORRECT PK
         .order_by('month')
     )
     
@@ -255,10 +293,10 @@ def dashboard_admin(request):
         month_labels.append(entry['month'].strftime('%b %Y'))
         month_values.append(entry['count'])
     
-    # Payroll by frequency with fallback
+    # Payroll by frequency with fallback - CORRECT: Payroll uses 'payroll_id' as PK
     payroll_counts = (
         Payroll.objects.values('payroll_frequency')
-        .annotate(count=Count('id'))  # FIXED: using 'id' instead of 'payroll_id'
+        .annotate(count=Count('payroll_id'))  # CORRECT PK
         .order_by('-count')
     )
     frequency_labels = []
@@ -278,7 +316,7 @@ def dashboard_admin(request):
         .values_list('iso2_code', flat=True)
     )
     
-    # Get payslip counts per country with country filter - FIXED: Added null checks
+    # Get payslip counts per country with country filter
     payslips_by_country = (
         PayRegister.objects.filter(
             created_at__gte=start_of_year,
@@ -287,7 +325,7 @@ def dashboard_admin(request):
         )
         .values('employee__company__country__iso2_code')
         .annotate(
-            count=Count('id'),
+            count=Count('payregister_id'),  # CORRECT PK
             country_name=F('employee__company__country__name')
         )
         .order_by('-count')
@@ -305,17 +343,17 @@ def dashboard_admin(request):
     
     # ──────────────── Top Companies (Optimized) ────────────────
     
-    # Get company IDs with most payslips first - FIXED: Using correct field name
+    # Get company IDs with most payslips first - CORRECT: Company uses 'company_id' as PK
     top_company_ids = (
         PayRegister.objects.filter(created_at__gte=start_of_year)
-        .values('employee__company__id')  # FIXED: using 'id' instead of 'company_id'
-        .annotate(payslips_ytd=Count('id'))
+        .values('employee__company__company_id')  # CORRECT PK field
+        .annotate(payslips_ytd=Count('payregister_id'))
         .order_by('-payslips_ytd')
-        .values_list('employee__company__id', flat=True)[:10]
+        .values_list('employee__company__company_id', flat=True)[:10]
     )
     
-    # Get company details
-    top_companies_qs = Company.objects.filter(id__in=top_company_ids)
+    # Get company details - CORRECT: filter by 'company_id' PK
+    top_companies_qs = Company.objects.filter(company_id__in=top_company_ids)
     
     top_companies = []
     for company in top_companies_qs:
@@ -327,7 +365,7 @@ def dashboard_admin(request):
         total_employees = company.employees.count()
         
         top_companies.append({
-            'company_id': company.id,
+            'company_id': company.company_id,  # CORRECT PK field
             'trade_name': company.trade_name or 'N/A',
             'country_name': company.country.name if company.country else 'N/A',
             'account_status': company.account_status,
@@ -448,8 +486,8 @@ def dashboard(request):
     # ──────────────── User-Specific Counts ────────────────
     
     if user_companies_count > 0:
-        # Get company IDs (using id, not company_id)
-        company_ids = user_companies.values_list('id', flat=True)
+        # Get company IDs (CORRECT: Company uses 'company_id' as PK)
+        company_ids = user_companies.values_list('company_id', flat=True)
         
         # Count employees in user's companies
         user_employees_count = Employee.objects.filter(
@@ -544,6 +582,8 @@ def dashboard(request):
     return render(request, 'dashboard/index.html', context)
 
 
+# Keep all your other views below - they remain unchanged
+# ... rest of the file continues ...
 
 
 
