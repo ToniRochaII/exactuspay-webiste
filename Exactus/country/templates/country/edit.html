@@ -3,7 +3,9 @@
 {% load country_role_filters %}
 
 {% block title %}Edit Country — {{ form.instance.name }} | ExactusPay{% endblock %}
-{% block page_title %}Edit Country{% endblock %}
+{% block page_title %}
+<i class="fas fa-globe-europe me-2"></i>Edit Country
+{% endblock %}
 
 {% block breadcrumbs %}
 <nav aria-label="breadcrumb">
@@ -16,95 +18,180 @@
 {% endblock %}
 
 {% block content %}
-<div class="card shadow-sm">
-  <div class="card-header d-flex justify-content-between align-items-center">
-    <h5 class="mb-0">
-      <i class="bi bi-pencil"></i> Edit Country — {{ form.instance.name }}
+<div class="card shadow-sm border-0">
+  <div class="card-header py-3 d-flex justify-content-between align-items-center">
+    <h5 class="mb-0 fw-semibold">
+      <i class="fas fa-edit me-2"></i>Editing: {{ form.instance.name }}
     </h5>
+
+    {% if form.instance.iso2_code %}
+    <img src="{% static 'dis/img/flags/' %}{{ form.instance.iso2_code|lower }}.png"
+         class="border rounded shadow-sm"
+         width="42" height="28" alt="Flag of {{ form.instance.name }}">
+    {% endif %}
   </div>
 
   <div class="card-body">
 
-      <p> 
-        {% if user|has_role:"EXEC" %}
-        <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a>
-        {% endif %}
-        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
-        <a href="{% url 'dashboard' %}">Dashboard</a> 
-        <a href="{% url 'user_list' %}"">Accounts</a>
-        <a href="{% url 'role_management' %}"">Role Management</a>
-        <a href="{% url 'country:country' %}">Countries</a>
-        <a href="{% url 'country:country_create' %}"> Add Country</a>
-        {% endif %}
-        ||||
-        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
-        <a href="{% url 'profile' %}"">Profile</a>
-        {% endif %}
-
-        <a href="{% url 'password_reset' %}">Reset password</a>
-      </p>
     <form method="post" class="needs-validation" novalidate>
       {% csrf_token %}
       {{ form.non_field_errors }}
 
-      <div class="row g-3">
-        <div class="col-md-6">
-          {{ form.name.label_tag }} {{ form.name }}
-        </div>
-        <div class="col-md-6">
-          {{ form.status.label_tag }} {{ form.status }}
-        </div>
+      <!-- Country Information -->
+      <div class="mb-4">
+        <h6 class="text-uppercase text-muted mb-3 fw-bold">
+          <i class="fas fa-flag me-1"></i> Country Details
+        </h6>
 
-        <div class="col-md-4">
-          {{ form.iso2_code.label_tag }} {{ form.iso2_code }}
-        </div>
-        <div class="col-md-4">
-          {{ form.iso3_code.label_tag }} {{ form.iso3_code }}
-        </div>
-        <div class="col-md-4">
-          {{ form.official_language.label_tag }} {{ form.official_language }}
-        </div>
+        <div class="row g-3">
+          
+          <div class="col-md-6">
+            <div class="form-floating">
+              {{ form.name }}
+              <label for="{{ form.name.id_for_label }}">Country Name</label>
+            </div>
+          </div>
 
-        <div class="col-md-4">
-          {{ form.currency_name.label_tag }} {{ form.currency_name }}
-        </div>
-        <div class="col-md-4">
-          {{ form.currency_code.label_tag }} {{ form.currency_code }}
-        </div>
-        <div class="col-md-4">
-          {{ form.currency_position.label_tag }} {{ form.currency_position }}
-        </div>
+          <div class="col-md-6">
+            <div class="form-floating">
+              {{ form.status }}
+              <label for="{{ form.status.id_for_label }}">Status</label>
+            </div>
+          </div>
 
-        <div class="col-md-4">
-          {{ form.fiscal_year_start.label_tag }} {{ form.fiscal_year_start }}
-        </div>
-        <div class="col-md-4">
-          {{ form.fiscal_year_end.label_tag }} {{ form.fiscal_year_end }}
-        </div>
-        <div class="col-md-4">
-          {{ form.numbering_format.label_tag }} {{ form.numbering_format }}
-        </div>
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.iso2_code }}
+              <label for="{{ form.iso2_code.id_for_label }}">ISO2 Code</label>
+            </div>
+          </div>
 
-        <div class="col-md-4">
-          {{ form.date_format.label_tag }} {{ form.date_format }}
-        </div>
-        <div class="col-md-4">
-          {{ form.decimals.label_tag }} {{ form.decimals }}
-        </div>
-        <div class="col-md-4">
-          {{ form.archive.label_tag }} {{ form.archive }}
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.iso3_code }}
+              <label for="{{ form.iso3_code.id_for_label }}">ISO3 Code</label>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.official_language }}
+              <label for="{{ form.official_language.id_for_label }}">Official Language</label>
+            </div>
+          </div>
+
         </div>
       </div>
 
+      <!-- Currency Info -->
+      <div class="mb-4">
+        <h6 class="text-uppercase text-muted mb-3 fw-bold">
+          <i class="fas fa-coins me-1"></i> Currency Information
+        </h6>
+
+        <div class="row g-3">
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.currency_name }}
+              <label for="{{ form.currency_name.id_for_label }}">Currency Name</label>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.currency_code }}
+              <label for="{{ form.currency_code.id_for_label }}">Currency Code</label>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.currency_position }}
+              <label for="{{ form.currency_position.id_for_label }}">Currency Position</label>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Fiscal & Numbering -->
+      <div class="mb-4">
+        <h6 class="text-uppercase text-muted mb-3 fw-bold">
+          <i class="fas fa-calendar-alt me-1"></i> Fiscal Settings
+        </h6>
+
+        <div class="row g-3">
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.fiscal_year_start }}
+              <label for="{{ form.fiscal_year_start.id_for_label }}">Fiscal Year Start</label>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.fiscal_year_end }}
+              <label for="{{ form.fiscal_year_end.id_for_label }}">Fiscal Year End</label>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.numbering_format }}
+              <label for="{{ form.numbering_format.id_for_label }}">Numbering Format</label>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Formatting -->
+      <div class="mb-4">
+        <h6 class="text-uppercase text-muted mb-3 fw-bold">
+          <i class="fas fa-cog me-1"></i> Formatting
+        </h6>
+
+        <div class="row g-3">
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.date_format }}
+              <label for="{{ form.date_format.id_for_label }}">Date Format</label>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.decimals }}
+              <label for="{{ form.decimals.id_for_label }}">Decimals</label>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.archive }}
+              <label for="{{ form.archive.id_for_label }}">Archive</label>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Actions -->
       <div class="text-end mt-4">
-        <button type="submit" class="btn btn-primary">
-          <i class="bi bi-save"></i> Save Changes
-        </button>
-        <a href="{% url 'country:country' %}" class="btn btn-danger ms-2">
-          <i class="bi bi-x-circle"></i> Cancel
+        <a href="{% url 'country:country' %}" class="btn btn-light border me-2">
+          <i class="fas fa-times me-1"></i> Cancel
         </a>
+
+        <button type="submit" class="btn btn-primary px-4">
+          <i class="fas fa-save me-1"></i> Save Changes
+        </button>
       </div>
+
     </form>
+
   </div>
 </div>
 {% endblock %}

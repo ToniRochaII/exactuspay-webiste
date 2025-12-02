@@ -1,155 +1,221 @@
 {% extends "base.html" %}
 {% load static %}
-{% load country_role_filters %}
-  
-{% block title %}Country Form{% endblock %}
+
+{% block title %}Create Country | ExactusPay{% endblock %}
+{% block page_title %}
+<i class="fas fa-plus-circle me-2"></i>Create Country
+{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Create Country</li>
+  </ol>
+</nav>
+{% endblock %}
 
 {% block content %}
-<div class="container py-4">
-  <div class="card shadow-sm border-0">
-    <div class="card-header d-flex justify-content-between align-items-center">
-      <h5 class="mb-0">
-        {% if form.instance.pk %}
-          Edit Country — {{ form.instance.name }}
-        {% else %}
-          Add New Country
-        {% endif %}
-      </h5>
-      <a href="{% url 'country:country' %}" class="btn btn-primary">Back to List</a>
-    </div>
+<div class="card shadow-sm border-0">
 
-    <div class="card-body">
+  <div class="card-header py-3">
+    <h5 class="mb-0 fw-semibold">
+      <i class="fas fa-flag me-2"></i>Add New Country
+    </h5>
+  </div>
 
-      <p> 
-        {% if user|has_role:"EXEC" %}
-        <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a>
-        {% endif %}
-        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
-        <a href="{% url 'dashboard' %}">Dashboard</a> 
-        <a href="{% url 'user_list' %}"">Accounts</a>
-        <a href="{% url 'role_management' %}"">Role Management</a>
-        <a href="{% url 'country:country' %}">Countries</a>
-        <a href="{% url 'country:country_create' %}"> Add Country</a>
-        {% endif %}
-        ||||
-        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
-        <a href="{% url 'profile' %}"">Profile</a>
-        {% endif %}
+  <div class="card-body">
 
-        <a href="{% url 'password_reset' %}">Reset password</a>
-      </p>
-      <form method="post" novalidate>
-        {% csrf_token %}
-        {% if form.non_field_errors %}
-          <div class="alert alert-danger">
-            {{ form.non_field_errors }}
+    <form method="post" class="needs-validation" novalidate>
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+
+      <!-- Dynamic Flag Display -->
+      <div class="text-end mb-4" id="flagPreviewContainer" style="display:none;">
+        <img id="flagPreview"
+             src=""
+             width="48" height="32"
+             class="rounded border shadow-sm"
+             alt="Country Flag Preview">
+      </div>
+
+      <!-- Country Information -->
+      <div class="mb-4">
+        <h6 class="text-uppercase text-muted mb-3 fw-bold">
+          <i class="fas fa-globe me-1"></i> Country Details
+        </h6>
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="form-floating">
+              {{ form.name }}
+              <label for="{{ form.name.id_for_label }}">Country Name</label>
+            </div>
           </div>
-        {% endif %}
 
-        <div class="row">
-          <!-- Left column -->
-            <div class="col-md-12">
-              <div class="row">
-                <div class="mb-3 col-md-2">
-                  {{ form.iso2_code.label_tag }} {{ form.iso2_code }}
-                  {% for error in form.iso2_code.errors %}
-                    <div class="text-danger small">{{ error }}</div>
-                  {% endfor %}
-                </div>
-                <div class="mb-3 col-md-2">
-                  {{ form.iso3_code.label_tag }} {{ form.iso3_code }}
-                  {% for error in form.iso3_code.errors %}
-                    <div class="text-danger small">{{ error }}</div>
-                  {% endfor %}
-                </div>
-                <div class="mb-3 col-md-6">
-                  {{ form.name.label_tag }} {{ form.name }}
-                  {% for error in form.name.errors %}
-                    <div class="text-danger small">{{ error }}</div>
-                  {% endfor %}
-                </div>
-                <div class="mb-3 col-md-2">
-                  {{ form.status.label_tag }} {{ form.status }}
-                  {% for error in form.status.errors %}
-                    <div class="text-danger small">{{ error }}</div>
-                  {% endfor %}
-                </div>
-              </div>
-            
-              <div class="row">
-                <div class="mb-3 col-md-3">
-                  {{ form.official_language.label_tag }} {{ form.official_language }}
-                  {% for error in form.official_language.errors %}
-                    <div class="text-danger small">{{ error }}</div>
-                  {% endfor %}
-                </div>
-                <div class="mb-3 col-md-3">
-                  {{ form.currency_name.label_tag }} {{ form.currency_name }}
-                  {% for error in form.currency_name.errors %}
-                    <div class="text-danger small">{{ error }}</div>
-                  {% endfor %}
-                </div>
-                <div class="mb-3 col-md-2">
-                  {{ form.currency_code.label_tag }} {{ form.currency_code }}
-                  {% for error in form.currency_code.errors %}
-                    <div class="text-danger small">{{ error }}</div>
-                  {% endfor %}
-                </div>
-                <div class="mb-3 col-md-2">
-                  {{ form.fiscal_year_start.label_tag }} {{ form.fiscal_year_start }}
-                  {% for error in form.fiscal_year_start.errors %}
-                    <div class="text-danger small">{{ error }}</div>
-                  {% endfor %}
-                </div>
-                <div class="mb-3 col-md-2">
-                  {{ form.fiscal_year_end.label_tag }} {{ form.fiscal_year_end }}
-                  {% for error in form.fiscal_year_end.errors %}
-                    <div class="text-danger small">{{ error }}</div>
-                  {% endfor %}
-                </div>
-              </div>
-              <div class="row">
-                <div class="mb-3 col-md-3">
-                  {{ form.numbering_format.label_tag }} {{ form.numbering_format }}
-                  {% for error in form.numbering_format.errors %}
-                    <div class="text-danger small">{{ error }}</div>
-                  {% endfor %}
-                </div>
-                <div class="mb-3 col-md-3">
-                  {{ form.currency_position.label_tag }} {{ form.currency_position }}
-                  {% for error in form.currency_position.errors %}
-                    <div class="text-danger small">{{ error }}</div>
-                  {% endfor %}
-                </div>
-                <div class="mb-3 col-md-2">
-                  {{ form.date_format.label_tag }} {{ form.date_format }}
-                  {% for error in form.date_format.errors %}
-                    <div class="text-danger small">{{ error }}</div>
-                  {% endfor %}
-                </div>
-                <div class="mb-3 col-md-2">
-                  {{ form.decimals.label_tag }} {{ form.decimals }}
-                  {% for error in form.decimals.errors %}
-                    <div class="text-danger small">{{ error }}</div>
-                  {% endfor %}
-                </div>
-                <div class="mb-3 col-md-2">
-                  {{ form.archive.label_tag }} {{ form.archive }}
-                  {% for error in form.archive.errors %}
-                    <div class="text-danger small">{{ error }}</div>
-                    {% endfor %}
-                </div>
-              </div>
+          <div class="col-md-6">
+            <div class="form-floating">
+              {{ form.status }}
+              <label for="{{ form.status.id_for_label }}">Status</label>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.iso2_code }}
+              <label for="{{ form.iso2_code.id_for_label }}">ISO2 Code</label>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.iso3_code }}
+              <label for="{{ form.iso3_code.id_for_label }}">ISO3 Code</label>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.official_language }}
+              <label for="{{ form.official_language.id_for_label }}">Official Language</label>
+            </div>
           </div>
         </div>
-        <div class="text-end mt-4 d-flex justify-content-end gap-2">
-          <button type="submit" class="btn btn-primary">
-            {% if form.instance.pk %}Update{% else %}Save{% endif %}
-          </button>
-          <a href="{% url 'country:country' %}" class="btn btn-primary">Cancel
-          </a>
+      </div>
+
+      <!-- Currency Section -->
+      <div class="mb-4">
+        <h6 class="text-uppercase text-muted mb-3 fw-bold">
+          <i class="fas fa-coins me-1"></i> Currency Information
+        </h6>
+
+        <div class="row g-3">
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.currency_name }}
+              <label for="{{ form.currency_name.id_for_label }}">Currency Name</label>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.currency_code }}
+              <label for="{{ form.currency_code.id_for_label }}">Currency Code</label>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.currency_position }}
+              <label for="{{ form.currency_position.id_for_label }}">Currency Position</label>
+            </div>
+          </div>
+          
         </div>
-    </div>
+      </div>
+
+      <!-- Fiscal Information -->
+      <div class="mb-4">
+        <h6 class="text-uppercase text-muted mb-3 fw-bold">
+          <i class="fas fa-calendar-alt me-1"></i> Fiscal Settings
+        </h6>
+
+        <div class="row g-3">
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.fiscal_year_start }}
+              <label for="{{ form.fiscal_year_start.id_for_label }}">Fiscal Year Start</label>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.fiscal_year_end }}
+              <label for="{{ form.fiscal_year_end.id_for_label }}">Fiscal Year End</label>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.numbering_format }}
+              <label for="{{ form.numbering_format.id_for_label }}">Numbering Format</label>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Formatting -->
+      <div class="mb-4">
+        <h6 class="text-uppercase text-muted mb-3 fw-bold">
+          <i class="fas fa-cog me-1"></i> Formatting
+        </h6>
+
+        <div class="row g-3">
+          
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.date_format }}
+              <label for="{{ form.date_format.id_for_label }}">Date Format</label>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.decimals }}
+              <label for="{{ form.decimals.id_for_label }}">Decimals</label>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.archive }}
+              <label for="{{ form.archive.id_for_label }}">Archive</label>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="text-end mt-4">
+        <a href="{% url 'country:country' %}" class="btn btn-light border me-2">
+          <i class="fas fa-arrow-left me-1"></i> Cancel
+        </a>
+
+        <button type="submit" class="btn btn-primary px-4">
+          <i class="fas fa-save me-1"></i> Create Country
+        </button>
+      </div>
+
+    </form>
+
   </div>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const iso2Input = document.getElementById("{{ form.iso2_code.id_for_label }}");
+    const flagContainer = document.getElementById("flagPreviewContainer");
+    const flagImage = document.getElementById("flagPreview");
+
+    if (iso2Input) {
+        iso2Input.addEventListener("input", () => {
+            const code = iso2Input.value.trim().toLowerCase();
+
+            if (code.length === 2) {
+                flagImage.src = "{% static 'dis/img/flags/' %}" + code + ".png";
+                flagContainer.style.display = "block";
+            } else {
+                flagContainer.style.display = "none";
+            }
+        });
+    }
+});
+</script>
 {% endblock %}
