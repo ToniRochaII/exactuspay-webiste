@@ -1,197 +1,334 @@
 {% extends "base.html" %}
 {% load static %}
-{% load country_role_filters %}
 
 {% block title %}Edit Country — {{ form.instance.name }} | ExactusPay{% endblock %}
 {% block page_title %}
-<i class="fas fa-globe-europe me-2"></i>Edit Country
+<i class="fas fa-edit me-2"></i>Edit Country
+{% endblock %}
+
+{% block extra_head %}
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+
+<style>
+/* Select2 styled to match Spark */
+.select2-container .select2-selection--single {
+    height: 58px !important;
+    padding: 14px 12px;
+    border-radius: 0.5rem;
+    border: 1px solid #ced4da;
+}
+.select2-selection__arrow {
+    top: 14px !important;
+}
+
+.summary-card {
+    border-left: 4px solid #0d6efd;
+}
+.summary-label {
+    font-size: .75rem;
+    color: #6c757d;
+}
+.summary-value {
+    font-size: 1rem;
+    font-weight: 600;
+}
+</style>
 {% endblock %}
 
 {% block breadcrumbs %}
 <nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Edit Country</li>
-  </ol>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
+        <li class="breadcrumb-item active">Edit Country</li>
+    </ol>
 </nav>
 {% endblock %}
 
 {% block content %}
-<div class="card shadow-sm border-0">
-  <div class="card-header py-3 d-flex justify-content-between align-items-center">
-    <h5 class="mb-0 fw-semibold">
-      <i class="fas fa-edit me-2"></i>Editing: {{ form.instance.name }}
-    </h5>
+<div class="row">
 
-    {% if form.instance.iso2_code %}
-    <img src="{% static 'dis/img/flags/' %}{{ form.instance.iso2_code|lower }}.png"
-         class="border rounded shadow-sm"
-         width="42" height="28" alt="Flag of {{ form.instance.name }}">
-    {% endif %}
-  </div>
+    <!-- LEFT FORM -->
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0">
 
-  <div class="card-body">
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-semibold">
+                    <i class="fas fa-flag me-2"></i>Edit Country: {{ form.instance.name }}
+                </h5>
 
-    <form method="post" class="needs-validation" novalidate>
-      {% csrf_token %}
-      {{ form.non_field_errors }}
-
-      <!-- Country Information -->
-      <div class="mb-4">
-        <h6 class="text-uppercase text-muted mb-3 fw-bold">
-          <i class="fas fa-flag me-1"></i> Country Details
-        </h6>
-
-        <div class="row g-3">
-          
-          <div class="col-md-6">
-            <div class="form-floating">
-              {{ form.name }}
-              <label for="{{ form.name.id_for_label }}">Country Name</label>
+                {% if form.instance.iso2_code %}
+                <img src="{% static 'dis/img/flags/' %}{{ form.instance.iso2_code|lower }}.png"
+                     width="48" height="32"
+                     class="rounded border shadow-sm"
+                     alt="Flag of {{ form.instance.name }}">
+                {% endif %}
             </div>
-          </div>
 
-          <div class="col-md-6">
-            <div class="form-floating">
-              {{ form.status }}
-              <label for="{{ form.status.id_for_label }}">Status</label>
+            <div class="card-body">
+
+                <form method="post" id="countryForm" novalidate>
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+
+                    <!-- Country Section -->
+                    <h6 class="text-uppercase text-muted mb-3 fw-bold">
+                        <i class="fas fa-globe me-1"></i> Country Details
+                    </h6>
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form.name }}
+                                <label>Country Name</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form.status }}
+                                <label>Status</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                {{ form.iso2_code }}
+                                <label>ISO2 Code</label>
+                            </div>
+                            <small id="iso2Error" class="text-danger d-none">ISO2 must be exactly 2 letters.</small>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                {{ form.iso3_code }}
+                                <label>ISO3 Code</label>
+                            </div>
+                            <small id="iso3Error" class="text-danger d-none">ISO3 must be exactly 3 letters.</small>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                {{ form.official_language }}
+                                <label>Official Language</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Currency Section -->
+                    <h6 class="text-uppercase text-muted mt-4 mb-3 fw-bold">
+                        <i class="fas fa-coins me-1"></i> Currency Information
+                    </h6>
+
+                    <div class="row g-3">
+
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                {{ form.currency_name }}
+                                <label>Currency Name</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                {{ form.currency_code }}
+                                <label>Currency Code</label>
+                            </div>
+                            <small id="curError" class="text-danger d-none">Currency code must be 3 letters.</small>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                {{ form.currency_position }}
+                                <label>Currency Position</label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Formatting -->
+                    <h6 class="text-uppercase text-muted mt-4 mb-3 fw-bold">
+                        <i class="fas fa-cog me-1"></i> Formatting
+                    </h6>
+
+                    <div class="row g-3">
+
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                {{ form.date_format }}
+                                <label>Date Format</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                {{ form.decimals }}
+                                <label>Decimals</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                {{ form.archive }}
+                                <label>Archive</label>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-floating">
+                                {{ form.numbering_format }}
+                                <label>Numbering Format</label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="text-end mt-4">
+                        <a href="{% url 'country:country' %}" class="btn btn-light border me-2">
+                            Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary px-4">
+                            Save Changes
+                        </button>
+                    </div>
+
+                </form>
             </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="form-floating">
-              {{ form.iso2_code }}
-              <label for="{{ form.iso2_code.id_for_label }}">ISO2 Code</label>
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="form-floating">
-              {{ form.iso3_code }}
-              <label for="{{ form.iso3_code.id_for_label }}">ISO3 Code</label>
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="form-floating">
-              {{ form.official_language }}
-              <label for="{{ form.official_language.id_for_label }}">Official Language</label>
-            </div>
-          </div>
-
         </div>
-      </div>
+    </div>
 
-      <!-- Currency Info -->
-      <div class="mb-4">
-        <h6 class="text-uppercase text-muted mb-3 fw-bold">
-          <i class="fas fa-coins me-1"></i> Currency Information
-        </h6>
-
-        <div class="row g-3">
-
-          <div class="col-md-4">
-            <div class="form-floating">
-              {{ form.currency_name }}
-              <label for="{{ form.currency_name.id_for_label }}">Currency Name</label>
+    <!-- RIGHT — LIVE SUMMARY -->
+    <div class="col-lg-4">
+        <div class="card shadow-sm border-0 summary-card">
+            <div class="card-header bg-white">
+                <h6 class="fw-bold mb-0">
+                    <i class="fas fa-eye me-2"></i>Country Preview
+                </h6>
             </div>
-          </div>
+            <div class="card-body">
 
-          <div class="col-md-4">
-            <div class="form-floating">
-              {{ form.currency_code }}
-              <label for="{{ form.currency_code.id_for_label }}">Currency Code</label>
+                <div class="text-center mb-3">
+                    <img id="liveFlag"
+                         src=""
+                         width="64" height="42"
+                         class="rounded border shadow-sm d-none"
+                         alt="Flag Preview">
+                </div>
+
+                <div class="mb-3">
+                    <div class="summary-label">Country</div>
+                    <div id="prevName" class="summary-value text-primary">{{ form.instance.name }}</div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="summary-label">Language</div>
+                    <div id="prevLang" class="summary-value">{{ form.instance.official_language }}</div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="summary-label">Currency</div>
+                    <div id="prevCurrency" class="summary-value">
+                        {{ form.instance.currency_name }} ({{ form.instance.currency_code }})
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="summary-label">Numbering Format</div>
+                    <div id="prevNumbering" class="summary-value">{{ form.instance.numbering_format }}</div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="summary-label">Status</div>
+                    <span id="prevStatus"
+                          class="badge {% if form.instance.status == 'Active' %}bg-success{% else %}bg-secondary{% endif %}">
+                        {{ form.instance.status }}
+                    </span>
+                </div>
+
             </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="form-floating">
-              {{ form.currency_position }}
-              <label for="{{ form.currency_position.id_for_label }}">Currency Position</label>
-            </div>
-          </div>
-
         </div>
-      </div>
+    </div>
 
-      <!-- Fiscal & Numbering -->
-      <div class="mb-4">
-        <h6 class="text-uppercase text-muted mb-3 fw-bold">
-          <i class="fas fa-calendar-alt me-1"></i> Fiscal Settings
-        </h6>
-
-        <div class="row g-3">
-
-          <div class="col-md-4">
-            <div class="form-floating">
-              {{ form.fiscal_year_start }}
-              <label for="{{ form.fiscal_year_start.id_for_label }}">Fiscal Year Start</label>
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="form-floating">
-              {{ form.fiscal_year_end }}
-              <label for="{{ form.fiscal_year_end.id_for_label }}">Fiscal Year End</label>
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="form-floating">
-              {{ form.numbering_format }}
-              <label for="{{ form.numbering_format.id_for_label }}">Numbering Format</label>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Formatting -->
-      <div class="mb-4">
-        <h6 class="text-uppercase text-muted mb-3 fw-bold">
-          <i class="fas fa-cog me-1"></i> Formatting
-        </h6>
-
-        <div class="row g-3">
-
-          <div class="col-md-4">
-            <div class="form-floating">
-              {{ form.date_format }}
-              <label for="{{ form.date_format.id_for_label }}">Date Format</label>
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="form-floating">
-              {{ form.decimals }}
-              <label for="{{ form.decimals.id_for_label }}">Decimals</label>
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="form-floating">
-              {{ form.archive }}
-              <label for="{{ form.archive.id_for_label }}">Archive</label>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Actions -->
-      <div class="text-end mt-4">
-        <a href="{% url 'country:country' %}" class="btn btn-light border me-2">
-          <i class="fas fa-times me-1"></i> Cancel
-        </a>
-
-        <button type="submit" class="btn btn-primary px-4">
-          <i class="fas fa-save me-1"></i> Save Changes
-        </button>
-      </div>
-
-    </form>
-
-  </div>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<!-- Select2 -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    // Initialize Select2
+    $("select").select2({ theme: "bootstrap-5" });
+
+    // Inputs
+    const nameInput = document.getElementById("{{ form.name.id_for_label }}");
+    const langInput = document.getElementById("{{ form.official_language.id_for_label }}");
+    const iso2Input = document.getElementById("{{ form.iso2_code.id_for_label }}");
+    const iso3Input = document.getElementById("{{ form.iso3_code.id_for_label }}");
+    const statusInput = document.getElementById("{{ form.status.id_for_label }}");
+    const currencyName = document.getElementById("{{ form.currency_name.id_for_label }}");
+    const currencyCode = document.getElementById("{{ form.currency_code.id_for_label }}");
+    const numberingInput = document.getElementById("{{ form.numbering_format.id_for_label }}");
+
+    const flagImg = document.getElementById("liveFlag");
+
+    // Auto-uppercase fields
+    [iso2Input, iso3Input, currencyCode].forEach(el => {
+        el.addEventListener("input", () => {
+            el.value = el.value.toUpperCase();
+        });
+    });
+
+    // Flag preview
+    function updateFlag() {
+        if (iso2Input.value.length === 2) {
+            flagImg.src = "{% static 'dis/img/flags/' %}" + iso2Input.value.toLowerCase() + ".png";
+            flagImg.classList.remove("d-none");
+        } else {
+            flagImg.classList.add("d-none");
+        }
+    }
+    iso2Input.addEventListener("input", updateFlag);
+    updateFlag();
+
+    // LIVE summary update
+    function updatePreview() {
+        document.getElementById("prevName").textContent = nameInput.value;
+        document.getElementById("prevLang").textContent = langInput.value;
+        document.getElementById("prevCurrency").textContent =
+            `${currencyName.value} (${currencyCode.value})`;
+
+        document.getElementById("prevNumbering").textContent = numberingInput.value;
+
+        const badge = document.getElementById("prevStatus");
+        badge.textContent = statusInput.value;
+        badge.className = "badge " + (statusInput.value === "Active" ? "bg-success" : "bg-secondary");
+    }
+
+    document.querySelectorAll("input, select").forEach(el => {
+        el.addEventListener("input", updatePreview);
+        el.addEventListener("change", updatePreview);
+    });
+
+    updatePreview();
+
+    // REAL-TIME VALIDATION
+    iso2Input.addEventListener("input", () => {
+        document.getElementById("iso2Error").classList.toggle("d-none", /^[A-Z]{2}$/.test(iso2Input.value));
+    });
+
+    iso3Input.addEventListener("input", () => {
+        document.getElementById("iso3Error").classList.toggle("d-none", /^[A-Z]{3}$/.test(iso3Input.value));
+    });
+
+    currencyCode.addEventListener("input", () => {
+        document.getElementById("curError").classList.toggle("d-none", /^[A-Z]{3}$/.test(currencyCode.value));
+    });
+});
+</script>
 {% endblock %}
