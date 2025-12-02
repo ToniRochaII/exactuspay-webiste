@@ -17,5 +17,8 @@ class Payroll(models.Model):
     ]
     payroll_frequency = models.CharField(max_length=15, choices=FREQUENCY_CHOICES, null=True, blank=True)
 
+    created_at = models.DateTimeField(auto_now_add=True)   # NEW
+    updated_at = models.DateTimeField(auto_now=True)       # NEW
+
     def __str__(self):
         return f"{self.regulations} - {self.payroll_frequency}"
