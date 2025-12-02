@@ -1,4 +1,4 @@
-# accounts/templatetags/dict_extras.py
+# Exactus/accounts/templatetags/dict_extras.py
 from django import template
 
 register = template.Library()
@@ -9,5 +9,3 @@ def dict_get(d, key):
     if isinstance(d, dict):
         return d.get(key)
     return None
-
-
