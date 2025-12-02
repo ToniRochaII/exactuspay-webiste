@@ -1,224 +1,189 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
+{% load static %}
 
-{% block title %}Upload Countries - ExactusPay{% endblock %}
+{% block title %}Upload Countries | ExactusPay{% endblock %}
+{% block page_title %}
+<i class="fas fa-upload me-2"></i>Upload Countries
+{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
+        <li class="breadcrumb-item active">Upload Countries</li>
+    </ol>
+</nav>
+{% endblock %}
 
 {% block content %}
-<div class="container-fluid py-4">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header pb-0">
-                    <div class="d-flex align-items-center">
-                        <h4>Upload Countries</h4>
-                        <a href="{% url 'country:country' %}" class="btn btn-outline-secondary btn-sm ms-auto">
-                            <i class="fas fa-arrow-left me-2"></i>Back to Countries
+<div class="card shadow-sm border-0">
+
+    <!-- Header -->
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <div>
+            <h5 class="mb-0 fw-semibold">
+                <i class="fas fa-file-upload me-2"></i>Upload Countries (CSV)
+            </h5>
+            <small class="text-muted">Upload multiple countries at once using our standardized CSV format.</small>
+        </div>
+
+        <a href="{% url 'country:country' %}" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-arrow-left me-2"></i>Back
+        </a>
+    </div>
+
+    <div class="card-body">
+
+        <!-- CSV INSTRUCTIONS -->
+        <div class="alert alert-info border-0 shadow-sm">
+            <h6 class="fw-bold mb-2">
+                <i class="fas fa-info-circle me-2"></i>CSV Format Requirements
+            </h6>
+            <ul class="mb-0">
+                <li>File must be in <strong>.csv</strong> format.</li>
+                <li>The first row must contain column headers.</li>
+                <li><strong>Required fields:</strong> iso2_code, iso3_code, name</li>
+                <li><strong>Optional:</strong> status, official_language, currency_name, currency_code, numbering_format, currency_position, date_format, decimals, archive</li>
+            </ul>
+        </div>
+
+        <!-- TEMPLATE DOWNLOAD -->
+        <div class="alert alert-warning border-0 shadow-sm d-flex justify-content-between align-items-center">
+            <span>
+                <strong>Need an example?</strong> Download our CSV template for correct formatting.
+            </span>
+            <a href="{% url 'country:download_csv_template' %}" class="btn btn-sm btn-outline-primary">
+                <i class="fas fa-download me-2"></i>Download CSV Template
+            </a>
+        </div>
+
+        <!-- UPLOAD FORM -->
+        <div class="card shadow-sm border-0 mt-4">
+            <div class="card-header">
+                <h6 class="mb-0 fw-semibold">
+                    <i class="fas fa-file-csv me-2"></i>Select CSV File
+                </h6>
+            </div>
+            <div class="card-body">
+
+                <form method="post" enctype="multipart/form-data" id="uploadForm">
+                    {% csrf_token %}
+
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            {{ form.file|as_crispy_field }}
+                        </div>
+
+                        <div class="col-md-4">
+                            {{ form.dry_run|as_crispy_field }}
+                            <small class="text-muted">Validate the file without saving to the database.</small>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary" id="uploadBtn">
+                            <i class="fas fa-upload me-2"></i>Upload Countries
+                        </button>
+                        <a href="{% url 'country:country' %}" class="btn btn-outline-secondary">
+                            Cancel
                         </a>
                     </div>
-                    <p class="text-sm mb-0">Upload multiple countries via CSV file</p>
-                </div>
-                <div class="card-body">
-                    <!-- Instructions -->
-                    <div class="alert alert-info">
-                        <h6 class="alert-heading">
-                            <i class="fas fa-info-circle me-2"></i>CSV Format Requirements
-                        </h6>
-                        <hr>
-                        <ul class="mb-1">
-                            <li>File must be in CSV format (comma-separated values)</li>
-                            <li>First row must contain column headers</li>
-                            <li>Required columns: <strong>iso2_code, iso3_code, name</strong></li>
-                            <li>Optional columns: status, official_language, currency_name, currency_code, fiscal_year_start, fiscal_year_end, numbering_format, currency_position, date_format, decimals, archive</li>
-                        </ul>
-                    </div>
+                </form>
 
-                    <!-- CSV Template Download -->
-                    <div class="alert alert-warning">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <strong>Need a template?</strong> Download our CSV template to ensure proper formatting.
-                            </div>
-                            <a href="{% url 'country:download_csv_template' %}" class="btn btn-sm btn-outline-primary">
-                                <i class="fas fa-download me-2"></i>Download Template
-                            </a>
-                        </div>
-                    </div>
+            </div>
+        </div>
 
-                    <!-- Upload Form -->
-                    <div class="card mt-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Upload CSV File</h5>
-                        </div>
-                        <div class="card-body">
-                            <form method="post" enctype="multipart/form-data" id="uploadForm">
-                                {% csrf_token %}
-                                
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        {{ form.file|as_crispy_field }}
-                                    </div>
-                                    <div class="col-md-4">
-                                        {{ form.dry_run|as_crispy_field }}
-                                        <small class="form-text text-muted">
-                                            Check this to validate the file without saving to database.
-                                        </small>
-                                    </div>
-                                </div>
+        <!-- SAMPLE PREVIEW -->
+        <div class="card shadow-sm border-0 mt-4">
+            <div class="card-header">
+                <h6 class="mb-0 fw-semibold">
+                    <i class="fas fa-table me-2"></i>Expected CSV Structure
+                </h6>
+            </div>
 
-                                <!-- Sample Data Preview -->
-                                <div class="mt-4">
-                                    <h6>Expected CSV Format:</h6>
-                                    <div class="table-responsive">
-                                        <table class="table table-sm table-bordered">
-                                            <thead class="table-light">
-                                                <tr>
-                                                    <th>iso2_code</th>
-                                                    <th>iso3_code</th>
-                                                    <th>name</th>
-                                                    <th>status</th>
-                                                    <th>currency_code</th>
-                                                    <th>archive</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>US</td>
-                                                    <td>USA</td>
-                                                    <td>United States</td>
-                                                    <td>ACTIVE</td>
-                                                    <td>USD</td>
-                                                    <td>N</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>GB</td>
-                                                    <td>GBR</td>
-                                                    <td>United Kingdom</td>
-                                                    <td>ACTIVE</td>
-                                                    <td>GBP</td>
-                                                    <td>N</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-
-                                <div class="mt-4">
-                                    <button type="submit" class="btn btn-primary" id="uploadBtn">
-                                        <i class="fas fa-upload me-2"></i>Upload Countries
-                                    </button>
-                                    <a href="{% url 'country:country' %}" class="btn btn-outline-secondary">
-                                        Cancel
-                                    </a>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    <!-- Field Reference -->
-                    <div class="card mt-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Field Reference</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-sm table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Field</th>
-                                            <th>Required</th>
-                                            <th>Format</th>
-                                            <th>Allowed Values</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><strong>iso2_code</strong></td>
-                                            <td>Yes</td>
-                                            <td>2 letters</td>
-                                            <td>US, GB, FR, etc.</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>iso3_code</strong></td>
-                                            <td>Yes</td>
-                                            <td>3 letters</td>
-                                            <td>USA, GBR, FRA, etc.</td>
-                                        </tr>
-                                        <tr>
-                                            <td><strong>name</strong></td>
-                                            <td>Yes</td>
-                                            <td>Text</td>
-                                            <td>Country name</td>
-                                        </tr>
-                                        <tr>
-                                            <td>status</td>
-                                            <td>No</td>
-                                            <td>Text</td>
-                                            <td>ACTIVE, IMPLEMENTING, INACTIVE</td>
-                                        </tr>
-                                        <tr>
-                                            <td>currency_code</td>
-                                            <td>No</td>
-                                            <td>3 letters</td>
-                                            <td>USD, EUR, GBP, etc.</td>
-                                        </tr>
-                                        <tr>
-                                            <td>numbering_format</td>
-                                            <td>No</td>
-                                            <td>Text</td>
-                                            <td>1,000.00 or 1.000,00</td>
-                                        </tr>
-                                        <tr>
-                                            <td>currency_position</td>
-                                            <td>No</td>
-                                            <td>Text</td>
-                                            <td>BEFORE, AFTER</td>
-                                        </tr>
-                                        <tr>
-                                            <td>date_format</td>
-                                            <td>No</td>
-                                            <td>Text</td>
-                                            <td>DD/MM/YYYY, MM/DD/YYYY, YYYY/MM/DD, YYYY/DD/MM</td>
-                                        </tr>
-                                        <tr>
-                                            <td>archive</td>
-                                            <td>No</td>
-                                            <td>Text</td>
-                                            <td>Y, N (default: N)</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>iso2_code</th>
+                                <th>iso3_code</th>
+                                <th>name</th>
+                                <th>status</th>
+                                <th>currency_code</th>
+                                <th>archive</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>US</td>
+                                <td>USA</td>
+                                <td>United States</td>
+                                <td>ACTIVE</td>
+                                <td>USD</td>
+                                <td>N</td>
+                            </tr>
+                            <tr>
+                                <td>GB</td>
+                                <td>GBR</td>
+                                <td>United Kingdom</td>
+                                <td>ACTIVE</td>
+                                <td>GBP</td>
+                                <td>N</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
+
+        <!-- FIELD REFERENCE -->
+        <div class="card shadow-sm border-0 mt-4">
+            <div class="card-header">
+                <h6 class="mb-0 fw-semibold">
+                    <i class="fas fa-list me-2"></i>Field Reference
+                </h6>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm table-striped align-middle">
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Required</th>
+                                <th>Format</th>
+                                <th>Allowed Values</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><strong>iso2_code</strong></td><td>Yes</td><td>2 letters</td><td>US, GB, FR…</td></tr>
+                            <tr><td><strong>iso3_code</strong></td><td>Yes</td><td>3 letters</td><td>USA, GBR, FRA…</td></tr>
+                            <tr><td><strong>name</strong></td><td>Yes</td><td>Text</td><td>Country name</td></tr>
+                            <tr><td>status</td><td>No</td><td>Text</td><td>ACTIVE, IMPLEMENTING, INACTIVE</td></tr>
+                            <tr><td>currency_code</td><td>No</td><td>3 letters</td><td>USD, EUR, GBP…</td></tr>
+                            <tr><td>numbering_format</td><td>No</td><td>Text</td><td>1,000.00 / 1.000,00</td></tr>
+                            <tr><td>currency_position</td><td>No</td><td>Text</td><td>BEFORE, AFTER</td></tr>
+                            <tr><td>date_format</td><td>No</td><td>Text</td><td>DD/MM/YYYY etc.</td></tr>
+                            <tr><td>archive</td><td>No</td><td>Y or N</td><td>Default: N</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 
-<!-- Loading Spinner Script -->
+<!-- Button Spinner on Submit -->
 <script>
-document.getElementById('uploadForm').addEventListener('submit', function() {
-    const btn = document.getElementById('uploadBtn');
+document.getElementById("uploadForm").addEventListener("submit", function () {
+    const btn = document.getElementById("uploadBtn");
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Uploading...';
 });
 </script>
 
-<style>
-.card {
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-    border: 1px solid rgba(0, 0, 0, 0.125);
-}
-
-.card-header {
-    background-color: #f8f9fa;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
-}
-
-.table th {
-    font-weight: 600;
-    font-size: 0.875rem;
-}
-</style>
 {% endblock %}
