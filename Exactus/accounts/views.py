@@ -9,10 +9,14 @@ from django.apps import apps
 from django.conf import settings
 from django.contrib.auth import get_user_model, logout, authenticate, login, views as auth_views
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Q, Count, F
+from django.db.models.functions import TruncMonth
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
+from django.core.cache import cache
+import json
+
 from Exactus.accounts.utils.access_control import AccessControl
 from Exactus.accounts.utils.permissions import permission_required
 from Exactus.accounts.forms import UserEditForm, UserRegistrationForm, LoginForm, UserProfileForm
@@ -26,8 +30,6 @@ from Exactus.accounts.models import (
 from Exactus.accounts.utils.permissions import has_permission
 from Exactus.accounts.utils.role_hierarchy import promote_role, demote_role
 
-
-User = get_user_model()
 
 def get_pending_regulation_updates():
     """
@@ -103,6 +105,7 @@ def register(request):
 
     return render(request, 'auth/register.html', {'form': form})
 
+
 def custom_login(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
@@ -132,60 +135,12 @@ def custom_login(request):
     
     return render(request, 'login.html')
 
+
 @login_required
 def profile(request):
     """User's own profile - now uses unified template"""
     return unified_profile(request, user_id=None)
 
-
-
-
-# accounts/views.py (corrected dashboard views)
-
-from django.db.models import Count, Q, F
-from django.db.models.functions import TruncMonth  # Add this import
-from django.core.cache import cache
-import json
-from datetime import timedelta
-from django.utils import timezone
-
-# accounts/views.py (FULLY CORRECTED VERSION)
-
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from django.http import HttpResponse
-from collections import defaultdict
-import csv
-from datetime import timedelta
-from django.apps import apps
-from django.conf import settings
-from django.contrib.auth import get_user_model, logout, authenticate, login, views as auth_views
-from django.db import transaction
-from django.db.models import Q, Count, F
-from django.db.models.functions import TruncMonth
-from django.urls import reverse_lazy
-from django.utils import timezone
-from django.views.decorators.http import require_http_methods
-from django.core.cache import cache
-import json
-
-from Exactus.accounts.utils.access_control import AccessControl
-from Exactus.accounts.utils.permissions import permission_required
-from Exactus.accounts.forms import UserEditForm, UserRegistrationForm, LoginForm, UserProfileForm
-from Exactus.accounts.models import (
-    RoleHierarchy,
-    User,
-    PermissionMatrix,
-    RoleTemplate,
-    UserProfile,
-)
-from Exactus.accounts.utils.permissions import has_permission
-from Exactus.accounts.utils.role_hierarchy import promote_role, demote_role
-
-
-# Remove duplicate User import - keep only one
-# User = get_user_model()  # REMOVE THIS - already imported from models
 
 @login_required
 def dashboard_admin(request):
@@ -218,7 +173,7 @@ def dashboard_admin(request):
     
     # ──────────────── KPIs ────────────────
     
-    # Country metrics - CORRECT: Country uses 'id' as PK
+    # Country metrics - Country uses 'id' as PK
     country_stats = Country.objects.aggregate(
         active_countries=Count('id', filter=Q(status='ACTIVE')),
         implementing_countries=Count('id', filter=Q(status='IMPLEMENTING')),
@@ -226,7 +181,7 @@ def dashboard_admin(request):
         total_countries=Count('id')
     )
     
-    # Company metrics - CORRECT: Company uses 'company_id' as PK
+    # Company metrics - Company uses 'company_id' as PK
     company_stats = Company.objects.aggregate(
         active_companies=Count('company_id', filter=Q(account_status='ACTIVE')),
         suspended_companies=Count('company_id', filter=Q(account_status='SUSPENDED')),
@@ -234,13 +189,13 @@ def dashboard_admin(request):
         total_companies=Count('company_id')
     )
     
-    # Employee metric - CORRECT: Employee uses 'employee_id' as PK
+    # Employee metric - Employee uses 'employee_id' as PK
     total_employees = cache.get('total_employees')
     if total_employees is None:
         total_employees = Employee.objects.count()
         cache.set('total_employees', total_employees, 3600)
     
-    # Payroll metrics - CORRECT: Payroll uses 'payroll_id' as PK
+    # Payroll metrics - Payroll uses 'payroll_id' as PK
     total_payrolls = Payroll.objects.count()
     
     # Get payroll frequency choices safely
@@ -256,7 +211,7 @@ def dashboard_admin(request):
     except Exception:
         monthly_payrolls = 0
     
-    # Payslip metrics - CORRECT: PayRegister uses 'payregister_id' as PK
+    # Payslip metrics - PayRegister uses 'payregister_id' as PK
     payslip_stats = {
         'payslips_total': PayRegister.objects.count(),
         'payslips_this_month': PayRegister.objects.filter(
@@ -270,7 +225,7 @@ def dashboard_admin(request):
         ).count(),
     }
     
-    # Unique employees processed - CORRECT: uses 'employee' foreign key
+    # Unique employees processed
     unique_employees_processed_total = cache.get('unique_employees_processed')
     if unique_employees_processed_total is None:
         unique_employees_processed_total = PayRegister.objects.values('employee').distinct().count()
@@ -278,7 +233,7 @@ def dashboard_admin(request):
     
     # ──────────────── Charts Data ────────────────
     
-    # Monthly payslips for last 12 months - CORRECT: PayRegister uses 'payregister_id' as PK
+    # Monthly payslips for last 12 months - PayRegister uses 'payregister_id' as PK
     payslips_monthly = (
         PayRegister.objects.filter(created_at__gte=one_year_ago)
         .annotate(month=TruncMonth('created_at'))
@@ -293,7 +248,7 @@ def dashboard_admin(request):
         month_labels.append(entry['month'].strftime('%b %Y'))
         month_values.append(entry['count'])
     
-    # Payroll by frequency with fallback - CORRECT: Payroll uses 'payroll_id' as PK
+    # Payroll by frequency with fallback - Payroll uses 'payroll_id' as PK
     payroll_counts = (
         Payroll.objects.values('payroll_frequency')
         .annotate(count=Count('payroll_id'))  # CORRECT PK
@@ -343,7 +298,7 @@ def dashboard_admin(request):
     
     # ──────────────── Top Companies (Optimized) ────────────────
     
-    # Get company IDs with most payslips first - CORRECT: Company uses 'company_id' as PK
+    # Get company IDs with most payslips first - Company uses 'company_id' as PK
     top_company_ids = (
         PayRegister.objects.filter(created_at__gte=start_of_year)
         .values('employee__company__company_id')  # CORRECT PK field
@@ -352,7 +307,7 @@ def dashboard_admin(request):
         .values_list('employee__company__company_id', flat=True)[:10]
     )
     
-    # Get company details - CORRECT: filter by 'company_id' PK
+    # Get company details - filter by 'company_id' PK
     top_companies_qs = Company.objects.filter(company_id__in=top_company_ids)
     
     top_companies = []
@@ -486,7 +441,7 @@ def dashboard(request):
     # ──────────────── User-Specific Counts ────────────────
     
     if user_companies_count > 0:
-        # Get company IDs (CORRECT: Company uses 'company_id' as PK)
+        # Get company IDs - Company uses 'company_id' as PK
         company_ids = user_companies.values_list('company_id', flat=True)
         
         # Count employees in user's companies
@@ -582,36 +537,31 @@ def dashboard(request):
     return render(request, 'dashboard/index.html', context)
 
 
-# Keep all your other views below - they remain unchanged
-# ... rest of the file continues ...
-
-
-
 class CustomPasswordResetView(auth_views.PasswordResetView):
     template_name = 'auth/password_reset.html'
     email_template_name = 'auth/password_reset_email.html'
     success_url = reverse_lazy('auth/password_reset_done')
 
     def form_valid(self, form):
-        messages.info(self.request, "If your email exists, you’ll receive reset instructions shortly.")
+        messages.info(self.request, "If your email exists, you'll receive reset instructions shortly.")
         return super().form_valid(form)
+
 
 class CustomPasswordResetDoneView(auth_views.PasswordResetDoneView):
     template_name = 'auth/password_reset_done.html'
 
+
 class CustomPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
-    template_name = 'auth//password_reset_confirm.html'
+    template_name = 'auth/password_reset_confirm.html'
     success_url = reverse_lazy('auth/password_reset_complete')
 
     def form_valid(self, form):
         messages.success(self.request, "Your password has been changed successfully.")
         return super().form_valid(form)
 
+
 class CustomPasswordResetCompleteView(auth_views.PasswordResetCompleteView):
     template_name = 'auth/password_reset_complete.html'
-
-
-
 
 
 @login_required
@@ -679,11 +629,11 @@ def export_users_csv(request):
     return response
 
 
-
 @login_required
 def user_detail(request, user_id):
     """User detail view - now uses unified template"""
     return unified_profile(request, user_id=user_id)
+
 
 @login_required
 def user_edit(request, user_id):
@@ -707,6 +657,7 @@ def user_edit(request, user_id):
 
     context = {"form": form, "user_obj": user_obj}
     return render(request, "management/user_edit.html", context)
+
 
 @permission_required("ROLE", "READ")
 def role_management(request):
@@ -743,19 +694,14 @@ def role_management(request):
         "hierarchy": dict(RoleHierarchy.objects.values_list('parent', 'child')),
     }
     
-    # ... rest of your existing role_management logic ...
     return render(request, "roles/role_management.html", context)
+
 
 @login_required
 def unified_profile(request, user_id=None):
     """
     Debugging version to identify exactly where the issue is
     """
-    print("=== PROFILE VIEW DEBUG ===")
-    print(f"Method: {request.method}")
-    print(f"User: {request.user}")
-    print(f"user_id param: {user_id}")
-
     # Determine target user
     if user_id:
         target_user = get_object_or_404(User, id=user_id)
@@ -763,8 +709,6 @@ def unified_profile(request, user_id=None):
         target_user = request.user
 
     profile, created = UserProfile.objects.get_or_create(user=target_user)
-    print(f"Profile: {profile}, Created: {created}")
-    print(f"Current avatar: {profile.avatar}")
 
     is_own_profile = (request.user == target_user)
     can_edit = is_own_profile or AccessControl.has_permission(request.user, "USER", "UPDATE")
@@ -780,41 +724,29 @@ def unified_profile(request, user_id=None):
     # POST HANDLING - DEBUG
     # ==========================
     if request.method == "POST":
-        print(f"POST data: {dict(request.POST)}")
-        print(f"FILES data: {dict(request.FILES)}")
         form_type = request.POST.get("form_type")
-        print(f"Form type: {form_type}")
 
         if form_type == "profile":
-            print("Processing PROFILE form")
             profile_form = UserProfileForm(request.POST, request.FILES, instance=profile)
-            print(f"Profile form valid: {profile_form.is_valid()}")
-            print(f"Profile form errors: {profile_form.errors}")
             
             if profile_form.is_valid():
-                saved_profile = profile_form.save()
-                print(f"Saved profile avatar: {saved_profile.avatar}")
+                profile_form.save()
                 messages.success(request, "Profile updated successfully.")
                 return redirect(request.path)
             else:
                 messages.error(request, f"Profile errors: {profile_form.errors}")
 
         elif form_type == "personal":
-            print("Processing PERSONAL form")
             personal_form = UserProfileForm(request.POST, request.FILES, instance=profile)
-            print(f"Personal form valid: {personal_form.is_valid()}")
-            print(f"Personal form errors: {personal_form.errors}")
             
             if personal_form.is_valid():
-                saved_profile = personal_form.save()
-                print(f"Saved personal info - avatar: {saved_profile.avatar}")
+                personal_form.save()
                 messages.success(request, "Personal information updated.")
                 return redirect(request.path)
             else:
                 messages.error(request, f"Personal info errors: {personal_form.errors}")
 
         elif form_type == "notifications" and is_own_profile:
-            print("Processing NOTIFICATIONS form")
             profile.notify_by_email = 'notify_by_email' in request.POST
             profile.notify_by_sms = 'notify_by_sms' in request.POST
             profile.save()
@@ -875,10 +807,10 @@ def role_management_view(request):
         'safety_warnings': safety_warnings,
         'operational_risks': operational_risks,
         'conflict_summary': conflict_detector.get_conflict_summary(),
-        # ... rest of your existing context
     }
     
     return render(request, 'role_management.html', context)
+
 
 def compute_effective_permissions(matrix, hierarchy, protected_rules):
     """Compute final resolved permissions after all rules"""
@@ -906,6 +838,7 @@ def compute_effective_permissions(matrix, hierarchy, protected_rules):
     
     return effective
 
+
 def apply_business_logic_protections(permissions, role):
     """Apply ExactusPay-specific business logic rules"""
     payroll_domains = ['PAYRUN', 'PAYREGISTER', 'CALCULATION', 'COMPANY', 'EMPLOYEE', 'PDCODES']
@@ -924,5 +857,3 @@ def apply_business_logic_protections(permissions, role):
             if domain in permissions:
                 permissions[domain]['MANAGE'] = True
                 permissions[domain]['READ'] = True
-
-
