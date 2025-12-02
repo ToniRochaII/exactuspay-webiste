@@ -8,7 +8,7 @@ class CountryForm(forms.ModelForm):
         model = Country
         fields = [
             "iso2_code", "iso3_code", "name", "status", "official_language",
-            "currency_name", "currency_code", "fiscal_year_start", "fiscal_year_end",
+            "currency_name", "currency_code",
             "numbering_format", "currency_position", "date_format", "decimals", "archive",
         ]
 
@@ -26,8 +26,6 @@ class CountryForm(forms.ModelForm):
             "official_language": forms.TextInput(attrs={"class": "form-control"}),
             "currency_name": forms.TextInput(attrs={"class": "form-control"}),
             "currency_code": forms.TextInput(attrs={"class": "form-control"}),
-            "fiscal_year_start": forms.TextInput(attrs={"class": "form-control"}),
-            "fiscal_year_end": forms.TextInput(attrs={"class": "form-control"}),
 
             # Dropdowns
             "status": forms.Select(attrs={"class": "form-control"}),
@@ -60,11 +58,6 @@ class CountryForm(forms.ModelForm):
             raise ValidationError("Currency code must be exactly 3 letters (e.g. EUR, USD).")
         return code
 
-    def clean(self):
-        cleaned = super().clean()
-
-        fy_start = cleaned.get("fiscal_year_start")
-        fy_end = cleaned.get("fiscal_year_end")
 
         # Basic fiscal year sanity check
         if fy_start and fy_end and fy_start == fy_end:

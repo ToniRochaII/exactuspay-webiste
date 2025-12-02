@@ -110,7 +110,7 @@ def download_csv_template(request):
     # Header row
     writer.writerow([
         'iso2_code', 'iso3_code', 'name', 'status', 'official_language',
-        'currency_name', 'currency_code', 'fiscal_year_start', 'fiscal_year_end',
+        'currency_name', 'currency_code',
         'numbering_format', 'currency_position', 'date_format', 'decimals', 'archive'
     ])
     
