@@ -423,7 +423,8 @@
                             {% endif %}
 
                             {# ⭐ CONTEXTUAL EDIT COUNTRY OPTION ⭐ #}
-                            {% if user|can:"COMPANY:CREATE" and (country or country_slug) %}
+                            {% if user|can:"COMPANY:CREATE" %}
+                                {% if country or country_slug %}
                             <li class="sidebar-divider"></li>
                             <li class="sidebar-item">
                                 <a class="sidebar-link"
