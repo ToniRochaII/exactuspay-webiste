@@ -1,133 +1,256 @@
 {% extends "base.html" %}
 {% load static %}
+{% load crispy_forms_tags %}
 {% load company_role_filters %}
 
-
-{% block title %}Companies — {{ country.name }} | ExactusPay{% endblock %}
-{% block page_title %}Companies — {{ country.name }}{% endblock %}
+{% block title %}Add Company — {{ country.name }} | ExactusPay{% endblock %}
+{% block page_title %}
+<i class="fas fa-building me-2"></i>Add Company — {{ country.name }}
+{% endblock %}
 
 {% block breadcrumbs %}
 <nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Companies — {{ country.name }}</li>
-  </ol>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'companies:company' country_slug %}">Companies</a></li>
+        <li class="breadcrumb-item active">Add Company</li>
+    </ol>
 </nav>
 {% endblock %}
 
 {% block content %}
-<div class="card shadow-sm">
-  <div class="card-header d-flex justify-content-between align-items-center">
-    <h5 class="mb-0">Companies in {{ country.name }}</h5>
+<div class="card shadow-sm border-0">
 
-  
-      <p> 
-        {% if user|has_role:"EXEC" %}
-        ||||
-        <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a> 
-        {% endif %}
-        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
-        <a href="{% url 'dashboard' %}">Dashboard</a> 
-        <a href="{% url 'user_list' %}"">Accounts</a>
-        <a href="{% url 'role_management' %}"">Role Management</a>
-        <a href="{% url 'regulations:regulations' country_slug %}"">Regulations</a>
-        <a href="{% url 'elements:elements' country_slug %}"">elements</a>
-        <a href="{% url 'companies:company' country_slug %}">Companies</a>
-        {% endif %}
-        ||||
-        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
-        <a href="{% url 'profile' %}"">Profile</a>
-        <a href="{% url 'country:country' %}">Countries</a>
-        <a href="{% url 'companies:company_create' country_slug %}">Add Company</a>
-        {% endif %}
-
-        <a href="{% url 'password_reset' %}">Reset password</a>
-      </p>
-  </div>
-
-  <div class="card-body">
-    {% if messages %}
-      {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-          {{ message }}
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    <!-- HEADER -->
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <div>
+            <h5 class="mb-0 fw-semibold">
+                <i class="fas fa-plus-circle me-2"></i>Add Company
+            </h5>
+            <small class="text-muted">Create a new company under <strong>{{ country.name }}</strong>.</small>
         </div>
-      {% endfor %}
-    {% endif %}
 
-    {% if companies %}
-      <div class="table-responsive">
-        <table id="datatable-companies" class="table table-striped align-middle table-hover" style="width:100%">
-          <thead class="table-light">
-            <tr>
-              <th>Number</th>
-              <th>Code</th>
-              <th>Trade Name</th>
-              <th>Legal Name</th>
-              <th>Town</th>
-              <th>Employees</th>
-              <th>Account Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for company in companies %}
-              <tr>
-                <td>{{ company.company_number }}</td>
-                <td>{{ company.company_code }}</td>
-                <td>{{ company.trade_name }}</td>
-                <td>{{ company.legal_name }}</td>
-                <td>{{ company.town|default:"—" }}</td>
-                <td>{{ company.employees.count }}</td>
-                <td>{{ company.account_status }}</td>
-                <td>
-                  <div class="d-flex justify-content gap-2">
-                    <a href="{% url 'employee:employee' country_slug company.company_id %}" class="btn btn-primary">
-                      <i class="bi bi-arrow-right-circle"></i> Enter
-                    </a>
-                    <a href="{% url 'companies:company_edit' country_slug company.company_id%}" class="btn btn-primary">
-                      <i class="bi bi-pencil"></i> Edit
-                    </a>
-                  </div>
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    {% else %}
-      <div class="text-center py-5">
-        <p class="text-muted mb-3">No companies found for {{ country.name }}.</p>
-        <a href="{% url 'companies:company_create' country_slug %}" class="btn btn-primary">
-          <i class="bi bi-plus-circle"></i> Add First Company
+        <a href="{% url 'companies:company' country_slug %}" class="btn btn-outline-secondary btn-sm">
+            <i class="fas fa-arrow-left me-2"></i>Back
         </a>
-      </div>
-    {% endif %}
-  </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="card-body">
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                {{ form.non_field_errors }}
+            </div>
+            {% endif %}
+
+            <!-- SECTION 1: COMPANY IDENTIFICATION -->
+            <h6 class="text-uppercase text-muted fw-bold mt-3 mb-3">
+                <i class="fas fa-id-card me-2"></i>Identification
+            </h6>
+
+            <div class="row g-3">
+
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        {{ form.company_code }}
+                        <label>Company Code</label>
+                    </div>
+                    {% for error in form.company_code.errors %}
+                        <small class="text-danger">{{ error }}</small>
+                    {% endfor %}
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        {{ form.company_number }}
+                        <label>Company Registration Number</label>
+                    </div>
+                    {% for error in form.company_number.errors %}
+                        <small class="text-danger">{{ error }}</small>
+                    {% endfor %}
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        {{ form.trade_name }}
+                        <label>Trade Name</label>
+                    </div>
+                    {% for error in form.trade_name.errors %}
+                        <small class="text-danger">{{ error }}</small>
+                    {% endfor %}
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        {{ form.legal_name }}
+                        <label>Legal Name</label>
+                    </div>
+                    {% for error in form.legal_name.errors %}
+                        <small class="text-danger">{{ error }}</small>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+            <!-- SECTION 2: ADDRESS -->
+            <h6 class="text-uppercase text-muted fw-bold mt-4 mb-3">
+                <i class="fas fa-map-marker-alt me-2"></i>Address
+            </h6>
+
+            <div class="row g-3">
+
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        {{ form.building_name }}
+                        <label>Building Name</label>
+                    </div>
+                    {% for error in form.building_name.errors %}
+                        <small class="text-danger">{{ error }}</small>
+                    {% endfor %}
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        {{ form.road_name_1 }}
+                        <label>Road Name 1</label>
+                    </div>
+                    {% for error in form.road_name_1.errors %}
+                        <small class="text-danger">{{ error }}</small>
+                    {% endfor %}
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        {{ form.road_name_2 }}
+                        <label>Road Name 2</label>
+                    </div>
+                    {% for error in form.road_name_2.errors %}
+                        <small class="text-danger">{{ error }}</small>
+                    {% endfor %}
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        {{ form.town }}
+                        <label>Town / City</label>
+                    </div>
+                    {% for error in form.town.errors %}
+                        <small class="text-danger">{{ error }}</small>
+                    {% endfor %}
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        {{ form.post_code }}
+                        <label>Post Code</label>
+                    </div>
+                    {% for error in form.post_code.errors %}
+                        <small class="text-danger">{{ error }}</small>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+            <!-- SECTION 3: TAX DETAILS -->
+            <h6 class="text-uppercase text-muted fw-bold mt-4 mb-3">
+                <i class="fas fa-file-invoice-dollar me-2"></i>Tax Details
+            </h6>
+
+            <div class="row g-3">
+
+                <div class="col-md-4">
+                    <div class="form-floating">
+                        {{ form.tax_id_1 }}
+                        <label>Tax ID 1</label>
+                    </div>
+                    {% for error in form.tax_id_1.errors %}
+                        <small class="text-danger">{{ error }}</small>
+                    {% endfor %}
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-floating">
+                        {{ form.tax_id_2 }}
+                        <label>Tax ID 2</label>
+                    </div>
+                    {% for error in form.tax_id_2.errors %}
+                        <small class="text-danger">{{ error }}</small>
+                    {% endfor %}
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-floating">
+                        {{ form.tax_id_3 }}
+                        <label>Tax ID 3</label>
+                    </div>
+                    {% for error in form.tax_id_3.errors %}
+                        <small class="text-danger">{{ error }}</small>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+            <!-- SECTION 4: RTI CREDENTIALS -->
+            <h6 class="text-uppercase text-muted fw-bold mt-4 mb-3">
+                <i class="fas fa-key me-2"></i>RTI Credentials
+            </h6>
+
+            <div class="row g-3">
+
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        {{ form.rti_user_id }}
+                        <label>RTI User ID</label>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        {{ form.rti_password }}
+                        <label>RTI Password</label>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- SECTION 5: ACCOUNT STATUS -->
+            <h6 class="text-uppercase text-muted fw-bold mt-4 mb-3">
+                <i class="fas fa-clipboard-check me-2"></i>Account Status
+            </h6>
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        {{ form.account_status }}
+                        <label>Status</label>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        {{ form.account_archive }}
+                        <label>Archive</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BUTTONS -->
+            <div class="text-end mt-4">
+                <button type="submit" class="btn btn-primary px-4">
+                    <i class="fas fa-save me-2"></i>Save Company
+                </button>
+                <a href="{% url 'companies:company' country_slug %}" class="btn btn-light border px-4">
+                    Cancel
+                </a>
+            </div>
+
+        </form>
+
+    </div>
 </div>
-
-{% endblock %}
-
-{% block extra_scripts %}
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    $("#datatable-companies").DataTable({
-      responsive: true,
-      pageLength: 10,
-      order: [[2, "asc"]],
-      language: {
-        search: "Search:",
-        lengthMenu: "Show _MENU_ companies",
-        zeroRecords: "No companies found.",
-        info: "Showing _START_–_END_ of _TOTAL_ companies",
-        infoEmpty: "No companies to display",
-        paginate: {
-          previous: "‹",
-          next: "›"
-        }
-      }
-    });
-  });
-</script>
 {% endblock %}

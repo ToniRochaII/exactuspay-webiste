@@ -199,59 +199,6 @@
             </div>
         </div>
     </div>
-
-    <!-- RIGHT — LIVE SUMMARY -->
-    <div class="col-lg-4">
-        <div class="card shadow-sm border-0 summary-card">
-            <div class="card-header bg-white">
-                <h6 class="fw-bold mb-0">
-                    <i class="fas fa-eye me-2"></i>Country Preview
-                </h6>
-            </div>
-            <div class="card-body">
-
-                <div class="text-center mb-3">
-                    <img id="liveFlag"
-                         src=""
-                         width="64" height="42"
-                         class="rounded border shadow-sm d-none"
-                         alt="Flag Preview">
-                </div>
-
-                <div class="mb-3">
-                    <div class="summary-label">Country</div>
-                    <div id="prevName" class="summary-value text-primary">{{ form.instance.name }}</div>
-                </div>
-
-                <div class="mb-3">
-                    <div class="summary-label">Language</div>
-                    <div id="prevLang" class="summary-value">{{ form.instance.official_language }}</div>
-                </div>
-
-                <div class="mb-3">
-                    <div class="summary-label">Currency</div>
-                    <div id="prevCurrency" class="summary-value">
-                        {{ form.instance.currency_name }} ({{ form.instance.currency_code }})
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <div class="summary-label">Numbering Format</div>
-                    <div id="prevNumbering" class="summary-value">{{ form.instance.numbering_format }}</div>
-                </div>
-
-                <div class="mb-3">
-                    <div class="summary-label">Status</div>
-                    <span id="prevStatus"
-                          class="badge {% if form.instance.status == 'Active' %}bg-success{% else %}bg-secondary{% endif %}">
-                        {{ form.instance.status }}
-                    </span>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
 </div>
 {% endblock %}
 
