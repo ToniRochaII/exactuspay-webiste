@@ -4,7 +4,7 @@
 {% block title %}Upload Companies | ExactusPay{% endblock %}
 
 {% block page_title %}
-<i class="fas fa-building me-2"></i>Upload Companies{% if country %} — {{ country.name }}{% endif %}
+<i class="fas fa-upload me-2"></i>Upload Companies{% if country %} — {{ country.name }}{% endif %}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -12,9 +12,11 @@
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
     <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
+
     {% if country %}
       <li class="breadcrumb-item"><a href="{% url 'companies:company' country.slug %}">Companies — {{ country.name }}</a></li>
     {% endif %}
+
     <li class="breadcrumb-item active" aria-current="page">Upload Companies</li>
   </ol>
 </nav>
@@ -26,10 +28,12 @@
     <!-- HEADER -->
     <div class="card-header d-flex justify-content-between align-items-center">
         <div>
-            <h5 class="fw-semibold mb-0">
+            <h5 class="card-title mb-0">
                 Upload Companies{% if country %} — {{ country.name }}{% endif %}
             </h5>
-            <small class="text-muted">Upload multiple companies using a CSV file.</small>
+            <div class="card-subtitle text-muted small">
+                Upload multiple companies via CSV file.
+            </div>
         </div>
 
         <a href="{% if country %}{% url 'companies:company' country.slug %}{% else %}{% url 'country:country' %}{% endif %}"
@@ -38,37 +42,38 @@
         </a>
     </div>
 
+    <!-- BODY -->
     <div class="card-body">
 
-        <!-- INSTRUCTIONS -->
+        <!-- CSV REQUIREMENTS -->
         <div class="alert alert-info">
             <h6 class="alert-heading">
-                <i class="fas fa-info-circle me-2"></i>CSV Format Requirements
+                <i class="fas fa-info-circle me-2"></i>CSV Requirements
             </h6>
             <hr>
             <ul class="mb-1">
-                <li>File must be in CSV format (comma-separated values).</li>
-                <li>First row must contain column headers.</li>
+                <li>File must be a <strong>.csv</strong> (comma-separated values)</li>
+                <li>The first row must contain column headers</li>
                 <li>Required columns:
                     <strong>country_code, company_code, trade_name, legal_name</strong>
                 </li>
-                <li><strong>country_code</strong> must match existing ISO2 codes (US, GB, FR, etc.).</li>
-                <li>Optional fields may be left blank.</li>
+                <li><strong>country_code</strong> must match ISO2 codes (e.g., US, GB, FR)</li>
+                <li>Optional columns may be left empty</li>
             </ul>
         </div>
 
-        <!-- CSV TEMPLATE DOWNLOAD -->
+        <!-- TEMPLATE DOWNLOAD -->
         <div class="alert alert-warning">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
-                    <strong>Need a template?</strong> Download a sample CSV to ensure correct formatting.
+                    <strong>Need a sample?</strong> Download a CSV template to ensure correct structure.
                 </div>
 
                 <a href="{% if country %}
-                            {% url 'companies:download_companies_template' country.slug %}
-                         {% else %}
-                            {% url 'companies:download_companies_template_global' %}
-                         {% endif %}"
+                          {% url 'companies:download_companies_template' country.slug %}
+                       {% else %}
+                          {% url 'companies:download_companies_template_global' %}
+                       {% endif %}"
                    class="btn btn-outline-primary btn-sm">
                     <i class="fas fa-download me-2"></i>Download Template
                 </a>
@@ -78,26 +83,27 @@
         <!-- UPLOAD FORM -->
         <div class="card mt-4 border-0 shadow-sm">
             <div class="card-header bg-light">
-                <h6 class="mb-0 fw-semibold">Upload CSV File</h6>
+                <h6 class="mb-0 fw-bold">Upload CSV File</h6>
             </div>
 
             <div class="card-body">
-                <form method="post" enctype="multipart/form-data" id="uploadForm">
+                <form id="uploadForm" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
 
                     <div class="row">
                         <div class="col-md-8">
                             {{ form.file|as_crispy_field }}
                         </div>
+
                         <div class="col-md-4">
                             {{ form.dry_run|as_crispy_field }}
-                            <small class="text-muted">Validate file without saving to the system.</small>
+                            <small class="text-muted">Validate without saving to the database.</small>
                         </div>
                     </div>
 
                     <!-- SAMPLE PREVIEW -->
                     <div class="mt-4">
-                        <h6 class="fw-semibold">Expected CSV Format:</h6>
+                        <h6 class="fw-semibold">Expected CSV Format (Example):</h6>
                         <div class="table-responsive">
                             <table class="table table-sm table-bordered">
                                 <thead class="table-light">
@@ -129,30 +135,34 @@
                         </div>
                     </div>
 
+                    <!-- ACTIONS -->
                     <div class="mt-4 d-flex gap-2">
-                        <button type="submit" class="btn btn-primary" id="uploadBtn">
+                        <button id="uploadBtn" type="submit" class="btn btn-primary">
                             <i class="fas fa-upload me-2"></i>Upload Companies
                         </button>
 
-                        <a href="{% if country %}{% url 'companies:company' country.slug %}{% else %}{% url 'country:country' %}{% endif %}"
+                        <a href="{% if country %}{% url 'companies:company' country.slug %}
+                                      {% else %}{% url 'country:country' %}
+                                      {% endif %}"
                            class="btn btn-outline-secondary">
                             Cancel
                         </a>
                     </div>
+
                 </form>
             </div>
         </div>
 
         <!-- FIELD REFERENCE -->
-        <div class="card mt-4 shadow-sm border-0">
+        <div class="card mt-4 border-0 shadow-sm">
             <div class="card-header bg-light">
-                <h6 class="mb-0 fw-semibold">Field Reference</h6>
+                <h6 class="fw-bold mb-0">Field Reference</h6>
             </div>
 
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-sm table-striped">
-                        <thead>
+                        <thead class="table-light">
                             <tr>
                                 <th>Field</th>
                                 <th>Required</th>
@@ -165,31 +175,31 @@
                                 <td><strong>country_code</strong></td>
                                 <td>Yes</td>
                                 <td>Text</td>
-                                <td>ISO2 country code</td>
+                                <td>ISO2 country code (must match an active country)</td>
                             </tr>
                             <tr>
                                 <td><strong>company_code</strong></td>
                                 <td>Yes</td>
                                 <td>Text</td>
-                                <td>Unique company code per country</td>
+                                <td>Unique per country</td>
                             </tr>
                             <tr>
                                 <td><strong>trade_name</strong></td>
                                 <td>Yes</td>
                                 <td>Text</td>
-                                <td>Company trade name</td>
+                                <td>Commercial name of the company</td>
                             </tr>
                             <tr>
                                 <td><strong>legal_name</strong></td>
                                 <td>Yes</td>
                                 <td>Text</td>
-                                <td>Registered legal name</td>
+                                <td>Registered legal entity name</td>
                             </tr>
                             <tr>
                                 <td>company_number</td>
                                 <td>No</td>
                                 <td>Text</td>
-                                <td>Company registration number</td>
+                                <td>Registration number (if applicable)</td>
                             </tr>
                             <tr>
                                 <td>account_status</td>
@@ -201,20 +211,20 @@
                                 <td>account_archive</td>
                                 <td>No</td>
                                 <td>Choice</td>
-                                <td>Y, N (default: N)</td>
+                                <td>Y or N (default: N)</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
+
         </div>
 
     </div>
 </div>
 
-<!-- LOADING BUTTON -->
 <script>
-document.getElementById('uploadForm').addEventListener('submit', function () {
+document.getElementById('uploadForm').addEventListener('submit', function() {
     const btn = document.getElementById('uploadBtn');
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Uploading...';
