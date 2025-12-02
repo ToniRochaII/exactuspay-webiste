@@ -6,6 +6,14 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 
 
+# accounts/models.py
+from django.db import models
+from django.contrib.auth.models import AbstractUser
+from django.conf import settings
+from django.core.exceptions import ValidationError
+from django.utils import timezone
+
+
 class User(AbstractUser):
     ROLE_CHOICES = [
         ("EXEC", "Exec"),
@@ -22,10 +30,6 @@ class User(AbstractUser):
     ]
     role = models.CharField(max_length=50, choices=ROLE_CHOICES, default="EMPLOYEE")
     
-    # TEMPORARILY COMMENT THIS OUT or provide a default value
-    # is_global_admin = models.BooleanField(default=False, 
-    #                                      help_text="Has access to all companies regardless of UserCompany assignments")
-    
     def __str__(self):
         return f"{self.username} ({self.get_role_display()})"
     
@@ -37,10 +41,8 @@ class User(AbstractUser):
     def is_platform_admin(self):
         return self.role in ["EXEC", "ADMIN"]
     
-    # TEMPORARY: Add property that doesn't require database field
     @property
     def is_global_admin(self):
-        # For now, platform admins are global admins
         return self.is_platform_admin
     
     def get_companies(self):
@@ -55,6 +57,45 @@ class User(AbstractUser):
             Q(authorized_users__user=self, authorized_users__is_active=True) |
             Q(created_by=self)
         ).distinct()
+
+
+class UserProfile(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255, blank=True, null=True)
+    surname = models.CharField(max_length=255, blank=True, null=True)
+    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
+    phone_number = models.CharField(max_length=20, blank=True, null=True)
+    address = models.CharField(max_length=255, blank=True, null=True)
+    city = models.CharField(max_length=100, blank=True, null=True)
+    country = models.CharField(max_length=100, blank=True, null=True)
+    notify_by_email = models.BooleanField(default=True)
+    notify_by_sms = models.BooleanField(default=False)
+    last_updated = models.DateTimeField(auto_now=True)
+    
+    # Preferences
+    notification_frequency = models.CharField(
+        max_length=20,
+        choices=[
+            ('IMMEDIATE', 'Immediately'),
+            ('DAILY', 'Daily Digest'),
+            ('WEEKLY', 'Weekly Digest'),
+        ],
+        default='IMMEDIATE'
+    )
+    
+    # Security - FIXED: Changed auto_now_add=True to default=timezone.now
+    two_factor_enabled = models.BooleanField(default=False)
+    last_password_change = models.DateTimeField(default=timezone.now)  # FIXED HERE
+
+    def __str__(self):
+        return f"{self.user.username}'s profile"
+    
+    @property
+    def full_name(self):
+        return f"{self.name or ''} {self.surname or ''}".strip() or self.user.username
+
+
+# ... rest of your models.py file continues ...
 
 
 class PermissionMatrix(models.Model):
@@ -136,42 +177,6 @@ class PermissionBulkUpdate(models.Model):
     
     class Meta:
         ordering = ["-applied_at"]
-    
-
-class UserProfile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255, blank=True, null=True)
-    surname = models.CharField(max_length=255, blank=True, null=True)
-    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
-    phone_number = models.CharField(max_length=20, blank=True, null=True)
-    address = models.CharField(max_length=255, blank=True, null=True)
-    city = models.CharField(max_length=100, blank=True, null=True)
-    country = models.CharField(max_length=100, blank=True, null=True)
-    notify_by_email = models.BooleanField(default=True)
-    notify_by_sms = models.BooleanField(default=False)
-    last_updated = models.DateTimeField(auto_now=True)
-    
-    # Preferences
-    notification_frequency = models.CharField(
-        max_length=20,
-        choices=[
-            ('IMMEDIATE', 'Immediately'),
-            ('DAILY', 'Daily Digest'),
-            ('WEEKLY', 'Weekly Digest'),
-        ],
-        default='IMMEDIATE'
-    )
-    
-    # Security
-    two_factor_enabled = models.BooleanField(default=False)
-    last_password_change = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.user.username}'s profile"
-    
-    @property
-    def full_name(self):
-        return f"{self.name or ''} {self.surname or ''}".strip() or self.user.username
 
 
 class RoleTemplate(models.Model):
