@@ -7,7 +7,7 @@ from django.http import HttpResponse
 
 from Exactus.company.models import  Company 
 from Exactus.country.models import Country
-from Exactus.company.forms import CompanyForm, CompanyFormGB, CompanyFormBR
+from Exactus.company.forms import CompanyForm, CompanyFormGB, CompanyFormBR, CompanyFormAR
 from Exactus.country.utils.decorators import role_required 
 
 
