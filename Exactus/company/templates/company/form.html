@@ -1,8 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
 {% load crispy_forms_tags %}
-{% load company_role_filters %}
-{% load company_filters %}
 
 {% block title %}
     {% if company %}
@@ -13,147 +11,101 @@
 {% endblock %}
 
 {% block page_title %}
-    <i class="fas fa-building me-2"></i>
-    {% if company %}
-        Edit Company ({{ country.iso2 }})
-    {% else %}
-        Create Company ({{ country.iso2 }})
-    {% endif %}
-{% endblock %}
-
-{% block breadcrumbs %}
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
-        <li class="breadcrumb-item">
-            <a href="{% url 'companies:company' country.slug %}">{{ country.name }} Companies</a>
-        </li>
-        <li class="breadcrumb-item active" aria-current="page">
-            {% if company %}Edit Company{% else %}Create Company{% endif %}
-        </li>
-    </ol>
-</nav>
+<i class="fas fa-building me-2"></i>
+{% if company %}
+    Edit Company ({{ country.iso2 }})
+{% else %}
+    Create Company ({{ country.iso2 }})
+{% endif %}
 {% endblock %}
 
 {% block content %}
 
 <div class="card shadow-sm border-0">
-
     <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="mb-0 fw-semibold">
-            {% if company %}
-                Edit Company — {{ company.trade_name|default:company.legal_name }}
-            {% else %}
-                Create New Company
-            {% endif %}
+        <h5 class="fw-semibold mb-0">
+            {% if company %} Edit Company {% else %} Create Company {% endif %}
         </h5>
-        <span class="badge bg-primary">
-            Country: {{ country.iso2 }} — {{ country.name }}
-        </span>
+        <span class="badge bg-primary">Country: {{ country.iso2 }}</span>
     </div>
 
     <div class="card-body">
-
-        {% if form.non_field_errors %}
-            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
-        {% endif %}
 
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
 
             <div class="row">
 
-                {# ====================== COMPANY INFO ====================== #}
+                <!-- COMPANY INFORMATION -->
                 <div class="col-md-6">
                     <div class="card mb-4">
                         <div class="card-header bg-light"><h6>Company Information</h6></div>
                         <div class="card-body">
-
-                            {% with company_fields="company_code company_number trade_name legal_name" %}
-                                {% for field in form %}
-                                    {% if company_fields|contains:field.name %}
-                                        {% include "company/field.html" with field=field %}
-                                    {% endif %}
-                                {% endfor %}
-                            {% endwith %}
-
+                            {% for field in form %}
+                                {% if field.name in company_fields %}
+                                    {% include "company/field.html" with field=field %}
+                                {% endif %}
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
 
-                {# ===================== ADDRESS INFO ====================== #}
+                <!-- ADDRESS -->
                 <div class="col-md-6">
                     <div class="card mb-4">
                         <div class="card-header bg-light"><h6>Address Information</h6></div>
                         <div class="card-body">
-
-                            {% with address_fields="building_name road_name_1 road_name_2 town post_code county" %}
-                                {% for field in form %}
-                                    {% if address_fields|contains:field.name %}
-                                        {% include "company/field.html" with field=field %}
-                                    {% endif %}
-                                {% endfor %}
-                            {% endwith %}
-
+                            {% for field in form %}
+                                {% if field.name in address_fields %}
+                                    {% include "company/field.html" with field=field %}
+                                {% endif %}
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
 
-                {# ====================== TAX INFO ========================= #}
+                <!-- TAX -->
                 <div class="col-12">
                     <div class="card mb-4">
                         <div class="card-header bg-light"><h6>Tax & Regulatory Information</h6></div>
                         <div class="card-body">
-                            <div class="row">
-
-                                {% with tax_fields="tax_id_1 tax_id_2 tax_id_3 tax_id_4 tax_id_5 tax_id_6 tax_id_7 tax_id_8 tax_id_9 tax_id_10" %}
-                                    {% for field in form %}
-                                        {% if tax_fields|contains:field.name %}
-                                            <div class="col-md-6">
-                                                {% include "company/field.html" with field=field %}
-                                            </div>
-                                        {% endif %}
-                                    {% endfor %}
-                                {% endwith %}
-
+                            <div class="row g-3">
+                                {% for field in form %}
+                                    {% if field.name in tax_fields %}
+                                        <div class="col-md-6">
+                                            {% include "company/field.html" with field=field %}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {# ====================== SYSTEM ACCESS ========================= #}
+                <!-- SYSTEM ACCESS -->
                 <div class="col-md-6">
                     <div class="card mb-4">
                         <div class="card-header bg-light"><h6>System Access</h6></div>
                         <div class="card-body">
-
-                            {% with system_fields="rti_user_id rti_password" %}
-                                {% for field in form %}
-                                    {% if system_fields|contains:field.name %}
-                                        {% include "company/field.html" with field=field %}
-                                    {% endif %}
-                                {% endfor %}
-                            {% endwith %}
-
+                            {% for field in form %}
+                                {% if field.name in system_fields %}
+                                    {% include "company/field.html" with field=field %}
+                                {% endif %}
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
 
-                {# ====================== ACCOUNT STATUS ====================== #}
+                <!-- ACCOUNT STATUS -->
                 <div class="col-md-6">
                     <div class="card mb-4">
                         <div class="card-header bg-light"><h6>Account Status</h6></div>
                         <div class="card-body">
-
-                            {% with status_fields="account_status account_archive" %}
-                                {% for field in form %}
-                                    {% if status_fields|contains:field.name %}
-                                        {% include "company/field.html" with field=field %}
-                                    {% endif %}
-                                {% endfor %}
-                            {% endwith %}
-
+                            {% for field in form %}
+                                {% if field.name in status_fields %}
+                                    {% include "company/field.html" with field=field %}
+                                {% endif %}
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
@@ -170,7 +122,6 @@
         </form>
 
     </div>
-
 </div>
 
 {% endblock %}
