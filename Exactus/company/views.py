@@ -29,7 +29,7 @@ def is_admin(user):
 @role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE")
 def company(request, country_slug):
     country = get_object_or_404(Country, slug=country_slug)
-    companies = Company.objects.filter(country=country).order_by("trade_name")
+    companies = Company.objects.filter(country=country).order_by("legal_name")
     return render(request, "company/index.html", {"country": country, "companies": companies, "country_slug": country.slug})
 
 
