@@ -40,6 +40,7 @@ def company_create(request, country_slug):
     
     FormGB = CompanyFormGB
     FormBR = CompanyFormBR
+    FormAR = CompanyFormAR
     
     if request.method == "POST":
         if country.iso2_code == "GB":
@@ -63,12 +64,25 @@ def company_create(request, country_slug):
                 messages.success(request, f"Company '{company.trade_name}' added successfully.")
                 return redirect("companies:company", country_slug=country.slug)
             # Remove the else clause here - we want to keep the form with errors
+        
+        elif country.iso2_code == "AR":  # Fixed: removed colon after elif
+            form = FormBR(request.POST)
+            
+            if form.is_valid():
+                company = form.save(commit=False)
+                company.country = country
+                company.save()
+                messages.success(request, f"Company '{company.trade_name}' added successfully.")
+                return redirect("companies:company", country_slug=country.slug)
+            # Remove the else clause here - we want to keep the form with errors
     
     else:  # GET request
         if country.iso2_code == "GB":
             form = FormGB()
         elif country.iso2_code == "BR":
             form = FormBR()
+        elif country.iso2_code == "AR":
+            form = FormAR()
         else:
             # Handle other countries if needed
             form = FormGB()  # Default or raise error

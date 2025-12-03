@@ -176,3 +176,77 @@ class CompanyFormBR(CompanyForm):
 
 
 
+@register_company_form("AR")
+class CompanyFormAR(CompanyForm):
+    """
+    Argentina-specific company form for ISO-2 = AR (English labels).
+    """
+
+    class Meta(CompanyForm.Meta):
+        labels = {
+            **getattr(CompanyForm.Meta, "labels", {}),
+
+            # Identification
+            "company_id": "Company ID",
+            "company_code": "Company Code",
+            "company_number": "Company Number",
+
+            # Names
+            "trade_name": "Trade Name (Nombre Comercial)",
+            "legal_name": "Legal Name (Razón Social)",
+
+            # Address
+            "building_name": "Building / Complement",
+            "road_name_1": "Street (Calle)",
+            "road_name_2": "Street (Line 2)",
+            "town": "City (Ciudad)",
+            "post_code": "Post Code (Código Postal)",
+            "county": "District / Neighbourhood (Barrio)",
+            "country": "Country",
+
+            # Fiscal Identifiers
+            "tax_id_1": "CUIT (Tax ID)",
+            "tax_id_2": "IIBB Registration (Inscripción Ingresos Brutos)",
+            "tax_id_3": "IVA Registration (Inscripción IVA)",
+            "tax_id_4": "Activity Code (Actividad)",
+            "tax_id_5": "Company Registration (Matrícula Comercial)",
+            "tax_id_6": "Tax Regime (Régimen Fiscal)",
+            "tax_id_7": "AFIP Password (Clave Fiscal)",
+            "tax_id_8": "Monotributo Category",
+            "tax_id_9": "Responsible Inscription (Inscripción Responsable)",
+            "tax_id_10": "Provincial Registration",
+
+            # System access
+            "rti_user_id": "AFIP Username",
+            "rti_password": "AFIP Password",
+        }
+
+        # Argentina-specific help texts (optional)
+        help_texts = {
+            **getattr(CompanyForm.Meta, "help_texts", {}),
+            "tax_id_1": "Código Único de Identificación Tributaria (11 digits)",
+            "tax_id_6": "e.g., Monotributo, Responsable Inscripto, Exento",
+        }
+
+    # CUIT validation (11 digits)
+    def clean_tax_id_1(self):
+        """Basic CUIT validation (11 digits)."""
+        cuit = self.cleaned_data.get("tax_id_1")
+        if cuit:
+            digits = "".join(filter(str.isdigit, str(cuit)))
+            if len(digits) != 11:
+                raise forms.ValidationError("CUIT must contain 11 digits.")
+        return cuit
+
+    # Optional: IIBB validation (varies by province)
+    def clean_tax_id_2(self):
+        """Basic IIBB validation (alphanumeric, varies by province)."""
+        iibb = self.cleaned_data.get("tax_id_2")
+        if iibb:
+            # Basic validation - IIBB format varies by province
+            # Could add more specific validation if needed
+            if len(str(iibb).strip()) < 3:
+                raise forms.ValidationError(
+                    "IIBB registration number seems too short."
+                )
+        return iibb
