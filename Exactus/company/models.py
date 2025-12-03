@@ -1,19 +1,27 @@
-from django.db import models
+"""
+Company Models - Simplified version
+"""
 
-# Company
+from django.db import models
+from django.utils.translation import gettext_lazy as _
+
+
 class Company(models.Model):
+    """
+    Company model - simplified for migration
+    """
+    
     ACCOUNT_STATUS_CHOICES = [
         ("ACTIVE", "Active"),
         ("SUSPENDED", "Suspended"),
         ("INACTIVE", "Inactive"),
     ]
 
-
     ACCOUNT_ARCHIVE_CHOICES = [
-        ("N", "NO"),
-        ("Y", "YES"),
+        ("N", "No"),
+        ("Y", "Yes"),
     ]
-
+    
     company_id = models.AutoField(primary_key=True)
     company_code = models.CharField("Company Code", max_length=20, unique=False)
     company_number = models.CharField("Company Number", max_length=50, blank=True, null=True)
@@ -24,8 +32,8 @@ class Company(models.Model):
     road_name_2 = models.CharField("Road Name 2", max_length=150, blank=True, null=True)
     town = models.CharField("Town", max_length=100, blank=True, null=True)
     post_code = models.CharField("Post Code", max_length=20, blank=True, null=True)
-    county = models.CharField("County", max_length=20, blank=True, null=True)
-    country = models.ForeignKey( "country.Country", on_delete=models.CASCADE, related_name="companies")
+    county = models.CharField("County", max_length=100, blank=True, null=True)  # Changed to 100
+    country = models.ForeignKey("country.Country", on_delete=models.CASCADE, related_name="companies")
 
     tax_id_1 = models.CharField("Tax ID 1", max_length=50, blank=True, null=True)
     tax_id_2 = models.CharField("Tax ID 2", max_length=50, blank=True, null=True)
@@ -49,13 +57,13 @@ class Company(models.Model):
         "Account Archive", max_length=10, choices=ACCOUNT_ARCHIVE_CHOICES, default="N"
     )
 
+    # NOTE: REMOVED timestamp fields for now
+    # created_at = models.DateTimeField(_("Created At"), auto_now_add=True)
+    # updated_at = models.DateTimeField(_("Updated At"), auto_now=True)
+
     class Meta:
         verbose_name_plural = "Companies"
         ordering = ["trade_name"]
 
     def __str__(self):
         return f"{self.trade_name} ({self.country.name})"
-
-
-
-
