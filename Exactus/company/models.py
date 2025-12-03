@@ -75,6 +75,16 @@ class Company(models.Model):
     tax_id_8 = models.CharField(_("Tax ID 8"), max_length=50, blank=True, null=True)
     tax_id_9 = models.CharField(_("Tax ID 9"), max_length=50, blank=True, null=True)
     tax_id_10 = models.CharField(_("Tax ID 10"), max_length=50, blank=True, null=True)
+    tax_id_11 = models.CharField(_("Tax ID 1"), max_length=50, blank=True, null=True)
+    tax_id_12 = models.CharField(_("Tax ID 2"), max_length=50, blank=True, null=True)
+    tax_id_13 = models.CharField(_("Tax ID 3"), max_length=50, blank=True, null=True)
+    tax_id_14 = models.CharField(_("Tax ID 4"), max_length=50, blank=True, null=True)
+    tax_id_15 = models.CharField(_("Tax ID 5"), max_length=50, blank=True, null=True)
+    tax_id_16 = models.CharField(_("Tax ID 6"), max_length=50, blank=True, null=True)
+    tax_id_17 = models.CharField(_("Tax ID 7"), max_length=50, blank=True, null=True)
+    tax_id_18 = models.CharField(_("Tax ID 8"), max_length=50, blank=True, null=True)
+    tax_id_19 = models.CharField(_("Tax ID 9"), max_length=50, blank=True, null=True)
+    tax_id_20 = models.CharField(_("Tax ID 10"), max_length=50, blank=True, null=True)
     
     # --- RTI (Real Time Information) credentials ---
     rti_user_id = models.CharField(
