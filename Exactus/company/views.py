@@ -51,9 +51,10 @@ def company_create(request, country_slug):
     else:
         form = form_class()
 
-    return render(request, "company/company_form.html", {
+    return render(request, "company/create.html", {
         "form": form,
         "country": country,
+         "country_slug":country_slug,
     })
 
 
