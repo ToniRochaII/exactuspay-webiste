@@ -36,6 +36,7 @@
 
 {% block content %}
 <div class="card shadow-sm border-0">
+
     <div class="card-header d-flex justify-content-between align-items-center">
         <h5 class="mb-0 fw-semibold">
             {% if company %}
@@ -44,131 +45,66 @@
                 Create New Company
             {% endif %}
         </h5>
-        <span class="badge bg-primary">
-            Country: {{ country.iso2 }} — {{ country.name }}
-        </span>
+        <span class="badge bg-primary">Country: {{ country.iso2 }} — {{ country.name }}</span>
     </div>
 
     <div class="card-body">
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
-            {% endfor %}
+
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                {{ form.non_field_errors }}
+            </div>
         {% endif %}
 
         <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
             {% csrf_token %}
-            
-            {% if form.non_field_errors %}
-                <div class="alert alert-danger">
-                    {{ form.non_field_errors }}
-                </div>
-            {% endif %}
 
             <div class="row">
-                <!-- Company Information -->
+
+                {# ================================================
+                   COMPANY INFORMATION
+                   ================================================ #}
                 <div class="col-md-6">
                     <div class="card mb-4">
-                        <div class="card-header bg-light">
-                            <h6 class="mb-0">Company Information</h6>
-                        </div>
+                        <div class="card-header bg-light"><h6 class="mb-0">Company Information</h6></div>
                         <div class="card-body">
-                            <div class="row g-3">
-                                {% for field in form %}
-                                    {% if forloop.counter0 < 6 %}
-                                        <div class="col-12">
-                                            <div class="form-group">
-                                                <label for="{{ field.id_for_label }}" class="form-label fw-semibold">
-                                                    {{ field.label }}
-                                                    {% if field.field.required %}
-                                                        <span class="text-danger">*</span>
-                                                    {% endif %}
-                                                </label>
-                                                {{ field }}
-                                                {% if field.help_text %}
-                                                    <div class="form-text text-muted">{{ field.help_text }}</div>
-                                                {% endif %}
-                                                {% if field.errors %}
-                                                    <div class="invalid-feedback d-block">
-                                                        {{ field.errors|striptags }}
-                                                    </div>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
+                            {% for name in "company_code company_number trade_name legal_name".split %}
+                                {% if form|dictsort:"0"|dict_has_key:name %}
+                                    {% include "company/field.html" with field=form[name] %}
+                                {% endif %}
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
 
-                <!-- Address Information -->
+                {# ================================================
+                   ADDRESS INFORMATION
+                   ================================================ #}
                 <div class="col-md-6">
                     <div class="card mb-4">
-                        <div class="card-header bg-light">
-                            <h6 class="mb-0">Address Information</h6>
-                        </div>
+                        <div class="card-header bg-light"><h6 class="mb-0">Address Information</h6></div>
                         <div class="card-body">
-                            <div class="row g-3">
-                                {% for field in form %}
-                                    {% if forloop.counter0 >= 6 and forloop.counter0 < 12 %}
-                                        <div class="col-12">
-                                            <div class="form-group">
-                                                <label for="{{ field.id_for_label }}" class="form-label fw-semibold">
-                                                    {{ field.label }}
-                                                    {% if field.field.required %}
-                                                        <span class="text-danger">*</span>
-                                                    {% endif %}
-                                                </label>
-                                                {{ field }}
-                                                {% if field.help_text %}
-                                                    <div class="form-text text-muted">{{ field.help_text }}</div>
-                                                {% endif %}
-                                                {% if field.errors %}
-                                                    <div class="invalid-feedback d-block">
-                                                        {{ field.errors|striptags }}
-                                                    </div>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
+                            {% for name in "building_name road_name_1 road_name_2 town post_code county".split %}
+                                {% if form|dictsort:"0"|dict_has_key:name %}
+                                    {% include "company/field.html" with field=form[name] %}
+                                {% endif %}
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
 
-                <!-- Tax Information -->
+                {# ================================================
+                   TAX INFORMATION
+                   ================================================ #}
                 <div class="col-12">
                     <div class="card mb-4">
-                        <div class="card-header bg-light">
-                            <h6 class="mb-0">Tax & Regulatory Information</h6>
-                        </div>
+                        <div class="card-header bg-light"><h6 class="mb-0">Tax & Regulatory Information</h6></div>
                         <div class="card-body">
                             <div class="row g-3">
-                                {% for field in form %}
-                                    {% if forloop.counter0 >= 12 and forloop.counter0 < 22 %}
+                                {% for name in "tax_id_1 tax_id_2 tax_id_3 tax_id_4 tax_id_5 tax_id_6 tax_id_7 tax_id_8 tax_id_9 tax_id_10".split %}
+                                    {% if form|dictsort:"0"|dict_has_key:name %}
                                         <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="{{ field.id_for_label }}" class="form-label fw-semibold">
-                                                    {{ field.label }}
-                                                    {% if field.field.required %}
-                                                        <span class="text-danger">*</span>
-                                                    {% endif %}
-                                                </label>
-                                                {{ field }}
-                                                {% if field.help_text %}
-                                                    <div class="form-text text-muted">{{ field.help_text }}</div>
-                                                {% endif %}
-                                                {% if field.errors %}
-                                                    <div class="invalid-feedback d-block">
-                                                        {{ field.errors|striptags }}
-                                                    </div>
-                                                {% endif %}
-                                            </div>
+                                            {% include "company/field.html" with field=form[name] %}
                                         </div>
                                     {% endif %}
                                 {% endfor %}
@@ -177,77 +113,38 @@
                     </div>
                 </div>
 
-                <!-- System Access & Status -->
+                {# ================================================
+                   SYSTEM ACCESS
+                   ================================================ #}
                 <div class="col-md-6">
                     <div class="card mb-4">
-                        <div class="card-header bg-light">
-                            <h6 class="mb-0">System Access</h6>
-                        </div>
+                        <div class="card-header bg-light"><h6 class="mb-0">System Access</h6></div>
                         <div class="card-body">
-                            <div class="row g-3">
-                                {% for field in form %}
-                                    {% if field.name in 'rti_user_id,rti_password' %}
-                                        <div class="col-12">
-                                            <div class="form-group">
-                                                <label for="{{ field.id_for_label }}" class="form-label fw-semibold">
-                                                    {{ field.label }}
-                                                    {% if field.field.required %}
-                                                        <span class="text-danger">*</span>
-                                                    {% endif %}
-                                                </label>
-                                                {{ field }}
-                                                {% if field.help_text %}
-                                                    <div class="form-text text-muted">{{ field.help_text }}</div>
-                                                {% endif %}
-                                                {% if field.errors %}
-                                                    <div class="invalid-feedback d-block">
-                                                        {{ field.errors|striptags }}
-                                                    </div>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
+                            {% for name in "rti_user_id rti_password".split %}
+                                {% if form|dictsort:"0"|dict_has_key:name %}
+                                    {% include "company/field.html" with field=form[name] %}
+                                {% endif %}
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
 
-                <!-- Account Status -->
+                {# ================================================
+                   ACCOUNT STATUS
+                   ================================================ #}
                 <div class="col-md-6">
                     <div class="card mb-4">
-                        <div class="card-header bg-light">
-                            <h6 class="mb-0">Account Status</h6>
-                        </div>
+                        <div class="card-header bg-light"><h6 class="mb-0">Account Status</h6></div>
                         <div class="card-body">
-                            <div class="row g-3">
-                                {% for field in form %}
-                                    {% if field.name in 'account_status,account_archive' %}
-                                        <div class="col-12">
-                                            <div class="form-group">
-                                                <label for="{{ field.id_for_label }}" class="form-label fw-semibold">
-                                                    {{ field.label }}
-                                                    {% if field.field.required %}
-                                                        <span class="text-danger">*</span>
-                                                    {% endif %}
-                                                </label>
-                                                {{ field }}
-                                                {% if field.help_text %}
-                                                    <div class="form-text text-muted">{{ field.help_text }}</div>
-                                                {% endif %}
-                                                {% if field.errors %}
-                                                    <div class="invalid-feedback d-block">
-                                                        {{ field.errors|striptags }}
-                                                    </div>
-                                                {% endif %}
-                                            </div>
-                                        </div>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
+                            {% for name in "account_status account_archive".split %}
+                                {% if form|dictsort:"0"|dict_has_key:name %}
+                                    {% include "company/field.html" with field=form[name] %}
+                                {% endif %}
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
+
             </div>
 
             <div class="d-flex justify-content-end gap-2 mt-4">
@@ -262,31 +159,8 @@
                     {% endif %}
                 </button>
             </div>
+
         </form>
     </div>
 </div>
-{% endblock %}
-
-{% block extra_scripts %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize tooltips
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl)
-    });
-    
-    // Form validation
-    var forms = document.querySelectorAll('.needs-validation')
-    Array.prototype.slice.call(forms).forEach(function (form) {
-        form.addEventListener('submit', function (event) {
-            if (!form.checkValidity()) {
-                event.preventDefault()
-                event.stopPropagation()
-            }
-            form.classList.add('was-validated')
-        }, false)
-    });
-});
-</script>
 {% endblock %}
