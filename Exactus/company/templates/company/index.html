@@ -1,8 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% load company_role_filters %}
-{% load company_filters %}
-
+{% load company_role_filters %} 
 
 {% block title %}Companies — {{ country.name }} | ExactusPay{% endblock %}
 
@@ -23,7 +21,6 @@
 {% block content %}
 <div class="card shadow-sm border-0">
 
-  <!-- HEADER -->
   <div class="card-header">
     <div class="d-flex justify-content-between align-items-center">
       <div>
@@ -46,7 +43,6 @@
     </div>
   </div>
 
-  <!-- BODY -->
   <div class="card-body">
 
     {# System messages #}
@@ -59,7 +55,8 @@
       {% endfor %}
     {% endif %}
 
-    {% if company.companies %}
+    {# 💡 FIXED: Changed 'company.companies' to 'companies' #}
+    {% if companies %}
       <div class="table-responsive">
         <table id="datatable-companies"
                class="table table-striped table-hover align-middle"
@@ -71,20 +68,18 @@
               <th>Trade Name</th>
               <th>Legal Name</th>
               <th>Town</th>
-              <th>Employees</th>
               <th>Status</th>
               <th class="text-end">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {% for company in company.companies %}
+            {% for company in companies %}
               <tr>
                 <td>{{ company.company_number }}</td>
                 <td><strong>{{ company.company_code }}</strong></td>
                 <td>{{ company.trade_name }}</td>
                 <td>{{ company.legal_name }}</td>
                 <td>{{ company.town|default:"—" }}</td>
-                <td>{{ company.employees.count }}</td>
 
                 <td>
                   {% if company.account_status == "ACTIVE" %}
@@ -98,6 +93,7 @@
 
                 <td class="text-end">
                   <div class="btn-group">
+                    {# Assuming you have an 'employee' namespace/app #}
                     <a href="{% url 'employee:employee' country_slug company.company_id %}"
                        class="btn btn-sm btn-outline-primary"
                        title="Enter Company">
@@ -147,12 +143,7 @@ document.addEventListener("DOMContentLoaded", function () {
         previous: "‹",
         next: "›"
       }
-    },
-    columnDefs: [
-      { responsivePriority: 1, targets: 2 }, // Trade name
-      { responsivePriority: 2, targets: -1 }, // Actions
-      { responsivePriority: 3, targets: 0 }   // Company number
-    ]
+    }
   });
 });
 </script>

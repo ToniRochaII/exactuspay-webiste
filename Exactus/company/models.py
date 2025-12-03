@@ -1,17 +1,12 @@
-"""
-Company Models - WITHOUT timestamps for now
-"""
-
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-
 
 class Company(models.Model):
     """
     Company model representing businesses in different countries.
     """
     
-    # Choices
+    # --- Choices ---
     ACCOUNT_STATUS_CHOICES = [
         ("ACTIVE", "Active"),
         ("SUSPENDED", "Suspended"),
@@ -23,10 +18,10 @@ class Company(models.Model):
         ("Y", "Yes"),
     ]
     
-    # Primary Key
+    # --- Primary Key ---
     company_id = models.AutoField(primary_key=True)
     
-    # Identification
+    # --- Identification ---
     company_code = models.CharField(
         _("Company Code"),
         max_length=20,
@@ -41,7 +36,7 @@ class Company(models.Model):
         help_text=_("Official registration number")
     )
     
-    # Names
+    # --- Names ---
     trade_name = models.CharField(
         _("Trade Name"),
         max_length=150,
@@ -54,48 +49,13 @@ class Company(models.Model):
         help_text=_("Registered legal name")
     )
     
-    # Address
-    building_name = models.CharField(
-        _("Building Name"),
-        max_length=150,
-        blank=True,
-        null=True
-    )
-    
-    road_name_1 = models.CharField(
-        _("Road Name 1"),
-        max_length=150,
-        blank=True,
-        null=True
-    )
-    
-    road_name_2 = models.CharField(
-        _("Road Name 2"),
-        max_length=150,
-        blank=True,
-        null=True
-    )
-    
-    town = models.CharField(
-        _("Town/City"),
-        max_length=100,
-        blank=True,
-        null=True
-    )
-    
-    post_code = models.CharField(
-        _("Post Code"),
-        max_length=20,
-        blank=True,
-        null=True
-    )
-    
-    county = models.CharField(
-        _("County/State/Province"),
-        max_length=100,
-        blank=True,
-        null=True
-    )
+    # --- Address ---
+    building_name = models.CharField(_("Building Name"), max_length=150, blank=True, null=True)
+    road_name_1 = models.CharField(_("Road Name 1"), max_length=150, blank=True, null=True)
+    road_name_2 = models.CharField(_("Road Name 2"), max_length=150, blank=True, null=True)
+    town = models.CharField(_("Town/City"), max_length=100, blank=True, null=True)
+    post_code = models.CharField(_("Post Code"), max_length=20, blank=True, null=True)
+    county = models.CharField(_("County/State/Province"), max_length=100, blank=True, null=True)
     
     country = models.ForeignKey(
         "country.Country",
@@ -104,7 +64,7 @@ class Company(models.Model):
         verbose_name=_("Country")
     )
     
-    # Tax IDs (flexible for different countries)
+    # --- Tax IDs (Generic slots for country-specific usage) ---
     tax_id_1 = models.CharField(_("Tax ID 1"), max_length=50, blank=True, null=True)
     tax_id_2 = models.CharField(_("Tax ID 2"), max_length=50, blank=True, null=True)
     tax_id_3 = models.CharField(_("Tax ID 3"), max_length=50, blank=True, null=True)
@@ -116,24 +76,18 @@ class Company(models.Model):
     tax_id_9 = models.CharField(_("Tax ID 9"), max_length=50, blank=True, null=True)
     tax_id_10 = models.CharField(_("Tax ID 10"), max_length=50, blank=True, null=True)
     
-    # RTI (Real Time Information) credentials
+    # --- RTI (Real Time Information) credentials ---
     rti_user_id = models.CharField(
-        _("RTI User ID"),
-        max_length=100,
-        blank=True,
-        null=True,
+        _("RTI User ID"), max_length=100, blank=True, null=True,
         help_text=_("Username for payroll reporting")
     )
     
     rti_password = models.CharField(
-        _("RTI Password"),
-        max_length=100,
-        blank=True,
-        null=True,
+        _("RTI Password"), max_length=100, blank=True, null=True,
         help_text=_("Password for payroll reporting")
     )
     
-    # Account Status
+    # --- Account Status ---
     account_status = models.CharField(
         _("Account Status"),
         max_length=10,
@@ -147,10 +101,6 @@ class Company(models.Model):
         choices=ACCOUNT_ARCHIVE_CHOICES,
         default="N"
     )
-    
-    # NOTE: REMOVED timestamp fields to fix migration issues
-    # created_at = models.DateTimeField(_("Created At"), auto_now_add=True)
-    # updated_at = models.DateTimeField(_("Updated At"), auto_now=True)
     
     class Meta:
         verbose_name = _("Company")

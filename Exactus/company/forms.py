@@ -1,26 +1,35 @@
 from django import forms
 from Exactus.company.models import Company
 
-# --- REGISTRY ---
+# ────────────────────────────────────────────────────────────────
+# ⚙️ Form Registry & Factory
+# ────────────────────────────────────────────────────────────────
 
 COMPANY_FORM_REGISTRY: dict[str, type[forms.ModelForm]] = {}
 
 def register_company_form(country_code: str):
-    """
-    Usage:
-        @register_company_form("GB")
-        class CompanyFormGB(CompanyForm):
-            ...
-    """
+    """Decorator to register a form class for a specific country ISO code."""
     country_code = country_code.upper()
-
     def decorator(cls):
         COMPANY_FORM_REGISTRY[country_code] = cls
         return cls
-
     return decorator
 
-# --- UPLOAD FORM CAN STAY GLOBAL (unless you want it per country) ---
+def get_company_form_class_for_country(country):
+    """
+    Returns the specific form class for a country, or the default CompanyForm.
+    """
+    # Adjust 'iso2_code' if your Country model uses 'code' or 'iso2'
+    code = getattr(country, "iso2_code", None) 
+    if not code:
+        return CompanyForm
+
+    code = code.upper()
+    return COMPANY_FORM_REGISTRY.get(code, CompanyForm)
+
+# ────────────────────────────────────────────────────────────────
+# 📄 Upload Form
+# ────────────────────────────────────────────────────────────────
 
 class CompanyUploadForm(forms.Form):
     file = forms.FileField(
@@ -34,21 +43,9 @@ class CompanyUploadForm(forms.Form):
         help_text="Check to validate without saving to database"
     )
 
-def get_company_form_class_for_country(country):
-    """
-    Given a Country instance, return the appropriate Company form class.
-    Fallback: CompanyForm (default).
-    """
-    # Adjust attribute names to whatever your Country model uses:
-    code = getattr(country, "iso2", None) or getattr(country, "code", None)
-    if not code:
-        return CompanyForm
-
-    code = code.upper()
-    return COMPANY_FORM_REGISTRY.get(code, CompanyForm)
-
-
-# --- DEFAULT FORM ---
+# ────────────────────────────────────────────────────────────────
+# 📝 Base Company Form
+# ────────────────────────────────────────────────────────────────
 
 class CompanyForm(forms.ModelForm):
     class Meta:
@@ -60,113 +57,43 @@ class CompanyForm(forms.ModelForm):
             "account_archive": forms.Select(attrs={"class": "form-select"}),
         }
 
+# ────────────────────────────────────────────────────────────────
+# 🌍 Country Specific Forms
+# ────────────────────────────────────────────────────────────────
 
-# --- COUNTRY-SPECIFIC FORMS ---
-
-@register_company_form("GB")
 @register_company_form("GB")
 class CompanyFormGB(CompanyForm):
-    """
-    UK-specific company form for ISO-2 = GB.
-    """
-
+    """UK-specific company form (ISO: GB)."""
     class Meta(CompanyForm.Meta):
         labels = {
-            # Base labels inherited, we override only the UK-specific ones
             **getattr(CompanyForm.Meta, "labels", {}),
-
-            "company_id": "Company ID",
-            "company_code": "Company Code",
-            "company_number": "Company Number",
-
-            "trade_name": "Name",
-            "legal_name": "Legal Name",
-
-            "building_name": "Building Name",
-            "road_name_1": "Road Name",
-            "road_name_2": "Road Name 2",
-            "town": "Town",
-            "post_code": "Post Code",
-            "county": "County",
-            "country": "Country",
-
-            # Tax IDs
+            "company_number": "Company Registration Number",
             "tax_id_1": "Employer PAYE Reference – Office Number",
             "tax_id_2": "Employer PAYE Reference – Reference Number",
             "tax_id_3": "Accounts Office Reference",
-            "tax_id_4": "Company Registration Number",
-            "tax_id_5": "Company CT UTR",
-            "tax_id_6": "SA UTR",
-            "tax_id_7": "ECON Reference",
-            "tax_id_8": "Eligible for Employer Relief",
-            "tax_id_9": "Apprentice Levy Due",
-            "tax_id_10": "",  # will be hidden anyway
-
-            "rti_user_id": "RTI Login",
-            "rti_password": "RTI Password",
+            "tax_id_4": "Corporation Tax UTR",
+            # Add other specific labels as needed
         }
-
-        # Hide tax_id_10
         widgets = {
             **getattr(CompanyForm.Meta, "widgets", {}),
-
             "tax_id_10": forms.HiddenInput(),
         }
 
-
 @register_company_form("BR")
 class CompanyFormBR(CompanyForm):
-    """
-    Brazil-specific company form for ISO-2 = BR (English labels).
-    """
-
+    """Brazil-specific company form (ISO: BR)."""
     class Meta(CompanyForm.Meta):
         labels = {
             **getattr(CompanyForm.Meta, "labels", {}),
-
-            # Identification
-            "company_id": "Company ID",
-            "company_code": "Company Code",
-            "company_number": "Company Number",
-
-            # Names
             "trade_name": "Trade Name (Nome Fantasia)",
             "legal_name": "Legal Name (Razão Social)",
-
-            # Address
-            "building_name": "Building / Complement",
-            "road_name_1": "Street",
-            "road_name_2": "Street (Line 2)",
-            "town": "City",
-            "post_code": "Post Code (CEP)",
-            "county": "District / Neighbourhood (Bairro)",
-            "country": "Country",
-
-            # Fiscal Identifiers
             "tax_id_1": "CNPJ",
-            "tax_id_2": "State Registration (Inscrição Estadual)",
-            "tax_id_3": "Municipal Registration (Inscrição Municipal)",
-            "tax_id_4": "Fiscal CNAE Code",
-            "tax_id_5": "NIRE",
-            "tax_id_6": "Tax Regime (Simples, Real, Presumed)",
-            "tax_id_7": "FGTS Code",
-            "tax_id_8": "INSS Code",
-            "tax_id_9": "eSocial Code",
-            "tax_id_10": "",  # hidden
-
-            # System access
-            "rti_user_id": "eSocial Username",
-            "rti_password": "eSocial Password",
+            "tax_id_2": "Inscrição Estadual",
+            "tax_id_3": "Inscrição Municipal",
         }
-
-        widgets = {
-            **getattr(CompanyForm.Meta, "widgets", {}),
-            "tax_id_10": forms.HiddenInput(),  # hidden for BR
-        }
-
-    # Optional: CNPJ numeric-length validation
+    
     def clean_tax_id_1(self):
-        """Basic CNPJ validation (14 digits)."""
+        """Basic CNPJ validation."""
         cnpj = self.cleaned_data.get("tax_id_1")
         if cnpj:
             digits = "".join(filter(str.isdigit, str(cnpj)))
@@ -174,79 +101,23 @@ class CompanyFormBR(CompanyForm):
                 raise forms.ValidationError("CNPJ must contain 14 digits.")
         return cnpj
 
-
-
 @register_company_form("AR")
 class CompanyFormAR(CompanyForm):
-    """
-    Argentina-specific company form for ISO-2 = AR (English labels).
-    """
-
+    """Argentina-specific company form (ISO: AR)."""
     class Meta(CompanyForm.Meta):
         labels = {
             **getattr(CompanyForm.Meta, "labels", {}),
-
-            # Identification
-            "company_id": "Company ID",
-            "company_code": "Company Code",
-            "company_number": "Company Number",
-
-            # Names
-            "trade_name": "Trade Name (Nombre Comercial)",
-            "legal_name": "Legal Name (Razón Social)",
-
-            # Address
-            "building_name": "Building / Complement",
-            "road_name_1": "Street (Calle)",
-            "road_name_2": "Street (Line 2)",
-            "town": "City (Ciudad)",
-            "post_code": "Post Code (Código Postal)",
-            "county": "District / Neighbourhood (Barrio)",
-            "country": "Country",
-
-            # Fiscal Identifiers
-            "tax_id_1": "CUIT (Tax ID)",
-            "tax_id_2": "IIBB Registration (Inscripción Ingresos Brutos)",
-            "tax_id_3": "IVA Registration (Inscripción IVA)",
-            "tax_id_4": "Activity Code (Actividad)",
-            "tax_id_5": "Company Registration (Matrícula Comercial)",
-            "tax_id_6": "Tax Regime (Régimen Fiscal)",
-            "tax_id_7": "AFIP Password (Clave Fiscal)",
-            "tax_id_8": "Monotributo Category",
-            "tax_id_9": "Responsible Inscription (Inscripción Responsable)",
-            "tax_id_10": "Provincial Registration",
-
-            # System access
-            "rti_user_id": "AFIP Username",
-            "rti_password": "AFIP Password",
+            "trade_name": "Nombre Comercial",
+            "legal_name": "Razón Social",
+            "tax_id_1": "CUIT",
+            "tax_id_2": "Ingresos Brutos",
         }
 
-        # Argentina-specific help texts (optional)
-        help_texts = {
-            **getattr(CompanyForm.Meta, "help_texts", {}),
-            "tax_id_1": "Código Único de Identificación Tributaria (11 digits)",
-            "tax_id_6": "e.g., Monotributo, Responsable Inscripto, Exento",
-        }
-
-    # CUIT validation (11 digits)
     def clean_tax_id_1(self):
-        """Basic CUIT validation (11 digits)."""
+        """Basic CUIT validation."""
         cuit = self.cleaned_data.get("tax_id_1")
         if cuit:
             digits = "".join(filter(str.isdigit, str(cuit)))
             if len(digits) != 11:
                 raise forms.ValidationError("CUIT must contain 11 digits.")
         return cuit
-
-    # Optional: IIBB validation (varies by province)
-    def clean_tax_id_2(self):
-        """Basic IIBB validation (alphanumeric, varies by province)."""
-        iibb = self.cleaned_data.get("tax_id_2")
-        if iibb:
-            # Basic validation - IIBB format varies by province
-            # Could add more specific validation if needed
-            if len(str(iibb).strip()) < 3:
-                raise forms.ValidationError(
-                    "IIBB registration number seems too short."
-                )
-        return iibb
