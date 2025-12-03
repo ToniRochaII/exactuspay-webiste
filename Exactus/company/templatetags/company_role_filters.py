@@ -8,3 +8,13 @@ def has_role(user, roles):
         return False
     role_list = [r.strip().upper() for r in roles.split(",")]
     return user.role.upper() in role_list
+
+
+@register.filter
+def contains(list_string, item):
+    """
+    Check if item is inside a space-separated string list.
+    Usage: {% if field.name|contains:company_fields %}.
+    """
+    items = [x.strip() for x in str(list_string).split()]
+    return item in items

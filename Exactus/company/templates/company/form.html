@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
 {% load crispy_forms_tags %}
+{% load company_role_filters %}
+{% load company_filters %}
 
 {% block title %}
     {% if company %}
@@ -35,6 +37,7 @@
 {% endblock %}
 
 {% block content %}
+
 <div class="card shadow-sm border-0">
 
     <div class="card-header d-flex justify-content-between align-items-center">
@@ -45,122 +48,129 @@
                 Create New Company
             {% endif %}
         </h5>
-        <span class="badge bg-primary">Country: {{ country.iso2 }} — {{ country.name }}</span>
+        <span class="badge bg-primary">
+            Country: {{ country.iso2 }} — {{ country.name }}
+        </span>
     </div>
 
     <div class="card-body">
 
         {% if form.non_field_errors %}
-            <div class="alert alert-danger">
-                {{ form.non_field_errors }}
-            </div>
+            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
         {% endif %}
 
-        <form method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
 
             <div class="row">
 
-                {# ================================================
-                   COMPANY INFORMATION
-                   ================================================ #}
+                {# ====================== COMPANY INFO ====================== #}
                 <div class="col-md-6">
                     <div class="card mb-4">
-                        <div class="card-header bg-light"><h6 class="mb-0">Company Information</h6></div>
+                        <div class="card-header bg-light"><h6>Company Information</h6></div>
                         <div class="card-body">
-                            {% for name in "company_code company_number trade_name legal_name".split %}
-                                {% if form|dictsort:"0"|dict_has_key:name %}
-                                    {% include "company/field.html" with field=form[name] %}
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
 
-                {# ================================================
-                   ADDRESS INFORMATION
-                   ================================================ #}
-                <div class="col-md-6">
-                    <div class="card mb-4">
-                        <div class="card-header bg-light"><h6 class="mb-0">Address Information</h6></div>
-                        <div class="card-body">
-                            {% for name in "building_name road_name_1 road_name_2 town post_code county".split %}
-                                {% if form|dictsort:"0"|dict_has_key:name %}
-                                    {% include "company/field.html" with field=form[name] %}
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-
-                {# ================================================
-                   TAX INFORMATION
-                   ================================================ #}
-                <div class="col-12">
-                    <div class="card mb-4">
-                        <div class="card-header bg-light"><h6 class="mb-0">Tax & Regulatory Information</h6></div>
-                        <div class="card-body">
-                            <div class="row g-3">
-                                {% for name in "tax_id_1 tax_id_2 tax_id_3 tax_id_4 tax_id_5 tax_id_6 tax_id_7 tax_id_8 tax_id_9 tax_id_10".split %}
-                                    {% if form|dictsort:"0"|dict_has_key:name %}
-                                        <div class="col-md-6">
-                                            {% include "company/field.html" with field=form[name] %}
-                                        </div>
+                            {% with company_fields="company_code company_number trade_name legal_name" %}
+                                {% for field in form %}
+                                    {% if company_fields|contains:field.name %}
+                                        {% include "company/field.html" with field=field %}
                                     {% endif %}
                                 {% endfor %}
+                            {% endwith %}
+
+                        </div>
+                    </div>
+                </div>
+
+                {# ===================== ADDRESS INFO ====================== #}
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-header bg-light"><h6>Address Information</h6></div>
+                        <div class="card-body">
+
+                            {% with address_fields="building_name road_name_1 road_name_2 town post_code county" %}
+                                {% for field in form %}
+                                    {% if address_fields|contains:field.name %}
+                                        {% include "company/field.html" with field=field %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endwith %}
+
+                        </div>
+                    </div>
+                </div>
+
+                {# ====================== TAX INFO ========================= #}
+                <div class="col-12">
+                    <div class="card mb-4">
+                        <div class="card-header bg-light"><h6>Tax & Regulatory Information</h6></div>
+                        <div class="card-body">
+                            <div class="row">
+
+                                {% with tax_fields="tax_id_1 tax_id_2 tax_id_3 tax_id_4 tax_id_5 tax_id_6 tax_id_7 tax_id_8 tax_id_9 tax_id_10" %}
+                                    {% for field in form %}
+                                        {% if tax_fields|contains:field.name %}
+                                            <div class="col-md-6">
+                                                {% include "company/field.html" with field=field %}
+                                            </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endwith %}
+
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {# ================================================
-                   SYSTEM ACCESS
-                   ================================================ #}
+                {# ====================== SYSTEM ACCESS ========================= #}
                 <div class="col-md-6">
                     <div class="card mb-4">
-                        <div class="card-header bg-light"><h6 class="mb-0">System Access</h6></div>
+                        <div class="card-header bg-light"><h6>System Access</h6></div>
                         <div class="card-body">
-                            {% for name in "rti_user_id rti_password".split %}
-                                {% if form|dictsort:"0"|dict_has_key:name %}
-                                    {% include "company/field.html" with field=form[name] %}
-                                {% endif %}
-                            {% endfor %}
+
+                            {% with system_fields="rti_user_id rti_password" %}
+                                {% for field in form %}
+                                    {% if system_fields|contains:field.name %}
+                                        {% include "company/field.html" with field=field %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endwith %}
+
                         </div>
                     </div>
                 </div>
 
-                {# ================================================
-                   ACCOUNT STATUS
-                   ================================================ #}
+                {# ====================== ACCOUNT STATUS ====================== #}
                 <div class="col-md-6">
                     <div class="card mb-4">
-                        <div class="card-header bg-light"><h6 class="mb-0">Account Status</h6></div>
+                        <div class="card-header bg-light"><h6>Account Status</h6></div>
                         <div class="card-body">
-                            {% for name in "account_status account_archive".split %}
-                                {% if form|dictsort:"0"|dict_has_key:name %}
-                                    {% include "company/field.html" with field=form[name] %}
-                                {% endif %}
-                            {% endfor %}
+
+                            {% with status_fields="account_status account_archive" %}
+                                {% for field in form %}
+                                    {% if status_fields|contains:field.name %}
+                                        {% include "company/field.html" with field=field %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endwith %}
+
                         </div>
                     </div>
                 </div>
 
             </div>
 
-            <div class="d-flex justify-content-end gap-2 mt-4">
-                <a href="{% url 'companies:company' country.slug %}" class="btn btn-light">
-                    <i class="fas fa-times me-1"></i> Cancel
-                </a>
-                <button type="submit" class="btn btn-primary px-4">
-                    {% if company %}
-                        <i class="fas fa-save me-1"></i> Save Changes
-                    {% else %}
-                        <i class="fas fa-plus-circle me-1"></i> Create Company
-                    {% endif %}
+            <div class="d-flex justify-content-end gap-2">
+                <a href="{% url 'companies:company' country.slug %}" class="btn btn-light">Cancel</a>
+                <button type="submit" class="btn btn-primary">
+                    {% if company %}Save Changes{% else %}Create Company{% endif %}
                 </button>
             </div>
 
         </form>
+
     </div>
+
 </div>
+
 {% endblock %}
