@@ -23,7 +23,7 @@
     <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
     <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
     <li class="breadcrumb-item">
-        <a href="{% url 'company:list' country.slug %}">{{ country.name }} Companies</a>
+        <a href="{% url 'companies:company' country.slug %}">{{ country.name }} Companies</a>
     </li>
     {% if company %}
         <li class="breadcrumb-item active" aria-current="page">Edit Company</li>
@@ -98,7 +98,7 @@
             <hr class="my-4">
 
             <div class="d-flex justify-content-end gap-2">
-                <a href="{% url 'company:list' country.slug %}" class="btn btn-light">
+                <a href="{% url 'companies:company' country.slug %}" class="btn btn-light">
                     Cancel
                 </a>
 
