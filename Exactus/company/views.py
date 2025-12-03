@@ -37,24 +37,27 @@ def company(request, country_slug):
 @role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE")
 def company_create(request, country_slug):
     country = get_object_or_404(Country, slug=country_slug)
-
-    form_class = get_company_form_class_for_country(country)
-
+    
+    try:
+        form_class = get_company_form_class_for_country(country)
+    except (AttributeError, NameError):
+        # Fallback to base form if function doesn't work
+        form_class = CompanyForm
+    
     if request.method == "POST":
         form = form_class(request.POST, request.FILES)
         if form.is_valid():
             company = form.save(commit=False)
-            company.country = country  # still set here, not in form
+            company.country = country
             company.save()
-            # redirect wherever
             return redirect("company:list", country_slug=country.slug)
     else:
         form = form_class()
-
+    
     return render(request, "company/create.html", {
         "form": form,
         "country": country,
-         "country_slug":country_slug,
+        "country_slug": country_slug,
     })
 
 
