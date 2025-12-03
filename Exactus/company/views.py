@@ -7,7 +7,7 @@ from django.http import HttpResponse
 
 from Exactus.company.models import  Company 
 from Exactus.country.models import Country
-from Exactus.company.forms import CompanyForm
+from Exactus.company.forms import CompanyForm, get_company_form_class_for_country
 from Exactus.country.utils.decorators import role_required 
 
 
@@ -38,23 +38,23 @@ def company(request, country_slug):
 def company_create(request, country_slug):
     country = get_object_or_404(Country, slug=country_slug)
 
+    form_class = get_company_form_class_for_country(country)
 
     if request.method == "POST":
-        form = CompanyForm(request.POST)
+        form = form_class(request.POST, request.FILES)
         if form.is_valid():
             company = form.save(commit=False)
-            company.country = country
+            company.country = country  # still set here, not in form
             company.save()
-            messages.success(request, f"Company '{company.trade_name}' added successfully.")
-            return redirect("companies:company", country_slug=country.slug)
+            # redirect wherever
+            return redirect("company:list", country_slug=country.slug)
     else:
-        form = CompanyForm()
+        form = form_class()
 
-    return render(
-        request,
-        "company/create.html",
-        {"form": form, "country": country, "country_slug": country.slug}
-    )
+    return render(request, "company/company_form.html", {
+        "form": form,
+        "country": country,
+    })
 
 
 
@@ -64,13 +64,15 @@ def company_edit(request, country_slug, company_id):
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, company_id=company_id, country=country)
 
+    form_class = get_company_form_class_for_country(country)
+
     if request.method == "POST":
-        form = CompanyForm(request.POST, instance=company)
+        form = form_class(request.POST,request.FILES, instance=company)
         if form.is_valid():
             form.save()
             return redirect("companies:company", country_slug=country.slug)
     else:
-        form = CompanyForm(instance=company)
+        form = form_class(instance=company)
 
     return render(request, "company/edit.html", {"form": form, "country": country, "country_slug":country_slug})
 

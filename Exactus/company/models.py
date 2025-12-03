@@ -24,6 +24,7 @@ class Company(models.Model):
     road_name_2 = models.CharField("Road Name 2", max_length=150, blank=True, null=True)
     town = models.CharField("Town", max_length=100, blank=True, null=True)
     post_code = models.CharField("Post Code", max_length=20, blank=True, null=True)
+    county = models.CharField("County", max_length=20, blank=True, null=True)
     country = models.ForeignKey( "country.Country", on_delete=models.CASCADE, related_name="companies")
 
     tax_id_1 = models.CharField("Tax ID 1", max_length=50, blank=True, null=True)
