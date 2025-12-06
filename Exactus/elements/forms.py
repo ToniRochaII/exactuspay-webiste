@@ -3,18 +3,56 @@ from django import forms
 from Exactus.elements.models import Element
 
 
+
 class ElementForm(forms.ModelForm):
     class Meta:
         model = Element
-        fields = "__all__"
-        exclude = ["country"]  # Country is set in the view
+        fields = [
+            "element_code",
+            "element_name",
+            "element_description",
+            "element_status",
+            "element_frequency",
+            "element_type",
+            "element_class",
+            "element_category",
+            "element_categorytype",
+            "element_account",
+            "element_map_code",
+            "element_gl_account",
+            "element_taxable",
+            "element_tax_flat",
+            "element_tax_irregular",
+            "element_social_securitable",
+            "element_pensionable",
+            "element_payable",
+            "element_calculate",
+        ]
+        widgets = {
+            # normal text/select widgets
+            "element_code": forms.TextInput(attrs={"class": "form-control"}),
+            "element_name": forms.TextInput(attrs={"class": "form-control"}),
+            "element_description": forms.TextInput(attrs={"class": "form-control"}),
+            "element_status": forms.Select(attrs={"class": "form-select"}),
+            "element_frequency": forms.Select(attrs={"class": "form-select"}),
+            "element_type": forms.Select(attrs={"class": "form-select"}),
+            "element_class": forms.Select(attrs={"class": "form-select"}),
+            "element_category": forms.Select(attrs={"class": "form-select"}),
+            "element_categorytype": forms.Select(attrs={"class": "form-select"}),
+            "element_account": forms.TextInput(attrs={"class": "form-control"}),
+            "element_map_code": forms.TextInput(attrs={"class": "form-control"}),
+            "element_gl_account": forms.TextInput(attrs={"class": "form-control"}),
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Add Bootstrap classes to form fields
-        for field_name, field in self.fields.items():
-            existing_classes = field.widget.attrs.get("class", "")
-            field.widget.attrs["class"] = (existing_classes + " form-control").strip()
+            # ✅ BOOLEAN FIELDS: must be CheckboxInput with `form-check-input`
+            "element_taxable": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+            "element_tax_flat": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+            "element_tax_irregular": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+            "element_social_securitable": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+            "element_pensionable": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+            "element_payable": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+            "element_calculate": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+        }
+
 
 
 class ElementUploadForm(forms.Form):

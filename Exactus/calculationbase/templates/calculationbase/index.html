@@ -1,79 +1,134 @@
 {% extends "base.html" %}
+{% load static %}
 {% load role_filters %}
-{% block title %}Calculation Bases — {{ country.name }}{% endblock %}
+
+{% block title %}Calculation Bases — {{ country.name }} | ExactusPay{% endblock %}
+
+{% block extra_css %}
+<!-- DataTables (Spark Bootstrap 5) -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
+{% endblock %}
+
+{% block page_title %}
+<i class="bi bi-calculator me-2"></i> Calculation Bases — {{ country.name }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Calculation Bases</li>
+  </ol>
+</nav>
+{% endblock %}
 
 {% block content %}
-<div class="container mt200">
-  <div class="card shadow-sm border-0">
-    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-      <h5 class="mb-0">Calculation Bases — {{ country.name }}</h5>
-      <a href="{% url 'calculationbase:create' country.slug regulations.id %}" class="btn btn-light btn-sm">
-        <i class="bi bi-plus-circle"></i> Add New
-      </a>
-    </div>
+<div class="card shadow-sm border-0">
 
-    <div class="card-body">
-      <p> 
-        {% if user|has_role:"EXEC" %}
-        <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a> 
-        {% endif %}
-        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
-        <a href="{% url 'dashboard' %}">Dashboard</a> 
-        <a href="{% url 'user_list' %}"">Accounts</a>
-        <a href="{% url 'role_management' %}"">Role Management</a>
-        <a href="{% url 'regulations:regulations' country_slug %}"">Regulations</a>
-        <a href="{% url 'country:country' %}">Countries</a>
-        <a href="{% url 'elements:elements' country_slug %}"">elements</a>
-        {% endif %}
-        ||||
-        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
-        <a href="{% url 'profile' %}"">Profile</a>
-        <a href="{% url 'companies:company' country_slug %}">Companies</a>
-        <a href="{% url 'calculationbase:list' country_slug regulations.id %}">Calculation Base</a>
-        {% endif %}
+  <!-- HEADER -->
+  <div class="card-header d-flex justify-content-between align-items-center py-3">
+    <h5 class="mb-0 fw-semibold">Calculation Bases — {{ country.name }}</h5>
 
-        <a href="{% url 'password_reset' %}">Reset password</a>
-      </p>
-      {% if bases %}
-      <div class="table-responsive">
-        <table class="table table-striped align-middle">
-          <thead class="table-light">
-            <tr>
-              <th>ID</th>
-              <th>Element</th>
-              <th>Element Base</th>
-              <th>Tax Jurisdiction</th>
-              <th>Table Type</th>
-              <th>Frequency</th>
-              <th class="text-end">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for b in bases %}
-            <tr>
-              <td>{{ b.id }}</td>
-              <td>{{ b.element.element_name }}</td>
-              <td>{{ b.element_base.element_name|default:"—" }}</td>
-              <td>{{ b.tax_jurisdiction }}</td>
-              <td>{{ b.table_type|default:"—" }}</td>
-              <td>{{ b.base_frequency|default:"—" }}</td>
-              <td class="text-end">
-                <a href="{% url 'calculationbase:edit' country.slug regulations.id b.id %}" class="btn btn-sm btn-outline-primary">
-                  <i class="bi bi-pencil"></i> Edit
-                </a>
-                <a href="{% url 'calculationbase:delete' country.slug regulations.id b.id %}" class="btn btn-sm btn-outline-danger">
-                  <i class="bi bi-trash"></i> Delete
-                </a>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+    <a href="{% url 'calculationbase:create' country.slug regulations.id %}" 
+       class="btn btn-light btn-sm">
+      <i class="bi bi-plus-circle"></i> Add New
+    </a>
+  </div>
+
+  <!-- BODY -->
+  <div class="card-body">
+
+    <!-- ROLE QUICK LINKS -->
+    
+
+    {% if bases %}
+
+    <!-- RESPONSIVE DATATABLE -->
+    <table id="datatable-responsive"
+           class="table table-striped table-hover nowrap"
+           style="width:100%">
+      <thead class="table-light">
+        <tr>
+          <th>ID</th>
+          <th>Element</th>
+          <th>Base Element</th>
+          <th>Tax Jurisdiction</th>
+          <th>Table Type</th>
+          <th>Frequency</th>
+          <th class="text-end">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for b in bases %}
+        <tr>
+          <td>{{ b.id }}</td>
+          <td>{{ b.element.element_name }}</td>
+          <td>{{ b.element_base.element_name|default:"—" }}</td>
+          <td>{{ b.tax_jurisdiction }}</td>
+          <td>{{ b.table_type|default:"—" }}</td>
+          <td>{{ b.base_frequency|default:"—" }}</td>
+
+          <td class="text-end">
+            <a href="{% url 'calculationbase:edit' country.slug regulations.id b.id %}"
+               class="btn btn-sm btn-outline-primary">
+               <i class="bi bi-pencil"></i>Edit
+            </a>
+
+            <a href="{% url 'calculationbase:delete' country.slug regulations.id b.id %}"
+               class="btn btn-sm btn-outline-danger ms-1">
+               <i class="bi bi-trash"></i>Delete
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    {% else %}
+    <div class="text-center py-5 text-muted">
+      <i class="bi bi-inboxes display-5 d-block mb-3"></i>
+      No Calculation Bases found.
+      <div class="mt-3">
+        <a href="{% url 'calculationbase:create' country.slug regulations.id %}" class="btn btn-primary">
+          <i class="bi bi-plus-circle me-1"></i> Add First Base
+        </a>
       </div>
-      {% else %}
-        <div class="text-center text-muted py-4">No Calculation Bases found.</div>
-      {% endif %}
     </div>
+    {% endif %}
   </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+
+<!-- jQuery + DataTables -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    $('#datatable-responsive').DataTable({
+        responsive: true,
+        pageLength: 25,
+        autoWidth: false,
+        ordering: true,
+        language: {
+            search: "_INPUT_",
+            searchPlaceholder: "Search calculation bases..."
+        },
+        columnDefs: [
+            { targets: -1, orderable: false }  // disable sorting on actions column
+        ]
+    });
+});
+</script>
+
 {% endblock %}

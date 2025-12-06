@@ -1,53 +1,378 @@
 {% extends "base.html" %}
+{% load static %}
 {% load role_filters %}
-{% block title %}{{ title }}{% endblock %}
+
+{% block title %}{{ title }} | ExactusPay{% endblock %}
+
+{% block extra_css %}
+<style>
+    .bracket-row {
+        border-bottom: 1px solid #e9ecef;
+        padding: 10px 0;
+    }
+    .bracket-row:last-child {
+        border-bottom: none;
+    }
+    .calculation-result {
+        background-color: #f8f9fa;
+        padding: 10px;
+        border-radius: 5px;
+        margin-top: 5px;
+        font-weight: bold;
+        min-height: 55px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .add-bracket-btn {
+        margin-top: 20px;
+    }
+    .bracket-header {
+        background-color: #f8f9fa;
+        font-weight: bold;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 15px;
+    }
+    /* Hide empty bracket rows */
+    .bracket-row:has(input[value=""]) {
+        display: none;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="container mt200">
-  <div class="card shadow-sm border-0">
-    <div class="card-header bg-primary text-white">
-      <h5 class="mb-0">{{ title }}</h5>
-    </div>
-    <div class="card-body">
-      <p> 
-        {% if user|has_role:"EXEC" %}
-        <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a> 
-        {% endif %}
-        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
-        <a href="{% url 'dashboard' %}">Dashboard</a> 
-        <a href="{% url 'user_list' %}"">Accounts</a>
-        <a href="{% url 'role_management' %}"">Role Management</a>
-        <a href="{% url 'regulations:regulations' country_slug %}"">Regulations</a>
-        <a href="{% url 'country:country' %}">Countries</a>
-        <a href="{% url 'elements:elements' country_slug %}"">elements</a>
-        {% endif %}
-        ||||
-        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
-        <a href="{% url 'profile' %}"">Profile</a>
-        <a href="{% url 'companies:company' country_slug %}">Companies</a>
-        <a href="{% url 'calculationbase:list' country_slug regulations.id %}">Calculation Base</a>
-        {% endif %}
-
-        <a href="{% url 'password_reset' %}">Reset password</a>
-      </p>
-      <form method="post">
-        {% csrf_token %}
-        <div class="row">
-          {% for field in form %}
-            <div class="col-md-6 mb-3">
-              <label class="form-label">{{ field.label }}</label>
-              {{ field }}
-              {% if field.errors %}
-                <div class="text-danger small">{{ field.errors|striptags }}</div>
-              {% endif %}
+<div class="container mt-4">
+    <div class="card shadow-sm border-0">
+        <!-- HEADER -->
+        <div class="card-header bg-primary text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-calculator me-2"></i>{{ title }}</h5>
+                <span class="badge bg-light text-dark">
+                    {{ country.name }} - {{ regulations.fiscal_year }}
+                </span>
             </div>
-          {% endfor %}
         </div>
 
-        <button type="submit" class="btn btn-primary mt-3">Save</button>
-        <a href="{% url 'calculationbase:list' country.slug regulations.id %}" class="btn btn-secondary mt-3">Cancel</a>
-      </form>
+        <div class="card-body">
+            <!-- BREADCRUMB/NAVIGATION -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'regulations:regulations' country.slug %}">Regulations</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'calculationbase:list' country.slug regulations.id %}">Calculation Base</a></li>
+                    <li class="breadcrumb-item active">{{ title }}</li>
+                </ol>
+            </nav>
+
+            <form method="post" id="calculationBaseForm">
+                {% csrf_token %}
+                
+                <!-- BASIC INFORMATION SECTION -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h6 class="fw-bold text-primary mb-3 border-bottom pb-2">
+                            <i class="bi bi-info-circle me-1"></i> Basic Information
+                        </h6>
+                    </div>
+                    
+                    <!-- Element Field -->
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            {{ form.element }}
+                            <label for="{{ form.element.id_for_label }}">
+                                <i class="bi bi-list-ul me-1"></i> Element
+                            </label>
+                        </div>
+                        {% if form.element.errors %}
+                            <div class="text-danger small mt-1">{{ form.element.errors|striptags }}</div>
+                        {% endif %}
+                        <small class="text-muted">Select an element</small>
+                    </div>
+
+                    <!-- Element Base Field -->
+                    <div class="col-md-6 mb-3">
+                        <div class="form-floating">
+                            {{ form.element_base }}
+                            <label for="{{ form.element_base.id_for_label }}">
+                                <i class="bi bi-diagram-3 me-1"></i> Base Element
+                            </label>
+                        </div>
+                        {% if form.element_base.errors %}
+                            <div class="text-danger small mt-1">{{ form.element_base.errors|striptags }}</div>
+                        {% endif %}
+                        <small class="text-muted">Select base element (optional)</small>
+                    </div>
+
+                    <!-- Other Fields -->
+                    {% for field in form %}
+                        {% if field.name not in "element,element_base" and not field.name|slice:":7" == "bracket_" and not field.name|slice:":5" == "rate_" %}
+                        <div class="col-md-6 mb-3">
+                            <div class="form-floating">
+                                {{ field }}
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            </div>
+                            {% if field.errors %}
+                                <div class="text-danger small mt-1">{{ field.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+
+                <!-- BRACKETS AND RATES SECTION -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h6 class="fw-bold text-primary mb-3 border-bottom pb-2">
+                            <i class="bi bi-bar-chart me-1"></i> Brackets & Rates
+                        </h6>
+                        
+                        <div class="bracket-header">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <i class="bi bi-arrow-right-circle me-1"></i> Bracket Amount
+                                </div>
+                                <div class="col-md-5">
+                                    <i class="bi bi-percent me-1"></i> Rate (%) 
+                                </div>
+                                <div class="col-md-2">
+                                    <i class="bi bi-calculator me-1"></i> Calculation
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Brackets and Rates Rows -->
+                        <div id="brackets-container">
+                            {% for i in "0123456789ABCDEF" %}
+                            {% with index=forloop.counter0|stringformat:"02d" %}
+                            <div class="bracket-row" id="bracket-row-{{ index }}">
+                                <div class="row align-items-center">
+                                    <!-- Bracket Field -->
+                                    <div class="col-md-5 mb-2">
+                                        <div class="form-floating">
+                                            {{ form|get_bracket_field:forloop.counter0 }}
+                                            <label for="{{ form|get_bracket_field_id:forloop.counter0 }}">
+                                                Bracket {{ index }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Rate Field -->
+                                    <div class="col-md-5 mb-2">
+                                        <div class="form-floating">
+                                            {{ form|get_rate_field:forloop.counter0 }}
+                                            <label for="{{ form|get_rate_field_id:forloop.counter0 }}">
+                                                Rate {{ index }} (%)
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Calculation Result -->
+                                    <div class="col-md-2 mb-2">
+                                        <div class="calculation-result text-center" 
+                                             id="calc-result-{{ index }}">
+                                            ₋
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endwith %}
+                            {% endfor %}
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="text-center mt-4">
+                            <button type="button" class="btn btn-outline-primary add-bracket-btn" id="add-bracket-btn">
+                                <i class="bi bi-plus-circle me-1"></i> Show More Brackets
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary ms-2" id="setup-rates-btn">
+                                <i class="bi bi-gear me-1"></i> Set Up Progressive Rates
+                            </button>
+                            <button type="button" class="btn btn-outline-info ms-2" id="calculate-all-btn">
+                                <i class="bi bi-calculator me-1"></i> Calculate All
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BUTTONS -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'calculationbase:list' country.slug regulations.id %}" 
+                               class="btn btn-light border">
+                                <i class="bi bi-x-circle me-1"></i> Cancel
+                            </a>
+                            <div>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-check-circle me-1"></i> Save Calculation Base
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const maxBrackets = 16;
+        let visibleBrackets = 5; // Start with 5 visible brackets
+        
+        // Show/hide bracket rows
+        function updateBracketVisibility() {
+            for (let i = 0; i < maxBrackets; i++) {
+                const index = i.toString().padStart(2, '0');
+                const row = document.getElementById(`bracket-row-${index}`);
+                if (row) {
+                    if (i < visibleBrackets) {
+                        row.style.display = 'block';
+                    } else {
+                        row.style.display = 'none';
+                    }
+                }
+            }
+            
+            // Update button text
+            const addButton = document.getElementById('add-bracket-btn');
+            if (visibleBrackets >= maxBrackets) {
+                addButton.disabled = true;
+                addButton.innerHTML = '<i class="bi bi-check-circle me-1"></i> All Brackets Visible';
+                addButton.classList.remove('btn-outline-primary');
+                addButton.classList.add('btn-outline-success');
+            } else {
+                addButton.innerHTML = `<i class="bi bi-plus-circle me-1"></i> Show More (${visibleBrackets}/${maxBrackets})`;
+            }
+        }
+        
+        // Calculate individual bracket
+        function calculateBracket(index) {
+            const bracketField = document.getElementById(`id_bracket_${index}`);
+            const rateField = document.getElementById(`id_rate_${index}`);
+            const resultDiv = document.getElementById(`calc-result-${index}`);
+            
+            if (bracketField && rateField && resultDiv) {
+                const bracketValue = parseFloat(bracketField.value) || 0;
+                const rateValue = parseFloat(rateField.value) || 0;
+                
+                if (bracketValue > 0 && rateValue > 0) {
+                    const result = bracketValue * (rateValue / 100);
+                    resultDiv.textContent = result.toFixed(2);
+                    resultDiv.classList.remove('text-muted');
+                    resultDiv.classList.add('text-success');
+                    resultDiv.title = `Calculation: ${bracketValue} × (${rateValue} ÷ 100) = ${result.toFixed(2)}`;
+                } else if (bracketValue > 0 || rateValue > 0) {
+                    resultDiv.textContent = 'Incomplete';
+                    resultDiv.classList.remove('text-success', 'text-muted');
+                    resultDiv.classList.add('text-warning');
+                } else {
+                    resultDiv.textContent = '₋';
+                    resultDiv.classList.remove('text-success', 'text-warning');
+                    resultDiv.classList.add('text-muted');
+                }
+            }
+        }
+        
+        // Calculate all brackets
+        function calculateAllBrackets() {
+            for (let i = 0; i < maxBrackets; i++) {
+                calculateBracket(i.toString().padStart(2, '0'));
+            }
+        }
+        
+        // Setup progressive rates
+        function setupProgressiveRates() {
+            const baseRate = parseFloat(prompt("Enter base rate (%) for progressive calculation:", "5")) || 0;
+            const increment = parseFloat(prompt("Enter rate increment (%) per bracket:", "0.5")) || 0;
+            
+            if (baseRate > 0) {
+                for (let i = 0; i < maxBrackets; i++) {
+                    const index = i.toString().padStart(2, '0');
+                    const rateField = document.getElementById(`id_rate_${index}`);
+                    if (rateField) {
+                        const calculatedRate = baseRate + (i * increment);
+                        rateField.value = calculatedRate.toFixed(4);
+                        // Trigger calculation
+                        rateField.dispatchEvent(new Event('input'));
+                    }
+                }
+            }
+        }
+        
+        // Add event listeners to bracket and rate fields
+        for (let i = 0; i < maxBrackets; i++) {
+            const index = i.toString().padStart(2, '0');
+            const bracketField = document.getElementById(`id_bracket_${index}`);
+            const rateField = document.getElementById(`id_rate_${index}`);
+            
+            if (bracketField) {
+                bracketField.addEventListener('input', () => calculateBracket(index));
+            }
+            if (rateField) {
+                rateField.addEventListener('input', () => calculateBracket(index));
+            }
+        }
+        
+        // Add more brackets button
+        const addButton = document.getElementById('add-bracket-btn');
+        addButton.addEventListener('click', function() {
+            if (visibleBrackets < maxBrackets) {
+                visibleBrackets = Math.min(visibleBrackets + 3, maxBrackets);
+                updateBracketVisibility();
+            }
+        });
+        
+        // Setup rates button
+        const setupRatesBtn = document.getElementById('setup-rates-btn');
+        setupRatesBtn.addEventListener('click', setupProgressiveRates);
+        
+        // Calculate all button (moved to action buttons section)
+        const calculateAllBtn = document.getElementById('calculate-all-btn');
+        calculateAllBtn.addEventListener('click', calculateAllBrackets);
+        
+        // Form validation
+        const form = document.getElementById('calculationBaseForm');
+        form.addEventListener('submit', function(e) {
+            let isValid = true;
+            const requiredFields = form.querySelectorAll('[required]');
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    field.classList.remove('is-invalid');
+                }
+            });
+            
+            if (!isValid) {
+                e.preventDefault();
+                alert('Please fill in all required fields.');
+            }
+        });
+        
+        // Initial setup
+        updateBracketVisibility();
+        calculateAllBrackets();
+        
+        // Auto-show brackets that have values
+        for (let i = 0; i < maxBrackets; i++) {
+            const index = i.toString().padStart(2, '0');
+            const bracketField = document.getElementById(`id_bracket_${index}`);
+            const rateField = document.getElementById(`id_rate_${index}`);
+            
+            if (bracketField && bracketField.value || rateField && rateField.value) {
+                if (i >= visibleBrackets) {
+                    visibleBrackets = i + 1;
+                }
+            }
+        }
+        updateBracketVisibility();
+    });
+</script>
 {% endblock %}

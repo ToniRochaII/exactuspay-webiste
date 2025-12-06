@@ -250,17 +250,13 @@
                                 </label>
                                 <select class="form-control" id="id_role" name="role" required>
                                     <option value="">Select role</option>
-                                    <option value="admin" {% if form.role.value == "admin" %}selected{% endif %}>Administrator</option>
-                                    <option value="manager" {% if form.role.value == "manager" %}selected{% endif %}>Manager</option>
-                                    <option value="staff" {% if form.role.value == "staff" %}selected{% endif %}>Staff</option>
-                                    <option value="viewer" {% if form.role.value == "viewer" %}selected{% endif %}>Viewer</option>
+                                    <option value="EXEC" {% if form.role.value == "EXEC" %}selected{% endif %}>Executive</option>
+                                    <option value="ADMIN" {% if form.role.value == "ADMIN" %}selected{% endif %}>Administratorr</option>
                                 </select>
                                 <div class="form-text">
                                     <small>
-                                        <strong>Administrator:</strong> Full system access<br>
-                                        <strong>Manager:</strong> Manage teams and reports<br>
-                                        <strong>Staff:</strong> Basic access to assigned modules<br>
-                                        <strong>Viewer:</strong> Read-only access
+                                        <strong>exec:</strong> Full system access<br>
+                                        <strong>admin:</strong> Manage teams and reports<br>
                                     </small>
                                 </div>
                                 {% if form.role.errors %}

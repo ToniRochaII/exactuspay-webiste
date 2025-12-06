@@ -133,12 +133,6 @@
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         {% endif %}
-                                        {% if user|can:"USER:DELETE" and user_obj != user %}
-                                        <a href="{% url 'user_delete' user_obj.id %}" class="btn btn-outline-danger"
-                                           data-bs-toggle="tooltip" title="Delete User">
-                                            <i class="fas fa-trash"></i>
-                                        </a>
-                                        {% endif %}
                                     </div>
                                 </td>
                             </tr>

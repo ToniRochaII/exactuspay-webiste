@@ -6,6 +6,7 @@ from Exactus.utils.decorators import role_required
 
 from Exactus.country.models import Country
 from Exactus.regulations.models import Regulations
+from Exactus.calculationbase.models import CalculationBase
 from Exactus.regulations.forms import RegulationsForm
 
 
@@ -89,22 +90,41 @@ def regulations_edit(request, country_slug, regulations_id):
 @login_required
 @role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
 def regulations_delete(request, country_slug, regulations_id):
-
     country = get_object_or_404(Country, slug=country_slug)
     regulations = get_object_or_404(Regulations, pk=regulations_id, country=country)
+    
+    # Check for dependencies (CalculationBase records)
+    calculation_bases_count = regulations.calculation_bases.count()
+    has_dependencies = calculation_bases_count > 0
 
     if request.method == "POST":
+        # Prevent deletion if there are dependencies
+        if has_dependencies:
+            messages.error(
+                request, 
+                f"Cannot delete regulation for {country.name} ({regulations.fiscal_year}) because "
+                f"it has {calculation_bases_count} calculation base(s) linked to it. "
+                "Please delete the calculation bases first."
+            )
+            return redirect("regulations:regulations", country_slug=country.slug)
+        
+        # If no dependencies exist, proceed with deletion
         year = regulations.fiscal_year
         regulations.delete()
         messages.success(request, f"Regulation for {country.name} ({year}) deleted successfully.")
-        return redirect("regulations", country_slug=country.slug)
+        return redirect("regulations:regulations", country_slug=country.slug)
 
     return render(
         request,
         "regulations/delete.html",
-        {"regulations": regulations, "country": country, "country_slug":country_slug},
+        {
+            "regulations": regulations, 
+            "country": country, 
+            "country_slug": country_slug,
+            "has_dependencies": has_dependencies,
+            "calculation_bases_count": calculation_bases_count
+        },
     )
-
 
 
 

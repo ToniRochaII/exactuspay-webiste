@@ -1,75 +1,133 @@
 {% extends "base.html" %}
 {% load static %}
 {% load regulations_role_filters %}
+{% load permission_tags %}
 
-{% block title %}Edit Regulation | ExactusPay{% endblock %}
-{% block page_title %}Edit Regulation{% endblock %}
+{% block title %}Add Regulation | ExactusPay{% endblock %}
+{% block page_title %}
+<i class="bi bi-plus-circle me-2"></i>Add Regulation
+{% endblock %}
+
+{% block extra_head %}
+<!-- Select2 CSS (same as country create page) -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+
+<style>
+/* FORM STYLING for ALL PAGES — matches Country Create */
+.select2-container .select2-selection--single {
+    height: 58px !important;
+    padding: 14px 12px;
+    border-radius: 0.5rem;
+    border: 1px solid #ced4da !important;
+}
+.select2-selection__arrow {
+    top: 14px !important;
+}
+
+.form-floating > .select2-container {
+    padding-top: 1.25rem !important;
+}
+
+.summary-label {
+    font-size: .75rem;
+    color: #6c757d;
+}
+.summary-value {
+    font-size: 1rem;
+    font-weight: 600;
+}
+</style>
+{% endblock %}
 
 {% block breadcrumbs %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'regulations:regulations' country.slug %}">Regulations</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Edit Regulation</li>
+    <li class="breadcrumb-item"><a href="{% url 'regulations:regulations' country_slug %}">Regulations</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Add Regulation</li>
   </ol>
 </nav>
 {% endblock %}
 
 {% block content %}
-<div class="card shadow-sm">
-  <div class="card-header d-flex justify-content-between align-items-center">
-    <h5 class="mb-0">Edit Regulation</h5>
-  </div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card shadow-sm border-0">
 
-  <div class="card-body">
-    <form method="post" novalidate class="needs-validation">
-      {% csrf_token %}
-      {{ form.non_field_errors }}
-
-      <!-- First Row (two columns side by side) -->
-      <div class="row mb-3">
-        <div class="col-md-6">
-          <label for="{{ form.fiscal_year.id_for_label }}" class="form-label fw-semibold">
-            {{ form.fiscal_year.label }}
-            {% if form.fiscal_year.field.required %}
-              <span class="text-danger">*</span>
-            {% endif %}
-          </label>
-          {{ form.fiscal_year }}
-          {% if form.fiscal_year.errors %}
-            <div class="invalid-feedback d-block">
-              {{ form.fiscal_year.errors|join:", " }}
+            <div class="card-header py-3">
+                <h5 class="mb-0 fw-semibold">
+                    <i class="bi bi-file-earmark-plus me-2"></i>Add New Regulation — {{ country.name }}
+                </h5>
             </div>
-          {% endif %}
-        </div>
 
-        <div class="col-md-6">
-          <label for="{{ form.effective_date.id_for_label }}" class="form-label fw-semibold">
-            {{ form.effective_date.label }}
-            {% if form.effective_date.field.required %}
-              <span class="text-danger">*</span>
-            {% endif %}
-          </label>
-          {{ form.effective_date }}
-          {% if form.effective_date.errors %}
-            <div class="invalid-feedback d-block">
-              {{ form.effective_date.errors|join:", " }}
+            <div class="card-body">
+                <form method="post" id="regForm" novalidate>
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+
+                    <!-- SECTION: DETAILS -->
+                    <h6 class="text-uppercase text-muted mb-3 fw-bold">
+                        <i class="bi bi-clipboard-data me-1"></i> Regulation Details
+                    </h6>
+
+                    <div class="row g-4">
+
+                        {% for field in form %}
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ field }}
+
+                                <label for="{{ field.id_for_label }}" class="fw-semibold">
+                                    {{ field.label }}
+                                    {% if field.field.required %}
+                                        <span class="text-danger">*</span>
+                                    {% endif %}
+                                </label>
+                            </div>
+
+                            {% if field.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ field.errors|join:", " }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+
+                    </div>
+
+                    <!-- BUTTONS -->
+                    <div class="text-end mt-4">
+                        <a href="{% url 'regulations:regulations' country_slug %}" class="btn btn-light border me-2">
+                            Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary px-4">
+                            Save Regulation
+                        </button>
+                    </div>
+                </form>
             </div>
-          {% endif %}
+
         </div>
-      </div>
-
-      <!-- Add other fields below in similar rows if needed -->
-
-      <div class="text-end mt-4">
-        <button type="submit" class="btn btn-primary">
-          <i class="bi bi-check-circle"></i> Save Changes
-        </button>
-        <a href="{% url 'regulations:regulations' country.slug %}" class="btn btn-danger ms-2">
-          <i class="bi bi-x-circle"></i> Cancel
-        </a>
-      </div>
-    </form>
-  </div>
+    </div>
 </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<!-- Select2 -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    // Activate Select2 on ALL SELECT fields
+    $("select").select2({
+        theme: "bootstrap-5",
+        dropdownParent: $('#regForm')
+    });
+
+    // Apply consistent floating-label behavior for Select2
+    $(".select2-container").addClass("form-control form-control-lg");
+
+});
+</script>
 {% endblock %}

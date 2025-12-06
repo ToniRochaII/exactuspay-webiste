@@ -1,15 +1,19 @@
 {% extends "base.html" %}
 {% load static %}
-
 {% load element_role_filters %}
+
 {% block title %}Delete Element | ExactusPay{% endblock %}
-{% block page_title %}Delete Element{% endblock %}
+
+{% block page_title %}
+<i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
+Delete Element
+{% endblock %}
 
 {% block breadcrumbs %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'country' %}">Countries</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
     <li class="breadcrumb-item"><a href="{% url 'elements:elements' country_slug %}">Elements — {{ country.name }}</a></li>
     <li class="breadcrumb-item active" aria-current="page">Delete Element</li>
   </ol>
@@ -17,76 +21,268 @@
 {% endblock %}
 
 {% block content %}
-<div class="card shadow-sm">
-  <div class="card-header d-flex justify-content-between align-items-center">
-    <h5 class="mb-0">
-      <i class="bi bi-exclamation-triangle"></i> Delete Element
-    </h5>
-  </div>
+<div class="row">
+  <div class="col-lg-12">
 
-  <div class="card-body">
-      <p> 
-        {% if user|has_role:"EXEC" %}
-        <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a>
-        {% endif %}
-        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
-        <a href="{% url 'dashboard' %}">Dashboard</a> 
-        <a href="{% url 'user_list' %}"">Accounts</a>
-        <a href="{% url 'role_management' %}"">Role Management</a>
-        <a href="{% url 'regulations:regulations' country_slug %}"">Regulations</a>
-        <a href="{% url 'country:country' %}">Countries</a>
-        <a href="{% url 'country:country_create' %}"> Add Country</a>
-        <a href="{% url 'elements:elements' country_slug %}"">Elements</a>
-        <a href="{% url 'elements:element_create' country_slug %}"">Add Elements</a>
-        {% endif %}
-        ||||
-        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
-        <a href="{% url 'profile' %}"">Profile</a>
-        {% endif %}
+    <div class="card shadow-sm border-0">
 
-        <a href="{% url 'password_reset' %}">Reset password</a>
-      </p>
-    <p class="lead">
-      Are you sure you want to permanently delete this element from
-      <strong>{{ country.name }}</strong>?
-    </p>
-
-    <div class="border rounded p-3 bg-light mb-4">
-      <div class="row g-2">
-        <div class="col-md-4">
-          <p class="mb-1"><strong>Code:</strong></p>
-          <p class="text-muted">{{ element.element_code|default:"—" }}</p>
-        </div>
-        <div class="col-md-4">
-          <p class="mb-1"><strong>Name:</strong></p>
-          <p class="text-muted">{{ element.element_name }}</p>
-        </div>
-        <div class="col-md-4">
-          <p class="mb-1"><strong>Description:</strong></p>
-          <p class="text-muted">{{ element.element_description|default:"—" }}</p>
-        </div>
+      <!-- HEADER -->
+      <div class="card-header py-3">
+        <h5 class="mb-0 fw-semibold text-danger">
+          <i class="bi bi-exclamation-octagon me-2"></i>
+          Confirm Element Deletion
+        </h5>
       </div>
-      <div class="row g-2 mt-2">
-        <div class="col-md-6">
-          <p class="mb-1"><strong>Category:</strong></p>
-          <p class="text-muted">{{ element.element_category|default:"—" }}</p>
+
+      <!-- BODY -->
+      <div class="card-body">
+
+        {% if has_dependencies %}
+          <!-- DEPENDENCY WARNING - CANNOT DELETE -->
+          <div class="alert alert-danger d-flex align-items-center mb-4" role="alert">
+            <i class="bi bi-shield-exclamation fs-4 me-3"></i>
+            <div>
+              <h5 class="alert-heading mb-2">Cannot Delete Element</h5>
+              <p class="mb-1">
+                This element <strong>cannot be deleted</strong> because it is referenced in 
+                <span class="badge bg-danger">{{ total_dependencies }}</span> 
+                calculation base(s).
+              </p>
+              <div class="mt-2">
+                <p class="mb-1"><strong>Usage Breakdown:</strong></p>
+                <ul class="mb-2">
+                  <li>Used as main element: <span class="badge bg-warning text-dark">{{ calculation_bases_as_element }}</span></li>
+                  {% if calculation_bases_as_base > 0 %}
+                  <li>Used as base element: <span class="badge bg-info">{{ calculation_bases_as_base }}</span></li>
+                  {% endif %}
+                </ul>
+              </div>
+              <p class="mb-3">
+                You must remove all calculation base references before you can delete this element.
+              </p>
+            </div>
+          </div>
+        {% else %}
+          <!-- REGULAR DELETE CONFIRMATION -->
+          <div class="alert alert-danger d-flex align-items-center mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
+            <div>
+              You are about to permanently delete this element.  
+              This action <strong>cannot be undone</strong>.
+            </div>
+          </div>
+        {% endif %}
+
+        <!-- Element Details -->
+        <div class="border rounded p-4 bg-light mb-4">
+          <h6 class="fw-bold mb-3 text-muted text-uppercase">
+            <i class="bi bi-info-circle me-1"></i> Element Details
+          </h6>
+
+          <div class="row g-3">
+            <div class="col-md-3">
+              <p class="mb-1 fw-semibold">Element Code</p>
+              <p class="text-muted mb-0">
+                <span class="badge bg-primary">{{ element.element_code|default:"—" }}</span>
+              </p>
+            </div>
+
+            <div class="col-md-3">
+              <p class="mb-1 fw-semibold">Element Name</p>
+              <p class="text-muted mb-0">{{ element.element_name }}</p>
+            </div>
+
+            <div class="col-md-3">
+              <p class="mb-1 fw-semibold">Status</p>
+              <p class="text-muted mb-0">
+                <span class="badge {% if element.element_status == 'Active' %}bg-success{% else %}bg-secondary{% endif %}">
+                  {{ element.element_status|default:"—" }}
+                </span>
+              </p>
+            </div>
+
+            <div class="col-md-3">
+              <p class="mb-1 fw-semibold">Type</p>
+              <p class="text-muted mb-0">{{ element.element_type|default:"—" }}</p>
+            </div>
+          </div>
+
+          <div class="row g-3 mt-3">
+            <div class="col-md-6">
+              <p class="mb-1 fw-semibold">Description</p>
+              <p class="text-muted mb-0">{{ element.element_description|default:"No description provided" }}</p>
+            </div>
+
+            <div class="col-md-3">
+              <p class="mb-1 fw-semibold">Category</p>
+              <p class="text-muted mb-0">{{ element.element_category|default:"—" }}</p>
+            </div>
+
+            <div class="col-md-3">
+              <p class="mb-1 fw-semibold">Frequency</p>
+              <p class="text-muted mb-0">{{ element.element_frequency|default:"—" }}</p>
+            </div>
+          </div>
+
+          <!-- Taxation & Benefits Badges -->
+          {% if element.element_taxable or element.element_pensionable or element.element_payable %}
+          <div class="row g-3 mt-4 pt-3 border-top">
+            <div class="col-12">
+              <p class="mb-2 fw-semibold text-muted">Taxation & Benefits Settings:</p>
+              <div class="d-flex flex-wrap gap-2">
+                {% if element.element_taxable %}
+                <span class="badge bg-danger">Taxable</span>
+                {% endif %}
+                {% if element.element_tax_flat %}
+                <span class="badge bg-warning text-dark">Flat Tax</span>
+                {% endif %}
+                {% if element.element_tax_irregular %}
+                <span class="badge bg-info">Irregular Tax</span>
+                {% endif %}
+                {% if element.element_social_securitable %}
+                <span class="badge bg-primary">Social Security</span>
+                {% endif %}
+                {% if element.element_pensionable %}
+                <span class="badge bg-success">Pensionable</span>
+                {% endif %}
+                {% if element.element_payable %}
+                <span class="badge bg-dark">Payable</span>
+                {% endif %}
+                {% if element.element_calculate %}
+                <span class="badge bg-secondary">Calculated</span>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          {% endif %}
         </div>
-        <div class="col-md-6">
-          <p class="mb-1"><strong>Status:</strong></p>
-          <p class="text-muted">{{ element.element_status|default:"—" }}</p>
+
+        <!-- Show Calculation Base Dependencies Details -->
+        {% if has_dependencies and calculation_bases %}
+        <div class="border rounded p-4 bg-warning bg-opacity-10 mb-4">
+          <h6 class="fw-bold mb-3 text-warning text-uppercase">
+            <i class="bi bi-link-45deg me-1"></i> Linked Calculation Bases
+          </h6>
+          
+          <div class="table-responsive">
+            <table class="table table-sm table-hover">
+              <thead class="table-warning">
+                <tr>
+                  <th>Fiscal Year</th>
+                  <th>Element Role</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for cb in calculation_bases %}
+                <tr>
+                  <td>{{ cb.regulations.fiscal_year|default:"N/A" }}</td>
+                  <td>
+                    {% if cb.element == element %}
+                    <span class="badge bg-warning text-dark">Main Element</span>
+                    {% elif cb.element_base == element %}
+                    <span class="badge bg-info">Base Element</span>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="5" class="text-center text-muted py-3">
+                    No calculation bases found
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          
+          <p class="mt-3 mb-0 text-warning">
+            <i class="bi bi-exclamation-triangle me-1"></i>
+            Remove this element from all calculation bases above before attempting deletion.
+          </p>
         </div>
+        {% endif %}
+
+        <!-- Delete Form (Only show if no dependencies) -->
+        {% if not has_dependencies %}
+        <form method="post" class="text-end" id="delete-form">
+          {% csrf_token %}
+          
+          <!-- Confirmation Checkbox -->
+          <div class="form-check mb-3 text-start">
+            <input class="form-check-input" type="checkbox" id="confirmDelete" required>
+            <label class="form-check-label text-danger fw-semibold" for="confirmDelete">
+              <i class="bi bi-check-circle me-1"></i>
+              I understand this action is permanent and cannot be undone
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn-danger px-4" id="delete-btn" disabled>
+            <i class="bi bi-trash me-1"></i> Delete Element
+          </button>
+
+          <a href="{% url 'elements:elements' country_slug %}" class="btn btn-light border ms-2 px-4">
+            <i class="bi bi-x-circle me-1"></i> Cancel
+          </a>
+        </form>
+        {% else %}
+        <!-- Alternative action when dependencies exist -->
+        <div class="text-end">
+          <a href="{% url 'calculationbase:list' country_slug=country.slug regulations_id=calculation_bases.0.regulations.id %}" 
+             class="btn btn-warning px-4 me-2">
+            <i class="bi bi-calculator me-1"></i> Manage Calculation Bases
+          </a>
+          <a href="{% url 'elements:elements' country_slug %}" class="btn btn-primary px-4">
+            <i class="bi bi-arrow-left me-1"></i> Back to Elements
+          </a>
+        </div>
+        {% endif %}
+
       </div>
     </div>
 
-    <form method="post" class="text-end">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-danger">
-        <i class="bi bi-trash"></i> Confirm Delete
-      </button>
-      <a href="{% url 'elements:elements' country_slug %}" class="btn btn-primary ms-2">
-        <i class="bi bi-x-circle"></i> Cancel
-      </a>
-    </form>
   </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const confirmCheckbox = document.getElementById('confirmDelete');
+    const deleteBtn = document.getElementById('delete-btn');
+    const deleteForm = document.getElementById('delete-form');
+    
+    // Enable/disable delete button based on checkbox
+    if (confirmCheckbox && deleteBtn) {
+      confirmCheckbox.addEventListener('change', function() {
+        deleteBtn.disabled = !this.checked;
+        if (!this.checked) {
+          deleteBtn.classList.remove('btn-danger');
+          deleteBtn.classList.add('btn-secondary');
+        } else {
+          deleteBtn.classList.remove('btn-secondary');
+          deleteBtn.classList.add('btn-danger');
+        }
+      });
+    }
+    
+    // Double confirmation on form submission
+    if (deleteForm) {
+      deleteForm.addEventListener('submit', function(e) {
+        const elementName = "{{ element.element_name|escapejs }}";
+        const elementCode = "{{ element.element_code|escapejs }}";
+        
+        const isConfirmed = confirm(
+          `Are you absolutely sure you want to delete element:\n\n` +
+          `• Name: ${elementName}\n` +
+          `• Code: ${elementCode}\n\n` +
+          `This action cannot be undone.`
+        );
+        
+        if (!isConfirmed) {
+          e.preventDefault();
+        }
+      });
+    }
+  });
+</script>
 {% endblock %}

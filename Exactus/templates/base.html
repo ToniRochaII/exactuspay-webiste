@@ -564,8 +564,7 @@
 
                 <!-- Breadcrumb Navigation -->
                 <nav aria-label="breadcrumb" class="d-none d-md-block">
-                    <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+                    <ol class="breadcrumb mt-3 mb-0">
                         {% block breadcrumbs %}{% endblock %}
                     </ol>
                 </nav>
@@ -621,7 +620,6 @@
                                 {% block page_subtitle %}
                                 {% if country %}
                                     <small class="text-muted">
-                                        – {{ country.name|default:"" }}
                                     </small>
                                 {% endif %}
                                 {% if company %}

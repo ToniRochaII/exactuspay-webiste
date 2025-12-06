@@ -825,3 +825,46 @@ def apply_business_logic_protections(permissions, role):
             if domain in permissions:
                 permissions[domain]['MANAGE'] = True
                 permissions[domain]['READ'] = True
+
+
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import get_user_model
+from django.template.loader import render_to_string
+from django.core.mail import send_mail
+from django.shortcuts import redirect, get_object_or_404
+from django.contrib import messages
+from django.conf import settings
+
+User = get_user_model()
+
+@login_required
+def admin_reset_password(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+
+    # Prevent resetting own password from admin tools
+    if user == request.user:
+        messages.error(request, "You cannot reset your own password here.")
+        return redirect("user_edit", id=user_id)
+
+    token = default_token_generator.make_token(user)
+
+    reset_url = request.build_absolute_uri(f"/reset/{user.pk}/{token}/")
+
+    # Send email
+    subject = "Password Reset Request"
+    message = render_to_string("emails/admin_reset_password.html", {
+        "user": user,
+        "reset_url": reset_url,
+    })
+
+    send_mail(
+        subject,
+        message,
+        settings.DEFAULT_FROM_EMAIL,
+        [user.email],
+        fail_silently=False
+    )
+
+    messages.success(request, f"Password reset email sent to {user.email}")
+    return redirect("user_edit", id=user_id)

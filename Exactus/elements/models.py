@@ -51,7 +51,7 @@ class Element(models.Model):
     ]
     element_category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, blank=True, null=True)
 
-    # Flags
+
     element_taxable = models.BooleanField(default=False)
     element_tax_flat = models.BooleanField(default=False)
     element_tax_irregular = models.BooleanField(default=False)

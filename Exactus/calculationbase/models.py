@@ -48,9 +48,6 @@ class CalculationBase(models.Model):
         blank=True
     )
 
-    tax_jurisdiction = models.CharField(max_length=150, null=True, blank=True)
-    table_type = models.CharField(max_length=15, choices=TABLE_TYPE_CHOICES, null=True, blank=True)
-    ss_category = models.CharField(max_length=15, choices=SS_CATEGORY_CHOICES, null=True, blank=True)
 
     base_frequency = models.CharField(max_length=15, choices=FREQUENCY_CHOICES, null=True, blank=True)
 

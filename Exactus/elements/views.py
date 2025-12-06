@@ -7,14 +7,19 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
+from django.db.models import Q 
 
+from Exactus.company import models
 from Exactus.elements.models import Element
 from Exactus.country.models import Country
 from Exactus.elements.forms import ElementForm, ElementUploadForm
 from Exactus.elements.utils.csv_importer import import_elements_from_csv
+from Exactus.calculationbase.models import CalculationBase
+from Exactus.utils.decorators import role_required 
 
 
 @login_required
+@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
 def element(request, country_slug):
     country = get_object_or_404(Country, slug=country_slug)
     elements = Element.objects.filter(country=country)
@@ -30,6 +35,7 @@ def element(request, country_slug):
 
 
 @login_required
+@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
 def element_create(request, country_slug):
     country = get_object_or_404(Country, slug=country_slug)
     if request.method == "POST":
@@ -55,6 +61,7 @@ def element_create(request, country_slug):
 
 
 @login_required
+@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
 def element_edit(request, country_slug, element_code):
     country = get_object_or_404(Country, slug=country_slug)
     element = get_object_or_404(Element, country=country, element_code=element_code)
@@ -78,16 +85,55 @@ def element_edit(request, country_slug, element_code):
         },
     )
 
-
 @login_required
-def element_delete(request, country_slug, element_code):
+@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
+def element_delete(request, country_slug, element_code):  # Changed from 'pk' to 'element_code'
     country = get_object_or_404(Country, slug=country_slug)
-    element = get_object_or_404(Element, country=country, element_code=element_code)
+    element = get_object_or_404(Element, element_code=element_code, country=country)
+    
+    # Check for dependencies in CalculationBase
+    # Check if element is used as the main element
+    calculation_bases_as_element = CalculationBase.objects.filter(
+        element=element
+    ).count()
+    
+    # Check if element is used as element_base (if applicable)
+    calculation_bases_as_base = CalculationBase.objects.filter(
+        element_base=element
+    ).count()
+    
+    # Total dependencies
+    total_dependencies = calculation_bases_as_element + calculation_bases_as_base
+    
+    # Check if element is referenced in any calculation base
+    has_dependencies = total_dependencies > 0
 
     if request.method == "POST":
+        # Block deletion if element has dependencies
+        if has_dependencies:
+            messages.error(
+                request, 
+                f"Cannot delete element '{element.element_name}' because "
+                f"it is referenced in {total_dependencies} calculation base(s). "
+                "Please remove all calculation base references first."
+            )
+            return redirect("elements:elements", country_slug=country.slug)
+        
+        # If no dependencies, proceed with deletion
+        element_name = element.element_name
+        element_code = element.element_code
         element.delete()
-        messages.success(request, "Element deleted successfully!")
-        return redirect("elements:elements", country_slug=country_slug)
+        
+        messages.success(
+            request, 
+            f"Element '{element_name}' ({element_code}) deleted successfully."
+        )
+        return redirect("elements:elements", country_slug=country.slug)
+
+    # Get specific calculation bases for display in template
+    calculation_bases = CalculationBase.objects.filter(
+        Q(element=element) | Q(element_base=element)
+    ).select_related('regulations', 'country').distinct()
 
     return render(
         request,
@@ -96,11 +142,19 @@ def element_delete(request, country_slug, element_code):
             "element": element,
             "country": country,
             "country_slug": country_slug,
+            "has_dependencies": has_dependencies,
+            "total_dependencies": total_dependencies,
+            "calculation_bases": calculation_bases,
+            "calculation_bases_as_element": calculation_bases_as_element,
+            "calculation_bases_as_base": calculation_bases_as_base,
         },
     )
 
 
+
+
 @login_required
+@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
 def element_upload_view(request, country_slug=None):
     """
     Handle element CSV uploads with optional country context.
@@ -168,6 +222,7 @@ def element_upload_view(request, country_slug=None):
 
 
 @login_required
+@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
 def element_upload_result_view(request, country_slug=None):
     """
     Display results of a CSV upload.
@@ -205,6 +260,7 @@ def element_upload_result_view(request, country_slug=None):
 
 
 @login_required
+@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
 def download_elements_template(request, country_slug=None):
     """
     Download CSV template for elements.
