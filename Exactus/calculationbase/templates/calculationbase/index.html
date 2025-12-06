@@ -54,8 +54,6 @@
           <th>ID</th>
           <th>Element</th>
           <th>Base Element</th>
-          <th>Tax Jurisdiction</th>
-          <th>Table Type</th>
           <th>Frequency</th>
           <th class="text-end">Actions</th>
         </tr>
@@ -67,8 +65,6 @@
           <td>{{ b.id }}</td>
           <td>{{ b.element.element_name }}</td>
           <td>{{ b.element_base.element_name|default:"—" }}</td>
-          <td>{{ b.tax_jurisdiction }}</td>
-          <td>{{ b.table_type|default:"—" }}</td>
           <td>{{ b.base_frequency|default:"—" }}</td>
 
           <td class="text-end">

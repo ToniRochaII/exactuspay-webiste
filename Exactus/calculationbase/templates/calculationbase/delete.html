@@ -1,40 +1,88 @@
 {% extends "base.html" %}
-{% block title %}Delete Calculation Base{% endblock %}
 {% load role_filters %}
+{% block title %}Delete Calculation Base | ExactusPay{% endblock %}
 
 {% block content %}
-    
-      <p> 
-        {% if user|has_role:"EXEC" %}
+
+<!-- NAVIGATION -->
+<p> 
+    {% if user|has_role:"EXEC" %}
         <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a> 
-        {% endif %}
-        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
-        <a href="{% url 'dashboard' %}">Dashboard</a> 
-        <a href="{% url 'user_list' %}"">Accounts</a>
-        <a href="{% url 'role_management' %}"">Role Management</a>
-        <a href="{% url 'regulations:regulations' country_slug %}"">Regulations</a>
+    {% endif %}
+
+    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
+        <a href="{% url 'dashboard' %}">Dashboard</a>
+        <a href="{% url 'user_list' %}">Accounts</a>
+        <a href="{% url 'role_management' %}">Role Management</a>
+        <a href="{% url 'regulations:regulations' country_slug %}">Regulations</a>
         <a href="{% url 'country:country' %}">Countries</a>
-        <a href="{% url 'elements:elements' country_slug %}"">elements</a>
-        {% endif %}
-        ||||
-        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
-        <a href="{% url 'profile' %}"">Profile</a>
+        <a href="{% url 'elements:elements' country_slug %}">Elements</a>
+    {% endif %}
+
+    ||||
+
+    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
+        <a href="{% url 'profile' %}">Profile</a>
         <a href="{% url 'companies:company' country_slug %}">Companies</a>
         <a href="{% url 'calculationbase:list' country_slug regulations.id %}">Calculation Base</a>
-        {% endif %}
+    {% endif %}
 
-        <a href="{% url 'password_reset' %}">Reset password</a>
-      </p>
+    <a href="{% url 'password_reset' %}">Reset password</a>
+</p>
+
 <div class="container mt200">
-  <h3>Are you sure you want to delete this Calculation Base?</h3>
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-danger text-white">
+            <h5 class="mb-0">
+                <i class="bi bi-exclamation-triangle me-2"></i> Delete Calculation Base
+            </h5>
+        </div>
 
-  <p><strong>ID:</strong> {{ cb.id }}</p>
-  <p><strong>Element:</strong> {{ cb.element.element_name }}</p>
+        <div class="card-body">
 
-  <form method="post">
-    {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Yes, delete</button>
-    <a href="{% url 'calculationbase:list' country.slug regulations.id %}" class="btn btn-secondary">Cancel</a>
-  </form>
+            <p class="lead">
+                Are you sure you want to permanently delete this Calculation Base?
+            </p>
+
+            <div class="border rounded p-3 bg-light mb-4">
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <strong>ID:</strong><br>
+                        <span class="text-muted">{{ cb.id }}</span>
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Element:</strong><br>
+                        <span class="text-muted">{{ cb.element.element_name }}</span>
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Base Element:</strong><br>
+                        <span class="text-muted">
+                            {{ cb.element_base.element_name|default:"—" }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <strong>Frequency:</strong><br>
+                        <span class="text-muted">{{ cb.base_frequency|default:"—" }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <form method="post" class="text-end">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-trash me-1"></i> Delete
+                </button>
+
+                <a href="{% url 'calculationbase:list' country.slug regulations.id %}"
+                   class="btn btn-secondary ms-2">
+                   <i class="bi bi-x-circle me-1"></i> Cancel
+                </a>
+            </form>
+        </div>
+    </div>
 </div>
+
 {% endblock %}

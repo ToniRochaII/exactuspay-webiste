@@ -30,7 +30,7 @@ def calculationbase_list(request, country_slug, regulations_id):
 @login_required
 def calculationbase_create(request, country_slug, regulations_id):
     country = get_object_or_404(Country, slug=country_slug)
-    regulations = get_object_or_404(Regulations, pk=regulations_id, country=country)
+    regulations = get_object_or_404(Regulations, pk=regulations_id)
 
     if request.method == "POST":
         form = CalculationBaseForm(request.POST, country=country, regulations=regulations)
@@ -39,12 +39,7 @@ def calculationbase_create(request, country_slug, regulations_id):
             cb.country = country
             cb.regulations = regulations
             cb.save()
-            messages.success(request, "Calculation Base created successfully.")
-            return redirect(
-                "calculationbase:list",
-                country_slug=country.slug,
-                regulations_id=regulations.id,
-            )
+            return redirect("calculationbase:list", country.slug, regulations.id)
     else:
         form = CalculationBaseForm(country=country, regulations=regulations)
 
@@ -55,10 +50,10 @@ def calculationbase_create(request, country_slug, regulations_id):
             "form": form,
             "country": country,
             "regulations": regulations,
-            "title": "Create Calculation Base",
-            "country_slug": country_slug,
-        },
+            "title": "Create Calculation Base"
+        }
     )
+
 
 
 @login_required
