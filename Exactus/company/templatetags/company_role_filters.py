@@ -18,3 +18,23 @@ def contains(list_string, item):
     """
     items = [x.strip() for x in str(list_string).split()]
     return item in items
+
+@register.filter
+def add_class(field, css_class):
+    """Add CSS class to form field"""
+    if field is None:
+        return ""
+    return field.as_widget(attrs={"class": css_class})
+
+@register.filter
+def get_field(form, field_name):
+    """Get a field from a form by name"""
+    try:
+        return form[field_name]
+    except KeyError:
+        return None
+
+@register.filter
+def split(value, delimiter=','):
+    """Split a string by delimiter"""
+    return value.split(delimiter)

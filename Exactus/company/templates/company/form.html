@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
-{% load company_role_filters %}
-{% load company_filters %}
 {% load crispy_forms_tags %}
+{% load company_filters %}
+{% load company_role_filters %}
 
 {% block title %}
     {% if company %}
@@ -13,110 +13,259 @@
 {% endblock %}
 
 {% block page_title %}
-{% if company %}
-    Edit Company ({{ country.iso2 }})
-{% else %}
-    Create Company ({{ country.iso2 }})
-{% endif %}
+    {% if company %}
+        <i class="bi bi-building me-2"></i>Edit Company – {{ company.trade_name }}
+    {% else %}
+        <i class="bi bi-building-add me-2"></i>Create Company ({{ country.iso2 }})
+    {% endif %}
+{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'companies:company' country.slug %}">{{ country.name }} Companies</a></li>
+    <li class="breadcrumb-item active" aria-current="page">
+      {% if company %}Edit Company{% else %}Create Company{% endif %}
+    </li>
+  </ol>
+</nav>
 {% endblock %}
 
 {% block content %}
 
 <div class="card shadow-sm border-0">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="fw-semibold mb-0">
-            {% if company %} Edit Company {% else %} Create Company {% endif %}
+    
+    <!-- HEADER -->
+    <div class="card-header 
+        {% if company %} text-dark 
+        {% else %} bg-success text-white {% endif %}
+        d-flex justify-content-between align-items-center">
+
+        <h5 class="mb-0 fw-semibold">
+            {% if company %}
+                <i class="bi bi-pencil-square me-2"></i>Edit Company — {{ company.trade_name|default:company.legal_name }}
+            {% else %}
+                <i class="bi bi-plus-circle me-2"></i>Create New Company
+            {% endif %}
         </h5>
-        <span class="badge bg-primary">Country: {{ country.iso2 }}</span>
+
+        <span class="badge {% if company %}bg-dark text-white{% else %}bg-light text-success{% endif %} fw-semibold px-3 py-2">
+            <i class="bi bi-flag me-1"></i>{{ country.name }}
+        </span>
     </div>
 
     <div class="card-body">
 
-        <form method="post" enctype="multipart/form-data">
+        {% if form.non_field_errors %}
+        <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data" id="company-form" novalidate>
             {% csrf_token %}
 
-            <div class="row">
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
 
-                <!-- COMPANY INFORMATION -->
-                <div class="col-md-6">
-                    <div class="card mb-4">
-                        <div class="card-header bg-light"><h6>Company Information</h6></div>
-                        <div class="card-body">
-                            {% for field in form %}
-                                {% if field.name in company_fields %}
-                                    {% include "company/field.html" with field=field %}
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
+            <!-- TABS HEADER -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item"><a class="nav-link active" href="#tab-basic" data-bs-toggle="tab">Company</a></li>
+                <li class="nav-item"><a class="nav-link" href="#tab-address" data-bs-toggle="tab">Address</a></li>
+                <li class="nav-item"><a class="nav-link" href="#tab-tax" data-bs-toggle="tab">Tax Information</a></li>
+                <li class="nav-item"><a class="nav-link" href="#tab-account" data-bs-toggle="tab">Account Settings</a></li>
+                <li class="nav-item"><a class="nav-link" href="#tab-logo" data-bs-toggle="tab">Others</a></li>
+            </ul>
 
-                <!-- ADDRESS -->
-                <div class="col-md-6">
-                    <div class="card mb-4">
-                        <div class="card-header bg-light"><h6>Address Information</h6></div>
-                        <div class="card-body">
-                            {% for field in form %}
-                                {% if field.name in address_fields %}
-                                    {% include "company/field.html" with field=field %}
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
+            <!-- TABS CONTENT -->
+            <div class="tab-content mt-4">
 
-                <!-- TAX -->
-                <div class="col-12">
-                    <div class="card mb-4">
-                        <div class="card-header bg-light"><h6>Tax & Regulatory Information</h6></div>
-                        <div class="card-body">
-                            <div class="row g-3">
-                                {% for field in form %}
-                                    {% if field.name in tax_fields %}
-                                        <div class="col-md-6">
-                                            {% include "company/field.html" with field=field %}
-                                        </div>
-                                    {% endif %}
-                                {% endfor %}
+                <!-- TAB 1 — BASIC INFO -->
+                <div class="tab-pane active" id="tab-basic" role="tabpanel">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form.company_code|add_class:"form-control" }}
+                                <label>{{ form.company_code.label }}*</label>
                             </div>
+                            {{ form.company_code.errors }}
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form.company_number|add_class:"form-control" }}
+                                <label>{{ form.company_number.label }}</label>
+                            </div>
+                            {{ form.company_number.errors }}
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form.trade_name|add_class:"form-control" }}
+                                <label>{{ form.trade_name.label }}*</label>
+                            </div>
+                            {{ form.trade_name.errors }}
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form.legal_name|add_class:"form-control" }}
+                                <label>{{ form.legal_name.label }}*</label>
+                            </div>
+                            {{ form.legal_name.errors }}
                         </div>
                     </div>
                 </div>
 
-                <!-- SYSTEM ACCESS -->
-                <div class="col-md-6">
-                    <div class="card mb-4">
-                        <div class="card-header bg-light"><h6>System Access</h6></div>
-                        <div class="card-body">
-                            {% for field in form %}
-                                {% if field.name in system_fields %}
-                                    {% include "company/field.html" with field=field %}
-                                {% endif %}
-                            {% endfor %}
+                <!-- TAB 2 — ADDRESS -->
+                <div class="tab-pane" id="tab-address" role="tabpanel">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form.building_name|add_class:"form-control" }}
+                                <label>{{ form.building_name.label }}</label>
+                            </div>
+                            {{ form.building_name.errors }}
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form.road_name_1|add_class:"form-control" }}
+                                <label>{{ form.road_name_1.label }}</label>
+                            </div>
+                            {{ form.road_name_1.errors }}
+                        </div>
+
+                        {% if form.road_name_2.field.widget.input_type != 'hidden' %}
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form.road_name_2|add_class:"form-control" }}
+                                <label>{{ form.road_name_2.label }}</label>
+                            </div>
+                            {{ form.road_name_2.errors }}
+                        </div>
+                        {% endif %}
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form.town|add_class:"form-control" }}
+                                <label>{{ form.town.label }}</label>
+                            </div>
+                            {{ form.town.errors }}
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form.post_code|add_class:"form-control" }}
+                                <label>{{ form.post_code.label }}</label>
+                            </div>
+                            {{ form.post_code.errors }}
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form.county|add_class:"form-control" }}
+                                <label>{{ form.county.label }}</label>
+                            </div>
+                            {{ form.county.errors }}
                         </div>
                     </div>
                 </div>
 
-                <!-- ACCOUNT STATUS -->
-                <div class="col-md-6">
-                    <div class="card mb-4">
-                        <div class="card-header bg-light"><h6>Account Status</h6></div>
-                        <div class="card-body">
-                            {% for field in form %}
-                                {% if field.name in status_fields %}
-                                    {% include "company/field.html" with field=field %}
-                                {% endif %}
-                            {% endfor %}
+                <!-- TAB 3 — TAX -->
+                <div class="tab-pane" id="tab-tax" role="tabpanel">
+                    <div class="row g-4">
+
+                        {% for field in form %}
+                            {% if field|is_tax_field and field.field.widget.input_type != 'hidden' %}
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    {{ field|add_class:"form-control" }}
+                                    <label>{{ field.label }}</label>
+                                    {% if field.help_text %}
+                                        <div class="form-text">{{ field.help_text }}</div>
+                                    {% endif %}
+                                </div>
+                                {{ field.errors }}
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+
+                        <!-- RTI USER ID -->
+                        {% if form.rti_user_id.field.widget.input_type != 'hidden' %}
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form.rti_user_id|add_class:"form-control" }}
+                                <label>{{ form.rti_user_id.label }}</label>
+                            </div>
+                            {{ form.rti_user_id.errors }}
+                        </div>
+                        {% endif %}
+
+                        <!-- RTI PASSWORD MOVED HERE -->
+                        {% if form.rti_password.field.widget.input_type != 'hidden' %}
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ form.rti_password|add_class:"form-control" }}
+                                <label>{{ form.rti_password.label }}</label>
+                            </div>
+                            {{ form.rti_password.errors }}
+                        </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+
+
+                <!-- TAB 4 — ACCOUNT -->
+                <div class="tab-pane" id="tab-account" role="tabpanel">
+                    <div class="row g-4">
+                        
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">{{ form.account_status.label }}</label>
+                            {{ form.account_status|add_class:"form-select" }}
+                            {{ form.account_status.errors }}
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">{{ form.account_archive.label }}</label>
+                            {{ form.account_archive|add_class:"form-select" }}
+                            {{ form.account_archive.errors }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 5 — LOGO -->
+                <div class="tab-pane" id="tab-logo" role="tabpanel">
+                    <div class="row g-4">
+                        <div class="col-md-12">
+                            <label class="form-label fw-semibold">{{ form.logo.label }}</label>
+                            {{ form.logo|add_class:"form-control" }}
+
+                            {% if company and company.logo %}
+                            <div class="mt-3">
+                                <img src="{{ company.logo.url }}" class="img-thumbnail" style="max-height:120px;">
+                            </div>
+                            {% endif %}
+
+                            {{ form.logo.errors }}
                         </div>
                     </div>
                 </div>
 
             </div>
 
-            <div class="d-flex justify-content-end gap-2">
-                <a href="{% url 'companies:company' country.slug %}" class="btn btn-light">Cancel</a>
-                <button type="submit" class="btn btn-primary">
-                    {% if company %}Save Changes{% else %}Create Company{% endif %}
+            <!-- BUTTONS -->
+            <div class="text-end mt-5 pt-4 border-top">
+                <a href="{% url 'companies:company' country.slug %}" class="btn btn-outline-secondary px-4 me-2">
+                    <i class="bi bi-x-lg me-1"></i>Cancel
+                </a>
+
+                <button class="btn {% if company %}btn-warning{% else %}btn-success{% endif %} px-5" id="submit-btn" type="submit">
+                    <i class="bi {% if company %}bi-save{% else %}bi-check-lg{% endif %} me-1"></i>
+                    <span id="submit-text">{% if company %}Save Changes{% else %}Create Company{% endif %}</span>
+                    <span id="submit-loading" class="spinner-border spinner-border-sm d-none ms-2"></span>
                 </button>
             </div>
 

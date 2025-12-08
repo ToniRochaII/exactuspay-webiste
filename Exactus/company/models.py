@@ -48,7 +48,7 @@ class Company(models.Model):
         max_length=150,
         help_text=_("Registered legal name")
     )
-    
+    logo = models.ImageField(upload_to='company_logos/', blank=True)
     # --- Address ---
     building_name = models.CharField(_("Building Name"), max_length=150, blank=True, null=True)
     road_name_1 = models.CharField(_("Road Name 1"), max_length=150, blank=True, null=True)
@@ -75,16 +75,16 @@ class Company(models.Model):
     tax_id_8 = models.CharField(_("Tax ID 8"), max_length=50, blank=True, null=True)
     tax_id_9 = models.CharField(_("Tax ID 9"), max_length=50, blank=True, null=True)
     tax_id_10 = models.CharField(_("Tax ID 10"), max_length=50, blank=True, null=True)
-    tax_id_11 = models.CharField(_("Tax ID 1"), max_length=50, blank=True, null=True)
-    tax_id_12 = models.CharField(_("Tax ID 2"), max_length=50, blank=True, null=True)
-    tax_id_13 = models.CharField(_("Tax ID 3"), max_length=50, blank=True, null=True)
-    tax_id_14 = models.CharField(_("Tax ID 4"), max_length=50, blank=True, null=True)
-    tax_id_15 = models.CharField(_("Tax ID 5"), max_length=50, blank=True, null=True)
-    tax_id_16 = models.CharField(_("Tax ID 6"), max_length=50, blank=True, null=True)
-    tax_id_17 = models.CharField(_("Tax ID 7"), max_length=50, blank=True, null=True)
-    tax_id_18 = models.CharField(_("Tax ID 8"), max_length=50, blank=True, null=True)
-    tax_id_19 = models.CharField(_("Tax ID 9"), max_length=50, blank=True, null=True)
-    tax_id_20 = models.CharField(_("Tax ID 10"), max_length=50, blank=True, null=True)
+    tax_id_11 = models.CharField(_("Tax ID 11"), max_length=50, blank=True, null=True)  # Fixed: was "Tax ID 1"
+    tax_id_12 = models.CharField(_("Tax ID 12"), max_length=50, blank=True, null=True)  # Fixed: was "Tax ID 2"
+    tax_id_13 = models.CharField(_("Tax ID 13"), max_length=50, blank=True, null=True)  # Fixed: was "Tax ID 3"
+    tax_id_14 = models.CharField(_("Tax ID 14"), max_length=50, blank=True, null=True)  # Fixed: was "Tax ID 4"
+    tax_id_15 = models.CharField(_("Tax ID 15"), max_length=50, blank=True, null=True)  # Fixed: was "Tax ID 5"
+    tax_id_16 = models.CharField(_("Tax ID 16"), max_length=50, blank=True, null=True)  # Fixed: was "Tax ID 6"
+    tax_id_17 = models.CharField(_("Tax ID 17"), max_length=50, blank=True, null=True)  # Fixed: was "Tax ID 7"
+    tax_id_18 = models.CharField(_("Tax ID 18"), max_length=50, blank=True, null=True)  # Fixed: was "Tax ID 8"
+    tax_id_19 = models.CharField(_("Tax ID 19"), max_length=50, blank=True, null=True)  # Fixed: was "Tax ID 9"
+    tax_id_20 = models.CharField(_("Tax ID 20"), max_length=50, blank=True, null=True)  # Fixed: was "Tax ID 10"
     
     # --- RTI (Real Time Information) credentials ---
     rti_user_id = models.CharField(

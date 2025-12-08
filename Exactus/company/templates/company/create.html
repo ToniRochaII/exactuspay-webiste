@@ -1,11 +1,23 @@
 {% extends "base.html" %}
 {% load static %}
+{% load crispy_forms_tags %}
 {% load company_role_filters %}
+{% load company_filters %}
 
-{% block title %}Add Company — {{ country.name }} | ExactusPay{% endblock %}
+{% block title %}
+    {% if company %}
+        Edit Company — {{ country.name }} | ExactusPay
+    {% else %}
+        Cree Company — {{ country.name }} | ExactusPay
+    {% endif %}
+{% endblock %}
 
 {% block page_title %}
-<i class="fas fa-plus-circle me-2"></i>Add Company — {{ country.name }}
+    {% if company %}
+        <i class="bi bi-building me-2"></i>Edit Company - {{ company.trade_name }}
+    {% else %}
+        <i class="bi bi-building-add me-2"></i>Create Company
+    {% endif %}
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -13,139 +25,402 @@
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
     <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'companies:company' country_slug %}">Companies — {{ country.name }}</a></li>
-    <li class="breadcrumb-item active">Add Company</li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'companies:company' country.slug %}">{{ country.name }} Companies</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      {% if company %}Edit {{ company.trade_name }} {% else %}Create Company {% endif %}
+    </li>
   </ol>
 </nav>
 {% endblock %}
 
 {% block content %}
+
 <div class="card shadow-sm border-0">
 
-  <!-- HEADER -->
-  <div class="card-header d-flex justify-content-between align-items-center">
-    <div>
-      <h5 class="card-title mb-0">Add a New Company</h5>
-      <small class="text-muted">Fill in the details below to create a company.</small>
+    <!-- HEADER BAR -->
+    <div class="card-header 
+        {% if company %} text-dark 
+        {% else %} bg-success text-white {% endif %}
+        d-flex justify-content-between align-items-center">
+
+        <h5 class="mb-0 fw-semibold">
+            {% if company %}
+                <i class="bi bi-pencil-square me-2"></i>Edit Company — {{ company.trade_name|default:company.legal_name }}
+            {% else %}
+                <i class="bi bi-plus-circle me-2"></i>Create New Company
+            {% endif %}
+        </h5>
+
+        <span class="badge {% if company %}bg-dark text-white{% else %}bg-light text-success{% endif %} fw-semibold px-3 py-2">
+            <i class="bi bi-flag me-1"></i>{{ country.name }}
+            {% if company and company.account_status %}
+                <span class="badge ms-2 bg-{% if company.account_status == 'ACTIVE' %}success{% elif company.account_status == 'SUSPENDED' %}warning{% else %}secondary{% endif %}">
+                    {{ company.get_account_status_display }}
+                </span>
+            {% endif %}
+        </span>
     </div>
 
-    <a href="{% url 'companies:company' country_slug %}" class="btn btn-outline-secondary btn-sm">
-      <i class="fas fa-arrow-left me-1"></i>Back
-    </a>
-  </div>
+    <div class="card-body">
 
-  <div class="card-body">
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ form.non_field_errors }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endif %}
 
-    <form method="post" novalidate>
-      {% csrf_token %}
+        <form method="post" enctype="multipart/form-data" id="company-form" class="needs-validation" novalidate>
+            {% csrf_token %}
 
-      {% if form.non_field_errors %}
-        <div class="alert alert-danger">{{ form.non_field_errors }}</div>
-      {% endif %}
+            {% for field in form.hidden_fields %}
+                {{ field }}
+            {% endfor %}
 
-      <div class="row">
+            <div class="row g-4">
 
-        <!-- LEFT COLUMN -->
-        <div class="col-md-6">
+                <!-- BASIC INFORMATION SECTION -->
+                <div class="col-12">
+                    <h6 class="border-bottom pb-2 mb-4">
+                        <i class="bi bi-info-circle me-2"></i>Basic Information
+                    </h6>
+                </div>
 
-          <h6 class="text-primary fw-bold mb-3">General Information</h6>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        {{ form.company_code|add_class:"form-control" }}
+                        <label for="{{ form.company_code.id_for_label }}">
+                            {{ form.company_code.label }}
+                            <span class="text-danger">*</span>
+                        </label>
+                        {% if form.company_code.help_text %}
+                            <div class="form-text">{{ form.company_code.help_text }}</div>
+                        {% endif %}
+                    </div>
+                    {% if form.company_code.errors %}
+                        <div class="text-danger small mt-1">{{ form.company_code.errors|striptags }}</div>
+                    {% endif %}
+                </div>
 
-          <div class="mb-3">
-            {{ form.company_code.label_tag }} {{ form.company_code }}
-            {% for error in form.company_code.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-          </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        {{ form.company_number|add_class:"form-control" }}
+                        <label for="{{ form.company_number.id_for_label }}">{{ form.company_number.label }}</label>
+                        {% if form.company_number.help_text %}
+                            <div class="form-text">{{ form.company_number.help_text }}</div>
+                        {% endif %}
+                    </div>
+                    {% if form.company_number.errors %}
+                        <div class="text-danger small mt-1">{{ form.company_number.errors|striptags }}</div>
+                    {% endif %}
+                </div>
 
-          <div class="mb-3">
-            {{ form.company_number.label_tag }} {{ form.company_number }}
-            {% for error in form.company_number.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-          </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        {{ form.trade_name|add_class:"form-control" }}
+                        <label for="{{ form.trade_name.id_for_label }}">
+                            {{ form.trade_name.label }}
+                            <span class="text-danger">*</span>
+                        </label>
+                    </div>
+                    {% if form.trade_name.errors %}
+                        <div class="text-danger small mt-1">{{ form.trade_name.errors|striptags }}</div>
+                    {% endif %}
+                </div>
 
-          <div class="mb-3">
-            {{ form.trade_name.label_tag }} {{ form.trade_name }}
-            {% for error in form.trade_name.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-          </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        {{ form.legal_name|add_class:"form-control" }}
+                        <label for="{{ form.legal_name.id_for_label }}">
+                            {{ form.legal_name.label }}
+                            <span class="text-danger">*</span>
+                        </label>
+                    </div>
+                    {% if form.legal_name.errors %}
+                        <div class="text-danger small mt-1">{{ form.legal_name.errors|striptags }}</div>
+                    {% endif %}
+                </div>
 
-          <div class="mb-3">
-            {{ form.legal_name.label_tag }} {{ form.legal_name }}
-            {% for error in form.legal_name.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-          </div>
+                <!-- ADDRESS SECTION -->
+                <div class="col-12 mt-4">
+                    <h6 class="border-bottom pb-2 mb-4">
+                        <i class="bi bi-geo-alt me-2"></i>Address
+                    </h6>
+                </div>
 
-          <h6 class="text-primary fw-bold mt-4 mb-3">Address</h6>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        {{ form.building_name|add_class:"form-control" }}
+                        <label for="{{ form.building_name.id_for_label }}">{{ form.building_name.label }}</label>
+                    </div>
+                    {% if form.building_name.errors %}
+                        <div class="text-danger small mt-1">{{ form.building_name.errors|striptags }}</div>
+                    {% endif %}
+                </div>
 
-          <div class="mb-3">
-            {{ form.building_name.label_tag }} {{ form.building_name }}
-            {% for error in form.building_name.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-          </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        {{ form.road_name_1|add_class:"form-control" }}
+                        <label for="{{ form.road_name_1.id_for_label }}">{{ form.road_name_1.label }}</label>
+                    </div>
+                    {% if form.road_name_1.errors %}
+                        <div class="text-danger small mt-1">{{ form.road_name_1.errors|striptags }}</div>
+                    {% endif %}
+                </div>
 
-          <div class="mb-3">
-            {{ form.road_name_1.label_tag }} {{ form.road_name_1 }}
-            {% for error in form.road_name_1.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-          </div>
+                {% if form.road_name_2.field.widget.input_type != 'hidden' %}
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        {{ form.road_name_2|add_class:"form-control" }}
+                        <label for="{{ form.road_name_2.id_for_label }}">{{ form.road_name_2.label }}</label>
+                    </div>
+                    {% if form.road_name_2.errors %}
+                        <div class="text-danger small mt-1">{{ form.road_name_2.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+                {% endif %}
 
-          <div class="mb-3">
-            {{ form.road_name_2.label_tag }} {{ form.road_name_2 }}
-            {% for error in form.road_name_2.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-          </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        {{ form.town|add_class:"form-control" }}
+                        <label for="{{ form.town.id_for_label }}">{{ form.town.label }}</label>
+                    </div>
+                    {% if form.town.errors %}
+                        <div class="text-danger small mt-1">{{ form.town.errors|striptags }}</div>
+                    {% endif %}
+                </div>
 
-          <div class="mb-3">
-            {{ form.town.label_tag }} {{ form.town }}
-            {% for error in form.town.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-          </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        {{ form.post_code|add_class:"form-control" }}
+                        <label for="{{ form.post_code.id_for_label }}">{{ form.post_code.label }}</label>
+                    </div>
+                    {% if form.post_code.errors %}
+                        <div class="text-danger small mt-1">{{ form.post_code.errors|striptags }}</div>
+                    {% endif %}
+                </div>
 
-          <div class="mb-3">
-            {{ form.post_code.label_tag }} {{ form.post_code }}
-            {% for error in form.post_code.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-          </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        {{ form.county|add_class:"form-control" }}
+                        <label for="{{ form.county.id_for_label }}">{{ form.county.label }}</label>
+                    </div>
+                    {% if form.county.errors %}
+                        <div class="text-danger small mt-1">{{ form.county.errors|striptags }}</div>
+                    {% endif %}
+                </div>
 
-          <h6 class="text-primary fw-bold mt-4 mb-3">Status</h6>
+                <!-- TAX IDENTIFICATION SECTION -->
+                <div class="col-12 mt-4">
+                    <h6 class="border-bottom pb-2 mb-4">
+                        <i class="bi bi-card-checklist me-2"></i>Tax Identification
+                    </h6>
+                </div>
 
-          <div class="mb-3">
-            {{ form.account_status.label_tag }} {{ form.account_status }}
-            {% for error in form.account_status.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-          </div>
+                {% for field in form %}
+                    {% if field|is_tax_field and field.field.widget.input_type != 'hidden' %}
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                {{ field|add_class:"form-control" }}
+                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                {% if field.help_text %}
+                                    <div class="form-text">{{ field.help_text }}</div>
+                                {% endif %}
+                            </div>
+                            {% if field.errors %}
+                                <div class="text-danger small mt-1">{{ field.errors|striptags }}</div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
 
-          <div class="mb-3">
-            {{ form.account_archive.label_tag }} {{ form.account_archive }}
-            {% for error in form.account_archive.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-          </div>
+                <!-- ACCOUNT SECTION -->
+                <div class="col-12 mt-4">
+                    <h6 class="border-bottom pb-2 mb-4">
+                        <i class="bi bi-shield-check me-2"></i>Account Settings
+                    </h6>
+                </div>
 
-        </div>
+                <div class="col-md-6">
+                    <label for="{{ form.account_status.id_for_label }}" class="form-label fw-semibold">
+                        {{ form.account_status.label }}
+                    </label>
+                    {{ form.account_status|add_class:"form-select" }}
+                    {% if form.account_status.errors %}
+                        <div class="text-danger small mt-1">{{ form.account_status.errors|striptags }}</div>
+                    {% endif %}
+                </div>
 
-        <!-- RIGHT COLUMN -->
-        <div class="col-md-6">
+                <div class="col-md-6">
+                    <label for="{{ form.account_archive.id_for_label }}" class="form-label fw-semibold">
+                        {{ form.account_archive.label }}
+                    </label>
+                    {{ form.account_archive|add_class:"form-select" }}
+                    {% if form.account_archive.errors %}
+                        <div class="text-danger small mt-1">{{ form.account_archive.errors|striptags }}</div>
+                    {% endif %}
+                </div>
 
-          <h6 class="text-primary fw-bold mb-3">Tax Identifiers</h6>
+                {% if form.rti_user_id.field.widget.input_type != 'hidden' %}
+                <div class="col-md-6 mt-3">
+                    <div class="form-floating">
+                        {{ form.rti_user_id|add_class:"form-control" }}
+                        <label for="{{ form.rti_user_id.id_for_label }}">{{ form.rti_user_id.label }}</label>
+                        {% if form.rti_user_id.help_text %}
+                            <div class="form-text">{{ form.rti_user_id.help_text }}</div>
+                        {% endif %}
+                    </div>
+                    {% if form.rti_user_id.errors %}
+                        <div class="text-danger small mt-1">{{ form.rti_user_id.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+                {% endif %}
 
-          {% for field in form.visible_fields %}
-            {% if field.name|slice:":6" == "tax_id" %}
-              <div class="mb-3">
-                {{ field.label_tag }} {{ field }}
-                {% for error in field.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-              </div>
-            {% endif %}
-          {% endfor %}
+                {% if form.rti_password.field.widget.input_type != 'hidden' %}
+                <div class="col-md-6 mt-3">
+                    <div class="form-floating">
+                        {{ form.rti_password|add_class:"form-control" }}
+                        <label for="{{ form.rti_password.id_for_label }}">{{ form.rti_password.label }}</label>
+                        {% if form.rti_password.help_text %}
+                            <div class="form-text">{{ form.rti_password.help_text }}</div>
+                        {% endif %}
+                    </div>
+                    {% if form.rti_password.errors %}
+                        <div class="text-danger small mt-1">{{ form.rti_password.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+                {% endif %}
 
-          <h6 class="text-primary fw-bold mt-4 mb-3">RTI Credentials</h6>
+                <!-- LOGO UPLOAD -->
+                <div class="col-12 mt-4">
+                    <h6 class="border-bottom pb-2 mb-4">
+                        <i class="bi bi-image me-2"></i>Logo
+                    </h6>
+                </div>
 
-          <div class="mb-3">
-            {{ form.rti_user_id.label_tag }} {{ form.rti_user_id }}
-            {% for error in form.rti_user_id.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-          </div>
+                <div class="col-md-12">
+                    <label for="{{ form.logo.id_for_label }}" class="form-label fw-semibold">
+                        {{ form.logo.label }}
+                    </label>
+                    {{ form.logo|add_class:"form-control" }}
 
-          <div class="mb-3">
-            {{ form.rti_password.label_tag }} {{ form.rti_password }}
-            {% for error in form.rti_password.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
-          </div>
+                    {% if company and company.logo %}
+                    <div class="mt-3">
+                        <p class="mb-2">Current logo:</p>
+                        <img src="{{ company.logo.url }}" alt="{{ company.trade_name }} logo"
+                             class="img-thumbnail" style="max-height: 120px;">
+                        <div class="form-check mt-2">
+                            <input type="checkbox" name="logo-clear" id="logo-clear_id" class="form-check-input">
+                            <label for="logo-clear_id" class="form-check-label text-danger">
+                                <i class="bi bi-trash me-1"></i>Remove current logo
+                            </label>
+                        </div>
+                    </div>
+                    {% endif %}
 
-        </div>
-      </div>
+                    {% if form.logo.errors %}
+                        <div class="text-danger small mt-1">{{ form.logo.errors|striptags }}</div>
+                    {% endif %}
+                </div>
 
-      <div class="text-end mt-4">
-        <button type="submit" class="btn btn-success px-4">
-          <i class="fas fa-save me-2"></i>Save Company
-        </button>
-      </div>
-    </form>
-  </div>
+            </div>
+
+            <!-- ACTION BUTTONS -->
+            <div class="text-end mt-5 pt-4 border-top">
+                <a href="{% url 'companies:company' country.slug %}"
+                   class="btn btn-outline-secondary px-4 me-2">
+                    <i class="bi bi-x-lg me-1"></i> Cancel
+                </a>
+
+                <button class="btn {% if company %}btn-warning{% else %}btn-success{% endif %} px-5"
+                        id="submit-btn"
+                        type="submit">
+                    <i class="bi {% if company %}bi-save{% else %}bi-check-lg{% endif %} me-1"></i>
+                    <span id="submit-text">{% if company %}Save Changes{% else %}Create Company{% endif %}</span>
+                    <span id="submit-loading"
+                          class="spinner-border spinner-border-sm d-none ms-2"
+                          role="status">
+                    </span>
+                </button>
+            </div>
+
+        </form>
+
+    </div>
 </div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Submit button loading state
+    const form = document.getElementById("company-form");
+    const btn = document.getElementById("submit-btn");
+    const text = document.getElementById("submit-text");
+    const spinner = document.getElementById("submit-loading");
+
+    if (form && btn) {
+        form.addEventListener("submit", function () {
+            btn.disabled = true;
+            text.innerText = "Saving...";
+            spinner.classList.remove("d-none");
+        });
+    }
+
+    const countryISO = "{{ country.iso2|upper }}";
+
+    // Brazil: CNPJ + CEP
+    if (countryISO === 'BR') {
+        const cnpjField = document.getElementById('id_tax_id_1');
+        if (cnpjField) {
+            cnpjField.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 14) value = value.substring(0, 14);
+                if (value.length > 2) value = value.replace(/^(\d{2})(\d)/, '$1.$2');
+                if (value.length > 5) value = value.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+                if (value.length > 8) value = value.replace(/^(\d{2})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3/$4');
+                if (value.length > 12) value = value.replace(/^(\d{2})\.(\d{3})\.(\d{3})\/(\d{4})(\d)/, '$1.$2.$3/$4-$5');
+                e.target.value = value;
+            });
+        }
+
+        const cepField = document.getElementById('id_post_code');
+        if (cepField) {
+            cepField.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 8) value = value.substring(0, 8);
+                if (value.length > 5) value = value.replace(/^(\d{5})(\d)/, '$1-$2');
+                e.target.value = value;
+            });
+        }
+    }
+
+    // Argentina: CUIT
+    if (countryISO === 'AR') {
+        const cuitField = document.getElementById('id_tax_id_1');
+        if (cuitField) {
+            cuitField.addEventListener('input', function(e) {
+                let value = e.target.value.replace(/\D/g, '');
+                if (value.length > 11) value = value.substring(0, 11);
+                if (value.length > 2) value = value.replace(/^(\d{2})(\d)/, '$1-$2');
+                if (value.length > 10) value = value.replace(/^(\d{2})-(\d{8})(\d)/, '$1-$2-$3');
+                e.target.value = value;
+            });
+        }
+    }
+
+    // UK: PAYE office number digits only
+    if (countryISO === 'GB') {
+        const payeField = document.getElementById('id_tax_id_1');
+        if (payeField) {
+            payeField.addEventListener('input', function(e) {
+                e.target.value = e.target.value.replace(/\D/g, '');
+            });
+        }
+    }
+});
+</script>
 {% endblock %}
