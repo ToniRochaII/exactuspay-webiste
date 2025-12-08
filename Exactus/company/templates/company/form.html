@@ -16,7 +16,7 @@
     {% if company %}
         <i class="bi bi-building me-2"></i>Edit Company – {{ company.trade_name }}
     {% else %}
-        <i class="bi bi-building-add me-2"></i>Create Company ({{ country.iso2 }})
+        <i class="bi bi-building-add me-2"></i>Create Company
     {% endif %}
 {% endblock %}
 
@@ -40,7 +40,7 @@
     <!-- HEADER -->
     <div class="card-header 
         {% if company %} text-dark 
-        {% else %} bg-success text-white {% endif %}
+        {% else %}  text-white {% endif %}
         d-flex justify-content-between align-items-center">
 
         <h5 class="mb-0 fw-semibold">
@@ -51,7 +51,7 @@
             {% endif %}
         </h5>
 
-        <span class="badge {% if company %}bg-dark text-white{% else %}bg-light text-success{% endif %} fw-semibold px-3 py-2">
+        <span class="badge {% if company %}bg-dark text-white{% else %}bg-dark text-light{% endif %} fw-semibold px-3 py-2">
             <i class="bi bi-flag me-1"></i>{{ country.name }}
         </span>
     </div>
@@ -258,15 +258,16 @@
 
             <!-- BUTTONS -->
             <div class="text-end mt-5 pt-4 border-top">
-                <a href="{% url 'companies:company' country.slug %}" class="btn btn-outline-secondary px-4 me-2">
-                    <i class="bi bi-x-lg me-1"></i>Cancel
-                </a>
 
-                <button class="btn {% if company %}btn-warning{% else %}btn-success{% endif %} px-5" id="submit-btn" type="submit">
+                <button class="btn {% if company %}btn-primary{% else %}btn-primary{% endif %} px-5" id="submit-btn" type="submit">
                     <i class="bi {% if company %}bi-save{% else %}bi-check-lg{% endif %} me-1"></i>
                     <span id="submit-text">{% if company %}Save Changes{% else %}Create Company{% endif %}</span>
                     <span id="submit-loading" class="spinner-border spinner-border-sm d-none ms-2"></span>
                 </button>
+
+                <a href="{% url 'companies:company' country.slug %}" class="btn btn-danger px-4 me-2">
+                    <i class="bi bi-x-lg me-1"></i>Cancel
+                </a>
             </div>
 
         </form>
