@@ -4,49 +4,67 @@ from Exactus.company.models import Company
 from Exactus.country.models import Country
 
 
+# pdcodes/forms.py
 class PDcodeForm(forms.ModelForm):
-    """
-    Form for creating/updating PD codes.
-    - Excludes company (set in the view)
-    - Validates that pdcode_code is unique per company
-    """
-
+    
     def __init__(self, *args, **kwargs):
         self.company = kwargs.pop("company", None)
         super().__init__(*args, **kwargs)
 
     class Meta:
         model = PDcode
-        exclude = ["company", "slug"]
+        fields = [
+            "pdcode_code",
+            "pdcode_name",
+            "pdcode_description",
+            "pdcode_status",
+            "pdcode_frequency",
+            "pdcode_type",
+            "pdcode_class",
+            "pdcode_category",
+            "pdcode_categorytype",
+            "pdcode_account",
+            "pdcode_map_code",
+            "pdcode_gl_account",
+            "pdcode_taxable",
+            "pdcode_tax_flat",
+            "pdcode_tax_irregular",
+            "pdcode_social_securitable",
+            "pdcode_pensionable",
+            "pdcode_payable",
+            "pdcode_calculate",
+        ]
+
         widgets = {
+            "pdcode_code": forms.TextInput(attrs={"class": "form-control"}),
+            "pdcode_name": forms.TextInput(attrs={"class": "form-control"}),
+            "pdcode_description": forms.TextInput(attrs={"class": "form-control"}),
+
             "pdcode_status": forms.Select(attrs={"class": "form-select"}),
             "pdcode_frequency": forms.Select(attrs={"class": "form-select"}),
             "pdcode_type": forms.Select(attrs={"class": "form-select"}),
             "pdcode_class": forms.Select(attrs={"class": "form-select"}),
             "pdcode_category": forms.Select(attrs={"class": "form-select"}),
             "pdcode_categorytype": forms.Select(attrs={"class": "form-select"}),
+
+            "pdcode_account": forms.TextInput(attrs={"class": "form-control"}),
+            "pdcode_map_code": forms.TextInput(attrs={"class": "form-control"}),
+            "pdcode_gl_account": forms.TextInput(attrs={"class": "form-control"}),
+
+            "pdcode_taxable": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+            "pdcode_tax_flat": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+            "pdcode_tax_irregular": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+            "pdcode_social_securitable": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+            "pdcode_pensionable": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+            "pdcode_payable": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+            "pdcode_calculate": forms.CheckboxInput(attrs={"class": "form-check-input"}),
         }
 
-    def clean_pdcode_code(self):
-        code = self.cleaned_data.get("pdcode_code")
-
-        # No company passed → skip custom validation (shouldn't happen in our views)
-        if not self.company or not code:
-            return code
-
-        qs = PDcode.objects.filter(company=self.company, pdcode_code=code)
-        if self.instance.pk:
-            qs = qs.exclude(pk=self.instance.pk)
-
-        if qs.exists():
-            raise forms.ValidationError(
-                "This PD Code already exists for this company."
-            )
-
-        return code
 
 
-# pdcodes/forms.py - Update the PDcodeCountryUploadForm
+
+
+
 # pdcodes/forms.py - Update the PDcodeUploadForm
 class PDcodeUploadForm(forms.Form):
     file = forms.FileField(

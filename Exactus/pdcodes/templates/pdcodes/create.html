@@ -3,119 +3,535 @@
 {% load pdcodes_role_filters %}
 
 {% block title %}Add PDcode — {{ company.name }} | ExactusPay{% endblock %}
-{% block page_title %}Add PDcode{% endblock %}
+
+{% block extra_css %}
+<style>
+  .is-invalid {
+    border-color: #dc3545 !important;
+  }
+  .is-valid {
+    border-color: #198754 !important;
+  }
+  .form-switch .form-check-input {
+    height: 1.5em;
+    width: 3em;
+  }
+</style>
+{% endblock %}
+
+{% block page_title %}
+<i class="bi bi-plus-circle me-2"></i> Add PDcode — {{ company.trade_name }}
+{% endblock %}
 
 {% block breadcrumbs %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'companies:company' country_slug%}">companies</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'pdcodes:pdcodes' country_slug company.company_id %}">PDcodes — {{ company.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'companies:company' country_slug %}">Companies</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'pdcodes:pdcodes' country_slug company.company_id %}">
+      PDcodes — {{ company.trade_name }}
+    </a></li>
     <li class="breadcrumb-item active" aria-current="page">Add PDcode</li>
   </ol>
 </nav>
 {% endblock %}
 
 {% block content %}
-<div class="card shadow-sm">
-  <div class="card-header d-flex justify-content-between align-items-center">
-    <h5 class="mb-0">
-      <i class="bi bi-plus-circle"></i> Add New PDcode — {{ company.name }}
+<div class="card shadow-sm border-0">
+
+  <!-- HEADER -->
+  <div class="card-header py-3 d-flex justify-content-between align-items-center">
+    <h5 class="mb-0 fw-semibold">
+      <i class="bi bi-plus-circle me-2"></i> Add New PDcode — {{ company.trade_name }}
     </h5>
   </div>
 
+  <!-- BODY -->
   <div class="card-body">
-      <p> 
-        {% if user|has_role:"EXEC" %}
-        ||||
-        <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a> 
-        {% endif %}
-        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
-        <a href="{% url 'dashboard' %}">Dashboard</a> 
-        <a href="{% url 'user_list' %}"">Accounts</a>
-        <a href="{% url 'role_management' %}"">Role Management</a>
-        <a href="{% url 'regulations:regulations' country_slug %}"">Regulations</a>
-        <a href="{% url 'elements:elements' country_slug %}"">elements</a>
-        {% endif %}
-        ||||
-        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
-        <a href="{% url 'profile' %}"">Profile</a>
-        <a href="{% url 'country:country' %}">Countries</a>
-        <a href="{% url 'companies:company' country_slug %}">Companies</a>
-        <a href="{% url 'employee:employee' country_slug company.company_id %}">Employees</a>
-        <a href="{% url 'employee:employee_create' country_slug company.company_id %}">Add Employee</a>
-        <a href="{% url 'pdcodes:pdcodes' country_slug company.company_id %}">P&D Code</a>
-        <a href="{% url 'pdcodes:pdcode_create' country_slug company.company_id %}">Add P&D Code</a>
-        {% endif %}
 
-        <a href="{% url 'password_reset' %}">Reset password</a>
-      </p>
     {% if messages %}
       {% for message in messages %}
-        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show">
+          <i class="bi {% if message.tags == 'success' %}bi-check-circle{% else %}bi-exclamation-triangle{% endif %} me-2"></i>
           {{ message }}
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          <button class="btn-close" data-bs-dismiss="alert"></button>
         </div>
       {% endfor %}
     {% endif %}
 
-    <form method="post" class="needs-validation" novalidate>
+    <form method="post" novalidate id="pdcode-form">
       {% csrf_token %}
-      {{ form.non_field_errors }}
+      
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+          {% for error in form.non_field_errors %}
+            {{ error }}
+          {% endfor %}
+        </div>
+      {% endif %}
 
-      <!-- ─────────── PDcode Details ─────────── -->
-      <h6 class="fw-bold border-bottom pb-2 mb-3 text-secondary">PDcode Details</h6>
-      <div class="row mb-3">
-        <div class="col-md-4">{{ form.pdcode_code.label_tag }} {{ form.pdcode_code }}</div>
-        <div class="col-md-4">{{ form.pdcode_name.label_tag }} {{ form.pdcode_name }}</div>
-        <div class="col-md-4">{{ form.pdcode_description.label_tag }} {{ form.pdcode_description }}</div>
+      <!-- PDCODE DETAILS SECTION -->
+      <div class="mb-4">
+        <h6 class="fw-bold text-muted text-uppercase mb-3 border-bottom pb-2">
+          <i class="bi bi-info-circle me-1"></i> PDcode Details
+        </h6>
+
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.pdcode_code }}
+              <label for="{{ form.pdcode_code.id_for_label }}">PDcode Code *</label>
+            </div>
+            {% if form.pdcode_code.errors %}
+              <div class="invalid-feedback d-block">
+                {% for error in form.pdcode_code.errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+            {% endif %}
+            {% if form.pdcode_code.help_text %}
+              <small class="form-text text-muted">{{ form.pdcode_code.help_text }}</small>
+            {% endif %}
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.pdcode_name }}
+              <label for="{{ form.pdcode_name.id_for_label }}">PDcode Name *</label>
+            </div>
+            {% if form.pdcode_name.errors %}
+              <div class="invalid-feedback d-block">
+                {% for error in form.pdcode_name.errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.pdcode_description }}
+              <label for="{{ form.pdcode_description.id_for_label }}">Description</label>
+            </div>
+            <div class="d-flex justify-content-between mt-1">
+              <small class="text-muted">Optional description</small>
+              <small id="description-counter" class="text-muted">0/255</small>
+            </div>
+            {% if form.pdcode_description.errors %}
+              <div class="invalid-feedback d-block">
+                {% for error in form.pdcode_description.errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
       </div>
 
-      <!-- ─────────── Classification ─────────── -->
-      <h6 class="fw-bold border-bottom pb-2 mb-3 text-secondary">Classification</h6>
-      <div class="row mb-3">
-        <div class="col-md-3">{{ form.pdcode_status.label_tag }} {{ form.pdcode_status }}</div>
-        <div class="col-md-3">{{ form.pdcode_frequency.label_tag }} {{ form.pdcode_frequency }}</div>
-        <div class="col-md-3">{{ form.pdcode_type.label_tag }} {{ form.pdcode_type }}</div>
-        <div class="col-md-3">{{ form.pdcode_class.label_tag }} {{ form.pdcode_class }}</div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-4">{{ form.pdcode_category.label_tag }} {{ form.pdcode_category }}</div>
-        <div class="col-md-4">{{ form.pdcode_categorytype.label_tag }} {{ form.pdcode_categorytype }}</div>
+      <!-- CLASSIFICATION SECTION -->
+      <div class="mb-4">
+        <h6 class="fw-bold text-muted text-uppercase mb-3 border-bottom pb-2">
+          <i class="bi bi-tags me-1"></i> Classification
+        </h6>
+
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.pdcode_status }}
+              <label for="{{ form.pdcode_status.id_for_label }}">Status *</label>
+            </div>
+            {% if form.pdcode_status.errors %}
+              <div class="invalid-feedback d-block">
+                {% for error in form.pdcode_status.errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.pdcode_frequency }}
+              <label for="{{ form.pdcode_frequency.id_for_label }}">Frequency *</label>
+            </div>
+            {% if form.pdcode_frequency.errors %}
+              <div class="invalid-feedback d-block">
+                {% for error in form.pdcode_frequency.errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.pdcode_type }}
+              <label for="{{ form.pdcode_type.id_for_label }}">Type *</label>
+            </div>
+            {% if form.pdcode_type.errors %}
+              <div class="invalid-feedback d-block">
+                {% for error in form.pdcode_type.errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.pdcode_class }}
+              <label for="{{ form.pdcode_class.id_for_label }}">Class *</label>
+            </div>
+            {% if form.pdcode_class.errors %}
+              <div class="invalid-feedback d-block">
+                {% for error in form.pdcode_class.errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.pdcode_category }}
+              <label for="{{ form.pdcode_category.id_for_label }}">Category</label>
+            </div>
+            {% if form.pdcode_category.errors %}
+              <div class="invalid-feedback d-block">
+                {% for error in form.pdcode_category.errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.pdcode_categorytype }}
+              <label for="{{ form.pdcode_categorytype.id_for_label }}">Category Type</label>
+            </div>
+            {% if form.pdcode_categorytype.errors %}
+              <div class="invalid-feedback d-block">
+                {% for error in form.pdcode_categorytype.errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
       </div>
 
-      <!-- ─────────── Accounting ─────────── -->
-      <h6 class="fw-bold border-bottom pb-2 mb-3 text-secondary">Accounting</h6>
-      <div class="row mb-3">
-        <div class="col-md-4">{{ form.pdcode_account.label_tag }} {{ form.pdcode_account }}</div>
-        <div class="col-md-4">{{ form.pdcode_map_code.label_tag }} {{ form.pdcode_map_code }}</div>
-        <div class="col-md-4">{{ form.pdcode_gl_account.label_tag }} {{ form.pdcode_gl_account }}</div>
+      <!-- ACCOUNTING SECTION -->
+      <div class="mb-4">
+        <h6 class="fw-bold text-muted text-uppercase mb-3 border-bottom pb-2">
+          <i class="bi bi-journal-bookmark me-1"></i> Accounting
+        </h6>
+
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.pdcode_account }}
+              <label for="{{ form.pdcode_account.id_for_label }}">Account</label>
+            </div>
+            {% if form.pdcode_account.errors %}
+              <div class="invalid-feedback d-block">
+                {% for error in form.pdcode_account.errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.pdcode_map_code }}
+              <label for="{{ form.pdcode_map_code.id_for_label }}">Map Code</label>
+            </div>
+            {% if form.pdcode_map_code.errors %}
+              <div class="invalid-feedback d-block">
+                {% for error in form.pdcode_map_code.errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="col-md-4">
+            <div class="form-floating">
+              {{ form.pdcode_gl_account }}
+              <label for="{{ form.pdcode_gl_account.id_for_label }}">GL Account</label>
+            </div>
+            {% if form.pdcode_gl_account.errors %}
+              <div class="invalid-feedback d-block">
+                {% for error in form.pdcode_gl_account.errors %}
+                  {{ error }}
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
       </div>
 
-      <!-- ─────────── Flags ─────────── -->
-      <h6 class="fw-bold border-bottom pb-2 mb-3 text-secondary">Taxation</h6>
-      <div class="row mb-3">
-        <div class="col-md-2">{{ form.pdcode_taxable.label_tag }} {{ form.pdcode_taxable }}</div>
-        <div class="col-md-2">{{ form.pdcode_tax_flat.label_tag }} {{ form.pdcode_tax_flat }}</div>
-        <div class="col-md-2">{{ form.pdcode_tax_irregular.label_tag }} {{ form.pdcode_tax_irregular }}</div>
-        <div class="col-md-2">{{ form.pdcode_social_securitable.label_tag }} {{ form.pdcode_social_securitable }}</div>
-        <div class="col-md-2">{{ form.pdcode_pensionable.label_tag }} {{ form.pdcode_pensionable }}</div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-2">{{ form.pdcode_payable.label_tag }} {{ form.pdcode_payable }}</div>
-        <div class="col-md-2">{{ form.pdcode_calculate.label_tag }} {{ form.pdcode_calculate }}</div>
+      <!-- TAXATION SECTION -->
+      <div class="mb-4">
+        <h6 class="fw-bold text-muted text-uppercase mb-3 border-bottom pb-2">
+          <i class="bi bi-shield-check me-1"></i> Taxation Settings
+        </h6>
+
+        <div class="row g-3">
+          <!-- Taxable -->
+          <div class="col-md-3 col-6">
+            <div class="card border h-70">
+              <div class="card-body p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="fw-semibold">{{ form.pdcode_taxable.label }}</h6>
+                    {% if form.pdcode_taxable.help_text %}
+                      <small class="text-muted">{{ form.pdcode_taxable.help_text }}</small>
+                    {% endif %}
+                  </div>
+                  <div class="form-check form-switch ms-2">
+                    {{ form.pdcode_taxable }}
+                    <label class="form-check-label" for="{{ form.pdcode_taxable.id_for_label }}"></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tax Flat -->
+          <div class="col-md-3 col-6">
+            <div class="card border h-70">
+              <div class="card-body p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="fw-semibold">{{ form.pdcode_tax_flat.label }}</h6>
+                    {% if form.pdcode_tax_flat.help_text %}
+                      <small class="text-muted">{{ form.pdcode_tax_flat.help_text }}</small>
+                    {% endif %}
+                  </div>
+                  <div class="form-check form-switch ms-2">
+                    {{ form.pdcode_tax_flat }}
+                    <label class="form-check-label" for="{{ form.pdcode_tax_flat.id_for_label }}"></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tax Irregular -->
+          <div class="col-md-3 col-6">
+            <div class="card border h-70">
+              <div class="card-body p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="fw-semibold">{{ form.pdcode_tax_irregular.label }}</h6>
+                    {% if form.pdcode_tax_irregular.help_text %}
+                      <small class="text-muted">{{ form.pdcode_tax_irregular.help_text }}</small>
+                    {% endif %}
+                  </div>
+                  <div class="form-check form-switch ms-2">
+                    {{ form.pdcode_tax_irregular }}
+                    <label class="form-check-label" for="{{ form.pdcode_tax_irregular.id_for_label }}"></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Social Securitable -->
+          <div class="col-md-3 col-6">
+            <div class="card border h-70">
+              <div class="card-body p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="fw-semibold">{{ form.pdcode_social_securitable.label }}</h6>
+                    {% if form.pdcode_social_securitable.help_text %}
+                      <small class="text-muted">{{ form.pdcode_social_securitable.help_text }}</small>
+                    {% endif %}
+                  </div>
+                  <div class="form-check form-switch ms-2">
+                    {{ form.pdcode_social_securitable }}
+                    <label class="form-check-label" for="{{ form.pdcode_social_securitable.id_for_label }}"></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pensionable -->
+          <div class="col-md-3 col-6">
+            <div class="card border h-70">
+              <div class="card-body p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="fw-semibold">{{ form.pdcode_pensionable.label }}</h6>
+                    {% if form.pdcode_pensionable.help_text %}
+                      <small class="text-muted">{{ form.pdcode_pensionable.help_text }}</small>
+                    {% endif %}
+                  </div>
+                  <div class="form-check form-switch ms-2">
+                    {{ form.pdcode_pensionable }}
+                    <label class="form-check-label" for="{{ form.pdcode_pensionable.id_for_label }}"></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payable -->
+          <div class="col-md-3 col-6">
+            <div class="card border h-70">
+              <div class="card-body p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="fw-semibold">{{ form.pdcode_payable.label }}</h6>
+                    {% if form.pdcode_payable.help_text %}
+                      <small class="text-muted">{{ form.pdcode_payable.help_text }}</small>
+                    {% endif %}
+                  </div>
+                  <div class="form-check form-switch ms-2">
+                    {{ form.pdcode_payable }}
+                    <label class="form-check-label" for="{{ form.pdcode_payable.id_for_label }}"></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Calculate -->
+          <div class="col-md-3 col-6">
+            <div class="card border h-70">
+              <div class="card-body p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="fw-semibold">{{ form.pdcode_calculate.label }}</h6>
+                    {% if form.pdcode_calculate.help_text %}
+                      <small class="text-muted">{{ form.pdcode_calculate.help_text }}</small>
+                    {% endif %}
+                  </div>
+                  <div class="form-check form-switch ms-2">
+                    {{ form.pdcode_calculate }}
+                    <label class="form-check-label" for="{{ form.pdcode_calculate.id_for_label }}"></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- ─────────── Buttons ─────────── -->
-      <div class="text-end mt-4">
-        <button type="submit" class="btn btn-primary">
-          <i class="bi bi-save"></i> Save
-        </button>
-        <a href="" class="btn btn-danger ms-2">
-          <i class="bi bi-x-circle"></i> Cancel
+      <!-- SUBMIT BUTTONS -->
+      <div class="text-end mt-5 pt-4 border-top">
+        <a href="{% url 'pdcodes:pdcodes' country_slug company.company_id %}" class="btn btn-light border me-2">
+          <i class="bi bi-x-circle me-1"></i> Cancel
         </a>
+
+        <button class="btn btn-primary px-4" id="submit-btn" type="submit">
+          <i class="bi bi-check-circle me-1"></i> 
+          <span id="submit-text">Save PDcode</span>
+          <span id="submit-loading" class="spinner-border spinner-border-sm d-none" role="status"></span>
+        </button>
       </div>
+
     </form>
+
   </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('pdcode-form');
+    const fields = form.querySelectorAll('input, select, textarea');
+    let formChanged = false;
+
+    // Character counter for description
+    const descriptionField = document.getElementById('{{ form.pdcode_description.id_for_label }}');
+    const counter = document.getElementById('description-counter');
+    
+    if (descriptionField && counter) {
+      descriptionField.addEventListener('input', function() {
+        const length = this.value.length;
+        counter.textContent = `${length}/255`;
+        counter.classList.toggle('text-danger', length > 255);
+      });
+      
+      // Initialize counter
+      if (descriptionField.value) {
+        counter.textContent = `${descriptionField.value.length}/255`;
+      }
+    }
+
+    // Field validation on blur
+    fields.forEach(field => {
+      field.addEventListener('blur', function() {
+        validateField(this);
+      });
+      
+      field.addEventListener('input', function() {
+        formChanged = true;
+        if (this.value.trim() !== '') {
+          this.classList.remove('is-invalid');
+        }
+      });
+    });
+
+    function validateField(field) {
+      if (field.required && !field.value.trim()) {
+        field.classList.add('is-invalid');
+        field.classList.remove('is-valid');
+        return false;
+      } else if (field.value.trim() !== '') {
+        field.classList.add('is-valid');
+        field.classList.remove('is-invalid');
+        return true;
+      }
+      return true;
+    }
+
+    // Form submission
+    form.addEventListener('submit', function(e) {
+      const submitBtn = document.getElementById('submit-btn');
+      const submitText = document.getElementById('submit-text');
+      const submitLoading = document.getElementById('submit-loading');
+      
+      // Validate all fields
+      let isValid = true;
+      fields.forEach(field => {
+        if (!validateField(field)) {
+          isValid = false;
+        }
+      });
+      
+      if (!isValid) {
+        e.preventDefault();
+        const firstError = form.querySelector('.is-invalid');
+        if (firstError) {
+          firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          firstError.focus();
+        }
+        return;
+      }
+      
+      // Show loading state
+      if (submitBtn && submitText && submitLoading) {
+        submitBtn.disabled = true;
+        submitText.textContent = 'Saving...';
+        submitLoading.classList.remove('d-none');
+      }
+      
+      formChanged = false;
+    });
+
+    // Warn about unsaved changes
+    window.addEventListener('beforeunload', function(e) {
+      if (formChanged) {
+        e.preventDefault();
+        e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+      }
+    });
+  });
+</script>
 {% endblock %}

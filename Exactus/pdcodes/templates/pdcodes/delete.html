@@ -2,99 +2,242 @@
 {% load static %}
 {% load pdcodes_role_filters %}
 
-{% block title %}Delete PDcode | ExactusPay{% endblock %}
-{% block page_title %}Delete PDcode{% endblock %}
+{% block title %}Delete PDcode — {{ company.trade_name }} | ExactusPay{% endblock %}
+
+{% block page_title %}
+<i class="bi bi-trash me-2"></i> Delete PDcode — {{ company.trade_name }}
+{% endblock %}
 
 {% block breadcrumbs %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item">
-      <a href="{% url 'dashboard' %}">Dashboard</a>
-    </li>
-    <li class="breadcrumb-item">
-      <a href="{% url 'companies:company' country_slug %}">{{ country.name }} companies</a>
-    </li>
-    <li class="breadcrumb-item">
-      <a href="{% url 'pdcodes:pdcodes' country_slug company_id %}">
-        PDcodes — {{ company.trade_name }}
-      </a>
-    </li>
-    <li class="breadcrumb-item active" aria-current="page">
-      Delete PDcode
-    </li>
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'companies:company' country_slug %}">Companies</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'pdcodes:pdcodes' country_slug company_id %}">
+      PDcodes — {{ company.trade_name }}
+    </a></li>
+    <li class="breadcrumb-item active" aria-current="page">Delete PDcode</li>
   </ol>
 </nav>
 {% endblock %}
 
 {% block content %}
-<div class="card shadow-sm">
+<div class="card shadow-sm border-0">
+
+  <!-- HEADER -->
+  <div class="card-header py-3 d-flex justify-content-between align-items-center text-white">
+    <h5 class="mb-0 fw-semibold">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i> Delete PDcode
+    </h5>
+  </div>
+
+  <!-- BODY -->
   <div class="card-body">
-      <p> 
-        {% if user|has_role:"EXEC" %}
-        ||||
-        <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a> 
-        {% endif %}
-        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
-        <a href="{% url 'dashboard' %}">Dashboard</a> 
-        <a href="{% url 'user_list' %}"">Accounts</a>
-        <a href="{% url 'role_management' %}"">Role Management</a>
-        <a href="{% url 'regulations:regulations' country_slug %}"">Regulations</a>
-        <a href="{% url 'elements:elements' country_slug %}"">elements</a>
-        {% endif %}
-        ||||
-        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
-        <a href="{% url 'profile' %}"">Profile</a>
-        <a href="{% url 'country:country' %}">Countries</a>
-        <a href="{% url 'companies:company' country_slug %}">Companies</a>
-        <a href="{% url 'employee:employee' country_slug company.company_id %}">Employees</a>
-        <a href="{% url 'employee:employee_create' country_slug company.company_id %}">Add Employee</a>
-        <a href="{% url 'pdcodes:pdcodes' country_slug company.company_id %}">P&D Code</a>
-        <a href="{% url 'pdcodes:pdcode_create' country_slug company.company_id %}">Add P&D Code</a>
-        {% endif %}
 
-        <a href="{% url 'password_reset' %}">Reset password</a>
-      </p>
-    <h5 class="mb-3 text-danger">Confirm deletion</h5>
-
-    <p>Are you sure you want to delete this PDcode?</p>
-
-    <div class="border rounded p-3 mb-4 bg-light">
-      <div class="row g-2">
-        <div class="col-md-4">
-          <p class="mb-1"><strong>Code:</strong></p>
-          <p class="text-muted">{{ pdcode.pdcode_code }}</p>
-        </div>
-        <div class="col-md-4">
-          <p class="mb-1"><strong>Name:</strong></p>
-          <p class="text-muted">{{ pdcode.pdcode_name }}</p>
-        </div>
-        <div class="col-md-4">
-          <p class="mb-1"><strong>Description:</strong></p>
-          <p class="text-muted">{{ pdcode.pdcode_description|default:"—" }}</p>
-        </div>
-      </div>
-      <div class="row g-2 mt-2">
-        <div class="col-md-6">
-          <p class="mb-1"><strong>Category:</strong></p>
-          <p class="text-muted">{{ pdcode.pdcode_category|default:"—" }}</p>
-        </div>
-        <div class="col-md-6">
-          <p class="mb-1"><strong>Status:</strong></p>
-          <p class="text-muted">{{ pdcode.pdcode_status|default:"—" }}</p>
+    <!-- WARNING MESSAGE -->
+    <div class="alert alert-warning border-warning">
+      <div class="d-flex align-items-start">
+        <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
+        <div>
+          <h5 class="alert-heading mb-2">Are you sure you want to delete this PDcode?</h5>
+          <p class="mb-0">
+            This action cannot be undone. Deleting this PDcode will permanently remove it from the system.
+            This may affect any employees or calculations associated with this PDcode.
+          </p>
         </div>
       </div>
     </div>
 
-    <form method="post" class="text-end">
+    <!-- PDCODE DETAILS -->
+    <div class="mb-4">
+      <h6 class="fw-bold text-muted text-uppercase mb-3 border-bottom pb-2">
+        <i class="bi bi-info-circle me-1"></i> PDcode Details
+      </h6>
+
+      <div class="card border">
+        <div class="card-body">
+          <div class="row g-4">
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label text-muted small mb-1">PDcode Code</label>
+                <p class="fw-semibold mb-0">{{ pdcode.pdcode_code }}</p>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label text-muted small mb-1">PDcode Name</label>
+                <p class="fw-semibold mb-0">{{ pdcode.pdcode_name }}</p>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label text-muted small mb-1">Status</label>
+                <p class="mb-0">
+                  <span class="badge {% if pdcode.pdcode_status == 'ACTIVE' %}bg-success{% else %}bg-secondary{% endif %}">
+                    {{ pdcode.pdcode_status|default:"—" }}
+                  </span>
+                </p>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label text-muted small mb-1">Type</label>
+                <p class="mb-0">{{ pdcode.pdcode_type|default:"—" }}</p>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label text-muted small mb-1">Class</label>
+                <p class="mb-0">{{ pdcode.pdcode_class|default:"—" }}</p>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="mb-3">
+                <label class="form-label text-muted small mb-1">Category</label>
+                <p class="mb-0">{{ pdcode.pdcode_category|default:"—" }}</p>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="mb-3">
+                <label class="form-label text-muted small mb-1">Description</label>
+                <p class="mb-0">{{ pdcode.pdcode_description|default:"No description provided." }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADDITIONAL INFORMATION -->
+    <div class="mb-4">
+      <h6 class="fw-bold text-muted text-uppercase mb-3 border-bottom pb-2">
+        <i class="bi bi-shield-exclamation me-1"></i> Additional Information
+      </h6>
+
+      <div class="row g-3">
+        <div class="col-md-3">
+          <div class="d-flex align-items-center">
+            <div class="me-2">
+              {% if pdcode.pdcode_taxable %}
+                <i class="bi bi-check-circle-fill text-success fs-5"></i>
+              {% else %}
+                <i class="bi bi-x-circle-fill text-secondary fs-5"></i>
+              {% endif %}
+            </div>
+            <div>
+              <p class="mb-0 fw-semibold">Taxable</p>
+              <small class="text-muted">PDcode is subject to taxation</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="d-flex align-items-center">
+            <div class="me-2">
+              {% if pdcode.pdcode_social_securitable %}
+                <i class="bi bi-check-circle-fill text-success fs-5"></i>
+              {% else %}
+                <i class="bi bi-x-circle-fill text-secondary fs-5"></i>
+              {% endif %}
+            </div>
+            <div>
+              <p class="mb-0 fw-semibold">Social Security</p>
+              <small class="text-muted">Subject to social security</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="d-flex align-items-center">
+            <div class="me-2">
+              {% if pdcode.pdcode_pensionable %}
+                <i class="bi bi-check-circle-fill text-success fs-5"></i>
+              {% else %}
+                <i class="bi bi-x-circle-fill text-secondary fs-5"></i>
+              {% endif %}
+            </div>
+            <div>
+              <p class="mb-0 fw-semibold">Pensionable</p>
+              <small class="text-muted">Subject to pension contributions</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-3">
+          <div class="d-flex align-items-center">
+            <div class="me-2">
+              {% if pdcode.pdcode_payable %}
+                <i class="bi bi-check-circle-fill text-success fs-5"></i>
+              {% else %}
+                <i class="bi bi-x-circle-fill text-secondary fs-5"></i>
+              {% endif %}
+            </div>
+            <div>
+              <p class="mb-0 fw-semibold">Payable</p>
+              <small class="text-muted">PDcode is payable to employees</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONFIRMATION FORM -->
+    <form method="post" class="mt-5 pt-4 border-top">
       {% csrf_token %}
-      <button type="submit" class="btn btn-danger">
-        <i class="bi bi-trash"></i> Confirm Delete
-      </button>
-      <a href="{% url 'pdcodes:pdcodes' country_slug company_id %}"
-         class="btn btn-outline-secondary ms-2">
-        <i class="bi bi-x-circle"></i> Cancel
-      </a>
+      
+      <div class="text-end">
+        <a href="{% url 'pdcodes:pdcodes' country_slug company_id %}" 
+           class="btn btn-light border me-2">
+          <i class="bi bi-x-circle me-1"></i> Cancel
+        </a>
+        
+        <button type="submit" class="btn btn-danger px-4" id="delete-btn">
+          <i class="bi bi-trash me-1"></i> 
+          <span id="delete-text">Delete PDcode</span>
+          <span id="delete-loading" class="spinner-border spinner-border-sm d-none" role="status"></span>
+        </button>
+      </div>
     </form>
+
   </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const deleteBtn = document.getElementById('delete-btn');
+    const deleteText = document.getElementById('delete-text');
+    const deleteLoading = document.getElementById('delete-loading');
+    let isDeleting = false;
+
+    if (deleteBtn) {
+      deleteBtn.addEventListener('click', function(e) {
+        if (!isDeleting) {
+          // Confirm deletion
+          const confirmed = confirm('⚠️ WARNING: This action is irreversible!\n\nAre you absolutely sure you want to delete this PDcode?\n\nThis may affect employee records and calculations.');
+          
+          if (!confirmed) {
+            e.preventDefault();
+            return;
+          }
+          
+          // Show loading state
+          isDeleting = true;
+          if (deleteText && deleteLoading) {
+            deleteBtn.disabled = true;
+            deleteText.textContent = 'Deleting...';
+            deleteLoading.classList.remove('d-none');
+          }
+        }
+      });
+    }
+  });
+</script>
 {% endblock %}
