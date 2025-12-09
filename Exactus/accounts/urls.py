@@ -35,6 +35,14 @@ urlpatterns = [
     path('users/<int:user_id>/unified/', views.unified_profile, name='unified_profile_view'),
 
 
+    # Session management
+    path('ajax/heartbeat/', views.heartbeat, name='heartbeat'),
+    path('ajax/tab-close/', views.tab_close_detection, name='tab_close'),
+    path('ajax/session-status/', views.session_status, name='session_status'),
+    
+    # Optional: Enhanced logout
+    path('logout/', views.enhanced_logout, name='logout'),
+
 ]
 
 if settings.DEBUG:

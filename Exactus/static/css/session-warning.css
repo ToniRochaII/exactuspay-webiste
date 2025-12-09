@@ -1,0 +1,50 @@
+/* Session warning modal enhancements */
+#sessionWarningModal .modal-content {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Countdown timer animation */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+#countdownTimer {
+    animation: pulse 1s infinite;
+    display: inline-block;
+    padding: 0 4px;
+    border-radius: 3px;
+    background-color: rgba(220, 53, 69, 0.1);
+}
+
+/* Progress bar animation */
+#progressBar {
+    transition: width 1s linear, background-color 0.5s ease;
+}
+
+/* Toast styling */
+.toast-container .toast {
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Mobile optimizations */
+@media (max-width: 576px) {
+    #sessionWarningModal .modal-dialog {
+        margin: 0.5rem;
+    }
+    
+    #sessionWarningModal .modal-footer {
+        flex-direction: column;
+    }
+    
+    #sessionWarningModal .modal-footer .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    #sessionWarningModal .modal-footer .btn:last-child {
+        margin-bottom: 0;
+    }
+}

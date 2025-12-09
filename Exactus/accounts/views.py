@@ -868,3 +868,97 @@ def admin_reset_password(request, user_id):
 
     messages.success(request, f"Password reset email sent to {user.email}")
     return redirect("user_edit", id=user_id)
+
+
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
+import json
+
+@csrf_exempt
+@require_POST
+def tab_close_detection(request):
+    """Handle tab close detection from beacon API"""
+    if request.user.is_authenticated:
+        # You could log this event or clean up session data
+        print(f"User {request.user.username} closed tab")
+    
+    return JsonResponse({'status': 'ok'})
+
+
+import time
+from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_GET, require_POST
+
+
+@login_required
+@require_GET
+def heartbeat(request):
+    """Endpoint for session keep-alive requests."""
+    # Update session timestamp
+    request.session['last_activity'] = time.time()
+    request.session.modified = True
+    
+    # Calculate remaining time
+    last_activity = request.session.get('last_activity', time.time())
+    elapsed = time.time() - last_activity
+    remaining = max(300 - elapsed, 0)
+    
+    return JsonResponse({
+        'status': 'active',
+        'user': request.user.username,
+        'remaining_seconds': int(remaining),
+        'timestamp': timezone.now().isoformat()
+    })
+
+
+@csrf_exempt
+@require_POST
+def tab_close_detection(request):
+    """Handle browser tab close notifications."""
+    if request.user.is_authenticated:
+        # Optional: log tab close event
+        print(f"Tab closed by {request.user.username}")
+        
+    return JsonResponse({'status': 'ok'})
+
+
+@login_required
+@require_GET
+def session_status(request):
+    """Debug endpoint to check session status."""
+    last_activity = request.session.get('last_activity', time.time())
+    elapsed = time.time() - last_activity
+    remaining = max(300 - elapsed, 0)
+    
+    return JsonResponse({
+        'authenticated': True,
+        'username': request.user.username,
+        'remaining_seconds': int(remaining),
+        'last_activity': last_activity,
+        'percent_remaining': int((remaining / 300) * 100),
+        'server_time': timezone.now().isoformat()
+    })
+
+
+# Optional: Enhanced logout view
+from django.contrib.auth import logout as auth_logout
+from django.contrib import messages
+from django.shortcuts import redirect
+
+
+def enhanced_logout(request):
+    """Custom logout that clears session data."""
+    if request.user.is_authenticated:
+        # Clear session data
+        if 'last_activity' in request.session:
+            del request.session['last_activity']
+        
+        auth_logout(request)
+        messages.info(request, 'You have been logged out successfully.')
+    
+    return redirect('login')
+

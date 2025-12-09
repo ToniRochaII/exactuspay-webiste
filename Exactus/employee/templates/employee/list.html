@@ -19,99 +19,90 @@
 <div class="card shadow-sm">
   <div class="card-header d-flex justify-content-between align-items-center">
     <h5 class="mb-0">Employees — {{ company.trade_name }}</h5>
+    <a href="{% url 'employee:employee_create' country_slug company.company_id %}" class="btn btn-primary btn-sm">
+      <i class="bi bi-plus-circle"></i> Add Employee
+    </a>
   </div>
 
   <div class="card-body">
-      <p> 
-        {% if user|has_role:"EXEC" %}
-        ||||
-        <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a> 
-        {% endif %}
-        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
-        <a href="{% url 'dashboard' %}">Dashboard</a> 
-        <a href="{% url 'user_list' %}"">Accounts</a>
-        <a href="{% url 'role_management' %}"">Role Management</a>
-        <a href="{% url 'regulations:regulations' country_slug %}"">Regulations</a>
-        <a href="{% url 'elements:elements' country_slug %}"">elements</a>
-        {% endif %}
-        ||||
-        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
-        <a href="{% url 'profile' %}"">Profile</a>
-        <a href="{% url 'country:country' %}">Countries</a>
-        <a href="{% url 'companies:company' country_slug %}">Companies</a>
-        <a href="{% url 'employee:employee' country_slug company.company_id %}">Employees</a>
-        <a href="{% url 'employee:employee_create' country_slug company.company_id %}">Add Employee</a>
-        <a href="{% url 'pdcodes:pdcodes' country_slug company.company_id %}">P&D Code</a>
-        <a href="{% url 'pdcodes:pdcode_create' country_slug company.company_id %}">Add P&D Code</a>
-        {% endif %}
 
-        <a href="{% url 'password_reset' %}">Reset password</a>
-      </p>
+
     {% if employees %}
-      <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-        <div class="d-flex align-items-center gap-2">
-          <label for="entries" class="form-label mb-0">Show</label>
-          <select id="entries" class="form-select form-select-sm w-auto">
-            <option value="10" selected>10</option>
-            <option value="25">25</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-          </select>
-          <span>entries</span>
-        </div>
-
-        <div class="d-flex align-items-center">
-          <label for="searchBox" class="form-label mb-0 me-2">Search:</label>
-          <input type="text" id="searchBox" class="form-control form-control-sm" placeholder="Search employees..." style="max-width: 250px;">
-        </div>
+    <!-- Search + Entries Toolbar -->
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-3">
+      <div class="d-flex align-items-center gap-2">
+        <label class="form-label mb-0">Show</label>
+        <select id="entries" class="form-select form-select-sm w-auto">
+          <option value="10" selected>10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+        <span>entries</span>
       </div>
 
-      <div class="table-responsive">
-        <table id="employeeTable" class="table table-striped align-middle">
-          <thead class="table-light">
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Surname</th>
-              <th>Gender</th>
-              <th>Job Title</th>
-              <th>Department</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for employee in employees %}
-            <tr>
-              <td>{{ employee.employee_id}}</td>
-              <td>{{ employee.employee_name }}</td>
-              <td>{{ employee.employee_surname }}</td>
-              <td>{{ employee.gender|default:"—" }}</td>
-              <td>{{ employee.job_title|default:"—" }}</td>
-              <td>{{ employee.department|default:"—" }}</td>
-              <td>
-                <div class="d-flex gap-2">
-                  <a href="{% url 'employee:employee_edit' country_slug company.company_id employee.id %}" class="btn btn-primary">
-                    <i class="bi bi-pencil"></i>Enter
-                  </a>
-                </div>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+      <div class="d-flex align-items-center">
+        <label class="form-label mb-0 me-2">Search:</label>
+        <input 
+          type="text" 
+          id="searchBox" 
+          class="form-control form-control-sm" 
+          placeholder="Search employees..."
+          style="max-width: 350px;"
+        >
       </div>
+    </div>
+
+    <!-- Employees Table -->
+    <div class="table-responsive">
+      <table id="employeeTable" class="table table-striped align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Gender</th>
+            <th>Job Title</th>
+            <th>Department</th>
+            <th class="text-center">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for employee in employees %}
+          <tr>
+            <td>{{ employee.employee_id }}</td>
+            <td>{{ employee.employee_name }}</td>
+            <td>{{ employee.employee_surname }}</td>
+            <td>{{ employee.gender|default:"—" }}</td>
+            <td>{{ employee.job_title|default:"—" }}</td>
+            <td>{{ employee.department|default:"—" }}</td>
+
+            <td class="text-center">
+              <a href="{% url 'employee:employee_edit' country_slug company.company_id employee.id %}" 
+                 class="btn btn-primary btn-sm">
+                <i class="bi bi-pencil"></i> Enter
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
     {% else %}
-      <div class="text-center py-5">
-        <p class="text-muted mb-3">No employees found for {{ company.trade_name }}.</p>
-        <a href="{% url 'employee:employee_create' country_slug company.company_id %}" class="btn btn-primary">
-          <i class="bi bi-plus-circle"></i> Add First Employee
-        </a>
-      </div>
+    <!-- No Employees -->
+    <div class="text-center py-5">
+      <p class="text-muted mb-3">No employees found for {{ company.trade_name }}.</p>
+      <a href="{% url 'employee:employee_create' country_slug company.company_id %}" class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Add First Employee
+      </a>
+    </div>
     {% endif %}
   </div>
 </div>
 
-<!-- Optional JS: Adds client-side search & entries filter -->
+<!-- Client-side Search & Pagination -->
 <script>
 document.addEventListener("DOMContentLoaded", function() {
   const table = document.querySelector("#employeeTable tbody");
@@ -121,48 +112,22 @@ document.addEventListener("DOMContentLoaded", function() {
 
   function filterTable() {
     const term = searchBox.value.toLowerCase();
-    let visibleRows = 0;
     rows.forEach(row => {
-      const text = row.textContent.toLowerCase();
-      const matches = text.includes(term);
-      row.style.display = matches ? "" : "none";
-      if (matches) visibleRows++;
+      row.style.display = row.textContent.toLowerCase().includes(term) ? "" : "none";
     });
   }
 
   function updateEntries() {
     const limit = parseInt(entriesSelect.value);
-    rows.forEach((row, i) => {
-      row.style.display = i < limit ? "" : "none";
+    rows.forEach((row, index) => {
+      row.style.display = index < limit ? "" : "none";
     });
   }
 
   searchBox.addEventListener("input", filterTable);
   entriesSelect.addEventListener("change", updateEntries);
-  updateEntries(); // default
+
+  updateEntries(); // Initial load
 });
 </script>
 {% endblock %}
-{% block extra_scripts %}
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    $("#datatable-employees").DataTable({
-      responsive: true,
-      pageLength: 10,
-      order: [[1, "asc"]],
-      language: {
-        search: "Search:",
-        lengthMenu: "Show _MENU_ employees",
-        zeroRecords: "No employees found.",
-        info: "Showing _START_–_END_ of _TOTAL_ employees",
-        infoEmpty: "No employees to display",
-        paginate: {
-          previous: "‹",
-          next: "›"
-        }
-      }
-    });
-  });
-</script>
-{% endblock %}
-

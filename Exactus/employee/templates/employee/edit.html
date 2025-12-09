@@ -18,7 +18,7 @@ Add Employee — {{ company.trade_name }} | ExactusPay
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'companies:company' country.id %}">Companies</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'companies:company' country_slug %}">Companies</a></li>
     <li class="breadcrumb-item"><a href="{% url 'employee:employee' country_slug company.company_id %}">Employees — {{ company.trade_name }}</a></li>
     <li class="breadcrumb-item active" aria-current="page">{% if employee %}Edit Employee{% else %}Add Employee{% endif %}</li>
   </ol>
@@ -35,171 +35,671 @@ Add Employee — {{ company.trade_name }} | ExactusPay
         <i class="bi bi-plus-circle"></i> Add Employee
       {% endif %}
     </h5>
+    <div>
+      <a href="{% url 'payregister:payregister_list' country_slug company.company_id %}" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left"></i> Pay Entry
+      </a>
+    </div>
   </div>
 
   <div class="card-body">
+    <!-- Navigation Menu -->
+    <div class="mb-4">
 
-      <p> 
-        {% if user|has_role:"EXEC" %}
-        ||||
-        <a href="{% url 'dashboard_admin' %}" class="btn btn-primary">Exec Dashboard</a> 
-        {% endif %}
-        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
-        <a href="{% url 'dashboard' %}" class="btn btn-primary">Dashboard</a> 
-        <a href="{% url 'user_list' %}" class="btn btn-primary">Accounts</a>
-        <a href="{% url 'role_management' %}" class="btn btn-primary">Role Management</a>
-        <a href="{% url 'regulations:regulations' country_slug %}" class="btn btn-primary">Regulations</a>
-        <a href="{% url 'elements:elements' country_slug %}" class="btn btn-primary">elements</a>
-        {% endif %}
-        ||||
-        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
-        <a href="{% url 'profile' %}"" class="btn btn-primary">Profile</a>
-        <a href="{% url 'country:country' %}" class="btn btn-primary">Countries</a>
-        <a href="{% url 'companies:company' country_slug %}" class="btn btn-primary">Companies</a>
-        <a href="{% url 'employee:employee' country_slug company.company_id %}" class="btn btn-primary">Employees</a>
-        <a href="{% url 'employee:employee_create' country_slug company.company_id %}" class="btn btn-primary">Add Employee</a>
-        <a href="{% url 'pdcodes:pdcodes' country_slug company.company_id %}" class="btn btn-primary">P&D Code</a>
-        <a href="{% url 'pdcodes:pdcode_create' country_slug company.company_id %}" class="btn btn-primary">Add P&D Code</a>
-        <a href="{% url 'pdcodes:pdcode_create' country_slug company.company_id %}" class="btn btn-primary">Add P&D Code</a>
-        <a href="{% url 'payregister:payregister_list' country_slug company.company_id employee.id %}" class="btn btn-primary">Pay Register</a>
+    </div>
 
-        {% endif %}
+    <!-- Tab Navigation -->
+    <ul class="nav nav-tabs mb-4" id="employeeTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal" type="button" role="tab">
+          <i class="bi bi-person"></i> Personal Data
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="address-tab" data-bs-toggle="tab" data-bs-target="#address" type="button" role="tab">
+          <i class="bi bi-geo-alt"></i> Address Information
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="bank-tab" data-bs-toggle="tab" data-bs-target="#bank" type="button" role="tab">
+          <i class="bi bi-bank"></i> Bank Details
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="job-tab" data-bs-toggle="tab" data-bs-target="#job" type="button" role="tab">
+          <i class="bi bi-briefcase"></i> Employment Details
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="tax-tab" data-bs-toggle="tab" data-bs-target="#tax" type="button" role="tab">
+          <i class="bi bi-percent"></i> Tax Details
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="pay-tab" data-bs-toggle="tab" data-bs-target="#pay" type="button" role="tab">
+          <i class="bi bi-percent"></i> Pay Register
+        </button>
+      </li>
+    </ul>
 
-        <a href="{% url 'password_reset' %}">Reset password</a>
-      </p>
     <form method="post" class="needs-validation" novalidate>
       {% csrf_token %}
       {{ form.non_field_errors }}
 
-      <!-- Personal Info -->
-      <h6 class="fw-bold border-bottom pb-2 mb-3">Personal Information</h6>
-      <div class="row mb-3">
-        <div class="col-md-4">
-          {{ form.employee_id.label_tag }} {{ form.employee_id }}
+      <div class="tab-content" id="employeeTabsContent">
+        <!-- Personal Information Tab -->
+        <div class="tab-pane fade show active" id="personal" role="tabpanel">
+          <div class="row g-3">
+            <!-- Employee Identification -->
+            <div class="col-12">
+              <h6 class="fw-bold text-primary mb-3">
+                <i class="bi bi-card-checklist"></i> Employee Identification
+              </h6>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.employee_id }}
+                {{ form.employee_id.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter a valid employee ID.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.employee_number }}
+                {{ form.employee_number.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter a valid employee number.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.employee_code }}
+                {{ form.employee_code.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter a valid employee code.
+                </div>
+              </div>
+            </div>
+
+            <!-- Basic Information -->
+            <div class="col-12 mt-4">
+              <h6 class="fw-bold text-primary mb-3">
+                <i class="bi bi-person-badge"></i> Basic Information
+              </h6>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="form-floating">
+                {{ form.employee_name }}
+                {{ form.employee_name.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter the employee's first name.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="form-floating">
+                {{ form.employee_surname }}
+                {{ form.employee_surname.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter the employee's surname.
+                </div>
+              </div>
+            </div>
+
+            <!-- Demographics -->
+            <div class="col-12 mt-4">
+              <h6 class="fw-bold text-primary mb-3">
+                <i class="bi bi-person-vcard"></i> Demographics
+              </h6>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.gender }}
+                {{ form.gender.label_tag }}
+                <div class="invalid-feedback">
+                  Please select a gender.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.date_of_birth }}
+                {{ form.date_of_birth.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter a valid date of birth.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.marital_status }}
+                {{ form.marital_status.label_tag }}
+                <div class="invalid-feedback">
+                  Please select marital status.
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="col-md-4">
-          {{ form.employee_number.label_tag }} {{ form.employee_number }}
+
+        <!-- Address Information Tab -->
+        <div class="tab-pane fade" id="address" role="tabpanel">
+          <div class="row g-3">
+            <div class="col-12">
+              <h6 class="fw-bold text-primary mb-3">
+                <i class="bi bi-house"></i> Address Details
+              </h6>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.employee_address_type }}
+                {{ form.employee_address_type.label_tag }}
+                <div class="invalid-feedback">
+                  Please select address type.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-8">
+              <div class="form-floating">
+                {{ form.employee_address_01 }}
+                {{ form.employee_address_01.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter address line 1.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="form-floating">
+                {{ form.employee_address_02 }}
+                {{ form.employee_address_02.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter address line 2.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="form-floating">
+                {{ form.employee_address_03 }}
+                {{ form.employee_address_03.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter address line 3.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.employee_address_04 }}
+                {{ form.employee_address_04.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter city.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.employee_address_05 }}
+                {{ form.employee_address_05.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter state/province.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.employee_address_06 }}
+                {{ form.employee_address_06.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter postal code.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-12">
+              <div class="form-floating">
+                {{ form.employee_address_07 }}
+                {{ form.employee_address_07.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter country.
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="col-md-4">
-          {{ form.employee_code.label_tag }} {{ form.employee_code }}
+
+        <!-- Bank Information Tab -->
+        <div class="tab-pane fade" id="bank" role="tabpanel">
+          <div class="row g-3">
+            <div class="col-12">
+              <h6 class="fw-bold text-primary mb-3">
+                <i class="bi bi-credit-card"></i> Bank Account Details
+              </h6>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.bank_01 }}
+                {{ form.bank_01.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter bank name.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.bank_02 }}
+                {{ form.bank_02.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter account holder name.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.bank_03 }}
+                {{ form.bank_03.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter account number.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.bank_04 }}
+                {{ form.bank_04.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter bank code.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.bank_05 }}
+                {{ form.bank_05.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter branch code.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.bank_06 }}
+                {{ form.bank_06.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter account type.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.bank_07 }}
+                {{ form.bank_07.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter IBAN.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.bank_08 }}
+                {{ form.bank_08.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter SWIFT/BIC.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.bank_09 }}
+                {{ form.bank_09.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter currency.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.bank_10 }}
+                {{ form.bank_10.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter payment method.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Job Information Tab -->
+        <div class="tab-pane fade" id="job" role="tabpanel">
+          <div class="row g-3">
+            <div class="col-12">
+              <h6 class="fw-bold text-primary mb-3">
+                <i class="bi bi-briefcase"></i> Employment Details
+              </h6>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.department }}
+                {{ form.department.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter department.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.cost_centre }}
+                {{ form.cost_centre.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter cost centre.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.job_title }}
+                {{ form.job_title.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter job title.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="form-floating">
+                {{ form.position_number }}
+                {{ form.position_number.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter position number.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="form-floating">
+                {{ form.fte }}
+                {{ form.fte.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter FTE.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tax Information Tab -->
+        <div class="tab-pane fade" id="tax" role="tabpanel">
+          <div class="row g-3">
+            <div class="col-12">
+              <h6 class="fw-bold text-primary mb-3">
+                <i class="bi bi-percent"></i> Tax Information
+              </h6>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.tax_info_01 }}
+                {{ form.tax_info_01.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter tax ID.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.tax_info_02 }}
+                {{ form.tax_info_02.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter tax filing status.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.tax_info_03 }}
+                {{ form.tax_info_03.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter tax exemption amount.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.tax_info_04 }}
+                {{ form.tax_info_04.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter tax bracket.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.tax_info_05 }}
+                {{ form.tax_info_05.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter tax residency.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.tax_info_06 }}
+                {{ form.tax_info_06.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter additional withholding.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.tax_info_07 }}
+                {{ form.tax_info_07.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter tax notes.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+                <!-- Pay Register Tab -->
+        <div class="tab-pane fade" id="pay" role="tabpanel">
+          <div class="row g-3">
+            <div class="col-12">
+              <h6 class="fw-bold text-primary mb-3">
+                <i class="bi bi-percent"></i> Pay Register
+              </h6>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.tax_info_01 }}
+                {{ form.tax_info_01.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter tax ID.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.tax_info_02 }}
+                {{ form.tax_info_02.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter tax filing status.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.tax_info_03 }}
+                {{ form.tax_info_03.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter tax exemption amount.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.tax_info_04 }}
+                {{ form.tax_info_04.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter tax bracket.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.tax_info_05 }}
+                {{ form.tax_info_05.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter tax residency.
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.tax_info_06 }}
+                {{ form.tax_info_06.label_tag }}
+                <div class="invalid-feedback">
+                  Please enter additional withholding.
+                </div>
+              </div>
+            </div>
+            
+          </div>
         </div>
       </div>
 
-      <div class="row mb-3">
-        <div class="col-md-6">
-          {{ form.employee_name.label_tag }} {{ form.employee_name }}
+      <!-- Action Buttons -->
+      <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+        <div>
+          <button type="button" class="btn btn-outline-secondary" id="prevTab">
+            <i class="bi bi-chevron-left"></i> Previous
+          </button>
+          <button type="button" class="btn btn-outline-secondary" id="nextTab">
+            Next 
+          </button>
         </div>
-        <div class="col-md-6">
-          {{ form.employee_surname.label_tag }} {{ form.employee_surname }}
+        <div>
+          <button type="submit" class="btn btn-primary ms-2">
+            <i class="bi bi-save"></i> Save Employee
+          </button>
+          <a href="{% url 'employee:employee' country_slug company.company_id %}" class="btn btn-danger">
+            <i class="bi bi-x-circle"></i> Cancel
+          </a>
         </div>
-      </div>
-
-      <div class="row mb-3">
-        <div class="col-md-4">
-          {{ form.gender.label_tag }} {{ form.gender }}
-        </div>
-        <div class="col-md-4">
-          {{ form.date_of_birth.label_tag }} {{ form.date_of_birth }}
-        </div>
-        <div class="col-md-4">
-          {{ form.marital_status.label_tag }} {{ form.marital_status }}
-        </div>
-      </div>
-
-      <!-- Address Info -->
-      <h6 class="fw-bold border-bottom pb-2 mb-3 mt-4">Address Information</h6>
-      <div class="row mb-3">
-        <div class="col-md-4">
-          {{ form.employee_address_type.label_tag }} {{ form.employee_address_type }}
-        </div>
-        <div class="col-md-8">
-          {{ form.employee_address_01.label_tag }} {{ form.employee_address_01 }}
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-6">
-          {{ form.employee_address_02.label_tag }} {{ form.employee_address_02 }}
-        </div>
-        <div class="col-md-6">
-          {{ form.employee_address_03.label_tag }} {{ form.employee_address_03 }}
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-4">
-          {{ form.employee_address_04.label_tag }} {{ form.employee_address_04 }}
-        </div>
-        <div class="col-md-4">
-          {{ form.employee_address_05.label_tag }} {{ form.employee_address_05 }}
-        </div>
-        <div class="col-md-4">
-          {{ form.employee_address_06.label_tag }} {{ form.employee_address_06 }}
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-12">
-          {{ form.employee_address_07.label_tag }} {{ form.employee_address_07 }}
-        </div>
-      </div>
-
-      <!-- Bank Info -->
-      <h6 class="fw-bold border-bottom pb-2 mb-3 mt-4">Bank Information</h6>
-      <div class="row mb-3">
-        <div class="col-md-4">{{ form.bank_01.label_tag }} {{ form.bank_01 }}</div>
-        <div class="col-md-4">{{ form.bank_02.label_tag }} {{ form.bank_02 }}</div>
-        <div class="col-md-4">{{ form.bank_03.label_tag }} {{ form.bank_03 }}</div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-4">{{ form.bank_04.label_tag }} {{ form.bank_04 }}</div>
-        <div class="col-md-4">{{ form.bank_05.label_tag }} {{ form.bank_05 }}</div>
-        <div class="col-md-4">{{ form.bank_06.label_tag }} {{ form.bank_06 }}</div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-4">{{ form.bank_07.label_tag }} {{ form.bank_07 }}</div>
-        <div class="col-md-4">{{ form.bank_08.label_tag }} {{ form.bank_08 }}</div>
-        <div class="col-md-4">{{ form.bank_09.label_tag }} {{ form.bank_09 }}</div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-4">{{ form.bank_10.label_tag }} {{ form.bank_10 }}</div>
-      </div>
-
-      <!-- Job / Payroll Info -->
-      <h6 class="fw-bold border-bottom pb-2 mb-3 mt-4">Job / Payroll Information</h6>
-      <div class="row mb-3">
-        <div class="col-md-4">{{ form.department.label_tag }} {{ form.department }}</div>
-        <div class="col-md-4">{{ form.cost_centre.label_tag }} {{ form.cost_centre }}</div>
-        <div class="col-md-4">{{ form.job_title.label_tag }} {{ form.job_title }}</div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-6">{{ form.position_number.label_tag }} {{ form.position_number }}</div>
-        <div class="col-md-6">{{ form.fte.label_tag }} {{ form.fte }}</div>
-      </div>
-
-      <!-- Tax Info -->
-      <h6 class="fw-bold border-bottom pb-2 mb-3 mt-4">Tax Information</h6>
-      <div class="row mb-3">
-        <div class="col-md-4">{{ form.tax_info_01.label_tag }} {{ form.tax_info_01 }}</div>
-        <div class="col-md-4">{{ form.tax_info_02.label_tag }} {{ form.tax_info_02 }}</div>
-        <div class="col-md-4">{{ form.tax_info_03.label_tag }} {{ form.tax_info_03 }}</div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-4">{{ form.tax_info_04.label_tag }} {{ form.tax_info_04 }}</div>
-        <div class="col-md-4">{{ form.tax_info_05.label_tag }} {{ form.tax_info_05 }}</div>
-        <div class="col-md-4">{{ form.tax_info_06.label_tag }} {{ form.tax_info_06 }}</div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-4">{{ form.tax_info_07.label_tag }} {{ form.tax_info_07 }}</div>
-      </div>
-
-      <!-- Buttons -->
-      <div class="text-end mt-4">
-        <button type="submit" class="btn btn-primary">
-          <i class="bi bi-save"></i> Save
-        </button>
-        <a href="{% url 'employee:employee' country_slug company.company_id %}" class="btn btn-danger ms-2">
-          <i class="bi bi-x-circle"></i> Cancel
-        </a>
       </div>
     </form>
   </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Tab navigation
+  const tabs = document.querySelectorAll('#employeeTabs button[data-bs-toggle="tab"]');
+  const prevBtn = document.getElementById('prevTab');
+  const nextBtn = document.getElementById('nextTab');
+  
+  let currentTabIndex = 0;
+  
+  // Update current tab index
+  tabs.forEach((tab, index) => {
+    tab.addEventListener('shown.bs.tab', function () {
+      currentTabIndex = index;
+      updateNavButtons();
+    });
+  });
+  
+  // Previous button click
+  prevBtn.addEventListener('click', function() {
+    if (currentTabIndex > 0) {
+      const prevTab = tabs[currentTabIndex - 1];
+      new bootstrap.Tab(prevTab).show();
+    }
+  });
+  
+  // Next button click
+  nextBtn.addEventListener('click', function() {
+    if (currentTabIndex < tabs.length - 1) {
+      const nextTab = tabs[currentTabIndex + 1];
+      new bootstrap.Tab(nextTab).show();
+    }
+  });
+  
+  // Update navigation button states
+  function updateNavButtons() {
+    prevBtn.disabled = currentTabIndex === 0;
+    nextBtn.disabled = currentTabIndex === tabs.length - 1;
+    nextBtn.textContent = currentTabIndex === tabs.length - 1 ? 'Review' : 'Next';
+  }
+  
+  // Initialize
+  updateNavButtons();
+  
+  // Bootstrap validation
+  const forms = document.querySelectorAll('.needs-validation');
+  Array.from(forms).forEach(function(form) {
+    form.addEventListener('submit', function(event) {
+      if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      form.classList.add('was-validated');
+    }, false);
+  });
+  
+  // Auto-focus first field in each tab when switching
+  tabs.forEach(tab => {
+    tab.addEventListener('shown.bs.tab', function(event) {
+      const targetPane = document.querySelector(event.target.getAttribute('data-bs-target'));
+      const firstInput = targetPane.querySelector('input, select, textarea');
+      if (firstInput) {
+        firstInput.focus();
+      }
+    });
+  });
+});
+</script>
 {% endblock %}

@@ -1,70 +1,18 @@
-# Services.py on Render
+# settings.py
 import os
-import dj_database_url
 from pathlib import Path
+import dj_database_url
 
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
 
-# DEBUG defaults to False on Render unless explicitly set to True
+# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "True") == "True"
 
-# Security settings
-if not DEBUG:
-    SECURE_SSL_REDIRECT = True
-    SECURE_HSTS_SECONDS = 31536000  # 1 year
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
-    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-    SECURE_BROWSER_XSS_FILTER = True
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    X_FRAME_OPTIONS = 'DENY'
-    USE_X_FORWARDED_HOST = True
-
-# Security settings
-SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SECURE = True  # Enable in production
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SAMESITE = 'Lax'
-
-# Cache configuration for permissions
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379/1',
-    }
-}
-
-# Or for development:
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'exactus-permissions',
-    }
-}
-
-# MUST be outside the DEBUG condition
-ROOT_URLCONF = 'ExactusPay.urls'
-
-ALLOWED_HOSTS = [
-    "127.0.0.1",
-    "localhost",
-    "exactuspay.onrender.com",
-    "payroll.exactuspay.com",
-    ".onrender.com",
-]
-
-CSRF_TRUSTED_ORIGINS = [
-    "https://exactuspay.onrender.com",
-    "https://payroll.exactuspay.com",
-]
-
-render_host = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
-if render_host:
-    ALLOWED_HOSTS.append(render_host)
-    CSRF_TRUSTED_ORIGINS.append(f"https://{render_host}")
-
+# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -72,12 +20,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    # Correct
+    
+    # Third-party apps
     'crispy_forms',
     'crispy_bootstrap5',
-
-    # Your app modules
+    
+    # Local apps
     'Exactus.accounts.apps.AccountsConfig',
     'Exactus.country.apps.CountryConfig',
     'Exactus.company',
@@ -91,20 +39,9 @@ INSTALLED_APPS = [
     'Exactus.payroll',
 ]
 
-MIDDLEWARE = [
-    "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
-    "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
-]
 
-WSGI_APPLICATION = 'ExactusPay.wsgi.application'
+ROOT_URLCONF = 'ExactusPay.urls'
 
-# Templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -124,66 +61,181 @@ TEMPLATES = [
     },
 ]
 
+WSGI_APPLICATION = 'ExactusPay.wsgi.application'
 
+# Database
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
-CRISPY_TEMPLATE_PACK = "bootstrap5"
-
-# Database configuration
-if "DATABASE_URL" in os.environ:
-    # Use Render's DATABASE_URL environment variable
+if DATABASE_URL:
+    # Use Render / production DB
     DATABASES = {
         "default": dj_database_url.config(
-            default=os.environ["DATABASE_URL"],
+            default=DATABASE_URL,
             conn_max_age=600,
             conn_health_checks=True,
             ssl_require=True,
         )
     }
 else:
-    # Fallback for local development
+    # Local development uses SQLite
     DATABASES = {
         "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": "exactuspay_db",
-            "USER": "exactuspay_db_user",
-            "PASSWORD": "PhjN7vTmTch7tOLtvYtgqVUJO2xcbRly",
-            "HOST": "dpg-d4fjqrumcj7s73apke3g-a.oregon-postgres.render.com",
-            "PORT": "5432",
-            "OPTIONS": {
-                'sslmode': 'require',
-            }
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
         }
     }
-# settings.py
-# File upload settings
+
+# Password validation
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
+
+# Internationalization
+LANGUAGE_CODE = "en-gb"
+TIME_ZONE = 'UTC'
+USE_I18N = True
+USE_TZ = True
+
+# Static files (CSS, JavaScript, Images)
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'Exactus', 'static'),
+]
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+# Media files
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
+# Default primary key field type
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Crispy Forms
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+# Custom User Model
+AUTH_USER_MODEL = 'accounts.User'
+
+# Authentication URLs
+LOGIN_URL = "/login/"
+LOGIN_REDIRECT_URL = "/dashboard/"
+LOGOUT_REDIRECT_URL = "/login/"
+
+# Allowed Hosts & CSRF
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    "exactuspay.onrender.com",
+    "payroll.exactuspay.com",
+    ".onrender.com",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://exactuspay.onrender.com",
+    "https://payroll.exactuspay.com",
+]
+
+# Add Render external hostname if available
+render_host = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+if render_host:
+    ALLOWED_HOSTS.append(render_host)
+    CSRF_TRUSTED_ORIGINS.append(f"https://{render_host}")
+
+# Security Settings
+SESSION_COOKIE_HTTPONLY = True
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SAMESITE = 'Lax'
+
+# Production Security Settings
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = 'DENY'
+    USE_X_FORWARDED_HOST = True
+    SESSION_COOKIE_SECURE = True
+else:
+    SESSION_COOKIE_SECURE = False  # Disable in development for easier testing
+
+# Cache Configuration
+if DEBUG:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': 'exactus-permissions',
+        }
+    }
+else:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': 'redis://127.0.0.1:6379/1',
+        }
+    }
+
+
+# ================================
+# SESSION & SECURITY CONFIGURATION
+# ================================
+
+# Session timeout (5 minutes)
+SESSION_COOKIE_AGE = 300
+SESSION_SAVE_EVERY_REQUEST = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_NAME = 'exactus_session'
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = 'Lax'
+
+# Use cached_db for cross-worker consistency
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+
+# Security: In production, ensure these are set
+if not DEBUG:
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+
+# ================================
+# MIDDLEWARE (Updated Order)
+# ================================
+
+MIDDLEWARE = [
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    
+    # Custom Session Middleware (MUST come after AuthenticationMiddleware)
+    "Exactus.middleware.session_timeout.SessionTimeoutMiddleware",
+    "Exactus.middleware.tab_close_detection.TabCloseMiddleware",
+    
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+]
+
+
+# File Upload Settings
 FILE_UPLOAD_HANDLERS = [
     'django.core.files.uploadhandler.TemporaryFileUploadHandler',
 ]
 
 # Progress bar session key
 PROGRESS_SESSION_KEY = 'upload_progress'
-
-AUTH_USER_MODEL = 'accounts.User'
-
-LOGIN_URL = "/login/"
-LOGIN_REDIRECT_URL = "/dashboard/"
-LOGOUT_REDIRECT_URL = "/login/"
-
-LANGUAGE_CODE = "en-gb"
-TIME_ZONE = 'UTC'
-USE_I18N = True
-USE_TZ = True
-
-STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'Exactus', 'static'),
-]
-
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

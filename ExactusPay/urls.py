@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from Exactus.accounts.views import tab_close_detection
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,5 +32,6 @@ urlpatterns = [
     
     path('',include(('Exactus.payregister.urls', 'payregister'), namespace='payregister')),
     path('',include('Exactus.payroll.urls')),
+    path('ajax/tab-close/', tab_close_detection, name='tab_close'),
     
 ]

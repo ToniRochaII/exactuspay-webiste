@@ -28,32 +28,51 @@ def employee_list(request, country_slug,company_id):
         },
     )
 
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from Exactus.company.models import Company
+from Exactus.employee.models import Employee
+from Exactus.country.models import Country
+from Exactus.employee.forms import get_employee_form_for_country, EmployeeUploadForm
+from Exactus.utils.decorators import role_required
+
+
 @login_required
 @role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE")
-def employee_create(request, country_slug,company_id):
+def employee_create(request, country_slug, company_id):
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
 
+    # Get the appropriate form class for this country
+    FormClass = get_employee_form_for_country(country)
+
     if request.method == "POST":
-        form = EmployeeForm(request.POST)
+        form = FormClass(request.POST)
         if form.is_valid():
             employee = form.save(commit=False)
             employee.company = company
             employee.save()
             messages.success(request, f"Employee '{employee.employee_name} {employee.employee_surname}' added successfully.")
             return redirect('employee:employee', country_slug=country_slug, company_id=company.company_id)
+        else:
+            # DEBUG: Print form errors
+            print("FORM ERRORS:")
+            for field, errors in form.errors.items():
+                print(f"{field}: {errors}")
+            # Also check cleaned_data
+            print("FORM DATA:", form.data)
     else:
-        form = EmployeeForm()
+        form = FormClass()
 
-    # ✅ Here’s the fix — make sure both `country` and `company` are passed!
     return render(
         request,
         "employee/create.html",
         {
             "form": form,
             "company": company,
-            "country":country  # ← this line MUST be present
-            ,"country_slug":country_slug  # ← this line MUST be present
+            "country": country,
+            "country_slug": country_slug
         },
     )
 
@@ -65,15 +84,30 @@ def employee_edit(request, country_slug, company_id, employee_id):
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
     employee = get_object_or_404(Employee, pk=employee_id, company=company)
+    
+    # Get the appropriate form class for this country
+    FormClass = get_employee_form_for_country(country)
+    
     if request.method == "POST":
-        form = EmployeeForm(request.POST, instance=employee)
+        form = FormClass(request.POST, instance=employee)
         if form.is_valid():
             form.save()
             messages.success(request, f"Employee '{employee.employee_name} {employee.employee_surname}' updated successfully.")
             return redirect('employee:employee', country_slug=country_slug, company_id=company.company_id)
     else:
-        form = EmployeeForm(instance=employee)
-    return render(request, "employee/edit.html", {"form": form, "company": company, "employee": employee, "country": country, "country_slug":country_slug})
+        form = FormClass(instance=employee)
+    
+    return render(request, "employee/edit.html", {
+        "form": form, 
+        "company": company, 
+        "employee": employee, 
+        "country": country, 
+        "country_slug": country_slug
+    })
+
+
+
+
 
 
 @login_required
@@ -172,138 +206,41 @@ from django.utils.decorators import method_decorator
 from django.contrib.admin.views.decorators import staff_member_required
 
 class EmployeeUploadView(View):
-    """
-    Class-based view for handling employee CSV uploads with progress tracking
-    """
     
     @method_decorator(staff_member_required)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
-    
+
     def get(self, request, country_slug, company_id):
-        """Display the upload form"""
-        from django.shortcuts import get_object_or_404
-        from country.models import Country
-        from .models import Company
-        from .forms import EmployeeUploadForm
-        
+        from Exactus.country.models import Country
+        from Exactus.company.models import Company
+        from Exactus.employee.forms import EmployeeUploadForm
+
         country = get_object_or_404(Country, slug=country_slug)
         company = get_object_or_404(Company, pk=company_id)
         form = EmployeeUploadForm()
-        
+
         return render(request, "employee/upload_form.html", {
             "form": form,
             "company": company,
             "country": country,
             "country_slug": country_slug
         })
-    
+
     def post(self, request, country_slug, company_id):
-        """Handle file upload and processing"""
-        from django.shortcuts import get_object_or_404, redirect
-        from django.contrib import messages
-        from country.models import Country
-        from .models import Company, Employee
-        from .forms import EmployeeUploadForm
-        from .utils.csv_importer import import_from_csv_with_progress
-        
+        from Exactus.country.models import Country
+        from Exactus.company.models import Company
+        from Exactus.employee.models import Employee
+        from Exactus.employee.forms import EmployeeUploadForm
+        from Exactus.employee.utils.csv_importer import import_from_csv_with_progress
+        import uuid
+
         country = get_object_or_404(Country, slug=country_slug)
         company = get_object_or_404(Company, pk=company_id)
+
         form = EmployeeUploadForm(request.POST, request.FILES)
-        
-        if form.is_valid():
-            dry_run = form.cleaned_data.get('dry_run', False)
-            
-            try:
-                # Define the field mapping for employees
-                employee_field_map = {
-                    "company_code": "company",
-                    "employee_id": "employee_id",
-                    "employee_number": "employee_number",
-                    "employee_code": "employee_code",
-                    "employee_name": "employee_name",
-                    "employee_surname": "employee_surname",
-                    "gender": "gender",
-                    "date_of_birth": "date_of_birth",
-                    "marital_status": "marital_status",
-                    "employee_address_type": "employee_address_type",
-                    "employee_address_01": "employee_address_01",
-                    "employee_address_02": "employee_address_02",
-                    "employee_address_03": "employee_address_03",
-                    "employee_address_04": "employee_address_04",
-                    "employee_address_05": "employee_address_05",
-                    "employee_address_06": "employee_address_06",
-                    "employee_address_07": "employee_address_07",
-                    "bank_01": "bank_01",
-                    "bank_02": "bank_02",
-                    "bank_03": "bank_03",
-                    "bank_04": "bank_04",
-                    "bank_05": "bank_05",
-                    "bank_06": "bank_06",
-                    "bank_07": "bank_07",
-                    "bank_08": "bank_08",
-                    "bank_09": "bank_09",
-                    "bank_10": "bank_10",
-                    "department": "department",
-                    "cost_centre": "cost_centre",
-                    "job_title": "job_title",
-                    "position_number": "position_number",
-                    "fte": "fte",
-                    "tax_info_01": "tax_info_01",
-                    "tax_info_02": "tax_info_02",
-                    "tax_info_03": "tax_info_03",
-                    "tax_info_04": "tax_info_04",
-                    "tax_info_05": "tax_info_05",
-                    "tax_info_06": "tax_info_06",
-                    "tax_info_07": "tax_info_07",
-                }
-                
-                # Define required fields
-                required_fields = ['company_code', 'employee_number', 'employee_code', 'employee_name', 'employee_surname']
-                
-                # Generate progress ID
-                import uuid
-                progress_id = str(uuid.uuid4())
-                
-                # Call import_from_csv_with_progress
-                result = import_from_csv_with_progress(
-                    file=request.FILES["file"],
-                    model=Employee,
-                    field_map=employee_field_map,
-                    required_fields=required_fields,
-                    dry_run=dry_run,
-                    request=request,
-                    progress_id=progress_id
-                )
-                
-                # Store result in session
-                request.session["upload_result"] = result
-                
-                # Show appropriate message
-                if dry_run:
-                    messages.success(request, 
-                        f"Dry run completed: {result['created']} to create, {result['updated']} to update. "
-                        f"{len(result['errors'])} errors found."
-                    )
-                else:
-                    messages.success(request, 
-                        f"Upload completed: {result['created']} created, {result['updated']} updated. "
-                        f"{len(result['errors'])} errors."
-                    )
-                
-                # Redirect to result page
-                return redirect("employee:employee_upload_result", country_slug=country_slug, company_id=company_id)
-                    
-            except Exception as e:
-                messages.error(request, f"Upload error: {str(e)}")
-                return render(request, "employee/upload_form.html", {
-                    "form": form,
-                    "company": company,
-                    "country": country,
-                    "country_slug": country_slug
-                })
-        
-        else:
+
+        if not form.is_valid():
             messages.error(request, "Please correct the errors below.")
             return render(request, "employee/upload_form.html", {
                 "form": form,
@@ -311,4 +248,97 @@ class EmployeeUploadView(View):
                 "country": country,
                 "country_slug": country_slug
             })
-        
+
+        # Form ok → read dry_run flag
+        dry_run = form.cleaned_data.get("dry_run", False)
+
+        # Ensure a progress_id exists
+        progress_id = request.POST.get("progress_id") or str(uuid.uuid4())
+
+        try:
+            # Field mapping for employees
+            employee_field_map = {
+                "company_code": "company",
+                "employee_id": "employee_id",
+                "employee_number": "employee_number",
+                "employee_code": "employee_code",
+                "employee_name": "employee_name",
+                "employee_surname": "employee_surname",
+                "gender": "gender",
+                "date_of_birth": "date_of_birth",
+                "marital_status": "marital_status",
+                "employee_address_type": "employee_address_type",
+                "employee_address_01": "employee_address_01",
+                "employee_address_02": "employee_address_02",
+                "employee_address_03": "employee_address_03",
+                "employee_address_04": "employee_address_04",
+                "employee_address_05": "employee_address_05",
+                "employee_address_06": "employee_address_06",
+                "employee_address_07": "employee_address_07",
+                "bank_01": "bank_01",
+                "bank_02": "bank_02",
+                "bank_03": "bank_03",
+                "bank_04": "bank_04",
+                "bank_05": "bank_05",
+                "bank_06": "bank_06",
+                "bank_07": "bank_07",
+                "bank_08": "bank_08",
+                "bank_09": "bank_09",
+                "bank_10": "bank_10",
+                "department": "department",
+                "cost_centre": "cost_centre",
+                "job_title": "job_title",
+                "position_number": "position_number",
+                "fte": "fte",
+                "tax_info_01": "tax_info_01",
+                "tax_info_02": "tax_info_02",
+                "tax_info_03": "tax_info_03",
+                "tax_info_04": "tax_info_04",
+                "tax_info_05": "tax_info_05",
+                "tax_info_06": "tax_info_06",
+                "tax_info_07": "tax_info_07",
+            }
+
+            required_fields = [
+                "company_code", "employee_number", "employee_code",
+                "employee_name", "employee_surname"
+            ]
+
+            # Execute import
+            result = import_from_csv_with_progress(
+                file=request.FILES["file"],
+                model=Employee,
+                field_map=employee_field_map,
+                required_fields=required_fields,
+                dry_run=dry_run,
+                request=request,
+                progress_id=progress_id
+            )
+
+            request.session["upload_result"] = result
+
+            if dry_run:
+                messages.success(
+                    request,
+                    f"Dry run completed: {result['created']} to create, "
+                    f"{result['updated']} to update, {len(result['errors'])} errors."
+                )
+            else:
+                messages.success(
+                    request,
+                    f"Upload complete: {result['created']} created, "
+                    f"{result['updated']} updated, {len(result['errors'])} errors."
+                )
+
+            return redirect("employee:employee_upload_result", country_slug=country_slug, company_id=company_id)
+
+        except Exception as e:
+            messages.error(request, f"Upload failed: {str(e)}")
+
+            return render(request, "employee/upload_form.html", {
+                "form": form,
+                "company": company,
+                "country": country,
+                "country_slug": country_slug
+            })
+

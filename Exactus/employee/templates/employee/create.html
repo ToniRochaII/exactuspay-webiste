@@ -35,167 +35,933 @@ Add Employee — {{ company.trade_name }} | ExactusPay
         <i class="bi bi-plus-circle"></i> Add Employee
       {% endif %}
     </h5>
+    <div>
+      <a href="{% url 'employee:employee' country_slug company.company_id %}" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left"></i> Back to Employees
+      </a>
+    </div>
   </div>
 
   <div class="card-body">
-      <p> 
-        {% if user|has_role:"EXEC" %}
-        ||||
-        <a href="{% url 'dashboard_admin' %}">Exec Dashboard</a> 
-        {% endif %}
-        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
-        <a href="{% url 'dashboard' %}">Dashboard</a> 
-        <a href="{% url 'user_list' %}"">Accounts</a>
-        <a href="{% url 'role_management' %}"">Role Management</a>
-        <a href="{% url 'regulations:regulations' country_slug %}"">Regulations</a>
-        <a href="{% url 'elements:elements' country_slug %}"">elements</a>
-        {% endif %}
-        ||||
-        {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION,DIRECTOR,MANAGER,SPECIALIST,FINANCE" %}
-        <a href="{% url 'profile' %}"">Profile</a>
-        <a href="{% url 'country:country' %}">Countries</a>
-        <a href="{% url 'companies:company' country_slug %}">Companies</a>
-        <a href="{% url 'employee:employee' country_slug company.company_id %}">Employees</a>
-        <a href="{% url 'employee:employee_create' country_slug company.company_id %}">Add Employee</a>
-        <a href="{% url 'pdcodes:pdcodes' country_slug company.company_id %}">P&D Code</a>
-        <a href="{% url 'pdcodes:pdcode_create' country_slug company.company_id %}">Add P&D Code</a>
-        {% endif %}
+    <!-- Country-specific notice -->
+    {% if country.slug == 'brazil' %}
+    <div class="alert alert-info d-flex align-items-center mb-4">
+      <i class="bi bi-globe me-2"></i>
+      <div>
+        <strong>Brazil-specific form:</strong> This form includes Brazil-specific fields (CPF, PIS/PASEP, CTPS).
+      </div>
+    </div>
+    {% endif %}
 
-        <a href="{% url 'password_reset' %}">Reset password</a>
-      </p>
+    <!-- Tab Navigation -->
+    <ul class="nav nav-tabs mb-4" id="employeeTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal" type="button" role="tab">
+          <i class="bi bi-person"></i> Personal Data
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="address-tab" data-bs-toggle="tab" data-bs-target="#address" type="button" role="tab">
+          <i class="bi bi-geo-alt"></i> Address Information
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="bank-tab" data-bs-toggle="tab" data-bs-target="#bank" type="button" role="tab">
+          <i class="bi bi-bank"></i> Bank Details
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="job-tab" data-bs-toggle="tab" data-bs-target="#job" type="button" role="tab">
+          <i class="bi bi-briefcase"></i> Employment Details
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="tax-tab" data-bs-toggle="tab" data-bs-target="#tax" type="button" role="tab">
+          <i class="bi bi-percent"></i> Tax Details
+        </button>
+      </li>
+    </ul>
+
     <form method="post" class="needs-validation" novalidate>
       {% csrf_token %}
       {{ form.non_field_errors }}
 
-      <!-- Personal Info -->
-      <h6 class="fw-bold border-bottom pb-2 mb-3">Personal Information</h6>
-      <div class="row mb-3">
-        <div class="col-md-4">
-          {{ form.employee_id.label_tag }} {{ form.employee_id }}
+      <div class="tab-content" id="employeeTabsContent">
+        <!-- Personal Information Tab -->
+        <div class="tab-pane fade show active" id="personal" role="tabpanel">
+          <div class="row g-3">
+            <!-- Employee Identification -->
+            <div class="col-12">
+              <h6 class="fw-bold text-primary mb-3">
+                <i class="bi bi-card-checklist"></i> Employee Identification
+              </h6>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.employee_id }}
+                <label for="{{ form.employee_id.id_for_label }}">
+                  {{ form.employee_id.label }}
+                  {% if form.employee_id.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.employee_id.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.employee_id.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.employee_number }}
+                <label for="{{ form.employee_number.id_for_label }}">
+                  {{ form.employee_number.label }}
+                  {% if form.employee_number.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.employee_number.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.employee_number.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.employee_code }}
+                <label for="{{ form.employee_code.id_for_label }}">
+                  {{ form.employee_code.label }}
+                  {% if form.employee_code.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.employee_code.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.employee_code.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Basic Information -->
+            <div class="col-12 mt-4">
+              <h6 class="fw-bold text-primary mb-3">
+                <i class="bi bi-person-badge"></i> Basic Information
+              </h6>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="form-floating">
+                {{ form.employee_name }}
+                <label for="{{ form.employee_name.id_for_label }}">
+                  {{ form.employee_name.label }}
+                  {% if form.employee_name.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.employee_name.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.employee_name.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="form-floating">
+                {{ form.employee_surname }}
+                <label for="{{ form.employee_surname.id_for_label }}">
+                  {{ form.employee_surname.label }}
+                  {% if form.employee_surname.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.employee_surname.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.employee_surname.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Demographics -->
+            <div class="col-12 mt-4">
+              <h6 class="fw-bold text-primary mb-3">
+                <i class="bi bi-person-vcard"></i> Demographics
+              </h6>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.gender }}
+                <label for="{{ form.gender.id_for_label }}">
+                  {{ form.gender.label }}
+                  {% if form.gender.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.gender.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.gender.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.date_of_birth }}
+                <label for="{{ form.date_of_birth.id_for_label }}">
+                  {{ form.date_of_birth.label }}
+                  {% if form.date_of_birth.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.date_of_birth.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.date_of_birth.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.marital_status }}
+                <label for="{{ form.marital_status.id_for_label }}">
+                  {{ form.marital_status.label }}
+                  {% if form.marital_status.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.marital_status.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.marital_status.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Brazil-specific fields -->
+            {% if country.slug == 'brazil' %}
+            <div class="col-12 mt-4">
+              <h6 class="fw-bold text-primary mb-3">
+                <i class="bi bi-flag"></i> Brazil-specific Information
+              </h6>
+            </div>
+            
+            {% if form.cpf %}
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.cpf }}
+                <label for="{{ form.cpf.id_for_label }}">
+                  {{ form.cpf.label }}
+                  {% if form.cpf.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.cpf.help_text %}
+                <small class="form-text text-muted">{{ form.cpf.help_text }}</small>
+                {% endif %}
+                {% if form.cpf.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.cpf.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            {% endif %}
+            
+            {% if form.pis %}
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.pis }}
+                <label for="{{ form.pis.id_for_label }}">
+                  {{ form.pis.label }}
+                  {% if form.pis.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.pis.help_text %}
+                <small class="form-text text-muted">{{ form.pis.help_text }}</small>
+                {% endif %}
+                {% if form.pis.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.pis.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            {% endif %}
+            
+            {% if form.ctps_number %}
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.ctps_number }}
+                <label for="{{ form.ctps_number.id_for_label }}">
+                  {{ form.ctps_number.label }}
+                  {% if form.ctps_number.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.ctps_number.help_text %}
+                <small class="form-text text-muted">{{ form.ctps_number.help_text }}</small>
+                {% endif %}
+                {% if form.ctps_number.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.ctps_number.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            {% endif %}
+            {% endif %}
+          </div>
         </div>
-        <div class="col-md-4">
-          {{ form.employee_number.label_tag }} {{ form.employee_number }}
+
+        <!-- Address Information Tab -->
+        <div class="tab-pane fade" id="address" role="tabpanel">
+          <div class="row g-3">
+            <div class="col-12">
+              <h6 class="fw-bold text-primary mb-3">
+                <i class="bi bi-house"></i> Address Details
+              </h6>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.employee_address_type }}
+                <label for="{{ form.employee_address_type.id_for_label }}">
+                  {{ form.employee_address_type.label }}
+                  {% if form.employee_address_type.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.employee_address_type.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.employee_address_type.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="col-md-8">
+              <div class="form-floating">
+                {{ form.employee_address_01 }}
+                <label for="{{ form.employee_address_01.id_for_label }}">
+                  {{ form.employee_address_01.label }}
+                  {% if form.employee_address_01.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.employee_address_01.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.employee_address_01.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="form-floating">
+                {{ form.employee_address_02 }}
+                <label for="{{ form.employee_address_02.id_for_label }}">
+                  {{ form.employee_address_02.label }}
+                  {% if form.employee_address_02.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.employee_address_02.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.employee_address_02.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="form-floating">
+                {{ form.employee_address_03 }}
+                <label for="{{ form.employee_address_03.id_for_label }}">
+                  {{ form.employee_address_03.label }}
+                  {% if form.employee_address_03.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.employee_address_03.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.employee_address_03.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.employee_address_04 }}
+                <label for="{{ form.employee_address_04.id_for_label }}">
+                  {{ form.employee_address_04.label }}
+                  {% if form.employee_address_04.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.employee_address_04.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.employee_address_04.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.employee_address_05 }}
+                <label for="{{ form.employee_address_05.id_for_label }}">
+                  {{ form.employee_address_05.label }}
+                  {% if form.employee_address_05.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.employee_address_05.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.employee_address_05.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.employee_address_06 }}
+                <label for="{{ form.employee_address_06.id_for_label }}">
+                  {{ form.employee_address_06.label }}
+                  {% if form.employee_address_06.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.employee_address_06.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.employee_address_06.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="col-12">
+              <div class="form-floating">
+                {{ form.employee_address_07 }}
+                <label for="{{ form.employee_address_07.id_for_label }}">
+                  {{ form.employee_address_07.label }}
+                  {% if form.employee_address_07.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.employee_address_07.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.employee_address_07.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="col-md-4">
-          {{ form.employee_code.label_tag }} {{ form.employee_code }}
+
+        <!-- Bank Information Tab -->
+        <div class="tab-pane fade" id="bank" role="tabpanel">
+          <div class="row g-3">
+            <div class="col-12">
+              <h6 class="fw-bold text-primary mb-3">
+                <i class="bi bi-credit-card"></i> Bank Account Details
+              </h6>
+            </div>
+            
+            <!-- Render bank fields manually -->
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.bank_01 }}
+                <label for="{{ form.bank_01.id_for_label }}">
+                  {{ form.bank_01.label }}
+                  {% if form.bank_01.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.bank_01.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.bank_01.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.bank_02 }}
+                <label for="{{ form.bank_02.id_for_label }}">
+                  {{ form.bank_02.label }}
+                  {% if form.bank_02.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.bank_02.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.bank_02.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.bank_03 }}
+                <label for="{{ form.bank_03.id_for_label }}">
+                  {{ form.bank_03.label }}
+                  {% if form.bank_03.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.bank_03.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.bank_03.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.bank_04 }}
+                <label for="{{ form.bank_04.id_for_label }}">
+                  {{ form.bank_04.label }}
+                  {% if form.bank_04.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.bank_04.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.bank_04.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.bank_05 }}
+                <label for="{{ form.bank_05.id_for_label }}">
+                  {{ form.bank_05.label }}
+                  {% if form.bank_05.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.bank_05.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.bank_05.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.bank_06 }}
+                <label for="{{ form.bank_06.id_for_label }}">
+                  {{ form.bank_06.label }}
+                  {% if form.bank_06.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.bank_06.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.bank_06.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.bank_07 }}
+                <label for="{{ form.bank_07.id_for_label }}">
+                  {{ form.bank_07.label }}
+                  {% if form.bank_07.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.bank_07.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.bank_07.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.bank_08 }}
+                <label for="{{ form.bank_08.id_for_label }}">
+                  {{ form.bank_08.label }}
+                  {% if form.bank_08.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.bank_08.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.bank_08.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.bank_09 }}
+                <label for="{{ form.bank_09.id_for_label }}">
+                  {{ form.bank_09.label }}
+                  {% if form.bank_09.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.bank_09.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.bank_09.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.bank_10 }}
+                <label for="{{ form.bank_10.id_for_label }}">
+                  {{ form.bank_10.label }}
+                  {% if form.bank_10.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.bank_10.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.bank_10.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Job Information Tab -->
+        <div class="tab-pane fade" id="job" role="tabpanel">
+          <div class="row g-3">
+            <div class="col-12">
+              <h6 class="fw-bold text-primary mb-3">
+                <i class="bi bi-briefcase"></i> Employment Details
+              </h6>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.department }}
+                <label for="{{ form.department.id_for_label }}">
+                  {{ form.department.label }}
+                  {% if form.department.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.department.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.department.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.cost_centre }}
+                <label for="{{ form.cost_centre.id_for_label }}">
+                  {{ form.cost_centre.label }}
+                  {% if form.cost_centre.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.cost_centre.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.cost_centre.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.job_title }}
+                <label for="{{ form.job_title.id_for_label }}">
+                  {{ form.job_title.label }}
+                  {% if form.job_title.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.job_title.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.job_title.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="form-floating">
+                {{ form.position_number }}
+                <label for="{{ form.position_number.id_for_label }}">
+                  {{ form.position_number.label }}
+                  {% if form.position_number.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.position_number.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.position_number.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <div class="form-floating">
+                {{ form.fte }}
+                <label for="{{ form.fte.id_for_label }}">
+                  {{ form.fte.label }}
+                  {% if form.fte.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.fte.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.fte.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tax Information Tab -->
+        <div class="tab-pane fade" id="tax" role="tabpanel">
+          <div class="row g-3">
+            <div class="col-12">
+              <h6 class="fw-bold text-primary mb-3">
+                <i class="bi bi-percent"></i> Tax Information
+              </h6>
+            </div>
+            
+            <!-- Note: For Brazil, tax_info_01, tax_info_02, tax_info_03 are hidden 
+                 and mapped to CPF, PIS in the form -->
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.tax_info_04 }}
+                <label for="{{ form.tax_info_04.id_for_label }}">
+                  {{ form.tax_info_04.label }}
+                  {% if form.tax_info_04.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.tax_info_04.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.tax_info_04.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.tax_info_05 }}
+                <label for="{{ form.tax_info_05.id_for_label }}">
+                  {{ form.tax_info_05.label }}
+                  {% if form.tax_info_05.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.tax_info_05.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.tax_info_05.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.tax_info_06 }}
+                <label for="{{ form.tax_info_06.id_for_label }}">
+                  {{ form.tax_info_06.label }}
+                  {% if form.tax_info_06.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.tax_info_06.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.tax_info_06.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="col-12">
+              <div class="form-floating">
+                {{ form.tax_info_07 }}
+                <label for="{{ form.tax_info_07.id_for_label }}">
+                  {{ form.tax_info_07.label }}
+                  {% if form.tax_info_07.field.required %}<span class="text-danger">*</span>{% endif %}
+                </label>
+                {% if form.tax_info_07.errors %}
+                <div class="invalid-feedback d-block">
+                  {% for error in form.tax_info_07.errors %}
+                  {{ error }}
+                  {% endfor %}
+                </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="row mb-3">
-        <div class="col-md-6">
-          {{ form.employee_name.label_tag }} {{ form.employee_name }}
+      <!-- Action Buttons -->
+      <div class="d-flex justify-content-between mt-4 pt-3 border-top">
+        <div>
+          <button type="button" class="btn btn-outline-secondary" id="prevTab">
+            <i class="bi bi-chevron-left"></i> Previous
+          </button>
+          <button type="button" class="btn btn-outline-secondary" id="nextTab">
+            Next <i class="bi bi-chevron-right"></i>
+          </button>
         </div>
-        <div class="col-md-6">
-          {{ form.employee_surname.label_tag }} {{ form.employee_surname }}
+        <div>
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-save"></i> Save Employee
+          </button>
+          <a href="{% url 'employee:employee' country_slug company.company_id %}" class="btn btn-danger ms-2">
+            <i class="bi bi-x-circle"></i> Cancel
+          </a>
         </div>
-      </div>
-
-      <div class="row mb-3">
-        <div class="col-md-4">
-          {{ form.gender.label_tag }} {{ form.gender }}
-        </div>
-        <div class="col-md-4">
-          {{ form.date_of_birth.label_tag }} {{ form.date_of_birth }}
-        </div>
-        <div class="col-md-4">
-          {{ form.marital_status.label_tag }} {{ form.marital_status }}
-        </div>
-      </div>
-
-      <!-- Address Info -->
-      <h6 class="fw-bold border-bottom pb-2 mb-3 mt-4">Address Information</h6>
-      <div class="row mb-3">
-        <div class="col-md-4">
-          {{ form.employee_address_type.label_tag }} {{ form.employee_address_type }}
-        </div>
-        <div class="col-md-8">
-          {{ form.employee_address_01.label_tag }} {{ form.employee_address_01 }}
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-6">
-          {{ form.employee_address_02.label_tag }} {{ form.employee_address_02 }}
-        </div>
-        <div class="col-md-6">
-          {{ form.employee_address_03.label_tag }} {{ form.employee_address_03 }}
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-4">
-          {{ form.employee_address_04.label_tag }} {{ form.employee_address_04 }}
-        </div>
-        <div class="col-md-4">
-          {{ form.employee_address_05.label_tag }} {{ form.employee_address_05 }}
-        </div>
-        <div class="col-md-4">
-          {{ form.employee_address_06.label_tag }} {{ form.employee_address_06 }}
-        </div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-12">
-          {{ form.employee_address_07.label_tag }} {{ form.employee_address_07 }}
-        </div>
-      </div>
-
-      <!-- Bank Info -->
-      <h6 class="fw-bold border-bottom pb-2 mb-3 mt-4">Bank Information</h6>
-      <div class="row mb-3">
-        <div class="col-md-4">{{ form.bank_01.label_tag }} {{ form.bank_01 }}</div>
-        <div class="col-md-4">{{ form.bank_02.label_tag }} {{ form.bank_02 }}</div>
-        <div class="col-md-4">{{ form.bank_03.label_tag }} {{ form.bank_03 }}</div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-4">{{ form.bank_04.label_tag }} {{ form.bank_04 }}</div>
-        <div class="col-md-4">{{ form.bank_05.label_tag }} {{ form.bank_05 }}</div>
-        <div class="col-md-4">{{ form.bank_06.label_tag }} {{ form.bank_06 }}</div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-4">{{ form.bank_07.label_tag }} {{ form.bank_07 }}</div>
-        <div class="col-md-4">{{ form.bank_08.label_tag }} {{ form.bank_08 }}</div>
-        <div class="col-md-4">{{ form.bank_09.label_tag }} {{ form.bank_09 }}</div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-4">{{ form.bank_10.label_tag }} {{ form.bank_10 }}</div>
-      </div>
-
-      <!-- Job / Payroll Info -->
-      <h6 class="fw-bold border-bottom pb-2 mb-3 mt-4">Job / Payroll Information</h6>
-      <div class="row mb-3">
-        <div class="col-md-4">{{ form.department.label_tag }} {{ form.department }}</div>
-        <div class="col-md-4">{{ form.cost_centre.label_tag }} {{ form.cost_centre }}</div>
-        <div class="col-md-4">{{ form.job_title.label_tag }} {{ form.job_title }}</div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-6">{{ form.position_number.label_tag }} {{ form.position_number }}</div>
-        <div class="col-md-6">{{ form.fte.label_tag }} {{ form.fte }}</div>
-      </div>
-
-      <!-- Tax Info -->
-      <h6 class="fw-bold border-bottom pb-2 mb-3 mt-4">Tax Information</h6>
-      <div class="row mb-3">
-        <div class="col-md-4">{{ form.tax_info_01.label_tag }} {{ form.tax_info_01 }}</div>
-        <div class="col-md-4">{{ form.tax_info_02.label_tag }} {{ form.tax_info_02 }}</div>
-        <div class="col-md-4">{{ form.tax_info_03.label_tag }} {{ form.tax_info_03 }}</div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-4">{{ form.tax_info_04.label_tag }} {{ form.tax_info_04 }}</div>
-        <div class="col-md-4">{{ form.tax_info_05.label_tag }} {{ form.tax_info_05 }}</div>
-        <div class="col-md-4">{{ form.tax_info_06.label_tag }} {{ form.tax_info_06 }}</div>
-      </div>
-      <div class="row mb-3">
-        <div class="col-md-4">{{ form.tax_info_07.label_tag }} {{ form.tax_info_07 }}</div>
-      </div>
-
-      <!-- Buttons -->
-      <div class="text-end mt-4">
-        <button type="submit" class="btn btn-primary">
-          <i class="bi bi-save"></i> Save
-        </button>
-        <a href="{% url 'employee:employee' country_slug company.company_id %}" class="btn btn-danger ms-2">
-          <i class="bi bi-x-circle"></i> Cancel
-        </a>
       </div>
     </form>
   </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Input masking for Brazil-specific fields (CPF + PIS)
+  if (document.getElementById('{{ form.cpf.id_for_label }}')) {
+    const cpfField = document.getElementById('{{ form.cpf.id_for_label }}');
+    cpfField.addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 11) value = value.substring(0, 11);
+
+      if (value.length > 9) {
+        value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+      } else if (value.length > 6) {
+        value = value.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+      } else if (value.length > 3) {
+        value = value.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+      }
+
+      e.target.value = value;
+    });
+  }
+
+  if (document.getElementById('{{ form.pis.id_for_label }}')) {
+    const pisField = document.getElementById('{{ form.pis.id_for_label }}');
+    pisField.addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 11) value = value.substring(0, 11);
+
+      if (value.length > 9) {
+        value = value.replace(/(\d{3})(\d{5})(\d{2})(\d{1})/, '$1.$2.$3-$4');
+      } else if (value.length > 8) {
+        value = value.replace(/(\d{3})(\d{5})(\d{1,2})/, '$1.$2.$3');
+      } else if (value.length > 3) {
+        value = value.replace(/(\d{3})(\d{1,5})/, '$1.$2');
+      }
+
+      e.target.value = value;
+    });
+  }
+
+  // Tab navigation logic
+  const tabs = document.querySelectorAll('#employeeTabs button[data-bs-toggle="tab"]');
+  const prevBtn = document.getElementById('prevTab');
+  const nextBtn = document.getElementById('nextTab');
+
+  let currentTabIndex = 0;
+
+  tabs.forEach((tab, index) => {
+    tab.addEventListener('shown.bs.tab', function () {
+      currentTabIndex = index;
+      updateNavButtons();
+    });
+  });
+
+  prevBtn.addEventListener('click', function() {
+    if (currentTabIndex > 0) {
+      const previous = tabs[currentTabIndex - 1];
+      new bootstrap.Tab(previous).show();
+    }
+  });
+
+  nextBtn.addEventListener('click', function() {
+    if (currentTabIndex < tabs.length - 1) {
+      const next = tabs[currentTabIndex + 1];
+      new bootstrap.Tab(next).show();
+    }
+  });
+
+  function updateNavButtons() {
+    prevBtn.disabled = currentTabIndex === 0;
+    nextBtn.disabled = currentTabIndex === tabs.length - 1;
+    nextBtn.innerHTML = currentTabIndex === tabs.length - 1
+        ? 'Review'
+        : 'Next <i class="bi bi-chevron-right"></i>';
+  }
+
+  updateNavButtons();
+
+  // Form validation
+  const forms = document.querySelectorAll('.needs-validation');
+
+  Array.from(forms).forEach(function(form) {
+    form.addEventListener('submit', function(event) {
+
+      if (!form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        // Automatically switch to the first tab that contains an invalid field
+        const invalidField = form.querySelector(':invalid');
+        if (invalidField) {
+          const tabPane = invalidField.closest('.tab-pane');
+          if (tabPane) {
+            const tabId = tabPane.id;
+            const correspondingTab = document.querySelector(`[data-bs-target="#${tabId}"]`);
+            if (correspondingTab) {
+              new bootstrap.Tab(correspondingTab).show();
+            }
+          }
+        }
+      }
+
+      form.classList.add('was-validated');
+    }, false);
+  });
+
+});
+</script>
 {% endblock %}
