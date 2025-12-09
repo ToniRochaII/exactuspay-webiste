@@ -1,12 +1,13 @@
-<!-- dashboard/index.html -->
 {% extends "base.html" %}
 {% load static %}
+
 {% block title %}Dashboard | ExactusPay{% endblock %}
 
 {% block content %}
 <div class="container-fluid">
+
     <!-- Header -->
-    <div class="header">
+    <div class="header mb-4">
         <h1 class="header-title">
             Welcome back, {{ user.get_full_name|default:user.username }}!
         </h1>
@@ -19,51 +20,28 @@
     <div class="row">
         <div class="col-sm-6 col-xl-3">
             <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col mt-0">
-                            <h5 class="card-title">My Companies</h5>
-                        </div>
-                        <div class="col-auto">
-                            <div class="stat text-primary">
-                                <i class="fas fa-building"></i>
-                            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <h5 class="card-title">Active Countries</h5>
+                    </div>
+                    <div class="col-auto">
+                        <div class="stat text-primary">
+                            <i class="fas fa-globe"></i> <!-- Changed icon -->
                         </div>
                     </div>
-                    <h1 class="mt-1 mb-3">{{ user_companies_count }}</h1>
-                    {% if user_companies_count == 0 %}
-                    <small class="text-muted">No companies assigned yet</small>
-                    {% endif %}
                 </div>
+                <h1 class="mt-1 mb-3">{{ active_countries_count }}</h1>
+                <small class="text-muted">Countries with active operations</small>
+            </div>
             </div>
         </div>
-
+        
         <div class="col-sm-6 col-xl-3">
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col mt-0">
-                            <h5 class="card-title">My Employees</h5>
-                        </div>
-                        <div class="col-auto">
-                            <div class="stat text-success">
-                                <i class="fas fa-users"></i>
-                            </div>
-                        </div>
-                    </div>
-                    <h1 class="mt-1 mb-3">{{ user_employees_count }}</h1>
-                    {% if user_companies_count > 0 %}
-                    <small class="text-muted">Across {{ user_companies_count }} compan{{ user_companies_count|pluralize:"y,ies" }}</small>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-6 col-xl-3">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col mt-0">
+                        <div class="col">
                             <h5 class="card-title">Active Companies</h5>
                         </div>
                         <div class="col-auto">
@@ -82,7 +60,30 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col mt-0">
+                        <div class="col">
+                            <h5 class="card-title">Actives Employees</h5>
+                        </div>
+                        <div class="col-auto">
+                            <div class="stat text-success">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="mt-1 mb-3">{{ user_employees_count }}</h1>
+                    {% if user_companies_count > 0 %}
+                    <small class="text-muted">Across {{ user_companies_count }} compan{{ user_companies_count|pluralize:"y,ies" }}</small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="col-sm-6 col-xl-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
                             <h5 class="card-title">30 Day Activity</h5>
                         </div>
                         <div class="col-auto">
@@ -98,93 +99,65 @@
         </div>
     </div>
 
-    <!-- Recent Activity -->
+    <!-- Main Content -->
     <div class="row">
+
+        <!-- Left Panel -->
         <div class="col-12 col-lg-8">
-            <div class="card">
+
+            <!-- World Map -->
+            <div class="card mb-4">
                 <div class="card-header">
-                    <h5 class="card-title mb-0">Recent Payslip Activity</h5>
+                    <h5 class="card-title mb-0">Current Countries</h5>
                 </div>
-                <div class="card-body">
-                    {% if recent_payslips %}
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Employee</th>
-                                    <th>Company</th>
-                                    <th>Amount</th>
-                                    <th>Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for payslip in recent_payslips %}
-                                <tr>
-                                    <td>
-                                        <strong>{{ payslip.employee.first_name }} {{ payslip.employee.last_name }}</strong>
-                                    </td>
-                                    <td>
-                                        {{ payslip.employee.company.trade_name|default:"N/A" }}
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-success">${{ payslip.amount|floatformat:2|default:"0.00" }}</span>
-                                    </td>
-                                    <td>
-                                        {{ payslip.created_at|date:"M d, Y" }}
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    {% else %}
-                    <div class="text-center py-4">
-                        <i class="fas fa-file-invoice-dollar fa-3x text-muted mb-3"></i>
-                        <p class="text-muted">No recent payslip activity</p>
-                    </div>
-                    {% endif %}
+                <div class="card-body px-4">
+                    <div id="world_map" style="height:350px;"></div>
                 </div>
             </div>
 
             <!-- Quick Actions -->
-            <div class="row mt-3">
+            <div class="row">
                 <div class="col-md-4">
                     <div class="card text-center h-100">
                         <div class="card-body">
                             <i class="fas fa-user-plus fa-2x text-primary mb-3"></i>
                             <h5 class="card-title">Add Employee</h5>
-                            <p class="card-text text-muted small">Add new employee to payroll</p>
+                            <p class="text-muted small">Add new employee to payroll</p>
                             <a href="#" class="btn btn-primary btn-sm">Get Started</a>
                         </div>
                     </div>
                 </div>
+
                 <div class="col-md-4">
                     <div class="card text-center h-100">
                         <div class="card-body">
                             <i class="fas fa-file-invoice-dollar fa-2x text-success mb-3"></i>
                             <h5 class="card-title">Run Payroll</h5>
-                            <p class="card-text text-muted small">Process payroll for current period</p>
+                            <p class="text-muted small">Process payroll for current period</p>
                             <a href="#" class="btn btn-success btn-sm">Start Payroll</a>
                         </div>
                     </div>
                 </div>
+
                 <div class="col-md-4">
                     <div class="card text-center h-100">
                         <div class="card-body">
                             <i class="fas fa-chart-bar fa-2x text-info mb-3"></i>
                             <h5 class="card-title">View Reports</h5>
-                            <p class="card-text text-muted small">Generate payroll reports</p>
+                            <p class="text-muted small">Generate payroll reports</p>
                             <a href="#" class="btn btn-info btn-sm">View Reports</a>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
 
-        <!-- Sidebar -->
+        <!-- Right Panel -->
         <div class="col-12 col-lg-4">
+
             <!-- Notifications -->
-            <div class="card">
+            <div class="card mb-3">
                 <div class="card-header">
                     <h5 class="card-title mb-0">Notifications</h5>
                 </div>
@@ -194,10 +167,8 @@
                         {% for notification in notifications %}
                         <div class="list-group-item border-0 px-0 py-2">
                             <div class="d-flex align-items-start">
-                                <div class="flex-shrink-0">
-                                    <i class="fas fa-bell text-{{ notification.type|default:'info' }}"></i>
-                                </div>
-                                <div class="flex-grow-1 ms-3">
+                                <i class="fas fa-bell text-{{ notification.type|default:'info' }}"></i>
+                                <div class="ms-3 flex-grow-1">
                                     <h6 class="mb-1">{{ notification.title }}</h6>
                                     <p class="mb-0 small text-muted">{{ notification.message }}</p>
                                     <small class="text-muted">{{ notification.created_at|timesince }} ago</small>
@@ -209,7 +180,7 @@
                     {% else %}
                     <div class="text-center py-3">
                         <i class="fas fa-bell-slash fa-2x text-muted mb-2"></i>
-                        <p class="text-muted mb-0">No new notifications</p>
+                        <p class="text-muted">No new notifications</p>
                     </div>
                     {% endif %}
                 </div>
@@ -217,7 +188,7 @@
 
             <!-- My Companies -->
             {% if user_companies %}
-            <div class="card mt-3">
+            <div class="card mb-3">
                 <div class="card-header">
                     <h5 class="card-title mb-0">My Companies</h5>
                 </div>
@@ -226,18 +197,14 @@
                         {% for company in user_companies %}
                         <a href="#" class="list-group-item list-group-item-action border-0 px-0 py-2">
                             <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <i class="fas fa-building text-primary"></i>
-                                </div>
-                                <div class="flex-grow-1 ms-3">
+                                <i class="fas fa-building text-primary"></i>
+                                <div class="ms-3 flex-grow-1">
                                     <h6 class="mb-0">{{ company.trade_name }}</h6>
                                     <small class="text-muted">{{ company.country.name|default:"No country" }}</small>
                                 </div>
-                                <div class="flex-shrink-0">
-                                    <span class="badge bg-{% if company.account_status == 'ACTIVE' %}success{% else %}warning{% endif %}">
-                                        {{ company.account_status }}
-                                    </span>
-                                </div>
+                                <span class="badge bg-{% if company.account_status == 'ACTIVE' %}success{% else %}warning{% endif %}">
+                                    {{ company.account_status }}
+                                </span>
                             </div>
                         </a>
                         {% endfor %}
@@ -246,26 +213,99 @@
             </div>
             {% endif %}
 
-            <!-- Support Card -->
-            <div class="card mt-3">
+            <!-- Support -->
+            <div class="card">
                 <div class="card-body text-center">
                     <i class="fas fa-headset fa-2x text-primary mb-3"></i>
                     <h5 class="card-title">Need Help?</h5>
-                    <p class="card-text text-muted small">
-                        Our support team is here to help you.
-                    </p>
+                    <p class="text-muted small">Our support team is here to help you.</p>
                     <a href="#" class="btn btn-outline-primary btn-sm">
-                        <i class="fas fa-comment-alt me-2"></i>
-                        Contact Support
+                        <i class="fas fa-comment-alt me-2"></i> Contact Support
                     </a>
                 </div>
             </div>
+
         </div>
+
     </div>
 </div>
 {% endblock %}
 
+{% block extra_js %}
+<script src="{% static 'jsvectormap/js/jsvectormap.min.js' %}"></script>
+<script src="{% static 'jsvectormap/maps/world.js' %}"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // First fetch the countries, then initialize the map
+    fetch("{% url 'country:dashboard_country_map' %}")
+        .then(response => response.json())
+        .then(data => {
+            // Now initialize the map with the fetched countries
+            var map = new jsVectorMap({
+                map: "world",
+                selector: "#world_map",
+                zoomButtons: true,
+                selectedRegions: data.countries || [],  // Use fetched countries
+                regionStyle: {
+                    initial: {
+                        fill: '#e4e4e4',
+                        "fill-opacity": 0.9,
+                        stroke: 'none',
+                        "stroke-width": 0,
+                        "stroke-opacity": 0
+                    },
+                    selected: {
+                        fill: '#1F3B73',
+                    }
+                },
+                zoomOnScroll: false
+            });
+            
+            window.addEventListener("resize", () => {
+                map.updateSize();
+            });
+            setTimeout(function() {
+                map.updateSize();
+            }, 350);
+        })
+        .catch(error => {
+            console.error("Error loading country data:", error);
+            // Initialize map with empty selection if fetch fails
+            initMap([]);
+        });
+    
+    // Fallback function
+    function initMap(selectedCountries) {
+        var map = new jsVectorMap({
+            map: "world",
+            selector: "#world_map",
+            zoomButtons: true,
+            selectedRegions: selectedCountries,
+            regionStyle: {
+                initial: {
+                    fill: '#e4e4e4',
+                    "fill-opacity": 0.9,
+                    stroke: 'none',
+                    "stroke-width": 0,
+                    "stroke-opacity": 0
+                },
+                selected: {
+                    fill: '#007bff',
+                }
+            },
+            zoomOnScroll: false
+        });
+        
+        window.addEventListener("resize", () => {
+            map.updateSize();
+        });
+        setTimeout(function() {
+            map.updateSize();
+        }, 350);
+    }
+});
+</script>
 
 
-
-
+{% endblock %}

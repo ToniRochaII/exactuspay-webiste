@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse
 from django.contrib.admin.views.decorators import staff_member_required
 
 from Exactus.country.utils.csv_importer import import_from_csv
@@ -27,7 +28,7 @@ def is_admin(user):
 def country(request):
     """Show active countries only."""
     countries = Country.objects.filter(archive="N").order_by("name")
-    return render(request, "country/index.html", {"countries": countries})
+    return render(request, "country/index.html", {"countries": countries, "active_countries_count": countries.count(), })
 
 
 @login_required
@@ -127,3 +128,40 @@ def download_csv_template(request):
     ])
     
     return response
+
+
+def dashboard_country_map(request):
+    """Return ISO2 country codes for the dashboard world map."""
+    try:
+        countries = Country.objects.filter(archive="N").values("iso2_code")
+        
+        # Debug: Check what data you're getting
+        print("Countries queryset:", list(countries))
+        
+        # Create lists/dicts
+        country_codes = []
+        country_labels = {}
+        
+        for country in countries:
+            iso2 = country.get("iso2_code")
+            
+            # Skip if iso2_code is missing or None
+            if iso2:
+                # Clean and uppercase the ISO2 code
+                iso2_clean = str(iso2).strip().upper()
+                country_codes.append(iso2_clean)
+        
+        # Debug: Check what you're returning
+        print("Country codes to return:", country_codes)
+        
+        return JsonResponse({
+            "countries": country_codes,
+        })
+        
+    except Exception as e:
+        # Log the error for debugging
+        print(f"Error in dashboard_country_map: {str(e)}")
+        return JsonResponse({
+            "countries": [],
+            "error": str(e)
+        })

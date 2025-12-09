@@ -14,4 +14,6 @@ urlpatterns = [
     path("country/upload/result/", views.country_upload_result_view, name="country_upload_result"),
     path("country/upload/template/", views.download_csv_template, name="download_csv_template"),
 
+    path('dashboard_country_map/', views.dashboard_country_map, name='dashboard_country_map'),
+
 ]
