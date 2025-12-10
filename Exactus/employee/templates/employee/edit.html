@@ -35,11 +35,6 @@ Add Employee — {{ company.trade_name }} | ExactusPay
         <i class="bi bi-plus-circle"></i> Add Employee
       {% endif %}
     </h5>
-    <div>
-      <a href="{% url 'payregister:payregister_list' country_slug company.company_id %}" class="btn btn-outline-secondary btn-sm">
-        <i class="bi bi-arrow-left"></i> Pay Entry
-      </a>
-    </div>
   </div>
 
   <div class="card-body">
@@ -72,12 +67,12 @@ Add Employee — {{ company.trade_name }} | ExactusPay
       </li>
       <li class="nav-item" role="presentation">
         <button class="nav-link" id="tax-tab" data-bs-toggle="tab" data-bs-target="#tax" type="button" role="tab">
-          <i class="bi bi-percent"></i> Tax Details
+          <i class="bi bi-percent"></i> Taxation Details
         </button>
       </li>
       <li class="nav-item" role="presentation">
         <button class="nav-link" id="pay-tab" data-bs-toggle="tab" data-bs-target="#pay" type="button" role="tab">
-          <i class="bi bi-percent"></i> Pay Register
+          <i class="bi bi-percent"></i> Compensation Details
         </button>
       </li>
     </ul>
@@ -459,155 +454,96 @@ Add Employee — {{ company.trade_name }} | ExactusPay
         <!-- Tax Information Tab -->
         <div class="tab-pane fade" id="tax" role="tabpanel">
           <div class="row g-3">
+
             <div class="col-12">
               <h6 class="fw-bold text-primary mb-3">
                 <i class="bi bi-percent"></i> Tax Information
               </h6>
             </div>
-            
+
             <div class="col-md-4">
               <div class="form-floating">
                 {{ form.tax_info_01 }}
-                {{ form.tax_info_01.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter tax ID.
-                </div>
+                <label for="{{ form.tax_info_01.id_for_label }}">Tax ID</label>
               </div>
             </div>
-            
+
             <div class="col-md-4">
               <div class="form-floating">
                 {{ form.tax_info_02 }}
-                {{ form.tax_info_02.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter tax filing status.
-                </div>
+                <label for="{{ form.tax_info_02.id_for_label }}">Tax Filing Status</label>
               </div>
             </div>
-            
+
             <div class="col-md-4">
               <div class="form-floating">
                 {{ form.tax_info_03 }}
-                {{ form.tax_info_03.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter tax exemption amount.
-                </div>
+                <label for="{{ form.tax_info_03.id_for_label }}">Tax Exemption Amount</label>
               </div>
             </div>
-            
+
             <div class="col-md-4">
               <div class="form-floating">
                 {{ form.tax_info_04 }}
-                {{ form.tax_info_04.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter tax bracket.
-                </div>
+                <label for="{{ form.tax_info_04.id_for_label }}">Tax Bracket</label>
               </div>
             </div>
-            
+
             <div class="col-md-4">
               <div class="form-floating">
                 {{ form.tax_info_05 }}
-                {{ form.tax_info_05.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter tax residency.
-                </div>
+                <label for="{{ form.tax_info_05.id_for_label }}">Tax Residency</label>
               </div>
             </div>
-            
+
             <div class="col-md-4">
               <div class="form-floating">
                 {{ form.tax_info_06 }}
-                {{ form.tax_info_06.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter additional withholding.
-                </div>
+                <label for="{{ form.tax_info_06.id_for_label }}">Additional Withholding</label>
               </div>
             </div>
-            
+
             <div class="col-md-4">
               <div class="form-floating">
                 {{ form.tax_info_07 }}
-                {{ form.tax_info_07.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter tax notes.
-                </div>
+                <label for="{{ form.tax_info_07.id_for_label }}">Tax Notes</label>
               </div>
             </div>
+
           </div>
         </div>
 
-                <!-- Pay Register Tab -->
+        <!-- Compensation Details Tab -->
         <div class="tab-pane fade" id="pay" role="tabpanel">
           <div class="row g-3">
-            <div class="col-12">
-              <h6 class="fw-bold text-primary mb-3">
-                <i class="bi bi-percent"></i> Pay Register
+
+            <div class="col-12 d-flex justify-content-between align-items-center mb-2">
+              <h6 class="fw-bold text-primary mb-0">
+                <i class="bi bi-cash-stack"></i> Compensation Details
               </h6>
-            </div>
-            
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.tax_info_01 }}
-                {{ form.tax_info_01.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter tax ID.
-                </div>
+              <div>
+                <a href="{% url 'compensation:compensation_create' country_slug company.company_id employee.id %}"
+                  class="btn btn-sm btn-primary">
+                  <i class="bi bi-plus-circle"></i> Add Component
+                </a>
+                <a href="{% url 'compensation:compensation_list' country_slug company.company_id employee.id %}"
+                  class="btn btn-sm btn-outline-secondary">
+                  View All
+                </a>
               </div>
             </div>
-            
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.tax_info_02 }}
-                {{ form.tax_info_02.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter tax filing status.
-                </div>
-              </div>
+
+            <div class="col-12">
+              <p class="text-muted mb-0">
+                Use the buttons above to manage this employee's compensation components.
+                Active components and archives are shown on the dedicated Compensation page.
+              </p>
             </div>
-            
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.tax_info_03 }}
-                {{ form.tax_info_03.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter tax exemption amount.
-                </div>
-              </div>
-            </div>
-            
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.tax_info_04 }}
-                {{ form.tax_info_04.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter tax bracket.
-                </div>
-              </div>
-            </div>
-            
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.tax_info_05 }}
-                {{ form.tax_info_05.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter tax residency.
-                </div>
-              </div>
-            </div>
-            
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.tax_info_06 }}
-                {{ form.tax_info_06.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter additional withholding.
-                </div>
-              </div>
-            </div>
-            
+
           </div>
         </div>
+
+
       </div>
 
       <!-- Action Buttons -->

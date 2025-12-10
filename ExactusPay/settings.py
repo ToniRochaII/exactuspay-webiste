@@ -35,8 +35,8 @@ INSTALLED_APPS = [
     'Exactus.employee',
     'Exactus.utils',
     'Exactus.pdcodes',
-    'Exactus.payregister.apps.PayregisterConfig',
     'Exactus.payroll',
+    'Exactus.compensation.apps.CompensationConfig',
 ]
 
 
@@ -138,13 +138,10 @@ LOGOUT_REDIRECT_URL = "/login/"
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
-    "exactuspay.onrender.com",
     "payroll.exactuspay.com",
-    ".onrender.com",
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://exactuspay.onrender.com",
     "https://payroll.exactuspay.com",
 ]
 
@@ -195,21 +192,13 @@ else:
 # SESSION & SECURITY CONFIGURATION
 # ================================
 
-# Session timeout (5 minutes)
-SESSION_COOKIE_AGE = 300
+# Simple session settings
+SESSION_COOKIE_AGE = 300  # 5 minutes
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-SESSION_COOKIE_NAME = 'exactus_session'
-SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SAMESITE = 'Lax'
 
-# Use cached_db for cross-worker consistency
-SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
-
-# Security: In production, ensure these are set
-if not DEBUG:
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
+# Use default session engine (no cache_db for now)
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 # ================================
 # MIDDLEWARE (Updated Order)
@@ -224,8 +213,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     
     # Custom Session Middleware (MUST come after AuthenticationMiddleware)
-    "Exactus.middleware.session_timeout.SessionTimeoutMiddleware",
-    "Exactus.middleware.tab_close_detection.TabCloseMiddleware",
+    # "Exactus.middleware.session_timeout.SessionTimeoutMiddleware",
+    # "Exactus.middleware.tab_close_detection.TabCloseMiddleware",
     
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",

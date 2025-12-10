@@ -16,20 +16,9 @@
 
     <title>{% block title %}ExactusPay{% endblock %}</title>
 
-    <!-- Bootstrap Icons for modal -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-
-    <!-- Session warning CSS (optional) -->
-    <link rel="stylesheet" href="{% static 'css/session-warning.css' %}">
-
-    <!-- Session Manager Configuration -->
-    <script>
-        // Pass authentication status to JavaScript
-        document.body.setAttribute('data-user-authenticated', '{{ user.is_authenticated|yesno:"true,false" }}');
-    </script>
-
-    <!-- Session Manager JavaScript -->
-    <script src="{% static 'js/session_manager.js' %}" defer></script>
+    <!-- CORE STYLES -->
+    <link href="{% static 'dis/css/modern.css' %}" rel="stylesheet">
+    <script src="{% static 'js/session_manager.js' %}"></script>
 
     <style>
         body { opacity: 0; }
@@ -739,6 +728,5 @@
     </script>
 
     {% block extra_js %}{% endblock %}
-    <div id="toastContainer" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
 </body>
 </html>

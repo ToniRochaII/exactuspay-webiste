@@ -1,373 +1,278 @@
 /**
- * ExactusPay Session Manager v2.0
- * Handles 5-minute idle timeout with 60-second warning.
+ * Simple Session Manager - JavaScript Only
+ * No Django middleware required
  */
 
-class SessionManager {
+class SimpleSessionManager {
     constructor() {
         this.config = {
-            timeout: 300,           // 5 minutes total
-            warning: 60,            // Show warning 60 seconds before
-            heartbeat: 30000,       // Send heartbeat every 30s
-            checkInterval: 1000     // Check idle every second
+            timeout: 300,      // 5 minutes
+            warning: 60,       // 1 minute warning
+            heartbeat: 30000,  // 30 seconds
+            checkInterval: 1000 // 1 second
         };
         
-        this.state = {
-            lastActivity: Date.now(),
-            warningActive: false,
-            countdown: null,
-            modal: null,
-            intervals: {}
-        };
+        this.lastActivity = Date.now();
+        this.warningShown = false;
+        this.intervals = {};
         
         this.init();
     }
-
+    
     init() {
-        this.createWarningModal();
+        console.log('Simple Session Manager: Initialized');
+        
+        // Only run if user is authenticated
+        if (!this.isAuthenticated()) {
+            return;
+        }
+        
         this.setupActivityTracking();
-        this.setupEventListeners();
-        this.startHeartbeat();
         this.startIdleChecker();
-        
-        console.log('Session Manager: Ready');
+        this.startHeartbeat();
+        this.setupTabCloseDetection();
     }
-
-    // ======================
-    // MODAL & UI COMPONENTS
-    // ======================
-
-    createWarningModal() {
-        const modalHTML = `
-            <div id="sessionWarningModal" class="modal fade" tabindex="-1">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content border-warning">
-                        <div class="modal-header bg-warning bg-opacity-10">
-                            <h5 class="modal-title text-warning">
-                                <i class="bi bi-exclamation-triangle me-2"></i>
-                                Session About to Expire
-                            </h5>
-                        </div>
-                        <div class="modal-body">
-                            <p>
-                                Your session will expire in 
-                                <span id="countdownTimer" class="fw-bold text-danger">60</span> 
-                                seconds due to inactivity.
-                            </p>
-                            <div class="progress" style="height: 6px;">
-                                <div id="progressBar" class="progress-bar bg-warning" 
-                                     style="width: 100%"></div>
-                            </div>
-                            <p class="small text-muted mt-2">
-                                For security, you'll be logged out automatically.
-                            </p>
-                        </div>
-                        <div class="modal-footer">
-                            <button id="logoutBtn" class="btn btn-outline-secondary btn-sm">
-                                Log Out Now
-                            </button>
-                            <button id="stayBtn" class="btn btn-primary btn-sm">
-                                Stay Signed In
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        // Add modal to DOM
-        const container = document.createElement('div');
-        container.innerHTML = modalHTML;
-        document.body.appendChild(container);
-
-        // Initialize Bootstrap modal
-        const modalElement = document.getElementById('sessionWarningModal');
-        this.state.modal = new bootstrap.Modal(modalElement);
-
-        // Add button listeners
-        document.getElementById('stayBtn').addEventListener('click', () => this.extendSession());
-        document.getElementById('logoutBtn').addEventListener('click', () => this.logoutNow());
-
-        // Reset state when modal hides
-        modalElement.addEventListener('hidden.bs.modal', () => {
-            this.state.warningActive = false;
-            this.stopCountdown();
-        });
+    
+    isAuthenticated() {
+        // Check Django's authentication cookie or data attribute
+        const body = document.body;
+        return body && body.getAttribute('data-user-authenticated') === 'true';
     }
-
-    showWarning() {
-        if (this.state.warningActive) return;
-        
-        this.state.warningActive = true;
-        this.state.timeRemaining = this.config.warning;
-        
-        // Show modal
-        if (this.state.modal) {
-            this.state.modal.show();
-        }
-        
-        // Start countdown
-        this.startCountdown();
-    }
-
-    hideWarning() {
-        this.state.warningActive = false;
-        this.stopCountdown();
-        
-        if (this.state.modal) {
-            this.state.modal.hide();
-        }
-    }
-
-    startCountdown() {
-        if (this.state.countdown) return;
-        
-        this.state.countdown = setInterval(() => {
-            this.state.timeRemaining--;
-            
-            // Update UI
-            const timer = document.getElementById('countdownTimer');
-            const progress = document.getElementById('progressBar');
-            
-            if (timer) timer.textContent = this.state.timeRemaining;
-            
-            if (progress) {
-                const percent = (this.state.timeRemaining / this.config.warning) * 100;
-                progress.style.width = `${percent}%`;
-                
-                // Change color when time is critical
-                if (this.state.timeRemaining <= 10) {
-                    progress.classList.remove('bg-warning');
-                    progress.classList.add('bg-danger');
-                }
-            }
-            
-            // Time's up - logout
-            if (this.state.timeRemaining <= 0) {
-                this.forceLogout();
-            }
-        }, 1000);
-    }
-
-    stopCountdown() {
-        if (this.state.countdown) {
-            clearInterval(this.state.countdown);
-            this.state.countdown = null;
-        }
-    }
-
-    // ======================
-    // ACTIVITY TRACKING
-    // ======================
-
+    
     setupActivityTracking() {
-        const events = [
-            'mousemove', 'click', 'keydown', 'scroll',
-            'touchstart', 'touchmove', 'wheel'
-        ];
-        
-        const resetActivity = () => {
-            this.state.lastActivity = Date.now();
-            if (this.state.warningActive) {
+        const events = ['mousemove', 'click', 'keydown', 'scroll', 'touchstart'];
+        const reset = () => {
+            this.lastActivity = Date.now();
+            if (this.warningShown) {
                 this.hideWarning();
             }
         };
         
         events.forEach(event => {
-            document.addEventListener(event, resetActivity, { passive: true });
+            document.addEventListener(event, reset);
         });
-        
-        // Also track form interactions
-        document.addEventListener('input', resetActivity);
-        document.addEventListener('change', resetActivity);
     }
-
+    
     startIdleChecker() {
-        this.state.intervals.idle = setInterval(() => {
-            const idleTime = (Date.now() - this.state.lastActivity) / 1000;
+        this.intervals.idle = setInterval(() => {
+            const idleSeconds = (Date.now() - this.lastActivity) / 1000;
             
             // Show warning at 4 minutes
-            if (idleTime >= 240 && idleTime < 300 && !this.state.warningActive) {
+            if (idleSeconds >= 240 && idleSeconds < 300 && !this.warningShown) {
                 this.showWarning();
             }
             
             // Logout at 5 minutes
-            if (idleTime >= 300) {
+            if (idleSeconds >= 300) {
                 this.forceLogout();
             }
         }, this.config.checkInterval);
     }
-
-    // ======================
-    // HEARTBEAT & NETWORK
-    // ======================
-
-    startHeartbeat() {
-        const sendHeartbeat = () => {
-            fetch('/ajax/heartbeat/', {
-                method: 'GET',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Cache-Control': 'no-cache'
-                },
-                credentials: 'include'
-            }).catch(error => {
-                // Network errors are okay - might be offline
-                console.debug('Heartbeat failed (possibly offline):', error);
-            });
-        };
+    
+    showWarning() {
+        if (this.warningShown) return;
+        this.warningShown = true;
         
-        // Send immediately, then every 30s
-        sendHeartbeat();
-        this.state.intervals.heartbeat = setInterval(sendHeartbeat, this.config.heartbeat);
-    }
-
-    // ======================
-    // TAB & BROWSER EVENTS
-    // ======================
-
-    setupEventListeners() {
-        // Tab visibility changes
-        document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'visible') {
-                // Reset activity when tab becomes visible
-                this.state.lastActivity = Date.now();
-            }
-        });
-        
-        // Tab close detection
-        window.addEventListener('beforeunload', () => {
-            if (navigator.sendBeacon) {
-                const data = new FormData();
-                data.append('tab_closed', 'true');
-                navigator.sendBeacon('/ajax/tab-close/', data);
-            }
-        });
-    }
-
-    // ======================
-    // ACTIONS
-    // ======================
-
-    async extendSession() {
-        try {
-            // Send heartbeat to reset server timer
-            await fetch('/ajax/heartbeat/', {
-                method: 'GET',
-                headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                credentials: 'include'
-            });
-            
-            // Reset local timer
-            this.state.lastActivity = Date.now();
-            this.hideWarning();
-            
-            // Show confirmation
-            this.showToast('Session extended', 'success');
-            
-        } catch (error) {
-            console.error('Failed to extend session:', error);
-            this.showToast('Unable to extend session', 'danger');
-        }
-    }
-
-    logoutNow() {
-        window.location.href = '/logout/';
-    }
-
-    async forceLogout() {
-        this.cleanup();
-        
-        try {
-            await fetch('/logout/', {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': this.getCsrfToken(),
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include'
-            });
-        } catch (error) {
-            // Continue to redirect even if fetch fails
-        }
-        
-        window.location.href = '/login/?session_expired=true';
-    }
-
-    getCsrfToken() {
-        const cookie = document.cookie
-            .split('; ')
-            .find(row => row.startsWith('csrftoken='));
-        return cookie ? cookie.split('=')[1] : '';
-    }
-
-    showToast(message, type = 'info') {
-        // Create toast container if needed
-        let container = document.getElementById('toastContainer');
-        if (!container) {
-            container = document.createElement('div');
-            container.id = 'toastContainer';
-            container.className = 'toast-container position-fixed bottom-0 end-0 p-3';
-            container.style.zIndex = '9999';
-            document.body.appendChild(container);
-        }
-        
-        // Create toast
-        const toastId = 'toast-' + Date.now();
-        const toastHTML = `
-            <div id="${toastId}" class="toast align-items-center text-white bg-${type} border-0" role="alert">
-                <div class="d-flex">
-                    <div class="toast-body">
-                        ${message}
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        // Create simple warning (no Bootstrap modal)
+        const warning = document.createElement('div');
+        warning.id = 'sessionWarning';
+        warning.innerHTML = `
+            <div style="
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #fff3cd;
+                border: 1px solid #ffeaa7;
+                border-radius: 5px;
+                padding: 15px;
+                z-index: 9999;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+                min-width: 300px;
+            ">
+                <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                    <span style="
+                        background: #ffc107;
+                        color: #000;
+                        width: 24px;
+                        height: 24px;
+                        border-radius: 50%;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        margin-right: 10px;
+                        font-weight: bold;
+                    ">!</span>
+                    <strong style="flex-grow: 1;">Session About to Expire</strong>
+                    <button id="closeWarning" style="
+                        background: none;
+                        border: none;
+                        font-size: 20px;
+                        cursor: pointer;
+                    ">&times;</button>
+                </div>
+                <p style="margin: 0 0 10px 0;">
+                    Your session will expire in <span id="countdown" style="font-weight: bold;">60</span> seconds.
+                </p>
+                <div style="display: flex; gap: 10px;">
+                    <button id="extendSession" style="
+                        background: #0d6efd;
+                        color: white;
+                        border: none;
+                        padding: 8px 15px;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        flex-grow: 1;
+                    ">Stay Signed In</button>
+                    <button id="logoutNow" style="
+                        background: #6c757d;
+                        color: white;
+                        border: none;
+                        padding: 8px 15px;
+                        border-radius: 4px;
+                        cursor: pointer;
+                    ">Log Out</button>
                 </div>
             </div>
         `;
         
-        container.insertAdjacentHTML('beforeend', toastHTML);
+        document.body.appendChild(warning);
         
-        // Show and auto-remove
-        const toastEl = document.getElementById(toastId);
-        const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
-        toast.show();
+        // Add event listeners
+        document.getElementById('extendSession').addEventListener('click', () => this.extendSession());
+        document.getElementById('logoutNow').addEventListener('click', () => this.logoutNow());
+        document.getElementById('closeWarning').addEventListener('click', () => this.hideWarning());
         
-        toastEl.addEventListener('hidden.bs.toast', () => {
-            toastEl.remove();
-        });
+        // Start countdown
+        this.startCountdown();
     }
-
-    // ======================
-    // CLEANUP
-    // ======================
-
-    cleanup() {
-        // Clear all intervals
-        Object.values(this.state.intervals).forEach(clearInterval);
-        this.state.intervals = {};
-        
-        // Stop countdown
-        this.stopCountdown();
-        
-        // Hide modal
-        if (this.state.modal && this.state.warningActive) {
-            this.state.modal.hide();
+    
+    startCountdown() {
+        let timeLeft = 60;
+        this.intervals.countdown = setInterval(() => {
+            timeLeft--;
+            const countdownEl = document.getElementById('countdown');
+            if (countdownEl) {
+                countdownEl.textContent = timeLeft;
+                
+                // Change color when time is low
+                if (timeLeft <= 10) {
+                    countdownEl.style.color = '#dc3545';
+                }
+            }
+            
+            if (timeLeft <= 0) {
+                this.forceLogout();
+            }
+        }, 1000);
+    }
+    
+    hideWarning() {
+        this.warningShown = false;
+        const warning = document.getElementById('sessionWarning');
+        if (warning) {
+            warning.remove();
+        }
+        if (this.intervals.countdown) {
+            clearInterval(this.intervals.countdown);
         }
     }
-}
-
-// Initialize only for authenticated users
-document.addEventListener('DOMContentLoaded', () => {
-    const isAuthenticated = document.body.getAttribute('data-user-authenticated') === 'true';
     
-    if (isAuthenticated) {
-        window.sessionManager = new SessionManager();
+    extendSession() {
+        // Send heartbeat
+        fetch(window.location.href, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        }).catch(() => {
+            // Ignore errors
+        });
         
-        // Cleanup on page unload
+        // Reset activity
+        this.lastActivity = Date.now();
+        this.hideWarning();
+        
+        // Show brief confirmation
+        this.showNotification('Session extended');
+    }
+    
+    logoutNow() {
+        window.location.href = '/logout/';
+    }
+    
+    forceLogout() {
+        // Try to logout via POST
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '/logout/';
+        
+        const csrf = document.querySelector('[name=csrfmiddlewaretoken]');
+        if (csrf) {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'csrfmiddlewaretoken';
+            input.value = csrf.value;
+            form.appendChild(input);
+        }
+        
+        document.body.appendChild(form);
+        form.submit();
+    }
+    
+    startHeartbeat() {
+        // Simple heartbeat - just refresh session cookie
+        this.intervals.heartbeat = setInterval(() => {
+            // Make a lightweight request to keep session alive
+            fetch('/?heartbeat=1', {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                cache: 'no-cache'
+            }).catch(() => {
+                // Ignore errors
+            });
+        }, this.config.heartbeat);
+    }
+    
+
+
+
+
+    
+    setupTabCloseDetection() {
         window.addEventListener('beforeunload', () => {
-            if (window.sessionManager) {
-                window.sessionManager.cleanup();
+            if (navigator.sendBeacon) {
+                navigator.sendBeacon('/?tab_closed=1');
             }
         });
     }
+    
+    showNotification(message) {
+        const notification = document.createElement('div');
+        notification.textContent = message;
+        notification.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #198754;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 4px;
+            z-index: 9998;
+        `;
+        
+        document.body.appendChild(notification);
+        setTimeout(() => notification.remove(), 3000);
+    }
+    
+    cleanup() {
+        Object.values(this.intervals).forEach(clearInterval);
+        this.hideWarning();
+    }
+}
+
+// Initialize when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    window.sessionManager = new SimpleSessionManager();
 });

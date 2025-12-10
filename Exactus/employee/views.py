@@ -6,6 +6,7 @@ from Exactus.employee.models import Employee
 from Exactus.country.models import Country
 from Exactus.employee.forms import EmployeeForm
 from Exactus.utils.decorators import role_required
+from django.db.models import Q
 
 # ────────────────────────────────────────────────
 # EMPLOYEE CRUD

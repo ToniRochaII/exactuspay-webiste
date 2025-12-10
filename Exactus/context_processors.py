@@ -30,7 +30,6 @@ def sidebar_context(request):
     from Exactus.elements.models import Element
     from Exactus.pdcodes.models import PDcode
     from Exactus.calculationbase.models import CalculationBase
-    from Exactus.payregister.models import PayRegister
     from Exactus.payroll.models import Payroll
 
     # -----------------------------------------
@@ -62,7 +61,7 @@ def sidebar_context(request):
         "calculationbase": SimpleLazyObject(lambda: CalculationBase.objects.filter(pk=kwargs.get("pk")).first())
                             if kwargs.get("pk") else None,
 
-        "payregister_id": kwargs.get("payregister_id"),
+
 
         "payroll_id": kwargs.get("payroll_id"),
     }

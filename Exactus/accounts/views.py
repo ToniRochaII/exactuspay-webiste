@@ -168,7 +168,6 @@ def dashboard_admin(request):
     from Exactus.country.models import Country
     from Exactus.company.models import Company
     from Exactus.employee.models import Employee
-    from Exactus.payregister.models import PayRegister
     from Exactus.payroll.models import Payroll
     
     # ──────────────── KPIs ────────────────
@@ -211,55 +210,12 @@ def dashboard_admin(request):
     except Exception:
         monthly_payrolls = 0
     
-    # Payslip metrics
-    payslip_stats = {
-        'payslips_total': PayRegister.objects.count(),
-        'payslips_this_month': PayRegister.objects.filter(
-            created_at__gte=start_of_month
-        ).count(),
-        'payslips_last_30d': PayRegister.objects.filter(
-            created_at__gte=thirty_days_ago
-        ).count(),
-        'payslips_ytd': PayRegister.objects.filter(
-            created_at__gte=start_of_year
-        ).count(),
-    }
+   
     
-    # Unique employees processed
-    unique_employees_processed_total = cache.get('unique_employees_processed')
-    if unique_employees_processed_total is None:
-        unique_employees_processed_total = PayRegister.objects.values('employee').distinct().count()
-        cache.set('unique_employees_processed', unique_employees_processed_total, 1800)
+   
     
-    # ──────────────── Charts Data ────────────────
-    
-    # Monthly payslips for last 12 months
-    payslips_monthly = (
-        PayRegister.objects.filter(created_at__gte=one_year_ago)
-        .annotate(month=TruncMonth('created_at'))
-        .values('month')
-        .annotate(count=Count('payregister_id'))
-        .order_by('month')
-    )
-    
-    month_labels = []
-    month_values = []
-    for entry in payslips_monthly:
-        month_labels.append(entry['month'].strftime('%b %Y'))
-        month_values.append(entry['count'])
-    
-    # Payroll by frequency with fallback
-    payroll_counts = (
-        Payroll.objects.values('payroll_frequency')
-        .annotate(count=Count('payroll_id'))
-        .order_by('-count')
-    )
-    frequency_labels = []
-    frequency_values = []
-    for item in payroll_counts:
-        if item['payroll_frequency']:
-            frequency_labels.append(item['payroll_frequency'].replace('-', ' ').replace('_', ' ').title())
-            frequency_values.append(item['count'])
+   
+   
     
     # ──────────────── Map Data ────────────────
     
@@ -272,78 +228,20 @@ def dashboard_admin(request):
     )
     
     # Get payslip counts per country with country filter
-    payslips_by_country = (
-        PayRegister.objects.filter(
-            created_at__gte=start_of_year,
-            employee__company__country__isnull=False,
-            employee__company__country__iso2_code__isnull=False
-        )
-        .values('employee__company__country__iso2_code')
-        .annotate(
-            count=Count('payregister_id'),
-            country_name=F('employee__company__country__name')
-        )
-        .order_by('-count')
-    )
     
-    map_country_data = []
-    for item in payslips_by_country:
-        iso_code = item.get('employee__company__country__iso2_code')
-        if iso_code:
-            map_country_data.append({
-                'code': iso_code.upper(),
-                'name': item.get('country_name', 'Unknown'),
-                'value': item['count']
-            })
+    
+    
+   
     
     # ──────────────── Top Companies (Optimized) ────────────────
     
     # Get company IDs with most payslips first
-    top_company_ids = (
-        PayRegister.objects.filter(created_at__gte=start_of_year)
-        .values('employee__company__company_id')
-        .annotate(payslips_ytd=Count('payregister_id'))
-        .order_by('-payslips_ytd')
-        .values_list('employee__company__company_id', flat=True)[:10]
-    )
+   
     
-    # Get company details
-    top_companies_qs = Company.objects.filter(company_id__in=top_company_ids)
+   
+ 
     
-    top_companies = []
-    for company in top_companies_qs:
-        payslips_ytd = PayRegister.objects.filter(
-            employee__company=company,
-            created_at__gte=start_of_year
-        ).count()
-        
-        total_employees = company.employees.count()
-        
-        top_companies.append({
-            'company_id': company.company_id,
-            'trade_name': company.trade_name or 'N/A',
-            'country_name': company.country.name if company.country else 'N/A',
-            'account_status': company.account_status,
-            'payslips_ytd': payslips_ytd,
-            'total_employees': total_employees
-        })
-    
-    # Sort by payslips_ytd to maintain order
-    top_companies.sort(key=lambda x: x['payslips_ytd'], reverse=True)
-    
-    # ──────────────── Recent Activity ────────────────
-    
-    recent_payslips = (
-        PayRegister.objects
-        .select_related('employee', 'employee__company', 'employee__company__country')
-        .only(
-            'created_at', 'amount', 'category',
-            'employee__first_name', 'employee__last_name', 'employee__employee_id',
-            'employee__company__trade_name',
-            'employee__company__country__name'
-        )
-        .order_by('-created_at')[:10]
-    )
+   
     
     # Prepare context
     context = {
@@ -411,7 +309,6 @@ def dashboard(request):
     from Exactus.country.models import Country
     from Exactus.company.models import Company
     from Exactus.employee.models import Employee
-    from Exactus.payregister.models import PayRegister
     from Exactus.payroll.models import Payroll
     
     # Check if user is global admin (platform admin)
@@ -448,12 +345,7 @@ def dashboard(request):
         ).count()
         
         # Get recent payslips
-        recent_payslips = (
-            PayRegister.objects
-            .filter(employee__company_id__in=company_ids)
-            .select_related('employee', 'employee__company')
-            .order_by('-created_at')[:8]
-        )
+       
         
         # Count current month payrolls
         current_month_payrolls_count = Payroll.objects.filter(
@@ -486,21 +378,6 @@ def dashboard(request):
         notifications = []
         pending_approvals_count = 0
     
-    # ──────────────── Platform Stats (Cached) ────────────────
-    
-    platform_stats_key = f'platform_stats_{now.strftime("%Y%m%d")}'
-    platform_stats = cache.get(platform_stats_key)
-    
-    if not platform_stats:
-        platform_stats = {
-            'active_countries_count': Country.objects.filter(status='ACTIVE').count(),
-            'active_companies_count': Company.objects.filter(account_status='ACTIVE').count(),
-            'total_employees_count': Employee.objects.count(),
-            'payslips_30d_count': PayRegister.objects.filter(
-                created_at__gte=thirty_days_ago
-            ).count(),
-        }
-        cache.set(platform_stats_key, platform_stats, 3600)
     
     # ──────────────── Prepare Context ────────────────
     
@@ -511,15 +388,9 @@ def dashboard(request):
         'current_month_payrolls_count': current_month_payrolls_count,
         'pending_approvals_count': pending_approvals_count,
         
-        # Platform stats
-        'active_countries_count': platform_stats.get('active_countries_count', 0),
-        'active_companies_count': platform_stats.get('active_companies_count', 0),
-        'total_employees_count': platform_stats.get('total_employees_count', 0),
-        'payslips_30d_count': platform_stats.get('payslips_30d_count', 0),
+  
         
-        # Activity feeds
-        'recent_payslips': recent_payslips,
-        'notifications': notifications,
+      
         
         # User info
         'user_role': request.user.get_role_display(),
@@ -766,7 +637,7 @@ def get_safety_warnings(matrix):
     warnings = []
     
     # Finance must be read-only for payroll
-    payroll_domains = ['PAYRUN', 'PAYREGISTER', 'CALCULATION', 'COMPANY', 'EMPLOYEE']
+    payroll_domains = ['PAYRUN',  'CALCULATION', 'COMPANY', 'EMPLOYEE']
     for domain in payroll_domains:
         if matrix.get('FINANCE', {}).get(domain, {}).get('CREATE'):
             warnings.append(f"FINANCE has CREATE access to {domain} - violates read-only policy")
@@ -809,7 +680,7 @@ def compute_effective_permissions(matrix, hierarchy, protected_rules):
 
 def apply_business_logic_protections(permissions, role):
     """Apply ExactusPay-specific business logic rules."""
-    payroll_domains = ['PAYRUN', 'PAYREGISTER', 'CALCULATION', 'COMPANY', 'EMPLOYEE', 'PDCODES']
+    payroll_domains = ['PAYRUN',  'CALCULATION', 'COMPANY', 'EMPLOYEE', 'PDCODES']
     
     if role == 'FINANCE':
         # FINANCE is read-only for payroll operations
