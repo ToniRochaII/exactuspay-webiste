@@ -23,7 +23,7 @@
                         <a href="{% url 'dashboard' %}">Dashboard</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{% url 'payroll:payroll_list' country_slug company.id %}">Payrolls</a>
+                        <a href="{% url 'payroll:payroll_list' country_slug company_id %}">Payrolls</a>
                     </li>
                     <li class="breadcrumb-item active">
                         {% if form.instance.pk %}Edit{% else %}Create{% endif %}
@@ -32,7 +32,7 @@
             </nav>
         </div>
         <div class="col-auto">
-            <a href="{% url 'payroll:payroll_list' country_slug company.id %}" 
+            <a href="{% url 'payroll:payroll_list' country_slug company_id %}" 
                class="btn btn-outline-secondary">
                 <i class="fas fa-arrow-left me-1"></i> Back to List
             </a>
@@ -82,13 +82,13 @@
                 </div>
                 
                 <!-- Hidden fields for company and country -->
-                <input type="hidden" name="company" value="{{ company.id }}">
+                <input type="hidden" name="company" value="{{ company_id }}">
                 <input type="hidden" name="country" value="{{ country.id }}">
                 
                 <div class="row mt-4">
                     <div class="col-12">
                         <div class="d-flex justify-content-between">
-                            <a href="{% url 'payroll:payroll_list' country_slug company.id %}" 
+                            <a href="{% url 'payroll:payroll_list' country_slug company_id %}" 
                                class="btn btn-secondary">
                                 <i class="fas fa-times me-1"></i> Cancel
                             </a>
