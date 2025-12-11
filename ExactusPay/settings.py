@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     
     # Third-party apps
     'crispy_forms',
@@ -36,7 +37,7 @@ INSTALLED_APPS = [
     'Exactus.utils',
     'Exactus.pdcodes',
     'Exactus.payroll',
-    'Exactus.compensation.apps.CompensationConfig',
+    'Exactus.compensation',
 ]
 
 
@@ -55,6 +56,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'Exactus.context_processors.sidebar_context',
                 'Exactus.context_processors.sidebar_context',
             ],
         },

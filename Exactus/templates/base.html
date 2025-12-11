@@ -188,7 +188,7 @@
                                 </a>
                             </li>
                             {% endif %}
-                            {% if company %}
+                            {% if company and company.company_id %}
                             <li class="sidebar-divider"></li>
                             <li class="sidebar-item">
                                 <a class="sidebar-link"
@@ -202,7 +202,7 @@
                     {% endif %}
 
                     {# Employees (needs company) #}
-                    {% if country_slug and company %}
+                    {% if country_slug and company and company.company_id %}
                     <li class="sidebar-item">
                         <a data-bs-target="#nav-payroll-employees"
                            data-bs-toggle="collapse"
@@ -236,7 +236,7 @@
                                 </a>
                             </li>
                             {% endif %}
-                            {% if employee %}
+                            {% if employee and employee.id %}
                             <li class="sidebar-divider"></li>
                             <li class="sidebar-item">
                                 <a class="sidebar-link"
@@ -250,7 +250,7 @@
                     {% endif %}
 
                     {# PD Codes (needs company) #}
-                    {% if country_slug and company %}
+                    {% if country_slug and company and company.company_id %}
                     <li class="sidebar-item">
                         <a data-bs-target="#nav-payroll-pdcodes"
                            data-bs-toggle="collapse"
@@ -297,77 +297,146 @@
                     </li>
                     {% endif %}
 
-                    {# Payroll (needs company) #}
-                    {% if country_slug and company %}
+                    {# Payroll (needs country and company) - FULLY FIXED SECTION #}
+                    {% if country_slug %}
                     <li class="sidebar-item">
                         <a data-bs-target="#nav-payroll-payroll"
                            data-bs-toggle="collapse"
                            class="sidebar-link collapsed"
                            href="#">
                             <i class="align-middle me-2 fas fa-money-check-alt"></i>Payroll
-                            <span class="sidebar-badge badge bg-success">
-                                {{ company.trade_name|default:"" }}
-                            </span>
                         </a>
                         <ul id="nav-payroll-payroll"
                             class="sidebar-dropdown list-unstyled collapse"
                             data-bs-parent="#sidebar">
-                            <li class="sidebar-item">
-                                <a class="sidebar-link"
-                                   href="{% url 'payroll:payroll' country_slug company.company_id %}">
-                                    <i class="fas fa-list me-2"></i>Payroll Records
-                                </a>
-                            </li>
-                            {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,EXEC,ADMIN" %}
-                            <li class="sidebar-item">
-                                <a class="sidebar-link"
-                                   href="{% url 'payroll:payroll_create' country_slug company.company_id %}">
-                                    <i class="fas fa-plus me-2"></i>Create Payroll
-                                </a>
-                            </li>
-                            {% endif %}
-                            {% if payroll_id %}
-                            <li class="sidebar-divider"></li>
-                            <li class="sidebar-item">
-                                <a class="sidebar-link"
-                                   href="{% url 'payroll:payroll_edit' country_slug company.company_id payroll_id %}">
-                                    <i class="fas fa-edit me-2"></i>Edit Payroll
-                                </a>
-                            </li>
+                            {% if company and company.company_id %}
+
+                                {# Payroll records for this company #}
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link"
+                                       href="{% url 'payroll:payroll_list' country_slug company.company_id %}">
+                                        <i class="fas fa-list me-2"></i>Payroll Records
+                                    </a>
+                                </li>
+
+                                {# Create new payroll #}
+                                {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,EXEC,ADMIN" %}
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link"
+                                       href="{% url 'payroll:payroll_create' country_slug company.company_id %}">
+                                        <i class="fas fa-plus me-2"></i>Create Payroll
+                                    </a>
+                                </li>
+                                {% endif %}
+
+                                {# Period-related actions – only when a payroll context exists #}
+                                {% if payroll or payroll_id %}
+                                    <li class="sidebar-divider"></li>
+
+                                    {# Case 1: full payroll object in context #}
+                                    {% if payroll %}
+                                        {% with current_payroll_id=payroll.pk %}
+                                            <li class="sidebar-item">
+                                                <a class="sidebar-link"
+                                                   href="{% url 'payroll:period_list' country_slug company.company_id payroll.id %}">
+                                                    <i class="fas fa-calendar-alt me-2"></i>All Periods
+                                                </a>
+                                            </li>
+
+                                            {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,EXEC,ADMIN" %}
+                                            <li class="sidebar-item">
+                                                <a class="sidebar-link"
+                                                   href="{% url 'payroll:period_create' country_slug company.company_id current_payroll_id %}">
+                                                    <i class="fas fa-plus-circle me-2"></i>Add Period
+                                                </a>
+                                            </li>
+                                            {% endif %}
+                                        {% endwith %}
+                                    {% elif payroll_id %}
+                                        {# Case 2: only payroll_id provided in context #}
+                                        {% with current_payroll_id=payroll_id %}
+                                            <li class="sidebar-item">
+                                                <a class="sidebar-link"
+                                                   href="{% url 'payroll:period_list' country_slug company.company_id current_payroll_id %}">
+                                                    <i class="fas fa-calendar-alt me-2"></i>All Periods
+                                                </a>
+                                            </li>
+
+                                            {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,EXEC,ADMIN" %}
+                                            <li class="sidebar-item">
+                                                <a class="sidebar-link"
+                                                   href="{% url 'payroll:period_create' country_slug company.company_id current_payroll_id %}">
+                                                    <i class="fas fa-plus-circle me-2"></i>Add Period
+                                                </a>
+                                            </li>
+                                            {% endif %}
+                                        {% endwith %}
+                                    {% endif %}
+                                {% endif %}
+
+                                {# View / edit specific payroll if payroll_id is set #}
+                                {% if payroll_id %}
+                                    <li class="sidebar-divider"></li>
+                                    <li class="sidebar-item">
+                                        <a class="sidebar-link"
+                                           href="{% url 'payroll:payroll_detail' country_slug company.company_id payroll_id %}">
+                                            <i class="fas fa-eye me-2"></i>View Payroll
+                                        </a>
+                                    </li>
+                                    <li class="sidebar-item">
+                                        <a class="sidebar-link"
+                                           href="{% url 'payroll:payroll_edit' country_slug company.company_id payroll_id %}">
+                                            <i class="fas fa-edit me-2"></i>Edit Payroll
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                            {% else %}
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link disabled" href="#">
+                                        <i class="fas fa-exclamation-circle me-2"></i>Select a company first
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a class="sidebar-link"
+                                       href="{% url 'companies:company' country_slug %}">
+                                        <i class="fas fa-building me-2"></i>Go to Companies
+                                    </a>
+                                </li>
                             {% endif %}
                         </ul>
                     </li>
                     {% endif %}
 
                     {# Pay Register (needs employee + company) #}
-                    {% if employee and employee.id and country_slug and company and company.id %}
+                    {% if employee and employee.id and country_slug and company and company.company_id %}
                     <li class="sidebar-item">
-                        <a data-bs-target="#nav-payroll-payregister"
+                        <a data-bs-target="#nav-payroll-compensation"
                            data-bs-toggle="collapse"
                            class="sidebar-link collapsed"
                            href="#">
                             <i class="align-middle me-2 fas fa-file-invoice-dollar"></i>Pay Register
                         </a>
-                        <ul id="nav-payroll-payregister"
+                        <ul id="nav-payroll-compensation"
                             class="sidebar-dropdown list-unstyled collapse"
                             data-bs-parent="#sidebar">
                             <li class="sidebar-item">
                                 <a class="sidebar-link"
-                                   href="{% url 'payregister:payregister_list' country_slug company.id employee.id %}">
-                                    Earnings / Pay Register Entries
+                                   href="{% url 'compensation:compensation_list' country_slug company.company_id employee.id %}">
+                                    <i class="fas fa-list me-2"></i>Earnings / Pay Register Entries
                                 </a>
                             </li>
                             {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,EXEC,ADMIN" %}
                             <li class="sidebar-item">
                                 <a class="sidebar-link"
-                                   href="{% url 'payregister:payregister_create' country_slug company.id employee.id %}">
-                                    Add Pay Register Entry
+                                   href="{% url 'compensation:compensation_create' country_slug company.company_id employee.id %}">
+                                    <i class="fas fa-plus me-2"></i>Add Pay Register Entry
                                 </a>
                             </li>
                             <li class="sidebar-item">
                                 <a class="sidebar-link"
-                                   href="{% url 'payregister:payregister_upload' country_slug company.id %}">
-                                    Bulk Upload Pay Register
+                                   href="">
+                                    <i class="fas fa-upload me-2"></i>Bulk Upload Pay Register
                                 </a>
                             </li>
                             {% endif %}
@@ -401,28 +470,24 @@
                             class="sidebar-dropdown list-unstyled collapse"
                             data-bs-parent="#sidebar">
                             <li class="sidebar-item">
-                                <a class="sidebar-link"
-                                   href="{% url 'country:country' %}">
+                                <a class="sidebar-link" href="{% url 'country:country' %}">
                                     <i class="fas fa-list me-2"></i>All Countries
                                 </a>
                             </li>
 
                             {% if user|can:"COMPANY:CREATE" %}
                             <li class="sidebar-item">
-                                <a class="sidebar-link"
-                                   href="{% url 'country:country_create' %}">
+                                <a class="sidebar-link" href="{% url 'country:country_create' %}">
                                     <i class="fas fa-plus me-2"></i>Add Country
                                 </a>
                             </li>
                             <li class="sidebar-item">
-                                <a class="sidebar-link"
-                                   href="{% url 'country:country_delete' %}">
+                                <a class="sidebar-link" href="{% url 'country:country_delete' %}">
                                     <i class="fas fa-solid fa-trash-arrow-up"></i>Restore Country
                                 </a>
                             </li>
                             <li class="sidebar-item">
-                                <a class="sidebar-link"
-                                   href="{% url 'country:country_upload' %}">
+                                <a class="sidebar-link" href="{% url 'country:country_upload' %}">
                                     <i class="fas fa-upload me-2"></i>Upload Countries
                                 </a>
                             </li>
@@ -533,14 +598,14 @@
                             <li class="sidebar-item">
                                 <a class="sidebar-link"
                                    href="{% url 'calculationbase:list' country_slug regulation_id %}">
-                                    Calculation Bases
+                                    <i class="fas fa-list me-2"></i>Calculation Bases
                                 </a>
                             </li>
                             {% if user|can:"RULE:CREATE" %}
                             <li class="sidebar-item">
                                 <a class="sidebar-link"
                                    href="{% url 'calculationbase:create' country_slug regulation_id %}">
-                                    Add Calculation Base
+                                    <i class="fas fa-plus me-2"></i>Add Calculation Base
                                 </a>
                             </li>
                             {% endif %}
@@ -621,6 +686,7 @@
                                 {% block page_subtitle %}
                                 {% if country %}
                                     <small class="text-muted">
+                                        {{ country.name }}
                                     </small>
                                 {% endif %}
                                 {% endblock %}
@@ -724,6 +790,27 @@
                     }
                 });
             }, 5000);
+            
+            // Highlight current page in sidebar
+            var currentPath = window.location.pathname;
+            var sidebarLinks = document.querySelectorAll('.sidebar-link');
+            
+            sidebarLinks.forEach(function(link) {
+                var linkPath = link.getAttribute('href');
+                if (linkPath && currentPath.includes(linkPath.split('?')[0])) {
+                    link.classList.add('active');
+                    
+                    // Expand parent dropdown if collapsed
+                    var parentDropdown = link.closest('.sidebar-dropdown');
+                    if (parentDropdown && parentDropdown.classList.contains('collapse')) {
+                        var dropdownToggle = document.querySelector('[data-bs-target="#' + parentDropdown.id + '"]');
+                        if (dropdownToggle) {
+                            dropdownToggle.classList.remove('collapsed');
+                            parentDropdown.classList.add('show');
+                        }
+                    }
+                }
+            });
         });
     </script>
 

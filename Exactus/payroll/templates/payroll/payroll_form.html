@@ -1,20 +1,142 @@
+<!-- Exactus/payroll/templates/payroll/payroll_form.html -->
 {% extends "base.html" %}
-{% load static %}
-{% block title %}{{ payroll|default:'New Payroll' }} | ExactusPay{% endblock %}
-{% block page_title %}{{ payroll|default:'New Payroll' }}{% endblock %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+{% load payroll_filters %}
+{% load accounts_role_filters %}
 
 {% block content %}
-<div class="card shadow-sm">
-  <div class="card-header">
-    <h5 class="mb-0">{{ payroll|default:'Create Payroll' }}</h5>
-  </div>
-  <div class="card-body">
-    <form method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit" class="btn btn-success">Save</button>
-      <a href="{% url 'payroll:payroll' country_slug company.company_id %}" class="btn btn-secondary">Cancel</a>
-    </form>
-  </div>
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <h2>
+                {% if form.instance.pk %}
+                Edit Payroll: FY{{ form.instance.fiscal_year }}
+                {% else %}
+                Create New Payroll
+                {% endif %}
+            </h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'dashboard' %}">Dashboard</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'payroll:payroll_list' country_slug company.id %}">Payrolls</a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        {% if form.instance.pk %}Edit{% else %}Create{% endif %}
+                    </li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-auto">
+            <a href="{% url 'payroll:payroll_list' country_slug company.id %}" 
+               class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Back to List
+            </a>
+        </div>
+    </div>
+
+    <!-- Form Card -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Payroll Information</h5>
+        </div>
+        <div class="card-body">
+            <form method="post" novalidate>
+                {% csrf_token %}
+                
+                <!-- Company and Country Information (Read-only) -->
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <div class="card bg-light">
+                            <div class="card-body py-2">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>Company:</strong> {{ company.trade_name|default:company.trade_name }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <strong>Country:</strong> {{ country.name }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        {{ form.fiscal_year|as_crispy_field }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form.regulation_version|as_crispy_field }}
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-12">
+                        {{ form.description|as_crispy_field }}
+                    </div>
+                </div>
+                
+                <!-- Hidden fields for company and country -->
+                <input type="hidden" name="company" value="{{ company.id }}">
+                <input type="hidden" name="country" value="{{ country.id }}">
+                
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'payroll:payroll_list' country_slug company.id %}" 
+                               class="btn btn-secondary">
+                                <i class="fas fa-times me-1"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i>
+                                {% if form.instance.pk %}Update{% else %}Create{% endif %} Payroll
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Help Text -->
+    <div class="card mt-3">
+        <div class="card-body">
+            <h6><i class="fas fa-info-circle me-1"></i> Important Notes:</h6>
+            <ul class="text-muted mb-0">
+                <li>You can only have one active payroll per company per fiscal year</li>
+                <li>Payroll can be edited only while in "Draft" or "Running" status</li>
+                <li>Once completed or locked, payroll cannot be modified</li>
+                <li>After creating payroll, you can add payroll periods</li>
+                <li>Fiscal year must be between 2000 and {% now "Y" as current_year %}{{ current_year|add:5 }}</li>
+            </ul>
+        </div>
+    </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-fill current year if not set
+    const fiscalYearField = document.getElementById('id_fiscal_year');
+    if (!fiscalYearField.value) {
+        const currentYear = new Date().getFullYear();
+        fiscalYearField.value = currentYear;
+    }
+    
+    // Validate fiscal year
+    fiscalYearField.addEventListener('blur', function() {
+        const year = parseInt(this.value);
+        const currentYear = new Date().getFullYear();
+        
+        if (year < 2000 || year > currentYear + 5) {
+            alert(`Fiscal year must be between 2000 and ${currentYear + 5}`);
+            this.focus();
+        }
+    });
+});
+</script>
 {% endblock %}

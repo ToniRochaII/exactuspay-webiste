@@ -1,57 +1,102 @@
 {% extends "base.html" %}
 {% load static %}
-{% block title %}Payrolls | ExactusPay{% endblock %}
-{% block page_title %}Payrolls{% endblock %}
+{% load humanize %}
+{% load payroll_filters %}
+{% load accounts_role_filters %}
+
+{% block title %}
+Payrolls — {{ company.trade_name }} | ExactusPay
+{% endblock %}
+
+{% block page_title %}
+<i class="bi bi-calendar3"></i> Payrolls — {{ company.trade_name }}
+{% endblock %}
 
 {% block breadcrumbs %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'companies:company' country_slug %}">{{ country }}</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Payrolls</li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'dashboard' %}">Dashboard</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'companies:company' country_slug %}">{{ country.name }}</a>
+    </li>
+    <li class="breadcrumb-item active">Payrolls</li>
   </ol>
 </nav>
 {% endblock %}
 
 {% block content %}
-<div class="card shadow-sm">
-  <div class="card-header d-flex justify-content-between align-items-center">
-    <h5 class="mb-0">Payrolls for {{ company }}</h5>
-    <a href="{% url 'payroll:payroll_create' country_slug company.company_id %}" class="btn btn-primary btn-sm">+ Add Payroll</a>
+<div class="container-fluid">
+
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h4 class="mb-0">{{ company.trade_name }}</h4>
+      <p class="text-muted mb-0">All payrolls by fiscal year</p>
+    </div>
+    {% if request.user|can_manage_company:company %}
+        <a href="{% url 'payroll:payroll_create' country_slug company.company_id %}"
+          class="btn btn-primary">
+          <i class="bi bi-plus-circle"></i> New Payroll
+        </a>
+    {% endif %}
   </div>
-  <div class="card-body">
-    {% if payrolls %}
-      <table class="table table-striped">
-        <thead>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      {% if payrolls %}
+      <table class="table table-hover align-middle">
+        <thead class="table-light">
           <tr>
-            <th>Regulation</th>
-            <th>Frequency</th>
-            <th>Actions</th>
+            <th>#</th>
+            <th>Fiscal Year</th>
+            <th>Status</th>
+            <th>Regulation Version</th>
+            <th>Created</th>
+            <th class="text-end">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {% for payroll in payrolls %}
+        {% for payroll in payrolls %}
           <tr>
-            <td>{{ payroll.regulations }}</td>
-            <td>{{ payroll.payroll_frequency }}</td>
+            <td>{{ forloop.counter }}</td>
+            <td>FY{{ payroll.fiscal_year }}</td>
+            <td>
+              <span class="badge {{ payroll.status|payroll_status_badge_class }}">
+                {{ payroll.get_status_display }}
+              </span>
+            </td>
+            <td>{{ payroll.regulation_version }}</td>
+            <td>{{ payroll.created_at|date:"Y-m-d H:i" }}</td>
             <td class="text-end">
-              <a href="" class="btn btn-sm btn-outline-primary">
-                <i class="bi bi-pencil"></i> Enter
+              <a href="{% url 'payroll:payroll_detail' country_slug company.company_id payroll.pk %}"
+                 class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-eye"></i> View
               </a>
-              <a href="{% url 'payroll:payroll_edit' country_slug company.company_id payroll.id %}" class="btn btn-sm btn-outline-primary">
+
+              {% if payroll.is_editable and request.user|can_manage_company:company %}
+              <a href="{% url 'payroll:payroll_edit' country_slug company.company_id payroll.pk %}"
+                 class="btn btn-sm btn-outline-primary">
                 <i class="bi bi-pencil"></i> Edit
               </a>
-              <a href="{% url 'payroll:payroll_delete' country_slug company.company_id payroll.id %}" class="btn btn-sm btn-outline-danger">
+              {% endif %}
+
+              {% if payroll.is_deletable and request.user|can_manage_company:company %}
+              <a href="{% url 'payroll:payroll_delete' country_slug company.company_id payroll.pk %}"
+                 class="btn btn-sm btn-outline-danger">
                 <i class="bi bi-trash"></i> Delete
               </a>
+              {% endif %}
             </td>
           </tr>
-          {% endfor %}
+        {% endfor %}
         </tbody>
       </table>
-    {% else %}
-      <p class="text-muted">No payrolls found for this company.</p>
-    {% endif %}
+      {% else %}
+        <p class="text-muted mb-0">No payrolls found for this company yet.</p>
+      {% endif %}
+    </div>
   </div>
+
 </div>
 {% endblock %}

@@ -1,0 +1,71 @@
+from django.db import models
+from django.core.exceptions import ValidationError
+from django.utils import timezone
+from django.db.models import Q, UniqueConstraint
+from django.contrib.auth import get_user_model
+from django.utils.translation import gettext_lazy as _
+
+User = get_user_model()
+
+class PayrollStatus(models.TextChoices):
+    DRAFT = 'draft', _('Draft')
+    RUNNING = 'running', _('Running')
+    COMPLETED = 'completed', _('Completed')
+    CANCELLED = 'cancelled', _('Cancelled')
+    LOCKED = 'locked', _('Locked')
+
+class PeriodStatus(models.TextChoices):
+    PENDING = 'pending', _('Pending')
+    SCHEDULED = 'scheduled', _('Scheduled')
+    PROCESSING = 'processing', _('Processing')
+    COMPLETED = 'completed', _('Completed')
+    LOCKED = 'locked', _('Locked')
+    FAILED = 'failed', _('Failed')
+
+class Payroll(models.Model):
+    company = models.ForeignKey('company.Company', on_delete=models.CASCADE, related_name='payrolls')
+    fiscal_year = models.IntegerField()
+    country = models.ForeignKey('country.Country', on_delete=models.PROTECT, related_name='payrolls')
+    regulation_version = models.CharField(max_length=50, default='latest')
+    status = models.CharField(max_length=20, choices=PayrollStatus.choices, default=PayrollStatus.DRAFT)
+
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = [
+            UniqueConstraint(
+                fields=['company', 'fiscal_year'],
+                name='unique_payroll_per_company_year',
+                condition=~Q(status=PayrollStatus.CANCELLED)
+            )
+        ]
+
+    def __str__(self):
+        return f'{self.company.name} – FY{self.fiscal_year}'
+
+
+class PayrollPeriod(models.Model):
+    payroll = models.ForeignKey(Payroll, on_delete=models.CASCADE, related_name='periods')
+    period_number = models.PositiveIntegerField()
+    name = models.CharField(max_length=100)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    processing_date = models.DateField()
+
+    status = models.CharField(max_length=20, choices=PeriodStatus.choices, default=PeriodStatus.PENDING)
+
+    employee_count = models.IntegerField(default=0)
+    total_amount = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            UniqueConstraint(fields=['payroll', 'period_number'], name='unique_period_number')
+        ]
+
+    def __str__(self):
+        return f'Period {self.period_number} – {self.payroll}'

@@ -1,0 +1,216 @@
+<!-- Exactus/payroll/templates/payroll/period_form.html -->
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+{% load payroll_filters %}
+{% load accounts_role_filters %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <h2>
+                {% if form.instance.pk %}
+                Edit Period: {{ form.instance.name }}
+                {% else %}
+                Create New Period
+                {% endif %}
+            </h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'dashboard' %}">Dashboard</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'payroll:payroll_list' country_slug company_id %}">Payrolls</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'payroll:payroll_detail' country_slug company_id payroll.pk %}">
+                            FY{{ payroll.fiscal_year }}
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active">
+                        {% if form.instance.pk %}Edit{% else %}Create{% endif %}
+                    </li>
+                </ol>
+            </nav>
+        </div>
+        <div class="col-auto">
+            <a href="{% url 'payroll:payroll_detail' country_slug company_id payroll.pk %}" 
+               class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Back
+            </a>
+        </div>
+    </div>
+
+    <!-- Form Card -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Period Information</h5>
+        </div>
+        <div class="card-body">
+            <form method="post" novalidate>
+                {% csrf_token %}
+                
+                <!-- Payroll Information (Read-only) -->
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <div class="card bg-light">
+                            <div class="card-body py-2">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>Payroll:</strong> FY{{ payroll.fiscal_year }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        <strong>Company:</strong> {{ payroll.company.trade_name|default:payroll.company.trade_name }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        {{ form.period_number|as_crispy_field }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form.name|as_crispy_field }}
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        {{ form.start_date|as_crispy_field }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ form.end_date|as_crispy_field }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ form.apply_regulations|as_crispy_field }}
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        {{ form.processing_date|as_crispy_field }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ form.payment_date|as_crispy_field }}
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-12">
+                        {{ form.regulation_overrides|as_crispy_field }}
+                    </div>
+                </div>
+                
+                <!-- Hidden field for payroll (for form processing) -->
+                <input type="hidden" name="payroll" value="{{ payroll.pk }}">
+                
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'payroll:payroll_detail' country_slug company_id payroll.pk %}" 
+                               class="btn btn-secondary">
+                                <i class="fas fa-times me-1"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i>
+                                {% if form.instance.pk %}Update{% else %}Create{% endif %} Period
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Help Text -->
+    <div class="card mt-3">
+        <div class="card-body">
+            <h6><i class="fas fa-info-circle me-1"></i> Important Notes:</h6>
+            <ul class="text-muted mb-0">
+                <li>Period dates cannot overlap with existing periods in the same payroll</li>
+                <li>Processing date should be on or after the end date</li>
+                <li>Period can only be edited while in "Pending" or "Scheduled" status</li>
+                <li>Once processed, period cannot be modified</li>
+                <li>Use regulation overrides for country-specific adjustments (JSON format)</li>
+                <li>Auto-generated name will use the start date month and year if left empty</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-generate name from dates
+    const startDateField = document.getElementById('id_start_date');
+    const endDateField = document.getElementById('id_end_date');
+    const nameField = document.getElementById('id_name');
+    
+    function updatePeriodName() {
+        if (startDateField.value && endDateField.value && (!nameField.value || nameField.value.trim() === '')) {
+            const startDate = new Date(startDateField.value);
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                              "July", "August", "September", "October", "November", "December"];
+            const monthName = monthNames[startDate.getMonth()];
+            const year = startDate.getFullYear();
+            nameField.value = `${monthName} ${year}`;
+        }
+    }
+    
+    startDateField.addEventListener('change', updatePeriodName);
+    endDateField.addEventListener('change', updatePeriodName);
+    
+    // Set default processing date (end date + 5 days)
+    endDateField.addEventListener('change', function() {
+        if (this.value) {
+            const endDate = new Date(this.value);
+            const processingDate = new Date(endDate);
+            processingDate.setDate(processingDate.getDate() + 5);
+            
+            const processingDateField = document.getElementById('id_processing_date');
+            if (!processingDateField.value) {
+                // Format as YYYY-MM-DD
+                const formattedDate = processingDate.toISOString().split('T')[0];
+                processingDateField.value = formattedDate;
+            }
+            
+            // Set payment date (processing date + 2 days)
+            const paymentDateField = document.getElementById('id_payment_date');
+            if (!paymentDateField.value) {
+                const paymentDate = new Date(processingDate);
+                paymentDate.setDate(paymentDate.getDate() + 2);
+                const formattedPaymentDate = paymentDate.toISOString().split('T')[0];
+                paymentDateField.value = formattedPaymentDate;
+            }
+        }
+    });
+    
+    // Auto-suggest next period number (only for new periods)
+    {% if not form.instance.pk %}
+    const periodNumberField = document.getElementById('id_period_number');
+    if (!periodNumberField.value || periodNumberField.value === '') {
+        fetch(`{% url 'payroll:next_period_number' payroll.pk %}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.next_period_number) {
+                    periodNumberField.value = data.next_period_number;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching next period number:', error);
+            });
+    }
+    {% endif %}
+});
+</script>
+{% endblock %}

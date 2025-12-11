@@ -22,3 +22,23 @@ def dict_key(dictionary, key):
         return dictionary.get(key, 0)
     except (AttributeError, KeyError):
         return 0
+
+@register.filter
+def can_manage_company(user, company):
+    """
+    Returns True if the user is allowed to manage the given company.
+    Adjust this logic to match your real permission model.
+    """
+    if not user.is_authenticated:
+        return False
+
+    # Simple default logic – tweak as needed
+    if user.is_superuser or user.is_staff:
+        return True
+
+    # If you have Django perms on the Company model
+    if user.has_perm('company.change_company') or user.has_perm('company.view_company'):
+        return True
+
+    # If you later have a more advanced RBAC, replace with that check.
+    return False

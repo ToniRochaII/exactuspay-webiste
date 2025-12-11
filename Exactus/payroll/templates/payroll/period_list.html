@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+{% load payroll_filters %}
+{% load accounts_role_filters %}
+
+{% block title %}
+Payroll Periods — {{ company.trade_name }} | ExactusPay
+{% endblock %}
+
+{% block page_title %}
+<i class="bi bi-calendar-range"></i> Payroll Periods — {{ payroll.fiscal_year }}
+{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'companies:company' country_slug %}">{{ country.name }}</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'payroll:payroll_list' country_slug company.company_id %}">Payrolls</a>
+    </li>
+    <li class="breadcrumb-item active">Periods</li>
+  </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="mb-0">
+            <i class="bi bi-calendar2-week"></i> Payroll Periods
+        </h4>
+
+        <a class="btn btn-primary"
+           href="{% url 'payroll:period_create' country_slug company.company_id %}?payroll={{ payroll.id }}">
+            <i class="bi bi-plus-circle"></i> New Period
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            {% if periods %}
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Date Range</th>
+                        <th>Status</th>
+                        <th>Total Net</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in periods %}
+                    <tr>
+                        <td>{{ p.period_number }}</td>
+                        <td>{{ p.name }}</td>
+                        <td>{{ p.start_date }} → {{ p.end_date }}</td>
+                        <td>
+                            <span class="badge bg-info">{{ p.get_status_display }}</span>
+                        </td>
+                        <td>{{ p.total_net }}</td>
+                        <td class="text-end">
+                            <a href="{% url 'payroll:period_detail' country_slug company.company_id p.id %}"
+                               class="btn btn-sm btn-outline-secondary">
+                               View
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+                <p class="text-muted">No payroll periods found.</p>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+

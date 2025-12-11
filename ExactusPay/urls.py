@@ -31,6 +31,7 @@ urlpatterns = [
     path('',include('Exactus.pdcodes.urls')),
     path('',include('Exactus.payroll.urls')),
     path('', include("Exactus.compensation.urls")),
+    
 
     path('ajax/tab-close/', tab_close_detection, name='tab_close'),
     

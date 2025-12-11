@@ -1,12 +1,180 @@
+# Exactus/payroll/forms.py
 from django import forms
-from Exactus.payroll.models import Payroll
-from Exactus.regulations.models import Regulations
+from django.core.exceptions import ValidationError
+from django.utils import timezone
+from .models import Payroll, PayrollPeriod, PayrollAdjustment, PayrollStatus, PeriodStatus
+
 
 class PayrollForm(forms.ModelForm):
     class Meta:
         model = Payroll
-        fields = ['regulations', 'payroll_frequency']
+        fields = [
+            'fiscal_year', 'regulation_version', 'description'
+        ]
         widgets = {
-            'regulations': forms.Select(attrs={'class': 'form-select'}),
-            'payroll_frequency': forms.Select(attrs={'class': 'form-select'}),
+            'description': forms.Textarea(attrs={'rows': 3}),
+            'fiscal_year': forms.NumberInput(attrs={'min': 2000, 'max': 2100}),
         }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Disable fields for non-editable payrolls
+        if self.instance and self.instance.pk and not self.instance.is_editable:
+            for field in self.fields:
+                self.fields[field].disabled = True
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        fiscal_year = cleaned_data.get('fiscal_year')
+        
+        # Check if fiscal year is valid
+        if fiscal_year:
+            from django.utils import timezone
+            current_year = timezone.now().year
+            if fiscal_year < 2000 or fiscal_year > current_year + 5:
+                raise forms.ValidationError({
+                    'fiscal_year': f'Fiscal year must be between 2000 and {current_year + 5}'
+                })
+        
+        return cleaned_data
+
+class PayrollPeriodForm(forms.ModelForm):
+    class Meta:
+        model = PayrollPeriod
+        fields = [
+            'period_number', 'name',
+            'start_date', 'end_date', 'processing_date', 'payment_date',
+            'apply_regulations', 'regulation_overrides'
+        ]
+        widgets = {
+            'start_date': forms.DateInput(attrs={'type': 'date'}),
+            'end_date': forms.DateInput(attrs={'type': 'date'}),
+            'processing_date': forms.DateInput(attrs={'type': 'date'}),
+            'payment_date': forms.DateInput(attrs={'type': 'date'}),
+            'regulation_overrides': forms.Textarea(attrs={
+                'rows': 3,
+                'placeholder': 'Enter JSON overrides (e.g., {"tax_rate": 0.15})'
+            }),
+        }
+    
+    def __init__(self, *args, **kwargs):
+        self.payroll = kwargs.pop('payroll', None)
+        super().__init__(*args, **kwargs)
+        
+        # Set initial period number if not provided
+        if not self.instance.pk and not self.initial.get('period_number') and self.payroll:
+            last_period = PayrollPeriod.objects.filter(payroll=self.payroll).order_by('period_number').last()
+            if last_period:
+                self.initial['period_number'] = last_period.period_number + 1
+            else:
+                self.initial['period_number'] = 1
+        
+        # Disable fields for non-editable periods
+        if self.instance and self.instance.pk and not self.instance.is_editable:
+            for field in self.fields:
+                self.fields[field].disabled = True
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        
+        # Validate dates
+        start_date = cleaned_data.get('start_date')
+        end_date = cleaned_data.get('end_date')
+        processing_date = cleaned_data.get('processing_date')
+        
+        if start_date and end_date:
+            if start_date >= end_date:
+                self.add_error('end_date', 'End date must be after start date')
+            
+            if processing_date and processing_date > end_date:
+                self.add_error('processing_date', 'Processing date must be on or after end date')
+            
+            # Check for overlapping periods
+            if self.payroll and self.instance.pk:
+                overlapping = PayrollPeriod.objects.filter(
+                    payroll=self.payroll,
+                    start_date__lt=end_date,
+                    end_date__gt=start_date
+                ).exclude(pk=self.instance.pk)
+                
+                if overlapping.exists():
+                    self.add_error('start_date', 'This period overlaps with an existing period')
+                    self.add_error('end_date', 'This period overlaps with an existing period')
+            elif self.payroll and not self.instance.pk:
+                # For new periods, check overlaps
+                overlapping = PayrollPeriod.objects.filter(
+                    payroll=self.payroll,
+                    start_date__lt=end_date,
+                    end_date__gt=start_date
+                )
+                
+                if overlapping.exists():
+                    self.add_error('start_date', 'This period overlaps with an existing period')
+                    self.add_error('end_date', 'This period overlaps with an existing period')
+        
+        # Validate period number
+        period_number = cleaned_data.get('period_number')
+        if period_number and period_number < 1:
+            self.add_error('period_number', 'Period number must be at least 1')
+        
+        # Validate regulation_overrides is valid JSON
+        regulation_overrides = cleaned_data.get('regulation_overrides')
+        if regulation_overrides and regulation_overrides.strip():
+            try:
+                import json
+                json.loads(regulation_overrides)
+            except json.JSONDecodeError:
+                self.add_error('regulation_overrides', 'Must be valid JSON format')
+        
+        return cleaned_data
+
+
+
+
+class PayrollAdjustmentForm(forms.ModelForm):
+    class Meta:
+        model = PayrollAdjustment
+        fields = [
+            'adjustment_type', 'description',
+            'amount', 'affected_employees', 'regulation_reference'
+        ]
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 3}),
+            'affected_employees': forms.Textarea(attrs={
+                'rows': 2,
+                'placeholder': 'Enter JSON array of employee IDs, e.g., [1, 2, 3] or leave empty for all'
+            }),
+        }
+    
+    def __init__(self, *args, **kwargs):
+        self.period = kwargs.pop('period', None)
+        super().__init__(*args, **kwargs)
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        amount = cleaned_data.get('amount')
+        
+        if amount and amount <= 0:
+            self.add_error('amount', 'Amount must be greater than 0')
+        
+        return cleaned_data
+
+
+class PayrollProcessForm(forms.Form):
+    """Form for processing a payroll period"""
+    force_recalculation = forms.BooleanField(
+        required=False,
+        initial=False,
+        help_text='Recalculate even if already processed'
+    )
+    dry_run = forms.BooleanField(
+        required=False,
+        initial=False,
+        help_text='Test calculation without saving results'
+    )
+    notes = forms.CharField(
+        widget=forms.Textarea(attrs={'rows': 3}),
+        required=False,
+        help_text='Notes about this processing run'
+    )
