@@ -74,7 +74,8 @@ def country_edit(request, slug):
 
 
 
-@staff_member_required
+@login_required
+@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
 def country_upload_view(request):
     if request.method == "POST":
         form = CountryUploadForm(request.POST, request.FILES)
@@ -94,13 +95,15 @@ def country_upload_view(request):
 
     return render(request, "country/upload_form.html", {"form": form})
 
-@staff_member_required
+@login_required
+@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
 def country_upload_result_view(request):
     result = request.session.get("upload_result")
     return render(request, "country/upload_result.html", {"result": result})
 
 
-@staff_member_required
+@login_required
+@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
 def download_csv_template(request):
     """Download a CSV template for country imports"""
     response = HttpResponse(content_type='text/csv')
@@ -129,7 +132,8 @@ def download_csv_template(request):
     
     return response
 
-
+@login_required
+@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
 def dashboard_country_map(request):
     """Return ISO2 country codes for the dashboard world map."""
     try:
