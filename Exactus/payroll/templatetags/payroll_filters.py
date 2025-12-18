@@ -1,6 +1,8 @@
 # Exactus/payroll/templatetags/payroll_filters.py
 from django import template
 
+from Exactus.payroll.models import PeriodStatus
+
 register = template.Library()
 
 @register.filter
@@ -15,7 +17,7 @@ def has_role(user, roles):
 @register.filter
 def completed_count(queryset):
     """Count completed periods in a queryset"""
-    return queryset.filter(status='completed').count()
+    return queryset.filter(status=PeriodStatus.COMPLETED).count()
 
 @register.filter
 def total_amount(queryset):
@@ -37,7 +39,7 @@ def format_currency(value):
 @register.filter
 def completed_count(queryset):
     """Count completed periods in a queryset"""
-    return queryset.filter(status='COMPLETED').count()
+    return queryset.filter(status=PeriodStatus.COMPLETED).count()
 
 @register.filter
 def completed_percentage(queryset):
@@ -45,7 +47,7 @@ def completed_percentage(queryset):
     total = queryset.count()
     if total == 0:
         return 0
-    completed = queryset.filter(status='COMPLETED').count()
+    completed = queryset.filter(status=PeriodStatus.COMPLETED).count()
     return (completed / total) * 100
 
 # payroll/templatetags/payroll_filters.py
@@ -59,7 +61,7 @@ register = template.Library()
 def completed_count(queryset):
     """Count completed periods in a queryset"""
     if hasattr(queryset, 'filter'):
-        return queryset.filter(status='COMPLETED').count()
+        return queryset.filter(status=PeriodStatus.COMPLETED).count()
     return 0
 
 @register.filter

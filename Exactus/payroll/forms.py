@@ -1,8 +1,7 @@
 # Exactus/payroll/forms.py
 from django import forms
-from django.core.exceptions import ValidationError
 from django.utils import timezone
-from .models import Payroll, PayrollPeriod, PayrollAdjustment, PayrollStatus, PeriodStatus
+from Exactus.payroll.models import Payroll, PayrollPeriod
 
 
 class PayrollForm(forms.ModelForm):
@@ -132,33 +131,7 @@ class PayrollPeriodForm(forms.ModelForm):
 
 
 
-class PayrollAdjustmentForm(forms.ModelForm):
-    class Meta:
-        model = PayrollAdjustment
-        fields = [
-            'adjustment_type', 'description',
-            'amount', 'affected_employees', 'regulation_reference'
-        ]
-        widgets = {
-            'description': forms.Textarea(attrs={'rows': 3}),
-            'affected_employees': forms.Textarea(attrs={
-                'rows': 2,
-                'placeholder': 'Enter JSON array of employee IDs, e.g., [1, 2, 3] or leave empty for all'
-            }),
-        }
-    
-    def __init__(self, *args, **kwargs):
-        self.period = kwargs.pop('period', None)
-        super().__init__(*args, **kwargs)
-    
-    def clean(self):
-        cleaned_data = super().clean()
-        amount = cleaned_data.get('amount')
-        
-        if amount and amount <= 0:
-            self.add_error('amount', 'Amount must be greater than 0')
-        
-        return cleaned_data
+
 
 
 class PayrollProcessForm(forms.Form):

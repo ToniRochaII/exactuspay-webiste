@@ -2,6 +2,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.http import JsonResponse, HttpResponseForbidden
@@ -14,11 +15,13 @@ from django.utils.decorators import method_decorator  # ADD THIS IMPORT
 
 from Exactus.company.models import Company
 from Exactus.country.models import Country
+
+from Exactus.employee.models import Employee
 from .models import (
     Payroll, PayrollPeriod, PayrollExecutionLog, 
     PayrollStatus, PeriodStatus
 )
-from .forms import PayrollForm, PayrollPeriodForm, PayrollAdjustmentForm, PayrollProcessForm
+from .forms import PayrollForm, PayrollPeriodForm, PayrollProcessForm
 
 
 # ============================================================
@@ -253,22 +256,23 @@ class PayrollPeriodDetailView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        period = self.get_object()
-        
-        # Get recent execution logs
-        execution_logs = period.execution_logs.all().order_by('-started_at')[:10]
-        adjustments = period.adjustments.all().order_by('-created_at')
-        
-        context["execution_logs"] = execution_logs
-        context["adjustments"] = adjustments
-        context["company_id"] = self.kwargs["company_id"]
-        context["country_slug"] = self.kwargs["country_slug"]
-        context["payroll_id"] = self.kwargs["payroll_id"]
-        
-        # Add process form for AJAX processing
-        context["process_form"] = PayrollProcessForm()
+        period = self.object
+
+        eligible_employees = period.get_eligible_employees()
+
+        context.update({
+            "eligible_employees": eligible_employees,
+            "eligible_employee_count": eligible_employees.count(),
+            "execution_logs": period.execution_logs.all().order_by("-started_at")[:10],
+            "adjustments": period.adjustments.all().order_by("-created_at"),
+            "company_id": self.kwargs["company_id"],
+            "country_slug": self.kwargs["country_slug"],
+            "payroll_id": self.kwargs["payroll_id"],
+            "process_form": PayrollProcessForm(),
+        })
 
         return context
+
 
 
 # ============================================================
@@ -497,96 +501,99 @@ class PayrollPeriodDeleteView(LoginRequiredMixin, DeleteView):
 # ============================================================
 
 # FIX: Use method_decorator for class-based view
-@method_decorator(login_required, name='dispatch')
+@method_decorator(login_required, name="dispatch")
 class PayrollPeriodProcessView(View):
+
     def post(self, request, country_slug, company_id, payroll_id, period_id):
+
         period = get_object_or_404(
             PayrollPeriod,
-            id=period_id,
+            pk=period_id,
             payroll_id=payroll_id,
             payroll__company_id=company_id
         )
-        
+
         if not period.can_process:
             return JsonResponse({
                 "success": False,
                 "error": f"Cannot process period with status: {period.get_status_display()}"
             }, status=400)
-        
-        # Start processing
+
+        execution_log = PayrollExecutionLog.objects.create(
+            period=period,
+            execution_type="calculation",
+            status="started",
+            input_data={"period_id": period_id},
+            executed_by=request.user
+        )
+
         try:
-            # Create execution log
-            execution_log = PayrollExecutionLog.objects.create(
-                period=period,
-                execution_type='calculation',
-                status='started',
-                input_data={'period_id': period_id},
-                executed_by=request.user
-            )
-            
-            # Mark period as processing
-            if period.mark_as_processing(request.user):
-                # Simulate processing (replace with actual payroll calculation)
-                # TODO: Integrate with actual payroll calculation engine
-                
-                # Simulate delay for processing
-                import time
-                time.sleep(2)  # Remove this in production
-                
-                # Mock results
-                mock_results = {
-                    'employee_count': 42,
-                    'total_gross': 125000.00,
-                    'total_deductions': 25000.00,
-                    'total_net': 100000.00,
-                    'total_tax': 15000.00,
-                    'total_amount': 100000.00,
-                    'success': True
-                }
-                
-                # Mark as completed
-                if period.mark_as_completed(mock_results):
-                    execution_log.mark_completed({
-                        'results': mock_results,
-                        'processing_time': 2.5,
-                        'success': True
-                    })
-                    
-                    return JsonResponse({
-                        "success": True,
-                        "message": "Payroll processing completed successfully",
-                        "results": mock_results,
-                        "redirect_url": reverse_lazy(
-                            "payroll:period_detail",
-                            kwargs={
-                                "country_slug": country_slug,
-                                "company_id": company_id,
-                                "payroll_id": payroll_id,
-                                "pk": period_id,
-                            },
-                        )
-                    })
-                else:
-                    execution_log.mark_failed("Failed to mark period as completed")
-                    return JsonResponse({
-                        "success": False,
-                        "error": "Failed to complete processing"
-                    }, status=500)
-            else:
+            # Move period to PROCESSING
+            period.mark_as_processing(request.user)
+
+            # ✅ SINGLE SOURCE OF TRUTH
+            employees = period.get_eligible_employees()
+
+            if not employees.exists():
+                execution_log.mark_failed("No eligible employees found")
                 return JsonResponse({
                     "success": False,
-                    "error": "Could not start processing"
+                    "error": "No eligible employees found for this payroll period"
                 }, status=400)
-                
-        except Exception as e:
-            # Log the error
-            if 'execution_log' in locals():
-                execution_log.mark_failed(str(e))
-            
+
+            # Resolve calculator
+            from Exactus.payroll.calculator.registry import get_calculator
+
+            calculator_cls = get_calculator(period.payroll.country.slug)
+
+            calculator = calculator_cls(
+                country=period.payroll.country,
+                tax_year=period.payroll.fiscal_year,
+                period=period,
+                employees=employees
+            )
+
+            result = calculator.calculate()
+
+            results_payload = {
+                "employee_count": len(result["employee_results"]),
+                "total_gross": result["totals"]["gross"],
+                "total_tax": result["totals"]["tax"],
+                "total_net": result["totals"]["net"],
+                "total_amount": result["totals"]["net"],
+                "success": True,
+            }
+
+            period.mark_as_completed(results_payload)
+
+            execution_log.mark_completed({
+                "results": results_payload,
+                "success": True
+            })
+
+            return JsonResponse({
+                "success": True,
+                "message": "Payroll processed successfully",
+                "results": results_payload,
+                "redirect_url": reverse_lazy(
+                    "payroll:period_detail",
+                    kwargs={
+                        "country_slug": country_slug,
+                        "company_id": company_id,
+                        "payroll_id": payroll_id,
+                        "pk": period_id,
+                    }
+                )
+            })
+
+        except Exception as exc:
+            execution_log.mark_failed(str(exc))
             return JsonResponse({
                 "success": False,
-                "error": f"Processing error: {str(e)}"
+                "error": f"Processing error: {str(exc)}"
             }, status=500)
+
+
 
 
 # ============================================================
@@ -777,3 +784,45 @@ def payroll_summary_api(request, payroll_id):
             'is_deletable': payroll.is_deletable,
         }
     })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

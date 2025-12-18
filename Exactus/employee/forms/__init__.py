@@ -9,7 +9,7 @@ EmployeeForm = BaseEmployeeForm
 
 __all__ = [
     'BaseEmployeeForm',
-    'EmployeeForm',  # Keep this for backward compatibility
+    'EmployeeForm',
     'EmployeeUploadForm',
     'BrazilEmployeeForm',
     'UnitedKingdomEmployeeForm',

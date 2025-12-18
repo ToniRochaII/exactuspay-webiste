@@ -1,17 +1,20 @@
-<!-- Complete fixed period_detail.html -->
 {% extends "base.html" %}
-{% load payroll_filters %}
 {% load humanize %}
+{% load payroll_filters %}
 {% load accounts_role_filters %}
 
 {% block content %}
 <div class="container-fluid">
-    <!-- Header -->
-    <div class="row mb-4">
+
+    <!-- =====================================================
+     HEADER
+    ====================================================== -->
+    <div class="row mb-4 align-items-center">
         <div class="col">
-            <h2>{{ period.name }}</h2>
+            <h2 class="mb-1">{{ period.name }}</h2>
+
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
+                <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item">
                         <a href="{% url 'dashboard' %}">Dashboard</a>
                     </li>
@@ -27,285 +30,275 @@
                 </ol>
             </nav>
         </div>
+
         <div class="col-auto">
             <div class="btn-group">
+
                 {% if period.is_editable %}
-                <a href="{% url 'payroll:period_edit' country_slug company_id payroll_id period.pk %}" 
+                <a href="{% url 'payroll:period_edit' country_slug company_id payroll_id period.pk %}"
                    class="btn btn-primary">
                     <i class="fas fa-edit me-1"></i> Edit
                 </a>
                 {% endif %}
-                
-                {% if period.can_process %}
-                <button class="btn btn-success process-period" 
-                        data-period_id="{{ period.pk }}">
+
+                {% if period.can_process and eligible_employee_count > 0 %}
+                <button class="btn btn-success process-period"
+                        data-period-id="{{ period.pk }}">
                     <i class="fas fa-play-circle me-1"></i> Process
                 </button>
                 {% endif %}
-                
+
                 {% if period.is_deletable %}
-                <button type="button" 
-                        class="btn btn-danger" 
-                        data-bs-toggle="modal" 
+                <button class="btn btn-danger"
+                        data-bs-toggle="modal"
                         data-bs-target="#deleteModal">
                     <i class="fas fa-trash me-1"></i> Delete
                 </button>
                 {% endif %}
+
             </div>
         </div>
     </div>
 
-    <!-- Status and Info Cards -->
+    <!-- =====================================================
+     STATUS CARDS
+    ====================================================== -->
     <div class="row mb-4">
+
+        <!-- Status -->
         <div class="col-md-3">
-            <div class="card">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Status</h5>
-                    <span class="badge bg-{% if period.status == 'pending' %}warning{% elif period.status == 'scheduled' %}info{% elif period.status == 'processing' %}primary{% elif period.status == 'completed' %}success{% else %}secondary{% endif %} fs-5 p-2">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6>Status</h6>
+                    <span class="badge fs-6 p-2 bg-
+                        {% if period.status == 'pending' %}warning
+                        {% elif period.status == 'processing' %}primary
+                        {% elif period.status == 'completed' %}success
+                        {% elif period.status == 'locked' %}secondary
+                        {% else %}info{% endif %}
+                    ">
                         {{ period.get_status_display }}
                     </span>
                 </div>
             </div>
         </div>
+
+        <!-- Employees -->
         <div class="col-md-3">
-            <div class="card">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Employees</h5>
-                    <h2 class="card-text">{{ period.employee_count|default:"0" }}</h2>
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6>Employees</h6>
+
+                    {% if period.status == "completed" %}
+                        <h2>{{ period.employee_count }}</h2>
+                        <small class="text-muted">processed</small>
+                    {% else %}
+                        <h2>{{ eligible_employee_count }}</h2>
+                        <small class="text-muted">eligible</small>
+                    {% endif %}
+
                 </div>
             </div>
         </div>
+
+        <!-- Total Amount -->
         <div class="col-md-3">
-            <div class="card">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Total Amount</h5>
-                    <h2 class="card-text">${{ period.total_amount|intcomma|default:"0" }}</h2>
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6>Total Amount</h6>
+                    <h2>${{ period.total_amount|intcomma }}</h2>
                 </div>
             </div>
         </div>
+
+        <!-- Period Number -->
         <div class="col-md-3">
-            <div class="card">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Period #</h5>
-                    <h2 class="card-text">{{ period.period_number }}</h2>
+            <div class="card text-center">
+                <div class="card-body">
+                    <h6>Period #</h6>
+                    <h2>{{ period.period_number }}</h2>
                 </div>
             </div>
         </div>
+
     </div>
 
-    <!-- Period Information -->
+    <!-- =====================================================
+     DETAILS + FINANCIAL SUMMARY
+    ====================================================== -->
     <div class="row">
+
+        <!-- Period Details -->
         <div class="col-md-6">
             <div class="card mb-4">
                 <div class="card-header">
-                    <h5 class="card-title mb-0">Period Details</h5>
+                    <strong>Period Details</strong>
                 </div>
                 <div class="card-body">
-                    <table class="table table-borderless">
+                    <table class="table table-borderless mb-0">
+                        <tr><th>Payroll</th><td>FY{{ period.payroll.fiscal_year }}</td></tr>
+                        <tr><th>Period Name</th><td>{{ period.name }}</td></tr>
                         <tr>
-                            <th width="40%">Payroll:</th>
-                            <td>FY{{ period.payroll.fiscal_year }}</td>
+                            <th>Date Range</th>
+                            <td>{{ period.start_date|date:"F d, Y" }} – {{ period.end_date|date:"F d, Y" }}</td>
                         </tr>
-                        <tr>
-                            <th>Period Name:</th>
-                            <td>{{ period.name }}</td>
-                        </tr>
-                        <tr>
-                            <th>Date Range:</th>
-                            <td>{{ period.start_date|date:"F d, Y" }} - {{ period.end_date|date:"F d, Y" }}</td>
-                        </tr>
-                        <tr>
-                            <th>Processing Date:</th>
-                            <td>{{ period.processing_date|date:"F d, Y"|default:"-" }}</td>
-                        </tr>
-                        <tr>
-                            <th>Payment Date:</th>
-                            <td>{{ period.payment_date|date:"F d, Y"|default:"-" }}</td>
-                        </tr>
-                        <tr>
-                            <th>Created By:</th>
-                            <td>{{ period.created_by.get_full_name|default:period.created_by.username }}</td>
-                        </tr>
-                        <tr>
-                            <th>Created Date:</th>
-                            <td>{{ period.created_at|date:"F d, Y H:i" }}</td>
-                        </tr>
+                        <tr><th>Processing Date</th><td>{{ period.processing_date|date:"F d, Y" }}</td></tr>
+                        <tr><th>Payment Date</th><td>{{ period.payment_date|date:"F d, Y" }}</td></tr>
+                        <tr><th>Created By</th><td>{{ period.created_by }}</td></tr>
+                        <tr><th>Created At</th><td>{{ period.created_at|date:"F d, Y H:i" }}</td></tr>
+
                         {% if period.processed_at %}
-                        <tr>
-                            <th>Processed At:</th>
-                            <td>{{ period.processed_at|date:"F d, Y H:i" }}</td>
-                        </tr>
-                        <tr>
-                            <th>Processed By:</th>
-                            <td>{{ period.processed_by.get_full_name|default:period.processed_by.username }}</td>
-                        </tr>
+                        <tr><th>Processed At</th><td>{{ period.processed_at|date:"F d, Y H:i" }}</td></tr>
+                        <tr><th>Processed By</th><td>{{ period.processed_by }}</td></tr>
                         {% endif %}
                     </table>
                 </div>
             </div>
         </div>
-        
+
+        <!-- Financial Summary -->
         <div class="col-md-6">
             <div class="card mb-4">
                 <div class="card-header">
-                    <h5 class="card-title mb-0">Financial Summary</h5>
+                    <strong>Financial Summary</strong>
                 </div>
                 <div class="card-body">
-                    <table class="table table-borderless">
-                        <tr>
-                            <th width="40%">Total Gross:</th>
-                            <td class="text-end">${{ period.total_gross|intcomma|default:"0.00" }}</td>
-                        </tr>
-                        <tr>
-                            <th>Total Deductions:</th>
-                            <td class="text-end">${{ period.total_deductions|intcomma|default:"0.00" }}</td>
-                        </tr>
-                        <tr>
-                            <th>Total Tax:</th>
-                            <td class="text-end">${{ period.total_tax|intcomma|default:"0.00" }}</td>
-                        </tr>
+                    <table class="table table-borderless mb-0">
+                        <tr><th>Total Gross</th><td class="text-end">${{ period.total_gross|intcomma }}</td></tr>
+                        <tr><th>Total Deductions</th><td class="text-end">${{ period.total_deductions|intcomma }}</td></tr>
+                        <tr><th>Total Tax</th><td class="text-end">${{ period.total_tax|intcomma }}</td></tr>
                         <tr class="border-top">
-                            <th><strong>Total Net:</strong></th>
-                            <td class="text-end">
-                                <strong>${{ period.total_net|intcomma|default:"0.00" }}</strong>
-                            </td>
+                            <th>Total Net</th>
+                            <td class="text-end fw-bold">${{ period.total_net|intcomma }}</td>
                         </tr>
                         <tr>
-                            <th><strong>Total Amount:</strong></th>
-                            <td class="text-end">
-                                <strong class="fs-5">${{ period.total_amount|intcomma|default:"0.00" }}</strong>
-                            </td>
+                            <th>Total Amount</th>
+                            <td class="text-end fs-5 fw-bold">${{ period.total_amount|intcomma }}</td>
                         </tr>
                     </table>
                 </div>
             </div>
         </div>
+
     </div>
 
-    <!-- Additional Information -->
-    {% if period.regulation_overrides and period.regulation_overrides != "{}" %}
+    <!-- =====================================================
+     ELIGIBLE EMPLOYEES
+    ====================================================== -->
     <div class="card mb-4">
         <div class="card-header">
-            <h5 class="card-title mb-0">Regulation Overrides</h5>
+            <strong>Eligible Employees</strong>
+            <span class="badge bg-secondary ms-2">{{ eligible_employee_count }}</span>
         </div>
         <div class="card-body">
-            <pre class="bg-light p-3 rounded">{{ period.regulation_overrides }}</pre>
-        </div>
-    </div>
-    {% endif %}
 
-    <!-- Execution Logs (if any) -->
-    {% if execution_logs %}
-    <div class="card">
-        <div class="card-header">
-            <h5 class="card-title mb-0">Execution History</h5>
-        </div>
-        <div class="card-body">
+            {% if eligible_employees %}
             <div class="table-responsive">
                 <table class="table table-sm">
                     <thead>
                         <tr>
-                            <th>Type</th>
-                            <th>Status</th>
-                            <th>Started At</th>
-                            <th>Completed At</th>
-                            <th>Duration</th>
-                            <th>Executed By</th>
+                            <th>Name</th>
+                            <th>Code</th>
+                            <th>Job Title</th>
+                            <th>Department</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for log in execution_logs %}
+                        {% for e in eligible_employees %}
                         <tr>
-                            <td>{{ log.get_execution_type_display|default:log.execution_type }}</td>
-                            <td>
-                                <span class="badge bg-{% if log.status == 'completed' %}success{% elif log.status == 'failed' %}danger{% else %}warning{% endif %}">
-                                    {{ log.get_status_display|default:log.status }}
-                                </span>
-                            </td>
-                            <td>{{ log.started_at|date:"M d, Y H:i" }}</td>
-                            <td>{{ log.completed_at|date:"M d, Y H:i"|default:"-" }}</td>
-                            <td>
-                                {% if log.processing_time %}
-                                    {{ log.processing_time.total_seconds|floatformat:1 }}s
-                                {% else %}
-                                    -
-                                {% endif %}
-                            </td>
-                            <td>{{ log.executed_by.get_full_name|default:log.executed_by.username }}</td>
+                            <td>{{ e.employee_name }} {{ e.employee_surname }}</td>
+                            <td>{{ e.employee_code }}</td>
+                            <td>{{ e.job_title|default:"-" }}</td>
+                            <td>{{ e.department|default:"-" }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
+            {% else %}
+                <p class="text-muted mb-0">No eligible employees found.</p>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <!-- =====================================================
+     EXECUTION LOGS
+    ====================================================== -->
+    {% if execution_logs %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <strong>Execution History</strong>
+        </div>
+        <div class="card-body table-responsive">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Started</th>
+                        <th>Completed</th>
+                        <th>Duration</th>
+                        <th>User</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in execution_logs %}
+                    <tr>
+                        <td>{{ log.execution_type }}</td>
+                        <td>
+                            <span class="badge bg-
+                                {% if log.status == 'completed' %}success
+                                {% elif log.status == 'failed' %}danger
+                                {% else %}warning{% endif %}
+                            ">
+                                {{ log.status }}
+                            </span>
+                        </td>
+                        <td>{{ log.started_at|date:"Y-m-d H:i" }}</td>
+                        <td>{{ log.completed_at|date:"Y-m-d H:i"|default:"-" }}</td>
+                        <td>{{ log.processing_time|default:"-" }}</td>
+                        <td>{{ log.executed_by }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
     {% endif %}
+
 </div>
 
-<!-- Delete Modal -->
-{% if period.is_deletable %}
-<div class="modal fade" id="deleteModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Delete Period</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete period <strong>"{{ period.name }}"</strong>?</p>
-                <p class="text-danger">
-                    <i class="fas fa-exclamation-triangle me-1"></i>
-                    This action cannot be undone.
-                </p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <a href="{% url 'payroll:period_delete' country_slug company_id payroll_id period.pk %}" 
-                   class="btn btn-danger">Delete Period</a>
-            </div>
-        </div>
-    </div>
-</div>
-{% endif %}
-
+<!-- =====================================================
+ PROCESS JS
+====================================================== -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Process Period Button
-    const processBtn = document.querySelector('.process-period');
-    if (processBtn) {
-        processBtn.addEventListener('click', function() {
-            const periodId = this.dataset.period_id;
-            
-            if (confirm('Process this payroll period?')) {
-                // Build the URL with all required parameters
-                const processUrl = `{% url 'payroll:period_process' country_slug company_id payroll_id 999 %}`.replace('999', periodId);
-                
-                fetch(processUrl, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': '{{ csrf_token }}',
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Payroll processing started!');
-                        if (data.redirect_url) {
-                            window.location.href = data.redirect_url;
-                        } else {
-                            location.reload();
-                        }
-                    } else {
-                        alert('Error: ' + (data.error || 'Unknown error'));
-                    }
-                })
-                .catch(error => {
-                    alert('Network error: ' + error);
-                });
+document.addEventListener("DOMContentLoaded", () => {
+    const btn = document.querySelector(".process-period");
+    if (!btn) return;
+
+    btn.addEventListener("click", () => {
+        if (!confirm("Process this payroll period?")) return;
+
+        const url = "{% url 'payroll:period_process' country_slug company_id payroll_id 0 %}"
+            .replace("/0/", "/" + btn.dataset.periodId + "/");
+
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}"
+            }
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success && data.redirect_url) {
+                window.location.href = data.redirect_url;
+            } else {
+                alert(data.error || "Processing failed");
             }
         });
-    }
+    });
 });
 </script>
+
 {% endblock %}

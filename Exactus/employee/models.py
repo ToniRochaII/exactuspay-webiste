@@ -91,3 +91,27 @@ class Employee(models.Model):
     def __str__(self):
         return f"{self.employee_name} {self.employee_surname} ({self.company.trade_name})"
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

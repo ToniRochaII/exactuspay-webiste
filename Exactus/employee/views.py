@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.views.generic import UpdateView
 from django.contrib import messages
 from Exactus.company.models import Company
 from Exactus.employee.models import Employee
@@ -8,6 +9,9 @@ from Exactus.employee.forms import EmployeeForm
 from Exactus.utils.decorators import role_required
 from django.db.models import Q
 
+
+from Exactus.employee.forms.base_employee_form import BaseEmployeeForm
+from Exactus.employee.forms import get_employee_form_for_country
 # ────────────────────────────────────────────────
 # EMPLOYEE CRUD
 # ────────────────────────────────────────────────
@@ -77,37 +81,94 @@ def employee_create(request, country_slug, company_id):
         },
     )
 
+# from Exactus.employee.forms.brazil_employee_form import BrazilEmployeeForm
+# from Exactus.employee.forms.base_employee_form import BaseEmployeeForm
+
+# @login_required
+# @role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE")
+# class EmployeeUpdateView(UpdateView):
+#     model = Employee
+#     template_name = "employee/employee_form.html"
+
+#     def get_form_class(self):
+#         country_slug = self.kwargs["country_slug"].lower()
+#         if country_slug == "br":
+#             return BrazilEmployeeForm
+#         return BaseEmployeeForm
+
+
 
 
 @login_required
-@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE")
+@role_required(
+    "EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION",
+    "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE"
+)
 def employee_edit(request, country_slug, company_id, employee_id):
+    """
+    Edit an existing employee.
+    Uses country-specific form logic (BR, GB, etc).
+    """
+
+    # ────────────────────────────────────────────────
+    # Resolve core objects
+    # ────────────────────────────────────────────────
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
-    employee = get_object_or_404(Employee, pk=employee_id, company=company)
-    
-    # Get the appropriate form class for this country
+
+    employee = get_object_or_404(
+        Employee,
+        pk=employee_id,
+        company=company
+    )
+
+    # ────────────────────────────────────────────────
+    # Resolve form class (SINGLE SOURCE OF TRUTH)
+    # ────────────────────────────────────────────────
     FormClass = get_employee_form_for_country(country)
-    
+
+    # ────────────────────────────────────────────────
+    # Handle POST / GET
+    # ────────────────────────────────────────────────
     if request.method == "POST":
         form = FormClass(request.POST, instance=employee)
+
         if form.is_valid():
             form.save()
-            messages.success(request, f"Employee '{employee.employee_name} {employee.employee_surname}' updated successfully.")
-            return redirect('employee:employee', country_slug=country_slug, company_id=company.company_id)
+
+            messages.success(
+                request,
+                f"Employee '{employee.employee_name} {employee.employee_surname}' updated successfully."
+            )
+
+            return redirect(
+                "employee:employee",
+                country_slug=country_slug,
+                company_id=company.company_id
+            )
+        else:
+            # Optional debug (remove later)
+            print("FORM ERRORS:")
+            for field, errors in form.errors.items():
+                print(f"{field}: {errors}")
+
     else:
         form = FormClass(instance=employee)
-    
-    return render(request, "employee/edit.html", {
-        "form": form, 
-        "company": company, 
-        "employee": employee, 
-        "country": country, 
-        "country_slug": country_slug
-    })
 
-
-
+    # ────────────────────────────────────────────────
+    # Render page
+    # ────────────────────────────────────────────────
+    return render(
+        request,
+        "employee/edit.html",
+        {
+            "form": form,
+            "employee": employee,
+            "company": company,
+            "country": country,
+            "country_slug": country_slug,
+        }
+    )
 
 
 

@@ -124,7 +124,7 @@ class Payroll(models.Model):
                     'fiscal_year': f'A payroll already exists for {self.company.trade_name} '
                                   f'in fiscal year {self.fiscal_year}'
                 })
-    
+
     def save(self, *args, **kwargs):
         """Override save to ensure validation"""
         self.full_clean()
@@ -307,43 +307,28 @@ class PayrollPeriod(models.Model):
         return f'{self.payroll} - Period {self.period_number}: {self.name}'
     
     def clean(self):
-        """Validate period before saving"""
         super().clean()
-        
+        if self.start_date >= self.end_date:
+            raise ValidationError("End date must be after start date")
 
-
-
-
-        
-        def save(self, *args, **kwargs):
-            """Override save to ensure validation"""
-            self.full_clean()
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        if not self.name and self.start_date:
+            self.name = self.start_date.strftime('%B %Y')
+        super().save(*args, **kwargs)
             
-            # Auto-generate name if not provided
-            if not self.name and self.start_date and self.end_date:
-                self.name = f"{self.start_date.strftime('%B %Y')}"
-            
-            super().save(*args, **kwargs)
         
         @property
         def is_editable(self):
-            """Check if period can be edited"""
-            if not self.pk:
-                return True
             return self.status in [PeriodStatus.PENDING, PeriodStatus.SCHEDULED]
-
 
         @property
         def is_deletable(self):
-            """Check if period can be deleted"""
-            if not self.pk:
-                return True
             return self.status == PeriodStatus.PENDING
-        
+
         @property
         def can_process(self):
-            """Check if period can be processed"""
-            return self.status in [PeriodStatus.PENDING, PeriodStatus.SCHEDULED]
+            return self.status in [PeriodStatus.PENDING, PeriodStatus.SCHEDULED]        
         
         @property
         def is_locked(self):
@@ -412,7 +397,17 @@ class PayrollPeriod(models.Model):
             
             return config
 
+    def get_eligible_employees(self):
+        from Exactus.employee.models import Employee
 
+        return Employee.objects.filter(
+            company_id=self.payroll.company_id,
+            is_active=True,
+            employment_start_date__lte=self.end_date
+        ).filter(
+            Q(employment_end_date__isnull=True) |
+            Q(employment_end_date__gte=self.start_date)
+        )
 
 class PayrollExecutionLog(models.Model):
     """

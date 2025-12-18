@@ -253,11 +253,11 @@ class BaseEmployeeForm(forms.ModelForm):
         }
 
     # Cleaning methods
+
     def clean_employee_id(self):
-        eid = self.cleaned_data.get("employee_id", "").strip()
-        if not eid:
-            raise ValidationError("Employee ID cannot be empty.")
-        return eid
+        eid = (self.cleaned_data.get("employee_id") or "").strip()
+        # optional in model -> optional in form
+        return eid or None
 
     def clean_employee_name(self):
         name = self.cleaned_data.get("employee_name", "").strip()
@@ -271,12 +271,10 @@ class BaseEmployeeForm(forms.ModelForm):
             raise ValidationError("Last name must be at least 2 characters.")
         return surname
 
-    def clean_date_of_birth(self):
-        dob = self.cleaned_data.get("date_of_birth")
-        if not dob:
-            raise ValidationError("Date of birth is required.")
-        return dob
 
+    def clean_date_of_birth(self):
+        # optional in model -> optional in form
+        return self.cleaned_data.get("date_of_birth")
 
 
 class EmployeeUploadForm(forms.Form):

@@ -36,7 +36,7 @@ Payroll Periods — {{ company.trade_name }} | ExactusPay
         </h4>
 
         <a class="btn btn-primary"
-           href="{% url 'payroll:period_create' country_slug company.company_id %}?payroll={{ payroll.id }}">
+           href="{% url 'payroll:period_create' country_slug company.company_id 0 %}?payroll={{ payroll.id }}">
             <i class="bi bi-plus-circle"></i> New Period
         </a>
     </div>
@@ -67,7 +67,7 @@ Payroll Periods — {{ company.trade_name }} | ExactusPay
                         </td>
                         <td>{{ p.total_net }}</td>
                         <td class="text-end">
-                            <a href="{% url 'payroll:period_detail' country_slug company.company_id p.id %}"
+                            <a href="{% url 'payroll:period_detail' country_slug company.company_id payroll.id p.id %}"
                                class="btn btn-sm btn-outline-secondary">
                                View
                             </a>

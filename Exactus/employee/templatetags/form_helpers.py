@@ -12,3 +12,4 @@ def get_section(field):
 def in_section(field, section_name):
     """Check if a field belongs to a specific section"""
     return field.field.widget.attrs.get('data-section') == section_name
+

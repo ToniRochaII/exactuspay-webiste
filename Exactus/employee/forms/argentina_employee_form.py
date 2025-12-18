@@ -63,8 +63,7 @@ class ArgentinaEmployeeForm(BaseEmployeeForm):
             "department": "Departamento",
             "job_title": "Puesto",
         }
-        
-        exclude = BaseEmployeeForm.Meta.exclude + ['tax_info_01', 'tax_info_02']
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

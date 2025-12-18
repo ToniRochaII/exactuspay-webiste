@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% load employee_role_filters %}
+{% load form_helpers %}
 
 {% block title %}
 {% if employee %}
@@ -19,14 +20,21 @@ Add Employee — {{ company.trade_name }} | ExactusPay
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
     <li class="breadcrumb-item"><a href="{% url 'companies:company' country_slug %}">Companies</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'employee:employee' country_slug company.company_id %}">Employees — {{ company.trade_name }}</a></li>
-    <li class="breadcrumb-item active" aria-current="page">{% if employee %}Edit Employee{% else %}Add Employee{% endif %}</li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'employee:employee' country_slug company.company_id %}">
+        Employees — {{ company.trade_name }}
+      </a>
+    </li>
+    <li class="breadcrumb-item active">
+      {% if employee %}Edit Employee{% else %}Add Employee{% endif %}
+    </li>
   </ol>
 </nav>
 {% endblock %}
 
 {% block content %}
 <div class="card shadow-sm">
+
   <div class="card-header d-flex justify-content-between align-items-center">
     <h5 class="mb-0">
       {% if employee %}
@@ -38,421 +46,125 @@ Add Employee — {{ company.trade_name }} | ExactusPay
   </div>
 
   <div class="card-body">
-    <!-- Navigation Menu -->
-    <div class="mb-4">
 
-    </div>
-
-    <!-- Tab Navigation -->
+    <!-- Tabs -->
     <ul class="nav nav-tabs mb-4" id="employeeTabs" role="tablist">
-      <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal" type="button" role="tab">
-          <i class="bi bi-person"></i> Personal Data
-        </button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="address-tab" data-bs-toggle="tab" data-bs-target="#address" type="button" role="tab">
-          <i class="bi bi-geo-alt"></i> Address Information
-        </button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="bank-tab" data-bs-toggle="tab" data-bs-target="#bank" type="button" role="tab">
-          <i class="bi bi-bank"></i> Bank Details
-        </button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="job-tab" data-bs-toggle="tab" data-bs-target="#job" type="button" role="tab">
-          <i class="bi bi-briefcase"></i> Employment Details
-        </button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="tax-tab" data-bs-toggle="tab" data-bs-target="#tax" type="button" role="tab">
-          <i class="bi bi-percent"></i> Taxation Details
-        </button>
-      </li>
-      <li class="nav-item" role="presentation">
-        <button class="nav-link" id="pay-tab" data-bs-toggle="tab" data-bs-target="#pay" type="button" role="tab">
-          <i class="bi bi-percent"></i> Compensation Details
-        </button>
-      </li>
+      <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#personal">Personal Data</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#address">Address Information</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#bank">Bank Details</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#job">Employment Details</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tax">Taxation Details</button></li>
+      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#pay">Compensation Details</button></li>
     </ul>
 
     <form method="post" class="needs-validation" novalidate>
       {% csrf_token %}
       {{ form.non_field_errors }}
 
-      <div class="tab-content" id="employeeTabsContent">
-        <!-- Personal Information Tab -->
-        <div class="tab-pane fade show active" id="personal" role="tabpanel">
+      <div class="tab-content">
+
+        <!-- PERSONAL -->
+        <div class="tab-pane fade show active" id="personal">
           <div class="row g-3">
-            <!-- Employee Identification -->
+
             <div class="col-12">
               <h6 class="fw-bold text-primary mb-3">
                 <i class="bi bi-card-checklist"></i> Employee Identification
               </h6>
             </div>
-            
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.employee_id }}
-                {{ form.employee_id.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter a valid employee ID.
-                </div>
-              </div>
-            </div>
-            
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.employee_number }}
-                {{ form.employee_number.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter a valid employee number.
-                </div>
-              </div>
-            </div>
-            
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.employee_code }}
-                {{ form.employee_code.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter a valid employee code.
-                </div>
-              </div>
-            </div>
 
-            <!-- Basic Information -->
-            <div class="col-12 mt-4">
-              <h6 class="fw-bold text-primary mb-3">
-                <i class="bi bi-person-badge"></i> Basic Information
-              </h6>
-            </div>
-            
-            <div class="col-md-6">
-              <div class="form-floating">
-                {{ form.employee_name }}
-                {{ form.employee_name.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter the employee's first name.
+            {% for field in form %}
+              {% if field|in_section:"personal" %}
+                <div class="col-md-4">
+                  <div class="form-floating">
+                    {{ field }}
+                    {{ field.label_tag }}
+                    {{ field.errors }}
+                  </div>
                 </div>
-              </div>
-            </div>
-            
-            <div class="col-md-6">
-              <div class="form-floating">
-                {{ form.employee_surname }}
-                {{ form.employee_surname.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter the employee's surname.
-                </div>
-              </div>
-            </div>
+              {% endif %}
+            {% endfor %}
 
-            <!-- Demographics -->
-            <div class="col-12 mt-4">
-              <h6 class="fw-bold text-primary mb-3">
-                <i class="bi bi-person-vcard"></i> Demographics
-              </h6>
-            </div>
-            
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.gender }}
-                {{ form.gender.label_tag }}
-                <div class="invalid-feedback">
-                  Please select a gender.
-                </div>
-              </div>
-            </div>
-            
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.date_of_birth }}
-                {{ form.date_of_birth.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter a valid date of birth.
-                </div>
-              </div>
-            </div>
-            
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.marital_status }}
-                {{ form.marital_status.label_tag }}
-                <div class="invalid-feedback">
-                  Please select marital status.
-                </div>
-              </div>
-            </div>
           </div>
         </div>
 
-        <!-- Address Information Tab -->
-        <div class="tab-pane fade" id="address" role="tabpanel">
+        <!-- ADDRESS -->
+        <div class="tab-pane fade" id="address">
           <div class="row g-3">
+
             <div class="col-12">
               <h6 class="fw-bold text-primary mb-3">
                 <i class="bi bi-house"></i> Address Details
               </h6>
             </div>
-            
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.employee_address_type }}
-                {{ form.employee_address_type.label_tag }}
-                <div class="invalid-feedback">
-                  Please select address type.
+
+            {% for field in form %}
+              {% if field|in_section:"address" %}
+                <div class="col-md-4">
+                  <div class="form-floating">
+                    {{ field }}
+                    {{ field.label_tag }}
+                    {{ field.errors }}
+                  </div>
                 </div>
-              </div>
-            </div>
-            
-            <div class="col-md-8">
-              <div class="form-floating">
-                {{ form.employee_address_01 }}
-                {{ form.employee_address_01.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter address line 1.
-                </div>
-              </div>
-            </div>
-            
-            <div class="col-md-6">
-              <div class="form-floating">
-                {{ form.employee_address_02 }}
-                {{ form.employee_address_02.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter address line 2.
-                </div>
-              </div>
-            </div>
-            
-            <div class="col-md-6">
-              <div class="form-floating">
-                {{ form.employee_address_03 }}
-                {{ form.employee_address_03.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter address line 3.
-                </div>
-              </div>
-            </div>
-            
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.employee_address_04 }}
-                {{ form.employee_address_04.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter city.
-                </div>
-              </div>
-            </div>
-            
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.employee_address_05 }}
-                {{ form.employee_address_05.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter state/province.
-                </div>
-              </div>
-            </div>
-            
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.employee_address_06 }}
-                {{ form.employee_address_06.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter postal code.
-                </div>
-              </div>
-            </div>
-            
-            <div class="col-12">
-              <div class="form-floating">
-                {{ form.employee_address_07 }}
-                {{ form.employee_address_07.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter country.
-                </div>
-              </div>
-            </div>
+              {% endif %}
+            {% endfor %}
+
           </div>
         </div>
 
-        <!-- Bank Information Tab -->
-        <div class="tab-pane fade" id="bank" role="tabpanel">
+        <!-- BANK -->
+        <div class="tab-pane fade" id="bank">
           <div class="row g-3">
+
             <div class="col-12">
               <h6 class="fw-bold text-primary mb-3">
                 <i class="bi bi-credit-card"></i> Bank Account Details
               </h6>
             </div>
-            
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.bank_01 }}
-                {{ form.bank_01.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter bank name.
+
+            {% for field in form %}
+              {% if field|in_section:"bank" %}
+                <div class="col-md-4">
+                  <div class="form-floating">
+                    {{ field }}
+                    {{ field.label_tag }}
+                    {{ field.errors }}
+                  </div>
                 </div>
-              </div>
-            </div>
-            
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.bank_02 }}
-                {{ form.bank_02.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter account holder name.
-                </div>
-              </div>
-            </div>
-            
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.bank_03 }}
-                {{ form.bank_03.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter account number.
-                </div>
-              </div>
-            </div>
-            
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.bank_04 }}
-                {{ form.bank_04.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter bank code.
-                </div>
-              </div>
-            </div>
-            
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.bank_05 }}
-                {{ form.bank_05.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter branch code.
-                </div>
-              </div>
-            </div>
-            
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.bank_06 }}
-                {{ form.bank_06.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter account type.
-                </div>
-              </div>
-            </div>
-            
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.bank_07 }}
-                {{ form.bank_07.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter IBAN.
-                </div>
-              </div>
-            </div>
-            
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.bank_08 }}
-                {{ form.bank_08.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter SWIFT/BIC.
-                </div>
-              </div>
-            </div>
-            
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.bank_09 }}
-                {{ form.bank_09.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter currency.
-                </div>
-              </div>
-            </div>
-            
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.bank_10 }}
-                {{ form.bank_10.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter payment method.
-                </div>
-              </div>
-            </div>
+              {% endif %}
+            {% endfor %}
+
           </div>
         </div>
 
-        <!-- Job Information Tab -->
-        <div class="tab-pane fade" id="job" role="tabpanel">
+        <!-- JOB -->
+        <div class="tab-pane fade" id="job">
           <div class="row g-3">
+
             <div class="col-12">
               <h6 class="fw-bold text-primary mb-3">
                 <i class="bi bi-briefcase"></i> Employment Details
               </h6>
             </div>
-            
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.department }}
-                {{ form.department.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter department.
+
+            {% for field in form %}
+              {% if field|in_section:"job" %}
+                <div class="col-md-4">
+                  <div class="form-floating">
+                    {{ field }}
+                    {{ field.label_tag }}
+                    {{ field.errors }}
+                  </div>
                 </div>
-              </div>
-            </div>
-            
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.cost_centre }}
-                {{ form.cost_centre.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter cost centre.
-                </div>
-              </div>
-            </div>
-            
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.job_title }}
-                {{ form.job_title.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter job title.
-                </div>
-              </div>
-            </div>
-            
-            <div class="col-md-6">
-              <div class="form-floating">
-                {{ form.position_number }}
-                {{ form.position_number.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter position number.
-                </div>
-              </div>
-            </div>
-            
-            <div class="col-md-6">
-              <div class="form-floating">
-                {{ form.fte }}
-                {{ form.fte.label_tag }}
-                <div class="invalid-feedback">
-                  Please enter FTE.
-                </div>
-              </div>
-            </div>
+              {% endif %}
+            {% endfor %}
+
           </div>
         </div>
 
-        <!-- Tax Information Tab -->
-        <div class="tab-pane fade" id="tax" role="tabpanel">
+        <!-- TAX -->
+        <div class="tab-pane fade" id="tax">
           <div class="row g-3">
 
             <div class="col-12">
@@ -461,60 +173,23 @@ Add Employee — {{ company.trade_name }} | ExactusPay
               </h6>
             </div>
 
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.tax_info_01 }}
-                <label for="{{ form.tax_info_01.id_for_label }}">Tax ID</label>
-              </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.tax_info_02 }}
-                <label for="{{ form.tax_info_02.id_for_label }}">Tax Filing Status</label>
-              </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.tax_info_03 }}
-                <label for="{{ form.tax_info_03.id_for_label }}">Tax Exemption Amount</label>
-              </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.tax_info_04 }}
-                <label for="{{ form.tax_info_04.id_for_label }}">Tax Bracket</label>
-              </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.tax_info_05 }}
-                <label for="{{ form.tax_info_05.id_for_label }}">Tax Residency</label>
-              </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.tax_info_06 }}
-                <label for="{{ form.tax_info_06.id_for_label }}">Additional Withholding</label>
-              </div>
-            </div>
-
-            <div class="col-md-4">
-              <div class="form-floating">
-                {{ form.tax_info_07 }}
-                <label for="{{ form.tax_info_07.id_for_label }}">Tax Notes</label>
-              </div>
-            </div>
+            {% for field in form %}
+              {% if field|in_section:"tax" %}
+                <div class="col-md-4">
+                  <div class="form-floating">
+                    {{ field }}
+                    {{ field.label_tag }}
+                    {{ field.errors }}
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
 
           </div>
         </div>
 
-        <!-- Compensation Details Tab -->
-        <div class="tab-pane fade" id="pay" role="tabpanel">
+        <!-- COMPENSATION -->
+        <div class="tab-pane fade" id="pay">
           <div class="row g-3">
 
             <div class="col-12 d-flex justify-content-between align-items-center mb-2">
@@ -523,11 +198,11 @@ Add Employee — {{ company.trade_name }} | ExactusPay
               </h6>
               <div>
                 <a href="{% url 'compensation:compensation_create' country_slug company.company_id employee.id %}"
-                  class="btn btn-sm btn-primary">
+                   class="btn btn-sm btn-primary">
                   <i class="bi bi-plus-circle"></i> Add Component
                 </a>
                 <a href="{% url 'compensation:compensation_list' country_slug company.company_id employee.id %}"
-                  class="btn btn-sm btn-outline-secondary">
+                   class="btn btn-sm btn-outline-secondary">
                   View All
                 </a>
               </div>
@@ -536,106 +211,36 @@ Add Employee — {{ company.trade_name }} | ExactusPay
             <div class="col-12">
               <p class="text-muted mb-0">
                 Use the buttons above to manage this employee's compensation components.
-                Active components and archives are shown on the dedicated Compensation page.
               </p>
             </div>
 
           </div>
         </div>
 
-
       </div>
 
-      <!-- Action Buttons -->
+      <!-- ACTIONS -->
       <div class="d-flex justify-content-between mt-4 pt-3 border-top">
         <div>
           <button type="button" class="btn btn-outline-secondary" id="prevTab">
             <i class="bi bi-chevron-left"></i> Previous
           </button>
           <button type="button" class="btn btn-outline-secondary" id="nextTab">
-            Next 
+            Next
           </button>
         </div>
         <div>
           <button type="submit" class="btn btn-primary ms-2">
             <i class="bi bi-save"></i> Save Employee
           </button>
-          <a href="{% url 'employee:employee' country_slug company.company_id %}" class="btn btn-danger">
-            <i class="bi bi-x-circle"></i> Cancel
+          <a href="{% url 'employee:employee' country_slug company.company_id %}"
+             class="btn btn-danger">
+            Cancel
           </a>
         </div>
       </div>
+
     </form>
   </div>
 </div>
-{% endblock %}
-
-{% block extra_js %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Tab navigation
-  const tabs = document.querySelectorAll('#employeeTabs button[data-bs-toggle="tab"]');
-  const prevBtn = document.getElementById('prevTab');
-  const nextBtn = document.getElementById('nextTab');
-  
-  let currentTabIndex = 0;
-  
-  // Update current tab index
-  tabs.forEach((tab, index) => {
-    tab.addEventListener('shown.bs.tab', function () {
-      currentTabIndex = index;
-      updateNavButtons();
-    });
-  });
-  
-  // Previous button click
-  prevBtn.addEventListener('click', function() {
-    if (currentTabIndex > 0) {
-      const prevTab = tabs[currentTabIndex - 1];
-      new bootstrap.Tab(prevTab).show();
-    }
-  });
-  
-  // Next button click
-  nextBtn.addEventListener('click', function() {
-    if (currentTabIndex < tabs.length - 1) {
-      const nextTab = tabs[currentTabIndex + 1];
-      new bootstrap.Tab(nextTab).show();
-    }
-  });
-  
-  // Update navigation button states
-  function updateNavButtons() {
-    prevBtn.disabled = currentTabIndex === 0;
-    nextBtn.disabled = currentTabIndex === tabs.length - 1;
-    nextBtn.textContent = currentTabIndex === tabs.length - 1 ? 'Review' : 'Next';
-  }
-  
-  // Initialize
-  updateNavButtons();
-  
-  // Bootstrap validation
-  const forms = document.querySelectorAll('.needs-validation');
-  Array.from(forms).forEach(function(form) {
-    form.addEventListener('submit', function(event) {
-      if (!form.checkValidity()) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
-      form.classList.add('was-validated');
-    }, false);
-  });
-  
-  // Auto-focus first field in each tab when switching
-  tabs.forEach(tab => {
-    tab.addEventListener('shown.bs.tab', function(event) {
-      const targetPane = document.querySelector(event.target.getAttribute('data-bs-target'));
-      const firstInput = targetPane.querySelector('input, select, textarea');
-      if (firstInput) {
-        firstInput.focus();
-      }
-    });
-  });
-});
-</script>
 {% endblock %}

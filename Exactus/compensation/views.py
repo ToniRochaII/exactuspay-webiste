@@ -7,15 +7,13 @@ from Exactus.company.models import Company
 from Exactus.country.models import Country
 from Exactus.employee.models import Employee
 from Exactus.utils.decorators import role_required
-
+from Exactus.pdcodes.models import PDcode
 from Exactus.compensation.forms import CompensationComponentForm
 from Exactus.compensation.models import CompensationComponent
 
 
 ROLES = ("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION",
          "DIRECTOR","MANAGER","SPECIALIST","FINANCE")
-
-
 @login_required
 @role_required(*ROLES)
 def compensation_list(request, country_slug, company_id, employee_id):
@@ -52,12 +50,19 @@ def compensation_create(request, country_slug, company_id, employee_id):
     employee = get_object_or_404(Employee, pk=employee_id, company=company)
 
     if request.method == "POST":
-        form = CompensationComponentForm(request.POST, company=company)
+        form = CompensationComponentForm(
+            request.POST,
+            company=company,
+        )
         if form.is_valid():
             component = form.save(commit=False)
             component.employee = employee
+            component.created_by = request.user
             component.save()
-            messages.success(request, "Compensation component added successfully.")
+            messages.success(
+                request,
+                "Compensation component added successfully."
+            )
             return redirect(
                 "compensation:compensation_list",
                 country_slug=country_slug,
@@ -80,6 +85,8 @@ def compensation_create(request, country_slug, company_id, employee_id):
 
 @login_required
 @role_required(*ROLES)
+@login_required
+@role_required(*ROLES)
 def compensation_edit(request, country_slug, company_id, employee_id, component_id):
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
@@ -91,10 +98,17 @@ def compensation_edit(request, country_slug, company_id, employee_id, component_
     )
 
     if request.method == "POST":
-        form = CompensationComponentForm(request.POST, company=company, instance=component)
+        form = CompensationComponentForm(
+            request.POST,
+            instance=component,
+            company=company,
+        )
         if form.is_valid():
             form.save()
-            messages.success(request, "Compensation component updated successfully.")
+            messages.success(
+                request,
+                "Compensation component updated successfully."
+            )
             return redirect(
                 "compensation:compensation_list",
                 country_slug=country_slug,
@@ -102,7 +116,10 @@ def compensation_edit(request, country_slug, company_id, employee_id, component_
                 employee_id=employee_id,
             )
     else:
-        form = CompensationComponentForm(company=company, instance=component)
+        form = CompensationComponentForm(
+            instance=component,
+            company=company,
+        )
 
     context = {
         "form": form,
@@ -114,6 +131,8 @@ def compensation_edit(request, country_slug, company_id, employee_id, component_
         "is_edit": True,
     }
     return render(request, "compensation/form.html", context)
+
+
 
 
 @login_required
@@ -159,3 +178,16 @@ def compensation_delete(request, country_slug, company_id, employee_id, componen
         "country_slug": country_slug,
     }
     return render(request, "compensation/delete.html", context)
+
+
+
+
+
+
+
+
+
+
+
+
+

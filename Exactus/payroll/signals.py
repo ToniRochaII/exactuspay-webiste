@@ -274,9 +274,9 @@ def handle_period_status_transitions(sender, instance, **kwargs):
                     status=PeriodStatus.COMPLETED
                 ).exists()
                 
-                if all_periods_completed:
-                    instance.payroll.status = PayrollStatus.COMPLETED
-                    instance.payroll.save()
+            Payroll.objects.filter(pk=instance.payroll_id).update(
+                status=PayrollStatus.COMPLETED
+            )
         
         except PayrollPeriod.DoesNotExist:
             pass  # New instance

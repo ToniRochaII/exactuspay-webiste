@@ -19,3 +19,8 @@ def get_country_flag(country):
         'argentina': '🇦🇷',
     }
     return flags.get(country.slug, '🌐')
+
+
+@register.filter
+def has_field(form, field_name: str) -> bool:
+    return hasattr(form, "fields") and field_name in form.fields
