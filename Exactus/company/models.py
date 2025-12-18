@@ -65,15 +65,15 @@ class Company(models.Model):
     )
     
     # --- Tax IDs (Generic slots for country-specific usage) ---
-    tax_id_1 = models.CharField(_("Tax ID 1"), max_length=50, blank=True, null=True)
-    tax_id_2 = models.CharField(_("Tax ID 2"), max_length=50, blank=True, null=True)
-    tax_id_3 = models.CharField(_("Tax ID 3"), max_length=50, blank=True, null=True)
-    tax_id_4 = models.CharField(_("Tax ID 4"), max_length=50, blank=True, null=True)
-    tax_id_5 = models.CharField(_("Tax ID 5"), max_length=50, blank=True, null=True)
-    tax_id_6 = models.CharField(_("Tax ID 6"), max_length=50, blank=True, null=True)
-    tax_id_7 = models.CharField(_("Tax ID 7"), max_length=50, blank=True, null=True)
-    tax_id_8 = models.CharField(_("Tax ID 8"), max_length=50, blank=True, null=True)
-    tax_id_9 = models.CharField(_("Tax ID 9"), max_length=50, blank=True, null=True)
+    tax_id_01 = models.CharField(_("Tax ID 1"), max_length=50, blank=True, null=True)
+    tax_id_02 = models.CharField(_("Tax ID 2"), max_length=50, blank=True, null=True)
+    tax_id_03 = models.CharField(_("Tax ID 3"), max_length=50, blank=True, null=True)
+    tax_id_04 = models.CharField(_("Tax ID 4"), max_length=50, blank=True, null=True)
+    tax_id_05 = models.CharField(_("Tax ID 5"), max_length=50, blank=True, null=True)
+    tax_id_06 = models.CharField(_("Tax ID 6"), max_length=50, blank=True, null=True)
+    tax_id_07 = models.CharField(_("Tax ID 7"), max_length=50, blank=True, null=True)
+    tax_id_08 = models.CharField(_("Tax ID 8"), max_length=50, blank=True, null=True)
+    tax_id_09 = models.CharField(_("Tax ID 9"), max_length=50, blank=True, null=True)
     tax_id_10 = models.CharField(_("Tax ID 10"), max_length=50, blank=True, null=True)
     tax_id_11 = models.CharField(_("Tax ID 11"), max_length=50, blank=True, null=True)  # Fixed: was "Tax ID 1"
     tax_id_12 = models.CharField(_("Tax ID 12"), max_length=50, blank=True, null=True)  # Fixed: was "Tax ID 2"
@@ -111,6 +111,26 @@ class Company(models.Model):
         choices=ACCOUNT_ARCHIVE_CHOICES,
         default="N"
     )
+    bank_01 = models.CharField(max_length=100, null=True, blank=True)
+    bank_02 = models.CharField(max_length=100, null=True, blank=True)
+    bank_03 = models.CharField(max_length=100, null=True, blank=True)
+    bank_04 = models.CharField(max_length=100, null=True, blank=True)
+    bank_05 = models.CharField(max_length=100, null=True, blank=True)
+    bank_06 = models.CharField(max_length=100, null=True, blank=True)
+    bank_07 = models.CharField(max_length=100, null=True, blank=True)
+    bank_08 = models.CharField(max_length=100, null=True, blank=True)
+    bank_09 = models.CharField(max_length=100, null=True, blank=True)
+    bank_10 = models.CharField(max_length=100, null=True, blank=True)
+    bank_11 = models.CharField(max_length=100, null=True, blank=True)
+    bank_12 = models.CharField(max_length=100, null=True, blank=True)
+    bank_13 = models.CharField(max_length=100, null=True, blank=True)
+    bank_14 = models.CharField(max_length=100, null=True, blank=True)
+    bank_15 = models.CharField(max_length=100, null=True, blank=True)
+    bank_16 = models.CharField(max_length=100, null=True, blank=True)
+    bank_17 = models.CharField(max_length=100, null=True, blank=True)
+    bank_18 = models.CharField(max_length=100, null=True, blank=True)
+    bank_19 = models.CharField(max_length=100, null=True, blank=True)
+    bank_20 = models.CharField(max_length=100, null=True, blank=True)
     
     class Meta:
         verbose_name = _("Company")
