@@ -1,4 +1,3 @@
-<!-- Exactus/payroll/templates/payroll/payroll_form.html -->
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% load humanize %}
@@ -7,7 +6,6 @@
 
 {% block content %}
 <div class="container-fluid">
-    <!-- Header -->
     <div class="row mb-4">
         <div class="col">
             <h2>
@@ -39,7 +37,6 @@
         </div>
     </div>
 
-    <!-- Form Card -->
     <div class="card">
         <div class="card-header">
             <h5 class="card-title mb-0">Payroll Information</h5>
@@ -48,7 +45,6 @@
             <form method="post" novalidate>
                 {% csrf_token %}
                 
-                <!-- Company and Country Information (Read-only) -->
                 <div class="row mb-3">
                     <div class="col-md-12">
                         <div class="card bg-light">
@@ -71,7 +67,7 @@
                         {{ form.fiscal_year|as_crispy_field }}
                     </div>
                     <div class="col-md-6">
-                        {{ form.regulation_version|as_crispy_field }}
+                        {{ form.regulation|as_crispy_field }}
                     </div>
                 </div>
                 
@@ -81,7 +77,6 @@
                     </div>
                 </div>
                 
-                <!-- Hidden fields for company and country -->
                 <input type="hidden" name="company" value="{{ company_id }}">
                 <input type="hidden" name="country" value="{{ country.id }}">
                 
@@ -103,16 +98,14 @@
         </div>
     </div>
     
-    <!-- Help Text -->
     <div class="card mt-3">
         <div class="card-body">
             <h6><i class="fas fa-info-circle me-1"></i> Important Notes:</h6>
             <ul class="text-muted mb-0">
-                <li>You can only have one active payroll per company per fiscal year</li>
-                <li>Payroll can be edited only while in "Draft" or "Running" status</li>
-                <li>Once completed or locked, payroll cannot be modified</li>
-                <li>After creating payroll, you can add payroll periods</li>
-                <li>Fiscal year must be between 2000 and {% now "Y" as current_year %}{{ current_year|add:5 }}</li>
+                <li>You can only have one active payroll per company per fiscal year.</li>
+                <li>The selected <strong>Regulation</strong> must match the <strong>Fiscal Year</strong> entered.</li>
+                <li>Payroll can be edited only while in "Draft" or "Running" status.</li>
+                <li>Fiscal year must be between 2000 and {% now "Y" as current_year %}{{ current_year|add:5 }}.</li>
             </ul>
         </div>
     </div>
@@ -120,21 +113,44 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Auto-fill current year if not set
     const fiscalYearField = document.getElementById('id_fiscal_year');
+    const regulationSelect = document.getElementById('id_regulation');
+    const currentYear = new Date().getFullYear();
+
+    // 1. Auto-fill current year if empty
     if (!fiscalYearField.value) {
-        const currentYear = new Date().getFullYear();
         fiscalYearField.value = currentYear;
     }
     
-    // Validate fiscal year
-    fiscalYearField.addEventListener('blur', function() {
+    // 2. Function to auto-select regulation based on fiscal year
+    function syncRegulationWithYear(year) {
+        if (!regulationSelect) return;
+        
+        // Loop through options to find one that contains the year string
+        for (let i = 0; i < regulationSelect.options.length; i++) {
+            const optionText = regulationSelect.options[i].text;
+            // Assumes the string representation contains the year (e.g., "United Kingdom - 2024")
+            if (optionText.includes(year.toString())) {
+                regulationSelect.selectedIndex = i;
+                break;
+            }
+        }
+    }
+
+    // 3. Trigger sync on load (if creating new)
+    if (!regulationSelect.value && fiscalYearField.value) {
+        syncRegulationWithYear(fiscalYearField.value);
+    }
+
+    // 4. Validate fiscal year and sync on change
+    fiscalYearField.addEventListener('change', function() {
         const year = parseInt(this.value);
-        const currentYear = new Date().getFullYear();
         
         if (year < 2000 || year > currentYear + 5) {
             alert(`Fiscal year must be between 2000 and ${currentYear + 5}`);
-            this.focus();
+            // Don't clear value, let user correct it, but don't sync
+        } else {
+            syncRegulationWithYear(year);
         }
     });
 });

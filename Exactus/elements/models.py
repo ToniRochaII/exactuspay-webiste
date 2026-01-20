@@ -59,7 +59,12 @@ class Element(models.Model):
     element_pensionable = models.BooleanField(default=False)
     element_payable = models.BooleanField(default=False)
     element_calculate = models.BooleanField(default=False)
-
+    is_auto_generated = models.BooleanField(
+            default=False, 
+            editable=False,
+            help_text="Flag to identify system-generated shadow elements (YTD, Bases, etc.)"
+        )
+    
     CALCBASETYPE_CHOICES = [
         ('Bracketable', 'Bracketable'),
         ('Prorational', 'Prorational'),
@@ -84,6 +89,8 @@ class Element(models.Model):
 
     def __str__(self):
         return f"{self.element_code} {self.element_description} ({self.country})"
+    
+
 
     class Meta:
         ordering = ["element_code"]

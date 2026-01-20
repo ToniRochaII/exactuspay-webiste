@@ -57,6 +57,7 @@
           <th>Name</th>
           <th>Description</th>
           <th>Category</th>
+          <th>Category Type</th>
           <th>Status</th>
           <th class="text-end">Actions</th>
         </tr>
@@ -69,6 +70,7 @@
           <td>{{ e.element_name }}</td>
           <td>{{ e.element_description|default:"—" }}</td>
           <td>{{ e.element_category|default:"—" }}</td>
+          <td>{{ e.element_categorytype|default:"—" }}</td>
           <td>{{ e.element_status }}</td>
 
           <td class="text-end">

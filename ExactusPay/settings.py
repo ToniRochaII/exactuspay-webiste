@@ -195,7 +195,7 @@ else:
 # ================================
 
 # Simple session settings
-SESSION_COOKIE_AGE = 300  # 5 minutes
+SESSION_COOKIE_AGE = 2000
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 

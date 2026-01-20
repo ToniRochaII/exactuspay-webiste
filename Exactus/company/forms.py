@@ -37,7 +37,7 @@ COUNTRY_FIELD_RULES = {
             "tax_id_09": "IRPJ",
             "tax_id_10": "CSLL",
             
-            # Banking (mapped to bank_01 to bank_20)
+            # Banking
             "bank_01": "Nome do Banco",
             "bank_02": "Código do Banco",
             "bank_03": "Número da Agência",
@@ -71,30 +71,20 @@ COUNTRY_FIELD_RULES = {
             "pay_frequency": "Frequência de Pagamento",
             "pay_day": "Dia do Pagamento",
             "standard_work_hours": "Jornada Semanal",
-            
-            # Contact Information
-            "contact_person": "Responsável Legal",
-            "contact_cpf": "CPF do Responsável",
-            "contact_phone": "Telefone Comercial",
-            "contact_email": "E-mail Comercial",
-            "accountant_name": "Nome do Contador",
-            "accountant_crc": "CRC do Contador",
         },
 
         "hidden": {
             "tax_id_11","tax_id_12","tax_id_13", "rti_password",
             "tax_id_14","tax_id_15","tax_id_16","tax_id_17",
             "tax_id_18","tax_id_19","tax_id_20", "rti_user_id",
-
-    },
+        },
 
         "placeholders": {
             "tax_id_01": "00.000.000/0000-00",
-            "postal_code": "00000-000",
+            "post_code": "00000-000",
             "bank_02": "001, 341, 237...",
             "bank_03": "1234",
             "bank_05": "123456-7",
-            "contact_cpf": "000.000.000-00",
         },
         "helptext": {
             "tax_id_01": "Informe o CNPJ completo da empresa (14 dígitos).",
@@ -106,9 +96,8 @@ COUNTRY_FIELD_RULES = {
         },
         "required_fields": [
             "company_code", "trade_name", "legal_name", "tax_id_01",
-            "address_line_1", "city", "state", "postal_code",
+            "road_name_1", "town", "county", "post_code",
             "bank_01", "bank_02", "bank_03", "bank_05", "bank_09",
-            "contact_person", "contact_phone", "contact_email"
         ],
         "choices": {
             "company_structure": [
@@ -158,11 +147,11 @@ COUNTRY_FIELD_RULES = {
             "legal_name": "Legal Name",
             
             # Address
-            "address_line_1": "Street Address",
-            "address_line_2": "Address Line 2",
-            "city": "Suburb/Town",
-            "state": "State/Territory",
-            "postal_code": "Postcode",
+            "road_name_1": "Street Address",
+            "road_name_2": "Address Line 2",
+            "town": "Suburb/Town",
+            "county": "State/Territory",
+            "post_code": "Postcode",
             "country": "Country",
             
             # Tax IDs
@@ -209,27 +198,19 @@ COUNTRY_FIELD_RULES = {
             "pay_frequency": "Pay Frequency",
             "pay_day": "Pay Day",
             "standard_work_hours": "Standard Hours per Week",
-            
-            # Contact Information
-            "contact_person": "Director/Manager",
-            "contact_phone": "Business Phone",
-            "contact_email": "Business Email",
-            "accountant_name": "Accountant Name",
-            "accountant_tfn": "Accountant TFN",
         },
         "hidden": {
             "tax_id_09","tax_id_10",
             "tax_id_11","tax_id_12","tax_id_13", "rti_password",
             "tax_id_14","tax_id_15","tax_id_16","tax_id_17",
             "tax_id_18","tax_id_19","tax_id_20", "rti_user_id",
-
-            },
+        },
         "placeholders": {
             "tax_id_01": "00 000 000 000",
             "tax_id_02": "000 000 000",
             "bank_03": "000-000",
             "bank_04": "00000000",
-            "postal_code": "0000",
+            "post_code": "0000",
         },
         "helptext": {
             "tax_id_01": "11 digit Australian Business Number",
@@ -239,9 +220,8 @@ COUNTRY_FIELD_RULES = {
         },
         "required_fields": [
             "company_code", "trade_name", "legal_name", "tax_id_01",
-            "address_line_1", "city", "state", "postal_code",
+            "road_name_1", "town", "county", "post_code",
             "bank_01", "bank_02", "bank_03", "bank_04",
-            "contact_person", "contact_phone", "contact_email"
         ],
         "choices": {
             "company_structure": [
@@ -270,7 +250,7 @@ COUNTRY_FIELD_RULES = {
                 ("FORTNIGHTLY", "Fortnightly"),
                 ("MONTHLY", "Monthly"),
             ],
-            "state": [
+            "county": [
                 ("", "Select State/Territory..."),
                 ("NSW", "New South Wales"),
                 ("VIC", "Victoria"),
@@ -292,11 +272,12 @@ COUNTRY_FIELD_RULES = {
             "legal_name": "Registered Name",
             
             # Address
-            "address_line_1": "Building and Street",
-            "address_line_2": "Address Line 2",
-            "city": "Town/City",
-            "state": "County",
-            "postal_code": "Postcode",
+            "building_name": "Building / House Name",
+            "road_name_1": "Street / Road",
+            "road_name_2": "Address Line 2",
+            "town": "Town/City",
+            "county": "County",
+            "post_code": "Postcode",
             "country": "Country",
             
             # Tax IDs
@@ -341,32 +322,24 @@ COUNTRY_FIELD_RULES = {
             "pay_frequency": "Pay Frequency",
             "pay_day": "Pay Day",
             "standard_work_hours": "Standard Weekly Hours",
-            
-            # Contact Information
-            "contact_person": "Director/Manager",
-            "contact_phone": "Business Phone",
-            "contact_email": "Business Email",
-            "accountant_name": "Accountant Name",
-            "accountant_aca": "Accountant ACA Number",
         },
         "placeholders": {
             "tax_id_01": "123/AB45678",
             "tax_id_03": "GB999 9999 73",
             "bank_03": "00-00-00",
             "bank_04": "12345678",
-            "postal_code": "SW1A 1AA",
+            "post_code": "SW1A 1AA",
         },
         "helptext": {
-            "tax_id_01": "PAYE reference from HMRC",
+            "tax_id_01": "PAYE reference from HMRC (Format: 123/X12345)",
             "tax_id_03": "VAT registration number (if applicable)",
             "bank_03": "6 digit sort code",
             "bank_05": "International Bank Account Number",
         },
         "required_fields": [
             "company_code", "trade_name", "legal_name", "tax_id_01",
-            "address_line_1", "city", "postal_code",
+            "road_name_1", "town", "post_code",
             "bank_01", "bank_02", "bank_03", "bank_04",
-            "contact_person", "contact_phone", "contact_email"
         ],
         "choices": {
             "company_structure": [
@@ -401,11 +374,11 @@ COUNTRY_FIELD_RULES = {
             "legal_name": "Razón Social",
             
             # Address
-            "address_line_1": "Calle",
-            "address_line_2": "Número",
-            "city": "Localidad",
-            "state": "Provincia",
-            "postal_code": "Código Postal",
+            "road_name_1": "Calle",
+            "road_name_2": "Número",
+            "town": "Localidad",
+            "county": "Provincia",
+            "post_code": "Código Postal",
             "country": "País",
             
             # Tax IDs
@@ -450,20 +423,12 @@ COUNTRY_FIELD_RULES = {
             "pay_frequency": "Frecuencia de Pago",
             "pay_day": "Día de Pago",
             "standard_work_hours": "Horas Semanales",
-            
-            # Contact Information
-            "contact_person": "Responsable Legal",
-            "contact_cuit": "CUIT del Responsable",
-            "contact_phone": "Teléfono Comercial",
-            "contact_email": "Email Comercial",
-            "accountant_name": "Nombre del Contador",
-            "accountant_cuit": "CUIT del Contador",
         },
         "placeholders": {
             "tax_id_01": "00-00000000-0",
             "bank_03": "0000000000000000000000",
             "bank_04": "ALIAS.BANCARIO",
-            "postal_code": "0000",
+            "post_code": "0000",
         },
         "helptext": {
             "tax_id_01": "Clave Única de Identificación Tributaria (11 dígitos)",
@@ -472,9 +437,8 @@ COUNTRY_FIELD_RULES = {
         },
         "required_fields": [
             "company_code", "trade_name", "legal_name", "tax_id_01",
-            "address_line_1", "city", "state",
+            "road_name_1", "town", "county",
             "bank_01", "bank_02", "bank_03",
-            "contact_person", "contact_phone", "contact_email"
         ],
         "choices": {
             "company_structure": [
@@ -504,7 +468,7 @@ COUNTRY_FIELD_RULES = {
                 ("QUINCENAL", "Quincenal"),
                 ("MENSUAL", "Mensual"),
             ],
-            "state": [
+            "county": [
                 ("", "Seleccione Provincia..."),
                 ("CABA", "Ciudad de Buenos Aires"),
                 ("BA", "Buenos Aires"),
@@ -544,59 +508,15 @@ class CompanyUploadForm(forms.Form):
 
 class CompanyForm(forms.ModelForm):
     
-    # Add all required fields dynamically
     def __init__(self, *args, **kwargs):
         self.country_instance = kwargs.pop("country", None)
         super().__init__(*args, **kwargs)
         
-        # Add additional fields not in base model
-        self._add_additional_fields()
+        # NOTE: _add_additional_fields removed because fields are now in the Model.
         
         if self.country_instance:
             self._apply_country_rules()
             self._set_required_fields()
-    
-    def _add_additional_fields(self):
-        """Add fields that might not be in the base model"""
-        additional_fields = {
-            # Address fields
-            'address_line_1': forms.CharField(max_length=100, required=False),
-            'address_line_2': forms.CharField(max_length=100, required=False),
-            'city': forms.CharField(max_length=50, required=False),
-            'state': forms.CharField(max_length=50, required=False),
-            'postal_code': forms.CharField(max_length=20, required=False),
-            
-            # Company structure
-            'company_structure': forms.ChoiceField(choices=[], required=False),
-            'number_of_employees': forms.IntegerField(min_value=0, required=False),
-            'pay_frequency': forms.ChoiceField(choices=[], required=False),
-            'pay_day': forms.CharField(max_length=20, required=False),
-            'standard_work_hours': forms.IntegerField(min_value=0, max_value=168, required=False),
-            
-            # Contact information
-            'contact_person': forms.CharField(max_length=100, required=False),
-            'contact_phone': forms.CharField(max_length=20, required=False),
-            'contact_email': forms.EmailField(required=False),
-            'contact_cpf': forms.CharField(max_length=14, required=False),
-            'contact_cuit': forms.CharField(max_length=13, required=False),
-            
-            # Accountant information
-            'accountant_name': forms.CharField(max_length=100, required=False),
-            'accountant_crc': forms.CharField(max_length=20, required=False),
-            'accountant_cuit': forms.CharField(max_length=13, required=False),
-            'accountant_tfn': forms.CharField(max_length=20, required=False),
-            'accountant_aca': forms.CharField(max_length=20, required=False),
-            
-            # Government registrations
-            'government_id_01': forms.CharField(max_length=50, required=False),
-            'government_id_02': forms.CharField(max_length=50, required=False),
-            'government_id_03': forms.CharField(max_length=50, required=False),
-            'government_id_04': forms.CharField(max_length=50, required=False),
-        }
-        
-        for field_name, field in additional_fields.items():
-            if field_name not in self.fields:
-                self.fields[field_name] = field
     
     def _get_country_iso(self):
         c = self.country_instance
@@ -638,39 +558,33 @@ class CompanyForm(forms.ModelForm):
         # Apply choices
         for name, choices in rules.get("choices", {}).items():
             if name in self.fields:
-                self.fields[name].choices = choices
-        
-        # Set widget classes
+                self.fields[name].widget = forms.Select(choices=choices, attrs={'class': 'form-select'})
+
+        # Apply widget attributes (classes, tabs)
+        self._apply_widget_attributes(iso)
+
+    def _apply_widget_attributes(self, iso):
         for field_name, field in self.fields.items():
+            # Banking
             if field_name.startswith('bank_'):
-                field.widget.attrs.update({
-                    'class': 'form-control',
-                    'data-section': 'banking',
-                    'data-country': iso
-                })
+                field.widget.attrs.update({'class': 'form-control', 'data-section': 'banking', 'data-country': iso})
+            # Tax
             elif field_name.startswith('tax_id_'):
-                field.widget.attrs.update({
-                    'class': 'form-control',
-                    'data-section': 'tax',
-                    'data-country': iso
-                })
+                field.widget.attrs.update({'class': 'form-control', 'data-section': 'tax', 'data-country': iso})
+            # Government
             elif field_name.startswith('government_id_'):
-                field.widget.attrs.update({
-                    'class': 'form-control',
-                    'data-section': 'government',
-                    'data-country': iso
-                })
-            elif field_name in ['address_line_1', 'address_line_2', 'city', 'state', 'postal_code']:
-                field.widget.attrs.update({
-                    'class': 'form-control',
-                    'data-section': 'address'
-                })
-            elif field_name in ['contact_person', 'contact_phone', 'contact_email', 'contact_cpf', 'contact_cuit']:
-                field.widget.attrs.update({
-                    'class': 'form-control',
-                    'data-section': 'contact'
-                })
-    
+                field.widget.attrs.update({'class': 'form-control', 'data-section': 'government', 'data-country': iso})
+            # Address
+            elif field_name in ['building_name', 'road_name_1', 'road_name_2', 'town', 'county', 'post_code']:
+                field.widget.attrs.update({'class': 'form-control', 'data-section': 'address'})
+            # Basic
+            elif field_name in ['company_code', 'company_number', 'trade_name', 'legal_name']:
+                field.widget.attrs.update({'class': 'form-control', 'data-section': 'basic'})
+            # Structure / Account
+            elif field_name in ['company_structure', 'number_of_employees', 'pay_frequency', 'pay_day', 'standard_work_hours']:
+                css_class = 'form-select' if isinstance(field.widget, forms.Select) else 'form-control'
+                field.widget.attrs.update({'class': css_class, 'data-section': 'structure'})
+
     def _set_required_fields(self):
         iso = self._get_country_iso()
         rules = COUNTRY_FIELD_RULES.get(iso)
@@ -684,36 +598,7 @@ class CompanyForm(forms.ModelForm):
     class Meta:
         model = Company
         exclude = ["country", "company_id"]
-        
-        widgets = {
-            # Basic info
-            "company_code": forms.TextInput(attrs={"class": "form-control", "data-section": "basic"}),
-            "company_number": forms.TextInput(attrs={"class": "form-control", "data-section": "basic"}),
-            "trade_name": forms.TextInput(attrs={"class": "form-control", "data-section": "basic"}),
-            "legal_name": forms.TextInput(attrs={"class": "form-control", "data-section": "basic"}),
-            
-            # Account settings
-            "account_status": forms.Select(attrs={"class": "form-select", "data-section": "account"}),
-            "account_archive": forms.Select(attrs={"class": "form-select", "data-section": "account"}),
-            
-            # Logo
-            "logo": forms.FileInput(attrs={"class": "form-control", "data-section": "logo"}),
-            
-            # Tax fields (01-20)
-            **{f"tax_id_{i:02d}": forms.TextInput(attrs={
-                "class": "form-control", 
-                "data-section": "tax",
-                "data-tax-field": f"tax_{i:02d}"
-            }) for i in range(1, 21)},
-            
-            # Banking fields (01-20)
-            **{f"bank_{i:02d}": forms.TextInput(attrs={
-                "class": "form-control", 
-                "data-section": "banking",
-                "data-bank-field": f"bank_{i:02d}"
-            }) for i in range(1, 21)},
-        }
-
+        # Widgets are handled dynamically in _apply_widget_attributes
 
 # ================================================================
 # 🇧🇷 BRAZIL - Custom Validation
@@ -771,9 +656,9 @@ class CompanyFormBR(CompanyForm):
                 raise ValidationError("Código do banco inválido.")
         return bank_code
     
-    def clean_postal_code(self):
+    def clean_post_code(self):
         """Validate Brazilian CEP"""
-        cep = self.cleaned_data.get("postal_code", "")
+        cep = self.cleaned_data.get("post_code", "")
         if cep:
             cep = re.sub(r'\D', '', cep)
             if len(cep) != 8:
@@ -834,9 +719,9 @@ class CompanyFormAU(CompanyForm):
                 raise ValidationError("BSB must contain 6 digits.")
         return bsb
     
-    def clean_postal_code(self):
+    def clean_post_code(self):
         """Validate Australian postcode"""
-        postcode = self.cleaned_data.get("postal_code", "")
+        postcode = self.cleaned_data.get("post_code", "")
         if postcode:
             postcode = re.sub(r'\D', '', postcode)
             if len(postcode) != 4:
@@ -871,9 +756,9 @@ class CompanyFormGB(CompanyForm):
                     raise ValidationError("UK VAT number must be 9 digits after GB.")
         return vat
     
-    def clean_postal_code(self):
+    def clean_post_code(self):
         """Validate UK postcode format"""
-        postcode = self.cleaned_data.get("postal_code", "").upper()
+        postcode = self.cleaned_data.get("post_code", "").upper()
         if postcode:
             # Basic UK postcode pattern validation
             uk_postcode_pattern = r'^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}$'
@@ -930,9 +815,9 @@ class CompanyFormAR(CompanyForm):
                 raise ValidationError("CBU debe contener 22 dígitos.")
         return cbu
     
-    def clean_postal_code(self):
+    def clean_post_code(self):
         """Validate Argentine postal code"""
-        postal_code = self.cleaned_data.get("postal_code", "")
+        postal_code = self.cleaned_data.get("post_code", "")
         if postal_code:
             postal_code = re.sub(r'\D', '', postal_code)
             if len(postal_code) != 4:
@@ -964,3 +849,96 @@ class CompanyFormUS(CompanyForm):
             if len(routing) != 9:
                 raise ValidationError("Routing number must contain 9 digits.")
         return routing
+
+
+# ================================================================
+# 🇨🇦 CANADA - Additional Country
+# ================================================================
+
+@register_company_form("CA")
+class CompanyFormCA(CompanyForm):
+    def clean_tax_id_01(self):
+        """Validate Canadian Business Number"""
+        bn = self.cleaned_data.get("tax_id_01", "")
+        if bn:
+            bn = re.sub(r'[^\d]', '', bn)
+            if len(bn) != 9:
+                raise ValidationError("Business Number must contain 9 digits.")
+        return bn
+    
+    def clean_post_code(self):
+        """Validate Canadian postal code"""
+        postal_code = self.cleaned_data.get("post_code", "").upper()
+        if postal_code:
+            # Canadian postal code pattern: A1A 1A1
+            canada_postal_pattern = r'^[A-Z]\d[A-Z] \d[A-Z]\d$'
+            if not re.match(canada_postal_pattern, postal_code):
+                raise ValidationError("Invalid Canadian postal code format. Use: A1A 1A1")
+        return postal_code
+
+
+# ================================================================
+# 🇲🇽 MEXICO - Additional Country
+# ================================================================
+
+@register_company_form("MX")
+class CompanyFormMX(CompanyForm):
+    def clean_tax_id_01(self):
+        """Validate Mexican RFC"""
+        rfc = self.cleaned_data.get("tax_id_01", "").upper()
+        if rfc:
+            # Basic RFC validation (12-13 characters)
+            if len(rfc) < 12 or len(rfc) > 13:
+                raise ValidationError("RFC debe tener entre 12 y 13 caracteres.")
+            
+            # First 3-4 characters should be letters (person/company name)
+            if not rfc[:4].isalpha():
+                raise ValidationError("RFC debe comenzar con letras.")
+        return rfc
+    
+    def clean_post_code(self):
+        """Validate Mexican postal code"""
+        postal_code = self.cleaned_data.get("post_code", "")
+        if postal_code:
+            postal_code = re.sub(r'\D', '', postal_code)
+            if len(postal_code) != 5:
+                raise ValidationError("Código postal debe contener 5 dígitos.")
+        return postal_code
+
+
+# ================================================================
+# DEBUG FUNCTION
+# ================================================================
+
+def debug_form_inheritance():
+    """Debug function to check form inheritance"""
+    print("\n" + "="*80)
+    print("FORM INHERITANCE DEBUG")
+    print("="*80)
+    
+    forms_to_check = [
+        CompanyForm,
+        CompanyFormBR,
+        CompanyFormAU,
+        CompanyFormGB,
+        CompanyFormAR,
+        CompanyFormUS,
+        CompanyFormCA,
+        CompanyFormMX,
+    ]
+    
+    for form_class in forms_to_check:
+        print(f"\n{form_class.__name__}:")
+        print(f"  Has Meta: {hasattr(form_class, 'Meta')}")
+        if hasattr(form_class, 'Meta'):
+            print(f"  Meta.model: {form_class._meta.model}")
+            print(f"  Meta.exclude: {form_class._meta.exclude}")
+        else:
+            print(f"  WARNING: No Meta class!")
+        
+        print(f"  Bases: {[base.__name__ for base in form_class.__bases__]}")
+
+
+# Run debug if executed directly
+if __name__ == "__main__":
+    debug_form_inheritance()

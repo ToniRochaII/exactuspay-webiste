@@ -1,28 +1,42 @@
 # Exactus/payroll/forms.py
 from django import forms
+from django.urls import reverse_lazy
 from django.utils import timezone
 from Exactus.payroll.models import Payroll, PayrollPeriod
+from Exactus.regulations.models import Regulations
 
 
 class PayrollForm(forms.ModelForm):
     class Meta:
         model = Payroll
         fields = [
-            'fiscal_year', 'regulation_version', 'description'
+            'fiscal_year', 'regulation', 'description'
         ]
         widgets = {
             'description': forms.Textarea(attrs={'rows': 3}),
             'fiscal_year': forms.NumberInput(attrs={'min': 2000, 'max': 2100}),
         }
-    
-    def __init__(self, *args, **kwargs):
+
+    def __init__(self, country=None, company=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
         
-        # Disable fields for non-editable payrolls
-        if self.instance and self.instance.pk and not self.instance.is_editable:
-            for field in self.fields:
-                self.fields[field].disabled = True
-    
+        # 1. Attach context to the instance immediately
+        # This ensures self.company exists when model.clean() runs
+        if company:
+            self.instance.company = company
+        
+        if country:
+            self.instance.country = country
+            
+            # Filter Regulation dropdown
+            self.fields['regulation'].queryset = Regulations.objects.filter(
+                country=country,
+                archive='N'
+            ).order_by('-fiscal_year')
+        else:
+            self.fields['regulation'].queryset = Regulations.objects.none()
+
+
     def clean(self):
         cleaned_data = super().clean()
         fiscal_year = cleaned_data.get('fiscal_year')
@@ -37,6 +51,18 @@ class PayrollForm(forms.ModelForm):
                 })
         
         return cleaned_data
+    def get_success_url(self):
+        # We need to manually construct the reverse URL using the kwargs
+        # passed into the view (country_slug, company_id)
+        # and the primary key of the newly created object (self.object.pk)
+        return reverse_lazy(
+            "payroll:payroll_detail",
+            kwargs={
+                "country_slug": self.kwargs["country_slug"],
+                "company_id": self.kwargs["company_id"],
+                "pk": self.object.pk,
+            },
+        )
 
 class PayrollPeriodForm(forms.ModelForm):
     class Meta:

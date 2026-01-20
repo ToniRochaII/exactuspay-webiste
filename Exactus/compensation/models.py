@@ -3,6 +3,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.contrib.auth import get_user_model
+from Exactus.elements.models import Element
 
 User = get_user_model()
 
@@ -15,6 +16,16 @@ class CompensationComponent(models.Model):
         on_delete=models.CASCADE,
         related_name='compensation_components'
     )
+    
+    # --- CHANGE HERE: Added null=True, blank=True ---
+    element = models.ForeignKey(
+        Element, 
+        on_delete=models.PROTECT,
+        null=True,   # Allow database NULL
+        blank=True   # Allow form to be empty
+    )
+    # -----------------------------------------------
+
     pd_code = models.ForeignKey(
         'pdcodes.PDCode',
         on_delete=models.PROTECT,
@@ -97,7 +108,12 @@ class CompensationComponent(models.Model):
         ]
     
     def __str__(self):
-        return f"{self.employee} - {self.pd_code}: {self.amount}"
+        code_str = "Unknown"
+        if self.pd_code:
+            code_str = str(self.pd_code)
+        elif self.element:
+            code_str = str(self.element)
+        return f"{self.employee} - {code_str}: {self.amount}"
     
     def clean(self):
         super().clean()
@@ -148,10 +164,3 @@ class CompensationComponent(models.Model):
         self.processed = False
         self.processed_period = ''
         self.save(update_fields=['processed', 'processed_period', 'updated_at'])
-
-
-
-
-
-
-        

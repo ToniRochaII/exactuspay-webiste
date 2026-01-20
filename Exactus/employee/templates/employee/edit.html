@@ -47,139 +47,201 @@ Add Employee — {{ company.trade_name }} | ExactusPay
 
   <div class="card-body">
 
-    <!-- Tabs -->
     <ul class="nav nav-tabs mb-4" id="employeeTabs" role="tablist">
-      <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#personal">Personal Data</button></li>
-      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#address">Address Information</button></li>
-      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#bank">Bank Details</button></li>
-      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#job">Employment Details</button></li>
-      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tax">Taxation Details</button></li>
-      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#pay">Compensation Details</button></li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="personal-tab" data-bs-toggle="tab" data-bs-target="#personal" type="button" role="tab" aria-controls="personal" aria-selected="true">Personal Data</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="address-tab" data-bs-toggle="tab" data-bs-target="#address" type="button" role="tab" aria-controls="address" aria-selected="false">Address Information</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="bank-tab" data-bs-toggle="tab" data-bs-target="#bank" type="button" role="tab" aria-controls="bank" aria-selected="false">Bank Details</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="job-tab" data-bs-toggle="tab" data-bs-target="#job" type="button" role="tab" aria-controls="job" aria-selected="false">Employment Details</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="tax-tab" data-bs-toggle="tab" data-bs-target="#tax" type="button" role="tab" aria-controls="tax" aria-selected="false">Taxation Details</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="pay-tab" data-bs-toggle="tab" data-bs-target="#pay" type="button" role="tab" aria-controls="pay" aria-selected="false">Compensation Details</button>
+      </li>
     </ul>
 
-    <form method="post" class="needs-validation" novalidate>
+    <form method="post" class="needs-validation" novalidate enctype="multipart/form-data">
       {% csrf_token %}
-      {{ form.non_field_errors }}
+      
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
 
-      <div class="tab-content">
+      <div class="tab-content" id="employeeTabsContent">
 
-        <!-- PERSONAL -->
-        <div class="tab-pane fade show active" id="personal">
+        <div class="tab-pane fade show active" id="personal" role="tabpanel" aria-labelledby="personal-tab">
           <div class="row g-3">
-
             <div class="col-12">
               <h6 class="fw-bold text-primary mb-3">
                 <i class="bi bi-card-checklist"></i> Employee Identification
               </h6>
             </div>
-
             {% for field in form %}
               {% if field|in_section:"personal" %}
                 <div class="col-md-4">
                   <div class="form-floating">
                     {{ field }}
                     {{ field.label_tag }}
-                    {{ field.errors }}
+                    <div class="invalid-feedback d-block">
+                        {{ field.errors }}
+                    </div>
                   </div>
                 </div>
               {% endif %}
             {% endfor %}
-
           </div>
         </div>
 
-        <!-- ADDRESS -->
-        <div class="tab-pane fade" id="address">
+        <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
           <div class="row g-3">
-
             <div class="col-12">
               <h6 class="fw-bold text-primary mb-3">
                 <i class="bi bi-house"></i> Address Details
               </h6>
             </div>
-
             {% for field in form %}
               {% if field|in_section:"address" %}
                 <div class="col-md-4">
                   <div class="form-floating">
                     {{ field }}
                     {{ field.label_tag }}
-                    {{ field.errors }}
+                    <div class="invalid-feedback d-block">
+                        {{ field.errors }}
+                    </div>
                   </div>
                 </div>
               {% endif %}
             {% endfor %}
-
           </div>
         </div>
 
-        <!-- BANK -->
-        <div class="tab-pane fade" id="bank">
+        <div class="tab-pane fade" id="bank" role="tabpanel" aria-labelledby="bank-tab">
           <div class="row g-3">
-
             <div class="col-12">
               <h6 class="fw-bold text-primary mb-3">
                 <i class="bi bi-credit-card"></i> Bank Account Details
               </h6>
             </div>
-
             {% for field in form %}
               {% if field|in_section:"bank" %}
                 <div class="col-md-4">
                   <div class="form-floating">
                     {{ field }}
                     {{ field.label_tag }}
-                    {{ field.errors }}
+                    <div class="invalid-feedback d-block">
+                        {{ field.errors }}
+                    </div>
                   </div>
                 </div>
               {% endif %}
             {% endfor %}
-
           </div>
         </div>
 
-        <!-- JOB -->
-        <div class="tab-pane fade" id="job">
+        <div class="tab-pane fade" id="job" role="tabpanel" aria-labelledby="job-tab">
           <div class="row g-3">
-
             <div class="col-12">
               <h6 class="fw-bold text-primary mb-3">
                 <i class="bi bi-briefcase"></i> Employment Details
               </h6>
             </div>
-
+            
             {% for field in form %}
               {% if field|in_section:"job" %}
                 <div class="col-md-4">
                   <div class="form-floating">
                     {{ field }}
                     {{ field.label_tag }}
-                    {{ field.errors }}
+                    <div class="invalid-feedback d-block">
+                        {{ field.errors }}
+                    </div>
                   </div>
                 </div>
               {% endif %}
             {% endfor %}
-
           </div>
         </div>
 
-        <!-- TAX -->
-        <div class="tab-pane fade" id="tax">
+        <div class="tab-pane fade" id="tax" role="tabpanel" aria-labelledby="tax-tab">
           <div class="row g-3">
-
             <div class="col-12">
               <h6 class="fw-bold text-primary mb-3">
                 <i class="bi bi-percent"></i> Tax Information
               </h6>
             </div>
-
             {% for field in form %}
               {% if field|in_section:"tax" %}
                 <div class="col-md-4">
                   <div class="form-floating">
                     {{ field }}
                     {{ field.label_tag }}
-                    {{ field.errors }}
+                    <div class="invalid-feedback d-block">
+                        {{ field.errors }}
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="tab-pane fade" id="pay" role="tabpanel" aria-labelledby="pay-tab">
+          <div class="row g-3">
+            
+            <div class="col-12 d-flex justify-content-between align-items-center mb-2">
+              <h6 class="fw-bold text-primary mb-0">
+                <i class="bi bi-cash-stack"></i> Compensation Details
+              </h6>
+              
+              <div>
+                {% if employee %}
+                  <a href="{% url 'compensation:compensation_create' country_slug company.company_id employee.id %}"
+                     class="btn btn-sm btn-primary">
+                    <i class="bi bi-plus-circle"></i> Add Component
+                  </a>
+                  <a href="{% url 'compensation:compensation_list' country_slug company.company_id employee.id %}"
+                     class="btn btn-sm btn-outline-secondary">
+                    View All
+                  </a>
+                {% else %}
+                  <button type="button" class="btn btn-sm btn-secondary" disabled>
+                     Save Employee to Add Compensation
+                  </button>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="col-12">
+              {% if employee %}
+                <p class="text-muted mb-0">
+                  Use the buttons above to manage this employee's compensation components.
+                </p>
+              {% else %}
+                <div class="alert alert-info">
+                  <i class="bi bi-info-circle"></i> Please fill out the personal and employment details and click <strong>Save Employee</strong>. Once the employee is created, you can add compensation components here.
+                </div>
+              {% endif %}
+            </div>
+
+            {% for field in form %}
+              {% if field|in_section:"pay" %}
+                <div class="col-md-4">
+                  <div class="form-floating">
+                    {{ field }}
+                    {{ field.label_tag }}
+                    <div class="invalid-feedback d-block">
+                        {{ field.errors }}
+                    </div>
                   </div>
                 </div>
               {% endif %}
@@ -188,41 +250,11 @@ Add Employee — {{ company.trade_name }} | ExactusPay
           </div>
         </div>
 
-        <!-- COMPENSATION -->
-        <div class="tab-pane fade" id="pay">
-          <div class="row g-3">
-
-            <div class="col-12 d-flex justify-content-between align-items-center mb-2">
-              <h6 class="fw-bold text-primary mb-0">
-                <i class="bi bi-cash-stack"></i> Compensation Details
-              </h6>
-              <div>
-                <a href="{% url 'compensation:compensation_create' country_slug company.company_id employee.id %}"
-                   class="btn btn-sm btn-primary">
-                  <i class="bi bi-plus-circle"></i> Add Component
-                </a>
-                <a href="{% url 'compensation:compensation_list' country_slug company.company_id employee.id %}"
-                   class="btn btn-sm btn-outline-secondary">
-                  View All
-                </a>
-              </div>
-            </div>
-
-            <div class="col-12">
-              <p class="text-muted mb-0">
-                Use the buttons above to manage this employee's compensation components.
-              </p>
-            </div>
-
-          </div>
-        </div>
-
       </div>
 
-      <!-- ACTIONS -->
       <div class="d-flex justify-content-between mt-4 pt-3 border-top">
         <div>
-          <button type="button" class="btn btn-outline-secondary" id="prevTab">
+          <button type="button" class="btn btn-outline-secondary" id="prevTab" style="display: none;">
             <i class="bi bi-chevron-left"></i> Previous
           </button>
           <button type="button" class="btn btn-outline-secondary" id="nextTab">
@@ -231,7 +263,7 @@ Add Employee — {{ company.trade_name }} | ExactusPay
         </div>
         <div>
           <button type="submit" class="btn btn-primary ms-2">
-            <i class="bi bi-save"></i> Save Employee
+            <i class="bi bi-save"></i> {% if employee %}Save Changes{% else %}Create Employee{% endif %}
           </button>
           <a href="{% url 'employee:employee' country_slug company.company_id %}"
              class="btn btn-danger">
@@ -243,4 +275,78 @@ Add Employee — {{ company.trade_name }} | ExactusPay
     </form>
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 1. Tab Navigation Logic
+    const triggerTabList = [].slice.call(document.querySelectorAll('#employeeTabs button'));
+    const prevBtn = document.getElementById('prevTab');
+    const nextBtn = document.getElementById('nextTab');
+    
+    // Helper to get active index
+    function getActiveTabIndex() {
+        const activeTab = document.querySelector('#employeeTabs button.active');
+        return triggerTabList.indexOf(activeTab);
+    }
+
+    // Update buttons visibility
+    function updateButtons() {
+        const index = getActiveTabIndex();
+        
+        // Prev button visibility
+        if (index === 0) {
+            prevBtn.style.display = 'none';
+        } else {
+            prevBtn.style.display = 'inline-block';
+        }
+
+        // Next button visibility (hide on last tab)
+        if (index === triggerTabList.length - 1) {
+            nextBtn.style.display = 'none';
+        } else {
+            nextBtn.style.display = 'inline-block';
+        }
+    }
+
+    // Handle Next Click
+    nextBtn.addEventListener('click', function() {
+        const index = getActiveTabIndex();
+        if (index < triggerTabList.length - 1) {
+            const nextTab = new bootstrap.Tab(triggerTabList[index + 1]);
+            nextTab.show();
+        }
+    });
+
+    // Handle Prev Click
+    prevBtn.addEventListener('click', function() {
+        const index = getActiveTabIndex();
+        if (index > 0) {
+            const prevTab = new bootstrap.Tab(triggerTabList[index - 1]);
+            prevTab.show();
+        }
+    });
+
+    // Update buttons whenever a tab is shown (clicked manually or via buttons)
+    triggerTabList.forEach(function(tabEl) {
+        tabEl.addEventListener('shown.bs.tab', function (event) {
+            updateButtons();
+        });
+    });
+
+    // Initialize state
+    updateButtons();
+
+    // 2. Form Validation (Bootstrap standard)
+    var forms = document.querySelectorAll('.needs-validation');
+    Array.prototype.slice.call(forms).forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+});
+</script>
 {% endblock %}

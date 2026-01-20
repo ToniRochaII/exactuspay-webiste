@@ -7,13 +7,10 @@
 <div class="container-fluid">
 
     <!-- Header -->
-    <div class="header mb-4">
+    <div class="header mb-">
         <h1 class="header-title">
             Welcome back, {{ user.get_full_name|default:user.username }}!
         </h1>
-        <p class="header-subtitle">
-            Role: <strong class="text-primary">{{ user_role }}</strong>
-        </p>
     </div>
 
     <!-- Quick Stats -->

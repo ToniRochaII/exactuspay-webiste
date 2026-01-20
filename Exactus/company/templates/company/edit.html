@@ -373,19 +373,39 @@ document.addEventListener("DOMContentLoaded", function () {
     const countryISO = "{{ country.iso2|upper }}";
 
     // Brazil: CNPJ + CEP
-    if (countryISO === 'BR') {
-        const cnpjField = document.getElementById('id_tax_id_1');
-        if (cnpjField) {
-            cnpjField.addEventListener('input', function(e) {
-                let value = e.target.value.replace(/\D/g, '');
-                if (value.length > 14) value = value.substring(0, 14);
-                if (value.length > 2) value = value.replace(/^(\d{2})(\d)/, '$1.$2');
-                if (value.length > 5) value = value.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
-                if (value.length > 8) value = value.replace(/^(\d{2})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3/$4');
-                if (value.length > 12) value = value.replace(/^(\d{2})\.(\d{3})\.(\d{3})\/(\d{4})(\d)/, '$1.$2.$3/$4-$5');
-                e.target.value = value;
-            });
-        }
+if (countryISO === 'BR') {
+    const cnpjField = document.getElementById('id_tax_id_01');
+
+    if (cnpjField) {
+        cnpjField.addEventListener('input', function (e) {
+            let digits = e.target.value.replace(/\D/g, '');
+
+            // Limit to 14 digits
+            digits = digits.substring(0, 14);
+
+            let formatted = digits;
+
+            if (digits.length > 2) {
+                formatted = digits.replace(/^(\d{2})(\d)/, '$1.$2');
+            }
+            if (digits.length > 5) {
+                formatted = formatted.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+            }
+            if (digits.length > 8) {
+                formatted = formatted.replace(/^(\d{2})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3/$4');
+            }
+            if (digits.length > 12) {
+                formatted = formatted.replace(
+                    /^(\d{2})\.(\d{3})\.(\d{3})\/(\d{4})(\d)/,
+                    '$1.$2.$3/$4-$5'
+                );
+            }
+
+            e.target.value = formatted;
+        });
+    }
+}
+
 
         const cepField = document.getElementById('id_post_code');
         if (cepField) {
@@ -400,7 +420,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Argentina: CUIT
     if (countryISO === 'AR') {
-        const cuitField = document.getElementById('id_tax_id_1');
+        const cuitField = document.getElementById('id_tax_id_01');
         if (cuitField) {
             cuitField.addEventListener('input', function(e) {
                 let value = e.target.value.replace(/\D/g, '');
@@ -414,7 +434,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // UK: PAYE office number digits only
     if (countryISO === 'GB') {
-        const payeField = document.getElementById('id_tax_id_1');
+        const payeField = document.getElementById('id_tax_id_01');
         if (payeField) {
             payeField.addEventListener('input', function(e) {
                 e.target.value = e.target.value.replace(/\D/g, '');

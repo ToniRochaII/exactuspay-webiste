@@ -4,37 +4,32 @@ from Exactus.company.models import Company
 from Exactus.country.models import Country
 
 
-# pdcodes/forms.py
+# Exactus/pdcodes/forms.py
+from django import forms
+from Exactus.pdcodes.models import PDcode
+from Exactus.elements.models import Element
+
 class PDcodeForm(forms.ModelForm):
-    
-    def __init__(self, *args, **kwargs):
-        self.company = kwargs.pop("company", None)
-        super().__init__(*args, **kwargs)
+    # We explicitly define the field to use checkboxes
+    applicable_bases = forms.ModelMultipleChoiceField(
+        queryset=Element.objects.none(),
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+        label="Applicable Bases"
+    )
 
     class Meta:
         model = PDcode
         fields = [
-            "pdcode_code",
-            "pdcode_name",
-            "pdcode_description",
-            "pdcode_status",
-            "pdcode_frequency",
-            "pdcode_type",
-            "pdcode_class",
-            "pdcode_category",
-            "pdcode_categorytype",
-            "pdcode_account",
-            "pdcode_map_code",
-            "pdcode_gl_account",
-            "pdcode_taxable",
-            "pdcode_tax_flat",
-            "pdcode_tax_irregular",
-            "pdcode_social_securitable",
-            "pdcode_pensionable",
-            "pdcode_payable",
-            "pdcode_calculate",
-        ]
+            'pdcode_code', 'pdcode_name', 'pdcode_description',
+            'pdcode_status', 'pdcode_frequency', 'pdcode_type',
+            'pdcode_class', 'pdcode_category', 'pdcode_categorytype',
+            'pdcode_account', 'pdcode_map_code', 'pdcode_gl_account',
+            # Boolean Flags
 
+            # New Field
+            'applicable_bases'
+        ]
         widgets = {
             "pdcode_code": forms.TextInput(attrs={"class": "form-control"}),
             "pdcode_name": forms.TextInput(attrs={"class": "form-control"}),
@@ -51,15 +46,22 @@ class PDcodeForm(forms.ModelForm):
             "pdcode_map_code": forms.TextInput(attrs={"class": "form-control"}),
             "pdcode_gl_account": forms.TextInput(attrs={"class": "form-control"}),
 
-            "pdcode_taxable": forms.CheckboxInput(attrs={"class": "form-check-input"}),
-            "pdcode_tax_flat": forms.CheckboxInput(attrs={"class": "form-check-input"}),
-            "pdcode_tax_irregular": forms.CheckboxInput(attrs={"class": "form-check-input"}),
-            "pdcode_social_securitable": forms.CheckboxInput(attrs={"class": "form-check-input"}),
-            "pdcode_pensionable": forms.CheckboxInput(attrs={"class": "form-check-input"}),
-            "pdcode_payable": forms.CheckboxInput(attrs={"class": "form-check-input"}),
-            "pdcode_calculate": forms.CheckboxInput(attrs={"class": "form-check-input"}),
-        }
+            "applicable_bases": forms.CheckboxSelectMultiple(attrs={"class": "form-check-input"}),
 
+        }
+    def __init__(self, *args, **kwargs):
+        # We expect 'company' to be passed in kwargs from the view
+        self.company = kwargs.pop('company', None)
+        super().__init__(*args, **kwargs)
+
+        if self.company:
+            # Filter elements:
+            # 1. Must belong to the same country as the company
+            # 2. Must be a "Base" category (as per your requirement)
+            self.fields['applicable_bases'].queryset = Element.objects.filter(
+                country=self.company.country,
+                element_categorytype='Base'
+            )
 
 
 

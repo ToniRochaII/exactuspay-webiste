@@ -1,0 +1,930 @@
+# Exactus/payroll/views.py
+import json
+import csv
+from decimal import Decimal, InvalidOperation
+import logging
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ValidationError
+from django.contrib.auth.decorators import login_required
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.http import JsonResponse, HttpResponse
+from django.urls import reverse_lazy, reverse
+from django.views import View
+from django.utils import timezone
+from django.views.decorators.http import require_POST, require_http_methods
+from django.db.models import Sum, Count, Q
+from django.utils.decorators import method_decorator
+from django.db import transaction
+
+# Models
+from Exactus.company.models import Company
+from Exactus.country.models import Country
+from Exactus.employee.models import Employee
+from .models import (
+    Payroll, PayrollPeriod, PayrollExecutionLog, 
+    PayrollStatus, PeriodStatus, PayrollResult
+)
+from .forms import PayrollForm, PayrollPeriodForm, PayrollProcessForm
+
+# Permissions
+from Exactus.country.utils.decorators import role_required
+
+# ============================================================
+# CONSTANTS & CODES
+# ============================================================
+EL_GROSS_PAYABLE = 'GROSS_PAYABLE'
+EL_NET_PAY = 'NET_PAY'
+EL_INCOME_TAX = 'INCOME_TAX'
+EL_NI_EE = 'NI_EE'
+EL_PENSION_EE = 'PENSION_EE'
+
+# ============================================================
+# PAYROLL DASHBOARD
+# ============================================================
+
+@login_required
+def payroll_dashboard(request, country_slug, company_id):
+    company = get_object_or_404(Company, pk=company_id)
+    country = get_object_or_404(Country, slug=country_slug)
+    
+    active_payrolls = Payroll.objects.filter(
+        company=company,
+        status__in=[PayrollStatus.DRAFT, PayrollStatus.RUNNING]
+    ).order_by('-fiscal_year')
+    
+    recent_periods = PayrollPeriod.objects.filter(
+        payroll__company=company
+    ).order_by('-created_at')[:10]
+    
+    total_payrolls = Payroll.objects.filter(company=company).count()
+    total_periods = PayrollPeriod.objects.filter(payroll__company=company).count()
+    
+    total_amount = PayrollPeriod.objects.filter(
+        payroll__company=company,
+        status=PeriodStatus.COMPLETED
+    ).aggregate(total=Sum('total_amount'))['total'] or 0
+    
+    context = {
+        'company': company,
+        'country': country,
+        'company_id': company_id,
+        'country_slug': country_slug,
+        'active_payrolls': active_payrolls,
+        'recent_periods': recent_periods,
+        'total_payrolls': total_payrolls,
+        'total_periods': total_periods,
+        'total_amount': total_amount,
+    }
+    return render(request, 'payroll/payroll_dashboard.html', context)
+
+
+# ============================================================
+# PAYROLL LIST
+# ============================================================
+
+class PayrollListView(LoginRequiredMixin, ListView):
+    model = Payroll
+    template_name = "payroll/payroll_list.html"
+    context_object_name = "payrolls"
+    paginate_by = 20
+
+    def get_queryset(self):
+        company_id = self.kwargs["company_id"]
+        queryset = Payroll.objects.filter(company_id=company_id).order_by("-fiscal_year")
+        return queryset.annotate(
+            period_count=Count('periods'),
+            total_amount_sum=Sum('periods__total_amount')
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        company_id = self.kwargs["company_id"]
+        country_slug = self.kwargs["country_slug"]
+        context["company"] = get_object_or_404(Company, pk=company_id)
+        context["country"] = get_object_or_404(Country, slug=country_slug)
+        context["company_id"] = company_id
+        context["country_slug"] = country_slug
+        return context
+
+
+# ============================================================
+# PAYROLL DETAIL
+# ============================================================
+
+class PayrollDetailView(LoginRequiredMixin, DetailView):
+    model = Payroll
+    template_name = "payroll/payroll_detail.html"
+    context_object_name = "payroll"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        payroll = self.get_object()
+        periods = payroll.periods.all().order_by("period_number")
+        
+        # Calculate totals safely
+        total_amount = periods.aggregate(total=Sum('total_amount'))['total'] or Decimal('0.00')
+        total_employees = periods.aggregate(total=Sum('employee_count'))['total'] or 0
+
+        summary = {
+            'total_periods': periods.count(),
+            'pending_periods': periods.filter(status=PeriodStatus.PENDING).count(),
+            'completed_periods': periods.filter(status=PeriodStatus.COMPLETED).count(),
+            'locked_periods': periods.filter(status=PeriodStatus.LOCKED).count(),
+            'total_amount': total_amount,
+            'total_employees': total_employees,
+        }
+        
+        context["periods"] = periods
+        context["summary"] = summary
+        context["country_slug"] = self.kwargs["country_slug"]
+        context["company_id"] = self.kwargs["company_id"]
+        return context
+
+
+# ============================================================
+# PAYROLL CREATE
+# ============================================================
+
+class PayrollCreateView(LoginRequiredMixin, CreateView):
+    model = Payroll
+    form_class = PayrollForm
+    template_name = "payroll/payroll_form.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["company"] = get_object_or_404(Company, pk=self.kwargs["company_id"])
+        context["country"] = get_object_or_404(Country, slug=self.kwargs["country_slug"])
+        context["company_id"] = self.kwargs["company_id"]
+        context["country_slug"] = self.kwargs["country_slug"]
+        return context
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['country'] = get_object_or_404(Country, slug=self.kwargs["country_slug"])
+        kwargs['company'] = get_object_or_404(Company, pk=self.kwargs["company_id"])
+        return kwargs
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy(
+            "payroll:payroll_detail",
+            kwargs={
+                "country_slug": self.kwargs["country_slug"],
+                "company_id": self.kwargs["company_id"],
+                "pk": self.object.pk,
+            },
+        )
+
+
+# ============================================================
+# PAYROLL UPDATE
+# ============================================================
+
+class PayrollUpdateView(LoginRequiredMixin, UpdateView):
+    model = Payroll
+    template_name = "payroll/payroll_form.html"
+    form_class = PayrollForm
+
+    def dispatch(self, request, *args, **kwargs):
+        payroll = self.get_object()
+        if not payroll.is_editable:
+            messages.error(request, f"Cannot edit payroll with status: {payroll.get_status_display()}")
+            return redirect(
+                "payroll:payroll_detail",
+                country_slug=self.kwargs["country_slug"],
+                company_id=self.kwargs["company_id"],
+                pk=payroll.pk,
+            )
+        return super().dispatch(request, *args, **kwargs)
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['country'] = self.object.country
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["company_id"] = self.kwargs["company_id"]
+        context["country_slug"] = self.kwargs["country_slug"]
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy(
+            "payroll:payroll_detail",
+            kwargs={
+                "country_slug": self.kwargs["country_slug"],
+                "company_id": self.kwargs["company_id"],
+                "pk": self.object.pk,
+            },
+        )
+
+
+# ============================================================
+# PAYROLL DELETE
+# ============================================================
+
+class PayrollDeleteView(LoginRequiredMixin, DeleteView):
+    model = Payroll
+    template_name = "payroll/payroll_confirm_delete.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        payroll = self.get_object()
+        if not payroll.is_deletable:
+            messages.error(request, f"Cannot delete payroll with status: {payroll.get_status_display()}")
+            return redirect(
+                "payroll:payroll_detail",
+                country_slug=self.kwargs["country_slug"],
+                company_id=self.kwargs["company_id"],
+                pk=payroll.pk,
+            )
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["company_id"] = self.kwargs["company_id"]
+        context["country_slug"] = self.kwargs["country_slug"]
+        return context
+
+    def delete(self, request, *args, **kwargs):
+        payroll = self.get_object()
+        payroll.status = PayrollStatus.CANCELLED
+        payroll.save()
+        messages.success(request, f"Payroll FY{payroll.fiscal_year} has been cancelled.")
+        return redirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse_lazy(
+            "payroll:payroll_list",
+            kwargs={
+                "country_slug": self.kwargs["country_slug"],
+                "company_id": self.kwargs["company_id"],
+            },
+        )
+
+
+# ============================================================
+# PERIOD LIST
+# ============================================================
+
+class PayrollPeriodListView(LoginRequiredMixin, ListView):
+    model = PayrollPeriod
+    template_name = "payroll/period_list.html"
+    context_object_name = "periods"
+    paginate_by = 20
+
+    def get_queryset(self):
+        payroll_id = self.kwargs["payroll_id"]
+        return PayrollPeriod.objects.filter(payroll_id=payroll_id).order_by("period_number")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        payroll_id = self.kwargs["payroll_id"]
+        
+        context["payroll"] = get_object_or_404(Payroll, pk=payroll_id)
+        context["company_id"] = self.kwargs["company_id"]
+        context["country_slug"] = self.kwargs["country_slug"]
+        context["payroll_id"] = payroll_id
+
+        return context
+
+
+# ============================================================
+# PERIOD DETAIL (MINIMAL VERSION - FIXES INDENTATION)
+# ============================================================
+
+class PayrollPeriodDetailView(LoginRequiredMixin, DetailView):
+    model = PayrollPeriod
+    template_name = "payroll/period_detail.html"
+    context_object_name = "period"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        period = self.object
+        
+        # Get basic data
+        eligible_employees = period.get_eligible_employees()
+        payroll_results = period.results.select_related('employee').all()
+        has_results = payroll_results.exists()
+        
+        # Simple context for now
+        context.update({
+            "eligible_employees": eligible_employees,
+            "eligible_employee_count": eligible_employees.count(),
+            "payroll_results": payroll_results,
+            "has_results": has_results,
+            "payroll": period.payroll,
+            "company_id": self.kwargs["company_id"],
+            "country_slug": self.kwargs["country_slug"],
+            "payroll_id": self.kwargs["payroll_id"],
+            "process_form": PayrollProcessForm(),
+        })
+        
+        return context
+
+
+# ============================================================
+# PERIOD CREATE
+# ============================================================
+
+class PayrollPeriodCreateView(LoginRequiredMixin, CreateView):
+    model = PayrollPeriod
+    form_class = PayrollPeriodForm
+    template_name = "payroll/period_form.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        self.payroll = get_object_or_404(Payroll, pk=self.kwargs["payroll_id"])
+        if not self.payroll.can_add_periods:
+            messages.error(request, f"Cannot add periods to payroll with status: {self.payroll.get_status_display()}")
+            return redirect(
+                "payroll:payroll_detail",
+                country_slug=self.kwargs["country_slug"],
+                company_id=self.kwargs["company_id"],
+                pk=self.payroll.pk,
+            )
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['payroll'] = self.payroll
+        return kwargs
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['payroll'] = self.payroll
+        today = timezone.now().date()
+        last_period = PayrollPeriod.objects.filter(payroll=self.payroll).order_by('end_date').last()
+        
+        if last_period:
+            initial['start_date'] = last_period.end_date + timezone.timedelta(days=1)
+            initial['end_date'] = last_period.end_date + timezone.timedelta(days=30)
+        else:
+            initial['start_date'] = today.replace(day=1)
+            import calendar
+            last_day = calendar.monthrange(today.year, today.month)[1]
+            initial['end_date'] = today.replace(day=last_day)
+        
+        if initial.get('end_date'):
+            initial['processing_date'] = initial['end_date'] + timezone.timedelta(days=5)
+            initial['payment_date'] = initial['end_date'] + timezone.timedelta(days=7)
+        return initial
+
+    def form_valid(self, form):
+        form.instance.payroll = self.payroll
+        form.instance.created_by = self.request.user
+        
+        if not form.instance.name and form.instance.start_date:
+            form.instance.name = form.instance.start_date.strftime('%B %Y')
+        
+        try:
+            response = super().form_valid(form)
+            messages.success(self.request, f"Period {form.instance.period_number} created successfully.")
+            
+            PayrollExecutionLog.objects.create(
+                period=form.instance,
+                execution_type='creation',
+                status='completed',
+                input_data={'period_data': json.loads(json.dumps(form.cleaned_data, default=str))},
+                output_data={'period_id': form.instance.pk},
+                executed_by=self.request.user
+            )
+            return response
+        except ValidationError as e:
+            form.add_error(None, e)
+            return self.form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["payroll"] = self.payroll
+        context["company_id"] = self.kwargs["company_id"]
+        context["country_slug"] = self.kwargs["country_slug"]
+        context["payroll_id"] = self.kwargs["payroll_id"]
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy(
+            "payroll:period_detail",
+            kwargs={
+                "country_slug": self.kwargs["country_slug"],
+                "company_id": self.kwargs["company_id"],
+                "payroll_id": self.kwargs["payroll_id"],
+                "pk": self.object.pk,
+            },
+        )
+
+
+# ============================================================
+# PERIOD UPDATE
+# ============================================================
+
+class PayrollPeriodUpdateView(LoginRequiredMixin, UpdateView):
+    model = PayrollPeriod
+    form_class = PayrollPeriodForm
+    template_name = "payroll/period_form.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        period = self.get_object()
+        if not period.is_editable:
+            messages.error(request, f"Cannot edit period with status: {period.get_status_display()}")
+            return redirect(
+                "payroll:period_detail",
+                country_slug=self.kwargs["country_slug"],
+                company_id=self.kwargs["company_id"],
+                payroll_id=self.kwargs["payroll_id"],
+                pk=period.pk,
+            )
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['payroll'] = self.object.payroll
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["company_id"] = self.kwargs["company_id"]
+        context["country_slug"] = self.kwargs["country_slug"]
+        context["payroll_id"] = self.kwargs["payroll_id"]
+        return context
+
+    def form_valid(self, form):
+        try:
+            response = super().form_valid(form)
+            messages.success(self.request, f"Period {form.instance.period_number} updated successfully.")
+            return response
+        except ValidationError as e:
+            form.add_error(None, e)
+            return self.form_invalid(form)
+
+    def get_success_url(self):
+        return reverse_lazy(
+            "payroll:period_detail",
+            kwargs={
+                "country_slug": self.kwargs["country_slug"],
+                "company_id": self.kwargs["company_id"],
+                "payroll_id": self.kwargs["payroll_id"],
+                "pk": self.object.pk,
+            },
+        )
+
+
+# ============================================================
+# PERIOD DELETE
+# ============================================================
+
+class PayrollPeriodDeleteView(LoginRequiredMixin, DeleteView):
+    model = PayrollPeriod
+    template_name = "payroll/period_confirm_delete.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        period = self.get_object()
+        if not period.is_deletable:
+            messages.error(request, f"Cannot delete period with status: {period.get_status_display()}")
+            return redirect(
+                "payroll:period_detail",
+                country_slug=self.kwargs["country_slug"],
+                company_id=self.kwargs["company_id"],
+                payroll_id=self.kwargs["payroll_id"],
+                pk=period.pk,
+            )
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["company_id"] = self.kwargs["company_id"]
+        context["country_slug"] = self.kwargs["country_slug"]
+        context["payroll_id"] = self.kwargs["payroll_id"]
+        return context
+
+    def delete(self, request, *args, **kwargs):
+        period = self.get_object()
+        period_number = period.period_number
+        period_name = period.name
+        
+        response = super().delete(request, *args, **kwargs)
+        messages.success(request, f"Period '{period_name}' (#{period_number}) deleted successfully.")
+        return response
+
+    def get_success_url(self):
+        return reverse_lazy(
+            "payroll:period_list",
+            kwargs={
+                "country_slug": self.kwargs["country_slug"],
+                "company_id": self.kwargs["company_id"],
+                "payroll_id": self.kwargs["payroll_id"],
+            },
+        )
+
+
+# ============================================================
+# SIMPLIFIED PROCESS PERIOD VIEW
+# ============================================================
+
+@method_decorator(login_required, name="dispatch")
+class PayrollPeriodProcessView(View):
+    
+    def post(self, request, country_slug, company_id, payroll_id, period_id):
+        period = get_object_or_404(
+            PayrollPeriod, 
+            pk=period_id, 
+            payroll_id=payroll_id, 
+            payroll__company_id=company_id
+        )
+
+        # Start Execution Log
+        execution_log = PayrollExecutionLog.objects.create(
+            period=period, 
+            execution_type="calculation", 
+            status="started",
+            input_data={"period_id": period_id, "country": country_slug}, 
+            executed_by=request.user
+        )
+
+        try:
+            # Mark Period as Processing
+            period.mark_as_processing(request.user)
+            
+            # Get Employees
+            employees = period.get_eligible_employees()
+            if not employees.exists():
+                raise ValueError("No eligible employees found for this period.")
+
+            # Simple processing
+            with transaction.atomic():
+                # Clear old results
+                PayrollResult.objects.filter(period=period).delete()
+                
+                results_to_create = []
+                
+                for emp in employees:
+                    # Simple calculation for now
+                    results_to_create.append(PayrollResult(
+                        period=period,
+                        employee=emp,
+                        gross_pay=Decimal('0.00'),
+                        net_pay=Decimal('0.00'),
+                        total_tax=Decimal('0.00'),
+                        total_deductions=Decimal('0.00'),
+                        details={}
+                    ))
+
+                # Bulk Save
+                PayrollResult.objects.bulk_create(results_to_create)
+                
+                # Update Period
+                period.total_gross = Decimal('0.00')
+                period.total_net = Decimal('0.00')
+                period.total_tax = Decimal('0.00')
+                
+                period.mark_as_completed(results_payload={
+                    "employee_count": len(results_to_create),
+                    "total_net": "0.00",
+                    "total_gross": "0.00"
+                })
+
+            # Log Success
+            execution_log.mark_completed({
+                "processed_count": len(results_to_create), 
+                "country": country_slug,
+                "success": True
+            })
+
+            return JsonResponse({
+                "success": True,
+                "message": f"Successfully processed {len(results_to_create)} employees.",
+                "redirect_url": reverse('payroll:period_detail', 
+                                       args=[country_slug, company_id, payroll_id, period_id])
+            })
+
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            execution_log.mark_failed(str(e))
+            period.status = PeriodStatus.PENDING
+            period.save()
+            return JsonResponse({
+                "success": False, 
+                "error": f"Processing error: {str(e)}"
+            }, status=500)
+
+
+# ============================================================
+# APPROVE PERIOD
+# ============================================================
+
+@login_required
+@require_POST
+def approve_period(request, country_slug, company_id, payroll_id, period_id):
+    period = get_object_or_404(
+        PayrollPeriod, 
+        pk=period_id, 
+        payroll_id=payroll_id, 
+        payroll__company_id=company_id
+    )
+
+    if period.status != PeriodStatus.PENDING:
+        messages.error(request, "Only pending periods can be approved.")
+        return redirect('payroll:period_detail', 
+                       country_slug=country_slug,
+                       company_id=company_id,
+                       payroll_id=payroll_id,
+                       pk=period_id)
+
+    try:
+        with transaction.atomic():
+            # Get eligible employees
+            employees = period.get_eligible_employees()
+            
+            if not employees.exists():
+                messages.error(request, "No eligible employees found.")
+                return redirect('payroll:period_detail',
+                               country_slug=country_slug,
+                               company_id=company_id,
+                               payroll_id=payroll_id,
+                               pk=period_id)
+
+            # Clear old results
+            PayrollResult.objects.filter(period=period).delete()
+            
+            results_to_create = []
+            
+            for emp in employees:
+                results_to_create.append(PayrollResult(
+                    period=period,
+                    employee=emp,
+                    gross_pay=Decimal('0.00'),
+                    net_pay=Decimal('0.00'),
+                    total_tax=Decimal('0.00'),
+                    total_deductions=Decimal('0.00'),
+                    details={}
+                ))
+            
+            if not results_to_create:
+                raise ValueError("No employees were successfully processed")
+            
+            # Bulk save
+            PayrollResult.objects.bulk_create(results_to_create)
+            
+            # Update period
+            period.total_gross = Decimal('0.00')
+            period.total_net = Decimal('0.00')
+            period.total_tax = Decimal('0.00')
+            period.mark_as_completed({
+                "employee_count": len(results_to_create),
+                "total_net": "0.00",
+                "total_gross": "0.00"
+            })
+
+            messages.success(
+                request, 
+                f"Period approved successfully. Processed {len(results_to_create)} employees."
+            )
+
+    except Exception as e:
+        logger = logging.getLogger(__name__)
+        logger.error(f"Error approving period: {e}")
+        messages.error(request, f"Error approving period: {str(e)}")
+
+    return redirect('payroll:period_detail',
+                   country_slug=country_slug,
+                   company_id=company_id,
+                   payroll_id=payroll_id,
+                   pk=period_id)
+
+
+# ============================================================
+# EXPORT VIEW
+# ============================================================
+
+class PayrollPeriodExportView(View):
+    @method_decorator(login_required)
+    def get(self, request, country_slug, company_id, payroll_id, period_id):
+        period = get_object_or_404(
+            PayrollPeriod, 
+            pk=period_id, 
+            payroll_id=payroll_id, 
+            payroll__company_id=company_id
+        )
+
+        results = PayrollResult.objects.filter(period=period).select_related('employee')
+        
+        if not results.exists():
+            return HttpResponse("No results found to export.", content_type="text/plain")
+
+        filename = f"GTN_Report_{period.name.replace(' ', '_')}.csv"
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+        writer = csv.writer(response)
+        
+        # Simple headers
+        headers = ['Employee ID', 'Name', 'Gross Pay', 'Net Pay', 'Total Tax']
+        writer.writerow(headers)
+        
+        # Simple data
+        for res in results:
+            row = [
+                res.employee.id,
+                f"{res.employee.employee_name} {res.employee.employee_surname}",
+                res.gross_pay,
+                res.net_pay,
+                res.total_tax
+            ]
+            writer.writerow(row)
+
+        return response
+
+
+# ============================================================
+# AJAX UTILITY VIEWS
+# ============================================================
+
+@login_required
+def get_next_period_number(request, payroll_id):
+    payroll = get_object_or_404(Payroll, pk=payroll_id)
+    last_period = PayrollPeriod.objects.filter(payroll=payroll).order_by('period_number').last()
+    next_number = last_period.period_number + 1 if last_period else 1
+    return JsonResponse({
+        'next_period_number': next_number,
+        'payroll_id': payroll_id,
+        'fiscal_year': payroll.fiscal_year
+    })
+
+@login_required
+@require_POST
+def lock_payroll(request, country_slug, company_id, payroll_id):
+    payroll = get_object_or_404(Payroll, pk=payroll_id, company_id=company_id)
+    try:
+        payroll.lock(request.user)
+        return JsonResponse({
+            'success': True,
+            'message': f'Payroll FY{payroll.fiscal_year} locked successfully',
+            'status': payroll.status,
+            'locked_at': payroll.locked_at.isoformat() if payroll.locked_at else None
+        })
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+@login_required
+@require_POST
+def unlock_payroll(request, country_slug, company_id, payroll_id):
+    payroll = get_object_or_404(Payroll, pk=payroll_id, company_id=company_id)
+    try:
+        payroll.unlock()
+        return JsonResponse({
+            'success': True,
+            'message': f'Payroll FY{payroll.fiscal_year} unlocked successfully',
+            'status': payroll.status,
+            'locked_at': None
+        })
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+@login_required
+@require_POST
+def lock_period(request, country_slug, company_id, payroll_id, period_id):
+    period = get_object_or_404(PayrollPeriod, pk=period_id, payroll_id=payroll_id)
+    try:
+        period.lock()
+        return JsonResponse({
+            'success': True,
+            'message': f'Period {period.name} locked successfully',
+            'status': period.status
+        })
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+@login_required
+@require_POST
+def unlock_period(request, country_slug, company_id, payroll_id, period_id):
+    period = get_object_or_404(PayrollPeriod, pk=period_id, payroll_id=payroll_id)
+    try:
+        period.unlock()
+        return JsonResponse({
+            'success': True,
+            'message': f'Period {period.name} unlocked successfully',
+            'status': period.status
+        })
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+@login_required
+def payroll_summary_api(request, payroll_id):
+    payroll = get_object_or_404(Payroll, pk=payroll_id)
+    summary = payroll.get_periods_summary()
+    return JsonResponse({
+        'success': True,
+        'summary': summary,
+        'payroll': {
+            'id': payroll.pk,
+            'fiscal_year': payroll.fiscal_year,
+            'status': payroll.status,
+            'status_display': payroll.get_status_display(),
+            'is_editable': payroll.is_editable,
+            'is_deletable': payroll.is_deletable,
+        }
+    })
+
+
+# ============================================================
+# RESET LOGIC
+# ============================================================
+
+@login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION",
+               "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE")
+@require_http_methods(["GET", "POST"])
+def payroll_reset_confirm(request, country_slug, company_id, payroll_id):
+    payroll = get_object_or_404(
+        Payroll, 
+        pk=payroll_id, 
+        company_id=company_id
+    )
+
+    if request.method == "POST":
+        try:
+            with transaction.atomic():
+                payroll.status = PayrollStatus.RUNNING
+                payroll.save()
+                
+                periods = PayrollPeriod.objects.filter(payroll=payroll)
+                updated_count = periods.update(
+                    status=PeriodStatus.PENDING,
+                    total_gross=0,
+                    total_net=0,
+                    total_tax=0,
+                    total_amount=0
+                )
+                
+                PayrollResult.objects.filter(period__payroll=payroll).delete()
+                
+                messages.success(
+                    request, 
+                    f"Successfully reset Payroll FY{payroll.fiscal_year}. "
+                    f"{updated_count} periods reverted to Pending."
+                )
+                
+                return redirect('payroll:payroll_detail', country_slug=country_slug, company_id=company_id, pk=payroll.pk)
+
+        except Exception as e:
+            messages.error(request, f"Error resetting payroll: {str(e)}")
+
+    context = {
+        'payroll': payroll,
+        'period_count': payroll.periods.count(),
+        'country_slug': country_slug,
+        'company_id': company_id,
+    }
+    return render(request, 'payroll/payroll_reset_confirm.html', context)
+
+
+@login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION",
+               "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE")
+@require_http_methods(["GET", "POST"])
+def payroll_period_reset_confirm(request, country_slug, company_id, payroll_id, period_id):
+    period = get_object_or_404(
+        PayrollPeriod, 
+        pk=period_id, 
+        payroll_id=payroll_id, 
+        payroll__company_id=company_id
+    )
+
+    if request.method == "POST":
+        try:
+            with transaction.atomic():
+                deleted_count, _ = PayrollResult.objects.filter(period=period).delete()
+                
+                PayrollPeriod.objects.filter(pk=period.pk).update(
+                    status=PeriodStatus.PENDING,
+                    total_gross=Decimal("0.00"),
+                    total_net=Decimal("0.00"),
+                    total_tax=Decimal("0.00"),
+                    total_amount=Decimal("0.00")
+                )
+
+                messages.success(
+                    request, 
+                    f"Period '{period.name}' successfully forced to 'Pending'. "
+                    f"Cleared {deleted_count} calculation records."
+                )
+                
+                return redirect('payroll:period_detail', country_slug=country_slug, company_id=company_id, payroll_id=payroll_id, pk=period.pk)
+
+        except Exception as e:
+            messages.error(request, f"Error resetting period: {str(e)}")
+            logger = logging.getLogger(__name__)
+            logger.error(f"Reset failed for period {period_id}: {e}")
+
+    context = {
+        'period': period,
+        'country_slug': country_slug,
+        'company_id': company_id,
+        'payroll_id': payroll_id,
+    }
+    return render(request, 'payroll/period_reset_confirm.html', context)

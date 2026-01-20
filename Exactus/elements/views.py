@@ -1,3 +1,4 @@
+
 # elements/views.py
 import csv
 import io
@@ -337,3 +338,17 @@ def download_elements_template(request, country_slug=None):
         )
 
     return response
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -57,6 +57,12 @@ def handle_payroll_status_transitions(sender, instance, **kwargs):
     """
     Handle payroll status transitions with business rules.
     """
+    if instance.pk:
+        old_instance = Payroll.objects.get(pk=instance.pk)
+        
+        # ALLOW Reset: If moving from COMPLETED to RUNNING, allow it.
+        if old_instance.status == PayrollStatus.COMPLETED and instance.status == PayrollStatus.RUNNING:
+            return  # Allow this specific transition
     if instance.pk:  # Only for existing instances
         try:
             old_instance = Payroll.objects.get(pk=instance.pk)

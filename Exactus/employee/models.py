@@ -67,6 +67,8 @@ class Employee(models.Model):
     # ───────────────
     # Job / Payroll Info
     # ───────────────
+    employment_start_date = models.DateField(null=True, blank=True, verbose_name="Employment Start Date")
+    employment_end_date = models.DateField(null=True, blank=True, verbose_name="Employment End Date")
     department = models.CharField("Department", max_length=100, null=True, blank=True)
     cost_centre = models.CharField("Cost Centre", max_length=100, null=True, blank=True)
     job_title = models.CharField("Job Title", max_length=100, null=True, blank=True)

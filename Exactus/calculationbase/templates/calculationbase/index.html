@@ -51,7 +51,7 @@
            style="width:100%">
       <thead class="table-light">
         <tr>
-          <th>ID</th>
+          <th>Code</th>
           <th>Element</th>
           <th>Base Element</th>
           <th>Frequency</th>
@@ -62,7 +62,7 @@
       <tbody>
         {% for b in bases %}
         <tr>
-          <td>{{ b.id }}</td>
+          <td>{{ b.element.element_code }}</td>
           <td>{{ b.element.element_name }}</td>
           <td>{{ b.element_base.element_name|default:"—" }}</td>
           <td>{{ b.base_frequency|default:"—" }}</td>

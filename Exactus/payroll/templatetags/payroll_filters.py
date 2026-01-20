@@ -135,3 +135,105 @@ def payroll_status_badge_class(status):
     }
 
     return mapping.get(key, "bg-light text-dark")
+
+
+@register.filter
+def get_column_class(col_index, input_headers_count, has_results, total_columns):
+    """Determine CSS class for a table column based on its position"""
+    if has_results:
+        if col_index == input_headers_count:
+            return "summary-column"
+        elif col_index == total_columns - 1:
+            return "net-column"
+        elif col_index < input_headers_count:
+            return "input-column"
+        else:
+            return "output-column"
+    else:
+        # Preview mode
+        if col_index >= input_headers_count:
+            return "summary-column"
+        else:
+            return "input-column"
+
+@register.filter
+def get_header_class(col_index, input_headers_count, has_results, total_columns):
+    """Determine CSS class for a table header based on its position"""
+    if has_results:
+        if col_index == input_headers_count:
+            return "summary-header"
+        elif col_index == total_columns - 1:
+            return "net-header"
+        elif col_index < input_headers_count:
+            return "input-header"
+        else:
+            return "output-header"
+    else:
+        # Preview mode
+        if col_index >= input_headers_count:
+            return "summary-header"
+        else:
+            return "input-header"
+        
+
+@register.filter
+def subtract(value, arg):
+    """Subtract arg from value"""
+    try:
+        return Decimal(str(value)) - Decimal(str(arg))
+    except (ValueError, TypeError, InvalidOperation):
+        return Decimal('0')
+
+@register.filter
+def divide(value, arg):
+    """Divide value by arg"""
+    try:
+        arg_decimal = Decimal(str(arg))
+        if arg_decimal == 0:
+            return Decimal('0')
+        return Decimal(str(value)) / arg_decimal
+    except (ValueError, TypeError, InvalidOperation, ZeroDivisionError):
+        return Decimal('0')
+
+
+
+@register.filter
+def length_range(value):
+    """Return a range from 0 to length of value"""
+    try:
+        return range(len(value))
+    except (TypeError, ValueError):
+        return range(0)
+
+
+
+@register.filter
+def column_count(value):
+    """Get the number of columns in the first row"""
+    try:
+        if value and len(value) > 0 and 'columns' in value[0]:
+            return len(value[0]['columns'])
+    except (TypeError, IndexError, KeyError):
+        pass
+    return 0
+
+
+@register.filter
+def sum_column(rows, col_index):
+    """Sum a specific column across all rows"""
+    total = Decimal('0')
+    try:
+        for row in rows:
+            if 'columns' in row and col_index < len(row['columns']):
+                total += Decimal(str(row['columns'][col_index]))
+    except (IndexError, ValueError, TypeError, InvalidOperation):
+        pass
+    return total
+
+@register.filter
+def get_range(value):
+    """Return range for iteration - SIMPLE VERSION"""
+    try:
+        return range(value)
+    except (TypeError, ValueError):
+        return range(0)

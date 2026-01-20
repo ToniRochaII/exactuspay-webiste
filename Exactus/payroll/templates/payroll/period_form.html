@@ -26,7 +26,7 @@
                         <a href="{% url 'payroll:payroll_list' country_slug company_id %}">Payrolls</a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{% url 'payroll:payroll_detail' country_slug company_id payroll.pk %}">
+                        <a href="{% url 'payroll:payroll_detail' country_slug company_id payroll_id %}">
                             FY{{ payroll.fiscal_year }}
                         </a>
                     </li>
@@ -34,10 +34,11 @@
                         {% if form.instance.pk %}Edit{% else %}Create{% endif %}
                     </li>
                 </ol>
+                
             </nav>
         </div>
         <div class="col-auto">
-            <a href="{% url 'payroll:payroll_detail' country_slug company_id payroll.pk %}" 
+            <a href="{% url 'payroll:payroll_detail' country_slug company_id payroll_id %}" 
                class="btn btn-outline-secondary">
                 <i class="fas fa-arrow-left me-1"></i> Back
             </a>
@@ -63,7 +64,7 @@
                                         <strong>Payroll:</strong> FY{{ payroll.fiscal_year }}
                                     </div>
                                     <div class="col-md-6">
-                                        <strong>Company:</strong> {{ payroll.company.trade_name|default:payroll.company.trade_name }}
+                                        <strong>Company:</strong> {{ payrollperiod.payroll.company.trade_name }}
                                     </div>
                                 </div>
                             </div>
@@ -113,7 +114,7 @@
                 <div class="row mt-4">
                     <div class="col-12">
                         <div class="d-flex justify-content-between">
-                            <a href="{% url 'payroll:payroll_detail' country_slug company_id payroll.pk %}" 
+                            <a href="{% url 'payroll:payroll_detail' country_slug company_id payroll_id %}" 
                                class="btn btn-secondary">
                                 <i class="fas fa-times me-1"></i> Cancel
                             </a>

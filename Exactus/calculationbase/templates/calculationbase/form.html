@@ -43,7 +43,6 @@
 
             <div class="card-body">
 
-                <!-- TOP: ELEMENT, ELEMENT BASE, FREQUENCY -->
                 <div class="row g-3 mb-4">
                     <div class="col-md-4">
                         <div class="form-floating">
@@ -67,11 +66,32 @@
                     </div>
                 </div>
 
-                <!-- BRACKETS -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            {{ form.rounding_base }}
+                            <label for="{{ form.rounding_base.id_for_label }}">Rounding Base</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            {{ form.rounding_bracket }}
+                            <label for="{{ form.rounding_bracket.id_for_label }}">Rounding Bracket</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            {{ form.rounding_taxed }}
+                            <label for="{{ form.rounding_taxed.id_for_label }}">Rounding Taxed</label>
+                        </div>
+                    </div>
+                </div>
+
                 <h6 class="fw-bold border-bottom pb-2 mb-3">Brackets</h6>
 
                 <div id="bracket-container">
-                    <!-- Manually create the first few rows -->
                     <div class="row g-3 mb-3 bracket-row" id="row-00">
                         <div class="col-md-4">
                             <div class="form-floating">
@@ -126,7 +146,6 @@
                         </div>
                     </div>
 
-                    <!-- Bracket 03 -->
                     <div class="row g-3 mb-3 bracket-row" id="row-03">
                         <div class="col-md-4">
                             <div class="form-floating">
@@ -145,7 +164,6 @@
                         </div>
                     </div>
 
-                    <!-- Bracket 04 -->
                     <div class="row g-3 mb-3 bracket-row" id="row-04">
                         <div class="col-md-4">
                             <div class="form-floating">
@@ -164,7 +182,6 @@
                         </div>
                     </div>
 
-                    <!-- Bracket 05 -->
                     <div class="row g-3 mb-3 bracket-row" id="row-05">
                         <div class="col-md-4">
                             <div class="form-floating">
@@ -183,7 +200,6 @@
                         </div>
                     </div>
 
-                    <!-- Bracket 06 -->
                     <div class="row g-3 mb-3 bracket-row" id="row-06">
                         <div class="col-md-4">
                             <div class="form-floating">
@@ -202,7 +218,6 @@
                         </div>
                     </div>
 
-                    <!-- Bracket 07 -->
                     <div class="row g-3 mb-3 bracket-row" id="row-07">
                         <div class="col-md-4">
                             <div class="form-floating">
@@ -221,7 +236,6 @@
                         </div>
                     </div>
 
-                    <!-- Bracket 08 -->
                     <div class="row g-3 mb-3 bracket-row" id="row-08">
                         <div class="col-md-4">
                             <div class="form-floating">
@@ -240,7 +254,6 @@
                         </div>
                     </div>
 
-                    <!-- Bracket 09 -->
                     <div class="row g-3 mb-3 bracket-row" id="row-09">
                         <div class="col-md-4">
                             <div class="form-floating">
@@ -259,7 +272,6 @@
                         </div>
                     </div>
 
-                    <!-- Bracket 10 -->
                     <div class="row g-3 mb-3 bracket-row" id="row-10">
                         <div class="col-md-4">
                             <div class="form-floating">
@@ -278,7 +290,6 @@
                         </div>
                     </div>
 
-                    <!-- Bracket 11 -->
                     <div class="row g-3 mb-3 bracket-row" id="row-11">
                         <div class="col-md-4">
                             <div class="form-floating">
@@ -297,7 +308,6 @@
                         </div>
                     </div>
 
-                    <!-- Bracket 12 -->
                     <div class="row g-3 mb-3 bracket-row" id="row-12">
                         <div class="col-md-4">
                             <div class="form-floating">
@@ -316,7 +326,6 @@
                         </div>
                     </div>
 
-                    <!-- Bracket 13 -->
                     <div class="row g-3 mb-3 bracket-row" id="row-13">
                         <div class="col-md-4">
                             <div class="form-floating">
@@ -335,7 +344,6 @@
                         </div>
                     </div>
 
-                    <!-- Bracket 14 -->
                     <div class="row g-3 mb-3 bracket-row" id="row-14">
                         <div class="col-md-4">
                             <div class="form-floating">
@@ -354,7 +362,6 @@
                         </div>
                     </div>
 
-                    <!-- Bracket 15 -->
                     <div class="row g-3 mb-3 bracket-row" id="row-15">
                         <div class="col-md-4">
                             <div class="form-floating">
@@ -372,11 +379,8 @@
                             <div class="calc-value text-muted" id="calc-15">—</div>
                         </div>
                     </div>
-
-                    <!-- Add more rows as needed, or use the template filter method above -->
                 </div>
 
-                <!-- ADD ROW BUTTON -->
                 <div class="text-center mt-3">
                     <button type="button" id="addRowBtn" class="btn btn-outline-primary">
                         <i class="bi bi-plus-circle me-1"></i>Add a new row
@@ -419,7 +423,7 @@ document.addEventListener("DOMContentLoaded", () => {
  
     ];
     
-    let visibleRows =3; // Start with first row visible
+    let visibleRows = 3; // Start with first 3 rows visible
 
     function updateVisibility() {
         allRows.forEach((row, index) => {

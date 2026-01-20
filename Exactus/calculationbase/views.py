@@ -23,7 +23,7 @@ def calculationbase_list(request, country_slug, regulations_id):
     return render(
         request,
         "calculationbase/index.html",
-        {"country": country, "regulations": regulations, "bases": bases, "country_slug":country_slug,},
+        {"country": country, "regulations": regulations, "bases": bases, "country_slug":country_slug},
     )
 
 
@@ -40,6 +40,9 @@ def calculationbase_create(request, country_slug, regulations_id):
             cb.regulations = regulations
             cb.save()
             return redirect("calculationbase:list", country.slug, regulations.id)
+        else:
+            # Helpful for debugging if validation fails silently
+            print(form.errors)
     else:
         form = CalculationBaseForm(country=country, regulations=regulations)
 
@@ -53,7 +56,6 @@ def calculationbase_create(request, country_slug, regulations_id):
             "title": "Create Calculation Base"
         }
     )
-
 
 
 @login_required
@@ -77,6 +79,8 @@ def calculationbase_edit(request, country_slug, regulations_id, pk):
                 country_slug=country.slug,
                 regulations_id=regulations.id,
             )
+        else:
+            print(form.errors)
     else:
         form = CalculationBaseForm(instance=cb, country=country, regulations=regulations)
 
@@ -111,5 +115,5 @@ def calculationbase_delete(request, country_slug, regulations_id, pk):
     return render(
         request,
         "calculationbase/delete.html",
-        {"cb": cb, "country": country, "regulations": regulations, "country_slug":country_slug,},
+        {"cb": cb, "country": country, "regulations": regulations, "country_slug":country_slug},
     )

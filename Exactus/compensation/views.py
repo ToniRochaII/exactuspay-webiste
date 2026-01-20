@@ -3,6 +3,8 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from Exactus.company.models import Company
 from Exactus.country.models import Country
 from Exactus.employee.models import Employee
@@ -179,11 +181,88 @@ def compensation_delete(request, country_slug, company_id, employee_id, componen
     }
     return render(request, "compensation/delete.html", context)
 
+# Exactus/payroll/views.py
+
+# ... existing imports ...
+from Exactus.elements.models import Element
+# Import your Compensation model here
+from Exactus.compensation.models import CompensationComponent
+
+class EmployeeCompensationListView(LoginRequiredMixin, ListView):
+    model = CompensationComponent
+    template_name = "payroll/employee_compensation_list.html"
+    context_object_name = "earnings"
+
+    def get_queryset(self):
+        self.employee = get_object_or_404(Employee, pk=self.kwargs['employee_id'])
+        
+        # Filter for:
+        # 1. This Employee
+        # 2. Active Records
+        # 3. Only 'Payment' category (Earnings)
+        return Compensation.objects.filter(
+            employee=self.employee,
+            is_active=True,
+            element__element_category='Payment'  # Filters for Earnings only
+        ).select_related('element')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['employee'] = self.employee
+        context['company_id'] = self.kwargs.get('company_id')
+        context['country_slug'] = self.kwargs.get('country_slug')
+        return context
 
 
 
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import ListView
+from django.utils import timezone
+from django.db.models import Q
 
+from Exactus.company.models import Company
+from Exactus.country.models import Country
+from Exactus.employee.models import Employee
+from Exactus.compensation.models import CompensationComponent
 
+class CompensationListView(LoginRequiredMixin, ListView):
+    model = CompensationComponent
+    template_name = "compensation/list.html"
+    context_object_name = "active_components"
+
+    def get_queryset(self):
+        self.company = get_object_or_404(Company, pk=self.kwargs['company_id'])
+        self.employee = get_object_or_404(Employee, pk=self.kwargs['employee_id'])
+        
+        # Return only ACTIVE components for the main list
+        # (Assuming active means no end_date OR end_date is in the future)
+        today = timezone.now().date()
+        return CompensationComponent.objects.filter(
+            employee=self.employee,
+            is_active=True
+        ).filter(
+            Q(end_date__isnull=True) | Q(end_date__gte=today)
+        ).select_related('element').order_by('start_date')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Context for Breadcrumbs and Header
+        context['company'] = self.company
+        context['country'] = get_object_or_404(Country, slug=self.kwargs['country_slug'])
+        context['employee'] = self.employee
+        context['country_slug'] = self.kwargs['country_slug']
+
+        # Fetch Archived (Processed/Past) components separately
+        today = timezone.now().date()
+        context['archived_components'] = CompensationComponent.objects.filter(
+            employee=self.employee
+        ).filter(
+            Q(is_active=False) | Q(end_date__lt=today)
+        ).select_related('element').order_by('-end_date')
+
+        return context
 
 
 

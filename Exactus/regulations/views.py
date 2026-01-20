@@ -74,7 +74,7 @@ def regulations_edit(request, country_slug, regulations_id):
                 request,
                 f"Regulation for {country.name} ({regulations.fiscal_year}) updated successfully.",
             )
-            return redirect("regulations", country_slug=country.slug)
+            return redirect("regulations:regulations", country_slug=country.slug)
     else:
         form = RegulationsForm(instance=regulations)
 

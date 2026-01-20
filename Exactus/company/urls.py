@@ -25,4 +25,11 @@ urlpatterns = [
     path("<slug:country_slug>/create/", views.company_create, name="company_create"),
     path("<slug:country_slug>/delete/", views.company_delete, name="company_delete"),
     path("<slug:country_slug>/edit/<int:company_id>/", views.company_edit, name="company_edit"),
+
+
+    path('<slug:country_slug>/test-validation/', views.company_test_validation,name='company_test_validation'),
+    path('<slug:country_slug>/create/debug/',views.company_form_debug, name='company_form_debug'),
+    path('<slug:country_slug>/debug-info/',views.company_debug_info,name='company_debug_info'),
+    path('<slug:country_slug>/validate-ajax/',views.company_validate_ajax, name='company_validate_ajax'),
+    path('<slug:country_slug>/field-requirements/',views.company_field_requirements,name='company_field_requirements'),
 ]

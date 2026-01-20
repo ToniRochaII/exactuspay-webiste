@@ -1,9 +1,11 @@
-# pdcodes/models.py
+# Exactus/pdcodes/models.py
 from django.utils.text import slugify
 from django.db import models
+from Exactus.elements.models import Element  # Import Element
 
 
 class PDcode(models.Model):
+
     company = models.ForeignKey(
         "company.Company",
         on_delete=models.CASCADE,
@@ -79,8 +81,19 @@ class PDcode(models.Model):
         ("Formulae", "Formulae"),
         ("Base", "Base"),
     ]
+
+
+    applicable_bases = models.ManyToManyField(
+        Element,
+        blank=True,
+        related_name="contributing_pdcodes",
+        help_text="Select which Bases this PD Code contributes to."
+    )
+
     pdcode_categorytype = models.CharField(
-        max_length=50, choices=CALCBASETYPE_CHOICES, blank=True, null=True
+        max_length=50, 
+        choices=CALCBASETYPE_CHOICES, # ✅ Use the variable
+        blank=True, null=True
     )
 
     slug = models.SlugField(max_length=100, unique=True, blank=True)
@@ -92,7 +105,7 @@ class PDcode(models.Model):
         return self.pdcode_code or self.pdcode_name or "PD Code"
 
     def _build_base_slug(self) -> str:
-        base = f"{self.company.company_id}-"
+        base = f"{self.company.pk}-"
         if self.pdcode_code:
             base += str(self.pdcode_code)
         elif self.pdcode_name:
