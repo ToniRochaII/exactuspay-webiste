@@ -41,7 +41,6 @@ urlpatterns = [
          views.payroll_reset_confirm, 
          name='payroll_reset'),
 
-
     # AJAX: Lock/Unlock Payroll
     path('<slug:country_slug>/<int:company_id>/payroll/<int:payroll_id>/lock/', 
          views.lock_payroll, 
@@ -80,10 +79,20 @@ urlpatterns = [
          views.PayrollPeriodProcessView.as_view(), 
          name='period_process'),
          
-    path('<slug:country_slug>/<int:company_id>/payroll/<int:payroll_id>/period/<int:period_id>/approve/', 
-         views.approve_period, 
-         name='approve_period'),
+    # --- ADDED: NEW APPROVAL WORKFLOW ACTIONS ---
+    path('<slug:country_slug>/<int:company_id>/payroll/<int:payroll_id>/period/<int:period_id>/send_approval/', 
+         views.PayrollPeriodSendApprovalView.as_view(), 
+         name='period_send_approval'),
          
+    path('<slug:country_slug>/<int:company_id>/payroll/<int:payroll_id>/period/<int:period_id>/authorize/', 
+         views.PayrollPeriodAuthorizeView.as_view(), 
+         name='period_authorize'),
+         
+    path('<slug:country_slug>/<int:company_id>/payroll/<int:payroll_id>/period/<int:period_id>/reject/', 
+         views.PayrollPeriodRejectView.as_view(), 
+         name='period_reject'),
+    # --------------------------------------------
+
     path('<slug:country_slug>/<int:company_id>/payroll/<int:payroll_id>/period/<int:period_id>/reset/', 
          views.payroll_period_reset_confirm, 
          name='period_reset'),
@@ -111,7 +120,6 @@ urlpatterns = [
          views.payroll_summary_api, 
          name='payroll_summary_api'),
 
-    # --- THIS WAS THE MISSING URL ---
     path('api/payroll/<int:payroll_id>/next-period/', 
          views.get_next_period_number, 
          name='next_period_number'),

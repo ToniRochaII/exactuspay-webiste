@@ -80,15 +80,35 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
         active_comps = comps.filter(is_active=True, processed=False)
         
         if self.period:
-            from django.db.models import Q
+            # Allow past items (arrears) by only filtering out FUTURE starts
             active_comps = active_comps.filter(
-                Q(end_date__isnull=True) | Q(end_date__gte=self.period.start_date),
                 start_date__lte=self.period.end_date
             ).select_related('pd_code')
 
         for comp in active_comps:
-            if self.period: amt = comp.get_period_amount(self.period.start_date, self.period.end_date)
-            else: amt = comp.amount
+            if self.period:
+                # 1. Skip Future Payments
+                if comp.start_date > self.period.end_date:
+                    continue 
+
+                # 2. Check for Expired vs Arrears
+                is_ended_in_past = comp.end_date and comp.end_date < self.period.start_date
+                
+                # --- FIX: LOGIC SPLIT ---
+                if is_ended_in_past:
+                    if comp.category == 'PERMANENT':
+                        # EXPIRED SALARY: Do NOT pay.
+                        continue 
+                    else:
+                        # UNPAID ARREARS (Variable/One-Time): Pay Full Amount.
+                        # e.g., Unpaid Overtime from last month.
+                        amt = comp.amount
+                else:
+                    # CURRENT / ONGOING: Prorate normally
+                    amt = comp.get_period_amount(self.period.start_date, self.period.end_date)
+            else: 
+                amt = comp.amount
+            
             amt = Decimal(str(amt))
             
             pd = getattr(comp, 'pdcode', getattr(comp, 'pd_code', None))
@@ -131,11 +151,7 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
                     target = rule.element
                     
                     if calc_val > 0:
-                        # [FIX] Determine Sign based on Code Range
-                        # 5000 = Gross (Positive)
-                        # 9000+ = Employer Contributions (Positive Cost)
-                        # Others = Deductions (Negative)
-                        
+                        # Determine Sign based on Code Range
                         try:
                             code_int = int(target.element_code)
                             if code_int == 5000 or code_int >= 9000:
@@ -143,7 +159,6 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
                             else:
                                 result_amt = -calc_val
                         except (ValueError, TypeError):
-                            # Default to deduction if code is weird
                             result_amt = -calc_val
 
                         # Register
@@ -159,14 +174,37 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
     def _collect_pd_codes(self):
         comps = self._get_compensation_list()
         if comps:
+            # Only fetch unprocessed items
             for c in comps.filter(is_active=True, processed=False):
-                pd = getattr(c, 'pdcode', getattr(c, 'pd_code', None))
-                if pd:
-                    self.pd_codes.append({
-                        'code': getattr(pd, 'pdcode_code', ''),
-                        'description': getattr(pd, 'pdcode_description', ''),
-                        'amount': c.amount
-                    })
+                amount_to_show = Decimal('0.00')
+                should_show = True
+
+                if self.period:
+                    # 1. Skip Future
+                    if c.start_date > self.period.end_date:
+                        should_show = False
+                    
+                    # 2. Logic for Past/Current Amount
+                    elif c.end_date and c.end_date < self.period.start_date:
+                        # Ended in Past
+                        if c.category == 'PERMANENT':
+                            should_show = False  # Expired Permanent -> Hide
+                        else:
+                            amount_to_show = c.amount # Past Arrears -> Show Full
+                    else:
+                        # Current
+                        amount_to_show = c.get_period_amount(self.period.start_date, self.period.end_date)
+                else:
+                    amount_to_show = c.amount
+
+                if should_show:
+                    pd = getattr(c, 'pdcode', getattr(c, 'pd_code', None))
+                    if pd:
+                        self.pd_codes.append({
+                            'code': getattr(pd, 'pdcode_code', ''),
+                            'description': getattr(pd, 'pdcode_description', ''),
+                            'amount': amount_to_show
+                        })
 
     def _build_return(self, net_pay):
         return {

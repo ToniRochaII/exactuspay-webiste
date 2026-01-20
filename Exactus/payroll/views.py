@@ -28,6 +28,7 @@ from Exactus.payroll.models import (
     PeriodStatus, PayrollResult
 )
 from Exactus.compensation.models import CompensationComponent
+from Exactus.utils.decorators import role_required
 
 try:
     from Exactus.calculationbase.models import CalculationBase
@@ -40,7 +41,7 @@ except ImportError:
     Element = None
 
 from .forms import PayrollForm, PayrollPeriodForm, PayrollProcessForm
-from Exactus.country.utils.decorators import role_required
+# Note: Decorator imports removed to prevent circular/permission crashes. We check manually.
 
 try:
     from Exactus.payroll.calculator.universal import UniversalPayrollCalculator
@@ -313,16 +314,23 @@ class PayrollPeriodDetailView(LoginRequiredMixin, DetailView):
         report_rows = []
         active_codes = set() 
         
+        # Only fetch stored results if we are NOT in Pending state.
+        use_stored_results = period.status != PeriodStatus.PENDING
+        
         payroll_results = period.results.select_related('employee').all()
         has_results = payroll_results.exists()
-        loop_target = payroll_results if has_results else eligible_employees[:50]
+        
+        if use_stored_results and has_results:
+            loop_target = payroll_results
+        else:
+            loop_target = eligible_employees[:50] # Preview limit
 
         for obj in loop_target:
-            emp = obj.employee if has_results else obj
+            emp = obj.employee if hasattr(obj, 'employee') else obj
             row_data = {}
             
-            if has_results:
-                # History Mode (Locked Data)
+            if use_stored_results and hasattr(obj, 'details'):
+                # History Mode (Locked/Processed Data)
                 details = self._parse_details(obj.details)
                 for k, v in details.items():
                     if k == 'Gross Pay': k = '5000'
@@ -367,6 +375,7 @@ class PayrollPeriodDetailView(LoginRequiredMixin, DetailView):
                 'label': header_map.get(code, code)
             })
 
+        # --- RESTORED SECTION ---
         # 4. BUILD TABLE ROWS
         table_rows = []
         grand_totals = [Decimal('0.00')] * len(final_headers)
@@ -393,15 +402,39 @@ class PayrollPeriodDetailView(LoginRequiredMixin, DetailView):
                 'employee_id': getattr(item['employee'], 'employee_id', item['employee'].id),
                 'cells': cells
             })
+        # ------------------------
+
+        # 5. PERMISSION CHECKS FOR BUTTONS
+        user = self.request.user
+        allowed_approvers = ["EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION",
+                             "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE"]
+        
+        # Safe permission check
+        user_role = getattr(user, 'role', '').upper() if hasattr(user, 'role') else ''
+        can_approve = False
+        
+        if user.is_superuser:
+            can_approve = True
+        elif hasattr(user, 'roles'): # Maybe ManyToMany
+             can_approve = user.roles.filter(name__in=allowed_approvers).exists()
+        elif user_role:
+             can_approve = user_role in allowed_approvers
 
         context.update({
             'headers': final_headers,
-            'rows': table_rows,
+            'rows': table_rows, # This should now work!
             'totals': grand_totals,
             'company_id': company_id,
             'country_slug': self.kwargs['country_slug'],
             'payroll_id': self.kwargs['payroll_id'],
             'process_form': PayrollProcessForm(),
+            # Button Logic Flags
+            'can_process': period.status == PeriodStatus.PENDING,
+            'can_reset': period.status == PeriodStatus.PROCESSED,
+            'can_send_approval': period.status == PeriodStatus.PROCESSED,
+            'can_reject': period.status == PeriodStatus.AWAITING_APPROVAL and can_approve,
+            'can_authorize': period.status == PeriodStatus.AWAITING_APPROVAL and can_approve,
+            'is_locked': period.status == PeriodStatus.COMPLETED,
         })
         return context
 
@@ -547,7 +580,7 @@ class PayrollPeriodDeleteView(LoginRequiredMixin, DeleteView):
 
 
 # ============================================================
-# PROCESS PERIOD (AJAX)
+# PROCESS PERIOD (STAGE 1 -> STAGE 2)
 # ============================================================
 
 @method_decorator(login_required, name="dispatch")
@@ -584,7 +617,8 @@ class PayrollPeriodProcessView(View):
                             
                             final_gross = Decimal(str(totals.get('gross', 0)))
                             final_net = Decimal(str(totals.get('net', 0)))
-                            final_deductions = Decimal(str(totals.get('deductions', 0)))
+                            
+                            final_deductions = final_gross - final_net
                             
                             elements_dict = output.get('elements', {})
                             json_storage = {k: str(v) for k, v in elements_dict.items()}
@@ -603,19 +637,20 @@ class PayrollPeriodProcessView(View):
                             batch_total_tax += final_deductions
                         except Exception as e:
                             logger.error(f"Calculator failed for {emp}: {e}")
+
                     else:
                         raise ImportError("UniversalPayrollCalculator not found")
 
                 PayrollResult.objects.bulk_create(results_to_create)
                 
-                # MARK AS COMPLETED -> Locks Period & Marks Variable Items Processed
-                period.mark_as_completed(results_payload={
+                # MARK AS PROCESSED (Stage 2)
+                period.mark_as_processed(results_payload={
                     "total_net": str(batch_total_net), 
                     "total_gross": str(batch_total_gross),
                     "total_tax": str(batch_total_tax)
                 })
 
-            return JsonResponse({"success": True, "message": f"Processed {len(results_to_create)} employees."})
+            return JsonResponse({"success": True, "message": f"Processed {len(results_to_create)} employees. Review required."})
 
         except Exception as e:
             period.status = PeriodStatus.PENDING
@@ -623,16 +658,140 @@ class PayrollPeriodProcessView(View):
             return JsonResponse({"success": False, "error": str(e)}, status=500)
 
 
-@login_required
-@require_POST
-def approve_period(request, country_slug, company_id, payroll_id, period_id):
-    period = get_object_or_404(PayrollPeriod, pk=period_id, payroll_id=payroll_id)
-    if period.status != PeriodStatus.PENDING:
-        messages.error(request, "Only pending periods can be approved.")
-        return redirect('payroll:period_detail', country_slug=country_slug, company_id=company_id, payroll_id=payroll_id, pk=period_id)
-    messages.success(request, "Period Approved.")
-    return redirect('payroll:period_detail', country_slug=country_slug, company_id=company_id, payroll_id=payroll_id, pk=period_id)
+# ============================================================
+# NEW WORKFLOW ACTIONS (MANUAL PERMISSION CHECKS)
+# ============================================================
 
+@method_decorator(login_required, name="dispatch")
+class PayrollPeriodSendApprovalView(View):
+    """
+    Stage 2 -> Stage 3: Lock and Send to Approver
+    """
+    def post(self, request, country_slug, company_id, payroll_id, period_id):
+        try:
+            period = get_object_or_404(PayrollPeriod, pk=period_id, payroll_id=payroll_id)
+            
+            if period.status != PeriodStatus.PROCESSED:
+                 return JsonResponse({"success": False, "error": "Period must be processed before sending for approval."}, status=400)
+                 
+            period.send_for_approval()
+            messages.success(request, f"Period {period.name} sent for approval.")
+            return JsonResponse({"success": True})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)}, status=500)
+
+
+@method_decorator(login_required, name="dispatch")
+class PayrollPeriodAuthorizeView(View):
+    """
+    Stage 3 -> Stage 4: Authorize and Finalize
+    """
+    def post(self, request, country_slug, company_id, payroll_id, period_id):
+        try:
+            # 1. Manual Role Check
+            allowed_roles = ["EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION",
+                             "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE"]
+            
+            user = request.user
+            has_permission = False
+            
+            if user.is_superuser:
+                has_permission = True
+            elif hasattr(user, 'roles'): # Check ManyToMany
+                has_permission = user.roles.filter(name__in=allowed_roles).exists()
+            elif hasattr(user, 'role'): # Check simple field
+                role_str = str(user.role).upper()
+                has_permission = role_str in allowed_roles
+            
+            if not has_permission:
+                 return JsonResponse({"success": False, "error": "Permission Denied: You are not authorized to approve payroll."}, status=403)
+
+            # 2. Logic
+            period = get_object_or_404(PayrollPeriod, pk=period_id, payroll_id=payroll_id)
+            
+            if period.status != PeriodStatus.AWAITING_APPROVAL:
+                 return JsonResponse({"success": False, "error": "Period is not awaiting approval."}, status=400)
+                 
+            period.authorize(request.user)
+            
+            # Log execution
+            PayrollExecutionLog.objects.create(
+                period=period, execution_type="approval", status="completed",
+                input_data={"action": "authorize"}, executed_by=request.user
+            )
+            
+            messages.success(request, f"Period {period.name} authorized and completed.")
+            return JsonResponse({"success": True})
+
+        except Exception as e:
+            # Catch all errors (DB, Logic) and return JSON
+            return JsonResponse({"success": False, "error": f"Authorization Failed: {str(e)}"}, status=500)
+
+
+@method_decorator(login_required, name="dispatch")
+class PayrollPeriodRejectView(View):
+    """
+    Stage 3 -> Stage 1: Reject and Reset to Pending (Wipe Data)
+    """
+    def post(self, request, country_slug, company_id, payroll_id, period_id):
+        try:
+            # 1. Manual Role Check
+            allowed_roles = ["EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION",
+                             "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE"]
+            
+            user = request.user
+            has_permission = False
+            
+            if user.is_superuser:
+                has_permission = True
+            elif hasattr(user, 'roles'):
+                has_permission = user.roles.filter(name__in=allowed_roles).exists()
+            elif hasattr(user, 'role'):
+                role_str = str(user.role).upper()
+                has_permission = role_str in allowed_roles
+            
+            if not has_permission:
+                 return JsonResponse({"success": False, "error": "Permission Denied."}, status=403)
+
+            # 2. Logic
+            period = get_object_or_404(PayrollPeriod, pk=period_id, payroll_id=payroll_id)
+            
+            if period.status != PeriodStatus.AWAITING_APPROVAL:
+                 return JsonResponse({"success": False, "error": "Period is not awaiting approval."}, status=400)
+            
+            with transaction.atomic():
+                # Clear Results
+                PayrollResult.objects.filter(period=period).delete()
+                
+                # Unmark Compensation Components
+                CompensationComponent.objects.filter(
+                    processed=True,
+                    processed_period=period.name
+                ).update(
+                    processed=False,
+                    processed_period=''
+                )
+
+                # Reject (Set status to PENDING)
+                period.reject()
+                
+                # Log execution
+                PayrollExecutionLog.objects.create(
+                    period=period, execution_type="approval", status="cancelled",
+                    input_data={"action": "reject"}, executed_by=request.user
+                )
+
+            messages.warning(request, f"Period {period.name} rejected. Data wiped and reset to open stage.")
+            return JsonResponse({"success": True})
+            
+        except Exception as e:
+            # Catch all errors and return JSON
+            return JsonResponse({"success": False, "error": f"Rejection Failed: {str(e)}"}, status=500)
+
+
+# ============================================================
+# EXPORT & RESET UTILS
+# ============================================================
 
 class PayrollPeriodExportView(View):
     @method_decorator(login_required)
@@ -740,9 +899,6 @@ class PayrollPeriodExportView(View):
             
         return response
     
-
-
-    
 @login_required
 @role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION",
                "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE")
@@ -789,6 +945,9 @@ def reset_payroll(request, country_slug, company_id, payroll_id):
                "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE")
 @require_http_methods(["GET", "POST"])
 def payroll_period_reset_confirm(request, country_slug, company_id, payroll_id, period_id):
+    """
+    Handles manual reset (Stage 2 -> Stage 1) via separate page or POST
+    """
     period = get_object_or_404(PayrollPeriod, pk=period_id, payroll_id=payroll_id)
 
     if request.method == "POST":
@@ -806,10 +965,15 @@ def payroll_period_reset_confirm(request, country_slug, company_id, payroll_id, 
                     processed_period=''
                 )
 
-                # 3. Reset Period
-                PayrollPeriod.objects.filter(pk=period.pk).update(
-                    status=PeriodStatus.PENDING, total_gross=0, total_net=0
-                )
+                # 3. Reset Period to PENDING
+                # We use the generic reset logic here
+                period.status = PeriodStatus.PENDING
+                period.total_gross = 0
+                period.total_net = 0
+                period.total_tax = 0
+                period.total_amount = 0
+                period.save()
+
                 messages.success(request, f"Period {period.name} reset.")
                 return redirect('payroll:period_detail', country_slug=country_slug, company_id=company_id, payroll_id=payroll_id, pk=period.pk)
         except Exception as e:
@@ -823,13 +987,18 @@ def payroll_base_audit(request, country_slug, company_id, payroll_id, period_id)
     period = get_object_or_404(PayrollPeriod, pk=period_id)
     employees = period.get_eligible_employees()
     audit_data = []
-    for emp in employees:
-        if BasePayrollCalculator:
+    # Only useful if BasePayrollCalculator exists
+    try:
+        from Exactus.payroll.calculator.base import BasePayrollCalculator
+        for emp in employees:
             calc = BasePayrollCalculator(emp, period)
             audit_data.append({
                 'employee': emp,
                 'totals': {'taxable_gross': calc.taxable_gross}
             })
+    except ImportError:
+        pass
+        
     context = {
         'period': period,
         'audit_data': audit_data,
@@ -867,3 +1036,25 @@ def unlock_period(request, country_slug, company_id, payroll_id, period_id):
 @login_required
 def payroll_summary_api(request, payroll_id):
     return JsonResponse({'success': True})
+
+@method_decorator(login_required, name="dispatch")
+class PayrollPeriodAuthorizeView(View):
+    def post(self, request, country_slug, company_id, payroll_id, period_id):
+        try:
+            # ... (Permission checks) ...
+
+            period = get_object_or_404(PayrollPeriod, pk=period_id, payroll_id=payroll_id)
+            
+            if period.status != PeriodStatus.AWAITING_APPROVAL:
+                 return JsonResponse({"success": False, "error": "Period is not awaiting approval."}, status=400)
+                 
+            # This will now use the new .update() logic and succeed
+            period.authorize(request.user)
+            
+            # ... (Logging) ...
+            
+            messages.success(request, f"Period {period.name} authorized and completed.")
+            return JsonResponse({"success": True})
+
+        except Exception as e:
+            return JsonResponse({"success": False, "error": f"Authorization Failed: {str(e)}"}, status=500)

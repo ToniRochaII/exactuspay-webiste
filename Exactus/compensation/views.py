@@ -1,7 +1,10 @@
 # Exactus/compensation/views.py
+from datetime import timedelta
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
+from django.db.models import Q
+from django.utils import timezone
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -12,10 +15,11 @@ from Exactus.utils.decorators import role_required
 from Exactus.pdcodes.models import PDcode
 from Exactus.compensation.forms import CompensationComponentForm
 from Exactus.compensation.models import CompensationComponent
-
+from Exactus.elements.models import Element
 
 ROLES = ("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION",
          "DIRECTOR","MANAGER","SPECIALIST","FINANCE")
+
 @login_required
 @role_required(*ROLES)
 def compensation_list(request, country_slug, company_id, employee_id):
@@ -60,6 +64,26 @@ def compensation_create(request, country_slug, company_id, employee_id):
             component = form.save(commit=False)
             component.employee = employee
             component.created_by = request.user
+            
+            # --- LOGIC: Auto-terminate previous permanent payment ---
+            if component.category == "PERMANENT":
+                # Find the most recent active permanent component with the same PD Code
+                # that started BEFORE this new one.
+                previous_comp = CompensationComponent.objects.filter(
+                    employee=employee,
+                    pd_code=component.pd_code,
+                    category="PERMANENT",
+                    is_active=True,
+                    start_date__lt=component.start_date
+                ).order_by('-start_date').first()
+
+                if previous_comp:
+                    # Set end date to one day before the new start date
+                    previous_comp.end_date = component.start_date - timedelta(days=1)
+                    previous_comp.save()
+                    messages.info(request, f"Previous {previous_comp.pd_code} record auto-terminated on {previous_comp.end_date}.")
+            # --------------------------------------------------------
+
             component.save()
             messages.success(
                 request,
@@ -87,8 +111,6 @@ def compensation_create(request, country_slug, company_id, employee_id):
 
 @login_required
 @role_required(*ROLES)
-@login_required
-@role_required(*ROLES)
 def compensation_edit(request, country_slug, company_id, employee_id, component_id):
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
@@ -106,7 +128,25 @@ def compensation_edit(request, country_slug, company_id, employee_id, component_
             company=company,
         )
         if form.is_valid():
-            form.save()
+            updated_comp = form.save(commit=False)
+            
+            # --- LOGIC: Auto-terminate previous permanent payment (on Edit too) ---
+            if updated_comp.category == "PERMANENT":
+                previous_comp = CompensationComponent.objects.filter(
+                    employee=employee,
+                    pd_code=updated_comp.pd_code,
+                    category="PERMANENT",
+                    is_active=True,
+                    start_date__lt=updated_comp.start_date
+                ).exclude(pk=updated_comp.pk).order_by('-start_date').first()
+
+                if previous_comp:
+                    # Update the previous record's end date based on the new start date
+                    previous_comp.end_date = updated_comp.start_date - timedelta(days=1)
+                    previous_comp.save()
+            # ----------------------------------------------------------------------
+
+            updated_comp.save()
             messages.success(
                 request,
                 "Compensation component updated successfully."
@@ -133,8 +173,6 @@ def compensation_edit(request, country_slug, company_id, employee_id, component_
         "is_edit": True,
     }
     return render(request, "compensation/form.html", context)
-
-
 
 
 @login_required
@@ -181,12 +219,6 @@ def compensation_delete(request, country_slug, company_id, employee_id, componen
     }
     return render(request, "compensation/delete.html", context)
 
-# Exactus/payroll/views.py
-
-# ... existing imports ...
-from Exactus.elements.models import Element
-# Import your Compensation model here
-from Exactus.compensation.models import CompensationComponent
 
 class EmployeeCompensationListView(LoginRequiredMixin, ListView):
     model = CompensationComponent
@@ -200,7 +232,7 @@ class EmployeeCompensationListView(LoginRequiredMixin, ListView):
         # 1. This Employee
         # 2. Active Records
         # 3. Only 'Payment' category (Earnings)
-        return Compensation.objects.filter(
+        return CompensationComponent.objects.filter(
             employee=self.employee,
             is_active=True,
             element__element_category='Payment'  # Filters for Earnings only
@@ -213,18 +245,6 @@ class EmployeeCompensationListView(LoginRequiredMixin, ListView):
         context['country_slug'] = self.kwargs.get('country_slug')
         return context
 
-
-
-from django.shortcuts import render, get_object_or_404
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import ListView
-from django.utils import timezone
-from django.db.models import Q
-
-from Exactus.company.models import Company
-from Exactus.country.models import Country
-from Exactus.employee.models import Employee
-from Exactus.compensation.models import CompensationComponent
 
 class CompensationListView(LoginRequiredMixin, ListView):
     model = CompensationComponent
@@ -263,10 +283,3 @@ class CompensationListView(LoginRequiredMixin, ListView):
         ).select_related('element').order_by('-end_date')
 
         return context
-
-
-
-
-
-
-

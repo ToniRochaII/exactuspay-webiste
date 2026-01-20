@@ -9,21 +9,62 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="fw-bold mb-0">{{ period.name }}</h2>
-            <p class="text-muted">Status: {{ period.get_status_display }}</p>
+            <div class="d-flex align-items-center gap-2 mt-1">
+                <span class="badge 
+                    {% if period.status == 'PENDING' %}bg-secondary
+                    {% elif period.status == 'PROCESSED' %}bg-info
+                    {% elif period.status == 'AWAITING_APPROVAL' %}bg-warning text-dark
+                    {% elif period.status == 'COMPLETED' %}bg-success
+                    {% else %}bg-secondary{% endif %}">
+                    {{ period.get_status_display }}
+                </span>
+                <span class="text-muted small">Period #{{ period.period_number }}</span>
+            </div>
         </div>
+
         <div class="d-flex gap-2">
-            {% if period.status != 'LOCKED' %}
-            <form method="post" action="{% url 'payroll:period_reset' country_slug company_id payroll_id period.id %}">
-                {% csrf_token %}
-                <button type="submit" class="btn btn-outline-danger">Reset</button>
-            </form>
+            {% if can_process %}
+                <button class="btn btn-primary" id="processBtn" data-period-id="{{ period.pk }}">
+                    <i class="bi bi-gear-fill me-1"></i> Process Payroll
+                </button>
             {% endif %}
-            {% if period.can_process %}
-            <button class="btn btn-primary" id="processBtn" data-period-id="{{ period.pk }}">Process Payroll</button>
+
+            {% if period.status == 'PROCESSED' %}
+                <form method="post" action="{% url 'payroll:period_reset' country_slug company_id payroll_id period.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Are you sure? This will delete all calculations.');">
+                        <i class="bi bi-arrow-counterclockwise me-1"></i> Reset Payroll
+                    </button>
+                </form>
+
+                <button class="btn btn-success" id="sendApprovalBtn" data-period-id="{{ period.pk }}">
+                    <i class="bi bi-send-fill me-1"></i> Send for Approval
+                </button>
             {% endif %}
-            <a href="{% url 'payroll:period_export' country_slug company_id payroll_id period.id %}" class="btn btn-outline-success">
-                Export CSV
-            </a>
+
+            {% if period.status == 'AWAITING_APPROVAL' %}
+                {% if can_reject %}
+                    <button class="btn btn-danger" id="rejectBtn" data-period-id="{{ period.pk }}">
+                        <i class="bi bi-x-circle-fill me-1"></i> Reject Payroll
+                    </button>
+                {% endif %}
+                
+                {% if can_authorize %}
+                    <button class="btn btn-success" id="authorizeBtn" data-period-id="{{ period.pk }}">
+                        <i class="bi bi-check-circle-fill me-1"></i> Authorize Payroll
+                    </button>
+                {% endif %}
+                
+                {% if not can_authorize and not can_reject %}
+                    <span class="text-muted fst-italic align-self-center">Waiting for authorized approver...</span>
+                {% endif %}
+            {% endif %}
+
+            {% if is_locked %}
+                <a href="{% url 'payroll:period_export' country_slug company_id payroll_id period.id %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-download me-1"></i> Export Report
+                </a>
+            {% endif %}
         </div>
     </div>
 
@@ -36,9 +77,8 @@
                 <table class="table table-bordered table-hover mb-0 align-middle">
                     <thead class="table-light">
                         <tr>
-                            <th class="ps-3" style="width: 80px;">ID</th>
-                            <th style="min-width: 200px;">Employee</th>
-                            
+                            <th>ID</th>
+                            <th class="ps-3" style="min-width: 200px;">Employee</th>
                             {% for header in headers %}
                                 <th class="text-end" style="min-width: 120px;">
                                     <div class="fw-bold">{{ header.label }}</div>
@@ -50,8 +90,8 @@
                     <tbody>
                         {% for row in rows %}
                         <tr>
-                            <td class="ps-3 text-muted small font-monospace">{{ row.employee_id }}</td>
-                            <td class="fw-bold">{{ row.employee_name }}</td>
+                            <td class="text-end">{{ row.employee_id }}</td>
+                            <td class="ps-3 fw-bold">{{ row.employee_name }}</td>
                             
                             {% for val in row.cells %}
                                 <td class="text-end font-monospace">
@@ -84,19 +124,74 @@
 
 {% block extra_js %}
 <script>
+// PROCESS (Stage 1)
 document.getElementById('processBtn')?.addEventListener('click', function() {
-    if(!confirm("Process Payroll?")) return;
-    this.disabled = true;
-    this.innerHTML = "Processing...";
-    const url = "{% url 'payroll:period_process' country_slug company_id payroll_id 0 %}".replace('0', this.dataset.periodId);
+    if(!confirm("Start Payroll Calculation?")) return;
+    const url = "{% url 'payroll:period_process' country_slug company_id payroll_id period.id %}";
+    handleAction(this, url);
+});
+
+// SEND FOR APPROVAL (Stage 2)
+document.getElementById('sendApprovalBtn')?.addEventListener('click', function() {
+    if(!confirm("Send for Approval? This will lock the period from further edits.")) return;
+    const url = "{% url 'payroll:period_send_approval' country_slug company_id payroll_id period.id %}";
+    handleAction(this, url);
+});
+
+// AUTHORIZE (Stage 3)
+document.getElementById('authorizeBtn')?.addEventListener('click', function() {
+    if(!confirm("Authorize Payroll? This action is final.")) return;
+    const url = "{% url 'payroll:period_authorize' country_slug company_id payroll_id period.id %}";
+    handleAction(this, url);
+});
+
+// REJECT (Stage 3)
+document.getElementById('rejectBtn')?.addEventListener('click', function() {
+    if(!confirm("Reject Payroll? This will DELETE all calculations and return to Open status.")) return;
+    const url = "{% url 'payroll:period_reject' country_slug company_id payroll_id period.id %}";
+    handleAction(this, url);
+});
+
+function handleAction(btn, url) {
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+    
     fetch(url, {
         method: 'POST',
-        headers: {'X-CSRFToken': '{{ csrf_token }}', 'Content-Type': 'application/json'},
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json'
+        },
         body: JSON.stringify({})
-    }).then(res => res.json()).then(data => {
-        if(data.success) location.reload();
-        else alert("Error: " + data.error);
+    })
+    .then(async response => {
+        const contentType = response.headers.get("content-type");
+        const isJson = contentType && contentType.includes("application/json");
+        const data = isJson ? await response.json() : await response.text();
+
+        if (!response.ok) {
+            let errorMsg = "Unknown Error";
+            if (isJson && data.error) errorMsg = data.error;
+            else if (!isJson) errorMsg = `Server returned HTML (Status ${response.status}). Check server console logs.`;
+            else errorMsg = response.statusText;
+            throw new Error(errorMsg);
+        }
+        return data;
+    })
+    .then(data => {
+        if(data.success) {
+            location.reload();
+        } else {
+            throw new Error(data.error || "Operation failed without error message");
+        }
+    })
+    .catch(err => {
+        console.error("Action Failed:", err);
+        alert("Action Failed: " + err.message);
+        btn.disabled = false;
+        btn.innerHTML = originalText;
     });
-});
+}
 </script>
 {% endblock %}
