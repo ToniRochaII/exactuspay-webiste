@@ -12,7 +12,7 @@ from Exactus.company.models import Company
 from Exactus.country.models import Country
 
 # Forms & Helpers
-from Exactus.company.forms import CompanyForm, CompanyUploadForm
+
 from Exactus.company.registry import get_company_form_class   
 from Exactus.company.utils.csv_importer import import_from_csv
 
