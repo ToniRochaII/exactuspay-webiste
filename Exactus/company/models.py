@@ -49,6 +49,13 @@ class Company(models.Model):
         help_text=_("Registered legal name")
     )
     logo = models.ImageField(upload_to='company_logos/', blank=True)
+
+    # --- contact ---
+    contact = models.CharField(_("contact"), max_length=150, blank=True, null=True)
+    phone = models.CharField(_("telephone"), max_length=150, blank=True, null=True)
+    email = models.CharField(_("email"), max_length=150, blank=True, null=True)
+    website = models.CharField(_("website"), max_length=150, blank=True, null=True)
+
     # --- Address ---
     building_name = models.CharField(_("Building Name"), max_length=150, blank=True, null=True)
     road_name_1 = models.CharField(_("Road Name 1"), max_length=150, blank=True, null=True)
@@ -96,7 +103,27 @@ class Company(models.Model):
         _("RTI Password"), max_length=100, blank=True, null=True,
         help_text=_("Password for payroll reporting")
     )
-    
+    agent_full_name = models.CharField(
+        _("Full Name"), max_length=150, blank=True, null=True,
+        help_text=_("Full name for payroll reporting")
+    )
+    agent_road_name_1 = models.CharField(
+        _("Road Name 1"), max_length=150, blank=True, null=True,
+        help_text=_("Road name for payroll reporting")
+    )
+    agent_road_name_2 = models.CharField(
+        _("Road Name"), max_length=150, blank=True, null=True,
+        help_text=_("Road name for payroll reporting")
+    )
+    agent_town = models.CharField(
+        _("Town"), max_length=150, blank=True, null=True,
+        help_text=_("Road name for payroll reporting")
+    )
+    agent_post_code = models.CharField(
+        _("Post Code"), max_length=20, blank=True, null=True,
+        help_text=_("Post code for payroll reporting")
+    )
+
     # --- Account Status ---
     account_status = models.CharField(
         _("Account Status"),

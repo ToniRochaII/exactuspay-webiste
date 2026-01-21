@@ -617,6 +617,11 @@ class PayrollPeriodProcessView(View):
                             
                             final_gross = Decimal(str(totals.get('gross', 0)))
                             final_net = Decimal(str(totals.get('net', 0)))
+
+                            # --- NEW CHECK: Skip zero-net employees for Additional Runs ---
+                            if getattr(period, 'is_additional', False) and final_net == 0:
+                                continue 
+                            # -------------------------------------------------------------
                             
                             final_deductions = final_gross - final_net
                             
@@ -797,15 +802,11 @@ class PayrollPeriodExportView(View):
     @method_decorator(login_required)
     def get(self, request, country_slug, company_id, payroll_id, period_id):
         period = get_object_or_404(PayrollPeriod, pk=period_id)
-        # Fetch results with employee data
         results = PayrollResult.objects.filter(period=period).select_related('employee')
         
-        # ------------------------------------------------------------
-        # 1. BUILD HEADER MAP (Same as DetailView)
-        # ------------------------------------------------------------
+        # 1. BUILD HEADER MAP
         header_map = {}
         
-        # Map Visible Elements
         if Element:
             visible_elems = Element.objects.filter(
                 country=period.payroll.country,
@@ -814,23 +815,18 @@ class PayrollPeriodExportView(View):
             for el in visible_elems:
                 header_map[el.element_code] = el.element_name
 
-        # Map Visible PD Codes
         pd_codes = PDcode.objects.filter(company_id=company_id, pdcode_status='Visible')
         for pd in pd_codes:
             header_map[pd.pdcode_code] = pd.pdcode_name
 
-        # Force Standard Headers
         header_map['5000'] = 'Gross Pay'
         header_map['8000'] = 'Net Salary'
 
-        # ------------------------------------------------------------
         # 2. GATHER DATA & IDENTIFY ACTIVE COLUMNS
-        # ------------------------------------------------------------
         rows_data = []
         active_codes = set()
 
         for res in results:
-            # Parse details JSON
             details = res.details
             if isinstance(details, str):
                 try: details = json.loads(details)
@@ -838,11 +834,9 @@ class PayrollPeriodExportView(View):
             elif not isinstance(details, dict):
                 details = {}
 
-            # Identify active codes (value != 0)
             for k, v in details.items():
                 try:
                     val = float(v)
-                    # Only include if defined in headers (or standard) and not zero
                     if abs(val) > 0 and (k in header_map or k in ['5000', '8000']):
                         active_codes.add(k)
                 except: pass
@@ -852,26 +846,30 @@ class PayrollPeriodExportView(View):
                 'details': details
             })
 
-        # ------------------------------------------------------------
-        # 3. SORT HEADERS (Numerical Order)
-        # ------------------------------------------------------------
+        # 3. SORT HEADERS
         def strict_numerical_sort(val):
             try: return int(val)
             except: return 999999
             
         sorted_codes = sorted(list(active_codes), key=strict_numerical_sort)
 
-        # ------------------------------------------------------------
         # 4. GENERATE CSV
-        # ------------------------------------------------------------
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = f'attachment; filename="Report_{period.name}.csv"'
         writer = csv.writer(response)
         
-        # Header Row: ID, Employee, [Dynamic Columns...]
+        # --- NEW: File Header ---
+        writer.writerow([f"Gross to Net Report: {period.name}"])
+        writer.writerow([]) # Empty row for spacing
+        # ------------------------
+
+        # Table Headers
         csv_headers = ['ID', 'Employee'] + [header_map.get(c, c) for c in sorted_codes]
         writer.writerow(csv_headers)
         
+        # Initialize Totals Map
+        col_totals = {code: Decimal('0.00') for code in sorted_codes}
+
         # Data Rows
         for item in rows_data:
             emp = item['employee']
@@ -892,13 +890,28 @@ class PayrollPeriodExportView(View):
                 except: 
                     val = 0.0
                 
-                # Format to 2 decimals
+                # Add to total (using Decimal for precision)
+                col_totals[code] += Decimal(str(val))
+
                 row.append(f"{val:.2f}")
                 
             writer.writerow(row)
+
+        # --- NEW: Totals Row ---
+        
+        totals_row = ['', 'TOTALS']
+        for code in sorted_codes:
+            # Format total to 2 decimal places
+            totals_row.append(f"{col_totals[code]:.2f}")
+            
+        writer.writerow(totals_row)
+        # -----------------------
             
         return response
-    
+
+
+
+
 @login_required
 @role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION",
                "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE")

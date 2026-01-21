@@ -42,20 +42,38 @@ def company(request, country_slug):
 # ➕ Create Company
 # ────────────────────────────────────────────────────────────────
 
+
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from Exactus.company.models import Company
+from Exactus.country.models import Country
+from Exactus.utils.decorators import role_required
+
+# UPDATED IMPORT: Use the new utility
+from Exactus.company.forms.utils import get_company_form_for_country
+
+# ────────────────────────────────────────────────────────────────
+# ➕ Create Company
+# ────────────────────────────────────────────────────────────────
+
 @login_required
 @role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION",
                "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE")
 def company_create(request, country_slug):
     country = get_object_or_404(Country, slug=country_slug)
-    FormClass = get_company_form_class(country)
+    
+    # Get the specific class (e.g., UnitedKingdomCompanyForm)
+    FormClass = get_company_form_for_country(country)
 
     if request.method == "POST":
-        form = FormClass(request.POST, request.FILES, country=country)
+        # Instantiate WITHOUT passing 'country' kwarg
+        form = FormClass(request.POST, request.FILES)
         
         if form.is_valid():
             try:
                 instance = form.save(commit=False)
-                instance.country = country
+                instance.country = country  # Attach country manually
                 instance.save()
                 messages.success(request, f"Company '{instance.trade_name}' created successfully!")
                 return redirect("companies:company", country.slug)
@@ -64,13 +82,15 @@ def company_create(request, country_slug):
         else:
             messages.error(request, "Please correct the errors below.")
     else:
-        form = FormClass(country=country)   
+        form = FormClass()
 
     return render(request, "company/form.html", {
         "form": form,
         "country": country,
         "company": None,
     })
+
+
 
 
 # ────────────────────────────────────────────────────────────────
@@ -83,15 +103,13 @@ def company_create(request, country_slug):
 def company_edit(request, country_slug, company_id):
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
-    FormClass = get_company_form_class(country)
+    
+    # Get the specific class
+    FormClass = get_company_form_for_country(country)
 
     if request.method == "POST":
-        form = FormClass(
-            request.POST,
-            request.FILES,
-            instance=company,
-            country=country,    
-        )
+        form = FormClass(request.POST, request.FILES, instance=company)
+        
         if form.is_valid():
             try:
                 instance = form.save(commit=False)
@@ -104,16 +122,19 @@ def company_edit(request, country_slug, company_id):
         else:
             messages.error(request, "Please correct the errors below.")
     else:
-        form = FormClass(
-            instance=company,
-            country=country,    
-        )
+        form = FormClass(instance=company)
 
     return render(request, "company/form.html", {
         "form": form,
         "country": country,
         "company": company,
     })
+
+
+
+
+
+
 
 
 # ────────────────────────────────────────────────────────────────

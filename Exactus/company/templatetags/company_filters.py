@@ -60,3 +60,34 @@ def get_field_help_text(form, field_name):
     if field_name in form.fields:
         return form.fields[field_name].help_text
     return ''
+
+
+
+@register.filter
+def has_fields_in_section(form, section_name):
+    """
+    Check if a form has visible fields in a given section.
+    
+    Usage: {% if form|has_fields_in_section:"communication" %}
+    """
+    if not form or not hasattr(form, 'visible_fields'):
+        return False
+    
+    for field in form.visible_fields():
+        # Check if field has data-section attribute
+        widget_attrs = getattr(field.field.widget, 'attrs', {})
+        if widget_attrs.get('data-section') == section_name:
+            return True
+    
+    return False
+
+@register.filter
+def split(value, delimiter=','):
+    """
+    Split a string by delimiter.
+    
+    Usage: {{ "a,b,c"|split:"," }}
+    """
+    if not value:
+        return []
+    return value.split(delimiter)

@@ -22,8 +22,16 @@ class CompensationComponentForm(forms.ModelForm):
             "pd_code": forms.Select(attrs={"class": "form-select"}),
             "category": forms.Select(attrs={"class": "form-select"}),
             "amount": forms.NumberInput(attrs={"class": "form-control", "step": "0.01"}),
-            "start_date": forms.DateInput(attrs={"class": "form-control", "type": "date"}),
-            "end_date": forms.DateInput(attrs={"class": "form-control", "type": "date"}),
+            # --- CHANGE START: Added format='%Y-%m-%d' ---
+            "start_date": forms.DateInput(
+                format='%Y-%m-%d',
+                attrs={"class": "form-control", "type": "date"}
+            ),
+            "end_date": forms.DateInput(
+                format='%Y-%m-%d',
+                attrs={"class": "form-control", "type": "date"}
+            ),
+            # --- CHANGE END ---
             "description": forms.Textarea(attrs={"class": "form-control", "rows": 2}),
             "reference": forms.TextInput(attrs={"class": "form-control"}),
             "is_active": forms.CheckboxInput(attrs={"class": "form-check-input"}),

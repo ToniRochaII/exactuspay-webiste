@@ -70,7 +70,7 @@ class PayrollPeriodForm(forms.ModelForm):
         fields = [
             'period_number', 'name',
             'start_date', 'end_date', 'processing_date', 'payment_date',
-            'apply_regulations', 'regulation_overrides'
+            'apply_regulations', 'is_additional', 'regulation_overrides'
         ]
         widgets = {
             'start_date': forms.DateInput(attrs={'type': 'date'}),
@@ -107,6 +107,7 @@ class PayrollPeriodForm(forms.ModelForm):
         start_date = cleaned_data.get('start_date')
         end_date = cleaned_data.get('end_date')
         processing_date = cleaned_data.get('processing_date')
+        is_additional = cleaned_data.get('is_additional')
         
         if start_date and end_date:
             if start_date >= end_date:
@@ -115,28 +116,32 @@ class PayrollPeriodForm(forms.ModelForm):
             if processing_date and processing_date > end_date:
                 self.add_error('processing_date', 'Processing date must be on or after end date')
             
-            # Check for overlapping periods
-            if self.payroll and self.instance.pk:
-                overlapping = PayrollPeriod.objects.filter(
-                    payroll=self.payroll,
-                    start_date__lt=end_date,
-                    end_date__gt=start_date
-                ).exclude(pk=self.instance.pk)
+            # --- FIXED LOGIC START ---
+            # Only check for overlaps if this is NOT an additional run.
+            if not is_additional:
+                if self.payroll and self.instance.pk:
+                    overlapping = PayrollPeriod.objects.filter(
+                        payroll=self.payroll,
+                        start_date__lt=end_date,
+                        end_date__gt=start_date,
+                        is_additional=False  # Only check against other normal runs
+                    ).exclude(pk=self.instance.pk)
                 
+                elif self.payroll and not self.instance.pk:
+                    # For new periods, check overlaps
+                    overlapping = PayrollPeriod.objects.filter(
+                        payroll=self.payroll,
+                        start_date__lt=end_date,
+                        end_date__gt=start_date,
+                        is_additional=False
+                    )
+                else:
+                    overlapping = PayrollPeriod.objects.none()
+
                 if overlapping.exists():
                     self.add_error('start_date', 'This period overlaps with an existing period')
                     self.add_error('end_date', 'This period overlaps with an existing period')
-            elif self.payroll and not self.instance.pk:
-                # For new periods, check overlaps
-                overlapping = PayrollPeriod.objects.filter(
-                    payroll=self.payroll,
-                    start_date__lt=end_date,
-                    end_date__gt=start_date
-                )
-                
-                if overlapping.exists():
-                    self.add_error('start_date', 'This period overlaps with an existing period')
-                    self.add_error('end_date', 'This period overlaps with an existing period')
+            # --- FIXED LOGIC END (Redundant block removed) ---
         
         # Validate period number
         period_number = cleaned_data.get('period_number')
@@ -153,11 +158,6 @@ class PayrollPeriodForm(forms.ModelForm):
                 self.add_error('regulation_overrides', 'Must be valid JSON format')
         
         return cleaned_data
-
-
-
-
-
 
 
 class PayrollProcessForm(forms.Form):

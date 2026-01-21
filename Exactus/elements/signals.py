@@ -20,7 +20,7 @@ def _generate_shadows(parent):
     """
     Internal function to generate the 4 types of shadow elements based on prefix rules.
     """
-    def create_shadow(prefix, suffix_name, category='Notional', type_override=None):
+    def create_shadow(prefix, suffix_name, category='Notional', categorytype='Base',type_override=None):
         # Construct new code (e.g., "9" + "5001" = "95001")
         new_code = f"{prefix}{parent.element_code}"
         
@@ -32,7 +32,7 @@ def _generate_shadows(parent):
             country=parent.country,
             element_code=new_code,
             element_name=f"{suffix_name} - {parent.element_name}",
-            element_description=f"Auto-generated {suffix_name} for {parent.element_code}",
+            element_description=f"{suffix_name} for {parent.element_name}",
             
             # Inherit settings from parent
             element_account=parent.element_account, 
@@ -44,6 +44,7 @@ def _generate_shadows(parent):
             element_type=type_override or 'Regular',
             element_class='Standard',
             element_category=category,
+            element_categorytype=categorytype,
             
             # Flags: Shadows are calculation tools, not usually payable directly
             element_taxable=False,
@@ -66,19 +67,18 @@ def _generate_shadows(parent):
 
     # 1. ALWAYS Create 1X (YTD Value)
     # Applies to almost all numeric payment/deduction codes to track Fiscal Year totals
-    create_shadow("1", "YTD", category='Notional')
+    create_shadow("1", "YTD", category='Notional', categorytype='Formulae')
 
     # 2. ALWAYS Create 2X (Cumulative Value)
     # Applies to almost all numeric codes for custom scope tracking
-    create_shadow("2", "Cumulative", category='Notional')
-
+    create_shadow("2", "Cumulative", category='Notional', categorytype='Formulae')
     # 3. Create 8X (Base used to calculate X)
     # Rule: applies to 5000–9999 (Gross totals & derived figures)
     if 5000 <= code_val <= 9999:
-        create_shadow("8", "Calc Base", category='Base')
+        create_shadow("8", "Base ", category='Base', categorytype='Base')
 
     # 4. Create 9X (Base used to calculate Employer costs)
     # Rule: Base for Employer Costs (8000–9999) OR Gross elements (5000-7999)
     # Since 5000-7999 often serve as the base for employer taxes, we encompass the full range.
     if 5000 <= code_val <= 9999:
-        create_shadow("9", "ER Cost Base", category='Base')
+        create_shadow("9", "Base YTD", category='Base', categorytype='Base')

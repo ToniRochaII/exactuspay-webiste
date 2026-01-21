@@ -1,7 +1,17 @@
 from django import forms
+from django.core.validators import RegexValidator
 from django.core.exceptions import ValidationError
 from Exactus.country.models import Country
 
+# ───────────────────────────────────────────
+# 1. SERVER-SIDE VALIDATOR (Python)
+# ───────────────────────────────────────────
+# We keep anchors (^ and $) here for strict Python validation
+text_only_validator = RegexValidator(
+    regex=r'^[a-zA-Z\s]+$',
+    message="Invalid format: This field accepts text only (letters and spaces).",
+    code='invalid_text_format'
+)
 
 class CountryForm(forms.ModelForm):
     class Meta:
@@ -18,27 +28,68 @@ class CountryForm(forms.ModelForm):
             "name": "Country Name",
         }
 
+        # ───────────────────────────────────────────
+        # 2. CLIENT-SIDE WIDGETS (HTML5)
+        # ───────────────────────────────────────────
+        # NOTE: patterns here do NOT use ^ or $ symbols.
         widgets = {
-            # Text fields
-            "iso2_code": forms.TextInput(attrs={"class": "form-control"}),
-            "iso3_code": forms.TextInput(attrs={"class": "form-control"}),
-            "name": forms.TextInput(attrs={"class": "form-control"}),
-            "official_language": forms.TextInput(attrs={"class": "form-control"}),
-            "currency_name": forms.TextInput(attrs={"class": "form-control"}),
-            "currency_code": forms.TextInput(attrs={"class": "form-control"}),
-
+            "iso2_code": forms.TextInput(attrs={
+                "class": "form-control",
+                "pattern": "[a-zA-Z\s]+",  # Regex for HTML (No anchors)
+                "title": "Letters only (e.g. GB)",
+                "placeholder": "e.g. GB"
+            }),
+            "iso3_code": forms.TextInput(attrs={
+                "class": "form-control",
+                "pattern": "[a-zA-Z\s]+",
+                "title": "Letters only (e.g. GBR)",
+                "placeholder": "e.g. GBR"
+            }),
+            "name": forms.TextInput(attrs={
+                "class": "form-control",
+                "pattern": "[a-zA-Z\s]+",
+                "title": "Letters and spaces only (e.g. United Kingdom)"
+            }),
+            "official_language": forms.TextInput(attrs={
+                "class": "form-control",
+                "pattern": "[a-zA-Z\s]+",
+                "title": "Letters only (e.g. English)"
+            }),
+            "currency_name": forms.TextInput(attrs={
+                "class": "form-control",
+                "pattern": "[a-zA-Z\s]+",
+                "title": "Letters only (e.g. Pound Sterling)"
+            }),
+            "currency_code": forms.TextInput(attrs={
+                "class": "form-control",
+                "pattern": "[a-zA-Z\s]+",
+                "title": "Letters only (e.g. GBP)"
+            }),
             # Dropdowns
-            "status": forms.Select(attrs={"class": "form-control"}),
-            "numbering_format": forms.Select(attrs={"class": "form-control"}),
-            "currency_position": forms.Select(attrs={"class": "form-control"}),
-            "date_format": forms.Select(attrs={"class": "form-control"}),
-            "decimals": forms.Select(attrs={"class": "form-control"}),
-            "archive": forms.Select(attrs={"class": "form-control"}),
+            "status": forms.Select(attrs={"class": "form-select"}),
+            "numbering_format": forms.Select(attrs={"class": "form-select"}),
+            "currency_position": forms.Select(attrs={"class": "form-select"}),
+            "date_format": forms.Select(attrs={"class": "form-select"}),
+            "decimals": forms.Select(attrs={"class": "form-select"}),
+            "archive": forms.Select(attrs={"class": "form-select"}),
         }
 
-    # ───────────────────────────────────────────
-    # CLEANING METHODS
-    # ───────────────────────────────────────────
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Apply the server-side validator to all text fields
+        text_fields = [
+            "name", 
+            "iso2_code", 
+            "iso3_code", 
+            "official_language", 
+            "currency_name", 
+            "currency_code"
+        ]
+
+        for field_name in text_fields:
+            if field_name in self.fields:
+                self.fields[field_name].validators.append(text_only_validator)
 
     def clean_iso2_code(self):
         code = self.cleaned_data["iso2_code"].upper()
@@ -55,22 +106,16 @@ class CountryForm(forms.ModelForm):
     def clean_currency_code(self):
         code = self.cleaned_data["currency_code"].upper()
         if len(code) != 3:
-            raise ValidationError("Currency code must be exactly 3 letters (e.g. EUR, USD).")
+            raise ValidationError("Currency code must be exactly 3 letters.")
         return code
-
-    def clean(self):
-        cleaned = super().clean()
-
-        fy_start = cleaned.get("fiscal_year_start")
-        fy_end = cleaned.get("fiscal_year_end")
-
-        # Basic fiscal year sanity check
-        if fy_start and fy_end and fy_start == fy_end:
-            raise ValidationError("Fiscal year start and end cannot be the same.")
-
-        return cleaned
 
 
 class CountryUploadForm(forms.Form):
-    file = forms.FileField()
-    dry_run = forms.BooleanField(required=False)
+    file = forms.FileField(
+        label="CSV File",
+        widget=forms.ClearableFileInput(attrs={"class": "form-control", "accept": ".csv"})
+    )
+    dry_run = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(attrs={"class": "form-check-input"})
+    )

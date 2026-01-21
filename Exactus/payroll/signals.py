@@ -181,18 +181,24 @@ def validate_period_dates(sender, instance, **kwargs):
     if instance.processing_date and instance.processing_date > instance.end_date:
         raise ValidationError("Processing date must be on or after end date")
     
+    # Skip overlap check if this is an additional run
+    if instance.is_additional:
+        return
+
     # Check for overlapping periods (excluding self)
     if instance.pk:  # For updates
         overlapping = PayrollPeriod.objects.filter(
             payroll=instance.payroll,
             start_date__lt=instance.end_date,
-            end_date__gt=instance.start_date
+            end_date__gt=instance.start_date,
+            is_additional=False # Ignore additional runs when checking overlaps for a normal run
         ).exclude(pk=instance.pk)
     else:  # For new periods
         overlapping = PayrollPeriod.objects.filter(
             payroll=instance.payroll,
             start_date__lt=instance.end_date,
-            end_date__gt=instance.start_date
+            end_date__gt=instance.start_date,
+            is_additional=False
         )
     
     if overlapping.exists():
@@ -200,7 +206,6 @@ def validate_period_dates(sender, instance, **kwargs):
             f"Period overlaps with existing period(s): "
             f"{', '.join(str(p) for p in overlapping)}"
         )
-
 
 @receiver(pre_save, sender=PayrollPeriod)
 def validate_period_editable(sender, instance, **kwargs):

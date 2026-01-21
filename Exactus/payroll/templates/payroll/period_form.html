@@ -89,7 +89,7 @@
                         {{ form.end_date|as_crispy_field }}
                     </div>
                     <div class="col-md-4">
-                        {{ form.apply_regulations|as_crispy_field }}
+                        {{ form.is_additional|as_crispy_field }}
                     </div>
                 </div>
                 
@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (this.value) {
             const endDate = new Date(this.value);
             const processingDate = new Date(endDate);
-            processingDate.setDate(processingDate.getDate() + 5);
+            processingDate.setDate(processingDate.getDate() -10);
             
             const processingDateField = document.getElementById('id_processing_date');
             if (!processingDateField.value) {
@@ -184,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const paymentDateField = document.getElementById('id_payment_date');
             if (!paymentDateField.value) {
                 const paymentDate = new Date(processingDate);
-                paymentDate.setDate(paymentDate.getDate() + 2);
+                paymentDate.setDate(paymentDate.getDate() + 5);
                 const formattedPaymentDate = paymentDate.toISOString().split('T')[0];
                 paymentDateField.value = formattedPaymentDate;
             }

@@ -263,6 +263,11 @@ class PayrollPeriod(models.Model):
         default=True,
         verbose_name='Apply Country Regulations'
     )
+    is_additional = models.BooleanField(
+        default=False,
+        verbose_name='Additional Run',
+        help_text='Check this for corrections, bonuses, or off-cycle runs. Allows date overlaps and calculates differences only.'
+    )
     regulation_overrides = models.JSONField(
         default=dict,
         blank=True,
@@ -295,13 +300,16 @@ class PayrollPeriod(models.Model):
         verbose_name_plural = 'Payroll Periods'
         ordering = ['payroll', 'period_number']
         constraints = [
+            # UPDATED: Only enforce uniqueness if is_additional is FALSE
             UniqueConstraint(
                 fields=['payroll', 'period_number'],
-                name='unique_period_number_per_payroll'
+                name='unique_period_number_per_payroll',
+                condition=Q(is_additional=False)
             ),
             UniqueConstraint(
                 fields=['payroll', 'start_date', 'end_date'],
-                name='unique_date_range_per_payroll'
+                name='unique_date_range_per_payroll',
+                condition=Q(is_additional=False)
             )
         ]
         indexes = [
@@ -316,7 +324,7 @@ class PayrollPeriod(models.Model):
     
     def clean(self):
         super().clean()
-        if self.start_date >= self.end_date:
+        if self.start_date and self.end_date and self.start_date >= self.end_date:
             raise ValidationError("End date must be after start date")
 
     def save(self, *args, **kwargs):
