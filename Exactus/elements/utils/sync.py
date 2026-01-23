@@ -5,22 +5,23 @@ from Exactus.pdcodes.models import PDcode
 
 def propagate_element_to_companies(element):
     """
-    Syncs a specific Element (1000-4900) to PDcodes for all companies in the country.
-    This works for both Creation (Insert) and Overwrite (Update).
+    Syncs a specific Element to PDcodes for all companies in the country.
+    Strictly restricted to Country Default codes (1000-4999).
     """
-    # 1. Validation: Only sync numeric codes in range 1000-4900
+    # 1. Validation: Only sync numeric codes
     try:
         code_val = int(element.element_code)
     except (ValueError, TypeError):
-        return 
+        return # Skip non-numeric
 
-    if not (1000 <= code_val <= 4900):
+    # 2. Range Check: 1000 to 4999 ONLY
+    if not (1000 <= code_val <= 4999):
         return
 
-    # 2. Find target companies
+    # 3. Find target companies
     companies = Company.objects.filter(country=element.country)
     
-    # 3. Update or Create PD Codes
+    # 4. Update or Create PD Codes
     for company in companies:
         PDcode.objects.update_or_create(
             company=company,

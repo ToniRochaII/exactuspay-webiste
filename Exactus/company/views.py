@@ -24,26 +24,45 @@ from Exactus.country.utils.decorators import role_required
 # 🧩 Company Index
 # ────────────────────────────────────────────────────────────────
 
+from django.db.models import Count, Q, Exists, OuterRef
+from Exactus.payroll.models import Payroll  # Import Payroll model
+
+
+
 @login_required
 @role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION",
                "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE")
 def company(request, country_slug):
     country = get_object_or_404(Country, slug=country_slug)
     
-    # 1. FIX: Check Role instead of 'user_type'
-    # Define roles that can see ALL companies in a country
     GLOBAL_ACCESS_ROLES = ['EXEC', 'ADMIN', 'OPERATION', 'COMPLIANCE', 'BILLING', 'IMPLEMENTATION']
     
+    # 1. Base Query
     if request.user.is_staff or request.user.role in GLOBAL_ACCESS_ROLES:
-        companies = Company.objects.filter(country=country).order_by("trade_name")
+        queryset = Company.objects.filter(country=country)
     else:
-        # 2. FIX: Use correct related_name 'authorized_users' (from UserCompany model)
-        # The previous code used 'user_contexts', which doesn't exist.
-        companies = Company.objects.filter(
+        queryset = Company.objects.filter(
             country=country,
             authorized_users__user=request.user,
-            authorized_users__is_active=True  # Ensure we only show active assignments
-        ).distinct().order_by("trade_name")
+            authorized_users__is_active=True
+        ).distinct()
+
+    # 2. Add Annotations (Employees Count & Open Payroll Status)
+    # We assume 'open' payrolls are those NOT completed/paid. Adjust status keys as needed.
+    OPEN_STATUSES = ['DRAFT', 'OPEN', 'PROCESSING', 'review', 'pending'] 
+    
+    companies = queryset.annotate(
+        # Count all employees linked to this company
+        total_employees=Count('employees', distinct=True),
+        
+        # Check if ANY payroll exists with an 'open' status
+        has_open_payroll=Exists(
+            Payroll.objects.filter(
+                company=OuterRef('pk'),
+                status__in=OPEN_STATUSES 
+            )
+        )
+    ).order_by("trade_name")
 
     return render(request, "company/index.html", {
         "country": country,

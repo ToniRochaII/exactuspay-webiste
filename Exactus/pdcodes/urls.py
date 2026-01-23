@@ -18,6 +18,6 @@ urlpatterns = [
          
     path("<slug:country_slug>/pdcodes/upload/country/",views.pdcode_upload_country_view, name="pdcode_upload_country",),
     path("<slug:country_slug>/pdcodes/upload/country/result/", views.pdcode_upload_country_result_view, name="pdcode_upload_country_result",),
-
+    path("sync-defaults/<slug:country_slug>/<int:company_id>/", views.pdcode_sync_defaults, name="sync_defaults"),
 
 ]

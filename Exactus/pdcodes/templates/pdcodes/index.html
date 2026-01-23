@@ -8,7 +8,6 @@
 {% endblock %}
 
 {% block extra_css %}
-<!-- DataTables Bootstrap 5 -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
 
@@ -42,10 +41,20 @@
     <h5 class="mb-0 fw-semibold">
       <i class="bi bi-list-check me-2"></i>Payroll & Deduction Codes
     </h5>
-    <a href="{% url 'pdcodes:pdcode_create' country_slug company.company_id %}"
-       class="btn btn-primary">
-      <i class="bi bi-plus-circle me-1"></i> Add PDcode
-    </a>
+    
+    <div>
+        <a href="{% url 'pdcodes:sync_defaults' country_slug company.company_id %}"
+           class="btn btn-info text-white me-2"
+           title="Pull country default codes (1000-4999) into this company"
+           onclick="return confirm('This will pull all Country Default Codes (1000-4999) into this company. Existing default codes will be updated to match the country standard. Continue?');">
+            <i class="bi bi-cloud-arrow-down-fill me-1"></i> Sync Defaults
+        </a>
+
+        <a href="{% url 'pdcodes:pdcode_create' country_slug company.company_id %}"
+           class="btn btn-primary">
+          <i class="bi bi-plus-circle me-1"></i> Add PDcode
+        </a>
+    </div>
   </div>
 
   <div class="card-body">
@@ -93,11 +102,9 @@
 {% endblock %}
 
 {% block extra_js %}
-<!-- DataTables Core -->
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
-<!-- Responsive Extension -->
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
 

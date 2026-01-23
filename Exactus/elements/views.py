@@ -60,7 +60,7 @@ def element_create(request, country_slug):
         },
     )
 
-# elements/views.py (Partial Update)
+# elements/views.py (Ensure this import is at the top)
 from Exactus.elements.utils.sync import propagate_element_to_companies
 
 @login_required
@@ -73,15 +73,16 @@ def element_edit(request, country_slug, element_code):
         form = ElementForm(request.POST, instance=element)
         if form.is_valid():
             # 1. Save the Element changes to the database
+            # Because of the fix in signals.py, this will NOT trigger a PDCode update yet.
             saved_element = form.save()
             
-            # 2. Check if the user requested a PD Code Overwrite
-            # This 'sync_pdcodes' field comes from the form checkbox we added
+            # 2. Check if the user manually requested a PD Code Overwrite
             if form.cleaned_data.get('sync_pdcodes'):
+                # ONLY run this if the box is checked
                 propagate_element_to_companies(saved_element)
-                messages.success(request, "Element updated and changes successfully propagated to all linked PD Codes!")
+                messages.success(request, f"Element '{saved_element.element_code}' updated and synced to all company PD Codes!")
             else:
-                messages.success(request, "Element updated locally. PD Codes were NOT changed.")
+                messages.success(request, f"Element '{saved_element.element_code}' updated locally. PD Codes were NOT changed.")
                 
             return redirect("elements:elements", country_slug=country_slug)
     else:
@@ -97,6 +98,7 @@ def element_edit(request, country_slug, element_code):
             "country_slug": country_slug,
         },
     )
+
 
 
 @login_required

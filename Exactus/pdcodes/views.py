@@ -39,7 +39,12 @@ def is_protected_element(country, pdcode_code):
 def pdcode_list(request, country_slug, company_id):
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, company_id=company_id)
-    pdcodes = PDcode.objects.order_by("pdcode_code").filter(company=company)
+    
+    # FIXED: Added filter to only show 'Visible' pdcodes
+    pdcodes = PDcode.objects.filter(
+        company=company, 
+        pdcode_status="Visible"
+    ).order_by("pdcode_code")
 
     return render(
         request,
@@ -568,3 +573,62 @@ def country_detail(request, country_slug):
     }
     
     return render(request, 'country/country_detail.html', context)
+
+from Exactus.elements.models import Element
+
+@login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION")
+def pdcode_sync_defaults(request, country_slug, company_id):
+    """
+    Manually pulls Country Default Elements (1000-4999) into the current Company's PD Codes.
+    Useful for new companies or fixing missing defaults.
+    """
+    country = get_object_or_404(Country, slug=country_slug)
+    company = get_object_or_404(Company, company_id=company_id)
+    
+    # 1. Fetch all elements for this country
+    country_elements = Element.objects.filter(country=country)
+    
+    synced_count = 0
+    
+    for element in country_elements:
+        try:
+            code_val = int(element.element_code)
+        except (ValueError, TypeError):
+            continue
+
+        # 2. Strict Range Check: Only sync Country Defaults (1000-4999)
+        if 1000 <= code_val <= 4999:
+            # 3. Create or Update the PD Code locally
+            PDcode.objects.update_or_create(
+                company=company,
+                pdcode_code=element.element_code,
+                defaults={
+                    "pdcode_name": element.element_name,
+                    "pdcode_description": element.element_description,
+                    "pdcode_status": element.element_status,
+                    "pdcode_frequency": element.element_frequency,
+                    "pdcode_type": element.element_type,
+                    "pdcode_class": element.element_class,
+                    "pdcode_category": element.element_category,
+                    "pdcode_categorytype": element.element_categorytype,
+                    "pdcode_taxable": element.element_taxable,
+                    "pdcode_tax_flat": element.element_tax_flat,
+                    "pdcode_tax_irregular": element.element_tax_irregular,
+                    "pdcode_social_securitable": element.element_social_securitable,
+                    "pdcode_pensionable": element.element_pensionable,
+                    "pdcode_payable": element.element_payable,
+                    "pdcode_calculate": element.element_calculate,
+                    "pdcode_account": element.element_account,
+                    "pdcode_map_code": element.element_map_code,
+                    "pdcode_gl_account": element.element_gl_account,
+                }
+            )
+            synced_count += 1
+
+    if synced_count > 0:
+        messages.success(request, f"Successfully synced {synced_count} Country Default codes.")
+    else:
+        messages.warning(request, "No Country Defaults found to sync.")
+
+    return redirect("pdcodes:pdcodes", country_slug=country_slug, company_id=company_id)

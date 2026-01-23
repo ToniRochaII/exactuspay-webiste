@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-{% load company_role_filters %} 
+{% load company_role_filters %}
 
 {% block title %}Companies — {{ country.name }} | ExactusPay{% endblock %}
 
@@ -55,7 +55,6 @@ Companies — {{ country.name }}
       {% endfor %}
     {% endif %}
 
-    {# 💡 FIXED: Changed 'company.companies' to 'companies' #}
     {% if companies %}
       <div class="table-responsive">
         <table id="datatable-companies"
@@ -67,7 +66,8 @@ Companies — {{ country.name }}
               <th>Code</th>
               <th>Trade Name</th>
               <th>Legal Name</th>
-              <th>Town</th>
+              <th class="text-center">Employees</th> {# Replaced Town #}
+              <th class="text-center">Payroll</th>   {# New Column #}
               <th>Status</th>
               <th class="text-end">Actions</th>
             </tr>
@@ -77,9 +77,32 @@ Companies — {{ country.name }}
               <tr>
                 <td>{{ company.company_number }}</td>
                 <td><strong>{{ company.company_code }}</strong></td>
-                <td>{{ company.trade_name }}</td>
+                <td>
+                    {# Link Trade Name to Employee List for quick access #}
+                    <a href="{% url 'employee:employee' country_slug company.company_id %}" class="text-decoration-none fw-bold text-dark">
+                        {{ company.trade_name }}
+                    </a>
+                </td>
                 <td>{{ company.legal_name }}</td>
-                <td>{{ company.town|default:"—" }}</td>
+                
+                {# Employees Count Column #}
+                <td class="text-center">
+                    <span class="badge bg-light text-dark border">
+                        {{ company.total_employees }}
+                    </span>
+                </td>
+
+                {# Open Payroll Indicator Column #}
+                <td class="text-center">
+                    {% if company.has_open_payroll %}
+                        {# If you have a payroll list URL, replace '#' with that URL #}
+                        <a href="#" class="badge bg-primary text-decoration-none" title="View Open Payrolls">
+                            <i class="fas fa-cog fa-spin me-1"></i> Open
+                        </a>
+                    {% else %}
+                        <span class="text-muted small opacity-50">—</span>
+                    {% endif %}
+                </td>
 
                 <td>
                   {% if company.account_status == "ACTIVE" %}
@@ -93,11 +116,10 @@ Companies — {{ country.name }}
 
                 <td class="text-end">
                   <div class="btn-group">
-                    {# Assuming you have an 'employee' namespace/app #}
                     <a href="{% url 'employee:employee' country_slug company.company_id %}"
                        class="btn btn-sm btn-outline-primary"
-                       title="Enter Company">
-                      <i class="fas fa-arrow-right"></i>
+                       title="Manage Employees">
+                      <i class="fas fa-users"></i>
                     </a>
                     <a href="{% url 'companies:company_edit' country_slug company.company_id %}"
                        class="btn btn-sm btn-outline-secondary"
@@ -114,7 +136,12 @@ Companies — {{ country.name }}
 
     {% else %}
       <div class="text-center py-5">
-        <p class="text-muted mb-3">No companies found for {{ country.name }}.</p>
+        <div class="mb-3">
+            <i class="fas fa-building fa-3x text-muted opacity-25"></i>
+        </div>
+        <h5 class="text-muted">No companies found</h5>
+        <p class="text-muted small mb-3">Get started by adding a new company for {{ country.name }}.</p>
+        
         {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
           <a href="{% url 'companies:company_create' country_slug %}" class="btn btn-primary">
             <i class="fas fa-plus-circle me-2"></i>Add First Company
@@ -131,19 +158,24 @@ Companies — {{ country.name }}
 document.addEventListener("DOMContentLoaded", function () {
   $("#datatable-companies").DataTable({
     responsive: true,
-    pageLength: 10,
-    order: [[2, "asc"]],
+    pageLength: 25, // Increased default view since lists can get long
+    order: [[2, "asc"]], // Order by Trade Name by default
+    columnDefs: [
+      { orderable: false, targets: [7] }, // Disable sorting on Actions column
+      { searchable: false, targets: [7] }
+    ],
     language: {
-      search: "Search:",
-      lengthMenu: "Show _MENU_ companies",
-      zeroRecords: "No companies found.",
-      info: "Showing _START_–_END_ of _TOTAL_ companies",
-      infoEmpty: "No companies to display",
+      search: "",
+      searchPlaceholder: "Search companies...",
+      lengthMenu: "Show _MENU_",
+      zeroRecords: "No matching companies found",
+      info: "Showing _START_ to _END_ of _TOTAL_ companies",
       paginate: {
-        previous: "‹",
-        next: "›"
+        previous: '<i class="fas fa-chevron-left"></i>',
+        next: '<i class="fas fa-chevron-right"></i>'
       }
-    }
+    },
+    dom: '<"d-flex justify-content-between align-items-center mb-3"lf>rtip'
   });
 });
 </script>
