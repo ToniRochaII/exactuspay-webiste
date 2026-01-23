@@ -101,10 +101,16 @@ urlpatterns = [
          views.PayrollPeriodExportView.as_view(), 
          name='period_export'),
 
+    # --- FIXED: Added country/company prefix to match the view's redirect arguments ---
+    path('<slug:country_slug>/<int:company_id>/payroll/<int:payroll_id>/period/<int:period_id>/upload-historical/', 
+         views.PayrollHistoricalUploadView.as_view(), 
+         name='historical_upload'),
+
     # AJAX: Lock/Unlock Period
     path('<slug:country_slug>/<int:company_id>/payroll/<int:payroll_id>/period/<int:period_id>/lock/', 
          views.lock_period, 
          name='lock_period'),
+         
     path('<slug:country_slug>/<int:company_id>/payroll/<int:payroll_id>/period/<int:period_id>/unlock/', 
          views.unlock_period, 
          name='unlock_period'),

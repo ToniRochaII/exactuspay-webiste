@@ -222,7 +222,13 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
         Apply database-defined calculation rules (CalculationBase).
         """
         regulation = self.period.payroll.regulation
-        rules = CalculationBase.objects.filter(regulations=regulation).select_related('element', 'element_base')
+        period_freq = self.period.frequency  # Get current period frequency
+
+        # --- UPDATED: Filter by Regulations AND Frequency ---
+        rules = CalculationBase.objects.filter(
+            regulations=regulation,
+            base_frequency=period_freq  # STRICT LINKING
+        ).select_related('element', 'element_base')
         
         for rule in rules:
             try:
@@ -246,10 +252,6 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
                                 result_amt = -calc_val 
                                 
                             self.register(target.element_name, result_amt, target.element_code)
-                            
-                            # --- FIXED: Do NOT update bases here ---
-                            # Adding the calculated result (e.g. Tax) back into its own base (86000)
-                            # causes double counting. Bases should only come from Inputs/Aggregation.
                             
                         except (ValueError, TypeError):
                             pass

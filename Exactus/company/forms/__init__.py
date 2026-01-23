@@ -1,4 +1,2 @@
-from Exactus.company.forms.base_company_form import BaseCompanyForm
-from Exactus.company.forms.united_kingdom_company_form import UnitedKingdomCompanyForm
-from Exactus.company.forms.brazil_company_form import BrazilCompanyForm
-from Exactus.company.forms.utils import get_company_form_for_country
+from .upload import CompanyUploadForm
+from .base import CompanyForm

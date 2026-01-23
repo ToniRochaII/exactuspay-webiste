@@ -1,23 +1,13 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse
-from django.contrib.admin.views.decorators import staff_member_required
+from django.http import JsonResponse, HttpResponse
+import csv
 
 from Exactus.country.utils.csv_importer import import_from_csv
 from Exactus.country.utils.decorators import role_required
 from Exactus.country.models import Country
 from Exactus.country.forms import CountryForm, CountryUploadForm
-import csv
-from django.http import HttpResponse
-
-# ────────────────────────────────────────────────
-# 🧩 Helper (Fix)
-# ────────────────────────────────────────────────
-def is_admin(user):
-    """Return True if user is ADMIN based on the main User model."""
-    return hasattr(user, "role") and user.role == "ADMIN"
-
 
 # ────────────────────────────────────────────────
 # 🌍 Country Pages
@@ -28,7 +18,10 @@ def is_admin(user):
 def country(request):
     """Show active countries only."""
     countries = Country.objects.filter(archive="N").order_by("name")
-    return render(request, "country/index.html", {"countries": countries, "active_countries_count": countries.count(), })
+    return render(request, "country/index.html", {
+        "countries": countries, 
+        "active_countries_count": countries.count()
+    })
 
 
 @login_required
@@ -70,8 +63,11 @@ def country_edit(request, slug):
     else:
         form = CountryForm(instance=country)
 
-    return render(request, "country/edit.html", {"form": form, "country": country, "country_slug": country.slug,})
-
+    return render(request, "country/edit.html", {
+        "form": form, 
+        "country": country, 
+        "country_slug": country.slug
+    })
 
 
 @login_required
@@ -80,20 +76,18 @@ def country_upload_view(request):
     if request.method == "POST":
         form = CountryUploadForm(request.POST, request.FILES)
         if form.is_valid():
-            # Get dry_run from form if needed
             dry_run = form.cleaned_data.get('dry_run', False)
             
-            # Now this matches the function signature in country/utils/csv_importer.py
+            # Using the utility we imported
             result = import_from_csv("country", request.FILES["file"], dry_run=dry_run)
             
-            # Store result in session for the result view
             request.session["upload_result"] = result
-            
             return redirect("country:country_upload_result")
     else:
         form = CountryUploadForm()
 
     return render(request, "country/upload_form.html", {"form": form})
+
 
 @login_required
 @role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
@@ -132,6 +126,7 @@ def download_csv_template(request):
     
     return response
 
+
 @login_required
 @role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
 def dashboard_country_map(request):
@@ -139,33 +134,21 @@ def dashboard_country_map(request):
     try:
         countries = Country.objects.filter(archive="N").values("iso2_code")
         
-        # Debug: Check what data you're getting
-        print("Countries queryset:", list(countries))
-        
-        # Create lists/dicts
         country_codes = []
-        country_labels = {}
         
         for country in countries:
             iso2 = country.get("iso2_code")
-            
-            # Skip if iso2_code is missing or None
             if iso2:
-                # Clean and uppercase the ISO2 code
-                iso2_clean = str(iso2).strip().upper()
-                country_codes.append(iso2_clean)
-        
-        # Debug: Check what you're returning
-        print("Country codes to return:", country_codes)
+                country_codes.append(str(iso2).strip().upper())
         
         return JsonResponse({
             "countries": country_codes,
         })
         
     except Exception as e:
-        # Log the error for debugging
         print(f"Error in dashboard_country_map: {str(e)}")
         return JsonResponse({
             "countries": [],
             "error": str(e)
         })
+        

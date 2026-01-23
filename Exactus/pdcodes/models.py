@@ -24,9 +24,9 @@ class PDcode(models.Model):
         max_length=15, choices=STATUS_CHOICES, blank=True, null=True
     )
 
-    pdcode_account = models.IntegerField(null=True, blank=True)
-    pdcode_map_code = models.IntegerField(null=True, blank=True)
-    pdcode_gl_account = models.IntegerField(null=True, blank=True)
+    pdcode_account = models.CharField(max_length=150)
+    pdcode_map_code = models.CharField(max_length=150)
+    pdcode_gl_account = models.CharField(max_length=150)
 
     FREQUENCY_CHOICES = [
         ("Recurring", "Recurring"),

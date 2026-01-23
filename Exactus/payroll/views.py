@@ -1,5 +1,6 @@
 import json
 import csv
+import io
 from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
 import logging
 
@@ -40,8 +41,13 @@ try:
 except ImportError:
     Element = None
 
-from .forms import PayrollForm, PayrollPeriodForm, PayrollProcessForm
-# Note: Decorator imports removed to prevent circular/permission crashes. We check manually.
+# Ensure HistoricalUploadForm is imported from your forms.py
+from .forms import (
+    PayrollForm, 
+    PayrollPeriodForm, 
+    PayrollProcessForm, 
+    HistoricalUploadForm
+)
 
 try:
     from Exactus.payroll.calculator.universal import UniversalPayrollCalculator
@@ -375,7 +381,6 @@ class PayrollPeriodDetailView(LoginRequiredMixin, DetailView):
                 'label': header_map.get(code, code)
             })
 
-        # --- RESTORED SECTION ---
         # 4. BUILD TABLE ROWS
         table_rows = []
         grand_totals = [Decimal('0.00')] * len(final_headers)
@@ -402,7 +407,6 @@ class PayrollPeriodDetailView(LoginRequiredMixin, DetailView):
                 'employee_id': getattr(item['employee'], 'employee_id', item['employee'].id),
                 'cells': cells
             })
-        # ------------------------
 
         # 5. PERMISSION CHECKS FOR BUTTONS
         user = self.request.user
@@ -507,6 +511,19 @@ class PayrollPeriodCreateView(LoginRequiredMixin, CreateView):
         return context
 
     def get_success_url(self):
+        # Redirect to Historical Upload if Payroll is flagged as historical
+        if self.payroll.is_historical:
+            return reverse_lazy(
+                "payroll:historical_upload",
+                kwargs={
+                    "country_slug": self.kwargs["country_slug"],
+                    "company_id": self.kwargs["company_id"],
+                    "payroll_id": self.kwargs["payroll_id"],
+                    "period_id": self.object.pk,
+                }
+            )
+        
+        # Default behavior for regular payrolls
         return reverse_lazy("payroll:period_detail", kwargs={
             "country_slug": self.kwargs["country_slug"],
             "company_id": self.kwargs["company_id"],
@@ -618,10 +635,9 @@ class PayrollPeriodProcessView(View):
                             final_gross = Decimal(str(totals.get('gross', 0)))
                             final_net = Decimal(str(totals.get('net', 0)))
 
-                            # --- NEW CHECK: Skip zero-net employees for Additional Runs ---
+                            # Skip zero-net employees for Additional Runs
                             if getattr(period, 'is_additional', False) and final_net == 0:
                                 continue 
-                            # -------------------------------------------------------------
                             
                             final_deductions = final_gross - final_net
                             
@@ -910,8 +926,6 @@ class PayrollPeriodExportView(View):
         return response
 
 
-
-
 @login_required
 @role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION",
                "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE")
@@ -1050,24 +1064,216 @@ def unlock_period(request, country_slug, company_id, payroll_id, period_id):
 def payroll_summary_api(request, payroll_id):
     return JsonResponse({'success': True})
 
-@method_decorator(login_required, name="dispatch")
-class PayrollPeriodAuthorizeView(View):
-    def post(self, request, country_slug, company_id, payroll_id, period_id):
-        try:
-            # ... (Permission checks) ...
+# ============================================================
+# HISTORICAL DATA UPLOAD
+# ============================================================
 
-            period = get_object_or_404(PayrollPeriod, pk=period_id, payroll_id=payroll_id)
+class PayrollHistoricalUploadView(LoginRequiredMixin, View):
+    """
+    Upload historical data via CSV. Validates columns against Elements/PD Codes.
+    """
+    def get(self, request, country_slug, company_id, payroll_id, period_id):
+        # Ensure we only upload to historical payrolls
+        period = get_object_or_404(PayrollPeriod, pk=period_id, payroll__is_historical=True)
+        form = HistoricalUploadForm()
+        context = {
+            'form': form,
+            'period': period,
+            'company_id': company_id,
+            'country_slug': country_slug,
+            'payroll_id': payroll_id
+        }
+        return render(request, 'payroll/historical_upload.html', context)
+
+    def post(self, request, country_slug, company_id, payroll_id, period_id):
+        period = get_object_or_404(PayrollPeriod, pk=period_id, payroll__is_historical=True)
+        form = HistoricalUploadForm(request.POST, request.FILES)
+        
+        context = {
+            'form': form, 'period': period, 'company_id': company_id, 
+            'country_slug': country_slug, 'payroll_id': payroll_id
+        }
+
+        if not form.is_valid():
+            return render(request, 'payroll/historical_upload.html', context)
+
+        file = request.FILES['file']
+        
+        try:
+            decoded_file = file.read().decode('utf-8-sig') # Handle BOM if present
+            io_string = io.StringIO(decoded_file)
+            reader = csv.DictReader(io_string)
+            headers = reader.fieldnames or []
+        except Exception as e:
+            messages.error(request, f"Error reading CSV: {e}")
+            return render(request, 'payroll/historical_upload.html', context)
+        
+        # 1. VALIDATION: Check Headers against Database
+        # ---------------------------------------------
+        company = get_object_or_404(Company, pk=company_id)
+        country = get_object_or_404(Country, slug=country_slug)
+        
+        # Fetch all valid codes from DB
+        db_elements = set(Element.objects.filter(country=country).values_list('element_code', flat=True))
+        db_pdcodes = set(PDcode.objects.filter(company=company).values_list('pdcode_code', flat=True))
+        
+        # Standard columns that don't need code validation
+        ignored_cols = [
+            'Employee ID', 'Employee Code', 'Employee Name', 'Name', 'Surname', 
+            'Gross Pay', 'Net Salary', 'Total Tax', 'Total Deductions', 'Net Pay'
+        ]
+        
+        missing_codes = []
+        
+        for header in headers:
+            # Clean header (strip spaces)
+            clean_header = header.strip()
             
-            if period.status != PeriodStatus.AWAITING_APPROVAL:
-                 return JsonResponse({"success": False, "error": "Period is not awaiting approval."}, status=400)
-                 
-            # This will now use the new .update() logic and succeed
-            period.authorize(request.user)
+            # Skip standard columns
+            if clean_header in ignored_cols:
+                continue
             
-            # ... (Logging) ...
-            
-            messages.success(request, f"Period {period.name} authorized and completed.")
-            return JsonResponse({"success": True})
+            # Check if it exists in DB
+            if clean_header not in db_elements and clean_header not in db_pdcodes:
+                missing_codes.append(clean_header)
+
+        # IF MISSING CODES FOUND -> STOP AND REPORT
+        if missing_codes:
+            return render(request, 'payroll/historical_upload_result.html', {
+                'success': False,
+                'missing_codes': missing_codes,
+                'period': period,
+                'company_id': company_id, 
+                'country_slug': country_slug, 
+                'payroll_id': payroll_id
+            })
+
+        # 2. PROCESSING: Import Data
+        # ---------------------------------------------
+        try:
+            with transaction.atomic():
+                # --- FIX: TRANSITION THROUGH 'PROCESSING' STATE ---
+                period.status = PeriodStatus.PROCESSING
+                period.processed_by = request.user
+                period.processed_at = timezone.now()
+                period.save()
+                
+                # Clear existing data for this period (it's a re-upload)
+                PayrollResult.objects.filter(period=period).delete()
+                
+                results_to_create = []
+                row_count = 0
+                
+                # Totals for Period update
+                total_gross_sum = Decimal(0)
+                total_net_sum = Decimal(0)
+                total_tax_sum = Decimal(0)
+
+                # Reset file pointer
+                io_string.seek(0)
+                reader = csv.DictReader(io_string)
+
+                for row in reader:
+                    # Identify Employee
+                    emp_id = row.get('Employee ID') or row.get('Employee Code')
+                    if not emp_id: continue
+                    
+                    emp = Employee.objects.filter(company_id=company_id, employee_id=emp_id).first()
+                    # Fallback to employee_code if needed
+                    if not emp:
+                        emp = Employee.objects.filter(company_id=company_id, employee_code=emp_id).first()
+                    
+                    if not emp:
+                        # You might want to collect missing employees to report as well
+                        continue
+
+                    details = {}
+                    gross = Decimal(0)
+                    net = Decimal(0)
+                    tax = Decimal(0)
+
+                    # Parse columns
+                    for key, value in row.items():
+                        clean_key = key.strip()
+                        if not value or value.strip() == '': continue
+                        
+                        try:
+                            clean_val = value.replace(',', '').replace('$', '').strip()
+                            amount = Decimal(clean_val)
+                            
+                            # Store in details JSON
+                            details[clean_key] = str(amount)
+                            
+                            # Heuristic for totals if specific columns aren't provided
+                            # (Usually Gross/Net are mapped to specific codes like 5000/8000 in your system)
+                            if clean_key == '5000': gross = amount
+                            elif clean_key == '8000': net = amount
+                            elif clean_key.startswith('6'): tax += abs(amount) # Assumption: 6xxx are taxes
+                            
+                        except InvalidOperation:
+                            continue # Skip non-numeric data
+
+                    # Prefer explicit columns if they exist in CSV
+                    if row.get('Gross Pay'): 
+                        gross = Decimal(row['Gross Pay'].replace(',', ''))
+                    if row.get('Net Pay') or row.get('Net Salary'): 
+                        val = row.get('Net Pay') or row.get('Net Salary')
+                        net = Decimal(val.replace(',', ''))
+                    if row.get('Total Tax'):
+                        tax = Decimal(row['Total Tax'].replace(',', ''))
+
+                    results_to_create.append(PayrollResult(
+                        period=period,
+                        employee=emp,
+                        gross_pay=gross,
+                        net_pay=net,
+                        total_tax=tax,
+                        total_deductions=gross-net,
+                        details=details
+                    ))
+                    
+                    total_gross_sum += gross
+                    total_net_sum += net
+                    total_tax_sum += tax
+                    row_count += 1
+
+                # Bulk Create Results
+                PayrollResult.objects.bulk_create(results_to_create)
+                
+                # Update Period
+                period.total_gross = total_gross_sum
+                period.total_net = total_net_sum
+                period.total_tax = total_tax_sum
+                period.total_amount = total_net_sum
+                period.employee_count = row_count
+                period.status = PeriodStatus.COMPLETED
+                period.save()
+                
+                # Log execution
+                PayrollExecutionLog.objects.create(
+                    period=period,
+                    execution_type='historical_upload',
+                    status='completed',
+                    employee_count=row_count,
+                    executed_by=request.user
+                )
+
+            return render(request, 'payroll/historical_upload_result.html', {
+                'success': True,
+                'count': row_count,
+                'period': period,
+                'company_id': company_id, 
+                'country_slug': country_slug, 
+                'payroll_id': payroll_id
+            })
 
         except Exception as e:
-            return JsonResponse({"success": False, "error": f"Authorization Failed: {str(e)}"}, status=500)
+            logger.error(f"Historical upload error: {e}")
+            return render(request, 'payroll/historical_upload_result.html', {
+                'success': False,
+                'error_message': str(e),
+                'period': period,
+                'company_id': company_id, 
+                'country_slug': country_slug, 
+                'payroll_id': payroll_id
+            })

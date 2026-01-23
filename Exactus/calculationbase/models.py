@@ -8,12 +8,13 @@ from Exactus.regulations.models import Regulations
 
 class CalculationBase(models.Model):
 
+    # Updated to match the specific frequencies: Weekly, Fortnightly, Semi-monthly, Four-weekly, Monthly
     FREQUENCY_CHOICES = [
-        ('Annually', 'Annually'),
-        ('Monthly', 'Monthly'),
-        ('Semi-Monthly', 'Semi-Monthly'),
-        ('Fortnightly', 'Fortnightly'),
         ('Weekly', 'Weekly'),
+        ('Fortnightly', 'Fortnightly'),
+        ('Semi-Monthly', 'Semi-Monthly'),
+        ('Four-weekly', 'Four-weekly'),
+        ('Monthly', 'Monthly'),
     ]
 
     ROUNDING_CHOICES = [
@@ -46,7 +47,6 @@ class CalculationBase(models.Model):
     base_frequency = models.CharField(max_length=15, choices=FREQUENCY_CHOICES, null=True, blank=True)
 
     # --- NEW FIELDS (Required for TaxEngine) ---
-    # Added blank=True to prevent validation errors if not provided in form
     rounding_base = models.CharField(max_length=15, choices=ROUNDING_CHOICES, default='None', blank=True)
     rounding_bracket = models.CharField(max_length=15, choices=ROUNDING_CHOICES, default='None', blank=True)
     rounding_taxed = models.CharField(max_length=15, choices=ROUNDING_CHOICES, default='None', blank=True)

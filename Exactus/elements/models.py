@@ -18,9 +18,9 @@ class Element(models.Model):
     ]
     element_status = models.CharField(max_length=15, choices=STATUS_CHOICES, blank=True, null=True)
 
-    element_account = models.IntegerField(null=True, blank=True)
-    element_map_code = models.IntegerField(null=True, blank=True)
-    element_gl_account = models.IntegerField(null=True, blank=True)
+    element_account = models.CharField(max_length=150)
+    element_map_code = models.CharField(max_length=150)
+    element_gl_account = models.CharField(max_length=150)
 
     FREQUENCY_CHOICES = [
         ('Recurring', 'Recurring'),

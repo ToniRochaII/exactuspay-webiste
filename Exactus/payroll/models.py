@@ -71,6 +71,11 @@ class Payroll(models.Model):
         verbose_name='Regulation Version',
         help_text='Select the specific regulation version for this fiscal year'
     )
+    is_historical = models.BooleanField(
+        default=False,
+        verbose_name="Historical Data Only",
+        help_text="Check this if this payroll record is for storing historical data from previous years."
+    )
     
     # Audit fields
     created_by = models.ForeignKey(
@@ -108,16 +113,20 @@ class Payroll(models.Model):
         ]
     
     def __str__(self):
-        return f'{self.company.trade_name} - FY{self.fiscal_year} - {self.get_status_display()}'
+        type_str = " (Historical)" if self.is_historical else ""
+        return f'{self.company.trade_name} - FY{self.fiscal_year}{type_str} - {self.get_status_display()}'
     
     def clean(self):
         super().clean()
         
         # 1. Validate fiscal year
         current_year = timezone.now().year
-        if self.fiscal_year < 2000 or self.fiscal_year > current_year + 5:
+        # Relaxed validation for historical data - allow older years
+        min_year = 1900 if self.is_historical else 2000
+        
+        if self.fiscal_year < min_year or self.fiscal_year > current_year + 5:
             raise ValidationError({
-                'fiscal_year': f'Fiscal year must be between 2000 and {current_year + 5}'
+                'fiscal_year': f'Fiscal year must be between {min_year} and {current_year + 5}'
             })
         
         # 2. Check for duplicate active payroll (excluding cancelled ones)
@@ -189,6 +198,14 @@ class PayrollPeriod(models.Model):
     """
     Individual pay period within a payroll
     """
+    FREQUENCY_CHOICES = [
+        ('Weekly', 'Weekly'),
+        ('Fortnightly', 'Fortnightly'),
+        ('Semi-Monthly', 'Semi-Monthly'),
+        ('Four-weekly', 'Four-weekly'),
+        ('Monthly', 'Monthly'),
+    ]
+
     payroll = models.ForeignKey(
         Payroll,
         on_delete=models.CASCADE,
@@ -204,6 +221,15 @@ class PayrollPeriod(models.Model):
         verbose_name='Period Name',
         help_text='e.g., January 2024, Q1 2024, etc.'
     )
+
+    frequency = models.CharField(
+        max_length=20, 
+        choices=FREQUENCY_CHOICES,
+        default='Monthly',
+        verbose_name='Frequency',
+        help_text='Links to CalculationBase frequency'
+    )
+
     start_date = models.DateField(verbose_name='Start Date')
     end_date = models.DateField(verbose_name='End Date')
     processing_date = models.DateField(
@@ -300,7 +326,6 @@ class PayrollPeriod(models.Model):
         verbose_name_plural = 'Payroll Periods'
         ordering = ['payroll', 'period_number']
         constraints = [
-            # UPDATED: Only enforce uniqueness if is_additional is FALSE
             UniqueConstraint(
                 fields=['payroll', 'period_number'],
                 name='unique_period_number_per_payroll',
@@ -347,23 +372,19 @@ class PayrollPeriod(models.Model):
 
     @property
     def is_locked(self):
-        """Check if period is locked"""
         return self.status in [PeriodStatus.AWAITING_APPROVAL, PeriodStatus.COMPLETED, PeriodStatus.LOCKED]
 
     def lock(self):
-        """Lock the period from modifications"""
         if not self.is_locked:
             self.status = PeriodStatus.LOCKED
             self.save(update_fields=['status', 'updated_at'])
 
     def unlock(self):
-        """Unlock the period for modifications"""
         if self.status == PeriodStatus.LOCKED:
             self.status = PeriodStatus.PENDING
             self.save(update_fields=['status', 'updated_at'])
 
     def mark_as_processing(self, user):
-        """Mark period as being processed (Stage 1 -> Engine Running)"""
         if self.can_process:
             self.status = PeriodStatus.PROCESSING
             self.processed_by = user
@@ -375,15 +396,10 @@ class PayrollPeriod(models.Model):
         return False
 
     def mark_as_processed(self, results_payload=None):
-        """
-        Stage 2: Engine finished. Data is ready for review.
-        Status -> PROCESSED.
-        """
         self.status = PeriodStatus.PROCESSED
         self.processed_at = timezone.now()
         
         if results_payload:
-            # Safely update totals
             try:
                 if 'total_net' in results_payload:
                     self.total_net = Decimal(str(results_payload['total_net']))
@@ -398,17 +414,14 @@ class PayrollPeriod(models.Model):
                 logger.error(f"Error converting total_gross: {e}")
                 self.total_gross = Decimal('0.00')
             
-            # Calculate other totals if provided
             if 'total_tax' in results_payload:
                 try:
                     self.total_tax = Decimal(str(results_payload['total_tax']))
                 except (ValueError, TypeError, InvalidOperation):
                     self.total_tax = Decimal('0.00')
             
-            # Calculate total amount
             self.total_amount = self.total_net
         
-        # Update employee count from results
         from .models import PayrollResult
         self.employee_count = PayrollResult.objects.filter(period=self).count()
         
@@ -420,10 +433,6 @@ class PayrollPeriod(models.Model):
         return True
 
     def send_for_approval(self):
-        """
-        Stage 2 -> Stage 3: User sends reviewed payroll for approval.
-        Locks the payroll from edits.
-        """
         if self.status == PeriodStatus.PROCESSED:
             timestamp = timezone.now()
             PayrollPeriod.objects.filter(pk=self.pk).update(
@@ -436,33 +445,21 @@ class PayrollPeriod(models.Model):
         return False
 
     def authorize(self, user):
-        """
-        Stage 3 -> Stage 4: Approver authorizes the payroll.
-        Finalizes the period AND archives variable AND expired permanent compensations.
-        """
-        # IMPORT HERE to avoid circular dependency
         from Exactus.compensation.models import CompensationComponent
 
         if self.status == PeriodStatus.AWAITING_APPROVAL:
             try:
                 with transaction.atomic():
                     timestamp = timezone.now()
-                    
-                    # Get list of employee IDs in this run
                     processed_employee_ids = self.results.values_list('employee_id', flat=True)
                     
-                    # -------------------------------------------------------------
-                    # 1. Archive Variable/One-time Compensations (Standard Logic)
-                    # -------------------------------------------------------------
                     variable_comps_to_archive = CompensationComponent.objects.filter(
                         employee_id__in=processed_employee_ids,
                         processed=False,
                         is_active=True
                     ).filter(
-                        # Must be Variable OR One Time
                         Q(category="VARIABLE") | Q(frequency='one_time')
                     ).filter(
-                        # Started on or before this period ends
                         start_date__lte=self.end_date
                     )
                     
@@ -473,33 +470,23 @@ class PayrollPeriod(models.Model):
                         updated_at=timestamp
                     )
 
-                    # -------------------------------------------------------------
-                    # 2. Archive EXPIRED Permanent Compensations (New Logic)
-                    # -------------------------------------------------------------
-                    # Find Permanent items that are active BUT have an end_date
-                    # that is on or before this period's end date.
                     expired_permanent_comps = CompensationComponent.objects.filter(
                         employee_id__in=processed_employee_ids,
                         processed=False,
                         is_active=True,
                         category="PERMANENT",
-                        end_date__isnull=False # Must have an end date set
+                        end_date__isnull=False 
                     ).filter(
-                        end_date__lte=self.end_date # The end date has passed
+                        end_date__lte=self.end_date 
                     )
 
-                    # Mark them as processed/inactive so they move to the Archive list
                     expired_permanent_comps.update(
                         processed=True,
-                        processed_period=self.name, # Stamped with the period it expired in
+                        processed_period=self.name, 
                         is_active=False,
                         updated_at=timestamp
                     )
 
-                    # -------------------------------------------------------------
-                    # 3. Update Period Status
-                    # -------------------------------------------------------------
-                    # We use update() to bypass strict clean() validations if any
                     PayrollPeriod.objects.filter(pk=self.pk).update(
                         status=PeriodStatus.COMPLETED,
                         updated_at=timestamp
@@ -515,13 +502,8 @@ class PayrollPeriod(models.Model):
         return False
 
     def reject(self):
-        """
-        Stage 3 -> Stage 1: Approver rejects the payroll.
-        Wipes data and resets to PENDING.
-        """
         if self.status == PeriodStatus.AWAITING_APPROVAL:
             timestamp = timezone.now()
-            # Use .update() to bypass validation
             PayrollPeriod.objects.filter(pk=self.pk).update(
                 status=PeriodStatus.PENDING,
                 total_gross=Decimal('0.00'),
@@ -541,7 +523,6 @@ class PayrollPeriod(models.Model):
             return True
         return False
 
-    # Helper for the dashboard
     def get_eligible_employees(self):
         from Exactus.employee.models import Employee
         return Employee.objects.filter(
@@ -552,12 +533,12 @@ class PayrollPeriod(models.Model):
         )
 
     def get_regulation_config(self):
-        """Get regulation configuration for this period"""
         config = {
             'country': self.payroll.country.slug,
             'regulation_version': self.payroll.regulation_version,
             'apply_regulations': self.apply_regulations,
             'period_type': 'regular',
+            'frequency': self.frequency,
             'dates': {
                 'start': self.start_date.isoformat(),
                 'end': self.end_date.isoformat(),
@@ -571,9 +552,6 @@ class PayrollPeriod(models.Model):
 
 
 class PayrollExecutionLog(models.Model):
-    """
-    Audit log for payroll period executions
-    """
     period = models.ForeignKey(
         PayrollPeriod,
         on_delete=models.CASCADE,
@@ -587,7 +565,8 @@ class PayrollExecutionLog(models.Model):
             ('approval', 'Approval'),
             ('payment', 'Payment'),
             ('reporting', 'Reporting'),
-            ('adjustment', 'Adjustment')
+            ('adjustment', 'Adjustment'),
+            ('historical_upload', 'Historical Upload')
         ],
         verbose_name='Execution Type'
     )
@@ -602,7 +581,6 @@ class PayrollExecutionLog(models.Model):
         verbose_name='Status'
     )
     
-    # Input/Output data
     input_data = models.JSONField(
         default=dict,
         encoder=DjangoJSONEncoder
@@ -618,11 +596,9 @@ class PayrollExecutionLog(models.Model):
         help_text='Error details if execution failed'
     )
     
-    # Statistics
     employee_count = models.IntegerField(default=0, verbose_name='Employee Count')
     processing_time = models.DurationField(null=True, blank=True, verbose_name='Processing Time')
     
-    # Audit fields
     started_at = models.DateTimeField(auto_now_add=True, verbose_name='Started At')
     completed_at = models.DateTimeField(null=True, blank=True, verbose_name='Completed At')
     executed_by = models.ForeignKey(
@@ -647,7 +623,6 @@ class PayrollExecutionLog(models.Model):
         return f'{self.period} - {self.execution_type} - {self.status}'
     
     def mark_completed(self, output_data=None):
-        """Mark execution as completed"""
         self.status = 'completed'
         self.completed_at = timezone.now()
         
@@ -660,7 +635,6 @@ class PayrollExecutionLog(models.Model):
         self.save()
     
     def mark_failed(self, error_message):
-        """Mark execution as failed"""
         self.status = 'failed'
         self.completed_at = timezone.now()
         self.error_details = error_message
@@ -671,9 +645,6 @@ class PayrollExecutionLog(models.Model):
         self.save()
 
 class PayrollAdjustment(models.Model):
-    """
-    Adjustments to payroll calculations
-    """
     period = models.ForeignKey(
         PayrollPeriod,
         on_delete=models.CASCADE,
@@ -698,7 +669,6 @@ class PayrollAdjustment(models.Model):
         verbose_name='Amount'
     )
     
-    # Affected employees (null means all employees in period)
     affected_employees = models.JSONField(
         default=list,
         blank=True,
@@ -706,7 +676,6 @@ class PayrollAdjustment(models.Model):
         help_text='List of employee IDs affected by this adjustment'
     )
     
-    # Regulation reference
     regulation_reference = models.CharField(
         max_length=100,
         blank=True,
@@ -714,11 +683,9 @@ class PayrollAdjustment(models.Model):
         help_text='Reference to specific regulation if applicable'
     )
     
-    # Status
     is_applied = models.BooleanField(default=False, verbose_name='Is Applied')
     applied_at = models.DateTimeField(null=True, blank=True, verbose_name='Applied At')
     
-    # Audit fields
     created_by = models.ForeignKey(
         User,
         on_delete=models.SET_NULL,
@@ -749,13 +716,11 @@ class PayrollAdjustment(models.Model):
         return f'{self.period} - {self.adjustment_type}: {self.description}'
     
     def apply(self):
-        """Apply this adjustment to the payroll period"""
         if not self.is_applied:
             self.is_applied = True
             self.applied_at = timezone.now()
             self.save()
             
-            # Update period totals
             self.period.total_amount += self.amount
             self.period.save(update_fields=['total_amount', 'updated_at'])
 

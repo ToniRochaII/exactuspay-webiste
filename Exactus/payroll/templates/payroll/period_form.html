@@ -1,4 +1,3 @@
-<!-- Exactus/payroll/templates/payroll/period_form.html -->
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% load humanize %}
@@ -7,7 +6,6 @@
 
 {% block content %}
 <div class="container-fluid">
-    <!-- Header -->
     <div class="row mb-4">
         <div class="col">
             <h2>
@@ -45,7 +43,21 @@
         </div>
     </div>
 
-    <!-- Form Card -->
+    {% if payroll.is_historical and not form.instance.pk %}
+    <div class="alert alert-info border-info shadow-sm">
+        <div class="d-flex align-items-center">
+            <div class="fs-4 me-3 text-info"><i class="fas fa-history"></i></div>
+            <div>
+                <h6 class="alert-heading fw-bold mb-1">Historical Data Entry</h6>
+                <p class="mb-0">
+                    This payroll is flagged for <strong>Historical Data</strong>. 
+                    After saving these dates, you will be automatically redirected to the <strong>Data Upload Wizard</strong>.
+                </p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     <div class="card">
         <div class="card-header">
             <h5 class="card-title mb-0">Period Information</h5>
@@ -54,7 +66,6 @@
             <form method="post" novalidate>
                 {% csrf_token %}
                 
-                <!-- Payroll Information (Read-only) -->
                 <div class="row mb-3">
                     <div class="col-md-12">
                         <div class="card bg-light">
@@ -62,9 +73,12 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <strong>Payroll:</strong> FY{{ payroll.fiscal_year }}
+                                        {% if payroll.is_historical %}
+                                            <span class="badge bg-secondary ms-2">Historical</span>
+                                        {% endif %}
                                     </div>
                                     <div class="col-md-6">
-                                        <strong>Company:</strong> {{ payrollperiod.payroll.company.trade_name }}
+                                        <strong>Company:</strong> {{ payroll.company.trade_name }}
                                     </div>
                                 </div>
                             </div>
@@ -73,11 +87,14 @@
                 </div>
                 
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-2">
                         {{ form.period_number|as_crispy_field }}
                     </div>
                     <div class="col-md-6">
                         {{ form.name|as_crispy_field }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ form.frequency|as_crispy_field }}
                     </div>
                 </div>
                 
@@ -108,7 +125,6 @@
                     </div>
                 </div>
                 
-                <!-- Hidden field for payroll (for form processing) -->
                 <input type="hidden" name="payroll" value="{{ payroll.pk }}">
                 
                 <div class="row mt-4">
@@ -119,8 +135,15 @@
                                 <i class="fas fa-times me-1"></i> Cancel
                             </a>
                             <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save me-1"></i>
-                                {% if form.instance.pk %}Update{% else %}Create{% endif %} Period
+                                {% if form.instance.pk %}
+                                    <i class="fas fa-save me-1"></i> Update Period
+                                {% else %}
+                                    {% if payroll.is_historical %}
+                                        <i class="fas fa-upload me-1"></i> Create & Upload Data
+                                    {% else %}
+                                        <i class="fas fa-save me-1"></i> Create Period
+                                    {% endif %}
+                                {% endif %}
                             </button>
                         </div>
                     </div>
@@ -129,17 +152,17 @@
         </div>
     </div>
     
-    <!-- Help Text -->
     <div class="card mt-3">
         <div class="card-body">
             <h6><i class="fas fa-info-circle me-1"></i> Important Notes:</h6>
             <ul class="text-muted mb-0">
-                <li>Period dates cannot overlap with existing periods in the same payroll</li>
-                <li>Processing date should be on or after the end date</li>
-                <li>Period can only be edited while in "Pending" or "Scheduled" status</li>
-                <li>Once processed, period cannot be modified</li>
-                <li>Use regulation overrides for country-specific adjustments (JSON format)</li>
-                <li>Auto-generated name will use the start date month and year if left empty</li>
+                <li><strong>Frequency:</strong> Ensure this matches the frequency defined in your Calculation Bases (e.g., Weekly, Monthly).</li>
+                <li>Period dates cannot overlap with existing periods in the same payroll (unless marked as Additional).</li>
+                <li>Processing date should be on or after the end date.</li>
+                <li>Period can only be edited while in "Pending" or "Scheduled" status.</li>
+                <li>Once processed, period cannot be modified.</li>
+                <li>Use regulation overrides for country-specific adjustments (JSON format).</li>
+                <li>Auto-generated name will use the start date month and year if left empty.</li>
             </ul>
         </div>
     </div>
@@ -163,39 +186,41 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    startDateField.addEventListener('change', updatePeriodName);
-    endDateField.addEventListener('change', updatePeriodName);
+    if (startDateField) startDateField.addEventListener('change', updatePeriodName);
+    if (endDateField) endDateField.addEventListener('change', updatePeriodName);
     
-    // Set default processing date (end date + 5 days)
-    endDateField.addEventListener('change', function() {
-        if (this.value) {
-            const endDate = new Date(this.value);
-            const processingDate = new Date(endDate);
-            processingDate.setDate(processingDate.getDate() -10);
-            
-            const processingDateField = document.getElementById('id_processing_date');
-            if (!processingDateField.value) {
-                // Format as YYYY-MM-DD
-                const formattedDate = processingDate.toISOString().split('T')[0];
-                processingDateField.value = formattedDate;
+    // Set default processing date logic
+    if (endDateField) {
+        endDateField.addEventListener('change', function() {
+            if (this.value) {
+                const endDate = new Date(this.value);
+                // Default: Processing date same as End Date (can be adjusted)
+                const processingDate = new Date(endDate);
+                
+                const processingDateField = document.getElementById('id_processing_date');
+                if (processingDateField && !processingDateField.value) {
+                    const formattedDate = processingDate.toISOString().split('T')[0];
+                    processingDateField.value = formattedDate;
+                }
+                
+                // Set payment date (processing date + 2 days)
+                const paymentDateField = document.getElementById('id_payment_date');
+                if (paymentDateField && !paymentDateField.value) {
+                    const paymentDate = new Date(processingDate);
+                    paymentDate.setDate(paymentDate.getDate() + 2);
+                    const formattedPaymentDate = paymentDate.toISOString().split('T')[0];
+                    paymentDateField.value = formattedPaymentDate;
+                }
             }
-            
-            // Set payment date (processing date + 2 days)
-            const paymentDateField = document.getElementById('id_payment_date');
-            if (!paymentDateField.value) {
-                const paymentDate = new Date(processingDate);
-                paymentDate.setDate(paymentDate.getDate() + 5);
-                const formattedPaymentDate = paymentDate.toISOString().split('T')[0];
-                paymentDateField.value = formattedPaymentDate;
-            }
-        }
-    });
+        });
+    }
     
     // Auto-suggest next period number (only for new periods)
     {% if not form.instance.pk %}
     const periodNumberField = document.getElementById('id_period_number');
-    if (!periodNumberField.value || periodNumberField.value === '') {
-        fetch(`{% url 'payroll:next_period_number' payroll.pk %}`)
+    if (periodNumberField && (!periodNumberField.value || periodNumberField.value === '')) {
+        const url = "{% url 'payroll:next_period_number' payroll.pk %}";
+        fetch(url)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');

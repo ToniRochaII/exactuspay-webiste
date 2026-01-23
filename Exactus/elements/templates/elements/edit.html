@@ -2,7 +2,7 @@
 {% load static %}
 {% load element_role_filters %}
 
-{% block title %}Add Element — {{ country.name }} | ExactusPay{% endblock %}
+{% block title %}Edit Element — {{ country.name }} | ExactusPay{% endblock %}
 
 {% block extra_css %}
 <style>
@@ -20,7 +20,7 @@
 {% endblock %}
 
 {% block page_title %}
-<i class="bi bi-plus-circle me-2"></i> Add Element
+<i class="bi bi-pencil-square me-2"></i> Edit Element
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -31,7 +31,7 @@
     <li class="breadcrumb-item"><a href="{% url 'elements:elements' country_slug %}">
       Elements — {{ country.name }}
     </a></li>
-    <li class="breadcrumb-item active" aria-current="page">Add Element</li>
+    <li class="breadcrumb-item active" aria-current="page">Edit Element</li>
   </ol>
 </nav>
 {% endblock %}
@@ -39,14 +39,12 @@
 {% block content %}
 <div class="card shadow-sm border-0">
 
-  <!-- HEADER -->
   <div class="card-header py-3 d-flex justify-content-between align-items-center">
     <h5 class="mb-0 fw-semibold">
-      <i class="bi bi-plus-circle me-2"></i> Add New Element — {{ country.name }}
+      <i class="bi bi-pencil-square me-2"></i> Edit Element: {{ element.element_code }} — {{ element.element_name }}
     </h5>
   </div>
 
-  <!-- BODY -->
   <div class="card-body">
 
     {% if messages %}
@@ -70,7 +68,6 @@
         </div>
       {% endif %}
 
-      <!-- DETAILS SECTION -->
       <div class="mb-4">
         <h6 class="fw-bold text-muted text-uppercase mb-3 border-bottom pb-2">
           <i class="bi bi-info-circle me-1"></i> Element Details
@@ -128,7 +125,6 @@
         </div>
       </div>
 
-      <!-- CLASSIFICATION SECTION -->
       <div class="mb-4">
         <h6 class="fw-bold text-muted text-uppercase mb-3 border-bottom pb-2">
           <i class="bi bi-tags me-1"></i> Classification
@@ -221,7 +217,6 @@
         </div>
       </div>
 
-      <!-- ACCOUNTING SECTION -->
       <div class="mb-4">
         <h6 class="fw-bold text-muted text-uppercase mb-3 border-bottom pb-2">
           <i class="bi bi-journal-bookmark me-1"></i> Accounting
@@ -272,7 +267,6 @@
         </div>
       </div>
 
-      <!-- TAXATION SECTION -->
       <div class="mb-4">
         <h6 class="fw-bold text-muted text-uppercase mb-3 border-bottom pb-2">
           <i class="bi bi-shield-check me-1"></i> Taxation Settings
@@ -302,7 +296,30 @@
         </div>
       </div>
 
-      <!-- SUBMIT BUTTONS -->
+      <div class="mb-4">
+        <h6 class="fw-bold text-muted text-uppercase mb-3 border-bottom pb-2">
+          <i class="bi bi-arrow-repeat me-1"></i> Synchronization
+        </h6>
+        
+        <div class="card border border-warning bg-light">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <div class="form-check form-switch">
+                {{ form.sync_pdcodes }}
+                <label class="form-check-label fw-bold text-dark" for="{{ form.sync_pdcodes.id_for_label }}">
+                  {{ form.sync_pdcodes.label }}
+                </label>
+              </div>
+            </div>
+            {% if form.sync_pdcodes.help_text %}
+              <div class="form-text text-muted mt-2 ms-1">
+                <i class="bi bi-info-circle-fill text-warning me-1"></i> {{ form.sync_pdcodes.help_text }}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
       <div class="text-end mt-5 pt-4 border-top">
         <a href="{% url 'elements:elements' country_slug %}" class="btn btn-light border me-2">
           <i class="bi bi-x-circle me-1"></i> Cancel
@@ -310,7 +327,7 @@
 
         <button class="btn btn-primary px-4" id="submit-btn" type="submit">
           <i class="bi bi-check-circle me-1"></i> 
-          <span id="submit-text">Save Element</span>
+          <span id="submit-text">Save Changes</span>
           <span id="submit-loading" class="spinner-border spinner-border-sm d-none" role="status"></span>
         </button>
       </div>

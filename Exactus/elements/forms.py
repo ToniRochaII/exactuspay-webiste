@@ -5,6 +5,15 @@ from Exactus.elements.models import Element
 
 
 class ElementForm(forms.ModelForm):
+
+    sync_pdcodes = forms.BooleanField(
+        required=False,
+        initial=False,
+        label="Update/Overwrite Linked PD Codes",
+        help_text="Check this to propagate these changes to all Companies (Only for codes 1000-4900).",
+        widget=forms.CheckboxInput(attrs={"class": "form-check-input"})
+    )
+
     class Meta:
         model = Element
         fields = [
@@ -27,6 +36,7 @@ class ElementForm(forms.ModelForm):
             "element_pensionable",
             "element_payable",
             "element_calculate",
+            "sync_pdcodes"
         ]
         widgets = {
             # normal text/select widgets
@@ -51,6 +61,7 @@ class ElementForm(forms.ModelForm):
             "element_pensionable": forms.CheckboxInput(attrs={"class": "form-check-input"}),
             "element_payable": forms.CheckboxInput(attrs={"class": "form-check-input"}),
             "element_calculate": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+            "sync_pdcodes": forms.CheckboxInput(attrs={"class": "form-check-input"}),
         }
 
 

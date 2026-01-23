@@ -16,8 +16,9 @@
 
     <title>{% block title %}ExactusPay{% endblock %}</title>
 
-    <!-- CORE STYLES -->
     <link href="{% static 'dis/css/modern.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <script src="{% static 'js/session_manager.js' %}"></script>
 
     <style>
@@ -50,6 +51,14 @@
             margin-left: auto;
             margin-right: auto;
         }
+        /* Context Switcher Styles */
+        .context-btn {
+            min-width: 200px;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
     </style>
 
     <script src="{% static 'dis/js/settings.js' %}"></script>
@@ -60,13 +69,11 @@
     <div class="splash active"><div class="splash-icon"></div></div>
 
     <div class="wrapper">
-        <!-- SIDEBAR -->
         <nav id="sidebar" class="sidebar">
             <a class="sidebar-brand text-center" href="{% url 'dashboard' %}">
                 ExactusPay
             </a>
             <div class="sidebar-content">
-                <!-- USER PANEL -->
                 <div class="sidebar-user">
                     <img
                         src="{% if user.is_authenticated and user.userprofile and user.userprofile.avatar %}
@@ -75,11 +82,13 @@
                                 {% static 'dis/img/avatars/default.jpg' %}
                             {% endif %}"
                         class="avatar-img mb-2"
-                        alt="User Avatar">
+                        alt="User Avatar"
+                        onerror="this.src='https://ui-avatars.com/api/?name={{ user.username }}&background=0D8ABC&color=fff'">
+                    
                     {% if user.is_authenticated %}
                         <div class="fw-bold">{{ user.username|default:"User" }}</div>
                         <div class="sidebar-user-role">
-                            {{ user.get_role_display|default:user.role|default:"" }}
+                            {{ user.get_user_type_display }}
                         </div>
                     {% else %}
                         <div class="fw-bold">Guest</div>
@@ -87,10 +96,8 @@
                     {% endif %}
                 </div>
 
-                <!-- SIDEBAR NAVIGATION -->
                 <ul class="sidebar-nav">
 
-                    <!-- DASHBOARD -->
                     <li class="sidebar-item">
                         <a class="sidebar-link" href="{% url 'dashboard' %}">
                             <i class="align-middle me-2 fas fa-fw fa-home"></i>Dashboard
@@ -99,9 +106,6 @@
 
                     {% if user.is_authenticated %}
 
-                    <!-- ========================================================= -->
-                    <!-- ADMINISTRATION (Exec/Admin/Compliance only)               -->
-                    <!-- ========================================================= -->
                     {% if user|has_role:"EXEC,ADMIN,COMPLIANCE" %}
                     <li class="sidebar-header">Administration</li>
 
@@ -145,11 +149,8 @@
                         </ul>
                     </li>
                     {% endif %}
-                    {% endif %} {# /Administration roles #}
+                    {% endif %} 
 
-                    <!-- ========================================================= -->
-                    <!-- PAYROLL OPERATIONS                                        -->
-                    <!-- ========================================================= -->
                     {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,FINANCE,EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
                     <li class="sidebar-header">Payroll Operations</li>
 
@@ -297,7 +298,7 @@
                     </li>
                     {% endif %}
 
-                    {# Payroll (needs country and company) - FULLY FIXED SECTION #}
+                    {# Payroll (needs country and company) #}
                     {% if country_slug %}
                     <li class="sidebar-item">
                         <a data-bs-target="#nav-payroll-payroll"
@@ -329,11 +330,10 @@
                                 </li>
                                 {% endif %}
 
-                                {# Period-related actions – only when a payroll context exists #}
+                                {# Period-related actions #}
                                 {% if payroll or payroll_id %}
                                     <li class="sidebar-divider"></li>
 
-                                    {# Case 1: full payroll object in context #}
                                     {% if payroll %}
                                         {% with current_payroll_id=payroll.pk %}
                                             <li class="sidebar-item">
@@ -353,7 +353,6 @@
                                             {% endif %}
                                         {% endwith %}
                                     {% elif payroll_id %}
-                                        {# Case 2: only payroll_id provided in context #}
                                         {% with current_payroll_id=payroll_id %}
                                             <li class="sidebar-item">
                                                 <a class="sidebar-link"
@@ -433,12 +432,6 @@
                                     <i class="fas fa-plus me-2"></i>Add Pay Register Entry
                                 </a>
                             </li>
-                            <li class="sidebar-item">
-                                <a class="sidebar-link"
-                                   href="">
-                                    <i class="fas fa-upload me-2"></i>Bulk Upload Pay Register
-                                </a>
-                            </li>
                             {% endif %}
                         </ul>
                     </li>
@@ -446,9 +439,6 @@
 
                     {% endif %} {# /Payroll Operations roles #}
 
-                    <!-- ========================================================= -->
-                    <!-- SYSTEM CONFIGURATION                                      -->
-                    <!-- ========================================================= -->
                     {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
                     <li class="sidebar-header">System Configuration</li>
 
@@ -493,7 +483,6 @@
                             </li>
                             {% endif %}
 
-                            {# ⭐ CONTEXTUAL EDIT COUNTRY OPTION ⭐ #}
                             {% if user|can:"COMPANY:CREATE" %}
                                 {% if country or country_slug %}
                             <li class="sidebar-divider"></li>
@@ -583,7 +572,7 @@
                     </li>
                     {% endif %}
 
-                    {# Calculation Base (tied to a specific regulation) #}
+                    {# Calculation Base #}
                     {% if country_slug and regulation_id %}
                     <li class="sidebar-item">
                         <a data-bs-target="#nav-config-calculationbase"
@@ -620,15 +609,12 @@
             </div>
         </nav>
 
-        <!-- MAIN CONTENT WRAPPER -->
         <div class="main">
-            <!-- NAVBAR -->
             <nav class="navbar navbar-expand navbar-theme">
                 <a class="sidebar-toggle d-flex me-2">
                     <i class="hamburger align-self-center"></i>
                 </a>
 
-                <!-- Breadcrumb Navigation -->
                 <nav aria-label="breadcrumb" class="d-none d-md-block">
                     <ol class="breadcrumb mt-3 mb-0">
                         {% block breadcrumbs %}{% endblock %}
@@ -636,12 +622,44 @@
                 </nav>
 
                 <div class="navbar-collapse collapse">
-                    <ul class="navbar-nav ms-auto">
-                        <!-- User Menu -->
+                    {% if user.is_authenticated %}
+                    <ul class="navbar-nav align-items-center ms-auto">
+                        <li class="nav-item dropdown me-3">
+
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="contextDropdown">
+                                <li><h6 class="dropdown-header text-uppercase small fw-bold">Switch Context</h6></li>
+                                
+                                {% if user.user_type == 'BUSINESS' %}
+                                <li>
+                                    <a class="dropdown-item {% if not active_company_id %}active{% endif %}" href="{% url 'switch_context' 'GLOBAL' %}">
+                                        <i class="fas fa-globe me-2"></i>Global View
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                {% endif %}
+
+                                {% for ctx in user.contexts.all %}
+                                    {% if ctx.company %}
+                                    <li>
+                                        <a class="dropdown-item {% if active_company_id == ctx.company.id|stringformat:'s' %}active{% endif %}" 
+                                           href="{% url 'switch_context' ctx.company.id %}">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span><i class="fas fa-building me-2 text-muted"></i>{{ ctx.company.trade_name }}</span>
+                                                <span class="badge bg-light text-dark border ms-2">{{ ctx.role }}</span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    {% endif %}
+                                {% empty %}
+                                    <li><span class="dropdown-item text-muted small fst-italic">No company assignments found</span></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+
                         <li class="nav-item dropdown ms-lg-2">
                             <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                                <i class="align-middle fas fa-user-circle"></i>
-                                <span class="d-none d-md-inline">
+                                <i class="align-middle fas fa-user-circle fa-lg"></i>
+                                <span class="d-none d-md-inline ms-1">
                                     {{ user.username|default:"Guest" }}
                                 </span>
                             </a>
@@ -658,12 +676,9 @@
                                     {% endif %}
 
                                     <div class="dropdown-divider"></div>
-                                    <form action="{% url 'logout' %}" method="post" class="d-inline">
-                                        {% csrf_token %}
-                                        <button type="submit" class="dropdown-item">
-                                            <i class="fas fa-sign-out-alt me-2"></i>Logout
-                                        </button>
-                                    </form>
+                                    <a class="dropdown-item text-danger" href="{% url 'logout' %}">
+                                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                    </a>
                                 {% else %}
                                     <a class="dropdown-item" href="{% url 'login' %}">
                                         <i class="fas fa-sign-in-alt me-2"></i>Login
@@ -672,13 +687,12 @@
                             </div>
                         </li>
                     </ul>
+                    {% endif %}
                 </div>
             </nav>
 
-            <!-- PAGE CONTENT -->
             <main class="content">
                 <div class="container-fluid p-4">
-                    <!-- Page Header -->
                     <div class="header mb-4 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2">
                         <div>
                             <h1 class="header-title mb-0">
@@ -697,7 +711,6 @@
                         </div>
                     </div>
 
-                    <!-- Messages Display -->
                     {% if messages %}
                     <div class="messages mb-4">
                         {% for message in messages %}
@@ -709,7 +722,6 @@
                     </div>
                     {% endif %}
 
-                    <!-- Main Content -->
                     {% block content %}
                     <div class="row">
                         <div class="col-12">
@@ -732,7 +744,6 @@
                 </div>
             </main>
 
-            <!-- FOOTER -->
             <footer class="footer">
                 <div class="container-fluid">
                     <div class="row text-muted align-items-center">
@@ -752,7 +763,7 @@
                                 &copy; {% now "Y" %} ExactusPay v1.0
                                 {% if user.is_authenticated %}
                                 <span class="text-muted ms-2">
-                                    • {{ user.get_role_display|default:user.role|default:"" }}
+                                    • {{ user.get_user_type_display }}
                                 </span>
                                 {% endif %}
                             </p>
@@ -763,7 +774,6 @@
         </div>
     </div>
 
-    <!-- ICONS -->
     <svg width="0" height="0" style="position:absolute">
         <defs>
             <symbol id="ion-ios-pulse-strong" viewBox="0 0 512 512">
@@ -772,10 +782,8 @@
         </defs>
     </svg>
 
-    <!-- CORE JS -->
     <script src="{% static 'dis/js/app.js' %}"></script>
 
-    <!-- INITIALIZATION -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Auto-hide alerts after 5 seconds

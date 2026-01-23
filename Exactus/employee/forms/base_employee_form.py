@@ -1,14 +1,13 @@
-# employee/forms.py
 from django import forms
 from django.core.exceptions import ValidationError
 from Exactus.employee.models import Employee
-
 
 class BaseEmployeeForm(forms.ModelForm):
     class Meta:
         model = Employee
         exclude = ["company"]
 
+        # Define labels for clarity (generic defaults)
         labels = {
             "employee_id": "Employee ID",
             "employee_number": "Employee Number",
@@ -18,245 +17,101 @@ class BaseEmployeeForm(forms.ModelForm):
             "gender": "Gender",
             "date_of_birth": "Date of Birth",
             "marital_status": "Marital Status",
+            
+            # Communications
+            "email": "Email Address",
+            "telephone": "Telephone Number",
+            
+            # Address 01-07 mapped in widgets
             "employee_address_type": "Address Type",
-            "employee_address_01": "Address Line 1",
-            "employee_address_02": "Address Line 2",
-            "employee_address_03": "Address Line 3",
-            "employee_address_04": "City",
-            "employee_address_05": "State/Province",
-            "employee_address_06": "Postal Code",
-            "employee_address_07": "Country",
-            "bank_01": "Bank Name",
-            "bank_02": "Account Holder Name",
-            "bank_03": "Account Number",
-            "bank_04": "Bank Code",
-            "bank_05": "Branch Code",
-            "bank_06": "Account Type",
-            "bank_07": "IBAN",
-            "bank_08": "SWIFT/BIC",
-            "bank_09": "Currency",
-            "bank_10": "Payment Method",
+            
+            # Job
+            "employment_start_date": "Start Date",
+            "employment_end_date": "Termination Date",
             "department": "Department",
             "cost_centre": "Cost Centre",
             "job_title": "Job Title",
             "position_number": "Position Number",
             "fte": "Full-Time Equivalent",
-            "tax_info_01": "Tax ID",
-            "tax_info_02": "Tax Status",
-            "tax_info_03": "Exemption Amount",
-            "tax_info_04": "Tax Bracket",
-            "tax_info_05": "Tax Residency",
-            "tax_info_06": "Additional Withholding",
-            "tax_info_07": "Tax Notes",
         }
 
         widgets = {
-            # Personal Information
-            "employee_id": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "personal"  # Make sure this is included
-            }),
-            "employee_number": forms.NumberInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "personal"
-            }),
-            "employee_code": forms.NumberInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "personal"
-            }),
-            "employee_name": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "personal"
-            }),
-            "employee_surname": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "personal"
-            }),
-            "gender": forms.Select(attrs={
-                "class": "form-control",
-                "data-section": "personal"
-            }),
-            "marital_status": forms.Select(attrs={
-                "class": "form-control",
-                "data-section": "personal"
-            }),
-            "employee_address_type": forms.Select(attrs={
-                "class": "form-control",
-                "data-section": "address"
-            }),
-            "date_of_birth": forms.DateInput(attrs={
-                "class": "form-control",
-                "type": "date",
-                "placeholder": " ",
-                "data-section": "personal"
-            }),
+            # --- Personal Information ---
+            "employee_id": forms.TextInput(attrs={"class": "form-control", "data-section": "personal"}),
+            "employee_number": forms.NumberInput(attrs={"class": "form-control", "data-section": "personal"}),
+            "employee_code": forms.NumberInput(attrs={"class": "form-control", "data-section": "personal"}),
+            "employee_name": forms.TextInput(attrs={"class": "form-control", "data-section": "personal"}),
+            "employee_surname": forms.TextInput(attrs={"class": "form-control", "data-section": "personal"}),
+            "gender": forms.Select(attrs={"class": "form-control", "data-section": "personal"}),
+            "marital_status": forms.Select(attrs={"class": "form-control", "data-section": "personal"}),
+            "date_of_birth": forms.DateInput(attrs={"class": "form-control", "type": "date", "data-section": "personal"}),
 
-            # Address Information
-            "employee_address_01": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "address"  # Make sure this is included
-            }),
-            "employee_address_02": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "address"
-            }),
-            "employee_address_03": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "address"
-            }),
-            "employee_address_04": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "address"
-            }),
-            "employee_address_05": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "address"
-            }),
-            "employee_address_06": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "address"
-            }),
-            "employee_address_07": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "address"
-            }),
+            # --- Communication & Address Information (Renamed Section) ---
+            "email": forms.EmailInput(attrs={"class": "form-control", "placeholder": "name@example.com", "data-section": "communication"}),
+            "telephone": forms.TextInput(attrs={"class": "form-control", "placeholder": "+1 234 567 890", "data-section": "communication"}),
+            
+            "employee_address_type": forms.Select(attrs={"class": "form-control", "data-section": "communication"}),
+            "employee_address_01": forms.TextInput(attrs={"class": "form-control", "placeholder": "Address Line 1", "data-section": "communication"}),
+            "employee_address_02": forms.TextInput(attrs={"class": "form-control", "placeholder": "Address Line 2", "data-section": "communication"}),
+            "employee_address_03": forms.TextInput(attrs={"class": "form-control", "placeholder": "Address Line 3", "data-section": "communication"}),
+            "employee_address_04": forms.TextInput(attrs={"class": "form-control", "placeholder": "City", "data-section": "communication"}),
+            "employee_address_05": forms.TextInput(attrs={"class": "form-control", "placeholder": "State/Province", "data-section": "communication"}),
+            "employee_address_06": forms.TextInput(attrs={"class": "form-control", "placeholder": "Postal Code", "data-section": "communication"}),
+            "employee_address_07": forms.TextInput(attrs={"class": "form-control", "placeholder": "Country", "data-section": "communication"}),
 
-            # Bank Information
-            "bank_01": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "bank"
-            }),
-            "bank_02": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "bank"
-            }),
-            "bank_03": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "bank"
-            }),
-            "bank_04": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "bank"
-            }),
-            "bank_05": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "bank"
-            }),
-            "bank_06": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "bank"
-            }),
-            "bank_07": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "bank"
-            }),
-            "bank_08": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "bank"
-            }),
-            "bank_09": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "bank"
-            }),
-            "bank_10": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "bank"
-            }),
-
-            # Job Information
-            "department": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "job"
-            }),
-            "cost_centre": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "job"
-            }),
-            "job_title": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "job"
-            }),
-            "position_number": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "job"
-            }),
-            "fte": forms.NumberInput(attrs={
-                "class": "form-control",
-                "step": "0.1",
-                "placeholder": " ",
-                "data-section": "job"
-            }),
-
-            # Tax Information
-            "tax_info_01": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "tax"
-            }),
-            "tax_info_02": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "tax"
-            }),
-            "tax_info_03": forms.NumberInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "tax"
-            }),
-            "tax_info_04": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "tax"
-            }),
-            "tax_info_05": forms.TextInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "tax"
-            }),
-            "tax_info_06": forms.NumberInput(attrs={
-                "class": "form-control",
-                "placeholder": " ",
-                "data-section": "tax"
-            }),
-            "tax_info_07": forms.Textarea(attrs={
-                "class": "form-control",
-                "rows": 3,
-                "placeholder": " ",
-                "data-section": "tax"
-            }),
+            # --- Job Information ---
+            "department": forms.TextInput(attrs={"class": "form-control", "data-section": "job"}),
+            "cost_centre": forms.TextInput(attrs={"class": "form-control", "data-section": "job"}),
+            "job_title": forms.TextInput(attrs={"class": "form-control", "data-section": "job"}),
+            "position_number": forms.TextInput(attrs={"class": "form-control", "data-section": "job"}),
+            "fte": forms.NumberInput(attrs={"class": "form-control", "step": "0.1", "data-section": "job"}),
+            "employment_start_date": forms.DateInput(attrs={"class": "form-control", "type": "date", "data-section": "job"}),
+            "employment_end_date": forms.DateInput(attrs={"class": "form-control", "type": "date", "data-section": "job"}),
         }
 
-    # Cleaning methods
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # ─────────────────────────────────────────────────────────────────
+        # AUTOMATICALLY GENERATE WIDGETS FOR BANK_01...20 AND TAX_01...20
+        # ─────────────────────────────────────────────────────────────────
+        
+        # 1. Bank Fields (bank_01 to bank_20)
+        for i in range(1, 21):
+            field_name = f"bank_{i:02d}"
+            if field_name in self.fields:
+                self.fields[field_name].widget.attrs.update({
+                    "class": "form-control",
+                    "placeholder": " ",
+                    "data-section": "bank"
+                })
+                # Set a generic label if none exists
+                if not self.fields[field_name].label:
+                    self.fields[field_name].label = f"Bank Field {i}"
 
+        # 2. Tax Fields (tax_info_01 to tax_info_20)
+        for i in range(1, 21):
+            field_name = f"tax_info_{i:02d}"
+            if field_name in self.fields:
+                # Default widget attributes
+                attrs = {
+                    "class": "form-control",
+                    "placeholder": " ",
+                    "data-section": "tax"
+                }
+                
+                # Special handling for known date fields
+                if i in [5, 6, 16, 17]:
+                    self.fields[field_name].widget = forms.DateInput(attrs={**attrs, "type": "date"})
+                else:
+                    self.fields[field_name].widget = forms.TextInput(attrs=attrs)
+                
+                if not self.fields[field_name].label:
+                     self.fields[field_name].label = f"Tax Field {i}"
+
+    # Cleaning methods
     def clean_employee_id(self):
         eid = (self.cleaned_data.get("employee_id") or "").strip()
-        # optional in model -> optional in form
         return eid or None
 
     def clean_employee_name(self):
@@ -270,12 +125,6 @@ class BaseEmployeeForm(forms.ModelForm):
         if len(surname) < 2:
             raise ValidationError("Last name must be at least 2 characters.")
         return surname
-
-
-    def clean_date_of_birth(self):
-        # optional in model -> optional in form
-        return self.cleaned_data.get("date_of_birth")
-
 
 class EmployeeUploadForm(forms.Form):
     file = forms.FileField()

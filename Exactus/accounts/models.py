@@ -5,7 +5,6 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
-
 # accounts/models.py
 from django.db import models
 from django.contrib.auth.models import AbstractUser
@@ -833,3 +832,83 @@ def log_notification_read(sender, instance, **kwargs):
             details=f"Read at: {instance.read_at}",
             company=instance.company
         )
+
+class UserContextMapping(models.Model):
+    """
+    Maps a user to specific context variables (e.g., active_company, active_country)
+    to persist state across sessions/requests without relying solely on cookies.
+    """
+    user = models.ForeignKey(
+        'accounts.User', 
+        on_delete=models.CASCADE, 
+        related_name='context_mappings'
+    )
+    context_key = models.CharField(max_length=100, help_text="The key of the context variable (e.g., 'selected_company_id')")
+    context_value = models.CharField(max_length=255, help_text="The value of the context variable")
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "User Context Mapping"
+        verbose_name_plural = "User Context Mappings"
+        unique_together = ('user', 'context_key')
+
+    def __str__(self):
+        return f"{self.user} | {self.context_key}: {self.context_value}"
+    
+class UserPermissionHelper:
+    """Helper class for user permission checks"""
+    
+    @staticmethod
+    def can_access_company(user, company):
+        """Check if user can access a specific company"""
+        if user.is_global_admin:
+            return True
+        
+        return UserCompany.objects.filter(
+            user=user,
+            company=company,
+            is_active=True
+        ).exists()
+    
+    @staticmethod
+    def get_user_companies(user):
+        """Get all companies a user can access"""
+        # FIX: Move import to the top of the method so it's available for both paths
+        from Exactus.company.models import Company 
+        
+        if user.is_global_admin:
+            return Company.objects.all()
+        
+        return Company.objects.filter(
+            authorized_users__user=user,
+            authorized_users__is_active=True
+        ).distinct()
+    
+    @staticmethod
+    def get_user_company_role(user, company):
+        """Get user's role in a specific company"""
+        try:
+            user_company = UserCompany.objects.get(
+                user=user,
+                company=company,
+                is_active=True
+            )
+            return user_company.role
+        except UserCompany.DoesNotExist:
+            return None
+    
+    @staticmethod
+    def has_company_permission(user, company, permission_type):
+        """Check if user has specific permission in a company"""
+        if user.is_global_admin:
+            return True
+        
+        try:
+            user_company = UserCompany.objects.get(
+                user=user,
+                company=company,
+                is_active=True
+            )
+            return user_company.has_company_permission(permission_type)
+        except UserCompany.DoesNotExist:
+            return False

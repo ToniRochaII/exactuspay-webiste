@@ -33,6 +33,12 @@ class Employee(models.Model):
     )
 
     # ───────────────
+    # Communications
+    # ───────────────
+    email = models.EmailField("Email Address", max_length=100, null=True, blank=True)
+    telephone = models.CharField("Telephone", max_length=50, null=True, blank=True)
+
+    # ───────────────
     # Address Info
     # ───────────────
     ADDRESS_CHOICES = [
@@ -63,6 +69,16 @@ class Employee(models.Model):
     bank_08 = models.CharField(max_length=100, null=True, blank=True)
     bank_09 = models.CharField(max_length=100, null=True, blank=True)
     bank_10 = models.CharField(max_length=100, null=True, blank=True)
+    bank_11 = models.CharField(max_length=100, null=True, blank=True)
+    bank_12 = models.CharField(max_length=100, null=True, blank=True)
+    bank_13 = models.CharField(max_length=100, null=True, blank=True)
+    bank_14 = models.CharField(max_length=100, null=True, blank=True)
+    bank_15 = models.CharField(max_length=100, null=True, blank=True)
+    bank_16 = models.CharField(max_length=100, null=True, blank=True)
+    bank_17 = models.CharField(max_length=100, null=True, blank=True)
+    bank_18 = models.CharField(max_length=100, null=True, blank=True)
+    bank_19 = models.CharField(max_length=100, null=True, blank=True)
+    bank_20 = models.CharField(max_length=100, null=True, blank=True)
 
     # ───────────────
     # Job / Payroll Info
@@ -84,7 +100,20 @@ class Employee(models.Model):
     tax_info_04 = models.CharField(max_length=100, null=True, blank=True)
     tax_info_05 = models.CharField(max_length=100, null=True, blank=True)
     tax_info_06 = models.CharField(max_length=100, null=True, blank=True)
-    tax_info_07 = models.CharField(max_length=100, null=True, blank=True)
+    tax_info_07 = models.CharField(max_length=100, null=True, blank=True) 
+    tax_info_08 = models.CharField(max_length=100, null=True, blank=True)
+    tax_info_09 = models.CharField(max_length=100, null=True, blank=True)
+    tax_info_10 = models.CharField(max_length=100, null=True, blank=True)
+    tax_info_11 = models.CharField(max_length=100, null=True, blank=True)
+    tax_info_12 = models.CharField(max_length=100, null=True, blank=True)
+    tax_info_13 = models.CharField(max_length=100, null=True, blank=True)
+    tax_info_14 = models.CharField(max_length=100, null=True, blank=True)
+    tax_info_15 = models.CharField(max_length=100, null=True, blank=True)
+    tax_info_16 = models.CharField(max_length=100, null=True, blank=True)
+    tax_info_17 = models.CharField(max_length=100, null=True, blank=True)
+    tax_info_18 = models.CharField(max_length=100, null=True, blank=True)
+    tax_info_19 = models.CharField(max_length=100, null=True, blank=True)
+    tax_info_20 = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Employees"
@@ -92,28 +121,3 @@ class Employee(models.Model):
 
     def __str__(self):
         return f"{self.employee_name} {self.employee_surname} ({self.company.trade_name})"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

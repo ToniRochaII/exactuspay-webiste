@@ -63,11 +63,14 @@
                 </div>
                 
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         {{ form.fiscal_year|as_crispy_field }}
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         {{ form.regulation|as_crispy_field }}
+                    </div>
+                    <div class="col-md-4">
+                        {{ form.is_historical|as_crispy_field }}
                     </div>
                 </div>
                 
@@ -104,8 +107,7 @@
             <ul class="text-muted mb-0">
                 <li>You can only have one active payroll per company per fiscal year.</li>
                 <li>The selected <strong>Regulation</strong> must match the <strong>Fiscal Year</strong> entered.</li>
-                <li>Payroll can be edited only while in "Draft" or "Running" status.</li>
-                <li>Fiscal year must be between 2000 and {% now "Y" as current_year %}{{ current_year|add:5 }}.</li>
+                <li>Check <strong>Historical Data Only</strong> if uploading data from a previous system.</li>
             </ul>
         </div>
     </div>
@@ -145,13 +147,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // 4. Validate fiscal year and sync on change
     fiscalYearField.addEventListener('change', function() {
         const year = parseInt(this.value);
-        
-        if (year < 2000 || year > currentYear + 5) {
-            alert(`Fiscal year must be between 2000 and ${currentYear + 5}`);
-            // Don't clear value, let user correct it, but don't sync
-        } else {
-            syncRegulationWithYear(year);
-        }
+        // Sync logic is generic, form handles valid range
+        syncRegulationWithYear(year);
     });
 });
 </script>

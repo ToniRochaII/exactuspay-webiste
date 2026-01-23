@@ -1,14 +1,34 @@
+# pdcodes/views.py
+import csv
+import io
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
 from django.db.models import Count, Avg
+from django.db import transaction
+from django.http import HttpResponse, JsonResponse
 
 from Exactus.pdcodes.utils.decorators import role_required
 from Exactus.employee.models import Employee
 from Exactus.pdcodes.models import PDcode
 from Exactus.company.models import Company
 from Exactus.country.models import Country
-from Exactus.pdcodes.forms import PDcodeForm
+from Exactus.elements.models import Element
+from Exactus.pdcodes.forms import PDcodeForm, PDcodeUploadForm
+from Exactus.pdcodes.utils.csv_importer import import_pdcodes_from_csv, import_pdcodes_to_all_companies
+
+
+# ─────────────────────────────────────────
+# HELPER: Protection Logic
+# ─────────────────────────────────────────
+def is_protected_element(country, pdcode_code):
+    """
+    Checks if a PD Code is linked to a Country Element.
+    Returns True if an Element exists with this code for this Country.
+    """
+    return Element.objects.filter(country=country, element_code=pdcode_code).exists()
 
 
 # ─────────────────────────────────────────
@@ -83,6 +103,27 @@ def pdcode_create(request, country_slug, company_id):
 def pdcode_edit(request, country_slug, company_id, pdcode_code):
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, company_id=company_id)
+    
+    # 1. Check if this is a "Protected" code (linked to an Element)
+    if is_protected_element(country, pdcode_code):
+        # 2. If protected, verify if user has override permissions
+        # Only EXEC, ADMIN, COMPLIANCE can edit protected elements in PDcodes
+        user_role = getattr(request.user, 'role', '')
+        allowed_override_roles = ["EXEC", "ADMIN", "COMPLIANCE"]
+        
+        if user_role not in allowed_override_roles:
+            messages.error(
+                request, 
+                f"PD Code '{pdcode_code}' is a Country Default Element. "
+                "Only EXEC, ADMIN, or COMPLIANCE roles are authorized to edit it here."
+            )
+            return redirect(
+                "pdcodes:pdcodes",
+                country_slug=country_slug,
+                company_id=company_id,
+            )
+
+    # Standard Edit Logic
     pdcode = get_object_or_404(PDcode, company=company, pdcode_code=pdcode_code)
 
     if request.method == "POST":
@@ -123,6 +164,26 @@ def pdcode_edit(request, country_slug, company_id, pdcode_code):
 def pdcode_delete(request, country_slug, company_id, pdcode_code):
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, company_id=company_id)
+    
+    # 1. Check if this is a "Protected" code (linked to an Element)
+    if is_protected_element(country, pdcode_code):
+        # 2. If protected, verify if user has override permissions
+        # Only EXEC, ADMIN, COMPLIANCE can delete protected elements in PDcodes
+        user_role = getattr(request.user, 'role', '')
+        allowed_override_roles = ["EXEC", "ADMIN", "COMPLIANCE"]
+        
+        if user_role not in allowed_override_roles:
+            messages.error(
+                request, 
+                f"PD Code '{pdcode_code}' is a Country Default Element. "
+                "Only EXEC, ADMIN, or COMPLIANCE roles are authorized to delete it."
+            )
+            return redirect(
+                "pdcodes:pdcodes",
+                country_slug=country_slug,
+                company_id=company_id,
+            )
+
     pdcode = get_object_or_404(PDcode, company=company, pdcode_code=pdcode_code)
 
     if request.method == "POST":
@@ -148,14 +209,9 @@ def pdcode_delete(request, country_slug, company_id, pdcode_code):
     )
 
 
-# pdcodes/views.py - Add these imports at the top
-from django.contrib.admin.views.decorators import staff_member_required
-from django.http import HttpResponse
-import csv
-from .utils.csv_importer import import_pdcodes_from_csv
-from .forms import PDcodeUploadForm
-
-# Add these views after your existing CRUD views
+# ─────────────────────────────────────────
+# COMPANY CSV UPLOAD
+# ─────────────────────────────────────────
 @staff_member_required
 def pdcode_upload_view(request, country_slug, company_id):
     """
@@ -306,14 +362,9 @@ def download_pdcodes_template(request, country_slug, company_id):
     return response
 
 
-
-# pdcodes/views.py - Add these imports
-from django.db import transaction
-from django.http import JsonResponse
-
-# Add these views after your existing upload views
-# pdcodes/views.py - Update the pdcode_upload_country_view
-# pdcodes/views.py - Update the pdcode_upload_country_view
+# ─────────────────────────────────────────
+# COUNTRY-WIDE CSV UPLOAD
+# ─────────────────────────────────────────
 @staff_member_required
 def pdcode_upload_country_view(request, country_slug):
     """
@@ -407,7 +458,6 @@ def pdcode_upload_country_view(request, country_slug):
         "companies_count": companies.count()
     })
 
-# Also update the template download view
 @staff_member_required
 def download_pdcodes_country_template(request, country_slug):
     """Download a CSV template for country-wide PD codes imports"""
@@ -477,9 +527,9 @@ def pdcode_upload_country_result_view(request, country_slug):
     })
 
 
-
-# country/views.py - Update your country_detail view
-
+# ─────────────────────────────────────────
+# COUNTRY DETAIL (DASHBOARD)
+# ─────────────────────────────────────────
 def country_detail(request, country_slug):
     country = get_object_or_404(Country, slug=country_slug)
     companies = Company.objects.filter(country=country)

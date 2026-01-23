@@ -7,18 +7,18 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
 
 # Models
-# ✅ Correctly importing the model, NOT defining it here
 from Exactus.company.models import Company
 from Exactus.country.models import Country
 
 # Forms & Helpers
-
 from Exactus.company.registry import get_company_form_class   
 from Exactus.company.utils.csv_importer import import_from_csv
+from Exactus.company.forms.utils import get_company_form_for_country
+# Added missing import
+from Exactus.company.forms import CompanyUploadForm 
 
-# Permissions
+# Permissions - FIXED: Use the v3.1 compatible decorator we updated earlier
 from Exactus.country.utils.decorators import role_required
-
 
 # ────────────────────────────────────────────────────────────────
 # 🧩 Company Index
@@ -29,7 +29,21 @@ from Exactus.country.utils.decorators import role_required
                "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE")
 def company(request, country_slug):
     country = get_object_or_404(Country, slug=country_slug)
-    companies = Company.objects.filter(country=country).order_by("trade_name")
+    
+    # 1. FIX: Check Role instead of 'user_type'
+    # Define roles that can see ALL companies in a country
+    GLOBAL_ACCESS_ROLES = ['EXEC', 'ADMIN', 'OPERATION', 'COMPLIANCE', 'BILLING', 'IMPLEMENTATION']
+    
+    if request.user.is_staff or request.user.role in GLOBAL_ACCESS_ROLES:
+        companies = Company.objects.filter(country=country).order_by("trade_name")
+    else:
+        # 2. FIX: Use correct related_name 'authorized_users' (from UserCompany model)
+        # The previous code used 'user_contexts', which doesn't exist.
+        companies = Company.objects.filter(
+            country=country,
+            authorized_users__user=request.user,
+            authorized_users__is_active=True  # Ensure we only show active assignments
+        ).distinct().order_by("trade_name")
 
     return render(request, "company/index.html", {
         "country": country,
@@ -42,24 +56,8 @@ def company(request, country_slug):
 # ➕ Create Company
 # ────────────────────────────────────────────────────────────────
 
-
-from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from Exactus.company.models import Company
-from Exactus.country.models import Country
-from Exactus.utils.decorators import role_required
-
-# UPDATED IMPORT: Use the new utility
-from Exactus.company.forms.utils import get_company_form_for_country
-
-# ────────────────────────────────────────────────────────────────
-# ➕ Create Company
-# ────────────────────────────────────────────────────────────────
-
 @login_required
-@role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION",
-               "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE")
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION", "OPERATION")
 def company_create(request, country_slug):
     country = get_object_or_404(Country, slug=country_slug)
     
@@ -67,7 +65,6 @@ def company_create(request, country_slug):
     FormClass = get_company_form_for_country(country)
 
     if request.method == "POST":
-        # Instantiate WITHOUT passing 'country' kwarg
         form = FormClass(request.POST, request.FILES)
         
         if form.is_valid():
@@ -91,15 +88,12 @@ def company_create(request, country_slug):
     })
 
 
-
-
 # ────────────────────────────────────────────────────────────────
 # ✏️ Edit Company
 # ────────────────────────────────────────────────────────────────
 
 @login_required
-@role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION",
-               "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE")
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION", "OPERATION")
 def company_edit(request, country_slug, company_id):
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
@@ -131,19 +125,12 @@ def company_edit(request, country_slug, company_id):
     })
 
 
-
-
-
-
-
-
 # ────────────────────────────────────────────────────────────────
 # 🗑 Delete Listing
 # ────────────────────────────────────────────────────────────────
 
 @login_required
-@role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION",
-               "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE")
+@role_required("EXEC", "ADMIN", "COMPLIANCE")
 def company_delete(request, country_slug):
     country = get_object_or_404(Country, slug=country_slug)
     companies = Company.objects.filter(country=country).order_by("trade_name")
@@ -159,7 +146,8 @@ def company_delete(request, country_slug):
 # 📤 Upload Company CSV
 # ────────────────────────────────────────────────────────────────
 
-@staff_member_required
+@login_required
+@role_required("EXEC", "ADMIN", "IMPLEMENTATION")
 def company_upload_view(request, country_slug=None):
     country = None
 
@@ -196,7 +184,8 @@ def company_upload_view(request, country_slug=None):
 # 📥 Upload Results
 # ────────────────────────────────────────────────────────────────
 
-@staff_member_required
+@login_required
+@role_required("EXEC", "ADMIN", "IMPLEMENTATION")
 def company_upload_result_view(request, country_slug=None):
     result = request.session.get("upload_result", {})
     country = None
@@ -215,7 +204,7 @@ def company_upload_result_view(request, country_slug=None):
 # 📄 Download CSV Template
 # ────────────────────────────────────────────────────────────────
 
-@staff_member_required
+@login_required
 def download_companies_template(request, country_slug=None):
     response = HttpResponse(content_type="text/csv")
     filename = "companies_import_template.csv"
@@ -268,7 +257,7 @@ def company_test_validation(request, country_slug):
     <body>
         <h1>Test Form Validation for {country.name}</h1>
         <form method="post">
-            <input type="hidden" name="country_code" value="{country.iso2}">
+            <input type="hidden" name="country_code" value="{country.iso2_code}">
             <h3>Required Fields:</h3>
     """
     
