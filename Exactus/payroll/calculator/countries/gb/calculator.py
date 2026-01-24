@@ -1,90 +1,55 @@
 from decimal import Decimal
-from Exactus.payroll.calculator.base import BasePayrollCalculator
-from Exactus.payroll.constants import (
-    BASE_TAXABLE, BASE_NIABLE, EL_GROSS_PAYABLE,
-    EL_TAX_FREE_ALLOWANCE, EL_INCOME_TAX, EL_NI_EE, EL_NI_ER,
-    EL_PENSION_EE, EL_NET_PAY
-)
+from .uk_tax_logic import UKTaxCodeParser
 
-class GBPayrollCalculator(BasePayrollCalculator):
-    """
-    Implements the 'Statutory Elements (law)' layer for Great Britain.
-    """
+class UnitedKingdomPayrollStrategy:
+    def __init__(self, payroll_calculator):
+        self.calc = payroll_calculator
+        self.employee = payroll_calculator.employee
 
-    def calculate(self):
-        # 1. Run Universal Segregation
-        super().calculate()
+    def process_nuances(self):
+        """
+        Implements UK Tax Logic with explicit Element 10000 (Tax Free Allowance).
+        Flow:
+        1. Calculate Tax Free Allowance.
+        2. Store as Element 10000.
+        3. 86000 (Tax Base) = 85000 (Gross) - 10000 (Allowance).
+        """
+        # 1. FETCH DATA
+        raw_code = getattr(self.employee, 'tax_info_03', '1257L') or '1257L'
+        raw_basis = getattr(self.employee, 'tax_info_04', 'Cumulative') or 'Cumulative'
         
-        # 2. Run Statutory Calculations
-        self.calculate_paye()      
-        self.calculate_ni()
+        # 2. PARSE TAX CODE & GET ALLOWANCE
+        parser = UKTaxCodeParser(raw_code, explicit_basis=raw_basis)
+        freq = self.calc.period.frequency if self.calc.period else "monthly"
+        allowance = parser.get_period_allowance(freq)
         
-        # 3. Run Net Calculation
-        self.calculate_net_pay()
+        # 3. CREATE ELEMENT 10000 (Tax Free Allowance)
+        # We explicitly store the allowance as a payroll element.
+        # This ensures it appears on the payslip and in reports.
+        self.calc.results_dict['10000'] = allowance
         
-        return {
-            'elements': self.register,
-            'breakdown': self.pd_breakdown
-        }
-
-    def calculate_paye(self):
-        taxable_base = self.register[BASE_TAXABLE]
-        
-        # A. Tax-Free Allowance
-        annual_allowance = Decimal('12570.00')
-        period_allowance = round(annual_allowance / Decimal('12'), 2)
-        
-        self.register[EL_TAX_FREE_ALLOWANCE] = period_allowance
-        
-        # B. Taxable Income
-        taxable_income = max(taxable_base - period_allowance, Decimal('0.00'))
-        
-        # C. Apply Tax Bands
-        tax_due = Decimal('0.00')
-        basic_band_limit = Decimal('3141.67') 
-        
-        if taxable_income <= basic_band_limit:
-            tax_due += taxable_income * Decimal('0.20')
-        else:
-            tax_due += basic_band_limit * Decimal('0.20')
-            remainder = taxable_income - basic_band_limit
-            tax_due += remainder * Decimal('0.40')
-            
-        self.register[EL_INCOME_TAX] = round(tax_due, 2)
-
-    def calculate_ni(self):
-        ni_base = self.register[BASE_NIABLE]
-        
-        pt = Decimal('1048.00')
-        st = Decimal('758.00')
-        uel = Decimal('4189.00')
-        
-        # EE NI
-        ni_ee = Decimal('0.00')
-        if ni_base > pt:
-            earnings_band_1 = min(ni_base, uel) - pt
-            ni_ee += earnings_band_1 * Decimal('0.08')
-            
-            if ni_base > uel:
-                ni_ee += (ni_base - uel) * Decimal('0.02')
-                
-        self.register[EL_NI_EE] = round(ni_ee, 2)
-
-        # ER NI
-        ni_er = Decimal('0.00')
-        if ni_base > st:
-            ni_er += (ni_base - st) * Decimal('0.138')
-            
-        self.register[EL_NI_ER] = round(ni_er, 2)
-
-    def calculate_net_pay(self):
-        gross_payable = self.register[EL_GROSS_PAYABLE]
-        
-        total_deductions = (
-            self.register.get(EL_INCOME_TAX, Decimal('0')) + 
-            self.register.get(EL_NI_EE, Decimal('0')) +
-            self.register.get(EL_PENSION_EE, Decimal('0'))
+        # Register for Payslip UI (Standardized Element)
+        self.calc.register(
+            name="Tax Free Allowance",
+            amount=allowance,
+            code="10000",
+            description=f"Tax Code {parser.raw_code}"
         )
+
+        # 4. GET SOURCE (Code 85000 - Gross Taxable Pay)
+        gross_taxable_source = self.calc.results_dict.get('85000', Decimal('0.00'))
+
+        # 5. CALCULATE TARGET (Code 86000 - Net Taxable Pay)
+        # Logic: Gross (85000) - Allowance (10000) = Tax Base (86000)
+        adjusted_base = gross_taxable_source - allowance
         
-        net_pay = gross_payable - total_deductions
-        self.register[EL_NET_PAY] = net_pay
+        # Safety check: Tax base cannot be negative
+        if adjusted_base < 0:
+            adjusted_base = Decimal("0.00")
+
+        # 6. OVERWRITE 86000
+        # The Tax Engine will now use this adjusted base to calculate Code 6000.
+        self.calc.results_dict['86000'] = adjusted_base
+        
+        # Optional: Store metadata for audit
+        self.calc.results_dict['TAX_CODE'] = parser.raw_code

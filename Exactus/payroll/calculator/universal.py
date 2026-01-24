@@ -25,6 +25,18 @@ except ImportError:
 class UniversalPayrollCalculator(BasePayrollCalculator):
     def __init__(self, employee, period, **kwargs):
         super().__init__(employee, period, **kwargs)
+        # ... existing setup ...
+
+        # Determine Country Slug for Strategy Loading
+        self.country_slug = ""
+        if self.period and self.period.payroll and self.period.payroll.country:
+            raw_slug = self.period.payroll.country.slug.lower()
+            
+            # --- FIX: MAP DATABASE SLUG TO FOLDER NAME ---
+            if raw_slug == "united-kingdom":
+                self.country_slug = "gb"
+            else:
+                self.country_slug = raw_slug.replace("-", "_")
         # Initialize standard totals
         self.total_gross = Decimal("0.00")
         self.taxable_gross = Decimal("0.00")
@@ -40,7 +52,16 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
         if self.period and self.period.payroll and self.period.payroll.country:
             self.country_slug = self.period.payroll.country.slug.lower().replace("-", "_")
 
+
     def calculate(self):
+        """
+        Main Execution Logic
+        1. Aggregate (Sum inputs)
+        2. UI Collection
+        3. Country Nuances (Modify bases, e.g., Subtract Tax Allowance)
+        4. Calculation Engine (Apply tax rates to modified bases)
+        5. Net Pay
+        """
         # 1. Init Results Dictionary
         self.results_dict = {} 
         self.breakdown = []
@@ -51,12 +72,13 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
         # 3. Collect UI info (For the payslip display)
         self._collect_pd_codes()
         
-        # 4. Standard Calculation Rules (Database Driven - Taxes, etc.)
+        # 4. Country Specific Nuances (Dynamic Strategy)
+        # MOVED UP: Runs BEFORE the Tax Engine to allow Allowance deduction from Tax Base.
+        self._apply_country_nuances()
+
+        # 5. Standard Calculation Rules (Database Driven)
         if self.period and self.period.payroll and CALCULATION_BASE_AVAILABLE:
             self._apply_calculation_rules()
-
-        # 5. Country Specific Nuances (Dynamic Strategy)
-        self._apply_country_nuances()
         
         # 6. Final Net Pay Calculation
         
@@ -273,14 +295,15 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
             module = importlib.import_module(module_path)
             
             strategy_class = None
+            # No longer need strict slug matching to class name
             clean_name = self.country_slug.replace("_", "").lower()
             
             for attr in dir(module):
-                # Search for a class like 'BrazilPayrollStrategy'
-                if attr.lower().endswith("payrollstrategy"):
-                    if clean_name in attr.lower():
-                        strategy_class = getattr(module, attr)
-                        break
+                # Search for any class ending in 'PayrollStrategy'
+                # This fixes the issue where 'gb' folder didn't match 'UnitedKingdomPayrollStrategy'
+                if attr.lower().endswith("payrollstrategy") and attr != "BasePayrollStrategy":
+                    strategy_class = getattr(module, attr)
+                    break
             
             if strategy_class:
                 # Instantiate and Run Strategy
@@ -290,7 +313,7 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
             else:
                 logger.debug(f"Module {module_path} found, but no matching strategy class found.")
 
-        except ImportError:
+        except ImportError as e:
             # Expected if no specific country file exists
             pass
         except Exception as e:

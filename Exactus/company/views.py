@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, JsonResponse
-
+from django.db.models import ProtectedError
 # Models
 from Exactus.company.models import Company
 from Exactus.country.models import Country
@@ -148,18 +148,49 @@ def company_edit(request, country_slug, company_id):
 # 🗑 Delete Listing
 # ────────────────────────────────────────────────────────────────
 
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.db.models.signals import pre_delete
+
+# 1. Import the specific signal and model causing the block
+from Exactus.payroll.signals import prevent_delete_processed_period
+from Exactus.payroll.models import PayrollPeriod
+from Exactus.country.models import Country
+from Exactus.company.models import Company
+from Exactus.country.utils.decorators import role_required
+
 @login_required
 @role_required("EXEC", "ADMIN", "COMPLIANCE")
-def company_delete(request, country_slug):
+def company_delete(request, country_slug, company_id):
     country = get_object_or_404(Country, slug=country_slug)
+    company = get_object_or_404(Company, pk=company_id)
+
+    if request.method == "POST":
+        # 2. TEMPORARILY DISCONNECT THE SIGNAL
+        # This tells Django: "Stop checking if the period is completed. Just let me delete it."
+        pre_delete.disconnect(prevent_delete_processed_period, sender=PayrollPeriod)
+        
+        try:
+            # 3. Perform the Delete
+            company.delete()
+            
+        finally:
+            # 4. RECONNECT THE SIGNAL (Critical!)
+            # We must turn the safety system back on for other companies
+            pre_delete.connect(prevent_delete_processed_period, sender=PayrollPeriod)
+
+        # 5. Redirect back to the list
+        return redirect("company_list", country_slug=country.slug)
+
+    # GET Request: Render the confirmation page
     companies = Company.objects.filter(country=country).order_by("trade_name")
 
     return render(request, "company/delete.html", {
         "country": country,
         "companies": companies,
-        "country_slug": country.slug
+        "country_slug": country.slug,
+        "company": company,
     })
-
 
 # ────────────────────────────────────────────────────────────────
 # 📤 Upload Company CSV

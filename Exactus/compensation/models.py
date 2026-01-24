@@ -20,7 +20,7 @@ class CompensationComponent(models.Model):
     # --- CHANGE HERE: Added null=True, blank=True ---
     element = models.ForeignKey(
         Element, 
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         null=True,   # Allow database NULL
         blank=True   # Allow form to be empty
     )
@@ -28,7 +28,7 @@ class CompensationComponent(models.Model):
 
     pd_code = models.ForeignKey(
         'pdcodes.PDCode',
-        on_delete=models.PROTECT,
+        on_delete=models.CASCADE,
         related_name='components',
         verbose_name='PD Code'
     )

@@ -75,8 +75,8 @@
             <td>{{ employee.employee_name }}</td>
             <td>{{ employee.employee_surname }}</td>
             <td>{{ employee.gender|default:"—" }}</td>
-            <td>{{ employee.job_title|default:"—" }}</td>
-            <td>{{ employee.department|default:"—" }}</td>
+            <td>{{ employee.tax_info_03|default:"—" }}</td>
+            <td>{{ employee.tax_info_04|default:"—" }}</td>
 
             <td class="text-center">
               <a href="{% url 'employee:employee_edit' country_slug company.company_id employee.id %}" 
