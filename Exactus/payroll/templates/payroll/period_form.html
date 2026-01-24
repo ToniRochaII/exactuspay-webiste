@@ -170,11 +170,14 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Auto-generate name from dates
+    // Get Field Elements
     const startDateField = document.getElementById('id_start_date');
     const endDateField = document.getElementById('id_end_date');
     const nameField = document.getElementById('id_name');
+    const processingDateField = document.getElementById('id_processing_date');
+    const paymentDateField = document.getElementById('id_payment_date');
     
+    // --- 1. Auto-generate name from dates ---
     function updatePeriodName() {
         if (startDateField.value && endDateField.value && (!nameField.value || nameField.value.trim() === '')) {
             const startDate = new Date(startDateField.value);
@@ -185,46 +188,63 @@ document.addEventListener('DOMContentLoaded', function() {
             nameField.value = `${monthName} ${year}`;
         }
     }
-    
-    if (startDateField) startDateField.addEventListener('change', updatePeriodName);
-    if (endDateField) endDateField.addEventListener('change', updatePeriodName);
-    
-    // Set default processing date logic
-    if (endDateField) {
-        endDateField.addEventListener('change', function() {
-            if (this.value) {
-                const endDate = new Date(this.value);
-                // Default: Processing date same as End Date (can be adjusted)
-                const processingDate = new Date(endDate);
-                
-                const processingDateField = document.getElementById('id_processing_date');
-                if (processingDateField && !processingDateField.value) {
-                    const formattedDate = processingDate.toISOString().split('T')[0];
-                    processingDateField.value = formattedDate;
-                }
-                
-                // Set payment date (processing date + 2 days)
-                const paymentDateField = document.getElementById('id_payment_date');
-                if (paymentDateField && !paymentDateField.value) {
-                    const paymentDate = new Date(processingDate);
-                    paymentDate.setDate(paymentDate.getDate() + 2);
-                    const formattedPaymentDate = paymentDate.toISOString().split('T')[0];
-                    paymentDateField.value = formattedPaymentDate;
-                }
+
+    // --- 2. Date Calculation Logic ---
+    function updateProcessingAndPaymentDates() {
+        if (startDateField.value) {
+            const startDate = new Date(startDateField.value);
+            
+            // A. Calculate Processing Date: Start Date + 20 Days
+            const processingDate = new Date(startDate);
+            processingDate.setDate(startDate.getDate() + 20);
+            
+            // Format to YYYY-MM-DD for HTML input
+            const procY = processingDate.getFullYear();
+            const procM = String(processingDate.getMonth() + 1).padStart(2, '0');
+            const procD = String(processingDate.getDate()).padStart(2, '0');
+            const formattedProcDate = `${procY}-${procM}-${procD}`;
+
+            // Set Processing Date
+            if (processingDateField) {
+                processingDateField.value = formattedProcDate;
             }
+
+            // B. Calculate Payment Date: Processing Date + 2 Days (Optional default)
+            // We only set this if it's currently empty to allow manual overrides
+            if (paymentDateField && !paymentDateField.value) {
+                const paymentDate = new Date(processingDate);
+                paymentDate.setDate(paymentDate.getDate() + 2);
+                
+                const payY = paymentDate.getFullYear();
+                const payM = String(paymentDate.getMonth() + 1).padStart(2, '0');
+                const payD = String(paymentDate.getDate()).padStart(2, '0');
+                
+                paymentDateField.value = `${payY}-${payM}-${payD}`;
+            }
+        }
+    }
+    
+    // --- 3. Event Listeners ---
+    
+    if (startDateField) {
+        startDateField.addEventListener('change', function() {
+            updatePeriodName();
+            updateProcessingAndPaymentDates(); // Triggered by Start Date now
         });
     }
     
-    // Auto-suggest next period number (only for new periods)
+    if (endDateField) {
+        endDateField.addEventListener('change', updatePeriodName);
+    }
+    
+    // --- 4. Auto-suggest next period number (only for new periods) ---
     {% if not form.instance.pk %}
     const periodNumberField = document.getElementById('id_period_number');
     if (periodNumberField && (!periodNumberField.value || periodNumberField.value === '')) {
         const url = "{% url 'payroll:next_period_number' payroll.pk %}";
         fetch(url)
             .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
+                if (!response.ok) { throw new Error('Network response was not ok'); }
                 return response.json();
             })
             .then(data => {

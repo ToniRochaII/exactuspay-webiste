@@ -329,7 +329,7 @@ class PayrollPeriodDetailView(LoginRequiredMixin, DetailView):
         if use_stored_results and has_results:
             loop_target = payroll_results
         else:
-            loop_target = eligible_employees[:50] # Preview limit
+            loop_target = eligible_employees[:10000] # Preview limit
 
         for obj in loop_target:
             emp = obj.employee if hasattr(obj, 'employee') else obj

@@ -80,7 +80,7 @@
             <div class="card">
                 <div class="card-body text-center">
                     <h5 class="card-title">Total Amount</h5>
-                    <h2 class="card-text">${{ summary.total_amount|intcomma|default:"0" }}</h2>
+                    <h2 class="card-text">${{ summary.total_amount|floatformat:2|intcomma|default:"0.00" }}</h2>
                 </div>
             </div>
         </div>

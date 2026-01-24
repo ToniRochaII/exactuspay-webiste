@@ -27,14 +27,20 @@ def compensation_list(request, country_slug, company_id, employee_id):
     company = get_object_or_404(Company, pk=company_id)
     employee = get_object_or_404(Employee, pk=employee_id, company=company)
 
+    # UPDATED: Exclude hidden PD Codes
     active_components = CompensationComponent.objects.filter(
         employee=employee,
         processed=False,
+    ).exclude(
+        pd_code__pdcode_status="Hidden"
     ).select_related("pd_code")
 
+    # UPDATED: Exclude hidden PD Codes
     archived_components = CompensationComponent.objects.filter(
         employee=employee,
         processed=True,
+    ).exclude(
+        pd_code__pdcode_status="Hidden"
     ).select_related("pd_code")
 
     context = {
@@ -232,10 +238,13 @@ class EmployeeCompensationListView(LoginRequiredMixin, ListView):
         # 1. This Employee
         # 2. Active Records
         # 3. Only 'Payment' category (Earnings)
+        # 4. UPDATED: Exclude Hidden PD Codes
         return CompensationComponent.objects.filter(
             employee=self.employee,
             is_active=True,
             element__element_category='Payment'  # Filters for Earnings only
+        ).exclude(
+            pd_code__pdcode_status="Hidden"
         ).select_related('element')
 
     def get_context_data(self, **kwargs):
@@ -258,11 +267,15 @@ class CompensationListView(LoginRequiredMixin, ListView):
         # Return only ACTIVE components for the main list
         # (Assuming active means no end_date OR end_date is in the future)
         today = timezone.now().date()
+        
+        # UPDATED: Exclude Hidden PD Codes
         return CompensationComponent.objects.filter(
             employee=self.employee,
             is_active=True
         ).filter(
             Q(end_date__isnull=True) | Q(end_date__gte=today)
+        ).exclude(
+            pd_code__pdcode_status="Hidden"
         ).select_related('element').order_by('start_date')
 
     def get_context_data(self, **kwargs):
@@ -276,10 +289,105 @@ class CompensationListView(LoginRequiredMixin, ListView):
 
         # Fetch Archived (Processed/Past) components separately
         today = timezone.now().date()
+        
+        # UPDATED: Exclude Hidden PD Codes
         context['archived_components'] = CompensationComponent.objects.filter(
             employee=self.employee
         ).filter(
             Q(is_active=False) | Q(end_date__lt=today)
+        ).exclude(
+            pd_code__pdcode_status="Hidden"
         ).select_related('element').order_by('-end_date')
 
         return context
+    
+    # ... existing imports ...
+from Exactus.compensation.forms import CompensationUploadForm # Make sure to import the new form
+from Exactus.compensation.utils.csv_importer import import_compensation_from_csv
+from django.contrib.admin.views.decorators import staff_member_required
+import csv 
+from django.http import HttpResponse
+
+# ... existing views ...
+
+# ─────────────────────────────────────────
+# BULK UPLOAD VIEWS
+# ─────────────────────────────────────────
+
+@login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION", "OPERATION")
+def compensation_upload_view(request, country_slug, company_id):
+    country = get_object_or_404(Country, slug=country_slug)
+    company = get_object_or_404(Company, pk=company_id)
+
+    if request.method == "POST":
+        form = CompensationUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            dry_run = form.cleaned_data.get('dry_run', False)
+            
+            try:
+                result = import_compensation_from_csv(
+                    file=request.FILES["file"],
+                    company=company,
+                    dry_run=dry_run
+                )
+                
+                request.session["compensation_upload_result"] = result
+                
+                if dry_run:
+                     messages.info(request, f"Dry Run Complete: {len(result['errors'])} errors found.")
+                else:
+                     messages.success(request, "Upload processed successfully.")
+                
+                return redirect("compensation:compensation_upload_result", country_slug=country_slug, company_id=company_id)
+                
+            except Exception as e:
+                messages.error(request, f"Upload failed: {str(e)}")
+    else:
+        form = CompensationUploadForm()
+
+    return render(request, "compensation/upload_form.html", {
+        "form": form,
+        "company": company,
+        "country": country,
+        "country_slug": country_slug
+    })
+
+@login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION", "OPERATION")
+def compensation_upload_result_view(request, country_slug, company_id):
+    country = get_object_or_404(Country, slug=country_slug)
+    company = get_object_or_404(Company, pk=company_id)
+    result = request.session.get("compensation_upload_result", {})
+    
+    return render(request, "compensation/upload_result.html", {
+        "result": result,
+        "company": company,
+        "country": country,
+        "country_slug": country_slug
+    })
+
+@login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION", "OPERATION")
+def download_compensation_template(request, country_slug, company_id):
+    country = get_object_or_404(Country, slug=country_slug)
+    company = get_object_or_404(Company, pk=company_id)
+    
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename="earnings_{company.company_code}_template.csv"'
+    
+    writer = csv.writer(response)
+    
+    # Headers
+    writer.writerow([
+        'employee_number', 'pdcode', 'amount', 'start_date', 
+        'end_date', 'category', 'frequency', 'reference', 'description'
+    ])
+    
+    # Sample Row
+    writer.writerow([
+        '1001', 'BASIC', '5000.00', '2024-01-01', 
+        '', 'PERMANENT', 'monthly', 'REF001', 'Base Salary Import'
+    ])
+    
+    return response

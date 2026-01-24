@@ -5,6 +5,58 @@
 {% block title %}Payroll - {{ period.name }}{% endblock %}
 
 {% block content %}
+<style>
+    /* Custom Scrollbar Logic for GTN Report */
+    .gtn-table-container {
+        /* This sets the height to 70% of the screen height, forcing vertical scroll */
+        max-height: 70vh; 
+        /* Enables scrollbars for both directions when needed */
+        overflow: auto; 
+        /* specific border handling for scrolling */
+        border: 1px solid #dee2e6;
+        position: relative;
+    }
+
+    /* Make the Header Sticky so it stays visible when scrolling down */
+    .gtn-table-container thead th {
+        position: sticky;
+        top: 0;
+        background-color: #f8f9fa; /* Light gray background to cover moving data */
+        z-index: 10;
+        box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Ensure cells don't wrap text, forcing horizontal scroll */
+    .gtn-table-container td, 
+    .gtn-table-container th {
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+
+    /* Optional: Make the first two columns (ID and Name) sticky to the left 
+       so you know who the data belongs to while scrolling right */
+    .gtn-table-container td:nth-child(1),
+    .gtn-table-container th:nth-child(1) {
+        position: sticky;
+        left: 0;
+        background-color: #fff;
+        z-index: 11; /* Higher than normal header */
+    }
+    .gtn-table-container td:nth-child(2),
+    .gtn-table-container th:nth-child(2) {
+        position: sticky;
+        left: 0; /* Adjust this if you want ID and Name separate, or stick them together */
+        background-color: #fff;
+        z-index: 11;
+    }
+    /* Fix z-index for the top-left corner intersection */
+    .gtn-table-container thead th:nth-child(1),
+    .gtn-table-container thead th:nth-child(2) {
+        z-index: 12;
+        background-color: #f8f9fa;
+    }
+</style>
+
 <div class="container-fluid py-4 mt-7">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
@@ -72,13 +124,14 @@
         <div class="card-header bg-white py-3">
             <h5 class="mb-0 fw-bold">Gross to Net Report</h5>
         </div>
+        
         <div class="card-body p-0">
-            <div class="table-responsive">
+            <div class="gtn-table-container">
                 <table class="table table-bordered table-hover mb-0 align-middle">
                     <thead class="table-light">
                         <tr>
-                            <th>ID</th>
-                            <th class="ps-3" style="min-width: 200px;">Employee</th>
+                            <th class="bg-light" style="min-width: 80px;">ID</th>
+                            <th class="ps-3 bg-light" style="min-width: 200px;">Employee</th>
                             {% for header in headers %}
                                 <th class="text-end" style="min-width: 120px;">
                                     <div class="fw-bold">{{ header.label }}</div>
@@ -90,8 +143,8 @@
                     <tbody>
                         {% for row in rows %}
                         <tr>
-                            <td class="text-end">{{ row.employee_id }}</td>
-                            <td class="ps-3 fw-bold">{{ row.employee_name }}</td>
+                            <td class="text-end bg-white fw-bold">{{ row.employee_id }}</td>
+                            <td class="ps-3 bg-white fw-bold">{{ row.employee_name }}</td>
                             
                             {% for val in row.cells %}
                                 <td class="text-end font-monospace">
@@ -108,7 +161,7 @@
                     {% if totals %}
                     <tfoot class="table-light border-top border-2">
                         <tr>
-                            <td colspan="2" class="text-end fw-bold py-3">TOTALS:</td>
+                            <td colspan="2" class="text-end fw-bold py-3 position-sticky start-0 bg-light">TOTALS:</td>
                             {% for total in totals %}
                                 <td class="text-end fw-bold">{{ total|floatformat:2|intcomma }}</td>
                             {% endfor %}

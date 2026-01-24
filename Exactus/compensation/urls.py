@@ -25,4 +25,12 @@ urlpatterns = [
         views.compensation_delete,
         name="compensation_delete",
     ),
+
+    path('<slug:country_slug>/<int:company_id>/compensation/upload/', views.compensation_upload_view, name='compensation_upload'),
+    path('<slug:country_slug>/<int:company_id>/compensation/upload/result/', views.compensation_upload_result_view, name='compensation_upload_result'),
+    path('<slug:country_slug>/<int:company_id>/compensation/template/', views.download_compensation_template, name='download_compensation_template'),
+
+
+
+
 ]

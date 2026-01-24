@@ -22,7 +22,6 @@ class CompensationComponentForm(forms.ModelForm):
             "pd_code": forms.Select(attrs={"class": "form-select"}),
             "category": forms.Select(attrs={"class": "form-select"}),
             "amount": forms.NumberInput(attrs={"class": "form-control", "step": "0.01"}),
-            # --- CHANGE START: Added format='%Y-%m-%d' ---
             "start_date": forms.DateInput(
                 format='%Y-%m-%d',
                 attrs={"class": "form-control", "type": "date"}
@@ -31,7 +30,6 @@ class CompensationComponentForm(forms.ModelForm):
                 format='%Y-%m-%d',
                 attrs={"class": "form-control", "type": "date"}
             ),
-            # --- CHANGE END ---
             "description": forms.Textarea(attrs={"class": "form-control", "rows": 2}),
             "reference": forms.TextInput(attrs={"class": "form-control"}),
             "is_active": forms.CheckboxInput(attrs={"class": "form-check-input"}),
@@ -47,14 +45,15 @@ class CompensationComponentForm(forms.ModelForm):
             *CompensationComponent.CATEGORY_CHOICES,
         ]
 
-        # 🔒 PD Codes restricted to the company
+        # 🔒 PD Codes restricted to the company AND not hidden
         if self.company is None:
-            # Safety: no company = no PD codes
             self.fields["pd_code"].queryset = PDcode.objects.none()
         else:
             self.fields["pd_code"].queryset = PDcode.objects.filter(
                 company=self.company
-            )
+            ).exclude(
+                pdcode_status="Hidden"
+            ).order_by("pdcode_code")
 
         self.fields["pd_code"].label = "Pay / Deduction Code"
 
@@ -101,3 +100,19 @@ class CompensationComponentForm(forms.ModelForm):
                     )
 
         return cleaned
+
+
+# ==========================================
+# NEW: Bulk Upload Form
+# ==========================================
+class CompensationUploadForm(forms.Form):
+    file = forms.FileField(
+        label="Select CSV File",
+        help_text="Upload a CSV file containing earnings data. Headers: employee_number, pdcode, amount, start_date, end_date (opt), category (opt), frequency (opt)"
+    )
+    dry_run = forms.BooleanField(
+        required=False,
+        initial=True,
+        label="Dry Run (Test)",
+        help_text="Check for errors without saving data to the database."
+    )
