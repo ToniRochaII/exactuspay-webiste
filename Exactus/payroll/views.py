@@ -813,9 +813,11 @@ class PayrollPeriodRejectView(View):
 # ============================================================
 # EXPORT & RESET UTILS
 # ============================================================
-
+@method_decorator(login_required, name='dispatch')
+@method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION",
+                                "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE"), 
+                                name='dispatch')
 class PayrollPeriodExportView(View):
-    @method_decorator(login_required)
     def get(self, request, country_slug, company_id, payroll_id, period_id):
         period = get_object_or_404(PayrollPeriod, pk=period_id)
         results = PayrollResult.objects.filter(period=period).select_related('employee')
@@ -879,9 +881,14 @@ class PayrollPeriodExportView(View):
         writer.writerow([]) # Empty row for spacing
         # ------------------------
 
-        # Table Headers
-        csv_headers = ['ID', 'Employee'] + [header_map.get(c, c) for c in sorted_codes]
+        # Table Headers Row 1: Human Readable Names
+        csv_headers = ['Employee ID', 'Employee Name'] + [header_map.get(c, c) for c in sorted_codes]
         writer.writerow(csv_headers)
+
+        # Table Headers Row 2: Raw Codes (pdcodes)
+        # We add two empty strings at the start to skip "Employee ID" and "Employee Name" columns
+        csv_codes = ['', ''] + [str(c) for c in sorted_codes]
+        writer.writerow(csv_codes)
         
         # Initialize Totals Map
         col_totals = {code: Decimal('0.00') for code in sorted_codes}

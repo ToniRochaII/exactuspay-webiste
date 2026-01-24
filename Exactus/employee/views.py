@@ -3,9 +3,10 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.decorators import method_decorator
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.views import View
 from django.db.models import Q
+from django.contrib.auth import get_user_model
 import csv
 import uuid
 
@@ -15,12 +16,36 @@ from Exactus.employee.models import Employee
 from Exactus.country.models import Country
 
 # Forms
-from Exactus.employee.forms import get_employee_form_for_country, EmployeeUploadForm
+from Exactus.employee.forms import get_employee_form_for_country, EmployeeUploadForm, EmployeeAccessForm
 
 # Utils
 from Exactus.utils.decorators import role_required
 from Exactus.employee.utils.csv_importer import import_from_csv_with_progress
 from Exactus.employee.utils.progress import get_upload_progress
+
+User = get_user_model()
+
+# ────────────────────────────────────────────────
+# SECURITY HELPER
+# ────────────────────────────────────────────────
+
+def validate_company_access(user, company):
+    """
+    Verifies if the current user is allowed to access the specific company.
+    1. Business Users / Superusers: Access All.
+    2. Client Users: Must have access via Client Group or direct assignment.
+    """
+    # 1. Superusers and Business Roles get full access
+    if user.is_superuser or getattr(user, 'is_business_user', False):
+        return True
+
+    # 2. Check Client User Access (using the new method we added to User model)
+    if hasattr(user, 'get_accessible_companies'):
+        accessible_companies = user.get_accessible_companies()
+        if company in accessible_companies:
+            return True
+            
+    return False
 
 
 # ────────────────────────────────────────────────
@@ -32,6 +57,12 @@ from Exactus.employee.utils.progress import get_upload_progress
 def employee_list(request, country_slug, company_id):
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
+    
+    # SECURITY CHECK
+    if not validate_company_access(request.user, company):
+        messages.error(request, "Access Denied: You do not have permission to view this company.")
+        return redirect("dashboard")
+
     employees = Employee.objects.filter(company=company).order_by("employee_id")
     
     return render(
@@ -52,7 +83,11 @@ def employee_create(request, country_slug, company_id):
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
 
-    # 1. Get the appropriate form class for this country
+    # SECURITY CHECK
+    if not validate_company_access(request.user, company):
+        messages.error(request, "Access Denied: You cannot create employees for this company.")
+        return redirect("dashboard")
+
     FormClass = get_employee_form_for_country(country)
 
     if request.method == "POST":
@@ -64,7 +99,6 @@ def employee_create(request, country_slug, company_id):
             messages.success(request, f"Employee '{employee.employee_name} {employee.employee_surname}' added successfully.")
             return redirect('employee:employee', country_slug=country_slug, company_id=company.company_id)
         else:
-            # DEBUG: Print form errors
             print("FORM ERRORS:", form.errors)
     else:
         form = FormClass()
@@ -81,49 +115,163 @@ def employee_create(request, country_slug, company_id):
     )
 
 
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.contrib.auth import get_user_model
+
+# Models
+from Exactus.company.models import Company
+from Exactus.employee.models import Employee
+from Exactus.country.models import Country
+
+# Forms
+from Exactus.employee.forms import get_employee_form_for_country, EmployeeAccessForm
+
+# Services & Utils
+from Exactus.accounts.services.onboarding import OnboardingService
+from Exactus.utils.decorators import role_required
+
+User = get_user_model()
+
+# ────────────────────────────────────────────────
+# SECURITY HELPER (Ensure this exists in your file)
+# ────────────────────────────────────────────────
+def validate_company_access(user, company):
+    if user.is_superuser or getattr(user, 'is_business_user', False):
+        return True
+    if hasattr(user, 'get_accessible_companies'):
+        if company in user.get_accessible_companies():
+            return True
+    return False
+
+# ────────────────────────────────────────────────
+# EMPLOYEE EDIT VIEW
+# ────────────────────────────────────────────────
+
 @login_required
 @role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION", "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE")
 def employee_edit(request, country_slug, company_id, employee_id):
     """
-    Edit an existing employee.
-    Uses country-specific form logic (BR, GB, etc).
+    Edit Employee details and manage their System User Account.
     """
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
 
-    employee = get_object_or_404(
-        Employee,
-        pk=employee_id,
-        company=company
-    )
+    # 1. Security Check
+    if not validate_company_access(request.user, company):
+        messages.error(request, "Access Denied.")
+        return redirect("dashboard")
 
-    # 1. Resolve form class (SINGLE SOURCE OF TRUTH)
+    employee = get_object_or_404(Employee, pk=employee_id, company=company)
+
+    # 2. Find Linked User (if any)
+    linked_user = None
+    if employee.email:
+        linked_user = User.objects.filter(email=employee.email).first()
+
+    # 3. Get Country-Specific Form
     FormClass = get_employee_form_for_country(country)
 
     if request.method == "POST":
+        
+        # ─────────────────────────────────────────────────────────────
+        # A. Handle "Create User Account" Action
+        # ─────────────────────────────────────────────────────────────
+        if "create_user_account" in request.POST:
+            # Permission check
+            if request.user.role not in ["EXEC", "ADMIN", "DIRECTOR", "MANAGER"]:
+                messages.error(request, "You do not have permission to create user accounts.")
+            
+            # Validation: Email Required
+            elif not employee.email:
+                messages.error(request, "Cannot create account: Employee has no email address.")
+            
+            # Validation: Tax ID Required (for Password)
+            elif not employee.tax_info_01:
+                messages.error(request, "Cannot create account: Tax ID (tax_info_01) is missing. This is required for the initial password.")
+                
+            # Validation: Account Exists
+            elif linked_user:
+                messages.warning(request, "User account already exists.")
+                
+            else:
+                try:
+                    # Generate unique username from email
+                    base_username = employee.email.split('@')[0]
+                    username = base_username
+                    counter = 1
+                    while User.objects.filter(username=username).exists():
+                        username = f"{base_username}{counter}"
+                        counter += 1
+
+                    # Execute Onboarding Service
+                    # Uses tax_info_01 as the password per requirement
+                    new_user = OnboardingService.onboard_employee(
+                        username=username,
+                        email=employee.email,
+                        password=employee.tax_info_01,  
+                        role="EMPLOYEE",
+                        created_by_user=request.user
+                    )
+                    
+                    messages.success(request, f"User account created for {new_user.username}. Password set to Tax ID.")
+                    
+                except Exception as e:
+                    messages.error(request, f"Error creating user: {str(e)}")
+            
+            # Redirect to self to refresh state
+            return redirect("employee:employee_edit", country_slug=country_slug, company_id=company.company_id, employee_id=employee.id)
+
+        # ─────────────────────────────────────────────────────────────
+        # B. Handle Standard Save (Employee Data + Access)
+        # ─────────────────────────────────────────────────────────────
         form = FormClass(request.POST, instance=employee)
+        
+        # Only initialize access form if user exists
+        access_form = None
+        if linked_user:
+            access_form = EmployeeAccessForm(request.POST, instance=linked_user)
 
         if form.is_valid():
-            form.save()
-            messages.success(
-                request,
-                f"Employee '{employee.employee_name} {employee.employee_surname}' updated successfully."
-            )
-            return redirect(
-                "employee:employee",
-                country_slug=country_slug,
-                company_id=company.company_id
-            )
+            saved_employee = form.save()
+            
+            # Handle Access Form (Roles/Client Group)
+            if access_form:
+                if access_form.is_valid():
+                    # Only higher roles can modify permissions
+                    if request.user.role in ["EXEC", "ADMIN", "DIRECTOR", "MANAGER"]:
+                        access_form.save()
+                        
+                        # Sync email if changed in employee form
+                        if saved_employee.email != linked_user.email:
+                            linked_user.email = saved_employee.email
+                            linked_user.save()
+                            messages.info(request, "Linked user email updated.")
+                    else:
+                        messages.warning(request, "You do not have permission to modify access roles.")
+                else:
+                    # If access form has errors, we should probably stop and show them, 
+                    # but typically we let the employee save succeed and warn about access.
+                    print("ACCESS FORM ERRORS:", access_form.errors)
+
+            messages.success(request, f"Employee '{employee.employee_name}' updated successfully.")
+            return redirect("employee:employee", country_slug=country_slug, company_id=company.company_id)
         else:
             print("FORM ERRORS:", form.errors)
+
     else:
+        # GET Request
         form = FormClass(instance=employee)
+        access_form = EmployeeAccessForm(instance=linked_user) if linked_user else None
 
     return render(
         request,
         "employee/edit.html",
         {
             "form": form,
+            "access_form": access_form,
+            "linked_user": linked_user,
             "employee": employee,
             "company": company,
             "country": country,
@@ -131,12 +279,17 @@ def employee_edit(request, country_slug, company_id, employee_id):
         }
     )
 
-
 @login_required
 @role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE")
 def employee_delete(request, country_slug, company_id, employee_id):
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
+    
+    # SECURITY CHECK
+    if not validate_company_access(request.user, company):
+        messages.error(request, "Access Denied.")
+        return redirect("dashboard")
+
     employee = get_object_or_404(Employee, pk=employee_id, company=company)
     
     if request.method == "POST":
@@ -169,6 +322,12 @@ class EmployeeUploadView(View):
     def get(self, request, country_slug, company_id):
         country = get_object_or_404(Country, slug=country_slug)
         company = get_object_or_404(Company, pk=company_id)
+
+        # SECURITY CHECK
+        if not validate_company_access(request.user, company):
+            messages.error(request, "Access Denied.")
+            return redirect("dashboard")
+
         form = EmployeeUploadForm()
 
         return render(request, "employee/upload_form.html", {
@@ -181,6 +340,11 @@ class EmployeeUploadView(View):
     def post(self, request, country_slug, company_id):
         country = get_object_or_404(Country, slug=country_slug)
         company = get_object_or_404(Company, pk=company_id)
+
+        # SECURITY CHECK
+        if not validate_company_access(request.user, company):
+            messages.error(request, "Access Denied.")
+            return redirect("dashboard")
 
         form = EmployeeUploadForm(request.POST, request.FILES)
 
@@ -284,6 +448,12 @@ def employee_upload_result_view(request, country_slug, company_id):
     """
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
+
+    # SECURITY CHECK
+    if not validate_company_access(request.user, company):
+        messages.error(request, "Access Denied.")
+        return redirect("dashboard")
+
     result = request.session.get("upload_result", {})
     
     return render(request, "employee/upload_result.html", {
@@ -300,6 +470,10 @@ def download_employees_template(request, country_slug, company_id):
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
     
+    # SECURITY CHECK
+    if not validate_company_access(request.user, company):
+        return HttpResponseForbidden("Access Denied")
+
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = f'attachment; filename="employees_{company.company_code}_template.csv"'
     

@@ -420,3 +420,61 @@ def company_form_debug(request, country_slug):
         "company": None,
         "form_analysis": form_analysis,
     })
+
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .models import ClientGroup
+from .forms import ClientGroupForm
+from Exactus.utils.decorators import role_required
+
+@login_required
+@role_required("EXEC", "ADMIN", "OPERATION")
+def client_group_list(request, country_slug):
+    """List all client groups."""
+    groups = ClientGroup.objects.prefetch_related('companies').all()
+    return render(request, 'company/client_group_list.html', {
+        'groups': groups,
+        'country_slug': country_slug  # Pass to template for breadcrumbs
+    })
+
+@login_required
+@role_required("EXEC", "ADMIN", "OPERATION")
+def client_group_create(request, country_slug):
+    """Create a new client group."""
+    if request.method == 'POST':
+        form = ClientGroupForm(request.POST)
+        if form.is_valid():
+            group = form.save()
+            messages.success(request, f"Client Group '{group.name}' created successfully.")
+            return redirect('company:client_group_list', country_slug=country_slug)
+    else:
+        form = ClientGroupForm()
+    
+    return render(request, 'company/client_group_form.html', {
+        'form': form, 
+        'title': 'Create Client Group',
+        'country_slug': country_slug
+    })
+
+@login_required
+@role_required("EXEC", "ADMIN", "OPERATION")
+def client_group_edit(request, country_slug, group_id):
+    """Edit an existing client group."""
+    group = get_object_or_404(ClientGroup, pk=group_id)
+    
+    if request.method == 'POST':
+        form = ClientGroupForm(request.POST, instance=group)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Client Group '{group.name}' updated successfully.")
+            return redirect('company:client_group_list', country_slug=country_slug)
+    else:
+        form = ClientGroupForm(instance=group)
+    
+    return render(request, 'company/client_group_form.html', {
+        'form': form, 
+        'title': f'Edit {group.name}',
+        'country_slug': country_slug
+    })

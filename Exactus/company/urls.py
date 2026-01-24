@@ -32,4 +32,9 @@ urlpatterns = [
     path('<slug:country_slug>/debug-info/',views.company_debug_info,name='company_debug_info'),
     path('<slug:country_slug>/validate-ajax/',views.company_validate_ajax, name='company_validate_ajax'),
     path('<slug:country_slug>/field-requirements/',views.company_field_requirements,name='company_field_requirements'),
+
+    path('<slug:country_slug>/groups/', views.client_group_list, name='client_group_list'),
+    path('<slug:country_slug>/groups/create/', views.client_group_create, name='client_group_create'),
+    path('<slug:country_slug>/groups/<int:group_id>/edit/', views.client_group_edit, name='client_group_edit'),
+
 ]

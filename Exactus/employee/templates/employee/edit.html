@@ -19,28 +19,48 @@
 {% block content %}
 <div class="card shadow-sm border-0">
   <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
-    <h5 class="mb-0 text-primary fw-bold"><i class="bi bi-pencil-square me-2"></i>Edit: {{ employee.employee_name }} {{ employee.employee_surname }}</h5>
-    <span class="badge bg-light text-secondary border">{{ employee.employee_number }}</span>
+    <h5 class="mb-0 text-primary fw-bold">
+        <i class="bi bi-pencil-square me-2"></i>Edit: {{ employee.employee_name }} {{ employee.employee_surname }}
+    </h5>
+    <span class="badge bg-light text-secondary border">#{{ employee.employee_number }}</span>
   </div>
   <div class="card-body p-4">
 
     <ul class="nav nav-tabs nav-tabs-custom mb-4" id="editEmployeeTabs" role="tablist">
-      <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#personal" type="button">Personal Data</button></li>
-      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#communication" type="button">Communication</button></li>
-      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#bank" type="button">Banking</button></li>
-      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#job" type="button">Employment</button></li>
-      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tax" type="button">Taxation</button></li>
-      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#pay" type="button">Compensation</button></li>
-      <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#account" type="button">Account</button></li>
+      <li class="nav-item">
+          <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#personal" type="button">Personal Data</button>
+      </li>
+      <li class="nav-item">
+          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#communication" type="button">Communication</button>
+      </li>
+      <li class="nav-item">
+          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#bank" type="button">Banking</button>
+      </li>
+      <li class="nav-item">
+          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#job" type="button">Employment</button>
+      </li>
+      <li class="nav-item">
+          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tax" type="button">Taxation</button>
+      </li>
+      <li class="nav-item">
+          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#pay" type="button">Compensation</button>
+      </li>
+      <li class="nav-item">
+          <button class="nav-link" data-bs-toggle="tab" data-bs-target="#account" type="button">Account</button>
+      </li>
     </ul>
 
-    <form method="post" class="needs-validation" novalidate>
+    <form method="post" class="needs-validation" novalidate enctype="multipart/form-data">
       {% csrf_token %}
       
-      {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+      {% for hidden in form.hidden_fields %}
+          {{ hidden }}
+      {% endfor %}
 
       {% if form.non_field_errors %}
-        <div class="alert alert-danger shadow-sm">{{ form.non_field_errors }}</div>
+        <div class="alert alert-danger shadow-sm">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ form.non_field_errors }}
+        </div>
       {% endif %}
 
       <div class="tab-content">
@@ -54,6 +74,9 @@
                         <div class="form-floating">
                             {{ field }}
                             <label for="{{ field.id_for_label }}" class="fw-bold text-secondary">{{ field.label }}</label>
+                            {% if field.errors %}
+                                <div class="invalid-feedback d-block">{{ field.errors.0 }}</div>
+                            {% endif %}
                         </div>
                     </div>
                     {% endif %}
@@ -62,7 +85,7 @@
         </div>
 
         <div class="tab-pane fade" id="communication">
-            <h6 class="text-primary fw-bold mb-3 border-bottom pb-2">Communications</h6>
+            <h6 class="text-primary fw-bold mb-3 border-bottom pb-2">Contact Information</h6>
             <div class="row g-3 mb-4">
                 <div class="col-md-6">
                     <div class="form-floating">
@@ -97,29 +120,34 @@
             <div class="row g-4">
                 <div class="col-12">
                     <div class="card h-100 border-light shadow-sm">
-                        <div class="card-header bg-light bg-gradient text-primary fw-bold border-bottom-0"><i class="bi bi-bank2 me-2"></i>Bank Account Details</div>
+                        <div class="card-header bg-light bg-gradient text-primary fw-bold border-bottom-0">
+                            <i class="bi bi-bank2 me-2"></i>Bank Account Details
+                        </div>
                         <div class="card-body">
                             <div class="row g-3">
-                                <div class="col-md-6"><div class="form-floating">{{ form.bank_02 }}<label for="{{ form.bank_02.id_for_label }}" class="fw-bold text-secondary">{{ form.bank_02.label }}</label></div></div>
-                                <div class="col-md-6"><div class="form-floating">{{ form.bank_01 }}<label for="{{ form.bank_01.id_for_label }}" class="fw-bold text-secondary">{{ form.bank_01.label }}</label></div></div>
-                                <div class="col-md-6"><div class="form-floating">{{ form.bank_03 }}<label for="{{ form.bank_03.id_for_label }}" class="fw-bold text-secondary">{{ form.bank_03.label }}</label></div></div>
-                                <div class="col-md-6"><div class="form-floating">{{ form.bank_04 }}<label for="{{ form.bank_04.id_for_label }}" class="fw-bold text-secondary">{{ form.bank_04.label }}</label></div></div>
-                                <div class="col-md-6"><div class="form-floating">{{ form.bank_08 }}<label for="{{ form.bank_08.id_for_label }}" class="fw-bold text-secondary">{{ form.bank_08.label }}</label></div></div>
-                                <div class="col-md-6"><div class="form-floating">{{ form.bank_07 }}<label for="{{ form.bank_07.id_for_label }}" class="fw-bold text-secondary">{{ form.bank_07.label }}</label></div></div>
+                                <div class="col-md-6"><div class="form-floating">{{ form.bank_02 }}<label for="{{ form.bank_02.id_for_label }}" class="text-secondary">{{ form.bank_02.label }}</label></div></div>
+                                <div class="col-md-6"><div class="form-floating">{{ form.bank_01 }}<label for="{{ form.bank_01.id_for_label }}" class="text-secondary">{{ form.bank_01.label }}</label></div></div>
+                                <div class="col-md-6"><div class="form-floating">{{ form.bank_03 }}<label for="{{ form.bank_03.id_for_label }}" class="text-secondary">{{ form.bank_03.label }}</label></div></div>
+                                <div class="col-md-6"><div class="form-floating">{{ form.bank_04 }}<label for="{{ form.bank_04.id_for_label }}" class="text-secondary">{{ form.bank_04.label }}</label></div></div>
+                                <div class="col-md-6"><div class="form-floating">{{ form.bank_08 }}<label for="{{ form.bank_08.id_for_label }}" class="text-secondary">{{ form.bank_08.label }}</label></div></div>
+                                <div class="col-md-6"><div class="form-floating">{{ form.bank_07 }}<label for="{{ form.bank_07.id_for_label }}" class="text-secondary">{{ form.bank_07.label }}</label></div></div>
                             </div>
                         </div>
                     </div>
                 </div>
+                
                 <div class="col-12">
                     <div class="card h-100 border-light shadow-sm">
-                        <div class="card-header bg-light bg-gradient text-primary fw-bold border-bottom-0"><i class="bi bi-geo-alt-fill me-2"></i>Bank Address</div>
+                        <div class="card-header bg-light bg-gradient text-primary fw-bold border-bottom-0">
+                            <i class="bi bi-geo-alt-fill me-2"></i>Bank Address
+                        </div>
                         <div class="card-body">
                             <div class="row g-3">
-                                <div class="col-md-6"><div class="form-floating">{{ form.bank_11 }}<label for="{{ form.bank_11.id_for_label }}" class="fw-bold text-secondary">{{ form.bank_11.label }}</label></div></div>
-                                <div class="col-md-6"><div class="form-floating">{{ form.bank_12 }}<label for="{{ form.bank_12.id_for_label }}" class="fw-bold text-secondary">{{ form.bank_12.label }}</label></div></div>
-                                <div class="col-md-6"><div class="form-floating">{{ form.bank_13 }}<label for="{{ form.bank_13.id_for_label }}" class="fw-bold text-secondary">{{ form.bank_13.label }}</label></div></div>
-                                <div class="col-md-6"><div class="form-floating">{{ form.bank_14 }}<label for="{{ form.bank_14.id_for_label }}" class="fw-bold text-secondary">{{ form.bank_14.label }}</label></div></div>
-                                <div class="col-md-12"><div class="form-floating">{{ form.bank_16 }}<label for="{{ form.bank_16.id_for_label }}" class="fw-bold text-secondary">{{ form.bank_16.label }}</label></div></div>
+                                <div class="col-md-6"><div class="form-floating">{{ form.bank_11 }}<label for="{{ form.bank_11.id_for_label }}" class="text-secondary">{{ form.bank_11.label }}</label></div></div>
+                                <div class="col-md-6"><div class="form-floating">{{ form.bank_12 }}<label for="{{ form.bank_12.id_for_label }}" class="text-secondary">{{ form.bank_12.label }}</label></div></div>
+                                <div class="col-md-6"><div class="form-floating">{{ form.bank_13 }}<label for="{{ form.bank_13.id_for_label }}" class="text-secondary">{{ form.bank_13.label }}</label></div></div>
+                                <div class="col-md-6"><div class="form-floating">{{ form.bank_14 }}<label for="{{ form.bank_14.id_for_label }}" class="text-secondary">{{ form.bank_14.label }}</label></div></div>
+                                <div class="col-md-12"><div class="form-floating">{{ form.bank_16 }}<label for="{{ form.bank_16.id_for_label }}" class="text-secondary">{{ form.bank_16.label }}</label></div></div>
                             </div>
                         </div>
                     </div>
@@ -128,12 +156,14 @@
                 {% if form.bank_17 %}
                 <div class="col-12">
                     <div class="card h-100 border-light shadow-sm">
-                        <div class="card-header bg-light bg-gradient text-primary fw-bold border-bottom-0"><i class="bi bi-hdd-network me-2"></i>Bacs Details</div>
+                        <div class="card-header bg-light bg-gradient text-primary fw-bold border-bottom-0">
+                            <i class="bi bi-hdd-network me-2"></i>Bacs Details
+                        </div>
                         <div class="card-body">
                             <div class="row g-3">
-                                <div class="col-md-4"><div class="form-floating">{{ form.bank_17 }}<label for="{{ form.bank_17.id_for_label }}" class="fw-bold text-secondary">{{ form.bank_17.label }}</label></div></div>
-                                <div class="col-md-4"><div class="form-floating">{{ form.bank_18 }}<label for="{{ form.bank_18.id_for_label }}" class="fw-bold text-secondary">{{ form.bank_18.label }}</label></div></div>
-                                <div class="col-md-4"><div class="form-floating">{{ form.bank_19 }}<label for="{{ form.bank_19.id_for_label }}" class="fw-bold text-secondary">{{ form.bank_19.label }}</label></div></div>
+                                <div class="col-md-4"><div class="form-floating">{{ form.bank_17 }}<label for="{{ form.bank_17.id_for_label }}" class="text-secondary">{{ form.bank_17.label }}</label></div></div>
+                                <div class="col-md-4"><div class="form-floating">{{ form.bank_18 }}<label for="{{ form.bank_18.id_for_label }}" class="text-secondary">{{ form.bank_18.label }}</label></div></div>
+                                <div class="col-md-4"><div class="form-floating">{{ form.bank_19 }}<label for="{{ form.bank_19.id_for_label }}" class="text-secondary">{{ form.bank_19.label }}</label></div></div>
                             </div>
                         </div>
                     </div>
@@ -166,8 +196,8 @@
                             <div class="card-body">
                                 <h6 class="card-title text-primary fw-bold mb-3 border-bottom pb-2">1. Documentation</h6>
                                 <div class="row g-3">
-                                    <div class="col-md-6"><div class="form-floating">{{ form.ni_number }}<label for="{{ form.ni_number.id_for_label }}" class="fw-bold text-secondary">1. {{ form.ni_number.label }}</label></div></div>
-                                    <div class="col-md-6"><div class="form-floating">{{ form.passport_number }}<label for="{{ form.passport_number.id_for_label }}" class="fw-bold text-secondary">2. {{ form.passport_number.label }}</label></div></div>
+                                    <div class="col-md-6"><div class="form-floating">{{ form.ni_number }}<label for="{{ form.ni_number.id_for_label }}" class="text-secondary">1. {{ form.ni_number.label }}</label></div></div>
+                                    <div class="col-md-6"><div class="form-floating">{{ form.passport_number }}<label for="{{ form.passport_number.id_for_label }}" class="text-secondary">2. {{ form.passport_number.label }}</label></div></div>
                                 </div>
                             </div>
                         </div>
@@ -177,9 +207,9 @@
                             <div class="card-body">
                                 <h6 class="card-title text-primary fw-bold mb-3 border-bottom pb-2">2. Taxation</h6>
                                 <div class="row g-3">
-                                    <div class="col-12"><div class="form-floating">{{ form.tax_code }}<label for="{{ form.tax_code.id_for_label }}" class="fw-bold text-secondary">3. {{ form.tax_code.label }}</label></div><div class="form-text small fst-italic">{{ form.tax_code.help_text }}</div></div>
-                                    <div class="col-12"><div class="form-floating">{{ form.tax_basis }}<label for="{{ form.tax_basis.id_for_label }}" class="fw-bold text-secondary">4. {{ form.tax_basis.label }}</label></div></div>
-                                    <div class="col-12"><div class="form-floating">{{ form.ni_category }}<label for="{{ form.ni_category.id_for_label }}" class="fw-bold text-secondary">5. {{ form.ni_category.label }}</label></div></div>
+                                    <div class="col-12"><div class="form-floating">{{ form.tax_code }}<label class="text-secondary">3. {{ form.tax_code.label }}</label></div><div class="form-text small fst-italic">{{ form.tax_code.help_text }}</div></div>
+                                    <div class="col-12"><div class="form-floating">{{ form.tax_basis }}<label class="text-secondary">4. {{ form.tax_basis.label }}</label></div></div>
+                                    <div class="col-12"><div class="form-floating">{{ form.ni_category }}<label class="text-secondary">5. {{ form.ni_category.label }}</label></div></div>
                                 </div>
                             </div>
                         </div>
@@ -189,10 +219,10 @@
                             <div class="card-body">
                                 <h6 class="card-title text-primary fw-bold mb-3 border-bottom pb-2">3. P45 Details</h6>
                                 <div class="row g-3">
-                                    <div class="col-md-6"><div class="form-floating">{{ form.p45_tax_code }}<label for="{{ form.p45_tax_code.id_for_label }}" class="fw-bold text-secondary">6. {{ form.p45_tax_code.label }}</label></div></div>
-                                    <div class="col-md-6"><div class="form-floating">{{ form.p45_tax_basis }}<label for="{{ form.p45_tax_basis.id_for_label }}" class="fw-bold text-secondary">7. {{ form.p45_tax_basis.label }}</label></div></div>
-                                    <div class="col-md-6"><div class="form-floating">{{ form.p45_gross_earnings }}<label for="{{ form.p45_gross_earnings.id_for_label }}" class="fw-bold text-secondary">8. {{ form.p45_gross_earnings.label }}</label></div></div>
-                                    <div class="col-md-6"><div class="form-floating">{{ form.p45_tax_paid }}<label for="{{ form.p45_tax_paid.id_for_label }}" class="fw-bold text-secondary">9. {{ form.p45_tax_paid.label }}</label></div></div>
+                                    <div class="col-md-6"><div class="form-floating">{{ form.p45_tax_code }}<label class="text-secondary">6. {{ form.p45_tax_code.label }}</label></div></div>
+                                    <div class="col-md-6"><div class="form-floating">{{ form.p45_tax_basis }}<label class="text-secondary">7. {{ form.p45_tax_basis.label }}</label></div></div>
+                                    <div class="col-md-6"><div class="form-floating">{{ form.p45_gross_earnings }}<label class="text-secondary">8. {{ form.p45_gross_earnings.label }}</label></div></div>
+                                    <div class="col-md-6"><div class="form-floating">{{ form.p45_tax_paid }}<label class="text-secondary">9. {{ form.p45_tax_paid.label }}</label></div></div>
                                 </div>
                             </div>
                         </div>
@@ -201,8 +231,8 @@
                         <div class="card shadow-sm border-0 h-100">
                             <div class="card-body">
                                 <h6 class="card-title text-primary fw-bold mb-3 border-bottom pb-2">4. Starter Declaration</h6>
-                                <div class="mb-3"><div class="form-floating">{{ form.starter_declaration }}<label for="{{ form.starter_declaration.id_for_label }}" class="fw-bold text-secondary">10. {{ form.starter_declaration.label }}</label></div></div>
-                                <div class="mb-3"><div class="form-floating">{{ form.starter_student_loan }}<label for="{{ form.starter_student_loan.id_for_label }}" class="fw-bold text-secondary">11. {{ form.starter_student_loan.label }}</label></div></div>
+                                <div class="mb-3"><div class="form-floating">{{ form.starter_declaration }}<label class="text-secondary">10. {{ form.starter_declaration.label }}</label></div></div>
+                                <div class="mb-3"><div class="form-floating">{{ form.starter_student_loan }}<label class="text-secondary">11. {{ form.starter_student_loan.label }}</label></div></div>
                             </div>
                         </div>
                     </div>
@@ -211,11 +241,11 @@
                             <div class="card-body">
                                 <h6 class="card-title text-primary fw-bold mb-3 border-bottom pb-2">5. Student Loans</h6>
                                 <div class="row g-3">
-                                    <div class="col-md-6"><div class="form-check form-switch pt-3 ps-5">{{ form.has_student_loan }}<label class="form-check-label fw-bold small text-secondary" for="{{ form.has_student_loan.id_for_label }}">12. Has Student Loan?</label></div></div>
-                                    <div class="col-md-6"><div class="form-floating">{{ form.student_loan_plan }}<label for="{{ form.student_loan_plan.id_for_label }}" class="fw-bold text-secondary">13. {{ form.student_loan_plan.label }}</label></div></div>
-                                    <div class="col-12"><div class="form-check form-switch ps-5">{{ form.has_pg_loan }}<label class="form-check-label fw-bold small text-secondary" for="{{ form.has_pg_loan.id_for_label }}">14. Has Post-Grad Loan?</label></div></div>
-                                    <div class="col-md-6"><div class="form-floating">{{ form.loan_start_date }}<label for="{{ form.loan_start_date.id_for_label }}" class="fw-bold text-secondary">15. {{ form.loan_start_date.label }}</label></div></div>
-                                    <div class="col-md-6"><div class="form-floating">{{ form.loan_end_date }}<label for="{{ form.loan_end_date.id_for_label }}" class="fw-bold text-secondary">16. {{ form.loan_end_date.label }}</label></div></div>
+                                    <div class="col-md-6"><div class="form-check form-switch pt-3 ps-5">{{ form.has_student_loan }}<label class="form-check-label fw-bold small text-secondary">12. Has Student Loan?</label></div></div>
+                                    <div class="col-md-6"><div class="form-floating">{{ form.student_loan_plan }}<label class="text-secondary">13. {{ form.student_loan_plan.label }}</label></div></div>
+                                    <div class="col-12"><div class="form-check form-switch ps-5">{{ form.has_pg_loan }}<label class="form-check-label fw-bold small text-secondary">14. Has Post-Grad Loan?</label></div></div>
+                                    <div class="col-md-6"><div class="form-floating">{{ form.loan_start_date }}<label class="text-secondary">15. {{ form.loan_start_date.label }}</label></div></div>
+                                    <div class="col-md-6"><div class="form-floating">{{ form.loan_end_date }}<label class="text-secondary">16. {{ form.loan_end_date.label }}</label></div></div>
                                 </div>
                             </div>
                         </div>
@@ -246,10 +276,10 @@
                                 <p class="text-muted small mb-0">View or add recurring payments, deductions, and salary information.</p>
                             </div>
                             <div class="btn-group">
-                                <a href="{% url 'compensation:compensation_list' country_slug company.company_id employee.id %}" class="btn btn-outline-secondary">
+                                <a href="#" class="btn btn-outline-secondary">
                                     <i class="bi bi-list-ul me-2"></i>View Components
                                 </a>
-                                <a href="{% url 'compensation:compensation_create' country_slug company.company_id employee.id %}" class="btn btn-primary">
+                                <a href="#" class="btn btn-primary">
                                     <i class="bi bi-plus-lg me-2"></i>Add Component
                                 </a>
                             </div>
@@ -270,20 +300,85 @@
         </div>
 
         <div class="tab-pane fade" id="account">
-            <h6 class="text-primary fw-bold mb-3 border-bottom pb-2">Account Management</h6>
-            <div class="alert alert-light border">
-                <i class="bi bi-info-circle me-2"></i>Account settings are visible to all administrators.
-            </div>
-            <div class="row g-3">
-               <div class="col-12 text-muted fst-italic">No specific account fields configured yet.</div>
-            </div>
+            <h6 class="text-primary fw-bold mb-3 border-bottom pb-2">Platform Access & Roles</h6>
+            
+            {% if linked_user %}
+                <div class="alert alert-success border-success bg-success-subtle mb-4">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-person-check-fill fs-4 me-3"></i>
+                        <div>
+                            <h6 class="mb-0 fw-bold">Active User Account Found</h6>
+                            <p class="mb-0 small">This employee is linked to username: <strong>{{ linked_user.username }}</strong></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm border-light">
+                    <div class="card-body">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label for="{{ access_form.role.id_for_label }}" class="form-label fw-bold text-secondary">
+                                    System Role
+                                </label>
+                                {{ access_form.role }}
+                                <div class="form-text">Changing this promotes or demotes the user's permissions.</div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="{{ access_form.client_group.id_for_label }}" class="form-label fw-bold text-secondary">
+                                    Client Group (Bulk Access)
+                                </label>
+                                {{ access_form.client_group }}
+                                <div class="form-text">Assign a group to give access to multiple companies.</div>
+                            </div>
+
+                            <div class="col-12 border-top pt-3">
+                                <div class="form-check form-switch">
+                                    {{ access_form.is_active }}
+                                    <label class="form-check-label fw-bold" for="{{ access_form.is_active.id_for_label }}">
+                                        User Login Enabled
+                                    </label>
+                                </div>
+                                <div class="form-text">Disable this to block access without deleting the account.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            {% else %}
+                <div class="text-center py-5 bg-light rounded-3 border border-dashed">
+                    <i class="bi bi-person-x text-muted" style="font-size: 3rem;"></i>
+                    <h5 class="fw-bold mt-3 text-secondary">No User Account Linked</h5>
+                    
+                    {% if employee.email %}
+                        <p class="text-muted mb-4">
+                            Ready to create a login account for <strong>{{ employee.email }}</strong>.<br>
+                            This will send the employee their username and a temporary password.
+                        </p>
+                        <button type="submit" name="create_user_account" value="1" class="btn btn-primary px-4">
+                            <i class="bi bi-person-plus-fill me-2"></i>Create User Account
+                        </button>
+                    {% else %}
+                        <p class="text-muted mb-4">
+                            This employee does not currently have login access.<br>
+                            An email address is required to create an account.
+                        </p>
+                        <div class="alert alert-warning d-inline-block">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            Please add an <strong>Email Address</strong> in the Communication tab and save to enable account creation.
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
         </div>
 
       </div>
 
       <div class="mt-5 pt-3 border-top d-flex justify-content-end bg-light p-3 rounded-bottom mx-n4 mb-n4">
         <a href="{% url 'employee:employee' country_slug company.company_id %}" class="btn btn-outline-secondary me-2">Cancel</a>
-        <button type="submit" class="btn btn-primary px-4"><i class="bi bi-save me-2"></i>Save Changes</button>
+        <button type="submit" class="btn btn-primary px-4">
+            <i class="bi bi-save me-2"></i>Save Changes
+        </button>
       </div>
     </form>
   </div>

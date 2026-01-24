@@ -34,6 +34,10 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('users/<int:user_id>/unified/', views.unified_profile, name='unified_profile_view'),
 
+    # accounts/urls.py
+    path('password-change/', auth_views.PasswordChangeView.as_view(template_name='auth/password_change.html'), name='password_change'),
+    path('password-change/done/', auth_views.PasswordChangeDoneView.as_view(template_name='auth/password_change_done.html'), name='password_change_done'),
+
 
     # Session management
     

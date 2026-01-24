@@ -3,6 +3,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.http import HttpResponse
 from collections import defaultdict
+
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_GET, require_POST
+from django.views.decorators.csrf import csrf_exempt
+
 import csv
 from datetime import timedelta
 from django.apps import apps
@@ -85,25 +90,57 @@ def get_pending_regulation_updates():
     return qs.count()
 
 
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from Exactus.accounts.models import User
+from Exactus.accounts.services.onboarding import OnboardingService
+
 @login_required
 def register(request):
-    """Admin-only user registration view."""
-    if request.user.role not in {"EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION","DIRECTOR","MANAGER"}:
+    """
+    Admin user creation that triggers the Two-Email Onboarding flow.
+    """
+    # 1. Permission Check
+    allowed_roles = {"EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION", "OPERATION", "DIRECTOR", "MANAGER"}
+    
+    # Safely handle users without a role attribute if necessary, though your model defaults to EMPLOYEE
+    user_role = getattr(request.user, 'role', None)
+    
+    if user_role not in allowed_roles:
         messages.error(request, "Access denied: only administrators can create new users.")
         return redirect("dashboard")
 
     if request.method == 'POST':
-        form = UserRegistrationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            messages.success(request, f"User '{user.username}' created successfully.")
-            return redirect("dashboard")
+        # We only need basic details, password will be auto-generated
+        username = request.POST.get('username')
+        email = request.POST.get('email')
+        role = request.POST.get('role')
+        
+        # Basic validation
+        if User.objects.filter(username=username).exists():
+            messages.error(request, "Username already exists.")
+        elif User.objects.filter(email=email).exists():
+            messages.error(request, "Email already exists.")
         else:
-            messages.error(request, "Please correct the errors below.")
-    else:
-        form = UserRegistrationForm()
+            try:
+                # 2. Call the Onboarding Service
+                # This generates the password, sets the flag, and sends the 2 emails
+                OnboardingService.onboard_employee(
+                    username=username,
+                    email=email,
+                    role=role,
+                    created_by_user=request.user
+                )
+                
+                messages.success(request, f"User '{username}' created. Credentials have been emailed.")
+                return redirect("user_list") 
+                
+            except Exception as e:
+                messages.error(request, f"Error creating user: {str(e)}")
 
-    return render(request, 'auth/register.html', {'form': form})
+    # Load roles for the dropdown
+    return render(request, 'auth/register.html', {'roles': User.ROLE_CHOICES})
 
 
 def custom_login(request):
@@ -292,118 +329,80 @@ def dashboard_admin(request):
     return render(request, 'dashboard/admin.html', context)
 
 
-@login_required
+from django.shortcuts import render
+from django.apps import apps
+from django.db.models import Count, Sum
+from django.db.models.functions import TruncMonth
+from django.utils import timezone
+import json
+import datetime
+
 def dashboard(request):
-    """Regular user dashboard with multi-tenant data."""
-    # Generate cache key
-    cache_key = f'dashboard_{request.user.id}_{timezone.now().strftime("%Y%m%d")}'
-    cached_data = cache.get(cache_key)
+    # --- Load Models ---
+    Company = apps.get_model('company', 'Company')
+    Employee = apps.get_model('employee', 'Employee')
+    PayrollPeriod = apps.get_model('payroll', 'PayrollPeriod')
+    PayrollResult = apps.get_model('payroll', 'PayrollResult')
+
+    # --- 1. CORRECT COUNTS LOGIC ---
+
+    # A. Active Companies
+    # Counts all companies currently marked as ACTIVE
+    active_companies_count = Company.objects.filter(account_status='ACTIVE').count()
+
+    # B. Active Countries
+    # This logic counts distinct countries where you have at least one active company.
+    # Example: If you have 5 companies but they are all in the 'UK', this will show "1".
+    active_countries_count = Company.objects.filter(account_status='ACTIVE').values('country').distinct().count()
+
+    # --- 2. Employee Stats ---
+    # Counts employees currently employed (no end date)
+    user_employees_count = Employee.objects.filter(employment_end_date__isnull=True).count()
     
-    if cached_data and not request.GET.get('refresh'):
-        return render(request, 'dashboard/index.html', cached_data)
+    # --- 3. Payroll Activity (30 Days) ---
+    today = timezone.now()
+    thirty_days_ago = today - datetime.timedelta(days=30)
     
-    now = timezone.now()
-    thirty_days_ago = now - timedelta(days=30)
-    
-    # Import models
-    from Exactus.country.models import Country
-    from Exactus.company.models import Company
-    from Exactus.employee.models import Employee
-    from Exactus.payroll.models import Payroll
-    
-    # Check if user is global admin (platform admin)
-    is_global_admin = request.user.role in ['EXEC', 'ADMIN']
-    
-    # ──────────────── Get User's Companies ────────────────
-    
-    if is_global_admin:
-        # Platform admins can see all companies
-        user_companies = Company.objects.all()
-    else:
-        # Check if UserCompany model exists
-        try:
-            from .models import UserCompany
-            user_companies = Company.objects.filter(
-                authorized_users__user=request.user,
-                authorized_users__is_active=True
-            ).distinct()
-        except Exception:
-            # Fallback: companies created by user
-            user_companies = Company.objects.filter(created_by=request.user)
-    
-    user_companies_count = user_companies.count()
-    
-    # ──────────────── User-Specific Counts ────────────────
-    
-    if user_companies_count > 0:
-        # Get company IDs
-        company_ids = user_companies.values_list('company_id', flat=True)
-        
-        # Count employees in user's companies
-        user_employees_count = Employee.objects.filter(
-            company_id__in=company_ids
+    payslips_30d_count = 0
+    # Only try to count if we have payroll data
+    if PayrollResult.objects.exists():
+        payslips_30d_count = PayrollResult.objects.filter(
+            period__payment_date__gte=thirty_days_ago
         ).count()
-        
-        # Get recent payslips
-       
-        
-        # Count current month payrolls
-        current_month_payrolls_count = Payroll.objects.filter(
-            company_id__in=company_ids,
-            created_at__year=now.year,
-            created_at__month=now.month
-        ).count()
-    else:
-        user_employees_count = 0
-        recent_payslips = []
-        current_month_payrolls_count = 0
-    
-    # ──────────────── Notifications ────────────────
+
+    # --- 4. Chart Data (Financial Trend) ---
+    six_months_ago = today - datetime.timedelta(days=180)
+    chart_labels = []
+    chart_data = []
     
     try:
-        from .models import Notification
-        notifications = Notification.objects.filter(
-            user=request.user,
-            archived=False
-        ).order_by('-created_at')[:10]
-        
-        # Count pending approvals
-        pending_approvals_count = Notification.objects.filter(
-            user=request.user,
-            notification_type='APPROVAL',
-            read=False,
-            archived=False
-        ).count()
+        trends = PayrollPeriod.objects.filter(payment_date__gte=six_months_ago)\
+            .annotate(month=TruncMonth('payment_date'))\
+            .values('month')\
+            .annotate(total_gross=Sum('total_gross'))\
+            .order_by('month')
+
+        chart_labels = [t['month'].strftime('%b') for t in trends]
+        chart_data = [float(t['total_gross'] or 0) for t in trends]
     except Exception:
-        notifications = []
-        pending_approvals_count = 0
-    
-    
-    # ──────────────── Prepare Context ────────────────
-    
+        pass # Handle empty DB gracefully
+
+    # --- 5. Context ---
+    user_companies = Company.objects.filter(account_status='ACTIVE')[:5]
+
     context = {
-        # User-specific data
-        'user_companies_count': user_companies_count,
+        'active_countries_count': active_countries_count,
+        'active_companies_count': active_companies_count,
         'user_employees_count': user_employees_count,
-        'current_month_payrolls_count': current_month_payrolls_count,
-        'pending_approvals_count': pending_approvals_count,
-        
-  
-        
-      
-        
-        # User info
-        'user_role': request.user.get_role_display(),
-        'cache_timestamp': now.isoformat(),
-        
-        # Companies list for quick access
-        'user_companies': user_companies[:5],
+        'payslips_30d_count': payslips_30d_count,
+        'user_companies': user_companies,
+        'notifications': [], 
+        'chart_labels': json.dumps(chart_labels),
+        'chart_data': json.dumps(chart_data),
     }
-    
-    # Cache for 15 minutes
-    cache.set(cache_key, context, 900)
-    
-    return render(request, 'dashboard/index.html', context)
+    return render(request, 'dashboard.html', context)
+
+
 
 
 class CustomPasswordResetView(auth_views.PasswordResetView):
@@ -508,28 +507,57 @@ def user_detail(request, user_id):
     return unified_profile(request, user_id=user_id)
 
 
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .models import User, UserProfile
+from .forms import UserEditForm, UserProfileForm
+from Exactus.utils.decorators import role_required
+
 @login_required
+@role_required("EXEC", "ADMIN")
 def user_edit(request, user_id):
-    """Allow admin to edit user role, permissions, and status."""
-    if request.user.role not in {"EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION"}:
-        messages.error(request, "Access denied.")
-        return redirect("dashboard")
+    """
+    Edit a user's account AND profile using the unified profile template.
+    """
+    user_to_edit = get_object_or_404(User, pk=user_id)
+    # Ensure a profile exists, creating one if necessary
+    profile, created = UserProfile.objects.get_or_create(user=user_to_edit)
 
-    user_obj = get_object_or_404(User, id=user_id)
+    if request.method == 'POST':
+        # Determine which form is being submitted via hidden input 'form_type'
+        form_type = request.POST.get('form_type')
+        
+        # Initialize both forms with POST data to prevent rendering errors if one fails
+        user_form = UserEditForm(request.POST, instance=user_to_edit)
+        profile_form = UserProfileForm(request.POST, request.FILES, instance=profile)
 
-    if request.method == "POST":
-        form = UserEditForm(request.POST, instance=user_obj)
-        if form.is_valid():
-            form.save()
-            messages.success(request, f"User '{user_obj.username}' updated successfully.")
-            return redirect("user_detail", user_id=user_obj.id)
-        else:
-            messages.error(request, "Please correct the errors below.")
+        if form_type == 'account' or not form_type: # Default to account logic
+            if user_form.is_valid():
+                user_form.save()
+                messages.success(request, f"Account settings for '{user_to_edit.username}' updated.")
+                return redirect('user_edit', user_id=user_id)
+        
+        elif form_type == 'personal':
+            if profile_form.is_valid():
+                profile_form.save()
+                messages.success(request, "Personal information updated.")
+                return redirect('user_edit', user_id=user_id)
+
     else:
-        form = UserEditForm(instance=user_obj)
+        # GET Request: Initialize forms with existing data
+        user_form = UserEditForm(instance=user_to_edit)
+        profile_form = UserProfileForm(instance=profile)
 
-    context = {"form": form, "user_obj": user_obj}
-    return render(request, "management/user_edit.html", context)
+    return render(request, 'profile/unified_profile.html', {
+        'form': user_form,           # Maps to {{ form }} in template
+        'profile_form': profile_form, # Maps to {{ profile_form }} in template
+        'user_to_edit': user_to_edit,
+        'target_user': user_to_edit   # The template uses this variable for display names
+    })
+
+
 
 
 @permission_required("ROLE", "READ")
@@ -832,4 +860,5 @@ def enhanced_logout(request):
         messages.info(request, 'You have been logged out successfully.')
     
     return redirect('login')
+
 

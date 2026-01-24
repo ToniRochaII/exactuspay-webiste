@@ -1,332 +1,55 @@
 {% extends "base.html" %}
-{% load static %}
-{% load accounts_role_filters %}
 
 {% block title %}Edit User | ExactusPay{% endblock %}
 
-{% block breadcrumbs %}
-    <li class="breadcrumb-item"><a href="{% url 'user_list' %}">Users</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Edit {{ user_obj.username }}</li>
-{% endblock %}
-
-{% block page_title %}Edit User{% endblock %}
-
-{% block page_actions %}
-    <a href="{% url 'user_detail' user_obj.id %}" class="btn btn-outline-secondary">
-        <i class="fas fa-arrow-left me-2"></i>Back to User
-    </a>
-{% endblock %}
-
 {% block content %}
-<div class="row">
-    <div class="col-md-3 col-xl-2">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title mb-0">User Settings</h5>
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 fw-bold text-primary">Edit User: {{ user_to_edit.username }}</h5>
             </div>
-            <div class="list-group list-group-flush" role="tablist">
-                <a class="list-group-item list-group-item-action active" data-bs-toggle="list" href="#account" role="tab">
-                    <i class="fas fa-user me-2"></i>Account
-                </a>
-                <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#permissions" role="tab">
-                    <i class="fas fa-shield-alt me-2"></i>Permissions
-                </a>
-                {% if user_obj != user %}
-                <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#danger" role="tab">
-                    <i class="fas fa-exclamation-triangle me-2"></i>Danger Zone
-                </a>
-                {% endif %}
-            </div>
-        </div>
-        
-        <!-- User Summary Card -->
-        <div class="card mt-3">
-            <div class="card-body text-center">
-                <img src="{% if user_obj.userprofile.avatar %}{{ user_obj.userprofile.avatar.url }}{% else %}{% static 'dis/img/avatars/default.jpg' %}{% endif %}" 
-                     class="rounded-circle mb-3" alt="{{ user_obj.username }}" width="80" height="80">
-                <h6 class="mb-1">{{ user_obj.username }}</h6>
-                <p class="text-muted mb-2">{{ user_obj.get_role_display }}</p>
-                <span class="badge {% if user_obj.is_active %}bg-success{% else %}bg-secondary{% endif %}">
-                    {% if user_obj.is_active %}Active{% else %}Inactive{% endif %}
-                </span>
-                {% if user_obj == user %}
-                <div class="mt-2">
-                    <span class="badge bg-primary">Current User</span>
-                </div>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-9 col-xl-10">
-        <div class="tab-content">
-            <!-- Account Tab -->
-            <div class="tab-pane fade show active" id="account" role="tabpanel">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">Account Information</h5>
-                    </div>
-                    <div class="card-body">
-                        <form method="post">
-                            {% csrf_token %}
-                            
-                            {% if form.non_field_errors %}
-                            <div class="alert alert-danger">
-                                {% for error in form.non_field_errors %}
-                                {{ error }}
-                                {% endfor %}
-                            </div>
-                            {% endif %}
-                            
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <div class="mb-3">
-                                        <label for="{{ form.username.id_for_label }}" class="form-label">
-                                            Username <span class="text-danger">*</span>
-                                        </label>
-                                        {{ form.username }}
-                                        {% if form.username.errors %}
-                                        <div class="invalid-feedback d-block">
-                                            {{ form.username.errors.0 }}
-                                        </div>
-                                        {% endif %}
-                                    </div>
-                                    
-                                    <div class="mb-3">
-                                        <label for="{{ form.email.id_for_label }}" class="form-label">
-                                            Email Address <span class="text-danger">*</span>
-                                        </label>
-                                        {{ form.email }}
-                                        {% if form.email.errors %}
-                                        <div class="invalid-feedback d-block">
-                                            {{ form.email.errors.0 }}
-                                        </div>
-                                        {% endif %}
-                                    </div>
-                                    
-                                    <div class="mb-3">
-                                        <label for="{{ form.first_name.id_for_label }}" class="form-label">First Name</label>
-                                        {{ form.first_name }}
-                                    </div>
-                                    
-                                    <div class="mb-3">
-                                        <label for="{{ form.last_name.id_for_label }}" class="form-label">Last Name</label>
-                                        {{ form.last_name }}
-                                    </div>
-                                </div>
-                                
-                                <div class="col-md-4">
-                                    <div class="text-center">
-                                        <div class="mb-3">
-                                            <img src="{% if user_obj.userprofile.avatar %}{{ user_obj.userprofile.avatar.url }}{% else %}{% static 'dis/img/avatars/default.jpg' %}{% endif %}" 
-                                                 class="rounded-circle img-fluid" width="128" height="128" 
-                                                 alt="{{ user_obj.username }}">
-                                        </div>
-                                        <small class="text-muted d-block mb-2">
-                                            For best results, use an image at least 128px by 128px in .jpg format
-                                        </small>
-                                        <button type="button" class="btn btn-outline-primary btn-sm" disabled>
-                                            <i class="fas fa-upload me-1"></i>Change Avatar
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="mt-4">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-save me-2"></i>Save Changes
-                                </button>
-                                <a href="{% url 'user_detail' user_obj.id %}" class="btn btn-outline-secondary">
-                                    Cancel
-                                </a>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Permissions Tab -->
-            <div class="tab-pane fade" id="permissions" role="tabpanel">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">User Permissions & Role</h5>
-                    </div>
-                    <div class="card-body">
-                        <form method="post">
-                            {% csrf_token %}
-                            
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="{{ form.role.id_for_label }}" class="form-label">
-                                            User Role <span class="text-danger">*</span>
-                                        </label>
-                                        {{ form.role }}
-                                        {% if form.role.errors %}
-                                        <div class="invalid-feedback d-block">
-                                            {{ form.role.errors.0 }}
-                                        </div>
-                                        {% endif %}
-                                        <div class="form-text">
-                                            Determines the user's access level and permissions within the system.
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label class="form-label">Account Status</label>
-                                        <div class="form-check form-switch mb-2">
-                                            {{ form.is_active }}
-                                            <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
-                                                Active Account
-                                            </label>
-                                        </div>
-                                        <div class="form-check form-switch">
-                                            {{ form.is_staff }}
-                                            <label class="form-check-label" for="{{ form.is_staff.id_for_label }}">
-                                                Staff Permissions
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Role Descriptions -->
-                            <div class="mt-4">
-                                <h6 class="mb-3">Role Descriptions:</h6>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="card bg-light mb-3">
-                                            <div class="card-body">
-                                                <h6 class="card-title">EXEC</h6>
-                                                <p class="card-text small">Full system access, including user management and system configuration.</p>
-                                            </div>
-                                        </div>
-                                        <div class="card bg-light mb-3">
-                                            <div class="card-body">
-                                                <h6 class="card-title">ADMIN</h6>
-                                                <p class="card-text small">Administrative access to manage users, roles, and system settings.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="card bg-light mb-3">
-                                            <div class="card-body">
-                                                <h6 class="card-title">DIRECTOR</h6>
-                                                <p class="card-text small">Payroll operations management with full CRUD access.</p>
-                                            </div>
-                                        </div>
-                                        <div class="card bg-light mb-3">
-                                            <div class="card-body">
-                                                <h6 class="card-title">FINANCE</h6>
-                                                <p class="card-text small">Read-only access to payroll data for reporting and auditing.</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="mt-4">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-save me-2"></i>Save Permissions
-                                </button>
-                                <a href="{% url 'user_detail' user_obj.id %}" class="btn btn-outline-secondary">
-                                    Cancel
-                                </a>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Danger Zone Tab -->
-            {% if user_obj != user %}
-            <div class="tab-pane fade" id="danger" role="tabpanel">
-                <div class="card border-danger">
-                    <div class="card-header bg-danger text-white">
-                        <h5 class="card-title mb-0">Danger Zone</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="alert alert-warning">
-                            <i class="fas fa-exclamation-triangle me-2"></i>
-                            <strong>Warning:</strong> These actions are irreversible. Please proceed with caution.
+            <div class="card-body p-4">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">First Name</label>
+                            {{ form.first_name }}
                         </div>
-                        
-                        <div class="d-flex justify-content-between align-items-center p-3 border rounded mb-3">
-                            <div>
-                                <h6 class="mb-1">Reset User Password</h6>
-                                <p class="text-muted mb-0">Send a password reset email to this user.</p>
-                            </div>
-                            <a href="{% url 'admin_reset_password' user_obj.id %}" class="btn btn-outline-warning">
-                                <i class="fas fa-key me-1"></i>Reset Password
-                            </a>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Last Name</label>
+                            {{ form.last_name }}
                         </div>
-                        
-                        <div class="d-flex justify-content-between align-items-center p-3 border rounded mb-3">
-                            <div>
-                                <h6 class="mb-1">Deactivate Account</h6>
-                                <p class="text-muted mb-0">
-                                    {% if user_obj.is_active %}
-                                    Temporarily disable this user's access to the system.
-                                    {% else %}
-                                    Reactivate this user's account.
-                                    {% endif %}
-                                </p>
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Email</label>
+                            {{ form.email }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">System Role</label>
+                            {{ form.role }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold">Client Group</label>
+                            {{ form.client_group }}
+                            <div class="form-text">{{ form.client_group.help_text }}</div>
+                        </div>
+                        <div class="col-12 pt-2">
+                            <div class="form-check form-switch">
+                                {{ form.is_active }}
+                                <label class="form-check-label" for="{{ form.is_active.id_for_label }}">Active User</label>
                             </div>
-                            <form method="post" class="d-inline">
-                                {% csrf_token %}
-                                <input type="hidden" name="toggle_active" value="true">
-                                <button type="submit" class="btn btn-outline-{% if user_obj.is_active %}warning{% else %}success{% endif %}">
-                                    <i class="fas fa-{% if user_obj.is_active %}ban{% else %}check{% endif %} me-1"></i>
-                                    {% if user_obj.is_active %}Deactivate{% else %}Activate{% endif %}
-                                </button>
-                            </form>
                         </div>
                     </div>
-                </div>
+
+                    <div class="d-flex justify-content-end border-top pt-3 mt-4">
+                        <a href="{% url 'user_list' %}" class="btn btn-outline-secondary me-2">Cancel</a>
+                        <button type="submit" class="btn btn-primary px-4">Save Changes</button>
+                    </div>
+                </form>
             </div>
-            {% endif %}
         </div>
     </div>
 </div>
-{% endblock %}
-
-{% block extra_js %}
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    // Add Bootstrap form styling to Django form fields
-    const formFields = document.querySelectorAll('input, select, textarea');
-    formFields.forEach(field => {
-        if (!field.classList.contains('btn')) {
-            field.classList.add('form-control');
-        }
-    });
-    
-    // Add specific styling to checkboxes
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach(checkbox => {
-        checkbox.classList.add('form-check-input');
-    });
-    
-    // Initialize tooltips
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
-});
-</script>
-
-<style>
-.form-check-input {
-    margin-top: 0.2rem;
-}
-.card-header.bg-danger {
-    border-bottom: 1px solid #dc3545;
-}
-.list-group-item.active {
-    background-color: #0d6efd;
-    border-color: #0d6efd;
-}
-</style>
 {% endblock %}

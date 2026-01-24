@@ -432,6 +432,12 @@
                                     <i class="fas fa-plus me-2"></i>Add Pay Register Entry
                                 </a>
                             </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link"
+                                   href="{% url 'compensation:compensation_upload' country_slug company.company_id %}">
+                                    <i class="fas fa-upload me-2"></i>Upload compensation
+                                </a>
+                            </li>
                             {% endif %}
                         </ul>
                     </li>
@@ -676,9 +682,16 @@
                                     {% endif %}
 
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item text-danger" href="{% url 'logout' %}">
+                                    
+                                    {# --- LOGOUT FIX: Use POST Form --- #}
+                                    <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
+                                        {% csrf_token %}
+                                    </form>
+                                    <a class="dropdown-item text-danger" href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                         <i class="fas fa-sign-out-alt me-2"></i>Logout
                                     </a>
+                                    {# -------------------------------- #}
+
                                 {% else %}
                                     <a class="dropdown-item" href="{% url 'login' %}">
                                         <i class="fas fa-sign-in-alt me-2"></i>Login

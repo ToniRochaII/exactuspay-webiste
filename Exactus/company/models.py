@@ -1,5 +1,29 @@
+
+
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
+class ClientGroup(models.Model):
+    """
+    Represents a group of companies (e.g., 'Smith Holdings') to allow 
+    efficient bulk access assignment for Directors/Managers.
+    """
+    name = models.CharField(max_length=150, unique=True)
+    companies = models.ManyToManyField(
+        'Company', 
+        related_name="client_groups",
+        blank=True,
+        help_text=_("Select all companies belonging to this client group.")
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Client Group"
+        verbose_name_plural = "Client Groups"
+
 
 class Company(models.Model):
     """
@@ -138,6 +162,8 @@ class Company(models.Model):
         choices=ACCOUNT_ARCHIVE_CHOICES,
         default="N"
     )
+    
+    # --- Banking ---
     bank_01 = models.CharField(max_length=100, null=True, blank=True)
     bank_02 = models.CharField(max_length=100, null=True, blank=True)
     bank_03 = models.CharField(max_length=100, null=True, blank=True)
