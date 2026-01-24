@@ -7,6 +7,7 @@ from collections import defaultdict
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_GET, require_POST
 from django.views.decorators.csrf import csrf_exempt
+from Exactus.country.utils.decorators import role_required
 
 import csv
 from datetime import timedelta
@@ -173,8 +174,8 @@ def custom_login(request):
     
     return render(request, 'login.html')
 
-
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION", "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE")
 def profile(request):
     """User's own profile - uses unified template."""
     return unified_profile(request, user_id=None)
@@ -337,6 +338,8 @@ from django.utils import timezone
 import json
 import datetime
 
+@login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION", "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE")  
 def dashboard(request):
     # --- Load Models ---
     Company = apps.get_model('company', 'Company')
