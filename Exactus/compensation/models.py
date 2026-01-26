@@ -17,14 +17,12 @@ class CompensationComponent(models.Model):
         related_name='compensation_components'
     )
     
-    # --- CHANGE HERE: Added null=True, blank=True ---
     element = models.ForeignKey(
         Element, 
         on_delete=models.CASCADE,
-        null=True,   # Allow database NULL
-        blank=True   # Allow form to be empty
+        null=True,
+        blank=True
     )
-    # -----------------------------------------------
 
     pd_code = models.ForeignKey(
         'pdcodes.PDCode',
@@ -88,7 +86,8 @@ class CompensationComponent(models.Model):
 
     CATEGORY_CHOICES = [
         (CATEGORY_PERMANENT, "Permanent"),
-        (CATEGORY_VARIABLE, "Variable"),
+        # CHANGE 1: Wording update
+        (CATEGORY_VARIABLE, "One-Off Payment"),
     ]
 
     category = models.CharField(

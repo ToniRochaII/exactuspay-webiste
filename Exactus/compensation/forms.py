@@ -84,11 +84,18 @@ class CompensationComponentForm(forms.ModelForm):
                 )
 
         if category == CompensationComponent.CATEGORY_VARIABLE:
+            # CHANGE 2: If 'One-Off' and no end date, copy start date automatically
+            if not end_date and start_date:
+                end_date = start_date
+                cleaned["end_date"] = end_date
+            
+            # (Fallback check if start_date was also missing, though caught above)
             if not end_date:
-                raise ValidationError("End date is required for variable components.")
+                raise ValidationError("End date is required for one-off payments.")
+                
             if end_date < start_date:
                 raise ValidationError(
-                    "End date cannot be before start date for variable components."
+                    "End date cannot be before start date for one-off payments."
                 )
 
         if self.instance.pk and self.instance.processed:

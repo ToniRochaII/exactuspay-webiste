@@ -44,7 +44,12 @@ class BaseEmployeeForm(forms.ModelForm):
             "employee_surname": forms.TextInput(attrs={"class": "form-control", "data-section": "personal"}),
             "gender": forms.Select(attrs={"class": "form-control", "data-section": "personal"}),
             "marital_status": forms.Select(attrs={"class": "form-control", "data-section": "personal"}),
-            "date_of_birth": forms.DateInput(attrs={"class": "form-control", "type": "date", "data-section": "personal"}),
+            
+            # FIX: Force ISO format (YYYY-MM-DD) for HTML5 date inputs
+            "date_of_birth": forms.DateInput(
+                format='%Y-%m-%d',
+                attrs={"class": "form-control", "type": "date", "data-section": "personal"}
+            ),
 
             # --- Communication & Address Information (Renamed Section) ---
             "email": forms.EmailInput(attrs={"class": "form-control", "placeholder": "name@example.com", "data-section": "communication"}),
@@ -65,8 +70,16 @@ class BaseEmployeeForm(forms.ModelForm):
             "job_title": forms.TextInput(attrs={"class": "form-control", "data-section": "job"}),
             "position_number": forms.TextInput(attrs={"class": "form-control", "data-section": "job"}),
             "fte": forms.NumberInput(attrs={"class": "form-control", "step": "0.1", "data-section": "job"}),
-            "employment_start_date": forms.DateInput(attrs={"class": "form-control", "type": "date", "data-section": "job"}),
-            "employment_end_date": forms.DateInput(attrs={"class": "form-control", "type": "date", "data-section": "job"}),
+            
+            # FIX: Force ISO format (YYYY-MM-DD) for HTML5 date inputs
+            "employment_start_date": forms.DateInput(
+                format='%Y-%m-%d',
+                attrs={"class": "form-control", "type": "date", "data-section": "job"}
+            ),
+            "employment_end_date": forms.DateInput(
+                format='%Y-%m-%d',
+                attrs={"class": "form-control", "type": "date", "data-section": "job"}
+            ),
         }
 
     def __init__(self, *args, **kwargs):
@@ -102,7 +115,11 @@ class BaseEmployeeForm(forms.ModelForm):
                 
                 # Special handling for known date fields
                 if i in [5, 6, 16, 17]:
-                    self.fields[field_name].widget = forms.DateInput(attrs={**attrs, "type": "date"})
+                    # Also ensure virtual date fields use correct format if possible
+                    self.fields[field_name].widget = forms.DateInput(
+                        format='%Y-%m-%d', 
+                        attrs={**attrs, "type": "date"}
+                    )
                 else:
                     self.fields[field_name].widget = forms.TextInput(attrs=attrs)
                 
@@ -129,4 +146,3 @@ class BaseEmployeeForm(forms.ModelForm):
 class EmployeeUploadForm(forms.Form):
     file = forms.FileField()
     dry_run = forms.BooleanField(required=False)
-

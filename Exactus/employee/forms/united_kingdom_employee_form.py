@@ -236,6 +236,7 @@ class UnitedKingdomEmployeeForm(BaseEmployeeForm):
             self.fields["student_loan_plan"].initial = self.instance.tax_info_13
             self.fields["has_pg_loan"].initial = str(self.instance.tax_info_14).lower() == 'true'
             
+            # Dates (loaded as strings, which DateInput handles fine)
             self.fields["loan_start_date"].initial = self.instance.tax_info_15
             self.fields["loan_end_date"].initial = self.instance.tax_info_16
             
@@ -291,9 +292,7 @@ class UnitedKingdomEmployeeForm(BaseEmployeeForm):
         # Sort Code Validation
         sort_code = self.cleaned_data.get("bank_03", "")
         if sort_code:
-            # Allow 00-00-00 or 000000, always save as 00-00-00? Or just validate.
-            # Here we enforce the hyphenated format or clean it.
-            # If user enters 123456, we can format it to 12-34-56
+            # Allow 00-00-00 or 000000
             digits = re.sub(r"\D", "", sort_code)
             if len(digits) != 6:
                 raise ValidationError("Sort code must contain exactly 6 digits.")
@@ -321,11 +320,19 @@ class UnitedKingdomEmployeeForm(BaseEmployeeForm):
         employee.tax_info_13 = self.cleaned_data.get("student_loan_plan")
         employee.tax_info_14 = str(self.cleaned_data.get("has_pg_loan", False))
         
-        employee.tax_info_15 = self.cleaned_data.get("loan_start_date")
-        employee.tax_info_16 = self.cleaned_data.get("loan_end_date")
+        # FIX: Convert Date objects to Strings for storage in CharFields
+        loan_start = self.cleaned_data.get("loan_start_date")
+        employee.tax_info_15 = str(loan_start) if loan_start else None
+
+        loan_end = self.cleaned_data.get("loan_end_date")
+        employee.tax_info_16 = str(loan_end) if loan_end else None
         
         employee.tax_info_17 = str(self.cleaned_data.get("is_director", False))
-        employee.tax_info_18 = self.cleaned_data.get("director_appointment_date")
+        
+        # FIX: Convert Date object to String
+        appt_date = self.cleaned_data.get("director_appointment_date")
+        employee.tax_info_18 = str(appt_date) if appt_date else None
+        
         employee.tax_info_19 = self.cleaned_data.get("director_nic_method")
         employee.tax_info_20 = str(self.cleaned_data.get("irregular_employment", False))
 

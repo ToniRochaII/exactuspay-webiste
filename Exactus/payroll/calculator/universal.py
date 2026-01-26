@@ -46,11 +46,9 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
                 self.country_slug = raw_slug.replace("-", "_")
 
     def calculate(self):
-        """
-        Main Execution Logic
-        """
         self.results_dict = {} 
         self.breakdown = []
+        # Reset overrides at start
         self.explicit_overrides = set() 
         
         # 2. Aggregation
@@ -59,12 +57,17 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
         # 3. Collect UI info
         self._collect_pd_codes()
         
-        # 4. Country Nuances (Runs BEFORE Tax Engine)
+        # 4. Country Nuances (Runs calculator.py logic - Calculates 0T here)
         self._apply_country_nuances()
 
-        # 5. Standard Calculation Rules
+        # 5. Standard Calculation Rules (Runs DB Engine)
         if self.period and self.period.payroll and CALCULATION_BASE_AVAILABLE:
             self._apply_calculation_rules()
+        
+        # --- CONSOLIDATION STEP ---
+        # Sums 6001-6998 into 6000 (Reporting Only)
+        self._consolidate_tax_codes()
+        # --------------------------
         
         # 6. Final Net Pay Calculation
         if '85000' in self.results_dict:
@@ -74,29 +77,34 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
 
         gross_val = self.results_dict.get('5000', Decimal('0.00'))
         
-        # Calculate Deductions
         total_deductions = Decimal('0.00')
-        
         for code, val in self.results_dict.items():
             try:
+                # Skip duplicate deductions logic
                 if code in self.salary_sacrifice_codes: continue
                 if code in self.deduction_codes:
                     total_deductions += abs(val)
                     continue
+                
+                # --- NET PAY PROTECTION ---
+                # Code 6000 is just a "Total" reporting line. 
+                # We skip it here because we are already deducting the individual 
+                # lines (6001, 6100, etc.) below.
+                if code == "6000": 
+                    continue
+                # --------------------------
 
                 code_int = int(code)
                 is_input_deduction = (2000 <= code_int <= 2999)
-                is_calc_deduction = (6000 <= code_int <= 7999)
+                is_calc_deduction = (6001 <= code_int <= 7999)
 
                 if is_input_deduction or is_calc_deduction:
                     total_deductions += abs(val)
-
             except (ValueError, TypeError):
                 continue
             
         net_pay = gross_val - total_deductions
         
-        # Reset Net Pay Codes
         self.results_dict['8000'] = Decimal("0.00")
         self.results_dict['88000'] = Decimal("0.00")
         self.results_dict['98000'] = Decimal("0.00")
@@ -106,6 +114,40 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
         self.results_dict['98000'] = net_pay 
 
         return self._build_return(net_pay)
+
+    def _consolidate_tax_codes(self):
+        """
+        Scans tax values (6001-6998).
+        Sums them into 6000 for reporting purposes.
+        Does NOT remove the individual lines from results_dict.
+        """
+        total_tax = Decimal("0.00")
+        
+        # 1. Sum up values
+        for code, val in self.results_dict.items():
+            try:
+                code_int = int(code)
+                # Check range 6001 to 6998
+                if 6001 <= code_int <= 6998:
+                    if val != 0:
+                        total_tax += val/2
+            except (ValueError, TypeError):
+                continue
+
+        # 2. Store the Total in 6000 (Reporting Only)
+        if total_tax != 0:
+            self.results_dict["6000"] = total_tax
+            
+            # Update or Add the 6000 Total line in Breakdown
+            found_total = False
+            for b in self.breakdown:
+                if str(b.get('code')) == "6000":
+                    b['amount'] = total_tax
+                    found_total = True
+                    break
+            
+            if not found_total:
+                self.register("PAYE Income Tax Total", total_tax, "6000")
 
     def _aggregate_compensations(self):
         comps = self._get_compensation_list()
@@ -166,13 +208,13 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
                         self.results_dict['95000'] = self.results_dict.get('95000', Decimal('0.00')) + amt
                 
                 if getattr(pd, 'pdcode_taxable', False):
-                    if '86000' not in explicit_bases_found:
+                    if '86001' not in explicit_bases_found:
                         if is_deduction:
-                            self.results_dict['86000'] = self.results_dict.get('86000', Decimal('0.00')) - amt
-                            self.results_dict['96000'] = self.results_dict.get('96000', Decimal('0.00')) - amt
+                            self.results_dict['86001'] = self.results_dict.get('86001', Decimal('0.00')) - amt
+                            self.results_dict['96001'] = self.results_dict.get('96001', Decimal('0.00')) - amt
                         else:
-                            self.results_dict['86000'] = self.results_dict.get('86000', Decimal('0.00')) + amt
-                            self.results_dict['96000'] = self.results_dict.get('96000', Decimal('0.00')) + amt
+                            self.results_dict['86001'] = self.results_dict.get('86001', Decimal('0.00')) + amt
+                            self.results_dict['96001'] = self.results_dict.get('96001', Decimal('0.00')) + amt
 
                 if getattr(pd, 'pdcode_social_securitable', False):
                     if '87000' not in explicit_bases_found:
@@ -191,14 +233,23 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
             base_frequency=period_freq
         ).select_related('element', 'element_base')
         
+        # --- STRICT LOCK LOGIC (Prevents Double Calculation) ---
+        blocked_codes = {str(x).strip() for x in self.explicit_overrides}
+
         for rule in rules:
             try:
-                # --- ROBUST OVERRIDE CHECK ---
-                current_code = str(rule.element.element_code).strip()
-                if current_code in self.explicit_overrides:
-                    # print(f"DEBUG: Skipping DB rule for {current_code}")
+                if not rule.element: continue
+                
+                target_code = str(rule.element.element_code).strip()
+                
+                # 1. PRIMARY LOCK: Check if this code is in the block list
+                if target_code in blocked_codes:
                     continue
-                # -----------------------------
+
+                # 2. FAIL-SAFE LOCK: Check if Tax is ALREADY calculated (e.g. by 0T manual logic)
+                # If '6001' is already populated with a non-zero value, DO NOT run the DB rule.
+                if target_code == "6001" and self.results_dict.get("6001", Decimal("0.00")) != 0:
+                     continue
 
                 base_val = Decimal('0.00')
                 if rule.element_base:
