@@ -72,7 +72,8 @@ WSGI_APPLICATION = 'ExactusPay.wsgi.application'
 # If not (Local), we use db.sqlite3.
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
-if DATABASE_URL:
+# Check if DATABASE_URL exists AND is not just whitespace
+if DATABASE_URL and DATABASE_URL.strip():
     DATABASES = {
         "default": dj_database_url.config(
             default=DATABASE_URL,
@@ -83,8 +84,6 @@ if DATABASE_URL:
     }
 else:
     # Local development uses SQLite
-    # NOTE: Ensure 'db.sqlite3' is in your .gitignore file to prevent
-    # it from being uploaded to production.
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
