@@ -1,62 +1,122 @@
-from decimal import Decimal, ROUND_UP, ROUND_DOWN, ROUND_HALF_UP
+from decimal import Decimal, ROUND_HALF_UP, ROUND_FLOOR, ROUND_CEILING
 
 class TaxEngine:
-    """
-    Pure Logic Engine. Accepts an Amount and a Rule Object. Returns Tax.
-    """
-
     @staticmethod
-    def _round(value, method, precision=Decimal('1')):
-        value = Decimal(str(value))
-        if method == 'Round up':
-            return value.quantize(precision, rounding=ROUND_UP)
-        elif method == 'Round down':
-            return value.quantize(precision, rounding=ROUND_DOWN)
-        return value
-
-    @classmethod
-    def calculate_progressive_tax(cls, taxable_amount, rule):
+    def calculate_progressive_tax(base_value, rule):
         """
-        Calculates tax by dynamically iterating through rule.bracket_XX fields.
+        Calculates tax based on the CalculationBase rule (from DB),
+        applying granular rounding at:
+        1. Global Base Level
+        2. Per-Bracket Taxable Portion Level
+        3. Per-Bracket Tax Result Level
+        4. Global Final Tax Level
         """
-        # 1. Round the Input Base
-        amount_remaining = cls._round(taxable_amount, rule.rounding_base)
+        
+        # 1. Global Base Rounding (The "Set up" section)
+        # We round the input amount (e.g. 86000) before starting.
+        remaining_base = TaxEngine.apply_rounding(
+            base_value, 
+            rule.rounding_base, 
+            rule.rounding_base_decimals
+        )
+        
         total_tax = Decimal("0.00")
         
-        # 2. Iterate through Bands (00 to 15)
+        # Loop through all 16 brackets (00 to 15)
         for i in range(16):
-            # Dynamic field lookup
-            limit_field = f"bracket_{i:02d}"
-            rate_field = f"rate_{i:02d}"
+            code = f"{i:02d}"
             
-            # Safety break if fields don't exist
-            if not hasattr(rule, limit_field): 
-                break
-
-            band_width = getattr(rule, limit_field)
-            rate = getattr(rule, rate_field)
+            # Fetch Bracket Config
+            bracket_limit = getattr(rule, f'bracket_{code}')
+            rate = getattr(rule, f'rate_{code}')
             
-            # Apply Rounding to Bracket Definition
-            band_width = cls._round(band_width, rule.rounding_bracket)
-
-            # Determine Taxable Chunk for this Band
-            # If band_width is 0, it means "Infinity" (the rest of the salary)
-            if band_width > 0:
-                taxable_chunk = min(amount_remaining, band_width)
+            # Fetch Per-Bracket Rounding Config
+            # "Bracket" rounding = Rounding the taxable income chunk
+            logic_bracket = getattr(rule, f'round_bracket_logic_{code}')
+            dec_bracket = getattr(rule, f'round_bracket_dec_{code}')
+            
+            # "Result" rounding = Rounding the calculated tax for this chunk
+            logic_result = getattr(rule, f'round_result_logic_{code}')
+            dec_result = getattr(rule, f'round_result_dec_{code}')
+            
+            # If bracket has no data, skip
+            if (bracket_limit is None or bracket_limit == 0) and (rate is None or rate == 0):
+                continue
+            
+            # Convert Rate to decimal (e.g. 20 -> 0.20)
+            # Assumption: If user enters "20" for 20%, we need to divide by 100.
+            # If user enters "0.20", we use as is. 
+            # Check if rate > 1 (implies percentage integer)
+            effective_rate = Decimal(rate)
+            if effective_rate > 1:
+                effective_rate = effective_rate / Decimal("100.00")
+            
+            # Determine how much money falls into this bracket
+            taxable_chunk = Decimal("0.00")
+            
+            if bracket_limit > 0:
+                # If there is a limit, fill it up to the limit
+                if remaining_base >= bracket_limit:
+                    taxable_chunk = bracket_limit
+                    remaining_base -= bracket_limit
+                else:
+                    taxable_chunk = remaining_base
+                    remaining_base = Decimal("0.00")
             else:
-                taxable_chunk = amount_remaining
-
-            # Calculate Tax for this Chunk
-            if taxable_chunk > 0:
-                tax_chunk = taxable_chunk * (rate / Decimal("100.00"))
-                total_tax += tax_chunk
-                
-                # Reduce remaining amount to process in next band
-                amount_remaining -= taxable_chunk
+                # If limit is 0 (or infinite), take everything remaining
+                taxable_chunk = remaining_base
+                remaining_base = Decimal("0.00")
             
-            # If no money left to tax, stop
-            if amount_remaining <= 0:
-                break
+            # SKIP if no money in this bracket
+            if taxable_chunk <= 0:
+                continue
 
-        # 3. Final Rounding
-        return cls._round(total_tax, rule.rounding_taxed, Decimal('0.01'))
+            # 2. Apply "Bracket" Rounding (Round the taxable chunk)
+            taxable_chunk = TaxEngine.apply_rounding(taxable_chunk, logic_bracket, dec_bracket)
+            
+            # Calculate Tax for this bracket
+            bracket_tax = taxable_chunk * effective_rate
+            
+            # 3. Apply "Result" Rounding (Round the tax)
+            bracket_tax = TaxEngine.apply_rounding(bracket_tax, logic_result, dec_result)
+            
+            total_tax += bracket_tax
+
+            # Optimization: If no base left and we handled the infinite bracket, break
+            if remaining_base <= 0:
+                break
+        
+        # 4. Global Final Tax Rounding
+        final_tax = TaxEngine.apply_rounding(
+            total_tax, 
+            rule.rounding_taxed, 
+            rule.rounding_taxed_decimals
+        )
+        
+        return final_tax
+
+    @staticmethod
+    def apply_rounding(value, logic_str, decimals):
+        """
+        Helper to apply Round Up/Down/Standard based on string from DB.
+        """
+        if not isinstance(value, Decimal):
+            value = Decimal(str(value))
+            
+        if not logic_str or logic_str == 'None':
+            # Default to Standard Half Up if not specified, or just quantize
+            rounding_mode = ROUND_HALF_UP
+        elif 'down' in logic_str.lower():
+            rounding_mode = ROUND_FLOOR
+        elif 'up' in logic_str.lower():
+            rounding_mode = ROUND_CEILING
+        else:
+            rounding_mode = ROUND_HALF_UP
+
+        # Create the exponent for quantization (e.g., '0.01' for 2 decimals)
+        if decimals == 0:
+            exp = Decimal("1")
+        else:
+            exp = Decimal("1." + "0" * decimals)
+
+        return value.quantize(exp, rounding=rounding_mode)

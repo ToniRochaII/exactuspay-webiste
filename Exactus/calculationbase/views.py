@@ -23,7 +23,7 @@ def calculationbase_list(request, country_slug, regulations_id):
     return render(
         request,
         "calculationbase/index.html",
-        {"country": country, "regulations": regulations, "bases": bases, "country_slug":country_slug},
+        {"country": country, "regulations": regulations, "bases": bases, "country_slug": country_slug},
     )
 
 
@@ -39,12 +39,17 @@ def calculationbase_create(request, country_slug, regulations_id):
             cb.country = country
             cb.regulations = regulations
             cb.save()
-            return redirect("calculationbase:list", country.slug, regulations.id)
-        else:
-            # Helpful for debugging if validation fails silently
-            print(form.errors)
+            messages.success(request, "Calculation Base created successfully.")
+            return redirect(
+                "calculationbase:list",
+                country_slug=country.slug,
+                regulations_id=regulations.id,
+            )
     else:
         form = CalculationBaseForm(country=country, regulations=regulations)
+
+    # --- THE FIX: PASS THE RANGE CONTEXT ---
+    bracket_range = [f"{i:02d}" for i in range(16)] # ["00", "01", ... "15"]
 
     return render(
         request,
@@ -53,8 +58,10 @@ def calculationbase_create(request, country_slug, regulations_id):
             "form": form,
             "country": country,
             "regulations": regulations,
-            "title": "Create Calculation Base"
-        }
+            "title": "Add Calculation Base",
+            "country_slug": country_slug,
+            "bracket_range": bracket_range, # Added this line
+        },
     )
 
 
@@ -65,12 +72,7 @@ def calculationbase_edit(request, country_slug, regulations_id, pk):
     cb = get_object_or_404(CalculationBase, pk=pk, country=country, regulations=regulations)
 
     if request.method == "POST":
-        form = CalculationBaseForm(
-            request.POST,
-            instance=cb,
-            country=country,
-            regulations=regulations,
-        )
+        form = CalculationBaseForm(request.POST, instance=cb, country=country, regulations=regulations)
         if form.is_valid():
             form.save()
             messages.success(request, "Calculation Base updated successfully.")
@@ -79,10 +81,11 @@ def calculationbase_edit(request, country_slug, regulations_id, pk):
                 country_slug=country.slug,
                 regulations_id=regulations.id,
             )
-        else:
-            print(form.errors)
     else:
         form = CalculationBaseForm(instance=cb, country=country, regulations=regulations)
+
+    # --- THE FIX: PASS THE RANGE CONTEXT ---
+    bracket_range = [f"{i:02d}" for i in range(16)]
 
     return render(
         request,
@@ -93,6 +96,7 @@ def calculationbase_edit(request, country_slug, regulations_id, pk):
             "regulations": regulations,
             "title": "Edit Calculation Base",
             "country_slug": country_slug,
+            "bracket_range": bracket_range, # Added this line
         },
     )
 
@@ -115,5 +119,5 @@ def calculationbase_delete(request, country_slug, regulations_id, pk):
     return render(
         request,
         "calculationbase/delete.html",
-        {"cb": cb, "country": country, "regulations": regulations, "country_slug":country_slug},
+        {"cb": cb, "country": country, "regulations": regulations, "country_slug": country_slug},
     )

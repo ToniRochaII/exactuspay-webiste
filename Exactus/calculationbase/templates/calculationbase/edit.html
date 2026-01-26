@@ -7,32 +7,32 @@
 {% block extra_css %}
 <style>
     .calc-value {
-        padding: 0.75rem;
+        padding: 0.25rem;
         background: #f8f9fa;
-        border-radius: 6px;
+        border-radius: 4px;
         font-weight: 600;
         text-align: center;
-        min-height: 58px;
+        height: 38px;
         display: flex;
         justify-content: center;
         align-items: center;
+        font-size: 0.9rem;
+    }
+    .bracket-label {
+        font-size: 0.75rem;
+        color: #6c757d;
+        margin-bottom: 2px;
+        display: block;
     }
 </style>
 {% endblock %}
-{% block page_title %}
-<i class="bi bi-calculator me-2"></i> Calculation Bases — {{ country.name }}
-{% endblock %}
-
 
 {% block breadcrumbs %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
     <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'elements:elements' country_slug %}">
-      Elements — {{ country.name }}
-    </a></li>
-    <li class="breadcrumb-item active" aria-current="page">Add Calculation Base</li>
+    <li class="breadcrumb-item active" aria-current="page">Calculation Base</li>
   </ol>
 </nav>
 {% endblock %}
@@ -48,366 +48,101 @@
 
         <div class="card-body">
 
-            <!-- TOP: ELEMENT, ELEMENT BASE, FREQUENCY -->
             <div class="row g-3 mb-4">
                 <div class="col-md-4">
                     <div class="form-floating">
                         {{ form.element }}
-                        <label for="{{ form.element.id_for_label }}">Element</label>
+                        <label>Target Element (Result)</label>
                     </div>
                 </div>
-
                 <div class="col-md-4">
                     <div class="form-floating">
                         {{ form.element_base }}
-                        <label for="{{ form.element_base.id_for_label }}">Element Base</label>
+                        <label>Base Element (Source)</label>
                     </div>
                 </div>
-
                 <div class="col-md-4">
                     <div class="form-floating">
                         {{ form.base_frequency }}
-                        <label for="{{ form.base_frequency.id_for_label }}">Frequency</label>
+                        <label>Frequency</label>
                     </div>
                 </div>
             </div>
 
-            <!-- BRACKETS -->
-            <h6 class="fw-bold border-bottom pb-2 mb-3">Brackets</h6>
+
+            <div class="row g-2 mb-2 fw-bold text-muted small text-uppercase">
+                <div class="col-md-2">Bracket Limit</div>
+                <div class="col-md-2">Rate (%)</div>
+                <div class="col-md-3 text-center">Input Rounding (Chunk)</div>
+                <div class="col-md-3 text-center">Result Rounding (Tax)</div>
+                <div class="col-md-2 text-end">Preview</div>
+            </div>
+            <hr class="mt-0 mb-3">
 
             <div id="bracket-container">
-                <!-- Bracket 00 -->
-                <div class="row g-3 mb-3 bracket-row" id="row-00">
-                    <div class="col-md-4">
-                        <div class="form-floating">
-                            {{ form.bracket_00 }}
-                            <label>Bracket 00</label>
-                        </div>
+                {% for i in bracket_range %}
+                <div class="row g-2 mb-3 bracket-row align-items-end" id="row-{{ i }}" style="display:none;">
+                    
+                    <div class="col-md-2">
+                        <span class="bracket-label">Limit {{ i }}</span>
+                        {% with bracket_field="bracket_"|add:i rate_field="rate_"|add:i r_b_log="round_bracket_logic_"|add:i r_b_dec="round_bracket_dec_"|add:i r_r_log="round_result_logic_"|add:i r_r_dec="round_result_dec_"|add:i %}
+                            
+                            {% for field in form %}
+                                {% if field.name == bracket_field %}{{ field }}{% endif %}
+                            {% endfor %}
                     </div>
-                    <div class="col-md-3">
-                        <div class="form-floating">
-                            {{ form.rate_00 }}
-                            <label>Rate 00 (%)</label>
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="calc-value text-muted" id="calc-00">—</div>
-                    </div>
-                </div>
 
-                <!-- Bracket 01 -->
-                <div class="row g-3 mb-3 bracket-row" id="row-01" style="display:none">
-                    <div class="col-md-4">
-                        <div class="form-floating">
-                            {{ form.bracket_01 }}
-                            <label>Bracket 01</label>
-                        </div>
+                    <div class="col-md-2">
+                        <span class="bracket-label">Rate {{ i }}</span>
+                            {% for field in form %}
+                                {% if field.name == rate_field %}{{ field }}{% endif %}
+                            {% endfor %}
                     </div>
-                    <div class="col-md-3">
-                        <div class="form-floating">
-                            {{ form.rate_01 }}
-                            <label>Rate 01 (%)</label>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="calc-value " id="calc-01">—</div>
-                    </div>
-                </div>
 
-                <!-- Bracket 02 -->
-                <div class="row g-3 mb-3 bracket-row" id="row-02" style="display:none">
-                    <div class="col-md-4">
-                        <div class="form-floating">
-                            {{ form.bracket_02 }}
-                            <label>Bracket 02</label>
-                        </div>
-                    </div>
                     <div class="col-md-3">
-                        <div class="form-floating">
-                            {{ form.rate_02 }}
-                            <label>Rate 02 (%)</label>
+                        <span class="bracket-label text-center">Input Rounding</span>
+                        <div class="input-group input-group-sm">
+                            {% for field in form %}
+                                {% if field.name == r_b_log %}{{ field }}{% endif %}
+                            {% endfor %}
+                            <span class="input-group-text px-1">Dec</span>
+                            {% for field in form %}
+                                {% if field.name == r_b_dec %}{{ field }}{% endif %}
+                            {% endfor %}
                         </div>
                     </div>
-                    <div class="col-md-5">
-                        <div class="calc-value text-muted" id="calc-02">—</div>
-                    </div>
-                </div>
 
-                <!-- Bracket 03 -->
-                <div class="row g-3 mb-3 bracket-row" id="row-03" style="display:none">
-                    <div class="col-md-4">
-                        <div class="form-floating">
-                            {{ form.bracket_03 }}
-                            <label>Bracket 03</label>
-                        </div>
-                    </div>
                     <div class="col-md-3">
-                        <div class="form-floating">
-                            {{ form.rate_03 }}
-                            <label>Rate 03 (%)</label>
+                        <span class="bracket-label text-center">Result Rounding</span>
+                        <div class="input-group input-group-sm">
+                            {% for field in form %}
+                                {% if field.name == r_r_log %}{{ field }}{% endif %}
+                            {% endfor %}
+                            <span class="input-group-text px-1">Dec</span>
+                            {% for field in form %}
+                                {% if field.name == r_r_dec %}{{ field }}{% endif %}
+                            {% endfor %}
                         </div>
                     </div>
-                    <div class="col-md-5">
-                        <div class="calc-value text-muted" id="calc-03">—</div>
-                    </div>
-                </div>
+                        {% endwith %}
 
-                <!-- Bracket 04 -->
-                <div class="row g-3 mb-3 bracket-row" id="row-04" style="display:none">
-                    <div class="col-md-4">
-                        <div class="form-floating">
-                            {{ form.bracket_04 }}
-                            <label>Bracket 04</label>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-floating">
-                            {{ form.rate_04 }}
-                            <label>Rate 04 (%)</label>
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="calc-value text-muted" id="calc-04">—</div>
+                    <div class="col-md-2">
+                         <div class="calc-value text-muted" id="calc-{{ i }}">0.00</div>
                     </div>
                 </div>
-
-                <!-- Bracket 05 -->
-                <div class="row g-3 mb-3 bracket-row" id="row-05" style="display:none">
-                    <div class="col-md-4">
-                        <div class="form-floating">
-                            {{ form.bracket_05 }}
-                            <label>Bracket 05</label>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-floating">
-                            {{ form.rate_05 }}
-                            <label>Rate 05 (%)</label>
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="calc-value text-muted" id="calc-05">—</div>
-                    </div>
-                </div>
-
-                <!-- Bracket 06 -->
-                <div class="row g-3 mb-3 bracket-row" id="row-06" style="display:none">
-                    <div class="col-md-4">
-                        <div class="form-floating">
-                            {{ form.bracket_06 }}
-                            <label>Bracket 06</label>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-floating">
-                            {{ form.rate_06 }}
-                            <label>Rate 06 (%)</label>
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="calc-value text-muted" id="calc-06">—</div>
-                    </div>
-                </div>
-
-                <!-- Bracket 07 -->
-                <div class="row g-3 mb-3 bracket-row" id="row-07" style="display:none">
-                    <div class="col-md-4">
-                        <div class="form-floating">
-                            {{ form.bracket_07 }}
-                            <label>Bracket 07</label>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-floating">
-                            {{ form.rate_07 }}
-                            <label>Rate 07 (%)</label>
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="calc-value text-muted" id="calc-07">—</div>
-                    </div>
-                </div>
-
-                <!-- Bracket 08 -->
-                <div class="row g-3 mb-3 bracket-row" id="row-08" style="display:none">
-                    <div class="col-md-4">
-                        <div class="form-floating">
-                            {{ form.bracket_08 }}
-                            <label>Bracket 08</label>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-floating">
-                            {{ form.rate_08 }}
-                            <label>Rate 08 (%)</label>
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="calc-value text-muted" id="calc-08">—</div>
-                    </div>
-                </div>
-
-                <!-- Bracket 09 -->
-                <div class="row g-3 mb-3 bracket-row" id="row-09" style="display:none">
-                    <div class="col-md-4">
-                        <div class="form-floating">
-                            {{ form.bracket_09 }}
-                            <label>Bracket 09</label>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-floating">
-                            {{ form.rate_09 }}
-                            <label>Rate 09 (%)</label>
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="calc-value text-muted" id="calc-09">—</div>
-                    </div>
-                </div>
-
-                <!-- Bracket 10 -->
-                <div class="row g-3 mb-3 bracket-row" id="row-10" style="display:none">
-                    <div class="col-md-4">
-                        <div class="form-floating">
-                            {{ form.bracket_10 }}
-                            <label>Bracket 10</label>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-floating">
-                            {{ form.rate_10 }}
-                            <label>Rate 10 (%)</label>
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="calc-value text-muted" id="calc-10">—</div>
-                    </div>
-                </div>
-
-                <!-- Bracket 11 -->
-                <div class="row g-3 mb-3 bracket-row" id="row-11" style="display:none">
-                    <div class="col-md-4">
-                        <div class="form-floating">
-                            {{ form.bracket_11 }}
-                            <label>Bracket 11</label>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-floating">
-                            {{ form.rate_11 }}
-                            <label>Rate 11 (%)</label>
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="calc-value text-muted" id="calc-11">—</div>
-                    </div>
-                </div>
-
-                <!-- Bracket 12 -->
-                <div class="row g-3 mb-3 bracket-row" id="row-12" style="display:none">
-                    <div class="col-md-4">
-                        <div class="form-floating">
-                            {{ form.bracket_12 }}
-                            <label>Bracket 12</label>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-floating">
-                            {{ form.rate_12 }}
-                            <label>Rate 12 (%)</label>
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="calc-value text-muted" id="calc-12">—</div>
-                    </div>
-                </div>
-
-                <!-- Bracket 13 -->
-                <div class="row g-3 mb-3 bracket-row" id="row-13" style="display:none">
-                    <div class="col-md-4">
-                        <div class="form-floating">
-                            {{ form.bracket_13 }}
-                            <label>Bracket 13</label>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-floating">
-                            {{ form.rate_13 }}
-                            <label>Rate 13 (%)</label>
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="calc-value text-muted" id="calc-13">—</div>
-                    </div>
-                </div>
-
-                <!-- Bracket 14 -->
-                <div class="row g-3 mb-3 bracket-row" id="row-14" style="display:none">
-                    <div class="col-md-4">
-                        <div class="form-floating">
-                            {{ form.bracket_14 }}
-                            <label>Bracket 14</label>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-floating">
-                            {{ form.rate_14 }}
-                            <label>Rate 14 (%)</label>
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="calc-value text-muted" id="calc-14">—</div>
-                    </div>
-                </div>
-
-                <!-- Bracket 15 -->
-                <div class="row g-3 mb-3 bracket-row" id="row-15" style="display:none">
-                    <div class="col-md-4">
-                        <div class="form-floating">
-                            {{ form.bracket_15 }}
-                            <label>Bracket 15</label>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-floating">
-                            {{ form.rate_15 }}
-                            <label>Rate 15 (%)</label>
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="calc-value text-muted" id="calc-15">—</div>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
 
-            <!-- ADD ROW BUTTON -->
             <div class="text-center mt-3">
-                <button type="button" id="addRowBtn" class="btn btn-outline-primary">
-                    <i class="bi bi-plus-circle me-1"></i>Add a new row
+                <button type="button" id="addRowBtn" class="btn btn-outline-primary btn-sm">
+                    <i class="bi bi-plus-circle me-1"></i>Add Next Bracket
                 </button>
             </div>
         </div>
 
-        <div class="card-footer bg-white d-flex justify-content-between">
-
-            <div class="text-end pt-4">
-                <!-- SAVE BUTTON -->
-                <button class="btn btn-primary px-4" id="submit-btn" type="submit">
-                    <i class="bi bi-check-circle me-1"></i>
-                    <span id="submit-text">Save Calculation Base</span>
-                    <span id="submit-loading" class="spinner-border spinner-border-sm d-none ms-2" 
-                        role="status"></span>
-                </button>
-
-                <!-- CANCEL BUTTON -->
-                <a href="{% url 'calculationbase:list' country.slug regulations.id %}" 
-                class="btn btn-danger border me-2">
-                    <i class="bi bi-x-circle me-1"></i> Cancel
-                </a>
-
-
-            </div>
+        <div class="card-footer bg-white d-flex justify-content-end py-3">
+            <a href="{% url 'calculationbase:list' country.slug regulations.id %}" class="btn btn-outline-danger me-2">Cancel</a>
+            <button class="btn btn-primary px-4" type="submit">Save Calculation Base</button>
         </div>
     </div>
 </form>
@@ -416,112 +151,117 @@
 {% block extra_js %}
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    const allRows = [
-        {id: "00", bracket: document.getElementById("id_bracket_00"), rate: document.getElementById("id_rate_00"), calc: document.getElementById("calc-00")},
-        {id: "01", bracket: document.getElementById("id_bracket_01"), rate: document.getElementById("id_rate_01"), calc: document.getElementById("calc-01")},
-        {id: "02", bracket: document.getElementById("id_bracket_02"), rate: document.getElementById("id_rate_02"), calc: document.getElementById("calc-02")},
-        {id: "03", bracket: document.getElementById("id_bracket_03"), rate: document.getElementById("id_rate_03"), calc: document.getElementById("calc-03")},
-        {id: "04", bracket: document.getElementById("id_bracket_04"), rate: document.getElementById("id_rate_04"), calc: document.getElementById("calc-04")},
-        {id: "05", bracket: document.getElementById("id_bracket_05"), rate: document.getElementById("id_rate_05"), calc: document.getElementById("calc-05")},
-        {id: "06", bracket: document.getElementById("id_bracket_06"), rate: document.getElementById("id_rate_06"), calc: document.getElementById("calc-06")},
-        {id: "07", bracket: document.getElementById("id_bracket_07"), rate: document.getElementById("id_rate_07"), calc: document.getElementById("calc-07")},
-        {id: "08", bracket: document.getElementById("id_bracket_08"), rate: document.getElementById("id_rate_08"), calc: document.getElementById("calc-08")},
-        {id: "09", bracket: document.getElementById("id_bracket_09"), rate: document.getElementById("id_rate_09"), calc: document.getElementById("calc-09")},
-        {id: "10", bracket: document.getElementById("id_bracket_10"), rate: document.getElementById("id_rate_10"), calc: document.getElementById("calc-10")},
-        {id: "11", bracket: document.getElementById("id_bracket_11"), rate: document.getElementById("id_rate_11"), calc: document.getElementById("calc-11")},
-        {id: "12", bracket: document.getElementById("id_bracket_12"), rate: document.getElementById("id_rate_12"), calc: document.getElementById("calc-12")},
-        {id: "13", bracket: document.getElementById("id_bracket_13"), rate: document.getElementById("id_rate_13"), calc: document.getElementById("calc-13")},
-        {id: "14", bracket: document.getElementById("id_bracket_14"), rate: document.getElementById("id_rate_14"), calc: document.getElementById("calc-14")},
-        {id: "15", bracket: document.getElementById("id_bracket_15"), rate: document.getElementById("id_rate_15"), calc: document.getElementById("calc-15")},
-    ];
+    
+    // Config: Maximum brackets
+    const MAX_ROWS = 16; 
+    let visibleRows = 1;
 
-    let visibleRows = 3; // first 3 rows by default
-
-    function updateVisibility() {
-        allRows.forEach((row, index) => {
-            const rowElement = document.getElementById(`row-${row.id}`);
-            if (!rowElement) return;
-
-            if (index < visibleRows) {
-                rowElement.style.display = "flex";
-            } else {
-                rowElement.style.display = "none";
-            }
-        });
+    // Helper: Excel-style rounding
+    function excelRound(value, type, decimals) {
+        if (isNaN(value)) return 0;
+        const d = parseInt(decimals) || 0;
+        const factor = Math.pow(10, d);
+        if (type === 'Round up') {
+            return (value > 0) ? Math.ceil(value * factor) / factor : Math.floor(value * factor) / factor;
+        } else if (type === 'Round down') {
+            return (value > 0) ? Math.floor(value * factor) / factor : Math.ceil(value * factor) / factor;
+        } else if (type === 'Standard') {
+            return Math.round(value * factor) / factor;
+        }
+        return value; // 'None'
     }
 
-    function calculate(rowId) {
-        const row = allRows.find(r => r.id === rowId);
-        if (!row || !row.bracket || !row.rate || !row.calc) return;
+    // Calculation Logic
+    function calculateRow(index) {
+        const id = index.toString().padStart(2, '0');
+        
+        // Inputs
+        const bracketInput = document.getElementById(`id_bracket_${id}`);
+        const rateInput = document.getElementById(`id_rate_${id}`);
+        
+        // Rounding Configs
+        const bracketLog = document.getElementById(`id_round_bracket_logic_${id}`);
+        const bracketDec = document.getElementById(`id_round_bracket_dec_${id}`);
+        const resLog = document.getElementById(`id_round_result_logic_${id}`);
+        const resDec = document.getElementById(`id_round_result_dec_${id}`);
+        
+        const outputDiv = document.getElementById(`calc-${id}`);
 
-        const b = parseFloat(row.bracket.value) || 0;
-        const r = parseFloat(row.rate.value) || 0;
+        if (!bracketInput || !rateInput) return;
 
-        if (b === 0 && r === 0) {
-            row.calc.innerHTML = "—";
-            row.calc.className = "calc-value text-muted";
-            return;
+        let b = parseFloat(bracketInput.value) || 0;
+        const r = parseFloat(rateInput.value) || 0;
+
+        // 1. Apply Input Rounding (Simulated on the Limit itself for preview)
+        if (bracketLog && bracketDec) {
+            b = excelRound(b, bracketLog.value, bracketDec.value);
         }
 
-        const result = b * (r / 100);
-        row.calc.innerHTML = result.toFixed(2);
-        row.calc.className = "calc-value text-success";
+        // 2. Calculate
+        let result = b * (r / 100 || 0); // Handle if rate is whole number percentage
+        
+        // 3. Apply Result Rounding
+        if (resLog && resDec) {
+            result = excelRound(result, resLog.value, resDec.value);
+            // Update display decimals based on config
+            const decToShow = parseInt(resDec.value) || 2;
+            outputDiv.innerHTML = result.toFixed(decToShow);
+        } else {
+            outputDiv.innerHTML = result.toFixed(2);
+        }
+
+        if (b > 0 || r > 0) outputDiv.classList.add("text-success");
+        else outputDiv.classList.remove("text-success");
     }
 
-    // Automatically reveal rows that already have values (> 0)
-    function autoRevealRows() {
-        allRows.forEach((row, index) => {
-            const b = parseFloat(row.bracket.value) || 0;
-            const r = parseFloat(row.rate.value) || 0;
-
-            if (b > 0 || r > 0) {
-                if (visibleRows <= index) {
-                    visibleRows = index + 1;
-                }
+    // Update Visibility
+    function updateVisibility() {
+        for(let i=0; i<MAX_ROWS; i++) {
+            const id = i.toString().padStart(2, '0');
+            const row = document.getElementById(`row-${id}`);
+            if(row) {
+                row.style.display = (i < visibleRows) ? "flex" : "none";
             }
-        });
+        }
+    }
 
+    // Auto-detect existing data to show rows
+    function initRows() {
+        for(let i=0; i<MAX_ROWS; i++) {
+            const id = i.toString().padStart(2, '0');
+            const bracketInput = document.getElementById(`id_bracket_${id}`);
+            const rateInput = document.getElementById(`id_rate_${id}`);
+            if(bracketInput && rateInput) {
+                if(parseFloat(bracketInput.value) > 0 || parseFloat(rateInput.value) > 0) {
+                    if(i + 1 > visibleRows) visibleRows = i + 1;
+                }
+                // Attach Listeners
+                const allInputs = document.querySelectorAll(
+                    `#id_bracket_${id}, #id_rate_${id}, 
+                     #id_round_bracket_logic_${id}, #id_round_bracket_dec_${id},
+                     #id_round_result_logic_${id}, #id_round_result_dec_${id}`
+                );
+                allInputs.forEach(input => {
+                    input.addEventListener('input', () => calculateRow(i));
+                    input.addEventListener('change', () => calculateRow(i));
+                });
+                // Initial calc
+                calculateRow(i);
+            }
+        }
         updateVisibility();
     }
 
-    // Attach listeners so typing also reveals the row if needed
-    allRows.forEach((row, index) => {
-        if (row.bracket) {
-            row.bracket.addEventListener("input", () => {
-                calculate(row.id);
-                const b = parseFloat(row.bracket.value) || 0;
-                const r = parseFloat(row.rate.value) || 0;
-                if ((b > 0 || r > 0) && visibleRows <= index) {
-                    visibleRows = index + 1;
-                    updateVisibility();
-                }
-            });
-        }
-
-        if (row.rate) {
-            row.rate.addEventListener("input", () => {
-                calculate(row.id);
-                const b = parseFloat(row.bracket.value) || 0;
-                const r = parseFloat(row.rate.value) || 0;
-                if ((b > 0 || r > 0) && visibleRows <= index) {
-                    visibleRows = index + 1;
-                    updateVisibility();
-                }
-            });
-        }
-    });
-
+    // Add Row Button
     document.getElementById("addRowBtn").addEventListener("click", () => {
-        if (visibleRows < allRows.length) {
+        if(visibleRows < MAX_ROWS) {
             visibleRows++;
             updateVisibility();
-            calculate(allRows[visibleRows - 1].id);
         }
     });
 
-    // Initial setup
-    autoRevealRows();                // show rows with existing values
-    allRows.forEach(row => calculate(row.id)); // compute existing results
+    // Run Init
+    initRows();
 });
 </script>
 {% endblock %}

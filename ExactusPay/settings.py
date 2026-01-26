@@ -10,6 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# Defaults to True only if the variable is not set. In Render, set this to "False".
 DEBUG = os.environ.get("DEBUG", "True") == "True"
 
 # Application definition
@@ -40,7 +41,6 @@ INSTALLED_APPS = [
     'Exactus.compensation',
 ]
 
-
 ROOT_URLCONF = 'ExactusPay.urls'
 
 TEMPLATES = [
@@ -56,7 +56,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'Exactus.context_processors.sidebar_context',
+                # Duplicate removed here
                 'Exactus.context_processors.sidebar_context',
             ],
         },
@@ -65,11 +65,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ExactusPay.wsgi.application'
 
-# Database
+# ================================
+# DATABASE CONFIGURATION
+# ================================
+# If DATABASE_URL is set (Production), we use it.
+# If not (Local), we use db.sqlite3.
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
 if DATABASE_URL:
-    # Use Render / production DB
     DATABASES = {
         "default": dj_database_url.config(
             default=DATABASE_URL,
@@ -80,6 +83,8 @@ if DATABASE_URL:
     }
 else:
     # Local development uses SQLite
+    # NOTE: Ensure 'db.sqlite3' is in your .gitignore file to prevent
+    # it from being uploaded to production.
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
@@ -109,15 +114,18 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
+# ================================
+# STATIC & MEDIA FILES
+# ================================
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'Exactus', 'static'),
 ]
+
+# WhiteNoise: Optimization for serving static files in production
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# Media files
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
@@ -136,7 +144,9 @@ LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/dashboard/"
 LOGOUT_REDIRECT_URL = "/login/"
 
-# Allowed Hosts & CSRF
+# ================================
+# HOSTS & SECURITY
+# ================================
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
@@ -158,8 +168,8 @@ SESSION_COOKIE_HTTPONLY = True
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SAMESITE = 'Lax'
 
-# Production Security Settings
 if not DEBUG:
+    # Production settings
     SECURE_SSL_REDIRECT = True
     SECURE_HSTS_SECONDS = 31536000  # 1 year
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
@@ -171,7 +181,8 @@ if not DEBUG:
     USE_X_FORWARDED_HOST = True
     SESSION_COOKIE_SECURE = True
 else:
-    SESSION_COOKIE_SECURE = False  # Disable in development for easier testing
+    # Development settings
+    SESSION_COOKIE_SECURE = False
 
 # Cache Configuration
 if DEBUG:
@@ -191,21 +202,17 @@ else:
 
 
 # ================================
-# SESSION & SECURITY CONFIGURATION
+# SESSION CONFIGURATION
 # ================================
-
-# Simple session settings
 SESSION_COOKIE_AGE = 2000
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-
-# Use default session engine (no cache_db for now)
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
-# ================================
-# MIDDLEWARE (Updated Order)
-# ================================
 
+# ================================
+# MIDDLEWARE
+# ================================
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -222,11 +229,9 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-
 # File Upload Settings
 FILE_UPLOAD_HANDLERS = [
     'django.core.files.uploadhandler.TemporaryFileUploadHandler',
 ]
 
-# Progress bar session key
 PROGRESS_SESSION_KEY = 'upload_progress'
