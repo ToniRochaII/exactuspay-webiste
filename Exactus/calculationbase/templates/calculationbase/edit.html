@@ -41,6 +41,22 @@
 <form method="post" id="baseForm">
     {% csrf_token %}
 
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        <strong>Please correct the errors below:</strong>
+        <ul>
+        {% for field in form %}
+            {% for error in field.errors %}
+                <li>{{ field.label }}: {{ error }}</li>
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
     <div class="card shadow-sm border-0">
         <div class="card-header d-flex justify-content-between align-items-center py-3">
             <h5 class="mb-0"><i class="bi bi-calculator me-2"></i>{{ title }}</h5>
@@ -69,12 +85,30 @@
                 </div>
             </div>
 
+            <div class="row g-3 mb-4">
+                 <div class="col-md-6">
+                    <label class="form-label small fw-bold text-muted">Base Rounding (Global)</label>
+                    <div class="input-group">
+                        {{ form.rounding_base }}
+                        <span class="input-group-text">Dec</span>
+                        {{ form.rounding_base_decimals }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label small fw-bold text-muted">Taxed Rounding (Global)</label>
+                    <div class="input-group">
+                        {{ form.rounding_taxed }}
+                        <span class="input-group-text">Dec</span>
+                        {{ form.rounding_taxed_decimals }}
+                    </div>
+                </div>
+            </div>
 
             <div class="row g-2 mb-2 fw-bold text-muted small text-uppercase">
                 <div class="col-md-2">Bracket Limit</div>
                 <div class="col-md-2">Rate (%)</div>
-                <div class="col-md-3 text-center">Input Rounding (Chunk)</div>
-                <div class="col-md-3 text-center">Result Rounding (Tax)</div>
+                <div class="col-md-3 text-center">Brackets roundings</div>
+                <div class="col-md-3 text-center">Tax roundings</div>
                 <div class="col-md-2 text-end">Preview</div>
             </div>
             <hr class="mt-0 mb-3">
