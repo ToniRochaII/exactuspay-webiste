@@ -62,6 +62,7 @@ Companies — {{ country.name }}
                style="width:100%">
           <thead class="table-light">
             <tr>
+              <th>ID</th>
               <th>Number</th>
               <th>Code</th>
               <th>Trade Name</th>
@@ -75,6 +76,7 @@ Companies — {{ country.name }}
           <tbody>
             {% for company in companies %}
               <tr>
+                <td>{{ company.company_id}}</td>
                 <td>{{ company.company_number }}</td>
                 <td><strong>{{ company.company_code }}</strong></td>
                 <td>
