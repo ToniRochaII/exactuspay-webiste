@@ -17,9 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from Exactus.accounts.views import tab_close_detection
+from django.views.generic import RedirectView
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+
+    path('', RedirectView.as_view(url='/dashboard/', permanent=False), name='home-redirect'),
+    path('admin/management/executive/panel/', admin.site.urls),
 
     path('',include('Exactus.accounts.urls')),
     path('',include('Exactus.country.urls')),
