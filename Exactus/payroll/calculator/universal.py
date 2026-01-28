@@ -36,6 +36,9 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
         
         # Override Container
         self.explicit_overrides = set()
+        
+        # Active NI Code Default
+        self.active_ni_code = "7001" 
 
         self.country_slug = ""
         if self.period and self.period.payroll and self.period.payroll.country:
@@ -48,8 +51,8 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
     def calculate(self):
         self.results_dict = {} 
         self.breakdown = []
-        # Reset overrides at start
         self.explicit_overrides = set() 
+        self.active_ni_code = "7001"
         
         # 2. Aggregation
         self._aggregate_compensations()
@@ -57,16 +60,15 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
         # 3. Collect UI info
         self._collect_pd_codes()
         
-        # 4. Country Nuances (Runs calculator.py logic - Calculates 0T here)
+        # 4. Country Nuances
         self._apply_country_nuances()
 
-        # 5. Standard Calculation Rules (Runs DB Engine)
+        # 5. Standard Calculation Rules
         if self.period and self.period.payroll and CALCULATION_BASE_AVAILABLE:
             self._apply_calculation_rules()
         
         # --- CONSOLIDATION STEP ---
-        # Sums 6001-6998 into 6000 (Reporting Only)
-        self._consolidate_tax_codes()
+        self._consolidate_reporting_codes()
         # --------------------------
         
         # 6. Final Net Pay Calculation
@@ -78,28 +80,36 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
         gross_val = self.results_dict.get('5000', Decimal('0.00'))
         
         total_deductions = Decimal('0.00')
-        for code, val in self.results_dict.items():
+        
+        # Iterate over a list copy to be safe
+        for code, val in list(self.results_dict.items()):
             try:
-                # Skip duplicate deductions logic
+                # 1. Skip if value is effectively zero
+                if not val: continue
+                
+                # 2. Skip duplicates
                 if code in self.salary_sacrifice_codes: continue
                 if code in self.deduction_codes:
                     total_deductions += abs(val)
                     continue
                 
-                # --- NET PAY PROTECTION ---
-                # Code 6000 is just a "Total" reporting line. 
-                # We skip it here because we are already deducting the individual 
-                # lines (6001, 6100, etc.) below.
-                if code == "6000": 
+                # 3. NET PAY PROTECTION
+                # A. Skip Reporting Totals (6000, 7000, 9000)
+                if code in ["6000", "7000", "9000"]: 
                     continue
-                # --------------------------
-
+                
+                # B. [REMOVED] Skip Employer NI (7010) logic deleted.
+                # Code 7010 IS NOW DEDUCTED.
+                
                 code_int = int(code)
                 is_input_deduction = (2000 <= code_int <= 2999)
-                is_calc_deduction = (6001 <= code_int <= 7999)
+                is_tax_calc = (6001 <= code_int <= 6999)
+                is_ni_calc  = (7001 <= code_int <= 7999)
+                is_oth_calc = (9001 <= code_int <= 9999)
 
-                if is_input_deduction or is_calc_deduction:
+                if is_input_deduction or is_tax_calc or is_ni_calc or is_oth_calc:
                     total_deductions += abs(val)
+
             except (ValueError, TypeError):
                 continue
             
@@ -115,115 +125,59 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
 
         return self._build_return(net_pay)
 
-    def _consolidate_tax_codes(self):
+    def _consolidate_reporting_codes(self):
         """
-        Scans tax values (6001-6998).
-        Sums them into 6000 for reporting purposes.
-        Does NOT remove the individual lines from results_dict.
+        Scans values for Tax/NI/Other and sums them into 6000/7000/9000.
         """
         total_tax = Decimal("0.00")
+        total_ni = Decimal("0.00")
+        total_other = Decimal("0.00")
         
-        # 1. Sum up values
-        for code, val in self.results_dict.items():
+        for code, val in list(self.results_dict.items()):
             try:
                 code_int = int(code)
-                # Check range 6001 to 6998
-                if 6001 <= code_int <= 6998:
-                    if val != 0:
-                        total_tax += val/2
+                if not val: continue
+
+                # Tax Range (Exclude 6000)
+                if 6001 <= code_int <= 6999:
+                    total_tax += val/2
+                
+                # NI Range (Exclude 7000)
+                elif 7001 <= code_int <= 7999:
+                    # [STRICT] Code 7010 is INCLUDED here.
+                    total_ni += val/2
+                    
+                # Other Range (Exclude 9000)
+                elif 9001 <= code_int <= 9999:
+                    total_other += val/2
+
             except (ValueError, TypeError):
                 continue
 
-        # 2. Store the Total in 6000 (Reporting Only)
-        if total_tax != 0:
-            self.results_dict["6000"] = total_tax
+        # --- FIX: FORCE INITIALIZATION ---
+        # Ensure these keys exist in the dict, so _register_total picks them up even if 0.00
+        for key in ["6000", "7000", "9000"]:
+            if key not in self.results_dict:
+                self.results_dict[key] = Decimal("0.00")
+
+        # Register Totals
+        self._register_total("6000", "PAYE Income Tax Total", total_tax)
+        self._register_total("7000", "National Insurance Total", total_ni)
+        self._register_total("9000", "Other Deductions Total", total_other)
+
+    def _register_total(self, code, name, amount):
+        if amount != 0 or code in self.results_dict:
+            self.results_dict[code] = amount
             
-            # Update or Add the 6000 Total line in Breakdown
             found_total = False
             for b in self.breakdown:
-                if str(b.get('code')) == "6000":
-                    b['amount'] = total_tax
+                if str(b.get('code')) == code:
+                    b['amount'] = amount
                     found_total = True
                     break
             
-            if not found_total:
-                self.register("PAYE Income Tax Total", total_tax, "6000")
-
-    def _aggregate_compensations(self):
-        comps = self._get_compensation_list()
-        if not comps: return
-
-        active_comps = comps.filter(is_active=True, processed=False)
-        if self.period:
-            active_comps = active_comps.filter(start_date__lte=self.period.end_date).select_related('pd_code')
-            if getattr(self.period, 'is_additional', False):
-                active_comps = active_comps.filter(Q(category='VARIABLE') | Q(frequency='one_time'))
-
-        for comp in active_comps:
-            if self.period:
-                if comp.start_date > self.period.end_date: continue 
-                is_ended_in_past = comp.end_date and comp.end_date < self.period.start_date
-                if is_ended_in_past:
-                    if comp.category == 'PERMANENT': continue 
-                    else: amt = comp.amount
-                else: amt = comp.get_period_amount(self.period.start_date, self.period.end_date)
-            else: amt = comp.amount
-            
-            amt = Decimal(str(amt))
-            pd = getattr(comp, 'pdcode', getattr(comp, 'pd_code', None))
-            
-            if pd and pd.pdcode_code:
-                code = pd.pdcode_code
-                cat = getattr(pd, 'category', getattr(pd, 'pdcode_category', ''))
-                is_deduction = str(cat).upper() == 'DEDUCTION'
-
-                if is_deduction:
-                    self.results_dict[code] = self.results_dict.get(code, Decimal('0.00')) + amt
-                    self.deduction_codes.add(code)
-                else:
-                    self.results_dict[code] = self.results_dict.get(code, Decimal('0.00')) + amt
-
-                try:
-                    int(code)
-                    p_base = f"8{code}"
-                    y_base = f"9{code}"
-                    self.results_dict[p_base] = self.results_dict.get(p_base, Decimal('0.00')) + amt
-                    self.results_dict[y_base] = self.results_dict.get(y_base, Decimal('0.00')) + amt
-                except ValueError: pass 
-
-                explicit_bases_found = set()
-                if hasattr(pd, 'applicable_bases'):
-                    for base in pd.applicable_bases.all():
-                        b_code = base.element_code
-                        explicit_bases_found.add(b_code)
-                        if is_deduction:
-                            self.results_dict[b_code] = self.results_dict.get(b_code, Decimal('0.00')) - amt
-                            if b_code == '85000': self.salary_sacrifice_codes.add(code)
-                        else:
-                            self.results_dict[b_code] = self.results_dict.get(b_code, Decimal('0.00')) + amt
-
-                if getattr(pd, 'pdcode_payable', False) and not is_deduction:
-                    if '85000' not in explicit_bases_found:
-                        self.results_dict['85000'] = self.results_dict.get('85000', Decimal('0.00')) + amt
-                        self.results_dict['95000'] = self.results_dict.get('95000', Decimal('0.00')) + amt
-                
-                if getattr(pd, 'pdcode_taxable', False):
-                    if '86001' not in explicit_bases_found:
-                        if is_deduction:
-                            self.results_dict['86001'] = self.results_dict.get('86001', Decimal('0.00')) - amt
-                            self.results_dict['96001'] = self.results_dict.get('96001', Decimal('0.00')) - amt
-                        else:
-                            self.results_dict['86001'] = self.results_dict.get('86001', Decimal('0.00')) + amt
-                            self.results_dict['96001'] = self.results_dict.get('96001', Decimal('0.00')) + amt
-
-                if getattr(pd, 'pdcode_social_securitable', False):
-                    if '87000' not in explicit_bases_found:
-                        if is_deduction:
-                            self.results_dict['87000'] = self.results_dict.get('87000', Decimal('0.00')) - amt
-                            self.results_dict['97000'] = self.results_dict.get('97000', Decimal('0.00')) - amt
-                        else:
-                            self.results_dict['87000'] = self.results_dict.get('87000', Decimal('0.00')) + amt
-                            self.results_dict['97000'] = self.results_dict.get('97000', Decimal('0.00')) + amt
+            if not found_total and amount != 0:
+                self.register(name, amount, code)
 
     def _apply_calculation_rules(self):
         regulation = self.period.payroll.regulation
@@ -233,7 +187,6 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
             base_frequency=period_freq
         ).select_related('element', 'element_base')
         
-        # --- STRICT LOCK LOGIC (Prevents Double Calculation) ---
         blocked_codes = {str(x).strip() for x in self.explicit_overrides}
 
         for rule in rules:
@@ -242,33 +195,47 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
                 
                 target_code = str(rule.element.element_code).strip()
                 
-                # 1. PRIMARY LOCK: Check if this code is in the block list
-                if target_code in blocked_codes:
+                # --- REDIRECT LOGIC ---
+                effective_code = target_code
+                if target_code == "6000": effective_code = "6001"
+                elif target_code == "7000": effective_code = self.active_ni_code
+                elif target_code == "9000": effective_code = "9001"
+
+                # 1. LOCK CHECK
+                if effective_code in blocked_codes:
                     continue
 
-                # 2. FAIL-SAFE LOCK: Check if Tax is ALREADY calculated (e.g. by 0T manual logic)
-                # If '6001' is already populated with a non-zero value, DO NOT run the DB rule.
-                if target_code == "6001" and self.results_dict.get("6001", Decimal("0.00")) != 0:
-                     continue
+                # 2. FAIL-SAFE
+                current_val = self.results_dict.get(effective_code, Decimal("0.00"))
+                if current_val != 0:
+                    continue
 
                 base_val = Decimal('0.00')
                 if rule.element_base:
                     base_code = rule.element_base.element_code
                     base_val = self.results_dict.get(base_code, Decimal('0.00'))
-                
+                else:
+                    # --- CONVENTION: Automatic Base Lookup for 9000 Series ---
+                    # If no explicit base is defined for 9001-9999, look for 89001-89999
+                    try:
+                        tgt_int = int(target_code)
+                        if 9001 <= tgt_int <= 9999:
+                            auto_base = f"8{target_code}"
+                            base_val = self.results_dict.get(auto_base, Decimal('0.00'))
+                    except (ValueError, TypeError):
+                        pass
+
                 if base_val > 0:
                     calc_val = TaxEngine.calculate_progressive_tax(base_val, rule)
-                    target = rule.element
+                    
                     if calc_val > 0:
                         try:
-                            code_int = int(target.element_code)
-                            if code_int == 5000 or code_int >= 9000: result_amt = calc_val 
-                            else: result_amt = -calc_val 
-                            self.register(target.element_name, result_amt, target.element_code)
+                            result_amt = -calc_val 
+                            self.register(rule.element.element_name, result_amt, effective_code)
                         except (ValueError, TypeError): pass
             except Exception as e:
                 logger.error(f"Error calculating rule {rule}: {e}")
-
+                
     def _apply_country_nuances(self):
         if not self.country_slug: return
         module_path = f"Exactus.payroll.calculator.countries.{self.country_slug}.calculator"
@@ -315,6 +282,76 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
                             'description': getattr(pd, 'pdcode_description', ''),
                             'amount': amount_to_show
                         })
+
+    def _aggregate_compensations(self):
+        comps = self._get_compensation_list()
+        if not comps: return
+        active_comps = comps.filter(is_active=True, processed=False)
+        if self.period:
+            active_comps = active_comps.filter(start_date__lte=self.period.end_date).select_related('pd_code')
+            if getattr(self.period, 'is_additional', False):
+                active_comps = active_comps.filter(Q(category='VARIABLE') | Q(frequency='one_time'))
+        for comp in active_comps:
+            if self.period:
+                if comp.start_date > self.period.end_date: continue 
+                is_ended_in_past = comp.end_date and comp.end_date < self.period.start_date
+                if is_ended_in_past:
+                    if comp.category == 'PERMANENT': continue 
+                    else: amt = comp.amount
+                else: amt = comp.get_period_amount(self.period.start_date, self.period.end_date)
+            else: amt = comp.amount
+            amt = Decimal(str(amt))
+            pd = getattr(comp, 'pdcode', getattr(comp, 'pd_code', None))
+            if pd and pd.pdcode_code:
+                code = pd.pdcode_code
+                cat = getattr(pd, 'category', getattr(pd, 'pdcode_category', ''))
+                is_deduction = str(cat).upper() == 'DEDUCTION'
+                if is_deduction:
+                    self.results_dict[code] = self.results_dict.get(code, Decimal('0.00')) + amt
+                    self.deduction_codes.add(code)
+                else:
+                    self.results_dict[code] = self.results_dict.get(code, Decimal('0.00')) + amt
+                try:
+                    int(code)
+                    p_base = f"8{code}"
+                    y_base = f"9{code}"
+                    self.results_dict[p_base] = self.results_dict.get(p_base, Decimal('0.00')) + amt
+                    self.results_dict[y_base] = self.results_dict.get(y_base, Decimal('0.00')) + amt
+                except ValueError: pass 
+                explicit_bases_found = set()
+                if hasattr(pd, 'applicable_bases'):
+                    for base in pd.applicable_bases.all():
+                        b_code = base.element_code
+                        explicit_bases_found.add(b_code)
+                        if is_deduction:
+                            self.results_dict[b_code] = self.results_dict.get(b_code, Decimal('0.00')) - amt
+                            if b_code == '85000': self.salary_sacrifice_codes.add(code)
+                        else:
+                            self.results_dict[b_code] = self.results_dict.get(b_code, Decimal('0.00')) + amt
+                if getattr(pd, 'pdcode_payable', False) and not is_deduction:
+                    if '85000' not in explicit_bases_found:
+                        self.results_dict['85000'] = self.results_dict.get('85000', Decimal('0.00')) + amt
+                        self.results_dict['95000'] = self.results_dict.get('95000', Decimal('0.00')) + amt
+                
+                if getattr(pd, 'pdcode_taxable', False):
+                    for base in ['86000', '86001']:
+                        if base not in explicit_bases_found:
+                            if is_deduction:
+                                self.results_dict[base] = self.results_dict.get(base, Decimal('0.00')) - amt
+                                self.results_dict[f'9{base[1:]}'] = self.results_dict.get(f'9{base[1:]}', Decimal('0.00')) - amt
+                            else:
+                                self.results_dict[base] = self.results_dict.get(base, Decimal('0.00')) + amt
+                                self.results_dict[f'9{base[1:]}'] = self.results_dict.get(f'9{base[1:]}', Decimal('0.00')) + amt
+
+                if getattr(pd, 'pdcode_social_securitable', False):
+                    for base in ['87000', '87001']:
+                        if base not in explicit_bases_found:
+                            if is_deduction:
+                                self.results_dict[base] = self.results_dict.get(base, Decimal('0.00')) - amt
+                                self.results_dict[f'9{base[1:]}'] = self.results_dict.get(f'9{base[1:]}', Decimal('0.00')) - amt
+                            else:
+                                self.results_dict[base] = self.results_dict.get(base, Decimal('0.00')) + amt
+                                self.results_dict[f'9{base[1:]}'] = self.results_dict.get(f'9{base[1:]}', Decimal('0.00')) + amt
 
     def _build_return(self, net_pay):
         return {

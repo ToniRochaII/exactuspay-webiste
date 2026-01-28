@@ -312,9 +312,14 @@ class PayrollPeriodDetailView(LoginRequiredMixin, DetailView):
         for pd in pd_codes:
             header_map[pd.pdcode_code] = pd.pdcode_name
 
-        # C. Force Standard Headers
-        header_map['5000'] = 'Gross Pay'
-        header_map['8000'] = 'Net Salary'
+        # C. FORCE STANDARD HEADERS (FIXED: Added all standard codes)
+        header_map.update({
+            '5000': 'Gross Pay',
+            '6000': 'Income Tax',
+            '7000': 'National Insurance',       
+            '8000': 'Net Salary',
+            '9000': 'Employer Contributions'
+        })
 
         # 2. GATHER DATA & FILTER COLUMNS
         report_rows = []
@@ -339,6 +344,7 @@ class PayrollPeriodDetailView(LoginRequiredMixin, DetailView):
                 # History Mode (Locked/Processed Data)
                 details = self._parse_details(obj.details)
                 for k, v in details.items():
+                    # Handle legacy key names just in case
                     if k == 'Gross Pay': k = '5000'
                     if k == 'Net Salary': k = '8000'
                     row_data[k] = self._safe_float(v)
@@ -363,6 +369,7 @@ class PayrollPeriodDetailView(LoginRequiredMixin, DetailView):
 
             # FILTER: Show column if ANYONE has value > 0
             for k, v in row_data.items():
+                # We check if it exists in our header_map OR is a standard key
                 if k in header_map and abs(v) > 0:
                     active_codes.add(k)
 
@@ -392,7 +399,6 @@ class PayrollPeriodDetailView(LoginRequiredMixin, DetailView):
                 
                 # Visual Logic:
                 # Deductions (6000-7999) -> Show absolute (Positive in UI)
-                # Employer Costs (9000+) -> Already positive, stay positive
                 try:
                     code_int = int(h['code'])
                     if 6000 <= code_int <= 7999: 
@@ -426,7 +432,7 @@ class PayrollPeriodDetailView(LoginRequiredMixin, DetailView):
 
         context.update({
             'headers': final_headers,
-            'rows': table_rows, # This should now work!
+            'rows': table_rows,
             'totals': grand_totals,
             'company_id': company_id,
             'country_slug': self.kwargs['country_slug'],
@@ -822,7 +828,7 @@ class PayrollPeriodExportView(View):
         period = get_object_or_404(PayrollPeriod, pk=period_id)
         results = PayrollResult.objects.filter(period=period).select_related('employee')
         
-        # 1. BUILD HEADER MAP
+        # 1. BUILD HEADER MAP (FIXED: Added all standard codes)
         header_map = {}
         
         if Element:
@@ -837,8 +843,13 @@ class PayrollPeriodExportView(View):
         for pd in pd_codes:
             header_map[pd.pdcode_code] = pd.pdcode_name
 
-        header_map['5000'] = 'Gross Pay'
-        header_map['8000'] = 'Net Salary'
+        header_map.update({
+            '5000': 'Gross Pay',
+            '6000': 'Total Tax',
+            '7000': 'Total NI',       
+            '8000': 'Net Salary',
+            '9000': 'Employer Contributions'
+        })
 
         # 2. GATHER DATA & IDENTIFY ACTIVE COLUMNS
         rows_data = []
@@ -855,6 +866,7 @@ class PayrollPeriodExportView(View):
             for k, v in details.items():
                 try:
                     val = float(v)
+                    # Check against header map to allow dynamic codes + standard ones
                     if abs(val) > 0 and (k in header_map or k in ['5000', '8000']):
                         active_codes.add(k)
                 except: pass
@@ -876,17 +888,15 @@ class PayrollPeriodExportView(View):
         response['Content-Disposition'] = f'attachment; filename="Report_{period.name}.csv"'
         writer = csv.writer(response)
         
-        # --- NEW: File Header ---
+        # File Header
         writer.writerow([f"Gross to Net Report: {period.name}"])
-        writer.writerow([]) # Empty row for spacing
-        # ------------------------
+        writer.writerow([]) 
 
         # Table Headers Row 1: Human Readable Names
         csv_headers = ['Employee ID', 'Employee Name'] + [header_map.get(c, c) for c in sorted_codes]
         writer.writerow(csv_headers)
 
         # Table Headers Row 2: Raw Codes (pdcodes)
-        # We add two empty strings at the start to skip "Employee ID" and "Employee Name" columns
         csv_codes = ['', ''] + [str(c) for c in sorted_codes]
         writer.writerow(csv_codes)
         
@@ -920,15 +930,12 @@ class PayrollPeriodExportView(View):
                 
             writer.writerow(row)
 
-        # --- NEW: Totals Row ---
-        
+        # Totals Row
         totals_row = ['', 'TOTALS']
         for code in sorted_codes:
-            # Format total to 2 decimal places
             totals_row.append(f"{col_totals[code]:.2f}")
             
         writer.writerow(totals_row)
-        # -----------------------
             
         return response
 
@@ -943,7 +950,6 @@ def payroll_reset_confirm(request, country_slug, company_id, payroll_id):
     if request.method == "POST":
         try:
             with transaction.atomic():
-                # Removed status update for Payroll
                 PayrollPeriod.objects.filter(payroll=payroll).update(
                     status=PeriodStatus.PENDING, total_gross=0, total_net=0, total_tax=0, total_amount=0
                 )
@@ -964,7 +970,6 @@ def reset_payroll(request, country_slug, company_id, payroll_id):
     payroll = get_object_or_404(Payroll, pk=payroll_id, company_id=company_id)
     try:
         with transaction.atomic():
-            # Removed status update for Payroll
             PayrollPeriod.objects.filter(payroll=payroll).update(
                 status=PeriodStatus.PENDING, total_gross=0, total_net=0, total_tax=0
             )
@@ -1000,7 +1005,6 @@ def payroll_period_reset_confirm(request, country_slug, company_id, payroll_id, 
                 )
 
                 # 3. Reset Period to PENDING
-                # We use the generic reset logic here
                 period.status = PeriodStatus.PENDING
                 period.total_gross = 0
                 period.total_net = 0

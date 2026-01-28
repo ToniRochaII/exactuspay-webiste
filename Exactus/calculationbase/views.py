@@ -46,10 +46,26 @@ def calculationbase_create(request, country_slug, regulations_id):
                 regulations_id=regulations.id,
             )
     else:
-        form = CalculationBaseForm(country=country, regulations=regulations)
+        # --- FIX START: Set Default to 'Round down' ---
+        initial_data = {
+            'rounding_base': 'Round down',
+            'rounding_taxed': 'Round down',
+        }
+        
+        # Pre-fill defaults for all 16 bracket slots so they are ready when revealed by JS
+        for i in range(16):
+            suffix = f"{i:02d}"
+            initial_data[f'round_bracket_logic_{suffix}'] = 'Round down'
+            initial_data[f'round_result_logic_{suffix}'] = 'Round down'
 
-    # --- THE FIX: PASS THE RANGE CONTEXT ---
-    bracket_range = [f"{i:02d}" for i in range(16)] # ["00", "01", ... "15"]
+        form = CalculationBaseForm(
+            country=country, 
+            regulations=regulations, 
+            initial=initial_data
+        )
+        # --- FIX END ---
+
+    bracket_range = [f"{i:02d}" for i in range(16)]
 
     return render(
         request,
@@ -60,7 +76,7 @@ def calculationbase_create(request, country_slug, regulations_id):
             "regulations": regulations,
             "title": "Add Calculation Base",
             "country_slug": country_slug,
-            "bracket_range": bracket_range, # Added this line
+            "bracket_range": bracket_range,
         },
     )
 
@@ -84,19 +100,18 @@ def calculationbase_edit(request, country_slug, regulations_id, pk):
     else:
         form = CalculationBaseForm(instance=cb, country=country, regulations=regulations)
 
-    # --- THE FIX: PASS THE RANGE CONTEXT ---
     bracket_range = [f"{i:02d}" for i in range(16)]
 
     return render(
         request,
-        "calculationbase/edit.html",
+        "calculationbase/form.html",
         {
             "form": form,
             "country": country,
             "regulations": regulations,
             "title": "Edit Calculation Base",
             "country_slug": country_slug,
-            "bracket_range": bracket_range, # Added this line
+            "bracket_range": bracket_range,
         },
     )
 
