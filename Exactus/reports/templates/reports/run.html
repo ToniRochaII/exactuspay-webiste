@@ -4,7 +4,7 @@
 {% block content %}
 <div class="container-fluid py-4">
     
-    <a href="{% url 'reports:list' company.id %}" class="text-decoration-none mb-3 d-inline-block">
+    <a href="{% url 'reports:list' country_slug company.company_id %}" class="text-decoration-none mb-3 d-inline-block">
         <i class="fas fa-arrow-left"></i> Back to Reports
     </a>
 

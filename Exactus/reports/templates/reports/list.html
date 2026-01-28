@@ -36,7 +36,7 @@
                                 </td>
                                 <td>{{ report.description|default:"-" }}</td>
                                 <td>
-                                    <a href="{% url 'reports:run' company.id report.id %}" class="btn btn-sm btn-success w-100">
+                                    <a href="{% url 'reports:run' country.slug company.company_id report.id %}" class="btn btn-sm btn-success w-100">
                                         <i class="fas fa-play me-1"></i> Run Report
                                     </a>
                                 </td>
