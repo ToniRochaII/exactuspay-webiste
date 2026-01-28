@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Custom Reports{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-0 text-gray-800">Custom Reports</h1>
+            <p class="text-muted">Available reports for {{ company.trade_name }}</p>
+        </div>
+        </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Report Definitions</h6>
+        </div>
+        <div class="card-body">
+            {% if reports %}
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover" width="100%" cellspacing="0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Report Name</th>
+                                <th>Source</th>
+                                <th>Description</th>
+                                <th style="width: 150px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for report in reports %}
+                            <tr>
+                                <td class="fw-bold">{{ report.name }}</td>
+                                <td>
+                                    <span class="badge bg-info text-dark">{{ report.get_source_model_display }}</span>
+                                </td>
+                                <td>{{ report.description|default:"-" }}</td>
+                                <td>
+                                    <a href="{% url 'reports:run' company.id report.id %}" class="btn btn-sm btn-success w-100">
+                                        <i class="fas fa-play me-1"></i> Run Report
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5 text-muted">
+                    <i class="fas fa-file-alt fa-3x mb-3"></i>
+                    <p>No custom reports defined for this company yet.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

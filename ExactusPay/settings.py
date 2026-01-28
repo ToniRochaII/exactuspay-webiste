@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'Exactus.pdcodes',
     'Exactus.payroll',
     'Exactus.compensation',
+    'Exactus.reports',
 ]
 
 ROOT_URLCONF = 'ExactusPay.urls'

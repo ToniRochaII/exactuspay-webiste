@@ -66,7 +66,7 @@
     {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <div class="splash active"><div class="splash-icon"></div></div>
+    <div class="splash "><div class="splash-icon"></div></div>
 
     <div class="wrapper">
         <nav id="sidebar" class="sidebar">
@@ -162,9 +162,6 @@
                            class="sidebar-link collapsed"
                            href="#">
                             <i class="align-middle me-2 fas fa-building"></i>Companies
-                            <span class="sidebar-badge badge bg-success">
-                                {{ country_slug|default_if_none:"" }}
-                            </span>
                         </a>
                         <ul id="nav-payroll-companies"
                             class="sidebar-dropdown list-unstyled collapse"
@@ -210,9 +207,6 @@
                            class="sidebar-link collapsed"
                            href="#">
                             <i class="align-middle me-2 fas fa-users"></i>Employees
-                            <span class="sidebar-badge badge bg-primary">
-                                {{ company.trade_name|default:"" }}
-                            </span>
                         </a>
                         <ul id="nav-payroll-employees"
                             class="sidebar-dropdown list-unstyled collapse"
@@ -258,9 +252,6 @@
                            class="sidebar-link collapsed"
                            href="#">
                             <i class="align-middle me-2 fas fa-code"></i>PD Codes
-                            <span class="sidebar-badge badge bg-info">
-                                {{ company.trade_name|default:"" }}
-                            </span>
                         </a>
                         <ul id="nav-payroll-pdcodes"
                             class="sidebar-dropdown list-unstyled collapse"
@@ -443,6 +434,37 @@
                     </li>
                     {% endif %}
 
+                    {# Reports (needs company) #}
+                    {% if country_slug and company and company.company_id %}
+                    <li class="sidebar-item">
+                        <a data-bs-target="#nav-reports"
+                           data-bs-toggle="collapse"
+                           class="sidebar-link collapsed"
+                           href="#">
+                            <i class="align-middle me-2 fas fa-chart-line"></i>Reports
+                        </a>
+                        <ul id="nav-reports"
+                            class="sidebar-dropdown list-unstyled collapse"
+                            data-bs-parent="#sidebar">
+                            <li class="sidebar-item">
+                                <a class="sidebar-link"
+                                   href="{% url 'reports:list' country_slug company.company_id %}">
+                                    <i class="fas fa-list-alt me-2"></i>All Reports
+                                </a>
+                            </li>
+                            {# Only show 'Run' if we are currently looking at a specific report context #}
+                            {% if report_id %}
+                            <li class="sidebar-item">
+                                <a class="sidebar-link"
+                                   href="{% url 'reports:run' country_slug company.company_id report_id %}">
+                                    <i class="fas fa-play me-2"></i>Run Current Report
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </li>
+                    {% endif %}
+
                     {% endif %} {# /Payroll Operations roles #}
 
                     {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
@@ -457,9 +479,7 @@
                            href="#">
                             <i class="align-middle me-2 fas fa-globe"></i>Country Setup
                             {% if country or country_slug %}
-                                <span class="sidebar-badge badge bg-secondary">
-                                    {{ country.name|default:country_slug }}
-                                </span>
+
                             {% endif %}
                         </a>
                         <ul id="nav-config-country"
@@ -497,7 +517,7 @@
                                    href="{% if country %}{% url 'country:country_edit' country.slug %}
                                       {% else %}{% url 'country:country_edit' country_slug %}{% endif %}">
                                     <i class="fas fa-edit me-2"></i>
-                                    Edit {{ country.name|default:"Country" }}
+                                    Edit .name|default:"Country" }}
                                 </a>
                             </li>
                                 {% endif %}
@@ -610,7 +630,7 @@
 
                     {% endif %} {# /System Configuration roles #}
 
-                    {% endif %} {# /user.is_authenticated #}
+                    {% endif %} {# /user.is_authenticated - THIS WAS THE FIX #}
                 </ul>
             </div>
         </nav>
@@ -637,7 +657,7 @@
                                 
                                 {% if user.user_type == 'BUSINESS' %}
                                 <li>
-                                    <a class="dropdown-item {% if not active_company_id %}active{% endif %}" href="{% url 'switch_context' 'GLOBAL' %}">
+                                    <a class="dropdown-item {% if not active_company_id %}{% endif %}" href="{% url 'switch_context' 'GLOBAL' %}">
                                         <i class="fas fa-globe me-2"></i>Global View
                                     </a>
                                 </li>
@@ -647,7 +667,7 @@
                                 {% for ctx in user.contexts.all %}
                                     {% if ctx.company %}
                                     <li>
-                                        <a class="dropdown-item {% if active_company_id == ctx.company.id|stringformat:'s' %}active{% endif %}" 
+                                        <a class="dropdown-item {% if active_company_id == ctx.company.id|stringformat:'s' %}{% endif %}" 
                                            href="{% url 'switch_context' ctx.company.id %}">
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <span><i class="fas fa-building me-2 text-muted"></i>{{ ctx.company.trade_name }}</span>
@@ -713,7 +733,7 @@
                                 {% block page_subtitle %}
                                 {% if country %}
                                     <small class="text-muted">
-                                        {{ country.name }}
+                                        .name }}
                                     </small>
                                 {% endif %}
                                 {% endblock %}
@@ -819,7 +839,7 @@
             sidebarLinks.forEach(function(link) {
                 var linkPath = link.getAttribute('href');
                 if (linkPath && currentPath.includes(linkPath.split('?')[0])) {
-                    link.classList.add('active');
+                    link.classList.add('');
                     
                     // Expand parent dropdown if collapsed
                     var parentDropdown = link.closest('.sidebar-dropdown');
