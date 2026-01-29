@@ -9,7 +9,7 @@
             <h1 class="h3 mb-0 text-gray-800">Custom Reports</h1>
             <p class="text-muted">Available reports for {{ company.trade_name }}</p>
         </div>
-        </div>
+    </div>
 
     <div class="card shadow mb-4">
         <div class="card-header py-3">
@@ -30,7 +30,12 @@
                         <tbody>
                             {% for report in reports %}
                             <tr>
-                                <td class="fw-bold">{{ report.name }}</td>
+                                <td>
+                                    <span class="fw-bold">{{ report.name }}</span>
+                                    {% if report.country %}
+                                        <span class="badge bg-secondary ms-2" style="font-size: 0.7em;">Global ({{ country.name }})</span>
+                                    {% endif %}
+                                </td>
                                 <td>
                                     <span class="badge bg-info text-dark">{{ report.get_source_model_display }}</span>
                                 </td>

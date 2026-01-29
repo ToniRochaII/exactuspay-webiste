@@ -353,10 +353,17 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
                                 self.results_dict[base] = self.results_dict.get(base, Decimal('0.00')) + amt
                                 self.results_dict[f'9{base[1:]}'] = self.results_dict.get(f'9{base[1:]}', Decimal('0.00')) + amt
 
-    def _build_return(self, net_pay):
+    def _build_return(self, net_pay, er_cost=0):  # Added er_cost to arguments
         return {
             'breakdown': self.breakdown,
             'elements': self.results_dict,
             'pd_codes': self.pd_codes,
-            'totals': {'gross': self.results_dict.get('5000', 0), 'net': net_pay}
+            'totals': {
+                'gross': self.results_dict.get('5000', 0), 
+                'net': net_pay
+            },  # <--- Added missing comma here
+            'ER Cost': {
+                'ER Cost': self.results_dict.get('9000', 0), 
+                'er_gross': er_cost
+            }
         }

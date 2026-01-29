@@ -682,6 +682,25 @@ class PayrollAdjustment(models.Model):
         verbose_name='Regulation Reference',
         help_text='Reference to specific regulation if applicable'
     )
+    LATE_REASON_CHOICES = [
+        ('A', 'A - Notional payment: Payment to Expat by 3rd party or overseas employer'),
+        ('B', 'B - Notional payment: Employment related security'),
+        ('C', 'C - Notional payment: Other'),
+        ('D', 'D - Payment to ' + " 'scheme organiser'"), # Keeping string safe
+        ('E', 'E - Micro Employer (Temporary relaxation)'),
+        ('F', 'F - No requirement to maintain a Deduction Working Sheet'),
+        ('G', 'G - Reasonable excuse'),
+        ('H', 'H - Correction to earlier submission'),
+    ]
+
+    late_reporting_reason = models.CharField(
+        max_length=1,
+        choices=LATE_REASON_CHOICES,
+        blank=True,
+        null=True,
+        verbose_name="Late Reporting Reason",
+        help_text="Only populate if submitting after the payment date."
+    )
     
     is_applied = models.BooleanField(default=False, verbose_name='Is Applied')
     applied_at = models.DateTimeField(null=True, blank=True, verbose_name='Applied At')

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>HMRC RTI Submission (FPS)</h2>
+    <div class="card p-4">
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+                <label class="form-label">Select Payroll Period</label>
+                <select name="period_id" class="form-select" required>
+                    {% for p in periods %}
+                        <option value="{{ p.id }}">{{ p }} ({{ p.payment_date }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="d-grid gap-2 d-md-block">
+                <button type="submit" name="format" value="csv" class="btn btn-info">
+                    <i class="fas fa-file-csv"></i> Download CSV (For Checking)
+                </button>
+                <button type="submit" name="format" value="xml" class="btn btn-primary">
+                    <i class="fas fa-file-code"></i> Generate HMRC XML
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -90,6 +90,11 @@ class Employee(models.Model):
     job_title = models.CharField("Job Title", max_length=100, null=True, blank=True)
     position_number = models.CharField("Position Number", max_length=100, null=True, blank=True)
     fte = models.CharField("FTE", max_length=100, null=True, blank=True)
+    irregular_payment_pattern = models.BooleanField(
+        default=False,
+        verbose_name="Irregular Payment Pattern",
+        help_text="Check if this employee is a casual worker or on a zero-hours contract (RTI Flag 145)."
+    )
 
     # ───────────────
     # Tax Info

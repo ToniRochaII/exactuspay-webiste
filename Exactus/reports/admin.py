@@ -3,15 +3,16 @@ from .models import ReportDefinition
 
 @admin.register(ReportDefinition)
 class ReportDefinitionAdmin(admin.ModelAdmin):
-    list_display = ('name', 'company', 'source_model', 'created_at')
-    list_filter = ('company', 'source_model')
-    search_fields = ('name', 'description')
+    # Add 'country' to list_display
+    list_display = ('name', 'country', 'company', 'source_model', 'created_at')
     
-    # This helps visualize the JSON field in the admin panel
-    # Depending on your Django version, JSONField has a decent default widget.
+    # Add 'country' to filters
+    list_filter = ('country', 'company', 'source_model')
+    
     fieldsets = (
         (None, {
-            'fields': ('name', 'description', 'company', 'created_by')
+            # Add 'country' to the editable fields
+            'fields': ('name', 'description', 'country', 'company', 'created_by')
         }),
         ('Configuration', {
             'fields': ('source_model', 'selected_fields')
