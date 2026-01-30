@@ -1,0 +1,221 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payslips</title>
+    <style>
+        body { font-family: 'Helvetica', 'Arial', sans-serif; font-size: 12px; margin: 0; background: #eee; }
+        .page-container { width: 210mm; margin: 0 auto; background: white; }
+        
+        .payslip-page {
+            width: 210mm;
+            height: 297mm; /* A4 Size */
+            padding: 15mm;
+            box-sizing: border-box;
+            background: white;
+            position: relative;
+            page-break-after: always;
+        }
+
+        /* HEADER */
+        .header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start;
+            border-bottom: 2px solid #333; 
+            padding-bottom: 10px; 
+            margin-bottom: 20px; 
+            min-height: 80px;
+        }
+
+        .company-info { display: flex; flex-direction: column; justify-content: center; }
+        
+        .company-logo {
+            max-height:250px;
+            max-width: 250px;
+            object-fit: contain;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .company-info h1 { margin: 0; font-size: 18px; text-transform: uppercase; }
+        .period-info { text-align: right; }
+
+        .emp-details { 
+            display: grid; 
+            grid-template-columns: repeat(5, 1fr); 
+            gap: 10px; 
+            background: #f4f4f4; 
+            padding: 10px; 
+            border-radius: 4px; 
+            margin-bottom: 20px; 
+        }
+        .label { font-size: 10px; color: #666; text-transform: uppercase; display: block; }
+        .value { font-weight: bold; font-size: 12px; }
+
+        /* GRID */
+        .pay-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 30px; 
+            margin-bottom: 20px; 
+            height: 450px; 
+        }
+
+        .pay-column {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            border-right: 1px dashed #eee; 
+        }
+        .pay-column:last-child { border-right: none; }
+
+        .col-header { 
+            font-weight: bold; 
+            border-bottom: 2px solid #ccc; 
+            padding-bottom: 5px; 
+            margin-bottom: 10px; 
+            text-transform: uppercase; 
+        }
+
+        .items-container { flex-grow: 1; }
+
+        .line-item { 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 4px 0; 
+            border-bottom: 1px dotted #eee; 
+        }
+
+        .total-row {
+            margin-top: auto; 
+            padding-top: 10px;
+            border-top: 2px solid #333;
+            font-weight: bold;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* FOOTER */
+        .footer { border-top: 2px solid #333; padding-top: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .net-pay-box { background: #e0f7fa; padding: 10px 20px; border: 1px solid #00acc1; text-align: center; }
+        .net-label { font-size: 10px; text-transform: uppercase; color: #006064; }
+        .net-value { font-size: 18px; font-weight: bold; color: #006064; }
+
+        @media print {
+            body { background: white; }
+            .page-container { width: 100%; margin: 0; }
+            .payslip-page { height: 100vh; margin: 0; border: none; }
+            @page { margin: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        {% for p in payslips %}
+        <div class="payslip-page">
+            
+            <div class="header">
+                <div class="company-info">
+                    {% if company.logo %}
+                        <img src="{{ company.logo.url }}" alt="{{ company.trade_name }}" class="company-logo">
+                    {% else %}
+                        <h1>{{ company.trade_name }}</h1>
+                    {% endif %}
+                    
+                    <div style="font-size: 11px; color: #555; margin-top: 4px;">
+                        {{ company.trade_name }}<br>
+                        {{ company.town|default:"" }}
+                    </div>
+                </div>
+
+                <div class="period-info">
+                    <span class="label">Pay Date</span>
+                    <span class="value">{{ p.period.date|date:"d M Y" }}</span>
+                    <br>
+                    <span class="label">Period</span>
+                    <span class="value">{{ p.period.tax_period|default:"-" }}</span>
+                </div>
+            </div>
+
+            <div class="emp-details">
+                <div>
+                    <span class="label">Employee Name</span>
+                    <span class="value">{{ p.employee.name }}</span>
+                </div>
+                <div>
+                    <span class="label">Employee ID</span>
+                    <span class="value">{{ p.employee.id }}</span>
+                </div>
+                <div>
+                    <span class="label">NI Number</span>
+                    <span class="value">{{ p.employee.ni_number|default:"-" }}</span>
+                </div>
+                <div>
+                    <span class="label">NI Category</span>
+                    <span class="value">{{ p.employee.ni_category|default:"-" }}</span>
+                </div>
+                <div>
+                    <span class="label">Tax Code</span>
+                    <span class="value">{{ p.employee.tax_code|default:"-" }}</span>
+                </div>
+            </div>
+
+            <div class="pay-grid">
+                
+                <div class="pay-column">
+                    <div class="col-header">Payments</div>
+                    
+                    <div class="items-container">
+                        {% for item in p.payments %}
+                        <div class="line-item">
+                            <span>{{ item.desc }}</span>
+                            <span>{{ item.val|floatformat:2|intcomma }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="total-row">
+                        <span>Total Payments</span>
+                        <span>{{ p.totals.payments|floatformat:2|intcomma }}</span>
+                    </div>
+                </div>
+
+                <div class="pay-column">
+                    <div class="col-header">Deductions</div>
+                    
+                    <div class="items-container">
+                        {% for item in p.deductions %}
+                        <div class="line-item">
+                            <span>{{ item.desc }}</span>
+                            <span>{{ item.val|floatformat:2|intcomma }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="total-row">
+                        <span>Total Deductions</span>
+                        <span>{{ p.totals.deductions|floatformat:2|intcomma }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="ytd-info">
+                    <span class="label">Taxable Pay YTD:</span> <span class="value">0.00</span> &nbsp;|&nbsp;
+                    <span class="label">Tax Paid YTD:</span> <span class="value">0.00</span>
+                </div>
+                
+                <div class="net-pay-box">
+                    <div class="net-label">Net Pay</div>
+                    <div class="net-value">{{ company.currency_symbol|default:"£" }}{{ p.totals.net|floatformat:2|intcomma }}</div>
+                </div>
+            </div>
+
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

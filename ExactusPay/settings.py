@@ -141,7 +141,7 @@ AUTH_USER_MODEL = 'accounts.User'
 
 # Authentication URLs
 LOGIN_URL = "/login/"
-LOGIN_REDIRECT_URL = "/dashboard/"
+LOGIN_REDIRECT_URL = 'role_based_redirect'
 LOGOUT_REDIRECT_URL = "/login/"
 
 # ================================

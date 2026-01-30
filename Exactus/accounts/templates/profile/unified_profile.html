@@ -27,372 +27,268 @@
 
 {% block content %}
 <style>
-.avatar-container {
-    position: relative;
-    width: 128px;
-    height: 128px;
-    margin: 0 auto;
-}
+    /* Profile Aesthetic Enhancements */
+    :root {
+        --profile-accent: #4f46e5;
+        --profile-bg: #f9fafb;
+    }
 
-.avatar-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; /* This ensures the image covers the area without stretching */
-    border-radius: 50%;
-    border: 3px solid #fff;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
+    .avatar-container {
+        position: relative;
+        width: 140px;
+        height: 140px;
+        margin: 0 auto;
+    }
 
-.avatar-placeholder {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 3px solid #fff;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
+    .avatar-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 4px solid #fff;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
 
-.avatar-placeholder i {
-    color: white;
-    font-size: 3rem;
-}
+    .avatar-placeholder {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 4px solid #fff;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
 
-.avatar-upload {
-    text-align: center;
-    margin-top: 1rem;
-}
+    .avatar-placeholder i { color: white; font-size: 3.5rem; }
 
-.avatar-preview {
-    margin-bottom: 1rem;
-}
+    .custom-file-input { display: none; }
+    .custom-file-label {
+        display: inline-block;
+        padding: 0.6rem 1.2rem;
+        background: var(--profile-accent);
+        color: white;
+        border-radius: 50px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+    .custom-file-label:hover { background: #4338ca; transform: translateY(-1px); }
 
-/* Custom file input styling */
-.custom-file-input {
-    display: none;
-}
-
-.custom-file-label {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    background: #007bff;
-    color: white;
-    border-radius: 0.375rem;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.custom-file-label:hover {
-    background: #0056b3;
-}
+    .tab-content { border: none; }
+    .card { border: none; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 </style>
 
-<div class="row">
-    <div class="col-md-3 col-xl-2">
-        <!-- Profile Settings Navigation -->
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title mb-0">Profile Settings</h5>
-            </div>
-            <div class="list-group list-group-flush" role="tablist">
-                <a class="list-group-item list-group-item-action active" data-bs-toggle="list" href="#account" role="tab">
-                    <i class="fas fa-user-circle me-2"></i>Account
+<div class="row g-4">
+    <div class="col-lg-3 col-xl-2">
+        <div class="card mb-3">
+            <div class="list-group list-group-flush rounded-3" role="tablist">
+                <a class="list-group-item list-group-item-action active py-3" data-bs-toggle="list" href="#account" role="tab">
+                    <i class="fas fa-id-badge me-2"></i>Account
                 </a>
-                <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#personal" role="tab">
+                <a class="list-group-item list-group-item-action py-3" data-bs-toggle="list" href="#personal" role="tab">
                     <i class="fas fa-address-card me-2"></i>Personal Info
                 </a>
                 {% if is_own_profile %}
-                <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#notifications" role="tab">
+                <a class="list-group-item list-group-item-action py-3" data-bs-toggle="list" href="#notifications" role="tab">
                     <i class="fas fa-bell me-2"></i>Notifications
                 </a>
                 {% endif %}
                 {% if not is_own_profile and can_manage_users %}
-                <a class="list-group-item list-group-item-action" data-bs-toggle="list" href="#admin" role="tab">
+                <a class="list-group-item list-group-item-action py-3" data-bs-toggle="list" href="#admin" role="tab">
                     <i class="fas fa-shield-alt me-2"></i>Admin Settings
                 </a>
                 {% endif %}
             </div>
         </div>
 
-        <!-- Quick Stats Card -->
-        <div class="card mt-3">
-            <div class="card-header">
-                <h6 class="card-title mb-0"><i class="fas fa-chart-bar me-2"></i>Quick Stats</h6>
-            </div>
+        <div class="card bg-light border-0">
             <div class="card-body">
-                <div class="mb-2">
-                    <small class="text-muted">Member Since</small>
-                    <div class="fw-bold">{{ target_user.date_joined|date:"M j, Y" }}</div>
+                <h6 class="text-uppercase text-muted small fw-bold mb-3">System Info</h6>
+                <div class="mb-3">
+                    <small class="d-block text-muted">Role</small>
+                    <span class="fw-bold">{{ target_user.get_role_display }}</span>
                 </div>
-                <div class="mb-2">
-                    <small class="text-muted">Last Login</small>
-                    <div class="fw-bold">{{ target_user.last_login|date:"M j, Y g:i A"|default:"Never" }}</div>
+                <div class="mb-3">
+                    <small class="d-block text-muted">Joined</small>
+                    <span class="fw-bold">{{ target_user.date_joined|date:"M j, Y" }}</span>
                 </div>
-                <div class="mb-2">
-                    <small class="text-muted">Status</small>
-                    <div>
-                        {% if target_user.is_active %}
-                            <span class="badge bg-success">Active</span>
-                        {% else %}
-                            <span class="badge bg-danger">Inactive</span>
-                        {% endif %}
-                    </div>
+                <div class="mb-0">
+                    <small class="d-block text-muted">Last Activity</small>
+                    <span class="fw-bold">{{ target_user.last_login|date:"M j, Y"|default:"N/A" }}</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="col-md-9 col-xl-10">
+    <div class="col-lg-9 col-xl-10">
         <div class="tab-content">
-            <!-- Account Tab -->
             <div class="tab-pane fade show active" id="account" role="tabpanel">
                 <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">
-                            <i class="fas fa-id-card me-2"></i>
-                            {% if is_own_profile %}My Account{% else %}User Account{% endif %}
-                        </h5>
+                    <div class="card-header bg-white pt-4 px-4 border-0">
+                        <h5 class="fw-bold mb-0">Account Settings</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body p-4">
                         <form method="post" enctype="multipart/form-data">
                             {% csrf_token %}
                             <input type="hidden" name="form_type" value="profile">
                             
-                            <div class="row">
-                                <div class="col-md-8">
+                            <div class="row align-items-center">
+                                <div class="col-md-4 text-center border-end">
+                                    <div class="avatar-container mb-3">
+                                        {% if profile.avatar %}
+                                            <img src="{{ profile.avatar.url }}" class="avatar-image" id="previewImg" alt="Avatar">
+                                        {% else %}
+                                            <div class="avatar-placeholder" id="placeholderIcon">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                        {% endif %}
+                                    </div>
                                     {% if is_own_profile %}
-                                        <!-- User editing their own profile -->
+                                    <input type="file" name="avatar" id="avatarInput" class="custom-file-input" accept="image/*">
+                                    <label for="avatarInput" class="custom-file-label">Change Photo</label>
+                                    <p class="text-muted extra-small mt-2">JPG, PNG up to 2MB</p>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="col-md-8 px-lg-5">
+                                    {% if is_own_profile %}
                                         <div class="mb-3">
-                                            <label class="form-label">Username</label>
-                                            <input type="text" class="form-control" value="{{ target_user.username }}" readonly>
-                                            <small class="form-text text-muted">Username cannot be changed</small>
+                                            <label class="form-label fw-semibold text-muted">Username</label>
+                                            <input type="text" class="form-control bg-light" value="{{ target_user.username }}" readonly>
                                         </div>
                                         <div class="mb-3">
-                                            <label class="form-label">Email Address</label>
-                                            <input type="email" class="form-control" value="{{ target_user.email }}" readonly>
-                                            <small class="form-text text-muted">Contact administrator to change email</small>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Role</label>
-                                            <input type="text" class="form-control" value="{{ target_user.get_role_display }}" readonly>
+                                            <label class="form-label fw-semibold text-muted">Email Address</label>
+                                            <input type="email" class="form-control bg-light" value="{{ target_user.email }}" readonly>
                                         </div>
                                     {% else %}
-                                        <!-- Admin editing another user -->
                                         <div class="row">
-                                            <div class="col-md-6">
-                                                {{ form.username|as_crispy_field }}
-                                            </div>
-                                            <div class="col-md-6">
-                                                {{ form.email|as_crispy_field }}
-                                            </div>
+                                            <div class="col-md-6">{{ form.username|as_crispy_field }}</div>
+                                            <div class="col-md-6">{{ form.email|as_crispy_field }}</div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-6">
-                                                {{ form.role|as_crispy_field }}
-                                            </div>
-                                            <div class="col-md-6">
-                                                {{ form.is_active|as_crispy_field }}
-                                            </div>
+                                            <div class="col-md-6">{{ form.role|as_crispy_field }}</div>
+                                            <div class="col-md-6">{{ form.is_active|as_crispy_field }}</div>
                                         </div>
                                     {% endif %}
                                 </div>
-                                <div class="col-md-4">
-                                    <div class="text-center">
-                                        <!-- Avatar Display with Proper Fitting -->
-                                        <div class="avatar-container mb-3">
-                                            {% if profile.avatar %}
-                                                <img src="{{ profile.avatar.url }}" 
-                                                     class="avatar-image" 
-                                                     alt="Profile Picture"
-                                                     onerror="this.src='{% static 'dis/img/avatars/default.jpg' %}'">
-                                            {% else %}
-                                                <div class="avatar-placeholder">
-                                                    <i class="fas fa-user"></i>
-                                                </div>
-                                            {% endif %}
-                                        </div>
-                                        
-                                        {% if is_own_profile and can_edit %}
-                                        <div class="avatar-upload">
-                                            <input type="file" name="avatar" id="avatarInput" 
-                                                   class="custom-file-input" 
-                                                   accept="image/*">
-                                            <label for="avatarInput" class="custom-file-label">
-                                                <i class="fas fa-upload me-1"></i>Change Photo
-                                            </label>
-                                            <div class="mt-2">
-                                                <small class="text-muted">JPG, PNG max 2MB</small>
-                                            </div>
-                                        </div>
-                                        {% endif %}
-                                    </div>
-                                </div>
                             </div>
 
-                            {% if can_edit %}
-                            <div class="mt-4">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-save me-2"></i>Save Changes
-                                </button>
-                                {% if not is_own_profile %}
-                                <a href="{% url 'user_list' %}" class="btn btn-secondary">
-                                    <i class="fas fa-arrow-left me-2"></i>Back to Users
-                                </a>
-                                {% endif %}
+                            <div class="d-flex justify-content-end mt-4 pt-3 border-top">
+                                <a href="{% url 'dashboard' %}" class="btn btn-link text-muted me-3">Cancel</a>
+                                <button type="submit" class="btn btn-primary px-4 fw-bold">Save Account Changes</button>
                             </div>
-                            {% endif %}
                         </form>
                     </div>
                 </div>
             </div>
 
-            <!-- Personal Information Tab -->
             <div class="tab-pane fade" id="personal" role="tabpanel">
                 <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">
-                            <i class="fas fa-address-book me-2"></i>Personal Information
-                        </h5>
+                    <div class="card-header bg-white pt-4 px-4 border-0">
+                        <h5 class="fw-bold mb-0">Personal Profile</h5>
                     </div>
-                    <div class="card-body">
-                        <form method="post" enctype="multipart/form-data">
+                    <div class="card-body p-4">
+                        <form method="post">
                             {% csrf_token %}
                             <input type="hidden" name="form_type" value="personal">
                             
                             <div class="row">
-                                <div class="col-md-6">
-                                    {{ profile_form.name|as_crispy_field }}
-                                </div>
-                                <div class="col-md-6">
-                                    {{ profile_form.surname|as_crispy_field }}
-                                </div>
+                                <div class="col-md-6">{{ profile_form.name|as_crispy_field }}</div>
+                                <div class="col-md-6">{{ profile_form.surname|as_crispy_field }}</div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6">
-                                    {{ profile_form.phone_number|as_crispy_field }}
-                                </div>
-                                <div class="col-md-6">
-                                    {{ profile_form.country|as_crispy_field }}
-                                </div>
+                                <div class="col-md-6">{{ profile_form.phone_number|as_crispy_field }}</div>
+                                <div class="col-md-6">{{ profile_form.country|as_crispy_field }}</div>
                             </div>
-                            {{ profile_form.address|as_crispy_field }}
+                            <div class="mb-3">{{ profile_form.address|as_crispy_field }}</div>
                             <div class="row">
+                                <div class="col-md-6">{{ profile_form.city|as_crispy_field }}</div>
                                 <div class="col-md-6">
-                                    {{ profile_form.city|as_crispy_field }}
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="mt-4">
+                                    <label class="form-label">Notification Channels</label>
+                                    <div class="d-flex gap-4 mt-2">
                                         {{ profile_form.notify_by_email|as_crispy_field }}
                                         {{ profile_form.notify_by_sms|as_crispy_field }}
                                     </div>
                                 </div>
                             </div>
 
-                            {% if can_edit %}
-                            <div class="mt-4">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-save me-2"></i>Update Personal Info
-                                </button>
+                            <div class="d-flex justify-content-end mt-4 pt-3 border-top">
+                                <button type="reset" class="btn btn-light me-auto">Reset Changes</button>
+                                <a href="{% url 'dashboard' %}" class="btn btn-link text-muted me-3">Cancel</a>
+                                <button type="submit" class="btn btn-primary px-4 fw-bold">Update Profile</button>
                             </div>
-                            {% endif %}
                         </form>
                     </div>
                 </div>
             </div>
 
-            <!-- Notifications Tab (Only for own profile) -->
             {% if is_own_profile %}
             <div class="tab-pane fade" id="notifications" role="tabpanel">
                 <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">
-                            <i class="fas fa-bell me-2"></i>Notification Preferences
-                        </h5>
+                    <div class="card-header bg-white pt-4 px-4 border-0">
+                        <h5 class="fw-bold mb-0">Preferences</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body p-4">
                         <form method="post">
                             {% csrf_token %}
                             <input type="hidden" name="form_type" value="notifications">
                             
-                            <div class="mb-3">
-                                <label class="form-label">Email Notifications</label>
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" name="notify_by_email" 
-                                           {% if profile.notify_by_email %}checked{% endif %}>
-                                    <label class="form-check-label">Receive email notifications</label>
+                            <div class="list-group list-group-flush mb-4">
+                                <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
+                                    <div>
+                                        <h6 class="mb-0 fw-bold">Email Alerts</h6>
+                                        <small class="text-muted">Receive updates about your account via email</small>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" name="notify_by_email" {% if profile.notify_by_email %}checked{% endif %}>
+                                    </div>
                                 </div>
-                                <small class="form-text text-muted">Get important updates via email</small>
-                            </div>
-                            
-                            <div class="mb-3">
-                                <label class="form-label">SMS Notifications</label>
-                                <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" name="notify_by_sms" 
-                                           {% if profile.notify_by_sms %}checked{% endif %}>
-                                    <label class="form-check-label">Receive SMS notifications</label>
+                                <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
+                                    <div>
+                                        <h6 class="mb-0 fw-bold">SMS Notifications</h6>
+                                        <small class="text-muted">Get urgent text alerts to your mobile</small>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" name="notify_by_sms" {% if profile.notify_by_sms %}checked{% endif %}>
+                                    </div>
                                 </div>
-                                <small class="form-text text-muted">Get urgent alerts via SMS</small>
                             </div>
 
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save me-2"></i>Save Preferences
-                            </button>
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary px-4 fw-bold">Save Preferences</button>
+                            </div>
                         </form>
                     </div>
                 </div>
             </div>
             {% endif %}
 
-            <!-- Admin Settings Tab (Only for admins viewing other users) -->
             {% if not is_own_profile and can_manage_users %}
             <div class="tab-pane fade" id="admin" role="tabpanel">
                 <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title mb-0">
-                            <i class="fas fa-shield-alt me-2"></i>Administrative Settings
-                        </h5>
+                    <div class="card-header bg-white pt-4 px-4 border-0">
+                        <h5 class="fw-bold text-danger mb-0">Management Console</h5>
                     </div>
-                    <div class="card-body">
-                        <div class="alert alert-warning">
-                            <i class="fas fa-exclamation-triangle me-2"></i>
-                            <strong>Administrative Actions</strong> - These actions affect user access and permissions.
-                        </div>
-                        
-                        <div class="row">
+                    <div class="card-body p-4">
+                        <div class="row g-4">
                             <div class="col-md-6">
-                                <div class="card border-0 bg-light">
-                                    <div class="card-body text-center">
-                                        <i class="fas fa-user-lock fa-2x text-primary mb-3"></i>
-                                        <h6>Account Status</h6>
-                                        <p class="text-muted small">Enable or disable user account</p>
-                                        {% if target_user.is_active %}
-                                            <span class="badge bg-success mb-2">Active</span>
-                                            <br>
-                                            <a href="#" class="btn btn-outline-danger btn-sm mt-2">
-                                                <i class="fas fa-user-slash me-1"></i>Deactivate
-                                            </a>
-                                        {% else %}
-                                            <span class="badge bg-danger mb-2">Inactive</span>
-                                            <br>
-                                            <a href="#" class="btn btn-outline-success btn-sm mt-2">
-                                                <i class="fas fa-user-check me-1"></i>Activate
-                                            </a>
-                                        {% endif %}
-                                    </div>
+                                <div class="p-4 bg-light rounded-3 h-100">
+                                    <h6 class="fw-bold"><i class="fas fa-user-shield me-2"></i>Access Control</h6>
+                                    <p class="small text-muted mb-4">Toggle user ability to sign into the system.</p>
+                                    {% if target_user.is_active %}
+                                        <button class="btn btn-outline-danger w-100">Deactivate Account</button>
+                                    {% else %}
+                                        <button class="btn btn-success w-100">Reactivate Account</button>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="card border-0 bg-light">
-                                    <div class="card-body text-center">
-                                        <i class="fas fa-key fa-2x text-warning mb-3"></i>
-                                        <h6>Password Reset</h6>
-                                        <p class="text-muted small">Send password reset email</p>
-                                        <a href="#" class="btn btn-outline-warning btn-sm mt-2">
-                                            <i class="fas fa-envelope me-1"></i>Reset Password
-                                        </a>
-                                    </div>
+                                <div class="p-4 bg-light rounded-3 h-100">
+                                    <h6 class="fw-bold"><i class="fas fa-key me-2"></i>Security Overrides</h6>
+                                    <p class="small text-muted mb-4">Manually trigger a password reset for this user.</p>
+                                    <button class="btn btn-warning w-100">Issue Password Reset</button>
                                 </div>
                             </div>
                         </div>
@@ -400,38 +296,6 @@
                 </div>
             </div>
             {% endif %}
-        </div>
-    </div>
-</div>
-
-<!-- Activity Section -->
-<div class="row mt-4">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="card-title mb-0">
-                    <i class="fas fa-history me-2"></i>Recent Activity
-                </h5>
-            </div>
-            <div class="card-body">
-                {% if activity_log %}
-                <div class="list-group list-group-flush">
-                    {% for activity in activity_log %}
-                    <div class="list-group-item d-flex justify-content-between align-items-center">
-                        <div>
-                            <i class="fas fa-circle text-success me-2" style="font-size: 0.5rem;"></i>
-                            {{ activity.action }}
-                        </div>
-                        <small class="text-muted">{{ activity.timestamp|date:"M j, Y g:i A" }}</small>
-                    </div>
-                    {% endfor %}
-                </div>
-                {% else %}
-                <p class="text-muted mb-0 text-center">
-                    <i class="fas fa-info-circle me-2"></i>No recent activity to display.
-                </p>
-                {% endif %}
-            </div>
         </div>
     </div>
 </div>
@@ -440,56 +304,38 @@
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Avatar preview with proper fitting
     const avatarInput = document.getElementById('avatarInput');
+    const previewImg = document.getElementById('previewImg');
+    const placeholder = document.getElementById('placeholderIcon');
+
     if (avatarInput) {
         avatarInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
-                // Validate file type
-                const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
-                if (!validTypes.includes(file.type)) {
-                    alert('Please select a valid image file (JPG, PNG, GIF)');
-                    this.value = '';
-                    return;
-                }
-
-                // Validate file size (2MB max)
-                if (file.size > 2 * 1024 * 1024) {
-                    alert('Image must be less than 2MB');
-                    this.value = '';
-                    return;
-                }
-
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    const avatarContainer = document.querySelector('.avatar-container');
-                    avatarContainer.innerHTML = `<img src="${e.target.result}" class="avatar-image" alt="Profile Preview">`;
+                    if (previewImg) {
+                        previewImg.src = e.target.result;
+                    } else if (placeholder) {
+                        const container = placeholder.parentElement;
+                        container.innerHTML = `<img src="${e.target.result}" class="avatar-image" id="previewImg" alt="Avatar">`;
+                    }
                 }
                 reader.readAsDataURL(file);
             }
         });
     }
 
-    // Tab persistence
-    const triggerTabList = [].slice.call(document.querySelectorAll('a[data-bs-toggle="list"]'));
-    triggerTabList.forEach(function (triggerEl) {
-        triggerEl.addEventListener('click', function (event) {
-            event.preventDefault();
-            const target = triggerEl.getAttribute('href');
-            sessionStorage.setItem('activeProfileTab', target);
-        });
-    });
-
-    // Restore active tab
-    const activeTab = sessionStorage.getItem('activeProfileTab');
-    if (activeTab) {
-        const triggerEl = document.querySelector(`a[href="${activeTab}"]`);
-        if (triggerEl) {
-            const tab = new bootstrap.Tab(triggerEl);
-            tab.show();
-        }
+    // Persist active tab across reloads
+    const hash = window.location.hash || sessionStorage.getItem('activeProfileTab');
+    if (hash) {
+        const triggerEl = document.querySelector(`a[href="${hash}"]`);
+        if (triggerEl) bootstrap.Tab.getOrCreateInstance(triggerEl).show();
     }
+
+    document.querySelectorAll('a[data-bs-toggle="list"]').forEach(el => {
+        el.addEventListener('shown.bs.tab', () => sessionStorage.setItem('activeProfileTab', el.getAttribute('href')));
+    });
 });
 </script>
 {% endblock %}

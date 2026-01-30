@@ -366,7 +366,7 @@ class EmployeeUploadView(View):
         try:
             # 1. Base Mapping
             field_map = {
-                "company_code": "company",
+                "id": "company",
                 "employee_id": "employee_id",
                 "employee_number": "employee_number",
                 "employee_code": "employee_code",

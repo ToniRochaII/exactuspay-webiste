@@ -10,6 +10,7 @@ urlpatterns = [
 
     path('register/', views.register, name='register'),
     path('login/', auth_views.LoginView.as_view(template_name="accounts/login.html",redirect_authenticated_user=True), name="login"),
+    path('logout/enhanced/', views.enhanced_logout, name='enhanced_logout'),
     path("logout/", auth_views.LogoutView.as_view(next_page='login'), name="logout"),
 
     # Password reset
@@ -19,8 +20,12 @@ urlpatterns = [
     path('reset/done/',auth_views.PasswordResetCompleteView.as_view(template_name='auth/password_reset_complete.html'),name='password_reset_complete'),
     path("users/<int:user_id>/reset-password/", views.admin_reset_password, name="admin_reset_password"),
 
-    path('dashboard/', views.dashboard, name='dashboard'),
+    path('dashboard/redirect/', views.role_based_redirect, name='role_based_redirect'),
+    path('dashboard/exec/', views.dashboard_exec, name='dashboard_exec'),
     path('dashboard/admin/', views.dashboard_admin, name='dashboard_admin'),
+    # path('dashboard/general/', views.dashboard_general, name='dashboard_general'),
+    # path('dashboard/employee/', views.dashboard_employee, name='dashboard_employee'),
+    path('dashboard/', views.dashboard, name='dashboard'),
     
     path('profile/', views.profile, name='profile'),
 

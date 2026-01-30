@@ -162,11 +162,16 @@ def report_list(request, country_slug, company_id):
     reports = ReportDefinition.objects.filter(
         Q(company=company) | Q(country=country)
     )
+
+    periods = PayrollPeriod.objects.filter(
+        payroll__company=company
+    ).select_related('payroll').order_by('-payment_date')
     
     return render(request, 'reports/list.html', {
         'company': company, 
         'reports': reports, 
-        'country': country
+        'country': country,
+        'periods': periods
     })
 
 @login_required
@@ -421,6 +426,163 @@ def rti_run(request, country_slug, company_id):
         'company': company,
         'periods': periods 
     })
+
+
+# ... (Keep existing imports)
+from Exactus.employee.models import Employee 
+
+@login_required
+def payslip_run(request, country_slug, company_id):
+    """
+    Generates HTML Printable Payslips.
+    FIXES:
+    1. Calculates Totals in Python (Float) to prevent rounding errors.
+    2. Sums exactly what is visible (Line Items) to ensure the math works.
+    """
+    country = get_object_or_404(Country, slug=country_slug)
+    company = get_object_or_404(Company, pk=company_id)
+    
+    # Fetch Periods
+    periods = PayrollPeriod.objects.filter(
+        payroll__company=company
+    ).select_related('payroll').order_by('-payment_date')
+    
+    if request.method == 'POST':
+        selected_period_id = request.POST.get('period_id')
+        period = get_object_or_404(PayrollPeriod, pk=selected_period_id)
+        
+        # 1. SETUP & VISIBILITY MAP
+        code_meta = {} 
+        try:
+            ElementModel = apps.get_model('elements', 'Element')
+            elements = ElementModel.objects.filter(country=country)
+            for e in elements:
+                code_meta[e.element_code] = {'status': e.element_status, 'desc': e.element_description}
+        except LookupError: pass
+
+        try:
+            PDCodeModel = apps.get_model('pdcodes', 'PDCode')
+            pdcodes = PDCodeModel.objects.filter(company=company)
+            for p in pdcodes:
+                code_meta[p.pdcode_code] = {'status': p.pdcode_status, 'desc': p.pdcode_description}
+        except LookupError: pass
+        
+        # 2. GENERATE DATA
+        report_def = ReportDefinition(name="Payslip Run", is_comparison=False) 
+        engine = ReportEngine(report_def, company_id)
+        raw_results = engine.generate(payroll_id=period.payroll.id)
+        
+        # --- DEDUPLICATION LOGIC ---
+        try: raw_results.sort(key=lambda x: x.get('id', 0))
+        except: pass
+
+        unique_results_map = {}
+        emp_ids = set()
+        for row in raw_results:
+            eid = row.get('employee_id') or row.get('employee__id') or row.get('employee')
+            if eid:
+                unique_results_map[eid] = row
+                emp_ids.add(eid)
+        
+        employees_map = Employee.objects.in_bulk(list(emp_ids))
+
+        # 3. PROCESS UNIQUE ROWS
+        payslips = []
+        
+        for eid, row in unique_results_map.items():
+            employee = employees_map.get(eid)
+            if not employee: continue 
+
+            details_json = row.get('details', {})
+            if isinstance(details_json, str):
+                try: details = json.loads(details_json)
+                except: details = {}
+            else:
+                details = details_json or {}
+
+            payments = []
+            deductions = []
+            
+            # --- NEW: Running Totals (Float) ---
+            running_total_pay = 0.0
+            running_total_ded = 0.0
+            
+            # Structural Totals (Net Pay still needs 8000)
+            net_pay = 0.0
+
+            for code, val_str in details.items():
+                try: val = float(val_str)
+                except: val = 0.0
+                
+                if abs(val) < 0.01: continue 
+
+                # Capture Net Pay specifically for footer
+                if code == '8000': 
+                    net_pay = val
+                    continue # Do not add to line items
+
+                # Visibility Check
+                meta = code_meta.get(code)
+                if not meta or meta['status'] != 'Visible': continue
+
+                desc = meta['desc'] or f"Code {code}"
+                try: code_int = int(code)
+                except: continue
+
+                # Categorize & Sum
+                if 1000 <= code_int <= 4999:
+                    payments.append({'desc': desc, 'val': val})
+                    running_total_pay += val
+
+                elif 6000 <= code_int <= 9999:
+                    deductions.append({'desc': desc, 'val': abs(val)})
+                    running_total_ded += abs(val) # Sum the positive display value
+
+            payslips.append({
+                'employee': {
+                    'name': f"{employee.employee_name} {employee.employee_surname}",
+                    'id': str(employee.employee_code),
+                    'ni_number': employee.tax_info_01,  
+                    'ni_category': employee.tax_info_04,
+                    'tax_code': employee.tax_info_03,
+                    'dept': employee.department
+                },
+                'payments': payments,
+                'deductions': deductions,
+                'totals': {
+                    'payments': running_total_pay,  # Exact sum of list
+                    'deductions': running_total_ded, # Exact sum of list
+                    'net': net_pay
+                },
+                'period': {
+                    'date': period.payment_date,
+                    'tax_period': period.period_number
+                }
+            })
+
+        payslips.sort(key=lambda x: x['employee']['name'])
+
+        return render(request, 'reports/payslip_view.html', {
+            'company': company,
+            'payslips': payslips
+        })
+
+    return render(request, 'reports/list.html', {
+        'company': company,
+        'periods': periods
+    })
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
