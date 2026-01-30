@@ -32,7 +32,6 @@
                         {% if form.instance.pk %}Edit{% else %}Create{% endif %}
                     </li>
                 </ol>
-                
             </nav>
         </div>
         <div class="col-auto">
@@ -156,13 +155,9 @@
         <div class="card-body">
             <h6><i class="fas fa-info-circle me-1"></i> Important Notes:</h6>
             <ul class="text-muted mb-0">
-                <li><strong>Frequency:</strong> Ensure this matches the frequency defined in your Calculation Bases (e.g., Weekly, Monthly).</li>
-                <li>Period dates cannot overlap with existing periods in the same payroll (unless marked as Additional).</li>
-                <li>Processing date is calculated as 20 days from the start of the month.</li>
-                <li>Payment date is calculated as 3 working days after the processing date.</li>
+                <li><strong>Processing Date:</strong> Calculated as Start Date + 20 calendar days.</li>
+                <li><strong>Payment Date:</strong> Calculated as Processing Date + 3 working days (skips weekends).</li>
                 <li>Period can only be edited while in "Pending" or "Scheduled" status.</li>
-                <li>Once processed, period cannot be modified.</li>
-                <li>Use regulation overrides for country-specific adjustments (JSON format).</li>
                 <li>Auto-generated name will use the start date month and year if left empty.</li>
             </ul>
         </div>
@@ -177,6 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const processingDateField = document.getElementById('id_processing_date');
     const paymentDateField = document.getElementById('id_payment_date');
     
+    // Helper to format Date object to YYYY-MM-DD
     function formatDate(date) {
         const d = new Date(date);
         let month = '' + (d.getMonth() + 1);
@@ -189,6 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return [year, month, day].join('-');
     }
 
+    // Helper to add working days (skipping Sat/Sun)
     function addWorkingDays(startDate, days) {
         let date = new Date(startDate);
         let addedDays = 0;
@@ -204,6 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updatePeriodName() {
         if (startDateField.value && endDateField.value && (!nameField.value || nameField.value.trim() === '')) {
+            // Using T00:00:00 to avoid timezone shifts
             const startDate = new Date(startDateField.value + 'T00:00:00');
             const monthNames = ["January", "February", "March", "April", "May", "June",
                               "July", "August", "September", "October", "November", "December"];
@@ -215,19 +213,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateProcessingAndPaymentDates() {
         if (startDateField.value) {
-            // 1. Get Start of Month
-            const refDate = new Date(startDateField.value + 'T00:00:00');
-            const startOfMonth = new Date(refDate.getFullYear(), refDate.getMonth(), 1);
-            
-            // 2. Set Processing Date to 20th of that month (20 days from start)
-            const processingDate = new Date(startOfMonth);
-            processingDate.setDate(20);
+            // 1. Processing Date = Start Date + 20 calendar days
+            const startDate = new Date(startDateField.value + 'T00:00:00');
+            const processingDate = new Date(startDate);
+            processingDate.setDate(startDate.getDate() + 20);
             
             if (processingDateField) {
                 processingDateField.value = formatDate(processingDate);
             }
 
-            // 3. Set Payment Date to 3 Working Days after Processing Date
+            // 2. Payment Date = Processing Date + 3 working days
             if (paymentDateField) {
                 const paymentDate = addWorkingDays(processingDate, 3);
                 paymentDateField.value = formatDate(paymentDate);
@@ -257,7 +252,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     periodNumberField.value = data.next_period_number;
                 }
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => console.error('Error fetching period number:', error));
     }
     {% endif %}
 });
