@@ -158,7 +158,8 @@
             <ul class="text-muted mb-0">
                 <li><strong>Frequency:</strong> Ensure this matches the frequency defined in your Calculation Bases (e.g., Weekly, Monthly).</li>
                 <li>Period dates cannot overlap with existing periods in the same payroll (unless marked as Additional).</li>
-                <li>Processing date should be on or after the end date.</li>
+                <li>Processing date is calculated as 20 days from the start of the month.</li>
+                <li>Payment date is calculated as 3 working days after the processing date.</li>
                 <li>Period can only be edited while in "Pending" or "Scheduled" status.</li>
                 <li>Once processed, period cannot be modified.</li>
                 <li>Use regulation overrides for country-specific adjustments (JSON format).</li>
@@ -170,17 +171,40 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Get Field Elements
     const startDateField = document.getElementById('id_start_date');
     const endDateField = document.getElementById('id_end_date');
     const nameField = document.getElementById('id_name');
     const processingDateField = document.getElementById('id_processing_date');
     const paymentDateField = document.getElementById('id_payment_date');
     
-    // --- 1. Auto-generate name from dates ---
+    function formatDate(date) {
+        const d = new Date(date);
+        let month = '' + (d.getMonth() + 1);
+        let day = '' + d.getDate();
+        const year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [year, month, day].join('-');
+    }
+
+    function addWorkingDays(startDate, days) {
+        let date = new Date(startDate);
+        let addedDays = 0;
+        while (addedDays < days) {
+            date.setDate(date.getDate() + 1);
+            // 0 = Sunday, 6 = Saturday
+            if (date.getDay() !== 0 && date.getDay() !== 6) {
+                addedDays++;
+            }
+        }
+        return date;
+    }
+
     function updatePeriodName() {
         if (startDateField.value && endDateField.value && (!nameField.value || nameField.value.trim() === '')) {
-            const startDate = new Date(startDateField.value);
+            const startDate = new Date(startDateField.value + 'T00:00:00');
             const monthNames = ["January", "February", "March", "April", "May", "June",
                               "July", "August", "September", "October", "November", "December"];
             const monthName = monthNames[startDate.getMonth()];
@@ -189,49 +213,32 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // --- 2. Date Calculation Logic ---
     function updateProcessingAndPaymentDates() {
         if (startDateField.value) {
-            // Create date object from field (this handles UTC/Local offset issues usually present in date inputs)
-            const parts = startDateField.value.split('-');
-            const year = parseInt(parts[0], 10);
-            const month = parseInt(parts[1], 10) - 1; // JS months are 0-indexed
+            // 1. Get Start of Month
+            const refDate = new Date(startDateField.value + 'T00:00:00');
+            const startOfMonth = new Date(refDate.getFullYear(), refDate.getMonth(), 1);
             
-            // A. Calculate Processing Date: 19th day of the month of the Start Date
-            // We force the date to the 19th of that specific year and month
-            const processingDate = new Date(year, month, 19);
+            // 2. Set Processing Date to 20th of that month (20 days from start)
+            const processingDate = new Date(startOfMonth);
+            processingDate.setDate(20);
             
-            // Format to YYYY-MM-DD for HTML input
-            const procY = processingDate.getFullYear();
-            const procM = String(processingDate.getMonth() + 1).padStart(2, '0');
-            const procD = String(processingDate.getDate()).padStart(2, '0');
-            const formattedProcDate = `${procY}-${procM}-${procD}`;
-
-            // Set Processing Date
             if (processingDateField) {
-                processingDateField.value = formattedProcDate;
+                processingDateField.value = formatDate(processingDate);
             }
 
-            // B. Calculate Payment Date: Processing Date + 2 Days (Optional default)
-            if (paymentDateField && !paymentDateField.value) {
-                const paymentDate = new Date(processingDate);
-                paymentDate.setDate(paymentDate.getDate() + 2);
-                
-                const payY = paymentDate.getFullYear();
-                const payM = String(paymentDate.getMonth() + 1).padStart(2, '0');
-                const payD = String(paymentDate.getDate()).padStart(2, '0');
-                
-                paymentDateField.value = `${payY}-${payM}-${payD}`;
+            // 3. Set Payment Date to 3 Working Days after Processing Date
+            if (paymentDateField) {
+                const paymentDate = addWorkingDays(processingDate, 3);
+                paymentDateField.value = formatDate(paymentDate);
             }
         }
     }
     
-    // --- 3. Event Listeners ---
-    
     if (startDateField) {
         startDateField.addEventListener('change', function() {
             updatePeriodName();
-            updateProcessingAndPaymentDates(); 
+            updateProcessingAndPaymentDates();
         });
     }
     
@@ -239,24 +246,18 @@ document.addEventListener('DOMContentLoaded', function() {
         endDateField.addEventListener('change', updatePeriodName);
     }
     
-    // --- 4. Auto-suggest next period number (only for new periods) ---
     {% if not form.instance.pk %}
     const periodNumberField = document.getElementById('id_period_number');
     if (periodNumberField && (!periodNumberField.value || periodNumberField.value === '')) {
         const url = "{% url 'payroll:next_period_number' payroll.pk %}";
         fetch(url)
-            .then(response => {
-                if (!response.ok) { throw new Error('Network response was not ok'); }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
                 if (data.next_period_number) {
                     periodNumberField.value = data.next_period_number;
                 }
             })
-            .catch(error => {
-                console.error('Error fetching next period number:', error);
-            });
+            .catch(error => console.error('Error:', error));
     }
     {% endif %}
 });
