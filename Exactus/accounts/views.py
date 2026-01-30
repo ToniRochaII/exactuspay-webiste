@@ -447,78 +447,124 @@ def enhanced_logout(request):
 # ──────────────────────────────────────────────────────────────────────────────
 # 2. DASHBOARDS
 # ──────────────────────────────────────────────────────────────────────────────
+
 import json
-from django.utils import timezone
 from datetime import timedelta, date
+from django.utils import timezone
+from django.db.models import Count, Q, Sum
+from django.db.models.functions import TruncMonth
 from django.apps import apps
-from django.shortcuts import render
-from django.db.models import Count
-from django.contrib.auth.decorators import login_required
-from Exactus.utils.decorators import role_required
 
 def get_dashboard_context(request):
+    """
+    Comprehensive executive dashboard context with Gross and Net totals.
+    """
     Company = apps.get_model('company', 'Company')
     Employee = apps.get_model('employee', 'Employee')
     PayrollResult = apps.get_model('payroll', 'PayrollResult')
+    Country = apps.get_model('country', 'Country')
 
-    now = timezone.now()
-    one_year_ago = now.date() - timedelta(days=365)
-    
-    # 1. Base Data & Top 5 Countries
-    active_companies = Company.objects.filter(account_status='ACTIVE').select_related('country')
-    
-    country_counts = {}
-    company_to_country = {}
-    for co in active_companies:
-        if co.country:
-            name = co.country.name
-            company_to_country[co.pk] = name
-            country_counts[name] = country_counts.get(name, 0) + 1
-    
-    top_country_data = sorted(country_counts.items(), key=lambda x: x[1], reverse=True)[:5]
-    top_country_names = [name for name, count in top_country_data]
-    
-    # 2. Results Collection
-    results = PayrollResult.objects.filter(period__payment_date__gte=one_year_ago).select_related('period__payroll__company')
+    today = timezone.now().date()
+    one_year_ago = today - timedelta(days=365)
 
-    # 3. Python Grouping for Charts
-    monthly_map = {}
-    for res in results:
-        try:
-            co_pk = res.period.payroll.company.pk
-            c_name = company_to_country.get(co_pk)
-            if c_name in top_country_names:
-                m_key = date(res.period.payment_date.year, res.period.payment_date.month, 1)
-                if m_key not in monthly_map:
-                    monthly_map[m_key] = {name: 0 for name in top_country_names}
-                monthly_map[m_key][c_name] += 1
-        except: continue
+    # 1. Base Queryset for the last 12 months
+    results_qs = PayrollResult.objects.filter(
+        period__payment_date__gte=one_year_ago
+    ).select_related('period', 'period__payroll__company__country')
 
-    sorted_months = sorted(monthly_map.keys())
-    bar_labels = [m.strftime('%b %Y') for m in sorted_months]
-    
+    # 2. Financial Aggregation
+    # Note: Replace 'gross_pay' and 'net_pay' with your actual model field names
+    totals = results_qs.aggregate(
+        total_gross=Sum('gross_pay'), # This specifically maps to Code 5000 logic
+        total_net=Sum('net_pay'),
+        total_count=Count('id')
+    )
+
+    total_payslips = totals['total_count'] or 0
+    total_gross_amount = totals['total_gross'] or 0
+    total_net_amount = totals['total_net'] or 0
+
+    # 3. Monthly Financial Trends
+    monthly_stats = (
+        results_qs.annotate(month=TruncMonth('period__payment_date'))
+        .values('month')
+        .annotate(
+            payslip_count=Count('id'),
+            monthly_gross=Sum('gross_pay'),
+            monthly_net=Sum('net_pay')
+        )
+        .order_by('month')
+    )
+
+    bar_labels = [s['month'].strftime('%b %Y') for s in monthly_stats]
+    payslip_trend_data = [s['payslip_count'] for s in monthly_stats]
+    gross_value_trend = [float(s['monthly_gross'] or 0) for s in monthly_stats]
+    net_value_trend = [float(s['monthly_net'] or 0) for s in monthly_stats]
+
+    # 4. KPI Counts
+    active_companies_qs = Company.objects.filter(account_status='ACTIVE')
+    active_headcount = Employee.objects.filter(
+        Q(employment_end_date__isnull=True) | Q(employment_end_date__gt=today)
+    ).count()
+
+    # 5. Top Countries
+    top_countries = list(
+        Country.objects.filter(companies__account_status='ACTIVE')
+        .annotate(company_count=Count('companies'))
+        .order_by('-company_count')[:5]
+        .values_list('name', 'company_count')
+    )
+    top_country_names = [c[0] for c in top_countries]
+
+    # 6. Per-Country Monthly Distribution (for Bar Chart)
+    country_monthly_qs = (
+        results_qs.filter(period__payroll__company__country__name__in=top_country_names)
+        .annotate(month=TruncMonth('period__payment_date'))
+        .values('month', 'period__payroll__company__country__name')
+        .annotate(count=Count('id'))
+    )
+
     bar_datasets_raw = []
-    for name in top_country_names:
+    for country in top_country_names:
+        country_data = []
+        for stat in monthly_stats:
+            match = next(
+                (item['count'] for item in country_monthly_qs 
+                 if item['month'] == stat['month'] and item['period__payroll__company__country__name'] == country), 
+                0
+            )
+            country_data.append(match)
+        
         bar_datasets_raw.append({
-            'label': name,
-            'data': [monthly_map[m][name] for m in sorted_months]
+            'label': country,
+            'data': country_data
         })
 
-    # FIX: Limit to 5 distinct companies for the recent list
-    user_companies = active_companies.order_by('-company_id').distinct()[:5]
-
     return {
-        'active_countries_count': len(country_counts),
-        'active_companies_count': active_companies.count(),
-        'user_employees_count': Employee.objects.filter(employment_end_date__isnull=True).count(),
-        'payrolls_completed_count': results.values('period').distinct().count(),
-        'user_companies': user_companies,
-        'country_stats': top_country_data,
+        'active_countries_count': Country.objects.filter(companies__account_status='ACTIVE').distinct().count(),
+        'active_companies_count': active_companies_qs.count(),
+        'user_employees_count': active_headcount,
+        'payrolls_completed_count': results_qs.values('period').distinct().count(),
+        'total_payslips_processed': total_payslips,
+        'total_gross_amount': total_gross_amount,
+        'total_net_amount': total_net_amount,
+        'user_companies': active_companies_qs.order_by('-company_id')[:5],
+        'country_stats': top_countries,
         'bar_labels': json.dumps(bar_labels),
         'bar_datasets_raw': json.dumps(bar_datasets_raw),
+        'payslip_trend_data': json.dumps(payslip_trend_data),
+        'gross_value_trend': json.dumps(gross_value_trend),
+        'net_value_trend': json.dumps(net_value_trend),
         'chart_labels': json.dumps(top_country_names),
-        'chart_data': json.dumps([country_counts[n] for n in top_country_names]),
+        'chart_data': json.dumps([c[1] for c in top_countries]),
     }
+
+
+
+
+
+
+
 
 @login_required
 @role_required("EXEC")
