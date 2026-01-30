@@ -192,11 +192,14 @@ document.addEventListener('DOMContentLoaded', function() {
     // --- 2. Date Calculation Logic ---
     function updateProcessingAndPaymentDates() {
         if (startDateField.value) {
-            const startDate = new Date(startDateField.value);
+            // Create date object from field (this handles UTC/Local offset issues usually present in date inputs)
+            const parts = startDateField.value.split('-');
+            const year = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10) - 1; // JS months are 0-indexed
             
-            // A. Calculate Processing Date: Start Date + 20 Days
-            const processingDate = new Date(startDate);
-            processingDate.setDate(startDate.getDate() + 10);
+            // A. Calculate Processing Date: 19th day of the month of the Start Date
+            // We force the date to the 19th of that specific year and month
+            const processingDate = new Date(year, month, 19);
             
             // Format to YYYY-MM-DD for HTML input
             const procY = processingDate.getFullYear();
@@ -210,7 +213,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             // B. Calculate Payment Date: Processing Date + 2 Days (Optional default)
-            // We only set this if it's currently empty to allow manual overrides
             if (paymentDateField && !paymentDateField.value) {
                 const paymentDate = new Date(processingDate);
                 paymentDate.setDate(paymentDate.getDate() + 2);
@@ -229,7 +231,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (startDateField) {
         startDateField.addEventListener('change', function() {
             updatePeriodName();
-            updateProcessingAndPaymentDates(); // Triggered by Start Date now
+            updateProcessingAndPaymentDates(); 
         });
     }
     
