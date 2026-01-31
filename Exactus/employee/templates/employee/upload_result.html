@@ -63,10 +63,29 @@
     </div>
     
     <div class="mt-3">
-        <a href="{% url 'employee:employee_upload' country_slug=country_slug company_id=company.company_id %}" 
-           class="btn btn-primary">Upload Another File</a>
-        <a href="{% url 'employee:employee' country_slug=country_slug company_id=company.company_id %}" 
-           class="btn btn-outline-secondary">Back to Employee List</a>
+        <div class="mt-4">
+        {% if company and company.company_id %}
+            <div class="d-flex gap-2">
+                <a href="{% url 'employee:employee_upload' country_slug=country_slug company_id=company.company_id %}" 
+                   class="btn btn-primary">
+                   Upload Another File for this Company
+                </a>
+                <a href="{% url 'employee:employee' country_slug=country_slug company_id=company.company_id %}" 
+                   class="btn btn-outline-secondary">
+                   Back to Employee List
+                </a>
+            </div>
+        {% else %}
+            <div class="d-flex gap-2">
+                <a href="{% url 'employee:global_upload' country_slug=country_slug %}" 
+                   class="btn btn-primary">
+                   Upload Another Global File
+                </a>
+                <a href="{% url 'dashboard' %}" 
+                   class="btn btn-outline-secondary">
+                   Back to Dashboard
+                </a>
+            </div>
+        {% endif %}
     </div>
-</div>
 {% endblock %}

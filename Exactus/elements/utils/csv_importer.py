@@ -1,156 +1,93 @@
-# elements/utils/csv_importer.py
 import csv
-from typing import Tuple, List
-
+from django.db import transaction
 from Exactus.country.models import Country
 from Exactus.elements.models import Element
 
-
-def _to_bool(value, default=False) -> bool:
-    if value is None:
-        return default
-    if isinstance(value, bool):
-        return value
-    val = str(value).strip().lower()
-    if val in ("true", "t", "yes", "y", "1"):
-        return True
-    if val in ("false", "f", "no", "n", "0", ""):
-        return False
-    return default
-
-
-def _to_int(value):
-    if value in (None, ""):
-        return None
-    try:
-        return int(value)
-    except (ValueError, TypeError):
-        return None
-
-
-def import_elements_from_csv(
-    csv_file, country: Country | None = None, dry_run: bool = False
-) -> Tuple[int, int, List[str]]:
+def import_elements_from_csv(io_string, country=None, dry_run=False):
     """
-    Import elements from a CSV file.
-
-    Args:
-        csv_file: file-like object or StringIO (already decoded text)
-        country: if provided, all rows are imported for this country.
-                 if None, CSV must have a 'country_code' column that
-                 matches Country.iso2_code.
-        dry_run: if True, validate and count but DO NOT save to the DB.
-
-    Returns:
-        (success_count, error_count, errors)
+    Imports Elements from CSV.
+    - Global Mode: Looks up 'country_code' from CSV.
+    - Local Mode: Uses the 'country' argument passed to the function.
     """
-    reader = csv.DictReader(csv_file)
+    reader = csv.DictReader(io_string)
     success_count = 0
     error_count = 0
-    errors: List[str] = []
+    errors = []
 
-    for row_num, row in enumerate(reader, start=2):  # start=2 to account for header row
-        try:
-            # ----- Resolve country -----
-            country_code = (row.get("country_code") or "").strip()
+    # List of boolean fields to convert from strings "TRUE"/"FALSE"
+    bool_fields = [
+        'element_taxable', 'element_tax_flat', 'element_tax_irregular',
+        'element_social_securitable', 'element_pensionable', 
+        'element_payable', 'element_calculate'
+    ]
 
-            if country is not None:
-                element_country = country
-            elif country_code:
-                # IMPORTANT: your Country model uses iso2_code
-                element_country = Country.objects.filter(
-                    iso2_code=country_code
-                ).first()
-                if not element_country:
-                    error_count += 1
-                    errors.append(
-                        f"Row {row_num}: Country with ISO2 code '{country_code}' not found"
-                    )
-                    continue
-            else:
-                error_count += 1
-                errors.append(f"Row {row_num}: No country specified")
-                continue
+    with transaction.atomic():
+        if dry_run:
+            sid = transaction.savepoint()
 
-            # ----- Basic element identity -----
-            element_code = (row.get("element_code") or "").strip()
-            if not element_code:
-                error_count += 1
-                errors.append(f"Row {row_num}: Missing 'element_code'")
-                continue
+        for row_idx, row in enumerate(reader, start=1):
+            try:
+                # -----------------------------------------------------------
+                # 1. Determine Target Country
+                # -----------------------------------------------------------
+                target_country = country
+                if not target_country:
+                    c_code = row.get('country_code', '').strip().upper()
+                    if not c_code:
+                        raise ValueError(f"Row {row_idx}: Missing 'country_code' for global upload.")
+                    
+                    try:
+                        target_country = Country.objects.get(iso2_code=c_code)
+                    except Country.DoesNotExist:
+                        raise ValueError(f"Row {row_idx}: Country code '{c_code}' not found.")
 
-            # Check if element already exists
-            existing_element = Element.objects.filter(
-                country=element_country, element_code=element_code
-            ).first()
+                # -----------------------------------------------------------
+                # 2. Validate Key Data
+                # -----------------------------------------------------------
+                element_code = row.get('element_code', '').strip()
+                if not element_code:
+                    raise ValueError(f"Row {row_idx}: Missing 'element_code'.")
 
-            # ----- Build data dict -----
-            element_data = {
-                "country": element_country,
-                "element_code": element_code,
-                "element_name": row.get("element_name", "").strip(),
-                "element_description": row.get("element_description", "").strip(),
-                # Choices – ensure defaults match your model choices exactly
-                "element_status": (row.get("element_status") or "Visible").strip()
-                or None,
-                "element_account": _to_int(row.get("element_account")),
-                "element_map_code": _to_int(row.get("element_map_code")),
-                "element_gl_account": _to_int(row.get("element_gl_account")),
-                "element_frequency": (
-                    row.get("element_frequency") or "Recurring"
-                ).strip()
-                or None,
-                "element_type": (row.get("element_type") or "Regular").strip() or None,
-                "element_class": (row.get("element_class") or "Statutory").strip()
-                or None,
-                "element_category": (row.get("element_category") or "Deduction").strip()
-                or None,
-                # Boolean flags
-                "element_taxable": _to_bool(row.get("element_taxable"), default=False),
-                "element_tax_flat": _to_bool(
-                    row.get("element_tax_flat"), default=False
-                ),
-                "element_tax_irregular": _to_bool(
-                    row.get("element_tax_irregular"), default=False
-                ),
-                "element_social_securitable": _to_bool(
-                    row.get("element_social_securitable"), default=False
-                ),
-                "element_pensionable": _to_bool(
-                    row.get("element_pensionable"), default=False
-                ),
-                "element_payable": _to_bool(row.get("element_payable"), default=True),
-                "element_calculate": _to_bool(
-                    row.get("element_calculate"), default=True
-                ),
-                "element_categorytype": (
-                    row.get("element_categorytype") or "Bracketable"
-                ).strip()
-                or None,
-                "archive": (row.get("archive") or "N").strip() or "N",
-            }
+                # -----------------------------------------------------------
+                # 3. Prepare Data
+                # -----------------------------------------------------------
+                defaults = {
+                    'element_name': row.get('element_name', '').strip(),
+                    'element_description': row.get('element_description', '').strip(),
+                    'element_status': row.get('element_status', 'Visible').strip(),
+                    'element_account': row.get('element_account', '').strip(),
+                    'element_map_code': row.get('element_map_code', '').strip(),
+                    'element_gl_account': row.get('element_gl_account', '').strip(),
+                    'element_frequency': row.get('element_frequency', 'Recurring').strip(),
+                    'element_type': row.get('element_type', 'Regular').strip(),
+                    'element_class': row.get('element_class', 'Standard').strip(),
+                    'element_category': row.get('element_category', 'Payment').strip(),
+                    'element_categorytype': row.get('element_categorytype', 'Base').strip(),
+                    'archive': row.get('archive', 'N').strip().upper()[:1] or 'N',
+                }
 
-            # ----- Save or simulate (dry run) -----
-            if dry_run:
-                # Just pretend we saved it successfully
+                # Handle Boolean Conversions
+                for field in bool_fields:
+                    val = row.get(field, 'FALSE').strip().upper()
+                    # Accept TRUE, 1, YES, T as True
+                    defaults[field] = (val in ['TRUE', '1', 'YES', 'T'])
+
+                # -----------------------------------------------------------
+                # 4. Update or Create
+                # -----------------------------------------------------------
+                # Unique identifier is (Country + Element Code)
+                obj, created = Element.objects.update_or_create(
+                    country=target_country,
+                    element_code=element_code,
+                    defaults=defaults
+                )
                 success_count += 1
-                continue
 
-            if existing_element:
-                # Update existing element
-                for field, value in element_data.items():
-                    if field == "country":
-                        continue  # don't reassign FK here
-                    setattr(existing_element, field, value)
-                existing_element.save()
-            else:
-                # Create new element
-                Element.objects.create(**element_data)
+            except Exception as e:
+                error_count += 1
+                errors.append(str(e))
 
-            success_count += 1
-
-        except Exception as e:
-            error_count += 1
-            errors.append(f"Row {row_num}: {str(e)}")
+        if dry_run:
+            transaction.savepoint_rollback(sid)
 
     return success_count, error_count, errors

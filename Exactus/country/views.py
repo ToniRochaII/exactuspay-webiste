@@ -6,21 +6,27 @@ import csv
 
 from Exactus.country.utils.csv_importer import import_from_csv
 from Exactus.country.utils.decorators import role_required
-from Exactus.country.models import Country
 from Exactus.country.forms import CountryForm, CountryUploadForm
-
-# ────────────────────────────────────────────────
-# 🌍 Country Pages
-# ────────────────────────────────────────────────
+from django.shortcuts import render
+from django.db.models import Count, Q
+from Exactus.country.models import Country
 
 @login_required
-@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
 def country(request):
-    """Show active countries only."""
-    countries = Country.objects.filter(archive="N").order_by("name")
-    return render(request, "country/index.html", {
-        "countries": countries, 
-        "active_countries_count": countries.count()
+    """
+    List countries with a count of Calculation Bases for Fiscal Year 2025.
+    """
+    # Annotate the queryset to count CalculationBases via the Regulations relationship
+    # Filter strictly for Regulations where fiscal_year is 2025
+    countries = Country.objects.annotate(
+        calc_bases_2025_count=Count(
+            'regulations__calculation_bases',
+            filter=Q(regulations__fiscal_year=2025)
+        )
+    ).order_by('name')
+
+    return render(request, 'country/index.html', {
+        'countries': countries
     })
 
 

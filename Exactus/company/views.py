@@ -192,102 +192,319 @@ def company_delete(request, country_slug, company_id):
         "company": company,
     })
 
+
+
+
+
+
+
+
+
+
+
+
+
+import openpyxl
+from openpyxl.styles import Font, PatternFill
+from openpyxl.worksheet.datavalidation import DataValidation
+from django.db import transaction
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from django.http import HttpResponse
+
+# Imports for the enhanced process
+from Exactus.country.models import Country
+from Exactus.company.models import Company
+from Exactus.company.forms import CompanyUploadForm 
+from Exactus.country.utils.decorators import role_required
+
 # ────────────────────────────────────────────────────────────────
-# 📤 Upload Company CSV
+# 📄 Smart Template Download (Multi-Country Support)
 # ────────────────────────────────────────────────────────────────
 
 @login_required
 @role_required("EXEC", "ADMIN", "IMPLEMENTATION")
+def download_companies_template(request, country_slug=None):
+    """
+    Generates an Excel template following your specific schema.
+    Includes validation dropdowns for Status and Archive choices.
+    """
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Company Import"
+
+    # Schema based on your requirements
+    headers = [
+        "country_code", "company_code", "trade_name", "legal_name", 
+        "company_number", "account_status", "account_archive"
+    ]
+    
+    # 1. Apply Headers and Styling
+    header_fill = PatternFill(start_color="1F4E78", end_color="1F4E78", fill_type="solid")
+    header_font = Font(color="FFFFFF", bold=True)
+    
+    for col_num, header in enumerate(headers, 1):
+        cell = ws.cell(row=1, column=col_num, value=header)
+        cell.fill = header_fill
+        cell.font = header_font
+        ws.column_dimensions[openpyxl.utils.get_column_letter(col_num)].width = 20
+
+    # 2. Add Data Validation Dropdowns
+    # Account Status
+    status_dv = DataValidation(type="list", formula1='"ACTIVE,SUSPENDED,INACTIVE"', allow_blank=True)
+    ws.add_data_validation(status_dv)
+    status_dv.add("F2:F500") # Column F
+
+    # Account Archive
+    archive_dv = DataValidation(type="list", formula1='"Y,N"', allow_blank=True)
+    ws.add_data_validation(archive_dv)
+    archive_dv.add("G2:G500") # Column G
+
+    # 3. Add Example Row
+    ws.append(["GB", "EX-001", "Example Ltd", "Example Holdings PLC", "1234567", "ACTIVE", "N"])
+
+    filename = f"Exactus_Bulk_Company_Template.xlsx"
+    response = HttpResponse(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+    response["Content-Disposition"] = f'attachment; filename="{filename}"'
+    wb.save(response)
+    return response
+
+# ────────────────────────────────────────────────────────────────
+# 📤 Enhanced Bulk Global Upload (Multi-Country)
+# ────────────────────────────────────────────────────────────────
+
+@login_required
+@role_required("EXEC", "ADMIN", "IMPLEMENTATION")
+@transaction.atomic
 def company_upload_view(request, country_slug=None):
-    country = None
-
-    if country_slug:
-        country = get_object_or_404(Country, slug=country_slug)
-
+    """
+    Handles Multi-Country Excel upload.
+    Matches country_code in each row to an active Country in the DB.
+    """
     if request.method == "POST":
         form = CompanyUploadForm(request.POST, request.FILES)
-
         if form.is_valid():
-            dry_run = form.cleaned_data.get("dry_run", False)
+            file = request.FILES["file"]
+            
             try:
-                result = import_from_csv("companies", request.FILES["file"], dry_run=dry_run, country=country)
-                request.session["upload_result"] = result
+                wb = openpyxl.load_workbook(file, data_only=True)
+                ws = wb.active
+                
+                # Extract headers and validate structure
+                rows = list(ws.iter_rows(values_only=True))
+                if not rows:
+                    messages.error(request, "The file is empty.")
+                    return redirect("companies:company_upload_global")
+                
+                file_headers = [str(h).strip().lower() for h in rows[0]]
+                data_rows = rows[1:]
 
-                if country_slug:
-                    return redirect("companies:company_upload_result", country_slug=country_slug)
+                success_count = 0
+                error_log = []
+                
+                # Pre-fetch countries for performance
+                country_map = {c.iso2_code.upper(): c for c in Country.objects.all()}
+
+                for index, row in enumerate(data_rows, start=2):
+                    if not any(row): continue # Skip blank rows
+                    
+                    # Create a dictionary of the row
+                    row_data = dict(zip(file_headers, row))
+                    
+                    try:
+                        # 1. Validate Country Code
+                        iso_code = str(row_data.get('country_code', '')).strip().upper()
+                        target_country = country_map.get(iso_code)
+                        
+                        if not target_country:
+                            error_log.append(f"Row {index}: Country Code '{iso_code}' not found or inactive.")
+                            continue
+
+                        # 2. Prepare Data (Handling Defaults)
+                        company_code = str(row_data.get('company_code', '')).strip()
+                        trade_name = str(row_data.get('trade_name', '')).strip()
+                        legal_name = str(row_data.get('legal_name', '')).strip()
+                        
+                        if not company_code or not trade_name:
+                            error_log.append(f"Row {index}: Missing company_code or trade_name.")
+                            continue
+
+                        # 3. Update or Create logic
+                        Company.objects.update_or_create(
+                            company_code=company_code,
+                            country=target_country,
+                            defaults={
+                                'trade_name': trade_name,
+                                'legal_name': legal_name,
+                                'company_number': row_data.get('company_number'),
+                                'account_status': str(row_data.get('account_status', 'ACTIVE')).upper(),
+                                'account_archive': str(row_data.get('account_archive', 'N')).upper(),
+                            }
+                        )
+                        success_count += 1
+
+                    except Exception as e:
+                        error_log.append(f"Row {index}: {str(e)}")
+
+                # Final result summary
+                request.session["upload_result"] = {
+                    "success_count": success_count,
+                    "errors": error_log,
+                    "total": len(data_rows)
+                }
                 return redirect("companies:company_upload_result_global")
 
             except Exception as e:
-                messages.error(request, f"Upload error: {str(e)}")
+                messages.error(request, f"Critical error processing Excel: {str(e)}")
 
     else:
         form = CompanyUploadForm()
 
-    return render(request, "company/upload_form.html", {
-        "form": form,
-        "country": country,
-        "country_slug": country_slug
-    })
+    return render(request, "company/upload_form.html", {"form": form})
 
 
-# ────────────────────────────────────────────────────────────────
-# 📥 Upload Results
-# ────────────────────────────────────────────────────────────────
+
+
+
+
+
+
+
+
+
+# Exactus/company/views.py
+import csv
+from django.http import HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse
+from Exactus.country.models import Country
+from Exactus.company.forms import CompanyUploadForm
+# (Include your other existing imports here)
 
 @login_required
-@role_required("EXEC", "ADMIN", "IMPLEMENTATION")
-def company_upload_result_view(request, country_slug=None):
-    result = request.session.get("upload_result", {})
+def company_upload_view(request, country_slug=None):
     country = None
-
     if country_slug:
         country = get_object_or_404(Country, slug=country_slug)
 
+    is_global = (country is None)
+
+    if request.method == "POST":
+        form = CompanyUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            csv_file = form.cleaned_data["csv_file"]
+            dry_run = form.cleaned_data.get("dry_run", False)
+
+            try:
+                data_set = csv_file.read().decode("utf-8-sig")
+            except UnicodeDecodeError:
+                csv_file.seek(0)
+                data_set = csv_file.read().decode("iso-8859-1")
+            
+            import io
+            io_string = io.StringIO(data_set)
+
+            # Assuming your importer handles (io_string, country=None) for global
+            success_count, error_count, errors = import_companies_from_csv(
+                io_string, country=country, dry_run=dry_run
+            )
+
+            request.session["upload_results"] = {
+                "success_count": success_count,
+                "error_count": error_count,
+                "errors": errors,
+                "country_slug": country_slug,
+            }
+
+            if country:
+                return redirect(reverse("companies:company_upload_result", kwargs={"country_slug": country_slug}))
+            else:
+                return redirect("companies:company_upload_result_global")
+    else:
+        form = CompanyUploadForm()
+
+    return render(
+        request,
+        "company/upload_form.html",
+        {
+            "form": form,
+            "country": country,
+            "is_global": is_global
+        }
+    )
+
+@login_required
+def company_upload_result_view(request, country_slug=None):
+    country = None
+    if country_slug:
+        country = get_object_or_404(Country, slug=country_slug)
+        
+    results = request.session.pop("upload_results", None)
+    if not results:
+        if country:
+            return redirect("companies:company", country_slug=country_slug)
+        return redirect("dashboard")
+
     return render(request, "company/upload_result.html", {
-        "result": result,
         "country": country,
-        "country_slug": country_slug
+        "results": results
     })
-
-
-# ────────────────────────────────────────────────────────────────
-# 📄 Download CSV Template
-# ────────────────────────────────────────────────────────────────
 
 @login_required
 def download_companies_template(request, country_slug=None):
-    response = HttpResponse(content_type="text/csv")
-    filename = "companies_import_template.csv"
-
+    """
+    Downloads CSV template. 
+    - Global Mode (slug=None): Adds 'country_code' column.
+    - Local Mode (slug=Set): Pre-fills specific country data.
+    """
+    country = None
     if country_slug:
         country = get_object_or_404(Country, slug=country_slug)
-        filename = f"companies_{country.iso2_code}_template.csv"
 
-    response["Content-Disposition"] = f'attachment; filename="{filename}"'
+    response = HttpResponse(content_type='text/csv')
+    
+    if country:
+        filename = f"companies_template_{country.iso2_code}.csv"
+    else:
+        filename = "companies_template_GLOBAL.csv"
+        
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
 
     writer = csv.writer(response)
 
-    # Headers matching the current model
-    writer.writerow([
-        "country_code", "company_code", "company_number", "trade_name", "legal_name",
+    # 1. Define Headers
+    headers = []
+    if not country:
+        headers.append("country_code")
+        
+    headers.extend([
+        "company_code", "company_number", "trade_name", "legal_name",
         "building_name", "road_name_1", "road_name_2", "town", "post_code",
         "tax_id_01", "tax_id_02", "tax_id_03", "tax_id_04", "tax_id_05",
         "rti_user_id", "rti_password", "account_status"
     ])
+    
+    writer.writerow(headers)
 
-    writer.writerow([
-        "GB", "COMP001", "12345678", "Example Ltd", "Example Trading Ltd",
-        "Tech House", "123 High St", "", "London", "EC1 1AA",
-        "PAYE123", "REF456", "", "", "",
+    # 2. Add Example Row
+    row = []
+    if not country:
+        row.append("GB") # Example for Global
+
+    row.extend([
+        "COMP001", "12345678", "Example Trading", "Example Ltd",
+        "10 Downing St", "Westminster", "", "London", "SW1A 2AA",
+        "PAYE123", "", "", "", "",
         "user_rti", "pass123", "ACTIVE"
     ])
+
+    writer.writerow(row)
 
     return response
 
 
-# ────────────────────────────────────────────────────────────────
-# 🧪 TEST VALIDATION VIEW
-# ────────────────────────────────────────────────────────────────
+
 
 def company_test_validation(request, country_slug):
     """Test view to check form validation without saving"""

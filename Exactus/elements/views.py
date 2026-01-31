@@ -1,8 +1,5 @@
-
-# elements/views.py
 import csv
 import io
-
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
@@ -10,14 +7,25 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.db.models import Q 
 
-from Exactus.company import models
+# Models
 from Exactus.elements.models import Element
 from Exactus.country.models import Country
-from Exactus.elements.forms import ElementForm, ElementUploadForm
-from Exactus.elements.utils.csv_importer import import_elements_from_csv
 from Exactus.calculationbase.models import CalculationBase
-from Exactus.utils.decorators import role_required 
 
+# Forms
+from Exactus.elements.forms import ElementForm, ElementUploadForm
+
+# Utils & Decorators
+from Exactus.utils.decorators import role_required 
+from Exactus.elements.utils.sync import propagate_element_to_companies
+
+# [CRITICAL IMPORT] This was missing or not detected
+from Exactus.elements.utils.csv_importer import import_elements_from_csv
+
+
+# -------------------------------------------------------------------------
+# CRUD Views
+# -------------------------------------------------------------------------
 
 @login_required
 @role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
@@ -60,8 +68,6 @@ def element_create(request, country_slug):
         },
     )
 
-# elements/views.py (Ensure this import is at the top)
-from Exactus.elements.utils.sync import propagate_element_to_companies
 
 @login_required
 @role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION", "OPERATION")
@@ -73,12 +79,10 @@ def element_edit(request, country_slug, element_code):
         form = ElementForm(request.POST, instance=element)
         if form.is_valid():
             # 1. Save the Element changes to the database
-            # Because of the fix in signals.py, this will NOT trigger a PDCode update yet.
             saved_element = form.save()
             
             # 2. Check if the user manually requested a PD Code Overwrite
             if form.cleaned_data.get('sync_pdcodes'):
-                # ONLY run this if the box is checked
                 propagate_element_to_companies(saved_element)
                 messages.success(request, f"Element '{saved_element.element_code}' updated and synced to all company PD Codes!")
             else:
@@ -100,53 +104,32 @@ def element_edit(request, country_slug, element_code):
     )
 
 
-
 @login_required
 @role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
-def element_delete(request, country_slug, element_code):  # Changed from 'pk' to 'element_code'
+def element_delete(request, country_slug, element_code):
     country = get_object_or_404(Country, slug=country_slug)
     element = get_object_or_404(Element, element_code=element_code, country=country)
     
-    # Check for dependencies in CalculationBase
-    # Check if element is used as the main element
-    calculation_bases_as_element = CalculationBase.objects.filter(
-        element=element
-    ).count()
-    
-    # Check if element is used as element_base (if applicable)
-    calculation_bases_as_base = CalculationBase.objects.filter(
-        element_base=element
-    ).count()
-    
-    # Total dependencies
+    # Check dependencies
+    calculation_bases_as_element = CalculationBase.objects.filter(element=element).count()
+    calculation_bases_as_base = CalculationBase.objects.filter(element_base=element).count()
     total_dependencies = calculation_bases_as_element + calculation_bases_as_base
-    
-    # Check if element is referenced in any calculation base
     has_dependencies = total_dependencies > 0
 
     if request.method == "POST":
-        # Block deletion if element has dependencies
         if has_dependencies:
             messages.error(
                 request, 
-                f"Cannot delete element '{element.element_name}' because "
-                f"it is referenced in {total_dependencies} calculation base(s). "
-                "Please remove all calculation base references first."
+                f"Cannot delete element '{element.element_name}' because it is referenced in {total_dependencies} calculation base(s)."
             )
             return redirect("elements:elements", country_slug=country.slug)
         
-        # If no dependencies, proceed with deletion
         element_name = element.element_name
         element_code = element.element_code
         element.delete()
-        
-        messages.success(
-            request, 
-            f"Element '{element_name}' ({element_code}) deleted successfully."
-        )
+        messages.success(request, f"Element '{element_name}' ({element_code}) deleted successfully.")
         return redirect("elements:elements", country_slug=country.slug)
 
-    # Get specific calculation bases for display in template
     calculation_bases = CalculationBase.objects.filter(
         Q(element=element) | Q(element_base=element)
     ).select_related('regulations', 'country').distinct()
@@ -161,26 +144,18 @@ def element_delete(request, country_slug, element_code):  # Changed from 'pk' to
             "has_dependencies": has_dependencies,
             "total_dependencies": total_dependencies,
             "calculation_bases": calculation_bases,
-            "calculation_bases_as_element": calculation_bases_as_element,
-            "calculation_bases_as_base": calculation_bases_as_base,
         },
     )
 
 
-
+# -------------------------------------------------------------------------
+# Upload & Export Views
+# -------------------------------------------------------------------------
 
 @login_required
-@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
+@role_required("EXEC", "ADMIN", "IMPLEMENTATION")
 def element_upload_view(request, country_slug=None):
-    """
-    Handle element CSV uploads with optional country context.
-
-    - If `country_slug` is provided, all rows are imported for that country.
-    - If not, CSV must contain `country_code` (ISO2) for each row.
-    """
-    country = None
-    if country_slug:
-        country = get_object_or_404(Country, slug=country_slug)
+    country = get_object_or_404(Country, slug=country_slug) if country_slug else None
 
     if request.method == "POST":
         form = ElementUploadForm(request.POST, request.FILES)
@@ -188,21 +163,20 @@ def element_upload_view(request, country_slug=None):
             csv_file = form.cleaned_data["csv_file"]
             dry_run = form.cleaned_data.get("dry_run", False)
 
-            # Read and decode the file content
+            # Handle encoding safely
             try:
-                data_set = csv_file.read().decode("utf-8")
+                content = csv_file.read().decode("utf-8-sig")
             except UnicodeDecodeError:
                 csv_file.seek(0)
-                data_set = csv_file.read().decode("iso-8859-1")
+                content = csv_file.read().decode("iso-8859-1")
+            
+            io_string = io.StringIO(content)
 
-            io_string = io.StringIO(data_set)
-
-            # Run import
+            # Call the importer (This is where your NameError was happening)
             success_count, error_count, errors = import_elements_from_csv(
                 io_string, country=country, dry_run=dry_run
             )
 
-            # Store results in session so the result page can show them
             request.session["upload_results"] = {
                 "success_count": success_count,
                 "error_count": error_count,
@@ -211,38 +185,23 @@ def element_upload_view(request, country_slug=None):
                 "dry_run": dry_run,
             }
 
-            # Redirect to the appropriate result page
-            if country_slug:
-                return redirect(
-                    reverse(
-                        "elements:elements_upload_result",
-                        kwargs={"country_slug": country_slug},
-                    )
-                )
-            else:
-                return redirect(reverse("elements:elements_upload_result_global"))
-        else:
-            messages.error(request, "Please correct the errors below.")
+            result_url = "elements:elements_upload_result" if country_slug else "elements:elements_upload_result_global"
+            kwargs = {"country_slug": country_slug} if country_slug else {}
+            return redirect(reverse(result_url, kwargs=kwargs))
     else:
         form = ElementUploadForm()
 
-    return render(
-        request,
-        "elements/upload_form.html",
-        {
-            "form": form,
-            "country": country,
-            "country_slug": country_slug,
-        },
-    )
+    return render(request, "elements/upload_form.html", {
+        "form": form, 
+        "country": country, 
+        "country_slug": country_slug,
+        "is_global": country is None
+    })
 
 
 @login_required
 @role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
 def element_upload_result_view(request, country_slug=None):
-    """
-    Display results of a CSV upload.
-    """
     country = None
     if country_slug:
         country = get_object_or_404(Country, slug=country_slug)
@@ -250,14 +209,9 @@ def element_upload_result_view(request, country_slug=None):
     upload_results = request.session.pop("upload_results", None)
 
     if not upload_results:
-        messages.warning(request, "No upload results found. Please upload a file first.")
+        messages.warning(request, "No upload results found.")
         if country_slug:
-            return redirect(
-                reverse(
-                    "elements:elements_upload",
-                    kwargs={"country_slug": country_slug},
-                )
-            )
+            return redirect(reverse("elements:elements_upload", kwargs={"country_slug": country_slug}))
         else:
             return redirect(reverse("elements:elements_upload_global"))
 
@@ -276,94 +230,39 @@ def element_upload_result_view(request, country_slug=None):
 
 
 @login_required
-@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
 def download_elements_template(request, country_slug=None):
-    """
-    Download CSV template for elements.
-    If `country_slug` is provided, the template will include an example row for that country.
-    """
-    country = None
-    if country_slug:
-        country = get_object_or_404(Country, slug=country_slug)
-
+    country = get_object_or_404(Country, slug=country_slug) if country_slug else None
+    
     response = HttpResponse(content_type="text/csv")
-
-    if country:
-        filename = f"elements_template_{country.iso2_code}.csv"
-    else:
-        filename = "elements_template.csv"
-
+    filename = f"elements_template_{country.iso2_code if country else 'GLOBAL'}.csv"
     response["Content-Disposition"] = f'attachment; filename="{filename}"'
 
     writer = csv.writer(response)
+    headers = [
+        "country_code", "element_code", "element_name", "element_description",
+        "element_status", "element_account", "element_map_code", "element_gl_account",
+        "element_frequency", "element_type", "element_class", "element_category",
+        "element_taxable", "element_tax_flat", "element_tax_irregular",
+        "element_social_securitable", "element_pensionable", "element_payable",
+        "element_calculate", "element_categorytype", "archive",
+    ]
+    writer.writerow(headers)
 
-    # Header row – must match importer field names
-    writer.writerow(
-        [
-            "country_code",
-            "element_code",
-            "element_name",
-            "element_description",
-            "element_status",
-            "element_account",
-            "element_map_code",
-            "element_gl_account",
-            "element_frequency",
-            "element_type",
-            "element_class",
-            "element_category",
-            "element_taxable",
-            "element_tax_flat",
-            "element_tax_irregular",
-            "element_social_securitable",
-            "element_pensionable",
-            "element_payable",
-            "element_calculate",
-            "element_categorytype",
-            "archive",
-        ]
-    )
+    # Example Row Logic
+    def write_example(c_code):
+        writer.writerow([
+            c_code, "1000", "Basic Salary", "Monthly Salary", "Visible", 
+            "1000", "1000", "1000", "Recurring", "Regular", "Standard", 
+            "Payment", "TRUE", "FALSE", "FALSE", "TRUE", "TRUE", "TRUE", "TRUE", 
+            "Prorational", "N"
+        ])
 
-    # Example row if country is provided
     if country:
-        writer.writerow(
-            [
-                country.iso2_code,  # country_code
-                "6000",  # element_code
-                "Income Tax",  # element_name
-                "Income Tax Description",  # element_description
-                "Visible",  # element_status
-                "6000",  # element_account
-                "6000",  # element_map_code
-                "6000",  # element_gl_account
-                "Recurring",  # element_frequency
-                "Regular",  # element_type
-                "Statutory",  # element_class
-                "Deduction",  # element_category
-                "FALSE",  # element_taxable
-                "FALSE",  # element_tax_flat
-                "FALSE",  # element_tax_irregular
-                "FALSE",  # element_social_securitable
-                "FALSE",  # element_pensionable
-                "TRUE",  # element_payable
-                "TRUE",  # element_calculate
-                "Bracketable",  # element_categorytype
-                "N",  # archive
-            ]
-        )
+        write_example(country.iso2_code)
+    else:
+        # Provide examples for the requested demo countries
+        demo_codes = ["AR", "CL", "PA", "PE", "AO", "ZA", "NG", "EG", "MA", "SA", "AE", "PK", "IN", "ID", "PH"]
+        for code in demo_codes:
+            write_example(code)
 
     return response
-
-
-
-
-
-
-
-
-
-
-
-
-
-

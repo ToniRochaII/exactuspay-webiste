@@ -47,10 +47,17 @@
                     </div>
                 </button>
                 
-                <a href="{% url 'employee:download_employees_template' country_slug=country_slug company_id=company.company_id %}" 
-                   class="btn btn-outline-secondary">
-                    Download Template
-                </a>
+                        {% if company and company.company_id %}
+                            <a href="{% url 'employee:download_employees_template' country_slug=country_slug company_id=company.company_id %}" 
+                            class="btn btn-outline-secondary">
+                                Download Company Template
+                            </a>
+                        {% else %}
+                            <a href="{% url 'employee:download_employees_template_global' country_slug=country_slug %}" 
+                            class="btn btn-outline-secondary">
+                                Download Global Template
+                            </a>
+                        {% endif %}
             </form>
             
             <!-- Progress Bar -->
