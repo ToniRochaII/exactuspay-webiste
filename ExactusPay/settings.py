@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'Exactus.payroll',
     'Exactus.compensation',
     'Exactus.reports',
+    'Exactus.ess.apps.EssConfig',
 ]
 
 ROOT_URLCONF = 'ExactusPay.urls'

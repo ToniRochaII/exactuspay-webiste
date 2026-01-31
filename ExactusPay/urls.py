@@ -32,6 +32,7 @@ urlpatterns = [
     # This contains <slug:country_slug>/ patterns. It must be LAST.
     path('', include('Exactus.company.urls')),
     
+    path('', include('Exactus.ess.urls')),
 
     path('ajax/tab-close/', tab_close_detection, name='tab_close'),
     

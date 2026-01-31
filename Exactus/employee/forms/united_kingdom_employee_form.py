@@ -162,7 +162,7 @@ class UnitedKingdomEmployeeForm(BaseEmployeeForm):
             # Banking - Account Details
             "bank_01": "Bank Name",
             "bank_02": "Account Name",
-            "bank_03": "Sort Code",          # CHANGED from Branch Code
+            "bank_03": "Sort Code",
             "bank_04": "Account Number",
             "bank_07": "IBAN",
             "bank_08": "Swift/BIC",

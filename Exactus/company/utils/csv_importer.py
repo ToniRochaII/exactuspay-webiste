@@ -1,200 +1,114 @@
-# company/utils/csv_importer.py
 import csv
-from dataclasses import dataclass, field
-from typing import Callable, Dict, List, Optional, Any
-from io import StringIO
 from django.db import transaction
+from django.core.exceptions import ValidationError
 from Exactus.country.models import Country
 from Exactus.company.models import Company
 
-@dataclass
-class ForeignKeyMapping:
-    csv_column: str
-    model_field: str
-    target_model: Any
-    target_lookup: str
-
-@dataclass
-class ModelImportConfig:
-    model: Any
-    natural_key_fields: List[str]
-    field_mapping: Dict[str, str]
-    fk_mappings: List[ForeignKeyMapping] = field(default_factory=list)
-    validator: Optional[Callable[[Dict[str, str]], None]] = None
-
-def validate_company_row(row):
-    """Strict validation rules for Company imports."""
-    
-    # Validate required fields
-    required_fields = ['country_code', 'company_code', 'trade_name', 'legal_name']
-    for field in required_fields:
-        if not row.get(field):
-            raise ValueError(f"Missing required field: {field}")
-    
-    # Validate country exists
-    country_code = row.get("country_code")
-    if country_code:
-        if not Country.objects.filter(iso2_code=country_code).exists():
-            raise ValueError(f"Country with code '{country_code}' does not exist")
-    
-    # Validate account_status
-    valid_statuses = ['ACTIVE', 'SUSPENDED', 'INACTIVE']
-    account_status = row.get("account_status", "ACTIVE")
-    if account_status not in valid_statuses:
-        raise ValueError(f"Invalid account_status '{account_status}'. Must be one of: {', '.join(valid_statuses)}")
-    
-    # Validate account_archive
-    valid_archive = ['Y', 'N']
-    account_archive = row.get("account_archive", "N")
-    if account_archive not in valid_archive:
-        raise ValueError("account_archive must be 'Y' or 'N'")
-
-IMPORT_CONFIGS = {
-    "companies": ModelImportConfig(
-        model=Company,
-        natural_key_fields=["country", "company_code"],
-        field_mapping={
-            "country_code": "country",  # Handled by FK mapping
-            "company_code": "company_code",
-            "company_number": "company_number",
-            "trade_name": "trade_name",
-            "legal_name": "legal_name",
-            "building_name": "building_name",
-            "road_name_1": "road_name_1",
-            "road_name_2": "road_name_2",
-            "town": "town",
-            "post_code": "post_code",
-            "tax_id_1": "tax_id_1",
-            "tax_id_2": "tax_id_2",
-            "tax_id_3": "tax_id_3",
-            "tax_id_4": "tax_id_4",
-            "tax_id_5": "tax_id_5",
-            "tax_id_6": "tax_id_6",
-            "tax_id_7": "tax_id_7",
-            "tax_id_8": "tax_id_8",
-            "tax_id_9": "tax_id_9",
-            "tax_id_10": "tax_id_10",
-            "rti_user_id": "rti_user_id",
-            "rti_password": "rti_password",
-            "account_status": "account_status",
-            "account_archive": "account_archive",
-        },
-        fk_mappings=[
-            ForeignKeyMapping(
-                csv_column="country_code",
-                model_field="country",
-                target_model=Country,
-                target_lookup="iso2_code"
-            )
-        ],
-        validator=validate_company_row
-    ),
-}
-
-def import_from_csv(model_key: str, file_obj, dry_run: bool = False):
+def import_companies_from_csv(io_string, country=None, dry_run=False):
     """
-    CSV importer for Companies.
-    
+    Imports companies from a CSV file.
+
     Args:
-        model_key (str): key from IMPORT_CONFIGS
-        file_obj: Django UploadedFile or file-like object
-        dry_run (bool): validate only, do not save changes
-    
+        io_string (io.StringIO): The CSV content stream.
+        country (Country, optional): If provided, all rows are imported into this country.
+                                     If None, the 'country_code' column is required per row.
+        dry_run (bool): If True, performs all validations but rolls back changes at the end.
+
     Returns:
-        dict: {created, updated, errors}
+        tuple: (success_count, error_count, errors_list)
     """
-
-    if model_key not in IMPORT_CONFIGS:
-        raise ValueError(f"Unknown import key '{model_key}'")
-
-    config = IMPORT_CONFIGS[model_key]
-    model = config.model
-
-    # Convert Django UploadedFile -> text buffer
-    if hasattr(file_obj, "read"):
-        text = file_obj.read().decode("utf-8-sig")
-        file_obj = StringIO(text)
-
-    reader = csv.DictReader(file_obj)
-    created = 0
-    updated = 0
+    reader = csv.DictReader(io_string)
+    success_count = 0
+    error_count = 0
     errors = []
 
-    @transaction.atomic
-    def run_import():
-        nonlocal created, updated
+    # Helper to clean strings
+    def clean_str(val):
+        if val is None:
+            return ""
+        return str(val).strip()
 
-        for line_num, row in enumerate(reader, start=2):
+    with transaction.atomic():
+        if dry_run:
+            sid = transaction.savepoint()
+
+        for row_idx, row in enumerate(reader, start=1):
             try:
-                # Validation
-                if config.validator:
-                    config.validator(row)
-
-                attrs = {}
-
-                # Simple field mappings
-                for csv_col, model_field in config.field_mapping.items():
-                    # Skip FK fields for now
-                    if any(fk.csv_column == csv_col for fk in config.fk_mappings):
-                        continue
+                # -----------------------------------------------------------
+                # 1. Determine Target Country
+                # -----------------------------------------------------------
+                target_country = country
+                
+                # Global Mode: Look up country from CSV
+                if not target_country:
+                    iso_code = clean_str(row.get('country_code')).upper()
+                    if not iso_code:
+                        raise ValueError(f"Row {row_idx}: Missing 'country_code' (Global Mode).")
                     
-                    raw_value = row.get(csv_col)
-                    
-                    # Handle empty values
-                    if raw_value in [None, ""]:
-                        continue
-                    
-                    attrs[model_field] = raw_value
+                    try:
+                        target_country = Country.objects.get(iso2_code=iso_code)
+                    except Country.DoesNotExist:
+                        raise ValueError(f"Row {row_idx}: Country code '{iso_code}' not found.")
 
-                # Foreign Keys
-                for fk in config.fk_mappings:
-                    raw_value = row.get(fk.csv_column)
-                    if raw_value:
-                        try:
-                            target_obj = fk.target_model.objects.get(
-                                **{fk.target_lookup: raw_value}
-                            )
-                            attrs[fk.model_field] = target_obj
-                        except fk.target_model.DoesNotExist:
-                            raise ValueError(f"{fk.target_model.__name__} with {fk.target_lookup}='{raw_value}' not found")
+                # -----------------------------------------------------------
+                # 2. Validate Required Fields
+                # -----------------------------------------------------------
+                company_code = clean_str(row.get('company_code'))
+                trade_name = clean_str(row.get('trade_name'))
 
-                # Update or Create
-                lookup_kwargs = {
-                    key: attrs[key]
-                    for key in config.natural_key_fields
-                    if key in attrs
+                if not company_code:
+                    raise ValueError(f"Row {row_idx}: Missing required field 'company_code'.")
+                
+                if not trade_name:
+                    raise ValueError(f"Row {row_idx}: Missing required field 'trade_name'.")
+
+                # -----------------------------------------------------------
+                # 3. Prepare Data
+                # -----------------------------------------------------------
+                company_data = {
+                    'company_number': clean_str(row.get('company_number')),
+                    'trade_name': trade_name,
+                    'legal_name': clean_str(row.get('legal_name')),
+                    
+                    # Address
+                    'building_name': clean_str(row.get('building_name')),
+                    'road_name_1': clean_str(row.get('road_name_1')),
+                    'road_name_2': clean_str(row.get('road_name_2')),
+                    'town': clean_str(row.get('town')),
+                    'post_code': clean_str(row.get('post_code')),
+                    
+                    # IDs
+                    'tax_id_01': clean_str(row.get('tax_id_01')),
+                    'tax_id_02': clean_str(row.get('tax_id_02')),
+                    'tax_id_03': clean_str(row.get('tax_id_03')),
+                    'tax_id_04': clean_str(row.get('tax_id_04')),
+                    'tax_id_05': clean_str(row.get('tax_id_05')),
+                    
+                    # Credentials
+                    'rti_user_id': clean_str(row.get('rti_user_id')),
+                    'rti_password': clean_str(row.get('rti_password')),
+                    
+                    # Status
+                    'account_status': clean_str(row.get('account_status', 'ACTIVE')).upper()
                 }
 
-                defaults = {
-                    key: value
-                    for key, value in attrs.items()
-                    if key not in config.natural_key_fields
-                }
-
-                obj, created_flag = model.objects.update_or_create(
-                    **lookup_kwargs,
-                    defaults=defaults
+                # -----------------------------------------------------------
+                # 4. Update or Create
+                # -----------------------------------------------------------
+                # Uniqueness is defined by (Country + Company Code)
+                obj, created = Company.objects.update_or_create(
+                    country=target_country,
+                    company_code=company_code,
+                    defaults=company_data
                 )
 
-                created += int(created_flag)
-                updated += int(not created_flag)
+                success_count += 1
 
             except Exception as e:
-                errors.append({
-                    "line": line_num,
-                    "row": row,
-                    "error": str(e)
-                })
+                error_count += 1
+                errors.append(str(e))
 
-        # Dry run rollback
         if dry_run:
-            transaction.set_rollback(True)
+            transaction.savepoint_rollback(sid)
 
-    run_import()
-
-    return {
-        "created": created,
-        "updated": updated,
-        "errors": errors,
-        "dry_run": dry_run,
-    }
+    return success_count, error_count, errors

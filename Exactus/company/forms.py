@@ -1,17 +1,37 @@
 from django import forms
-from .models import ClientGroup, Company
+from Exactus.company.models import Company, ClientGroup
 
-class ClientGroupForm(forms.ModelForm):
-    companies = forms.ModelMultipleChoiceField(
-        queryset=Company.objects.all(),
-        widget=forms.SelectMultiple(attrs={'class': 'form-control', 'size': '10'}),
+# -------------------------------------------------------------------------
+# UPLOAD FORM
+# -------------------------------------------------------------------------
+class CompanyUploadForm(forms.Form):
+    # FIXED: Renamed from 'file' to 'csv_file' to match the template
+    csv_file = forms.FileField(  
+        label="CSV File",
+        widget=forms.ClearableFileInput(attrs={"class": "form-control", "accept": ".csv"}),
+        required=True
+    )
+    
+    dry_run = forms.BooleanField(
         required=False,
-        help_text="Hold Ctrl (or Cmd) to select multiple companies."
+        initial=False,
+        label="Dry Run (Test without saving)",
+        widget=forms.CheckboxInput(attrs={"class": "form-check-input"}),
+        help_text="Check this box to validate the CSV data without saving changes to the database."
     )
 
+# -------------------------------------------------------------------------
+# STANDARD FORMS
+# -------------------------------------------------------------------------
+class CompanyForm(forms.ModelForm):
+    class Meta:
+        model = Company
+        fields = "__all__"
+        widgets = {
+            'country': forms.HiddenInput(),
+        }
+
+class ClientGroupForm(forms.ModelForm):
     class Meta:
         model = ClientGroup
-        fields = ['name', 'companies']
-        widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g., Smith Holdings Group'}),
-        }
+        fields = ["name", "description"]

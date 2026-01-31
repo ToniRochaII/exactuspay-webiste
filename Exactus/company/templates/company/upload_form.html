@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load crispy_forms_tags %}
 {% load company_role_filters %}
 {% load company_filters %}
 
@@ -27,7 +26,6 @@
 {% block content %}
 <div class="card shadow-sm border-0">
 
-    <!-- HEADER -->
     <div class="card-header d-flex justify-content-between align-items-center">
         <div>
             <h5 class="card-title mb-0">
@@ -44,10 +42,8 @@
         </a>
     </div>
 
-    <!-- BODY -->
     <div class="card-body">
 
-        <!-- CSV REQUIREMENTS -->
         <div class="alert alert-info">
             <h6 class="alert-heading">
                 <i class="fas fa-info-circle me-2"></i>CSV Requirements
@@ -64,7 +60,6 @@
             </ul>
         </div>
 
-        <!-- TEMPLATE DOWNLOAD -->
         <div class="alert alert-warning">
             <div class="d-flex justify-content-between align-items-center">
                 <div>
@@ -82,7 +77,6 @@
             </div>
         </div>
 
-        <!-- UPLOAD FORM -->
         <div class="card mt-4 border-0 shadow-sm">
             <div class="card-header bg-light">
                 <h6 class="mb-0 fw-bold">Upload CSV File</h6>
@@ -94,16 +88,40 @@
 
                     <div class="row">
                         <div class="col-md-8">
-                            {{ form.file|as_crispy_field }}
+                            <div class="mb-3">
+                                <label for="{{ form.csv_file.id_for_label }}" class="form-label fw-bold">
+                                    {{ form.csv_file.label }}
+                                </label>
+                                
+                                {{ form.csv_file }}
+                                
+                                {% if form.csv_file.help_text %}
+                                    <div class="form-text">{{ form.csv_file.help_text }}</div>
+                                {% endif %}
+                                
+                                {% if form.csv_file.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {{ form.csv_file.errors|join:", " }}
+                                    </div>
+                                {% endif %}
+                            </div>
                         </div>
 
                         <div class="col-md-4">
-                            {{ form.dry_run|as_crispy_field }}
-                            <small class="text-muted">Validate without saving to the database.</small>
+                            <div class="mb-3 pt-4">
+                                <div class="form-check">
+                                    {{ form.dry_run }}
+                                    <label class="form-check-label fw-bold" for="{{ form.dry_run.id_for_label }}">
+                                        {{ form.dry_run.label }}
+                                    </label>
+                                </div>
+                                <div class="form-text ms-4 mt-0">
+                                    Validate without saving to the database.
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- SAMPLE PREVIEW -->
                     <div class="mt-4">
                         <h6 class="fw-semibold">Expected CSV Format (Example):</h6>
                         <div class="table-responsive">
@@ -137,7 +155,6 @@
                         </div>
                     </div>
 
-                    <!-- ACTIONS -->
                     <div class="mt-4 d-flex gap-2">
                         <button id="uploadBtn" type="submit" class="btn btn-primary">
                             <i class="fas fa-upload me-2"></i>Upload Companies
@@ -155,12 +172,10 @@
             </div>
         </div>
 
-        <!-- FIELD REFERENCE -->
         <div class="card mt-4 border-0 shadow-sm">
             <div class="card-header bg-light">
                 <h6 class="fw-bold mb-0">Field Reference</h6>
             </div>
-
             <div class="card-body">
                 <div class="table-responsive">
                     <table class="table table-sm table-striped">
@@ -197,29 +212,10 @@
                                 <td>Text</td>
                                 <td>Registered legal entity name</td>
                             </tr>
-                            <tr>
-                                <td>company_number</td>
-                                <td>No</td>
-                                <td>Text</td>
-                                <td>Registration number (if applicable)</td>
-                            </tr>
-                            <tr>
-                                <td>account_status</td>
-                                <td>No</td>
-                                <td>Choice</td>
-                                <td>ACTIVE, SUSPENDED, INACTIVE</td>
-                            </tr>
-                            <tr>
-                                <td>account_archive</td>
-                                <td>No</td>
-                                <td>Choice</td>
-                                <td>Y or N (default: N)</td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-
         </div>
 
     </div>
@@ -228,8 +224,10 @@
 <script>
 document.getElementById('uploadForm').addEventListener('submit', function() {
     const btn = document.getElementById('uploadBtn');
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Uploading...';
+    if(btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Uploading...';
+    }
 });
 </script>
 {% endblock %}

@@ -511,7 +511,7 @@ def get_dashboard_context(request):
     top_countries = list(
         Country.objects.filter(companies__account_status='ACTIVE')
         .annotate(company_count=Count('companies'))
-        .order_by('-company_count')[:10]
+        .select_related('-company_count')[:10]
         .values_list('name', 'company_count')
     )
     top_country_names = [c[0] for c in top_countries]
