@@ -1,0 +1,277 @@
+{% extends "base.html" %}
+{% load humanize %}
+
+{% block title %}Payslip | {{ payslip.period.payment_date|date:"M Y" }}{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* 1. Global Background */
+    body { 
+        background-color: #F4F4F4 !important; 
+    }
+    
+    :root { 
+        --primary-blue: #172E7F; 
+        --text-dark: #1f2937;
+        --text-gray: #6b7280;
+        --border-light: #e5e7eb;
+    }
+
+    /* 2. Container */
+    .payslip-wrapper {
+        max-width: 900px;
+        margin: 40px auto;
+        background: #ffffff;
+        /* Optional: Add a subtle shadow if you want it to pop off the grey background */
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); 
+        padding: 60px;
+        min-height: 800px;
+    }
+
+    /* 3. Header Section */
+    .payslip-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end; /* Align bottom of text */
+        margin-bottom: 20px;
+    }
+
+    .company-brand h1 {
+        color: var(--primary-blue);
+        font-weight: 800;
+        font-size: 2rem;
+        margin: 0;
+        line-height: 1;
+    }
+    
+    .company-sub {
+        font-size: 1rem;
+        color: var(--text-dark);
+        margin-top: 8px;
+        font-weight: 500;
+    }
+
+    .doc-title {
+        text-align: right;
+    }
+    
+    .doc-title h2 {
+        font-size: 2rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        color: var(--text-dark);
+        margin: 0;
+        line-height: 1;
+    }
+    
+    .doc-title p {
+        color: var(--text-gray);
+        font-size: 1rem;
+        margin-top: 8px;
+        margin-bottom: 0;
+    }
+
+    /* 4. The Thick Blue Divider */
+    .header-divider {
+        border-bottom: 3px solid var(--primary-blue);
+        margin-bottom: 40px;
+        width: 100%;
+    }
+
+    /* 5. Details Grid (Employee & Payment) */
+    .details-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 80px; /* Wide gap between columns */
+        margin-bottom: 50px;
+    }
+
+    .section-title {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--text-gray);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid var(--border-light);
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+
+    .details-content p {
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+        color: var(--text-dark);
+        line-height: 1.5;
+    }
+    
+    .details-content strong {
+        font-weight: 700;
+        color: var(--text-dark);
+    }
+
+    /* 6. Financial Table */
+    .finance-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    
+    .finance-table th {
+        text-align: left;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        color: var(--text-gray);
+        padding: 12px 0;
+        border-bottom: 1px solid var(--border-light);
+    }
+    
+    .finance-table td {
+        padding: 16px 0;
+        font-size: 1rem;
+        color: var(--text-dark);
+        border-bottom: 1px solid var(--border-light);
+    }
+    
+    .finance-table .text-end { text-align: right; }
+    .finance-table .text-danger { color: #ef4444; }
+
+    /* 7. Totals / Footer */
+    .total-section {
+        margin-top: 40px;
+        display: flex;
+        justify-content: flex-end;
+    }
+    
+    .total-box {
+        width: 300px;
+    }
+    
+    .total-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        font-size: 1rem;
+    }
+    
+    .net-pay-row {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 2px solid var(--border-light);
+        font-weight: 800;
+        font-size: 1.25rem;
+        color: var(--primary-blue);
+    }
+
+    /* Print Styles */
+    @media print {
+        body { background-color: #fff !important; }
+        .no-print { display: none !important; }
+        .payslip-wrapper { box-shadow: none; margin: 0; padding: 0; width: 100%; max-width: 100%; }
+        /* Ensure background colors/borders print */
+        * { -webkit-print-color-adjust: exact; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid no-print" style="max-width: 900px; margin: 20px auto;">
+    <a href="{% url 'ess:dashboard' %}" class="btn btn-link text-decoration-none" style="color: var(--text-gray);">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+    <button onclick="window.print()" class="btn btn-primary float-end" style="background-color: var(--primary-blue); border: none;">
+        <i class="fas fa-print"></i> Print
+    </button>
+</div>
+
+<div class="payslip-wrapper">
+    
+    <div class="payslip-header">
+        <div class="company-brand">
+            <h1>ExactusPay</h1>
+            <div class="company-sub">{{ payslip.period.payroll.company.trade_name }}</div>
+        </div>
+        <div class="doc-title">
+            <h2>PAYSLIP</h2>
+            <p>Period: {{ payslip.period.payment_date|date:"F Y" }}</p>
+        </div>
+    </div>
+
+    <div class="header-divider"></div>
+
+    <div class="details-grid">
+        <div>
+            <div class="section-title">Employee Details</div>
+            <div class="details-content">
+                <p><strong>{{ payslip.employee.employee_name }} {{ payslip.employee.employee_surname }}</strong></p>
+                <p>ID: {{ payslip.employee.employee_number }}</p>
+                <p>Dept: {{ payslip.employee.department|default:"General" }}</p>
+                <br>
+                <p>
+                    {{ payslip.employee.employee_address_01 }}<br>
+                    {% if payslip.employee.employee_address_02 %}{{ payslip.employee.employee_address_02 }}<br>{% endif %}
+                    {{ payslip.employee.employee_address_03 }}<br>
+                    {{ payslip.employee.employee_address_06 }}
+                </p>
+            </div>
+        </div>
+
+        <div>
+            <div class="section-title">Payment Details</div>
+            <div class="details-content">
+                <p>Pay Date: <strong>{{ payslip.period.payment_date|date:"d M Y" }}</strong></p>
+                <p>Currency: <strong>{{ payslip.period.payroll.company.country.currency_code }}</strong></p>
+                <p>Tax Period: {{ payslip.period.period_number }}</p>
+            </div>
+        </div>
+    </div>
+
+    <table class="finance-table">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th class="text-end">Earnings</th>
+                <th class="text-end">Deductions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Basic Salary</td>
+                <td class="text-end">{{ payslip.gross_pay|intcomma }}</td>
+                <td class="text-end"></td>
+            </tr>
+            {% if payslip.total_deductions > 0 %}
+            <tr>
+                <td>Tax & National Insurance</td>
+                <td class="text-end"></td>
+                <td class="text-end">{{ payslip.total_deductions|intcomma }}</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    <div class="total-section">
+        <div class="total-box">
+            <div class="total-row">
+                <span>Total Gross Pay</span>
+                <span>{{ payslip.gross_pay|intcomma }}</span>
+            </div>
+            <div class="total-row text-danger">
+                <span>Total Deductions</span>
+                <span>-{{ payslip.total_deductions|intcomma }}</span>
+            </div>
+            <div class="net-pay-row">
+                <span>NET PAY</span>
+                <span>{{ payslip.period.payroll.company.country.currency_code }} {{ payslip.net_pay|intcomma }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin-top: 60px; padding-top: 20px; border-top: 1px solid #e5e7eb; color: #6b7280; font-size: 0.85rem; display: flex; justify-content: space-between;">
+        <div>Payment Method: <strong>Bank Transfer</strong></div>
+        <div>Bank Account Ending: <strong>**** {{ payslip.employee.bank_04|slice:"-4:" }}</strong></div>
+    </div>
+
+</div>
+{% endblock %}

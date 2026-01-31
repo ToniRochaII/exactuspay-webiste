@@ -1,0 +1,323 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}My Portal | ExactusPay{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* 1. Global Reset */
+    body { 
+        background-color: #F4F4F4 !important; 
+    }
+    
+    :root { 
+        --primary-blue: #172E7F; 
+        --secondary-blue: #386CA8; 
+        --light-blue: #81BCDB; 
+        --ice-blue: #ACDEEF;
+        --success-green: #10b981;
+        --card-radius: 16px;
+    }
+
+    /* 2. Main Container Alignment */
+    .ess-dashboard-container {
+        padding-top: 20px;
+        padding-bottom: 30px;
+        max-width: 1600px; 
+        margin: 0 auto;
+
+    /* 3. PROFILE HEADER - WHITE VERSION */
+    .profile-header {
+        background: #ffffff; /* Changed to White */
+        border-radius: var(--card-radius);
+        padding: 40px 50px;
+        color: var(--primary-blue); /* Text is now Blue */
+        margin-bottom: 0px;
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); /* Softer shadow */
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+        
+        /* Pull header up */
+        margin-top: -20px; 
+    }
+    
+    /* Decorative circle (Subtle gray now) */
+    .profile-header::after {
+        content: '';
+        
+        position: absolute;
+        right: -50px;
+        top: -80px;
+        width: 300px;
+        height: 300px;
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .profile-img {
+        width: 150px; 
+        height: 150px;
+        border-radius: 50%;
+        border: 4px solid #f4f7fc; /* Light gray border to match bg */
+        background: #FFFFFF;
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
+        overflow: hidden;
+    }
+    
+    /* 4. CARD STYLING */
+    .dashboard-panel-card {
+        border: 5px solid #f0f0f0;
+        border-radius: var(--card-radius);
+        background-color: #ffffff;
+        margin-bottom: 0px;
+        margin-top: 20px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    }
+    .panel-header { 
+        padding: 24px 30px; 
+        border-bottom: 1px solid #f9fafb;
+    }
+    .section-title { 
+        font-weight: 700; 
+        color: #6b7280; 
+        font-size: 0.8rem; 
+        text-transform: uppercase; 
+        letter-spacing: 0.5px;
+        margin: 0;
+    }
+
+    /* 5. FORM STYLING */
+    .form-control {
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        padding: 12px 15px;
+        background-color: #fff;
+        font-size: 0.95rem;
+    }
+    .form-control:focus {
+        border-color: var(--light-blue);
+        box-shadow: 0 0 0 3px rgba(172, 222, 239, 0.4);
+    }
+    .form-label-small {
+        font-size: 0.7rem;
+        font-weight: 700;
+        color: #6b7280;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+        display: block;
+    }
+    
+    .btn-save { 
+        background-color: var(--primary-blue); 
+        color: white; 
+        border-radius: 8px; 
+        font-weight: 600;
+        transition: 0.2s;
+        border: none;
+    }
+    .btn-save:hover { background-color: var(--secondary-blue); color: white; }
+    
+    .btn-view-all {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--secondary-blue);
+        text-decoration: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 ess-dashboard-container">
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="profile-header">
+                <div class="profile-img">
+                    <img src="{% if user.is_authenticated and user.userprofile.avatar %}{{ user.userprofile.avatar.url }}{% else %}{% static 'dis/img/avatars/default.jpg' %}{% endif %}" 
+                         class="avatar-img rounded-circle" 
+                         style="width: 100%; height: 100%; object-fit: cover;" 
+                         alt="User Avatar" 
+                         onerror="this.src='https://ui-avatars.com/api/?name={{ user.username }}&background=0D8ABC&color=fff'">
+                </div>
+                <div style="z-index: 2;">
+                    <h2 class="mb-1 fw-bold" style="color: var(--primary-blue);">{{ employee.employee_name }} {{ employee.employee_surname }}</h2>
+                    <p class="mb-0 opacity-75" style="color: #6b7280;">{{ employee.job_title|default:"Staff Member" }} • {{ employee.department|default:"General" }}</p>
+                    <div class="mt-3 d-inline-block rounded-pill px-3 py-1 fw-bold small" style="background-color: #f0f4f8; color: var(--primary-blue);">
+                        Employee ID: {{ employee.employee_code }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card dashboard-panel-card">
+                <div class="panel-header"><h5 class="section-title">Earnings History (Last 12 Months)</h5></div>
+                <div class="card-body p-4">
+                    <div style="height: 300px; width: 100%;">
+                        <canvas id="earningsBarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        
+        <div class="col-lg-8">
+            <div class="card dashboard-panel-card">
+                <div class="panel-header d-flex justify-content-between align-items-center">
+                    <h5 class="section-title">Recent Payslips</h5>
+                    <a href="#" class="btn-view-all">View Full History <i class="fas fa-arrow-right ms-1"></i></a>
+                </div>
+                <div class="list-group list-group-flush">
+                    {% for payslip in payslips %}
+                    <div class="list-group-item d-flex justify-content-between align-items-center py-4 px-4 border-bottom-0 border-top" style="transition: background 0.2s;">
+                        <div>
+                            <div class="fw-bold text-dark fs-5 mb-1">{{ payslip.period.payment_date|date:"F Y" }}</div>
+                            <small class="text-muted">Paid on {{ payslip.period.payment_date }}</small>
+                        </div>
+                        <div class="text-end">
+                            <div class="fw-bold fs-5 mb-1" style="color: var(--primary-blue);">{{ payslip.net_pay|intcomma }}</div>
+                            <a href="{% url 'ess:view_payslip' payslip.id %}" class="btn btn-sm btn-light border px-3 rounded-pill" style="font-size: 0.75rem; color: #6b7280;">
+                                <i class="fas fa-file-pdf me-1"></i> PDF
+                            </a>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="p-5 text-center text-muted">No payslips available yet.</div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            
+            <div class="card dashboard-panel-card">
+                <div class="panel-header"><h5 class="section-title">Last Pay Breakdown</h5></div>
+                <div class="card-body text-center p-4">
+                    <div style="height: 250px; position: relative;">
+                        <canvas id="payPieChart"></canvas>
+                    </div>
+                    <div class="mt-4">
+                        <h2 class="mb-0 fw-bold" style="color: var(--success-green);">
+                            {% if last_payslip %}{{ last_payslip.net_pay|intcomma }}{% else %}0.00{% endif %}
+                        </h2>
+                        <small class="text-muted fw-bold text-uppercase" style="letter-spacing: 1px;">Net Take Home</small>
+                    </div>
+                </div>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="card dashboard-panel-card">
+                    <div class="panel-header"><h5 class="section-title">Contact Address</h5></div>
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <label class="form-label-small">Street Address</label>
+                            {{ form.employee_address_01 }}
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <label class="form-label-small">City / Town</label>
+                                {{ form.employee_address_04 }}
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label-small">Post Code</label>
+                                {{ form.employee_address_06 }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card dashboard-panel-card">
+                    <div class="panel-header"><h5 class="section-title">Banking Details</h5></div>
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <label class="form-label-small">Bank Name</label>
+                            {{ form.bank_01 }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label-small">Account Holder</label>
+                            {{ form.bank_02 }}
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label-small">Account Number</label>
+                            {{ form.bank_04 }}
+                        </div>
+                        <button type="submit" class="btn btn-save w-100 py-3 shadow-sm text-uppercase" style="letter-spacing: 1px;">
+                            <i class="fas fa-save me-2"></i> Update Profile
+                        </button>
+                    </div>
+                </div>
+            </form>
+            </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Oceanic Blue Palette
+    const colors = ['#172E7F', '#386CA8', '#81BCDB', '#ACDEEF', '#90CCDE', '#CEF2EA'];
+
+    // 2. Bar Chart
+    const barCanvas = document.getElementById('earningsBarChart');
+    if(barCanvas) {
+        new Chart(barCanvas, {
+            type: 'bar',
+            data: {
+                labels: {{ bar_labels|safe }},
+                datasets: [
+                    { label: 'Gross Pay', data: {{ gross_data|safe }}, backgroundColor: colors[1], borderRadius: 4, barPercentage: 0.5 },
+                    { label: 'Total Deductions', data: {{ tax_data|safe }}, backgroundColor: colors[2], borderRadius: 4, barPercentage: 0.5 },
+                    { label: 'Net Pay', data: {{ net_data|safe }}, backgroundColor: colors[0], borderRadius: 4, barPercentage: 0.5 }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: false,
+                scales: { 
+                    x: { grid: { display: false } }, 
+                    y: { beginAtZero: true, grid: { borderDash: [5, 5] } } 
+                },
+                plugins: { legend: { position: 'top', align: 'end' } }
+            }
+        });
+    }
+
+    // 3. Pie Chart
+    const pieCanvas = document.getElementById('payPieChart');
+    if(pieCanvas) {
+        new Chart(pieCanvas, {
+            type: 'doughnut',
+            data: {
+                labels: ['Net Pay', 'Taxes & Deductions'],
+                datasets: [{
+                    data: {{ pie_data|safe }},
+                    backgroundColor: ['#172E7F', '#ef4444'], // Deep Blue for Net
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: { 
+                responsive: true, maintainAspectRatio: false, 
+                cutout: '80%', // Thinner ring
+                plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } } } 
+            }
+        });
+    }
+});
+</script>
+{% endblock %}
