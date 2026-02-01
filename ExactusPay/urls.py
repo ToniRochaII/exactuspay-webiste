@@ -1,6 +1,9 @@
 """
 URL configuration for ExactusPay project.
 """
+import os
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from Exactus.accounts.views import tab_close_detection
@@ -16,9 +19,6 @@ urlpatterns = [
     path('', include('Exactus.country.urls')),
 
     # 2. Specific Modules (Global & Feature Routes)
-    # These MUST come before 'company' because they define specific words 
-    # (e.g., 'elements/', 'regulations/') that would otherwise be caught 
-    # by the company app's generic <slug:country_slug> pattern.
     path('', include('Exactus.regulations.urls')),
     path('', include('Exactus.elements.urls')),
     path('', include('Exactus.calculationbase.urls')),
@@ -29,7 +29,6 @@ urlpatterns = [
     path('', include('Exactus.employee.urls')),
 
     # 3. Company / Country Catch-All
-    # This contains <slug:country_slug>/ patterns. It must be LAST.
     path('', include('Exactus.company.urls')),
     
     path('', include('Exactus.ess.urls')),
@@ -37,3 +36,10 @@ urlpatterns = [
     path('ajax/tab-close/', tab_close_detection, name='tab_close'),
     
 ]
+
+# ================================
+# MEDIA SERVING (FIX FOR RENDER)
+# ================================
+# This block allows Django to serve user uploads (avatars) from the persistent disk
+if settings.DEBUG or 'RENDER_EXTERNAL_HOSTNAME' in os.environ:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

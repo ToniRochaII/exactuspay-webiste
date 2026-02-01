@@ -170,11 +170,20 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'Exactus', 'static'),
 ]
-
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
+# --- "IN-HOUSE" PERSISTENT STORAGE ---
+
+# URL that the browser uses to access the file
 MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+
+# RENDER_EXTERNAL_HOSTNAME is only present in Production
+if 'RENDER_EXTERNAL_HOSTNAME' in os.environ:
+    # PRODUCTION: Save to the Persistent Disk mount path we defined in Dashboard
+    MEDIA_ROOT = '/var/lib/media'
+else:
+    # LOCAL: Save to the project folder
+    MEDIA_ROOT = BASE_DIR / "media"
 
 
 # ================================

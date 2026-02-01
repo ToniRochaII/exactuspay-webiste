@@ -672,23 +672,66 @@ def user_edit(request, user_id):
 
 @login_required
 def unified_profile(request, user_id=None):
-    """Unified profile view for viewing/editing."""
+    """
+    Unified profile view for viewing/editing.
+    Handles both 'My Profile' and 'Admin viewing User Profile'.
+    """
+    # 1. Determine the target user (Self or Another User)
     target_user = get_object_or_404(User, id=user_id) if user_id else request.user
     profile, _ = UserProfile.objects.get_or_create(user=target_user)
+    is_own_profile = (request.user == target_user)
     
+    # 2. Handle Form Submission
     if request.method == "POST":
-        form = UserProfileForm(request.POST, request.FILES, instance=profile)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Profile updated.")
+        form_type = request.POST.get('form_type')
+        
+        # --- CASE A: Account Settings (Username, Role, Active Status, Avatar) ---
+        if form_type == 'account':
+            # If Admin/Exec editing another user: Use UserEditForm
+            if not is_own_profile:
+                form = UserEditForm(request.POST, instance=target_user)
+                if form.is_valid():
+                    form.save()
+                    messages.success(request, "Account settings updated successfully.")
+                else:
+                    messages.error(request, "Error updating account. Please check the form.")
+            
+            # If User editing themselves: They can only update Avatar (not Role/Username)
+            else:
+                if 'avatar' in request.FILES:
+                    # Avatar is on UserProfile, so we use UserProfileForm partially
+                    profile_form = UserProfileForm(request.POST, request.FILES, instance=profile)
+                    if profile_form.is_valid():
+                        profile_form.save()
+                        messages.success(request, "Avatar updated successfully.")
+        
+        # --- CASE B: Personal Info (Name, Address, etc.) ---
+        elif form_type == 'personal':
+            profile_form = UserProfileForm(request.POST, request.FILES, instance=profile)
+            if profile_form.is_valid():
+                profile_form.save()
+                messages.success(request, "Personal profile updated.")
+            else:
+                messages.error(request, "Error updating personal info.")
+
+        # --- CASE C: Notifications ---
+        elif form_type == 'notifications':
+            profile_form = UserProfileForm(request.POST, instance=profile)
+            if profile_form.is_valid():
+                profile_form.save()
+                messages.success(request, "Notification preferences saved.")
+
         return redirect(request.path)
 
+    # 3. GET Request - Render the page
     return render(request, "profile/unified_profile.html", {
         "target_user": target_user,
         "profile": profile,
-        "profile_form": UserProfileForm(instance=profile),
-        "is_own_profile": (request.user == target_user)
+        "form": UserEditForm(instance=target_user),       # For Account Tab
+        "profile_form": UserProfileForm(instance=profile), # For Personal Tab
+        "is_own_profile": is_own_profile
     })
+
 
 @login_required
 def heartbeat(request):
