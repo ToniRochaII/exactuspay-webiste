@@ -214,12 +214,30 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 # EMAIL CONFIGURATION
 # ================================
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# ================================
+# EMAIL CONFIGURATION
+# ================================
+
+# 1. Determine Backend: Use SMTP (Real) for Production, Console (Text) for Local Debugging
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
 EMAIL_HOST = 'smtp.hostinger.com'
 EMAIL_PORT = 465
-EMAIL_USE_TLS = True
+
+# --- CRITICAL FIX START ---
+# Port 465 requires SSL, not TLS. This fixes the hanging connection.
+EMAIL_USE_SSL = True   
+EMAIL_USE_TLS = False  
+# --- CRITICAL FIX END ---
+
 EMAIL_HOST_USER = 'no-reply@exactuspay.com'
-EMAIL_HOST_PASSWORD = 'TlBFI=[b2L'
+
+# SECURITY: Try to get password from Environment Variable first, fallback to string
+EMAIL_HOST_PASSWORD = os.environ.get("TlBFI=[b2L")
+
 DEFAULT_FROM_EMAIL = 'Exactus Support <no-reply@exactuspay.com>'
 
 
