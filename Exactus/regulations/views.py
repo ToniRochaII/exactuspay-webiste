@@ -2,26 +2,30 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from Exactus.utils.decorators import role_required
+from django.http import HttpResponse
+import csv
 
+from Exactus.country.utils.decorators import role_required
 from Exactus.country.models import Country
 from Exactus.regulations.models import Regulations
 from Exactus.calculationbase.models import CalculationBase
-from Exactus.regulations.forms import RegulationsForm
+from Exactus.regulations.forms import RegulationsForm, RegulationsUploadForm
+from .utils.csv_importer import import_from_csv
 
 
 # ────────────────────────────────────────────────────────────────
 # LIST REGULATIONS
 # ────────────────────────────────────────────────────────────────
 @login_required
-@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
+@role_required("EXEC", "ADMIN", "COMPLIANCE")
 def regulations(request, country_slug):
+    """List regulations - Restricted to EXEC and ADMIN."""
     country = get_object_or_404(Country, slug=country_slug)
     regulations = Regulations.objects.filter(country=country).order_by("-effective_date")
     return render(
         request,
         "regulations/index.html",
-        {"country": country, "regulations": regulations, "country_slug":country_slug},
+        {"country": country, "regulations": regulations, "country_slug": country_slug},
     )
 
 
@@ -29,11 +33,9 @@ def regulations(request, country_slug):
 # CREATE REGULATION
 # ────────────────────────────────────────────────────────────────
 @login_required
-@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
+@role_required("EXEC", "ADMIN", "COMPLIANCE")
 def regulations_create(request, country_slug):
-    """
-    Create a new regulation for a specific country.
-    """
+    """Create a new regulation - Restricted to EXEC and ADMIN."""
     country = get_object_or_404(Country, slug=country_slug)
 
     if request.method == "POST":
@@ -53,7 +55,7 @@ def regulations_create(request, country_slug):
     return render(
         request,
         "regulations/create.html",
-        {"form": form, "country": country, "country_slug":country_slug},
+        {"form": form, "country": country, "country_slug": country_slug},
     )
 
 
@@ -61,8 +63,9 @@ def regulations_create(request, country_slug):
 # EDIT REGULATION
 # ────────────────────────────────────────────────────────────────
 @login_required
-@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
+@role_required("EXEC", "ADMIN", "COMPLIANCE")
 def regulations_edit(request, country_slug, regulations_id):
+    """Edit an existing regulation - Restricted to EXEC and ADMIN."""
     country = get_object_or_404(Country, slug=country_slug)
     regulations = get_object_or_404(Regulations, pk=regulations_id, country=country)
 
@@ -81,15 +84,17 @@ def regulations_edit(request, country_slug, regulations_id):
     return render(
         request,
         "regulations/edit.html",
-        {"form": form, "country": country, "regulations": regulations, "country_slug":country_slug},
+        {"form": form, "country": country, "regulations": regulations, "country_slug": country_slug},
     )
 
 
-# ──────────────────────
-
+# ────────────────────────────────────────────────────────────────
+# DELETE REGULATION
+# ────────────────────────────────────────────────────────────────
 @login_required
-@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
+@role_required("EXEC", "ADMIN", "COMPLIANCE")
 def regulations_delete(request, country_slug, regulations_id):
+    """Delete a regulation - Restricted to EXEC and ADMIN."""
     country = get_object_or_404(Country, slug=country_slug)
     regulations = get_object_or_404(Regulations, pk=regulations_id, country=country)
     
@@ -98,17 +103,14 @@ def regulations_delete(request, country_slug, regulations_id):
     has_dependencies = calculation_bases_count > 0
 
     if request.method == "POST":
-        # Prevent deletion if there are dependencies
         if has_dependencies:
             messages.error(
                 request, 
                 f"Cannot delete regulation for {country.name} ({regulations.fiscal_year}) because "
-                f"it has {calculation_bases_count} calculation base(s) linked to it. "
-                "Please delete the calculation bases first."
+                f"it has {calculation_bases_count} calculation base(s) linked to it."
             )
             return redirect("regulations:regulations", country_slug=country.slug)
         
-        # If no dependencies exist, proceed with deletion
         year = regulations.fiscal_year
         regulations.delete()
         messages.success(request, f"Regulation for {country.name} ({year}) deleted successfully.")
@@ -127,23 +129,14 @@ def regulations_delete(request, country_slug, regulations_id):
     )
 
 
+# ────────────────────────────────────────────────────────────────
+# UPLOAD & TEMPLATE VIEWS (RESTRICTED TO EXEC & ADMIN)
+# ────────────────────────────────────────────────────────────────
 
-
-
-# regulations/views.py (add these imports and views)
-from django.contrib.admin.views.decorators import staff_member_required
-from django.http import HttpResponse
-import csv
-from .utils.csv_importer import import_from_csv
-from .forms import RegulationsUploadForm
-
-# Add these views to your existing regulations/views.py
-
-@staff_member_required
+@login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE")
 def regulations_upload_view(request, country_slug=None):
-    """
-    Upload regulations via CSV. Can be country-specific or global.
-    """
+    """Upload regulations via CSV - Restricted to EXEC and ADMIN."""
     country = None
     if country_slug:
         country = get_object_or_404(Country, slug=country_slug)
@@ -176,11 +169,11 @@ def regulations_upload_view(request, country_slug=None):
         
     return render(request, "regulations/upload_form.html", context)
 
-@staff_member_required
+
+@login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE")
 def regulations_upload_result_view(request, country_slug=None):
-    """
-    Display upload results.
-    """
+    """View upload results - Restricted to EXEC and ADMIN."""
     result = request.session.get("upload_result", {})
     country = None
     if country_slug:
@@ -195,9 +188,11 @@ def regulations_upload_result_view(request, country_slug=None):
         
     return render(request, "regulations/upload_result.html", context)
 
-@staff_member_required
+
+@login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE")
 def download_regulations_template(request, country_slug=None):
-    """Download a CSV template for regulations imports"""
+    """Download CSV template - Restricted to EXEC and ADMIN."""
     response = HttpResponse(content_type='text/csv')
     filename = "regulations_import_template.csv"
     if country_slug:
@@ -207,13 +202,7 @@ def download_regulations_template(request, country_slug=None):
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     
     writer = csv.writer(response)
-    
-    # Header row
-    writer.writerow([
-        'country_code', 'fiscal_year', 'effective_date', 'archive'
-    ])
-    
-    # Sample data rows
+    writer.writerow(['country_code', 'fiscal_year', 'effective_date', 'archive'])
     writer.writerow(['US', '2024', '2024-01-01', 'N'])
     writer.writerow(['GB', '2024', '2024-04-06', 'N'])
     writer.writerow(['FR', '2024', '2024-01-01', 'N'])

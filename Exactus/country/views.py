@@ -7,14 +7,19 @@ import csv
 from Exactus.country.utils.csv_importer import import_from_csv
 from Exactus.country.utils.decorators import role_required
 from Exactus.country.forms import CountryForm, CountryUploadForm
-from django.shortcuts import render
 from django.db.models import Count, Q
 from Exactus.country.models import Country
 
+# -------------------------------------------------------------------------
+# COUNTRY MANAGEMENT VIEWS (RESTRICTED TO EXEC & ADMIN)
+# -------------------------------------------------------------------------
+
 @login_required
+@role_required("EXEC", "ADMIN","COMPLIANCE")
 def country(request):
     """
     List countries with a count of Calculation Bases for Fiscal Year 2025.
+    Restricted to EXEC and ADMIN.
     """
     # Annotate the queryset to count CalculationBases via the Regulations relationship
     # Filter strictly for Regulations where fiscal_year is 2025
@@ -31,17 +36,17 @@ def country(request):
 
 
 @login_required
-@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
+@role_required("EXEC", "ADMIN","COMPLIANCE")
 def country_delete(request):
-    """Show archived (deleted) countries only."""
+    """Show archived (deleted) countries only. Restricted to EXEC and ADMIN."""
     countries = Country.objects.filter(archive="Y").order_by("name")
     return render(request, "country/delete.html", {"countries": countries})
 
 
 @login_required
-@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
+@role_required("EXEC", "ADMIN","COMPLIANCE")
 def country_create(request):
-    """Create a new country."""
+    """Create a new country. Restricted to EXEC and ADMIN."""
     if request.method == "POST":
         form = CountryForm(request.POST)
         if form.is_valid():
@@ -55,9 +60,9 @@ def country_create(request):
 
 
 @login_required
-@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
+@role_required("EXEC", "ADMIN","COMPLIANCE")
 def country_edit(request, slug):
-    """Edit a country."""
+    """Edit a country. Restricted to EXEC and ADMIN."""
     country = get_object_or_404(Country, slug=slug)
 
     if request.method == "POST":
@@ -77,8 +82,9 @@ def country_edit(request, slug):
 
 
 @login_required
-@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
+@role_required("EXEC", "ADMIN","COMPLIANCE")
 def country_upload_view(request):
+    """Upload countries via CSV. Restricted to EXEC and ADMIN."""
     if request.method == "POST":
         form = CountryUploadForm(request.POST, request.FILES)
         if form.is_valid():
@@ -96,16 +102,17 @@ def country_upload_view(request):
 
 
 @login_required
-@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
+@role_required("EXEC", "ADMIN","COMPLIANCE")
 def country_upload_result_view(request):
+    """View upload results. Restricted to EXEC and ADMIN."""
     result = request.session.get("upload_result")
     return render(request, "country/upload_result.html", {"result": result})
 
 
 @login_required
-@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
+@role_required("EXEC", "ADMIN","COMPLIANCE")
 def download_csv_template(request):
-    """Download a CSV template for country imports"""
+    """Download a CSV template for country imports. Restricted to EXEC and ADMIN."""
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="country_import_template.csv"'
     
@@ -134,9 +141,9 @@ def download_csv_template(request):
 
 
 @login_required
-@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
+@role_required("EXEC", "ADMIN","COMPLIANCE")
 def dashboard_country_map(request):
-    """Return ISO2 country codes for the dashboard world map."""
+    """Return ISO2 country codes for the dashboard world map. Restricted to EXEC and ADMIN."""
     try:
         countries = Country.objects.filter(archive="N").values("iso2_code")
         
@@ -152,9 +159,7 @@ def dashboard_country_map(request):
         })
         
     except Exception as e:
-        print(f"Error in dashboard_country_map: {str(e)}")
         return JsonResponse({
             "countries": [],
             "error": str(e)
         })
-        

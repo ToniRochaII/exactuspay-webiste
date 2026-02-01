@@ -260,7 +260,7 @@
                                     <i class="fas fa-list me-2"></i>All Companies
                                 </a>
                             </li>
-                            {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,EXEC,ADMIN" %}
+                            {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,EXEC,ADMIN,COMPLIANCE" %}
                             <li class="sidebar-item">
                                 <a class="sidebar-link"
                                    href="{% url 'companies:company_create' country_slug %}">
@@ -304,7 +304,7 @@
                                     <i class="fas fa-list me-2"></i>All Pay Elements
                                 </a>
                             </li>
-                            {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,EXEC,ADMIN" %}
+                            {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,EXEC,ADMIN,COMPLIANCE" %}
                             <li class="sidebar-item">
                                 <a class="sidebar-link"
                                    href="{% url 'pdcodes:pdcode_create' country_slug company.company_id %}">
@@ -348,7 +348,7 @@
                                     <i class="fas fa-list me-2"></i>All Employees
                                 </a>
                             </li>
-                            {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,EXEC,ADMIN" %}
+                            {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,EXEC,ADMIN,COMPLIANCE" %}
                             <li class="sidebar-item">
                                 <a class="sidebar-link"
                                    href="{% url 'employee:employee_create' country_slug company.company_id %}">
@@ -391,7 +391,7 @@
                                     <i class="fas fa-list me-2"></i>Pay Register
                                 </a>
                             </li>
-                            {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,EXEC,ADMIN" %}
+                            {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,EXEC,ADMIN,COMPLIANCE" %}
                             <li class="sidebar-item">
                                 <a class="sidebar-link"
                                    href="{% url 'compensation:compensation_create' country_slug company.company_id employee.id %}">
@@ -428,7 +428,7 @@
                                         <i class="fas fa-list me-2"></i>Payroll Records
                                     </a>
                                 </li>
-                                {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,EXEC,ADMIN" %}
+                                {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,EXEC,ADMIN,COMPLIANCE" %}
                                 <li class="sidebar-item">
                                     <a class="sidebar-link"
                                        href="{% url 'payroll:payroll_create' country_slug company.company_id %}">
@@ -446,7 +446,7 @@
                                                     <i class="fas fa-calendar-alt me-2"></i>All Periods
                                                 </a>
                                             </li>
-                                            {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,EXEC,ADMIN" %}
+                                            {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,EXEC,ADMIN,COMPLIANCE" %}
                                             <li class="sidebar-item">
                                                 <a class="sidebar-link"
                                                    href="{% url 'payroll:period_create' country_slug company.company_id current_payroll_id %}">
@@ -463,7 +463,7 @@
                                                     <i class="fas fa-calendar-alt me-2"></i>All Periods
                                                 </a>
                                             </li>
-                                            {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,EXEC,ADMIN" %}
+                                            {% if user|has_role:"DIRECTOR,MANAGER,SPECIALIST,EXEC,ADMIN,COMPLIANCE" %}
                                             <li class="sidebar-item">
                                                 <a class="sidebar-link"
                                                    href="{% url 'payroll:period_create' country_slug company.company_id current_payroll_id %}">

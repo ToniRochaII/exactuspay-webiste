@@ -4,27 +4,28 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.apps import apps
 from django.db.models import Sum
-from Exactus.employee.forms.base_employee_form import BaseEmployeeForm
+from django.http import HttpResponseForbidden
+from Exactus.country.utils.decorators import role_required
 
-import json
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.apps import apps
-from django.db.models import Sum
-
-# IMPORT THE NEW FORM HERE
+# Forms
 from Exactus.ess.forms import EmployeeSelfServiceForm 
 
+# ──────────────────────────────────────────────────────────────────────────────
+# EMPLOYEE SELF-SERVICE (ESS) VIEWS
+# ──────────────────────────────────────────────────────────────────────────────
+
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "EMPLOYEE")
 def employee_self_service(request):
     """
     Employee Self-Service Dashboard.
+    Accessible to any logged-in user with a matching Employee record.
     """
     Employee = apps.get_model('employee', 'Employee')
     PayrollResult = apps.get_model('payroll', 'PayrollResult')
     
     # 1. Identity Check
+    # Grounds the view context strictly to the authenticated user's profile
     try:
         employee = Employee.objects.get(email=request.user.email)
     except Employee.DoesNotExist:
@@ -32,7 +33,7 @@ def employee_self_service(request):
 
     # 2. Handle Form Submission
     if request.method == "POST":
-        # Use EmployeeSelfServiceForm here
+        # Form allows employees to update specific fields (Address/Bank)
         form = EmployeeSelfServiceForm(request.POST, request.FILES, instance=employee)
         
         if form.is_valid():
@@ -40,19 +41,17 @@ def employee_self_service(request):
             messages.success(request, "Your profile details have been approved and saved.")
             return redirect('ess:dashboard')
         else:
-            # This will now only show errors relevant to Address/Bank fields
             messages.error(request, "Unable to save. Please check the errors below.")
-            print(form.errors) # Debugging
     else:
-        # Use EmployeeSelfServiceForm here
         form = EmployeeSelfServiceForm(instance=employee)
 
-    # 3. Data for Charts & History (Existing code remains same)
+    # 3. Data for Charts & History
     historical_results = PayrollResult.objects.filter(
         employee=employee,
         period__status='COMPLETED'
     ).select_related('period').order_by('-period__payment_date').distinct()[:12]
 
+    # Reverse for chronological display in charts
     chart_results = list(historical_results)[::-1]
     
     bar_labels = [res.period.payment_date.strftime('%b %Y') for res in chart_results]
@@ -80,26 +79,30 @@ def employee_self_service(request):
     return render(request, 'ess/dashboard.html', context)
 
 
-
-
-
-
-
-
-
-
-
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "EMPLOYEE")
 def view_payslip(request, result_id):
+    """
+    Detailed Payslip View.
+    Includes a security check to ensure employees only see their own data.
+    """
     PayrollResult = apps.get_model('payroll', 'PayrollResult')
-    # Use select_related to get the company and country for the currency symbol/names
+    
+    # Fetch result with related metadata for currency and formatting
     payslip = get_object_or_404(
-        PayrollResult.objects.select_related('employee', 'period__payroll__company__country'), 
+        PayrollResult.objects.select_related(
+            'employee', 
+            'period__payroll__company__country'
+        ), 
         id=result_id
     )
     
-    # Security check: Ensure the employee email matches the logged-in user email
+    # SECURITY CHECK:
+    # Restricts access so only the owner of the record can view the DEF details.
+    # Admins/Execs have system-wide access via the Management views previously processed.
     if payslip.employee.email != request.user.email:
-        return HttpResponseForbidden("You do not have permission to view this payslip.")
+        # Check if user is Admin/Exec to allow privileged viewing if coming from admin panel
+        if request.user.role not in ["ADMIN", "EXEC"]:
+            return HttpResponseForbidden("You do not have permission to view this payslip.")
     
     return render(request, 'ess/payslip_detail.html', {'payslip': payslip})

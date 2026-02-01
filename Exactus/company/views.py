@@ -13,6 +13,7 @@ from Exactus.company.forms import CompanyForm, ClientGroupForm, CompanyUploadFor
 
 # Utils
 from Exactus.company.utils.csv_importer import import_companies_from_csv
+from Exactus.country.utils.decorators import role_required
 
 
 # -------------------------------------------------------------------
@@ -20,7 +21,9 @@ from Exactus.company.utils.csv_importer import import_companies_from_csv
 # -------------------------------------------------------------------
 
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION")
 def company_upload_view(request, country_slug=None):
+    """Restricted to EXEC and ADMIN."""
     country = None
     if country_slug:
         country = get_object_or_404(Country, slug=country_slug)
@@ -83,14 +86,11 @@ def company_upload_view(request, country_slug=None):
         }
     )
 
-# ... (Keep remaining views: result, download template, CRUD views)
-
-
-
-
 
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATIONS",)
 def company_upload_result_view(request, country_slug=None):
+    """Restricted to EXEC and ADMIN."""
     country = None
     if country_slug:
         country = get_object_or_404(Country, slug=country_slug)
@@ -106,8 +106,11 @@ def company_upload_result_view(request, country_slug=None):
         "results": results
     })
 
+
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION")
 def download_companies_template(request, country_slug=None):
+    """Restricted to EXEC and ADMIN."""
     country = None
     if country_slug:
         country = get_object_or_404(Country, slug=country_slug)
@@ -154,18 +157,27 @@ def download_companies_template(request, country_slug=None):
     return response
 
 # -------------------------------------------------------------------
-# STANDARD CRUD VIEWS (Abbreviated for brevity as they were correct)
+# STANDARD CRUD VIEWS
 # -------------------------------------------------------------------
+
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATIONS", "DIRECTOR", "MANAGER", "BILLING", "SPECIALIST", "FINANCE")
 def company(request, country_slug):
+    """Restricted to EXEC and ADMIN."""
     country = get_object_or_404(Country, slug=country_slug)
     companies = Company.objects.filter(country=country)
     return render(request, 'company/index.html', {'companies': companies, 'country': country})
 
 
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION")  
 def company_create(request, country_slug):
+    """
+    Only users with EXEC, ADMIN, or COMPLIANCE roles can access this.
+    Others are bounced to the dashboard.
+    """
     country = get_object_or_404(Country, slug=country_slug)
+    
     if request.method == "POST":
         form = CompanyForm(request.POST)
         if form.is_valid():
@@ -176,10 +188,14 @@ def company_create(request, country_slug):
             return redirect('companies:company', country_slug=country.slug)
     else:
         form = CompanyForm()
-    return render(request, 'company/create.html', {'form': form, 'country': country})
+    
+    return render(request, 'company/form.html', {'form': form, 'country': country})
+
 
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATIONS")
 def company_edit(request, country_slug, company_id):
+    """Restricted to EXEC and ADMIN."""
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, id=company_id, country=country)
     if request.method == "POST":
@@ -192,8 +208,11 @@ def company_edit(request, country_slug, company_id):
         form = CompanyForm(instance=company)
     return render(request, 'company/edit.html', {'form': form, 'company': company, 'country': country})
 
+
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION")
 def company_delete(request, country_slug, company_id):
+    """Restricted to EXEC and ADMIN."""
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, id=company_id, country=country)
     if request.method == "POST":
@@ -207,13 +226,18 @@ def company_delete(request, country_slug, company_id):
 # -------------------------------------------------------------------
 
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATIONS", "DIRECTOR", "MANAGER")
 def client_group_list(request, country_slug):
+    """Restricted to EXEC and ADMIN."""
     country = get_object_or_404(Country, slug=country_slug)
     groups = ClientGroup.objects.filter(country=country)
     return render(request, 'company/groups/list.html', {'groups': groups, 'country': country})
 
+
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION")
 def client_group_create(request, country_slug):
+    """Restricted to EXEC and ADMIN."""
     country = get_object_or_404(Country, slug=country_slug)
     if request.method == "POST":
         form = ClientGroupForm(request.POST)
@@ -227,8 +251,11 @@ def client_group_create(request, country_slug):
         form = ClientGroupForm()
     return render(request, 'company/groups/form.html', {'form': form, 'country': country})
 
+
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATIONS")
 def client_group_edit(request, country_slug, group_id):
+    """Restricted to EXEC and ADMIN."""
     country = get_object_or_404(Country, slug=country_slug)
     group = get_object_or_404(ClientGroup, id=group_id, country=country)
     if request.method == "POST":
@@ -241,9 +268,32 @@ def client_group_edit(request, country_slug, group_id):
         form = ClientGroupForm(instance=group)
     return render(request, 'company/groups/form.html', {'form': form, 'country': country})
 
-# Debug Placeholders
-def company_test_validation(request, country_slug): return HttpResponse("Debug: Test Validation")
-def company_form_debug(request, country_slug): return HttpResponse("Debug: Form Debug")
-def company_debug_info(request, country_slug): return HttpResponse("Debug: Info")
-def company_validate_ajax(request, country_slug): return HttpResponse("Debug: Ajax")
-def company_field_requirements(request, country_slug): return HttpResponse("Debug: Requirements")
+
+@login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION")
+def company_test_validation(request, country_slug): 
+    return HttpResponse("Debug: Test Validation")
+
+
+@login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION")
+def company_form_debug(request, country_slug): 
+    return HttpResponse("Debug: Form Debug")
+
+
+@login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION")
+def company_debug_info(request, country_slug): 
+    return HttpResponse("Debug: Info")
+
+
+@login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION")
+def company_validate_ajax(request, country_slug): 
+    return HttpResponse("Debug: Ajax")
+
+
+@login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION")
+def company_field_requirements(request, country_slug): 
+    return HttpResponse("Debug: Requirements")

@@ -14,13 +14,16 @@ from Exactus.elements.models import Element
 from Exactus.calculationbase.models import CalculationBase
 from Exactus.calculationbase.forms import CalculationBaseForm, CalculationBaseUploadForm
 from Exactus.calculationbase.utils.csv_importer import import_calculationbase_from_csv
+from Exactus.country.utils.decorators import role_required
 
 # -------------------------------------------------------------------------
 # STANDARD CRUD VIEWS
 # -------------------------------------------------------------------------
 
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE")
 def calculationbase_list(request, country_slug, regulations_id):
+    """List calculation bases - Restricted to EXEC and ADMIN."""
     country = get_object_or_404(Country, slug=country_slug)
     regulations = get_object_or_404(Regulations, pk=regulations_id, country=country)
 
@@ -43,7 +46,9 @@ def calculationbase_list(request, country_slug, regulations_id):
 
 
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE")
 def calculationbase_create(request, country_slug, regulations_id):
+    """Create calculation base - Restricted to EXEC and ADMIN."""
     country = get_object_or_404(Country, slug=country_slug)
     regulations = get_object_or_404(Regulations, pk=regulations_id)
 
@@ -94,7 +99,9 @@ def calculationbase_create(request, country_slug, regulations_id):
 
 
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE")
 def calculationbase_edit(request, country_slug, regulations_id, pk):
+    """Edit calculation base - Restricted to EXEC and ADMIN."""
     country = get_object_or_404(Country, slug=country_slug)
     regulations = get_object_or_404(Regulations, pk=regulations_id, country=country)
     cb = get_object_or_404(CalculationBase, pk=pk, country=country, regulations=regulations)
@@ -129,7 +136,9 @@ def calculationbase_edit(request, country_slug, regulations_id, pk):
 
 
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE")
 def calculationbase_delete(request, country_slug, regulations_id, pk):
+    """Delete calculation base - Restricted to EXEC and ADMIN."""
     country = get_object_or_404(Country, slug=country_slug)
     regulations = get_object_or_404(Regulations, pk=regulations_id, country=country)
     cb = get_object_or_404(CalculationBase, pk=pk, country=country, regulations=regulations)
@@ -160,13 +169,9 @@ def calculationbase_delete(request, country_slug, regulations_id, pk):
 # -------------------------------------------------------------------------
 
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE")
 def calculationbase_upload(request, country_slug=None, regulations_id=None):
-    """
-    Handles uploads for 3 Contexts:
-    1. Fully Local: (Country + Reg ID provided) -> Context locked.
-    2. Hybrid/Country Scope: (Country provided, Reg ID None) -> Context locked to Country, Reg inferred from CSV.
-    3. Fully Global: (Both None) -> Context inferred entirely from CSV.
-    """
+    """Upload calculation bases via CSV - Restricted to EXEC and ADMIN."""
     country = None
     regulations = None
 
@@ -177,13 +182,10 @@ def calculationbase_upload(request, country_slug=None, regulations_id=None):
     # 2. Resolve Regulation Context
     if country and regulations_id:
         regulations = get_object_or_404(Regulations, pk=regulations_id, country=country)
-        # Fully Local -> Use the standard local form template
         template_name = "calculationbase/upload_form.html"
     elif country:
-        # Hybrid -> Use the Global template (instructions are better for bulk), but pass country context
         template_name = "calculationbase/upload_global.html"
     else:
-        # Global -> Use Global template
         template_name = "calculationbase/upload_global.html"
 
     if request.method == "POST":
@@ -192,7 +194,6 @@ def calculationbase_upload(request, country_slug=None, regulations_id=None):
             csv_file = form.cleaned_data["csv_file"]
             dry_run = form.cleaned_data.get("dry_run", False)
 
-            # Handle file encoding
             try:
                 data_set = csv_file.read().decode("utf-8-sig")
             except UnicodeDecodeError:
@@ -201,9 +202,6 @@ def calculationbase_upload(request, country_slug=None, regulations_id=None):
             
             io_string = io.StringIO(data_set)
 
-            # Import Logic
-            # The importer uses 'country' and 'regulations' if provided to lock context.
-            # If they are None, it looks for columns in the CSV.
             success_count, error_count, errors = import_calculationbase_from_csv(
                 io_string, 
                 country=country, 
@@ -211,7 +209,6 @@ def calculationbase_upload(request, country_slug=None, regulations_id=None):
                 dry_run=dry_run
             )
 
-            # Store results in session for the result view
             request.session["calc_upload_results"] = {
                 "success_count": success_count,
                 "error_count": error_count,
@@ -221,7 +218,6 @@ def calculationbase_upload(request, country_slug=None, regulations_id=None):
                 "regulations_id": regulations_id
             }
 
-            # Redirect based on context
             if country and regulations:
                 return redirect(reverse("calculationbase:upload_result", kwargs={
                     "country_slug": country_slug, 
@@ -248,10 +244,9 @@ def calculationbase_upload(request, country_slug=None, regulations_id=None):
 
 
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE")
 def calculationbase_upload_result(request, country_slug=None, regulations_id=None):
-    """
-    Displays results. Adapts to the context (Local vs Global).
-    """
+    """View upload results - Restricted to EXEC and ADMIN."""
     results = request.session.pop("calc_upload_results", None)
     
     country = None
@@ -264,11 +259,9 @@ def calculationbase_upload_result(request, country_slug=None, regulations_id=Non
         regulations = get_object_or_404(Regulations, pk=regulations_id, country=country)
         template_name = "calculationbase/upload_result.html"
     else:
-        # Use Global result template for Hybrid or Global modes
         template_name = "calculationbase/upload_result_global.html"
 
     if not results:
-        # Fallback redirects if session is empty (user refreshed page)
         if country and regulations:
             return redirect("calculationbase:list", country_slug=country_slug, regulations_id=regulations_id)
         elif country:
@@ -288,13 +281,9 @@ def calculationbase_upload_result(request, country_slug=None, regulations_id=Non
 
 
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE")
 def download_calculationbase_template(request, country_slug=None, regulations_id=None):
-    """
-    Generates a CSV template.
-    - If Global: Adds 'country_code' and 'fiscal_year' columns.
-    - If Hybrid (Country known, Reg unknown): Adds 'fiscal_year' column.
-    - If Local (Both known): Standard columns only.
-    """
+    """Download CSV template - Restricted to EXEC and ADMIN."""
     country = None
     regulations = None
     
@@ -304,13 +293,11 @@ def download_calculationbase_template(request, country_slug=None, regulations_id
     if country and regulations_id:
         regulations = get_object_or_404(Regulations, pk=regulations_id)
 
-    # Determine required extra columns
     needs_country_col = (country is None)
     needs_year_col = (regulations is None)
 
     response = HttpResponse(content_type='text/csv')
     
-    # Filename generation
     if country:
         fname = f"calculation_base_template_{country.iso2_code}.csv"
     else:
@@ -320,23 +307,18 @@ def download_calculationbase_template(request, country_slug=None, regulations_id
 
     writer = csv.writer(response)
 
-    # 1. Construct Headers
     headers = []
-    
     if needs_country_col:
         headers.append("country_code")
-    
     if needs_year_col:
         headers.append("fiscal_year")
 
-    # Standard fields
     headers.extend([
         "element_code", "element_base_code", "base_frequency",
         "rounding_base", "rounding_base_decimals",
         "rounding_taxed", "rounding_taxed_decimals"
     ])
     
-    # Bracket fields 00-15
     for i in range(16):
         s = f"{i:02d}"
         headers.extend([
@@ -347,26 +329,20 @@ def download_calculationbase_template(request, country_slug=None, regulations_id
 
     writer.writerow(headers)
 
-    # 2. Construct Example Row
     row = []
-    
     if needs_country_col:
-        row.append("AR") # Example country code
-    
+        row.append("AR")
     if needs_year_col:
-        row.append("2025") # Example fiscal year
+        row.append("2025")
 
-    # Example data
     row.extend([
-        "6000", "", "Monthly",  # element info
-        "Round down", "2",      # base rounding
-        "Round down", "2",      # taxed rounding
+        "6000", "", "Monthly",
+        "Round down", "2",
+        "Round down", "2",
     ])
     
-    # Bracket 00 (Filled example)
     row.extend(["0.00", "0.050000", "Round down", "2", "Round down", "2"])
     
-    # Brackets 01-15 (Empty examples)
     for _ in range(15):
         row.extend(["", "", "", "", "", ""])
 

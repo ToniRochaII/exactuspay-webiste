@@ -29,7 +29,7 @@ from Exactus.payroll.models import (
     PeriodStatus, PayrollResult
 )
 from Exactus.compensation.models import CompensationComponent
-from Exactus.utils.decorators import role_required
+from Exactus.country.utils.decorators import role_required
 
 try:
     from Exactus.calculationbase.models import CalculationBase
@@ -61,6 +61,7 @@ logger = logging.getLogger(__name__)
 # ============================================================
 
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE")
 def payroll_dashboard(request, country_slug, company_id):
     company = get_object_or_404(Company, pk=company_id)
     country = get_object_or_404(Country, slug=country_slug)
@@ -99,6 +100,7 @@ def payroll_dashboard(request, country_slug, company_id):
 # PAYROLL LIST
 # ============================================================
 
+@method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE"), name='dispatch')
 class PayrollListView(LoginRequiredMixin, ListView):
     model = Payroll
     template_name = "payroll/payroll_list.html"
@@ -128,6 +130,7 @@ class PayrollListView(LoginRequiredMixin, ListView):
 # PAYROLL DETAIL
 # ============================================================
 
+@method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE"), name='dispatch')
 class PayrollDetailView(LoginRequiredMixin, DetailView):
     model = Payroll
     template_name = "payroll/payroll_detail.html"
@@ -161,6 +164,7 @@ class PayrollDetailView(LoginRequiredMixin, DetailView):
 # PAYROLL CREATE
 # ============================================================
 
+@method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE"), name='dispatch')
 class PayrollCreateView(LoginRequiredMixin, CreateView):
     model = Payroll
     form_class = PayrollForm
@@ -199,6 +203,7 @@ class PayrollCreateView(LoginRequiredMixin, CreateView):
 # PAYROLL UPDATE
 # ============================================================
 
+@method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST",), name='dispatch')
 class PayrollUpdateView(LoginRequiredMixin, UpdateView):
     model = Payroll
     template_name = "payroll/payroll_form.html"
@@ -230,6 +235,7 @@ class PayrollUpdateView(LoginRequiredMixin, UpdateView):
 # PAYROLL DELETE
 # ============================================================
 
+@method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST",), name='dispatch')
 class PayrollDeleteView(LoginRequiredMixin, DeleteView):
     model = Payroll
     template_name = "payroll/payroll_confirm_delete.html"
@@ -260,6 +266,7 @@ class PayrollDeleteView(LoginRequiredMixin, DeleteView):
 # PERIOD LIST
 # ============================================================
 
+@method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE"), name='dispatch')
 class PayrollPeriodListView(LoginRequiredMixin, ListView):
     model = PayrollPeriod
     template_name = "payroll/period_list.html"
@@ -284,6 +291,7 @@ class PayrollPeriodListView(LoginRequiredMixin, ListView):
 # PERIOD DETAIL (GROSS TO NET REPORT)
 # ============================================================
 
+@method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE"), name='dispatch')
 class PayrollPeriodDetailView(LoginRequiredMixin, DetailView):
     model = PayrollPeriod
     template_name = "payroll/period_detail.html"
@@ -463,6 +471,7 @@ class PayrollPeriodDetailView(LoginRequiredMixin, DetailView):
 # PERIOD CREATE, UPDATE, DELETE
 # ============================================================
 
+@method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST"), name='dispatch')
 class PayrollPeriodCreateView(LoginRequiredMixin, CreateView):
     model = PayrollPeriod
     form_class = PayrollPeriodForm
@@ -538,6 +547,7 @@ class PayrollPeriodCreateView(LoginRequiredMixin, CreateView):
         })
 
 
+@method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST"), name='dispatch')
 class PayrollPeriodUpdateView(LoginRequiredMixin, UpdateView):
     model = PayrollPeriod
     form_class = PayrollPeriodForm
@@ -571,6 +581,7 @@ class PayrollPeriodUpdateView(LoginRequiredMixin, UpdateView):
         })
 
 
+@method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST"), name='dispatch')
 class PayrollPeriodDeleteView(LoginRequiredMixin, DeleteView):
     model = PayrollPeriod
     template_name = "payroll/period_confirm_delete.html"
@@ -607,6 +618,7 @@ class PayrollPeriodDeleteView(LoginRequiredMixin, DeleteView):
 # ============================================================
 
 @method_decorator(login_required, name="dispatch")
+@method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST"), name='dispatch')
 class PayrollPeriodProcessView(View):
     def post(self, request, country_slug, company_id, payroll_id, period_id):
         period = get_object_or_404(PayrollPeriod, pk=period_id, payroll_id=payroll_id, payroll__company_id=company_id)
@@ -690,6 +702,7 @@ class PayrollPeriodProcessView(View):
 # ============================================================
 
 @method_decorator(login_required, name="dispatch")
+@method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST"), name='dispatch')
 class PayrollPeriodSendApprovalView(View):
     """
     Stage 2 -> Stage 3: Lock and Send to Approver
@@ -709,6 +722,7 @@ class PayrollPeriodSendApprovalView(View):
 
 
 @method_decorator(login_required, name="dispatch")
+@method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER"), name='dispatch')
 class PayrollPeriodAuthorizeView(View):
     """
     Stage 3 -> Stage 4: Authorize and Finalize
@@ -756,6 +770,7 @@ class PayrollPeriodAuthorizeView(View):
 
 
 @method_decorator(login_required, name="dispatch")
+@method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER"), name='dispatch')
 class PayrollPeriodRejectView(View):
     """
     Stage 3 -> Stage 1: Reject and Reset to Pending (Wipe Data)
@@ -820,9 +835,7 @@ class PayrollPeriodRejectView(View):
 # EXPORT & RESET UTILS
 # ============================================================
 @method_decorator(login_required, name='dispatch')
-@method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION",
-                                "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE"), 
-                                name='dispatch')
+@method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE"), name='dispatch')
 class PayrollPeriodExportView(View):
     def get(self, request, country_slug, company_id, payroll_id, period_id):
         period = get_object_or_404(PayrollPeriod, pk=period_id)
@@ -941,8 +954,7 @@ class PayrollPeriodExportView(View):
 
 
 @login_required
-@role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION",
-               "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE")
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST")
 @require_http_methods(["GET", "POST"])
 def payroll_reset_confirm(request, country_slug, company_id, payroll_id):
     payroll = get_object_or_404(Payroll, pk=payroll_id, company_id=company_id)
@@ -965,6 +977,7 @@ def payroll_reset_confirm(request, country_slug, company_id, payroll_id):
 
 
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST")
 @require_POST
 def reset_payroll(request, country_slug, company_id, payroll_id):
     payroll = get_object_or_404(Payroll, pk=payroll_id, company_id=company_id)
@@ -980,8 +993,7 @@ def reset_payroll(request, country_slug, company_id, payroll_id):
 
 
 @login_required
-@role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION",
-               "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE")
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST")
 @require_http_methods(["GET", "POST"])
 def payroll_period_reset_confirm(request, country_slug, company_id, payroll_id, period_id):
     """
@@ -1021,6 +1033,7 @@ def payroll_period_reset_confirm(request, country_slug, company_id, payroll_id, 
 
 
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST")
 def payroll_base_audit(request, country_slug, company_id, payroll_id, period_id):
     period = get_object_or_404(PayrollPeriod, pk=period_id)
     employees = period.get_eligible_employees()
@@ -1048,30 +1061,36 @@ def payroll_base_audit(request, country_slug, company_id, payroll_id, period_id)
 
 
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST")
 def get_next_period_number(request, payroll_id):
     return JsonResponse({'next_period_number': 1})
 
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST")
 @require_POST
 def lock_payroll(request, country_slug, company_id, payroll_id):
     return JsonResponse({'success': True})
 
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST")
 @require_POST
 def unlock_payroll(request, country_slug, company_id, payroll_id):
     return JsonResponse({'success': True})
 
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST")
 @require_POST
 def lock_period(request, country_slug, company_id, payroll_id, period_id):
     return JsonResponse({'success': True})
 
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST")
 @require_POST
 def unlock_period(request, country_slug, company_id, payroll_id, period_id):
     return JsonResponse({'success': True})
 
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST")
 def payroll_summary_api(request, payroll_id):
     return JsonResponse({'success': True})
 
@@ -1079,6 +1098,7 @@ def payroll_summary_api(request, payroll_id):
 # HISTORICAL DATA UPLOAD
 # ============================================================
 
+@method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST",), name='dispatch')
 class PayrollHistoricalUploadView(LoginRequiredMixin, View):
     """
     Upload historical data via CSV. Validates columns against Elements/PD Codes.

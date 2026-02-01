@@ -4,11 +4,13 @@ import datetime
 from dateutil.relativedelta import relativedelta
 from collections import defaultdict
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.apps import apps
 from django.utils.dateparse import parse_date
+
+# Models & Forms
 from .models import ReportDefinition
 from .forms import RunReportForm
 from .engine import ReportEngine
@@ -16,6 +18,10 @@ from .rti_engine import RTIGenerator
 from Exactus.company.models import Company
 from Exactus.country.models import Country
 from Exactus.payroll.models import Payroll, PayrollPeriod
+from Exactus.employee.models import Employee 
+
+# Access Control
+from Exactus.country.utils.decorators import role_required
 
 # ==========================================
 #               HELPER FUNCTIONS
@@ -155,7 +161,9 @@ def export_to_csv(filename, headers, codes, matrix):
 # ==========================================
 
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE","IMPLEMENTATION","BILLING","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE")
 def report_list(request, country_slug, company_id):
+    """Restricted to EXEC and ADMIN."""
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
     
@@ -175,7 +183,9 @@ def report_list(request, country_slug, company_id):
     })
 
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE","IMPLEMENTATION","BILLING","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE")
 def report_run(request, country_slug, company_id, report_id):
+    """Restricted to EXEC and ADMIN."""
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
     report_def = get_object_or_404(ReportDefinition, pk=report_id)
@@ -366,7 +376,7 @@ def report_run(request, country_slug, company_id, report_id):
                     details = row.get('parsed_details', {})
                     for col in final_cols_config:
                         code = col['code']
-                        val = details.get(code, 0.0)
+                        val = details.get(col['code'], 0.0)
                         if code in CODES_TO_INVERT: val = abs(val)
                         row_values.append(format_localized(val, 'number', country))
                     
@@ -390,9 +400,11 @@ def report_run(request, country_slug, company_id, report_id):
 
 
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE","IMPLEMENTATION","BILLING","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE")
 def rti_run(request, country_slug, company_id):
     """
     Dedicated view for generating HMRC Real Time Information (RTI) submissions.
+    Restricted to EXEC and ADMIN.
     """
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
@@ -428,16 +440,11 @@ def rti_run(request, country_slug, company_id):
     })
 
 
-# ... (Keep existing imports)
-from Exactus.employee.models import Employee 
-
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE","IMPLEMENTATION","BILLING","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE")
 def payslip_run(request, country_slug, company_id):
     """
-    Generates HTML Printable Payslips.
-    FIXES:
-    1. Calculates Totals in Python (Float) to prevent rounding errors.
-    2. Sums exactly what is visible (Line Items) to ensure the math works.
+    Generates HTML Printable Payslips. Restricted to EXEC and ADMIN.
     """
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
@@ -571,19 +578,3 @@ def payslip_run(request, country_slug, company_id):
         'company': company,
         'periods': periods
     })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

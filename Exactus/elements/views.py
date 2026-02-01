@@ -16,20 +16,18 @@ from Exactus.calculationbase.models import CalculationBase
 from Exactus.elements.forms import ElementForm, ElementUploadForm
 
 # Utils & Decorators
-from Exactus.utils.decorators import role_required 
+from Exactus.country.utils.decorators import role_required 
 from Exactus.elements.utils.sync import propagate_element_to_companies
-
-# [CRITICAL IMPORT] This was missing or not detected
 from Exactus.elements.utils.csv_importer import import_elements_from_csv
 
-
-# -------------------------------------------------------------------------
-# CRUD Views
-# -------------------------------------------------------------------------
+# ──────────────────────────────────────────────────────────────────────────────
+# 1. ELEMENT CRUD VIEWS (RESTRICTED TO EXEC & ADMIN)
+# ──────────────────────────────────────────────────────────────────────────────
 
 @login_required
-@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
+@role_required("EXEC", "ADMIN","COMPLIANCE")
 def element(request, country_slug):
+    """List elements - Restricted to EXEC and ADMIN."""
     country = get_object_or_404(Country, slug=country_slug)
     elements = Element.objects.filter(country=country)
     return render(
@@ -44,8 +42,9 @@ def element(request, country_slug):
 
 
 @login_required
-@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
+@role_required("EXEC", "ADMIN","COMPLIANCE")
 def element_create(request, country_slug):
+    """Create a new element - Restricted to EXEC and ADMIN."""
     country = get_object_or_404(Country, slug=country_slug)
     if request.method == "POST":
         form = ElementForm(request.POST)
@@ -70,23 +69,22 @@ def element_create(request, country_slug):
 
 
 @login_required
-@role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION", "OPERATION")
+@role_required("EXEC", "ADMIN","COMPLIANCE")
 def element_edit(request, country_slug, element_code):
+    """Edit an existing element - Restricted to EXEC and ADMIN."""
     country = get_object_or_404(Country, slug=country_slug)
     element = get_object_or_404(Element, country=country, element_code=element_code)
     
     if request.method == "POST":
         form = ElementForm(request.POST, instance=element)
         if form.is_valid():
-            # 1. Save the Element changes to the database
             saved_element = form.save()
             
-            # 2. Check if the user manually requested a PD Code Overwrite
             if form.cleaned_data.get('sync_pdcodes'):
                 propagate_element_to_companies(saved_element)
-                messages.success(request, f"Element '{saved_element.element_code}' updated and synced to all company PD Codes!")
+                messages.success(request, f"Element '{saved_element.element_code}' updated and synced!")
             else:
-                messages.success(request, f"Element '{saved_element.element_code}' updated locally. PD Codes were NOT changed.")
+                messages.success(request, f"Element '{saved_element.element_code}' updated locally.")
                 
             return redirect("elements:elements", country_slug=country_slug)
     else:
@@ -105,12 +103,13 @@ def element_edit(request, country_slug, element_code):
 
 
 @login_required
-@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
+@role_required("EXEC", "ADMIN","COMPLIANCE")
 def element_delete(request, country_slug, element_code):
+    """Delete an element - Restricted to EXEC and ADMIN."""
     country = get_object_or_404(Country, slug=country_slug)
     element = get_object_or_404(Element, element_code=element_code, country=country)
     
-    # Check dependencies
+    # Check dependencies in Calculation Bases
     calculation_bases_as_element = CalculationBase.objects.filter(element=element).count()
     calculation_bases_as_base = CalculationBase.objects.filter(element_base=element).count()
     total_dependencies = calculation_bases_as_element + calculation_bases_as_base
@@ -148,13 +147,14 @@ def element_delete(request, country_slug, element_code):
     )
 
 
-# -------------------------------------------------------------------------
-# Upload & Export Views
-# -------------------------------------------------------------------------
+# ──────────────────────────────────────────────────────────────────────────────
+# 2. UPLOAD & EXPORT VIEWS (RESTRICTED TO EXEC & ADMIN)
+# ──────────────────────────────────────────────────────────────────────────────
 
 @login_required
-@role_required("EXEC", "ADMIN", "IMPLEMENTATION")
+@role_required("EXEC", "ADMIN","COMPLIANCE")
 def element_upload_view(request, country_slug=None):
+    """Upload elements via CSV - Restricted to EXEC and ADMIN."""
     country = get_object_or_404(Country, slug=country_slug) if country_slug else None
 
     if request.method == "POST":
@@ -163,7 +163,6 @@ def element_upload_view(request, country_slug=None):
             csv_file = form.cleaned_data["csv_file"]
             dry_run = form.cleaned_data.get("dry_run", False)
 
-            # Handle encoding safely
             try:
                 content = csv_file.read().decode("utf-8-sig")
             except UnicodeDecodeError:
@@ -172,7 +171,6 @@ def element_upload_view(request, country_slug=None):
             
             io_string = io.StringIO(content)
 
-            # Call the importer (This is where your NameError was happening)
             success_count, error_count, errors = import_elements_from_csv(
                 io_string, country=country, dry_run=dry_run
             )
@@ -200,8 +198,9 @@ def element_upload_view(request, country_slug=None):
 
 
 @login_required
-@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION")
+@role_required("EXEC", "ADMIN","COMPLIANCE")
 def element_upload_result_view(request, country_slug=None):
+    """View upload results - Restricted to EXEC and ADMIN."""
     country = None
     if country_slug:
         country = get_object_or_404(Country, slug=country_slug)
@@ -230,7 +229,9 @@ def element_upload_result_view(request, country_slug=None):
 
 
 @login_required
+@role_required("EXEC", "ADMIN","COMPLIANCE")
 def download_elements_template(request, country_slug=None):
+    """Download CSV template - Restricted to EXEC and ADMIN."""
     country = get_object_or_404(Country, slug=country_slug) if country_slug else None
     
     response = HttpResponse(content_type="text/csv")
@@ -248,7 +249,6 @@ def download_elements_template(request, country_slug=None):
     ]
     writer.writerow(headers)
 
-    # Example Row Logic
     def write_example(c_code):
         writer.writerow([
             c_code, "1000", "Basic Salary", "Monthly Salary", "Visible", 
@@ -260,7 +260,6 @@ def download_elements_template(request, country_slug=None):
     if country:
         write_example(country.iso2_code)
     else:
-        # Provide examples for the requested demo countries
         demo_codes = ["AR", "CL", "PA", "PE", "AO", "ZA", "NG", "EG", "MA", "SA", "AE", "PK", "IN", "ID", "PH"]
         for code in demo_codes:
             write_example(code)

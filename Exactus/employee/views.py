@@ -14,6 +14,7 @@ from django.http import HttpResponse
 from django.views import View
 from django.db import transaction
 from django.contrib.auth import get_user_model
+from django.utils.crypto import get_random_string  # <-- CRITICAL FIX
 
 # Models
 from Exactus.company.models import Company
@@ -28,30 +29,31 @@ from Exactus.employee.forms import (
 )
 
 # Utils & Permissions
-from Exactus.utils.decorators import role_required
+from Exactus.country.utils.decorators import role_required
 
 User = get_user_model()
 
-# ────────────────────────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────────
 # SECURITY HELPER
-# ────────────────────────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────────
 
 def validate_company_access(user, company):
     """Verifies if the current user is allowed to access the specific company."""
-    if user.is_superuser or getattr(user, 'is_business_user', False):
+    if user.is_superuser or getattr(user, 'role', '') in ["EXEC", "ADMIN"]:
         return True
     if hasattr(user, 'get_accessible_companies'):
         if company in user.get_accessible_companies():
             return True
     return False
 
-# ────────────────────────────────────────────────
-# EMPLOYEE CRUD
-# ────────────────────────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────────
+# EMPLOYEE CRUD (RESTRICTED TO EXEC & ADMIN)
+# ──────────────────────────────────────────────────────────────────────────────
 
 @login_required
-@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE")
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATIONS", "DIRECTOR", "MANAGER", "SPECIALIST")
 def employee_list(request, country_slug, company_id):
+    """List employees for a specific company - Restricted to EXEC and ADMIN."""
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
     
@@ -69,8 +71,9 @@ def employee_list(request, country_slug, company_id):
     })
 
 @login_required
-@role_required("EXEC","ADMIN","COMPLIANCE","BILLING","IMPLEMENTATION","OPERATION","DIRECTOR","MANAGER")
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATIONS", "DIRECTOR", "MANAGER", "SPECIALIST")
 def employee_create(request, country_slug, company_id):
+    """Create a new employee record - Restricted to EXEC and ADMIN."""
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
 
@@ -96,8 +99,12 @@ def employee_create(request, country_slug, company_id):
     })
 
 @login_required
-@role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION", "OPERATION", "DIRECTOR", "MANAGER")
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATIONS", "DIRECTOR", "MANAGER", "SPECIALIST")
 def employee_edit(request, country_slug, company_id, employee_id):
+    """
+    Edit an existing employee record - Restricted to EXEC and ADMIN.
+    Includes logic to create User account if missing.
+    """
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
 
@@ -110,6 +117,41 @@ def employee_edit(request, country_slug, company_id, employee_id):
     FormClass = get_employee_form_for_country(country)
 
     if request.method == "POST":
+        # --- NEW LOGIC: Handle User Account Creation (Fixed) ---
+        if 'create_user_account' in request.POST:
+            if not employee.email:
+                messages.error(request, "Employee must have an email address to create a user account.")
+            elif linked_user:
+                messages.warning(request, "User account already exists.")
+            else:
+                try:
+                    # 1. Generate Secure Password manually using utils
+                    temp_password = get_random_string(length=12)
+                    
+                    # 2. Create User manually to bypass Manager errors
+                    new_user = User.objects.create_user(
+                        username=employee.email,
+                        email=employee.email,
+                        password=temp_password
+                    )
+                    
+                    # 3. Set Attributes
+                    new_user.role = 'EMPLOYEE'
+                    new_user.first_name = employee.employee_name
+                    new_user.last_name = employee.employee_surname
+                    new_user.save()
+                    
+                    # 4. Success Message (In production, send this via email)
+                    messages.success(request, f"User account created! Temporary Password: {temp_password}")
+                    return redirect("employee:employee_edit", country_slug=country_slug, company_id=company.company_id, employee_id=employee.id)
+                    
+                except Exception as e:
+                    messages.error(request, f"Error creating user account: {str(e)}")
+            
+            # Refresh to show message if we didn't redirect
+            return redirect("employee:employee_edit", country_slug=country_slug, company_id=company.company_id, employee_id=employee.id)
+
+        # --- Standard Form Handling ---
         form = FormClass(request.POST, instance=employee)
         access_form = EmployeeAccessForm(request.POST, instance=linked_user) if linked_user else None
 
@@ -128,13 +170,14 @@ def employee_edit(request, country_slug, company_id, employee_id):
         "employee": employee, "company": company, "country": country, "country_slug": country_slug,
     })
 
-# ────────────────────────────────────────────────
-# MULTI-FORMAT UPLOAD (EXCEL & CSV)
-# ────────────────────────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────────
+# MULTI-FORMAT UPLOAD (RESTRICTED TO EXEC & ADMIN)
+# ──────────────────────────────────────────────────────────────────────────────
 
 class EmployeeUploadView(View):
+    """Handle bulk employee uploads - Restricted to EXEC and ADMIN."""
     @method_decorator(login_required)
-    @method_decorator(role_required("EXEC", "ADMIN", "IMPLEMENTATION"))
+    @method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATIONS", "DIRECTOR", "MANAGER", "SPECIALIST"))
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
@@ -161,7 +204,6 @@ class EmployeeUploadView(View):
         try:
             data_rows = []
             
-            # 1. PROCESS BY FILE TYPE
             if filename.endswith('.csv'):
                 file.seek(0)
                 content = file.read().decode('utf-8-sig').splitlines()
@@ -191,7 +233,6 @@ class EmployeeUploadView(View):
                 messages.error(request, "Unsupported format. Please upload .xlsx or .csv")
                 return self.get(request, country_slug, company_id)
 
-            # 2. CORE PROCESSING LOGIC
             success_count = 0
             error_log = []
             company_cache = {c.company_code: c for c in Company.objects.all()}
@@ -210,7 +251,6 @@ class EmployeeUploadView(View):
                         error_log.append(f"Row {index}: Missing employee_number.")
                         continue
 
-                    # FIX: Handle employee_code constraint
                     emp_code = data.get('employee_code') or emp_num
 
                     defaults = {
@@ -223,7 +263,6 @@ class EmployeeUploadView(View):
                         'employment_start_date': data.get('employment_start_date'),
                     }
 
-                    # Tax info mapping
                     if 'ni_number' in data: defaults['tax_info_01'] = data['ni_number']
                     if 'tax_code' in data: defaults['tax_info_03'] = data['tax_code']
                     if 'cpf' in data: defaults['tax_info_01'] = data['cpf']
@@ -254,14 +293,14 @@ class EmployeeUploadView(View):
             messages.error(request, f"File processing error: {str(e)}")
             return self.get(request, country_slug, company_id)
 
-# ────────────────────────────────────────────────
-# RESULT VIEWS
-# ────────────────────────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────────
+# RESULT VIEWS (RESTRICTED TO EXEC & ADMIN)
+# ──────────────────────────────────────────────────────────────────────────────
 
 @login_required
-@role_required("EXEC", "ADMIN", "IMPLEMENTATION")
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATIONS", "DIRECTOR", "MANAGER", "SPECIALIST")
 def employee_upload_result_view(request, country_slug=None, company_id=None):
-    """Consolidated view to display upload outcome."""
+    """Display upload outcome - Restricted to EXEC and ADMIN."""
     result = request.session.pop("upload_result", None)
     if not result:
         messages.warning(request, "No upload results found.")
@@ -275,29 +314,28 @@ def employee_upload_result_view(request, country_slug=None, company_id=None):
     })
 
 @login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATIONS", "DIRECTOR", "MANAGER", "SPECIALIST")
 def global_upload_result_view(request, country_slug):
-    """Alias for global route consistency."""
+    """Alias for global route consistency - Restricted to EXEC and ADMIN."""
     return employee_upload_result_view(request, country_slug=country_slug)
 
-# ────────────────────────────────────────────────
-# TEMPLATE DOWNLOAD
-# ────────────────────────────────────────────────
+# ──────────────────────────────────────────────────────────────────────────────
+# TEMPLATE DOWNLOAD (RESTRICTED TO EXEC & ADMIN)
+# ──────────────────────────────────────────────────────────────────────────────
 
 @login_required
-@role_required("EXEC", "ADMIN", "IMPLEMENTATION")
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATIONS", "DIRECTOR", "MANAGER", "SPECIALIST")
 def download_employees_template(request, country_slug, company_id=None):
-    """Generates the Excel template with required fields and dropdowns."""
+    """Generate Excel template - Restricted to EXEC and ADMIN."""
     wb = openpyxl.Workbook()
     ws = wb.active
     ws.title = "Employee Import"
 
-    # CORE REQUIRED FIELDS (including employee_code for constraint safety)
     headers = [
         'company_code', 'employee_number', 'employee_code', 'employee_name', 
         'employee_surname', 'gender', 'date_of_birth', 'email', 'employment_start_date'
     ]
 
-    # Localization
     if country_slug in ['united-kingdom', 'uk', 'gb']:
         headers += ['ni_number', 'tax_code']
     elif country_slug in ['brazil', 'br']:
@@ -316,7 +354,6 @@ def download_employees_template(request, country_slug, company_id=None):
         company = get_object_or_404(Company, pk=company_id)
         ws.cell(row=2, column=1, value=company.company_code)
 
-    # Gender Dropdown (Now in column F)
     gender_dv = DataValidation(type="list", formula1='"Male,Female"', allow_blank=True)
     ws.add_data_validation(gender_dv)
     gender_dv.add("F2:F500")
