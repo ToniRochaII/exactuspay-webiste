@@ -233,7 +233,7 @@ else:
 
 # Hostinger typically prefers Port 587 with STARTTLS for cloud connections
 EMAIL_HOST = 'smtp.hostinger.com'
-EMAIL_PORT = 587
+EMAIL_PORT = 465
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
