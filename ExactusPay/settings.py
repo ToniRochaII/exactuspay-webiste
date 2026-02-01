@@ -8,10 +8,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ================================
 # CORE SETTINGS
 # ================================
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
 
-# SECURITY WARNING: don't run with debug turned on in production!
 # In Render, ensure the environment variable DEBUG is set to "False".
 DEBUG = os.environ.get("DEBUG", "True") == "True"
 
@@ -25,7 +23,6 @@ CSRF_TRUSTED_ORIGINS = [
     "https://payroll.exactuspay.com",
 ]
 
-# Add Render external hostname automatically if available
 render_host = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
 if render_host:
     ALLOWED_HOSTS.append(render_host)
@@ -43,12 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
-    
-    # Third-party apps
     'crispy_forms',
     'crispy_bootstrap5',
-    
-    # Local apps
     'Exactus.accounts.apps.AccountsConfig',
     'Exactus.country.apps.CountryConfig',
     'Exactus.company',
@@ -71,11 +64,6 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    
-    # Custom Session Middleware (Uncomment if needed)
-    # "Exactus.middleware.session_timeout.SessionTimeoutMiddleware",
-    # "Exactus.middleware.tab_close_detection.TabCloseMiddleware",
-    
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -107,8 +95,6 @@ WSGI_APPLICATION = 'ExactusPay.wsgi.application'
 # ================================
 # DATABASE CONFIGURATION
 # ================================
-# If DATABASE_URL is set (Production), we use it.
-# If not (Local), we use db.sqlite3.
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
 if DATABASE_URL and DATABASE_URL.strip():
@@ -121,7 +107,6 @@ if DATABASE_URL and DATABASE_URL.strip():
         )
     }
 else:
-    # Local development uses SQLite
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.sqlite3",
@@ -131,10 +116,9 @@ else:
 
 
 # ================================
-# CACHE CONFIGURATION (UPDATED)
+# CACHE CONFIGURATION
 # ================================
 if DEBUG:
-    # Local memory cache for development
     CACHES = {
         'default': {
             'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
@@ -142,11 +126,9 @@ if DEBUG:
         }
     }
 else:
-    # Production Redis Cache (Updated to support Render's REDIS_URL)
     CACHES = {
         'default': {
             'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-            # Use Render's REDIS_URL if available, fallback to localhost
             'LOCATION': os.environ.get("REDIS_URL", "redis://127.0.0.1:6379/1"),
         }
     }
@@ -189,7 +171,6 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'Exactus', 'static'),
 ]
 
-# WhiteNoise: Optimization for serving static files in production
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "/media/"
@@ -199,22 +180,14 @@ MEDIA_ROOT = BASE_DIR / "media"
 # ================================
 # APP SETTINGS
 # ================================
-# Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# Crispy Forms
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
-
-# Custom User Model
 AUTH_USER_MODEL = 'accounts.User'
-
-# Authentication URLs
 LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = 'role_based_redirect'
 LOGOUT_REDIRECT_URL = "/login/"
 
-# File Upload Settings
 FILE_UPLOAD_HANDLERS = [
     'django.core.files.uploadhandler.TemporaryFileUploadHandler',
 ]
@@ -229,9 +202,8 @@ CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SAMESITE = 'Lax'
 
 if not DEBUG:
-    # Production settings
     SECURE_SSL_REDIRECT = True
-    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -241,10 +213,8 @@ if not DEBUG:
     USE_X_FORWARDED_HOST = True
     SESSION_COOKIE_SECURE = True
 else:
-    # Development settings
     SESSION_COOKIE_SECURE = False
 
-# Session Configuration
 SESSION_COOKIE_AGE = 2000
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
@@ -252,31 +222,21 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 
 # ================================
-# EMAIL CONFIGURATION (FIXED)
+# EMAIL CONFIGURATION (TLS / PORT 587)
 # ================================
-# 1. Determine Backend:
-# If DEBUG is True, use Console (prints to terminal) to prevent browser hanging during local dev.
-# If DEBUG is False (Production), use SMTP.
 
+# Switch to Console backend if debugging, otherwise SMTP
+if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-# Hostinger SMTP Settings
+# Hostinger typically prefers Port 587 with STARTTLS for cloud connections
 EMAIL_HOST = 'smtp.hostinger.com'
 EMAIL_PORT = 587
-
-# --- CRITICAL FIX START ---
-# Port 465 requires Implicit SSL. 
-# We MUST set USE_SSL=True and USE_TLS=False to avoid hanging connections.
-EMAIL_USE_SSL = True   
-EMAIL_USE_TLS = False  
-# --- CRITICAL FIX END ---
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
 
 EMAIL_HOST_USER = 'no-reply@exactuspay.com'
-
-# SECURITY: Try to get password from Environment Variable first.
-# If you haven't set the Env Var yet, replace "PASSWORD_HERE" with the real password.
-EMAIL_HOST_PASSWORD = os.environ.get("TlBFI=[b2L") 
-
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "TlBFI=[b2L")
 DEFAULT_FROM_EMAIL = 'Exactus Support <no-reply@exactuspay.com>'
