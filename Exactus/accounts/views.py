@@ -16,10 +16,12 @@ from django.template.loader import render_to_string
 from django.conf import settings
 from django.core.cache import cache
 
-# --- CORRECTED IMPORTS HERE ---
+# --- IMPORT ADDED FOR HTML EMAILS ---
+from django.utils.html import strip_tags
+# ------------------------------------
+
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
-# ------------------------------
 
 from django.contrib.auth import get_user_model, authenticate, login, logout as auth_logout, views as auth_views
 from django.contrib.auth.decorators import login_required
@@ -58,6 +60,9 @@ User = get_user_model()
 def get_pending_regulation_updates():
     """
     Return the number of regulations that still require an update.
+    Attempts to use a `regulations` app if it exists, otherwise defaults to 0
+    so the dashboard continues to function even when the compliance app
+    hasn't been installed yet.
     """
     candidates = ("RegulationUpdate", "Regulation")
     RegulationModel = None
@@ -303,28 +308,28 @@ def admin_reset_password(request, user_id):
         return redirect("user_edit", user_id=user_id)
 
     token = default_token_generator.make_token(user)
-    
-    # --- CORRECT USAGE HERE ---
     uid = urlsafe_base64_encode(force_bytes(user.pk))
-    # --------------------------
-    
-    # Construct reset URL
     reset_url = request.build_absolute_uri(reverse('password_reset_confirm', args=[uid, token]))
 
-    # Send email
     subject = "Password Reset Request - Admin Initiated"
-    message = render_to_string("emails/admin_reset_password.html", {
+    
+    # 1. Render HTML content
+    html_message = render_to_string("emails/admin_reset_password.html", {
         "user": user,
         "reset_url": reset_url,
     })
+    
+    # 2. Create plain text alternative for fallback
+    plain_message = strip_tags(html_message)
 
     try:
         send_mail(
             subject,
-            message,
+            plain_message, # Pass plain text as primary message
             settings.DEFAULT_FROM_EMAIL,
             [user.email],
-            fail_silently=False
+            fail_silently=False,
+            html_message=html_message # Pass HTML version
         )
         messages.success(request, f"Password reset email sent to {user.email}")
     except Exception as e:
@@ -344,11 +349,7 @@ def resend_welcome_email(request, user_id):
     
     # Generate a fresh token for password setup/reset
     token = default_token_generator.make_token(user)
-    
-    # --- CORRECT USAGE HERE ---
     uid = urlsafe_base64_encode(force_bytes(user.pk))
-    # --------------------------
-    
     setup_url = request.build_absolute_uri(reverse('password_reset_confirm', args=[uid, token]))
     
     subject = "Welcome to Exactus - Account Details"
@@ -360,14 +361,20 @@ def resend_welcome_email(request, user_id):
         'login_url': request.build_absolute_uri(reverse('login'))
     }
     
+    # 1. Render HTML content
+    html_message = render_to_string("emails/account_welcome.html", context)
+    
+    # 2. Create plain text alternative for fallback
+    plain_message = strip_tags(html_message)
+    
     try:
-        message = render_to_string("emails/account_welcome.html", context)
         send_mail(
             subject,
-            message,
+            plain_message, # Pass plain text as primary message
             settings.DEFAULT_FROM_EMAIL,
             [user.email],
-            fail_silently=False
+            fail_silently=False,
+            html_message=html_message # Pass HTML version
         )
         messages.success(request, f"Welcome email with setup instructions sent to {user.email}.")
     except Exception as e:
