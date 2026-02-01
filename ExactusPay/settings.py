@@ -1,4 +1,3 @@
-# settings.py
 import os
 from pathlib import Path
 import dj_database_url
@@ -6,14 +5,36 @@ import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# ================================
+# CORE SETTINGS
+# ================================
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# Defaults to True only if the variable is not set. In Render, set this to "False".
+# In Render, ensure the environment variable DEBUG is set to "False".
 DEBUG = os.environ.get("DEBUG", "True") == "True"
 
-# Application definition
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    "payroll.exactuspay.com",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://payroll.exactuspay.com",
+]
+
+# Add Render external hostname automatically if available
+render_host = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+if render_host:
+    ALLOWED_HOSTS.append(render_host)
+    CSRF_TRUSTED_ORIGINS.append(f"https://{render_host}")
+
+
+# ================================
+# INSTALLED APPS
+# ================================
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -43,6 +64,22 @@ INSTALLED_APPS = [
     'Exactus.ess.apps.EssConfig',
 ]
 
+MIDDLEWARE = [
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    
+    # Custom Session Middleware (Uncomment if needed)
+    # "Exactus.middleware.session_timeout.SessionTimeoutMiddleware",
+    # "Exactus.middleware.tab_close_detection.TabCloseMiddleware",
+    
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+]
+
 ROOT_URLCONF = 'ExactusPay.urls'
 
 TEMPLATES = [
@@ -58,7 +95,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                # Duplicate removed here
                 'Exactus.context_processors.sidebar_context',
             ],
         },
@@ -67,6 +103,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ExactusPay.wsgi.application'
 
+
 # ================================
 # DATABASE CONFIGURATION
 # ================================
@@ -74,7 +111,6 @@ WSGI_APPLICATION = 'ExactusPay.wsgi.application'
 # If not (Local), we use db.sqlite3.
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
-# Check if DATABASE_URL exists AND is not just whitespace
 if DATABASE_URL and DATABASE_URL.strip():
     DATABASES = {
         "default": dj_database_url.config(
@@ -93,7 +129,31 @@ else:
         }
     }
 
-# Password validation
+
+# ================================
+# CACHE CONFIGURATION (UPDATED)
+# ================================
+if DEBUG:
+    # Local memory cache for development
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': 'exactus-permissions',
+        }
+    }
+else:
+    # Production Redis Cache (Updated to support Render's REDIS_URL)
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+            'LOCATION': os.environ.get("REDIS_URL", "redis://127.0.0.1:6379/1"),
+        }
+    }
+
+
+# ================================
+# PASSWORD VALIDATION
+# ================================
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -109,11 +169,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Internationalization
+
+# ================================
+# INTERNATIONALIZATION
+# ================================
 LANGUAGE_CODE = "en-gb"
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
+
 
 # ================================
 # STATIC & MEDIA FILES
@@ -130,6 +194,10 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
+
+# ================================
+# APP SETTINGS
+# ================================
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -145,26 +213,16 @@ LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = 'role_based_redirect'
 LOGOUT_REDIRECT_URL = "/login/"
 
-# ================================
-# HOSTS & SECURITY
-# ================================
-ALLOWED_HOSTS = [
-    "127.0.0.1",
-    "localhost",
-    "payroll.exactuspay.com",
+# File Upload Settings
+FILE_UPLOAD_HANDLERS = [
+    'django.core.files.uploadhandler.TemporaryFileUploadHandler',
 ]
+PROGRESS_SESSION_KEY = 'upload_progress'
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://payroll.exactuspay.com",
-]
 
-# Add Render external hostname if available
-render_host = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
-if render_host:
-    ALLOWED_HOSTS.append(render_host)
-    CSRF_TRUSTED_ORIGINS.append(f"https://{render_host}")
-
-# Security Settings
+# ================================
+# SECURITY SETTINGS
+# ================================
 SESSION_COOKIE_HTTPONLY = True
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SAMESITE = 'Lax'
@@ -185,85 +243,36 @@ else:
     # Development settings
     SESSION_COOKIE_SECURE = False
 
-# Cache Configuration
-if DEBUG:
-    CACHES = {
-        'default': {
-            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-            'LOCATION': 'exactus-permissions',
-        }
-    }
-else:
-    CACHES = {
-        'default': {
-            'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-            'LOCATION': 'redis://127.0.0.1:6379/1',
-        }
-    }
-
-
-# ================================
-# SESSION CONFIGURATION
-# ================================
+# Session Configuration
 SESSION_COOKIE_AGE = 2000
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
-# ================================
-# EMAIL CONFIGURATION
-# ================================
 
 # ================================
-# EMAIL CONFIGURATION
+# EMAIL CONFIGURATION (FIXED)
 # ================================
-
-# 1. Determine Backend: Use SMTP (Real) for Production, Console (Text) for Local Debugging
+# If DEBUG is True, we use Console Backend (prints to terminal) to prevent browser hanging.
+# If DEBUG is False (Production), we use SMTP.
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
+# Hostinger SMTP Settings
 EMAIL_HOST = 'smtp.hostinger.com'
 EMAIL_PORT = 465
 
-# --- CRITICAL FIX START ---
-# Port 465 requires SSL, not TLS. This fixes the hanging connection.
+# --- SSL FIX: Use SSL=True for port 465 to prevent hanging ---
 EMAIL_USE_SSL = True   
 EMAIL_USE_TLS = False  
-# --- CRITICAL FIX END ---
+# -------------------------------------------------------------
 
 EMAIL_HOST_USER = 'no-reply@exactuspay.com'
 
-# SECURITY: Try to get password from Environment Variable first, fallback to string
-EMAIL_HOST_PASSWORD = os.environ.get("TlBFI=[b2L")
+# Ideally, set this environment variable in Render. 
+# If not set, it falls back to the hardcoded string (replace 'PASSWORD_HERE' with your actual password).
+EMAIL_HOST_PASSWORD = os.environ.get("TlBFI=[b2L") 
 
 DEFAULT_FROM_EMAIL = 'Exactus Support <no-reply@exactuspay.com>'
-
-
-
-# ================================
-# MIDDLEWARE
-# ================================
-MIDDLEWARE = [
-    "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
-    "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
-    
-    # Custom Session Middleware (MUST come after AuthenticationMiddleware)
-    # "Exactus.middleware.session_timeout.SessionTimeoutMiddleware",
-    # "Exactus.middleware.tab_close_detection.TabCloseMiddleware",
-    
-    "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
-]
-
-# File Upload Settings
-FILE_UPLOAD_HANDLERS = [
-    'django.core.files.uploadhandler.TemporaryFileUploadHandler',
-]
-
-PROGRESS_SESSION_KEY = 'upload_progress'
