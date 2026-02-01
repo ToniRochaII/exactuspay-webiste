@@ -25,6 +25,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
 from django.db.models import Q, Count, Sum, F
 from django.db.models.functions import TruncMonth
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
 
 # Internal Exactus Imports
 from Exactus.company import admin
@@ -286,6 +288,8 @@ def apply_business_logic_protections(permissions, role):
 # 4. EMAIL & ACCOUNT NOTIFICATIONS
 # ──────────────────────────────────────────────────────────────────────────────
 
+# Exactus/accounts/views.py
+
 @login_required
 @role_required("EXEC", "ADMIN")
 def admin_reset_password(request, user_id):
@@ -301,7 +305,10 @@ def admin_reset_password(request, user_id):
         return redirect("user_edit", user_id=user_id)
 
     token = default_token_generator.make_token(user)
-    uid = auth_views.utils.urlsafe_base64_encode(auth_views.utils.force_bytes(user.pk))
+    
+    # --- FIX: Use imported utility functions directly ---
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    # ----------------------------------------------------
     
     # Construct reset URL
     reset_url = request.build_absolute_uri(reverse('password_reset_confirm', args=[uid, token]))
@@ -326,6 +333,53 @@ def admin_reset_password(request, user_id):
         messages.error(request, f"Failed to send email: {str(e)}")
 
     return redirect("user_edit", user_id=user_id)
+
+
+@login_required
+@role_required("EXEC", "ADMIN")
+def resend_welcome_email(request, user_id):
+    """
+    Manually resend the welcome email with account details and a setup link.
+    Useful if the initial onboarding email was lost or expired.
+    """
+    user = get_object_or_404(User, id=user_id)
+    
+    # Generate a fresh token for password setup/reset
+    token = default_token_generator.make_token(user)
+    
+    # --- FIX: Use imported utility functions directly ---
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    # ----------------------------------------------------
+
+    setup_url = request.build_absolute_uri(reverse('password_reset_confirm', args=[uid, token]))
+    
+    subject = "Welcome to Exactus - Account Details"
+    context = {
+        'user': user,
+        'username': user.username,
+        'role': user.get_role_display(),
+        'setup_url': setup_url,
+        'login_url': request.build_absolute_uri(reverse('login'))
+    }
+    
+    try:
+        message = render_to_string("emails/account_welcome.html", context)
+        send_mail(
+            subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [user.email],
+            fail_silently=False
+        )
+        messages.success(request, f"Welcome email with setup instructions sent to {user.email}.")
+    except Exception as e:
+        messages.error(request, f"Error sending welcome email: {str(e)}")
+        
+    return redirect("user_edit", user_id=user_id)
+
+
+
+
 
 
 @login_required
