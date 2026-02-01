@@ -222,21 +222,19 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
 
 # ================================
-# EMAIL CONFIGURATION (TLS / PORT 587)
+# EMAIL CONFIGURATION (FORCE REAL SENDING)
 # ================================
 
-# Switch to Console backend if debugging, otherwise SMTP
-if DEBUG:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-else:
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# Force SMTP backend to test real sending, even if DEBUG is True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-# Hostinger typically prefers Port 587 with STARTTLS for cloud connections
+# Hostinger Settings (Port 587 + TLS)
 EMAIL_HOST = 'smtp.hostinger.com'
-EMAIL_PORT = 465
-EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True   # StartTLS (Recommended for Cloud Hosting)
 EMAIL_USE_SSL = False
 
 EMAIL_HOST_USER = 'no-reply@exactuspay.com'
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "TlBFI=[b2L")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "YOUR_REAL_PASSWORD_HERE") 
+
 DEFAULT_FROM_EMAIL = 'Exactus Support <no-reply@exactuspay.com>'
