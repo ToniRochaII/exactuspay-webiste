@@ -258,13 +258,13 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 # If DEBUG is True, use Console (prints to terminal) to prevent browser hanging during local dev.
 # If DEBUG is False (Production), use SMTP.
 
-
-    
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # Hostinger SMTP Settings
 EMAIL_HOST = 'smtp.hostinger.com'
-EMAIL_PORT = 465
+EMAIL_PORT = 587
 
 # --- CRITICAL FIX START ---
 # Port 465 requires Implicit SSL. 
