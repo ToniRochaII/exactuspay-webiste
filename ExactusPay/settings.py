@@ -235,6 +235,6 @@ EMAIL_USE_TLS = True   # StartTLS (Recommended for Cloud Hosting)
 EMAIL_USE_SSL = False
 
 EMAIL_HOST_USER = 'no-reply@exactuspay.com'
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "YOUR_REAL_PASSWORD_HERE") 
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "TlBFI=[b2L") 
 
 DEFAULT_FROM_EMAIL = 'Exactus Support <no-reply@exactuspay.com>'

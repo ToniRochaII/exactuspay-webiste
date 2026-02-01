@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
+<link href="{% static 'css/modern.css' %}" rel="stylesheet">
+
 {% load crispy_forms_tags %}
 
 {% block title %}
@@ -78,7 +80,9 @@
 
     .tab-content { border: none; }
     .card { border: none; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+
 </style>
+
 
 <div class="row g-4">
     <div class="col-lg-3 col-xl-2">
