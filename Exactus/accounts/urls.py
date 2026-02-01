@@ -1,55 +1,38 @@
+# Exactus/accounts/urls.py
 from django.urls import path
-from django.conf import settings
-from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from Exactus.accounts import views
 
 urlpatterns = [
-    # existing routes
-
-
-    path('register/', views.register, name='register'),
-    path('login/', auth_views.LoginView.as_view(template_name="accounts/login.html",redirect_authenticated_user=True), name="login"),
-    path('logout/enhanced/', views.enhanced_logout, name='enhanced_logout'),
-    path("logout/", auth_views.LogoutView.as_view(next_page='login'), name="logout"),
-
-    # Password reset
-    path('password_reset/', auth_views.PasswordResetView.as_view(template_name='auth/password_reset.html'), name='password_reset'),
-    path('password_reset/done/',auth_views.PasswordResetDoneView.as_view(template_name='auth/password_reset_done.html'), name='password_reset_done'),
-    path('reset/<uidb64>/<token>/',auth_views.PasswordResetConfirmView.as_view(template_name='auth/password_reset_confirm.html'),name='password_reset_confirm'),
-    path('reset/done/',auth_views.PasswordResetCompleteView.as_view(template_name='auth/password_reset_complete.html'),name='password_reset_complete'),
-    path("users/<int:user_id>/reset-password/", views.admin_reset_password, name="admin_reset_password"),
-
+    # 1. Profile & Settings
+    path('profile/', views.profile, name='profile'),
+    
+    # 2. Dashboards
     path('dashboard/redirect/', views.role_based_redirect, name='role_based_redirect'),
     path('dashboard/exec/', views.dashboard_exec, name='dashboard_exec'),
     path('dashboard/admin/', views.dashboard_admin, name='dashboard_admin'),
-    # path('dashboard/general/', views.dashboard_general, name='dashboard_general'),
-    # path('dashboard/employee/', views.dashboard_employee, name='dashboard_employee'),
+    path('dashboard/general/', views.dashboard, name='dashboard_general'),
+    path('dashboard/employee/', views.dashboard, name='dashboard_employee'),
     path('dashboard/', views.dashboard, name='dashboard'),
-    
-    path('profile/', views.profile, name='profile'),
 
-    path('users/', views.user_list, name='user_list'),
-    path('users/export/', views.export_users_csv, name='export_users_csv'),
-    path('users/<int:user_id>/', views.user_detail, name='user_detail'),
-    path('users/<int:user_id>/edit/', views.user_edit, name='user_edit'),
-
-    path('roles/', views.role_management, name='role_management'),
-
+    # 3. Auth & Registration
     path('register/', views.register, name='register'),
-    path('users/<int:user_id>/unified/', views.unified_profile, name='unified_profile_view'),
+    path('login/', auth_views.LoginView.as_view(template_name="accounts/login.html", redirect_authenticated_user=True), name="login"),
+    path('logout/', views.enhanced_logout, name='enhanced_logout'), # Matches base.html
 
-    # accounts/urls.py
-    path('password-change/', auth_views.PasswordChangeView.as_view(template_name='auth/password_change.html'), name='password_change'),
-    path('password-change/done/', auth_views.PasswordChangeDoneView.as_view(template_name='auth/password_change_done.html'), name='password_change_done'),
-
-
-    # Session management
+    # 4. Password Management
+    path('password_reset/', views.CustomPasswordResetView.as_view(), name='password_reset'),
+    path('password_reset/done/', views.CustomPasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', views.CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('reset/done/', views.CustomPasswordResetCompleteView.as_view(), name='password_reset_complete'),
     
-    # Optional: Enhanced logout
-    path('logout/', views.enhanced_logout, name='logout'),
-
+    # 5. User Management & Admin Tools
+    path('export-users/', views.export_users_csv, name='export_users_csv'), # Matches user_list.html
+    path('users/', views.user_list, name='user_list'),
+    path('users/<int:user_id>/edit/', views.user_edit, name='user_edit'),
+    path("users/<int:user_id>/reset-password/", views.admin_reset_password, name="admin_reset_password"),
+    path("users/<int:user_id>/resend-welcome/", views.resend_welcome_email, name="resend_welcome_email"),
+    
+    # 6. Roles
+    path('roles/', views.role_management, name='role_management'),
 ]
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

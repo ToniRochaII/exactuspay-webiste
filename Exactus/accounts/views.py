@@ -8,7 +8,7 @@ from collections import defaultdict
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.http import HttpResponse, JsonResponse
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.utils import timezone
 from django.apps import apps
 from django.core.mail import send_mail
@@ -25,7 +25,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
 from django.db.models import Q, Count, Sum, F
 from django.db.models.functions import TruncMonth
-from django.db.models import Count
 
 # Internal Exactus Imports
 from Exactus.company import admin
@@ -36,7 +35,7 @@ from Exactus.accounts.utils.role_hierarchy import promote_role, demote_role
 from Exactus.accounts.services.onboarding import OnboardingService
 from Exactus.accounts.forms import UserEditForm, UserRegistrationForm, LoginForm, UserProfileForm
 from Exactus.country.models import Country
-from Exactus.company.models import Company  
+from Exactus.company.models import Company
 from Exactus.accounts.models import (
     User,
     UserProfile,
@@ -46,6 +45,10 @@ from Exactus.accounts.models import (
 )
 
 User = get_user_model()
+
+# ──────────────────────────────────────────────────────────────────────────────
+# UTILITY: COMPLIANCE CHECK
+# ──────────────────────────────────────────────────────────────────────────────
 
 def get_pending_regulation_updates():
     """
@@ -101,22 +104,15 @@ def get_pending_regulation_updates():
     return qs.count()
 
 
-
-
-
-
-
+# ──────────────────────────────────────────────────────────────────────────────
+# 1. PROFILE & PASSWORD VIEWS
+# ──────────────────────────────────────────────────────────────────────────────
 
 @login_required
 @role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION", "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE")
 def profile(request):
     """User's own profile - uses unified template."""
     return unified_profile(request, user_id=None)
-
-
-
-
-
 
 
 class CustomPasswordResetView(auth_views.PasswordResetView):
@@ -150,8 +146,9 @@ class CustomPasswordResetCompleteView(auth_views.PasswordResetCompleteView):
     template_name = 'auth/password_reset_complete.html'
 
 
-
-
+# ──────────────────────────────────────────────────────────────────────────────
+# 2. USER MANAGEMENT & EXPORTS
+# ──────────────────────────────────────────────────────────────────────────────
 
 @login_required
 def export_users_csv(request):
@@ -177,12 +174,6 @@ def export_users_csv(request):
 def user_detail(request, user_id):
     """User detail view - uses unified template."""
     return unified_profile(request, user_id=user_id)
-
-
-
-
-
-
 
 
 @permission_required("ROLE", "READ")
@@ -221,7 +212,9 @@ def role_management(request):
     return render(request, "roles/role_management.html", context)
 
 
-
+# ──────────────────────────────────────────────────────────────────────────────
+# 3. PERMISSION HELPERS
+# ──────────────────────────────────────────────────────────────────────────────
 
 def get_safety_warnings(matrix):
     """Generate safety warnings for permission matrix."""
@@ -289,45 +282,95 @@ def apply_business_logic_protections(permissions, role):
                 permissions[domain]['READ'] = True
 
 
-
-
+# ──────────────────────────────────────────────────────────────────────────────
+# 4. EMAIL & ACCOUNT NOTIFICATIONS
+# ──────────────────────────────────────────────────────────────────────────────
 
 @login_required
+@role_required("EXEC", "ADMIN")
 def admin_reset_password(request, user_id):
+    """
+    Sends a password reset email to a specific user.
+    Strictly for EXEC and ADMIN.
+    """
     user = get_object_or_404(User, id=user_id)
 
     # Prevent resetting own password from admin tools
     if user == request.user:
-        messages.error(request, "You cannot reset your own password here.")
-        return redirect("user_edit", id=user_id)
+        messages.error(request, "You cannot reset your own password here. Use the standard reset flow.")
+        return redirect("user_edit", user_id=user_id)
 
     token = default_token_generator.make_token(user)
-
-    reset_url = request.build_absolute_uri(f"/reset/{user.pk}/{token}/")
+    uid = auth_views.utils.urlsafe_base64_encode(auth_views.utils.force_bytes(user.pk))
+    
+    # Construct reset URL
+    reset_url = request.build_absolute_uri(reverse('password_reset_confirm', args=[uid, token]))
 
     # Send email
-    subject = "Password Reset Request"
+    subject = "Password Reset Request - Admin Initiated"
     message = render_to_string("emails/admin_reset_password.html", {
         "user": user,
         "reset_url": reset_url,
     })
 
-    send_mail(
-        subject,
-        message,
-        settings.DEFAULT_FROM_EMAIL,
-        [user.email],
-        fail_silently=False
-    )
+    try:
+        send_mail(
+            subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [user.email],
+            fail_silently=False
+        )
+        messages.success(request, f"Password reset email sent to {user.email}")
+    except Exception as e:
+        messages.error(request, f"Failed to send email: {str(e)}")
 
-    messages.success(request, f"Password reset email sent to {user.email}")
-    return redirect("user_edit", id=user_id)
+    return redirect("user_edit", user_id=user_id)
 
 
-from django.http import JsonResponse
-from django.views.decorators.http import require_POST
-from django.views.decorators.csrf import csrf_exempt
-import json
+@login_required
+@role_required("EXEC", "ADMIN")
+def resend_welcome_email(request, user_id):
+    """
+    Manually resend the welcome email with account details and a setup link.
+    Useful if the initial onboarding email was lost or expired.
+    """
+    user = get_object_or_404(User, id=user_id)
+    
+    # Generate a fresh token for password setup/reset
+    token = default_token_generator.make_token(user)
+    uid = auth_views.utils.urlsafe_base64_encode(auth_views.utils.force_bytes(user.pk))
+    setup_url = request.build_absolute_uri(reverse('password_reset_confirm', args=[uid, token]))
+    
+    subject = "Welcome to Exactus - Account Details"
+    context = {
+        'user': user,
+        'username': user.username,
+        'role': user.get_role_display(),
+        'setup_url': setup_url,
+        'login_url': request.build_absolute_uri(reverse('login'))
+    }
+    
+    # We use a dedicated welcome template. If it doesn't exist, ensure you create 'emails/account_welcome.html'
+    try:
+        message = render_to_string("emails/account_welcome.html", context)
+        send_mail(
+            subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [user.email],
+            fail_silently=False
+        )
+        messages.success(request, f"Welcome email with setup instructions sent to {user.email}.")
+    except Exception as e:
+        messages.error(request, f"Error sending welcome email: {str(e)}")
+        
+    return redirect("user_edit", user_id=user_id)
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# 5. UTILITIES (BEACON, SESSION)
+# ──────────────────────────────────────────────────────────────────────────────
 
 @csrf_exempt
 @require_POST
@@ -338,20 +381,6 @@ def tab_close_detection(request):
         print(f"User {request.user.username} closed tab")
     
     return JsonResponse({'status': 'ok'})
-
-
-import time
-from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
-from django.utils import timezone
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_GET, require_POST
-
-
-
-
-
-
 
 @login_required
 @require_GET
@@ -371,12 +400,8 @@ def session_status(request):
     })
 
 
-
-
-
-
 # ──────────────────────────────────────────────────────────────────────────────
-# 1. AUTHENTICATION & REGISTRATION
+# 6. AUTHENTICATION & REGISTRATION
 # ──────────────────────────────────────────────────────────────────────────────
 
 @login_required
@@ -436,7 +461,6 @@ def custom_login(request):
 
 def enhanced_logout(request):
     """Custom logout that clears session data."""
-    from django.contrib.auth import logout as auth_logout
     if request.user.is_authenticated:
         if 'last_activity' in request.session:
             del request.session['last_activity']
@@ -444,16 +468,10 @@ def enhanced_logout(request):
         messages.info(request, 'You have been logged out successfully.')
     return redirect('login')
 
-# ──────────────────────────────────────────────────────────────────────────────
-# 2. DASHBOARDS
-# ──────────────────────────────────────────────────────────────────────────────
 
-import json
-from datetime import timedelta, date
-from django.utils import timezone
-from django.db.models import Count, Q, Sum
-from django.db.models.functions import TruncMonth
-from django.apps import apps
+# ──────────────────────────────────────────────────────────────────────────────
+# 7. DASHBOARDS
+# ──────────────────────────────────────────────────────────────────────────────
 
 def get_dashboard_context(request):
     """
@@ -473,9 +491,8 @@ def get_dashboard_context(request):
     ).select_related('period', 'period__payroll__company__country')
 
     # 2. Financial Aggregation
-    # Note: Replace 'gross_pay' and 'net_pay' with your actual model field names
     totals = results_qs.aggregate(
-        total_gross=Sum('gross_pay'), # This specifically maps to Code 5000 logic
+        total_gross=Sum('gross_pay'),
         total_net=Sum('net_pay'),
         total_count=Count('id')
     )
@@ -560,12 +577,6 @@ def get_dashboard_context(request):
     }
 
 
-
-
-
-
-
-
 @login_required
 @role_required("EXEC")
 def dashboard_exec(request):
@@ -580,16 +591,27 @@ def dashboard_admin(request):
 @login_required
 @role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION", "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE")  
 def dashboard(request):
-    return render(request, 'dashboard.html',get_dashboard_context(request))
+    return render(request, 'dashboard.html', get_dashboard_context(request))
+
 
 # ──────────────────────────────────────────────────────────────────────────────
-# 3. USER & PROFILE MANAGEMENT
+# 8. USER & PROFILE MANAGEMENT VIEWS
 # ──────────────────────────────────────────────────────────────────────────────
 
 @login_required
 def user_list(request):
-    """Admin user list with filtering and search."""
-    if request.user.role not in ["EXEC","ADMIN","BILLING","IMPLEMENTATION","OPERATION", "DIRECTOR","MANAGER"]:
+    """
+    Admin user list with filtering and search.
+    Updated access to allow all internal roles to view the directory.
+    """
+    # Expanded role list to match export_users_csv for consistency
+    ALLOWED_ROLES = {
+        "EXEC", "ADMIN", "BILLING", "IMPLEMENTATION", 
+        "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE"
+    }
+    
+    if request.user.role not in ALLOWED_ROLES:
+        messages.error(request, "Access denied.")
         return redirect("dashboard")
 
     users = User.objects.all()
@@ -655,35 +677,24 @@ def unified_profile(request, user_id=None):
         "is_own_profile": (request.user == target_user)
     })
 
-# ──────────────────────────────────────────────────────────────────────────────
-# 4. UTILITIES & SESSION
-# ──────────────────────────────────────────────────────────────────────────────
-
 @login_required
 def heartbeat(request):
     """Session keep-alive."""
     request.session['last_activity'] = time.time()
     return JsonResponse({'status': 'active', 'user': request.user.username})
-from django.shortcuts import redirect
-from django.contrib.auth.decorators import login_required
 
 @login_required
 def role_based_redirect(request):
     user = request.user
-    role = getattr(user, 'role', 'EMPLOYEE')  # Default to EMPLOYEE if not set
+    role = getattr(user, 'role', 'EMPLOYEE') 
 
-    # Mapping logic based on your requirements
     if role == 'EXEC':
         return redirect('/dashboard/exec/')
-    
     elif role == 'ADMIN':
         return redirect('/dashboard/admin/')
-    
     elif role in ['IMPLEMENTATION', 'BILLING', 'COMPLIANCE', 'OPERATION']:
         return redirect('/dashboard/general/')
-    
     elif role == 'EMPLOYEE':
         return redirect('/dashboard/employee/')
     
-    # "Client" roles (DIRECTOR, MANAGER, specialist and finance) or any other fallback
     return redirect('/dashboard/')

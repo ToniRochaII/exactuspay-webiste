@@ -210,6 +210,19 @@ SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 
+# ================================
+# EMAIL CONFIGURATION
+# ================================
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.hostinger.com'
+EMAIL_PORT = 465
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'no-reply@exactuspay.com'
+EMAIL_HOST_PASSWORD = 'TlBFI=[b2L'
+DEFAULT_FROM_EMAIL = 'Exactus Support <no-reply@exactuspay.com>'
+
+
 
 # ================================
 # MIDDLEWARE
