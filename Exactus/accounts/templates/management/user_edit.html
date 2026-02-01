@@ -1,21 +1,43 @@
 {% extends "base.html" %}
 {% load static %}
-<link href="{% static 'css/modern.css' %}" rel="stylesheet">
 
 {% block title %}Edit User | ExactusPay{% endblock %}
 
 {% block content %}
+<link href="{% static 'css/modern.css' %}" rel="stylesheet">
+
 <div class="row justify-content-center">
     <div class="col-md-8">
         <div class="card shadow-sm border-0">
-            <div class="card-header bg-white py-3">
-                <h5 class="mb-0 fw-bold text-primary">Edit User: {{ user_to_edit.username }}</h5>
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 fw-bold text-primary">Edit User: {{ target_user.username }}</h5>
+                
+                <div class="btn-group">
+                    <a href="{% url 'resend_welcome_email' target_user.id %}" 
+                       class="btn btn-sm btn-outline-info"
+                       onclick="return confirm('Resend welcome email to {{ target_user.email }}?');">
+                        <i class="fas fa-paper-plane me-1"></i> Resend Welcome
+                    </a>
+                    <a href="{% url 'admin_reset_password' target_user.id %}" 
+                       class="btn btn-sm btn-outline-warning"
+                       onclick="return confirm('Send password reset to {{ target_user.email }}?');">
+                        <i class="fas fa-key me-1"></i> Reset Password
+                    </a>
+                </div>
             </div>
+            
             <div class="card-body p-4">
                 <form method="post">
                     {% csrf_token %}
                     
+                    <input type="hidden" name="form_type" value="account">
+                    
                     <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label fw-bold">Username</label>
+                            {{ form.username }}
+                        </div>
+
                         <div class="col-md-6">
                             <label class="form-label fw-bold">First Name</label>
                             {{ form.first_name }}

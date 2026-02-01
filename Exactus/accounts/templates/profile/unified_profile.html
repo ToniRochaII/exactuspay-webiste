@@ -99,7 +99,7 @@
                     <i class="fas fa-bell me-2"></i>Notifications
                 </a>
                 {% endif %}
-                {% if not is_own_profile and can_manage_users %}
+                {% if not is_own_profile %}
                 <a class="list-group-item list-group-item-action py-3" data-bs-toggle="list" href="#admin" role="tab">
                     <i class="fas fa-shield-alt me-2"></i>Admin Settings
                 </a>
@@ -136,7 +136,7 @@
                     <div class="card-body p-4">
                         <form method="post" enctype="multipart/form-data">
                             {% csrf_token %}
-                            <input type="hidden" name="form_type" value="profile">
+                            <input type="hidden" name="form_type" value="account">
                             
                             <div class="row align-items-center">
                                 <div class="col-md-4 text-center border-end">
@@ -168,21 +168,32 @@
                                         </div>
                                     {% else %}
                                         <div class="row">
-                                            <div class="col-md-6">{{ form.username|as_crispy_field }}</div>
-                                            <div class="col-md-6">{{ form.email|as_crispy_field }}</div>
+                                            <div class="col-md-12">{{ form.username|as_crispy_field }}</div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">{{ form.first_name|as_crispy_field }}</div>
+                                            <div class="col-md-6">{{ form.last_name|as_crispy_field }}</div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">{{ form.email|as_crispy_field }}</div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6">{{ form.role|as_crispy_field }}</div>
-                                            <div class="col-md-6">{{ form.is_active|as_crispy_field }}</div>
+                                            <div class="col-md-6">{{ form.client_group|as_crispy_field }}</div>
+                                        </div>
+                                        <div class="row mt-2">
+                                            <div class="col-md-12">{{ form.is_active|as_crispy_field }}</div>
                                         </div>
                                     {% endif %}
                                 </div>
                             </div>
 
+                            {% if not is_own_profile %}
                             <div class="d-flex justify-content-end mt-4 pt-3 border-top">
-                                <a href="{% url 'dashboard' %}" class="btn btn-link text-muted me-3">Cancel</a>
+                                <a href="{% url 'user_list' %}" class="btn btn-link text-muted me-3">Cancel</a>
                                 <button type="submit" class="btn btn-primary px-4 fw-bold">Save Account Changes</button>
                             </div>
+                            {% endif %}
                         </form>
                     </div>
                 </div>
@@ -219,7 +230,6 @@
                             </div>
 
                             <div class="d-flex justify-content-end mt-4 pt-3 border-top">
-                                <button type="reset" class="btn btn-light me-auto">Reset Changes</button>
                                 <a href="{% url 'dashboard' %}" class="btn btn-link text-muted me-3">Cancel</a>
                                 <button type="submit" class="btn btn-primary px-4 fw-bold">Update Profile</button>
                             </div>
@@ -269,7 +279,7 @@
             </div>
             {% endif %}
 
-            {% if not is_own_profile and can_manage_users %}
+            {% if not is_own_profile %}
             <div class="tab-pane fade" id="admin" role="tabpanel">
                 <div class="card">
                     <div class="card-header bg-white pt-4 px-4 border-0">
@@ -279,20 +289,16 @@
                         <div class="row g-4">
                             <div class="col-md-6">
                                 <div class="p-4 bg-light rounded-3 h-100">
-                                    <h6 class="fw-bold"><i class="fas fa-user-shield me-2"></i>Access Control</h6>
-                                    <p class="small text-muted mb-4">Toggle user ability to sign into the system.</p>
-                                    {% if target_user.is_active %}
-                                        <button class="btn btn-outline-danger w-100">Deactivate Account</button>
-                                    {% else %}
-                                        <button class="btn btn-success w-100">Reactivate Account</button>
-                                    {% endif %}
+                                    <h6 class="fw-bold"><i class="fas fa-paper-plane me-2"></i>Welcome Email</h6>
+                                    <p class="small text-muted mb-4">Resend the welcome email with setup instructions.</p>
+                                    <a href="{% url 'resend_welcome_email' target_user.id %}" class="btn btn-outline-info w-100" onclick="return confirm('Resend welcome email?');">Resend Email</a>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="p-4 bg-light rounded-3 h-100">
                                     <h6 class="fw-bold"><i class="fas fa-key me-2"></i>Security Overrides</h6>
                                     <p class="small text-muted mb-4">Manually trigger a password reset for this user.</p>
-                                    <button class="btn btn-warning w-100">Issue Password Reset</button>
+                                    <a href="{% url 'admin_reset_password' target_user.id %}" class="btn btn-warning w-100" onclick="return confirm('Send password reset?');">Issue Password Reset</a>
                                 </div>
                             </div>
                         </div>

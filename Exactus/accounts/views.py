@@ -16,12 +16,11 @@ from django.template.loader import render_to_string
 from django.conf import settings
 from django.core.cache import cache
 
-# --- IMPORT ADDED FOR HTML EMAILS ---
+# --- CRITICAL IMPORTS FOR EMAIL FIX ---
 from django.utils.html import strip_tags
-# ------------------------------------
-
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
+# --------------------------------------
 
 from django.contrib.auth import get_user_model, authenticate, login, logout as auth_logout, views as auth_views
 from django.contrib.auth.decorators import login_required
@@ -60,9 +59,6 @@ User = get_user_model()
 def get_pending_regulation_updates():
     """
     Return the number of regulations that still require an update.
-    Attempts to use a `regulations` app if it exists, otherwise defaults to 0
-    so the dashboard continues to function even when the compliance app
-    hasn't been installed yet.
     """
     candidates = ("RegulationUpdate", "Regulation")
     RegulationModel = None
@@ -122,15 +118,13 @@ def profile(request):
     return unified_profile(request, user_id=None)
 
 
-# Exactus/accounts/views.py
-
 class CustomPasswordResetView(auth_views.PasswordResetView):
+    """Custom password reset view."""
     template_name = 'auth/password_reset.html'
     email_template_name = 'auth/password_reset_email.html'
     
-    # --- FIX 1: Remove 'auth/' prefix ---
-    success_url = reverse_lazy('password_reset_done') 
-    # ------------------------------------
+    # Corrected success_url to match urls.py name
+    success_url = reverse_lazy('password_reset_done')
 
     def form_valid(self, form):
         messages.info(self.request, "If your email exists, you'll receive reset instructions shortly.")
@@ -138,15 +132,16 @@ class CustomPasswordResetView(auth_views.PasswordResetView):
 
 
 class CustomPasswordResetDoneView(auth_views.PasswordResetDoneView):
+    """Custom password reset done view."""
     template_name = 'auth/password_reset_done.html'
 
 
 class CustomPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
+    """Custom password reset confirm view."""
     template_name = 'auth/password_reset_confirm.html'
     
-    # --- FIX 2: Remove 'auth/' prefix ---
+    # Corrected success_url to match urls.py name
     success_url = reverse_lazy('password_reset_complete')
-    # ------------------------------------
 
     def form_valid(self, form):
         messages.success(self.request, "Your password has been changed successfully.")
@@ -154,6 +149,7 @@ class CustomPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
 
 
 class CustomPasswordResetCompleteView(auth_views.PasswordResetCompleteView):
+    """Custom password reset complete view."""
     template_name = 'auth/password_reset_complete.html'
 
 
@@ -294,7 +290,7 @@ def apply_business_logic_protections(permissions, role):
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# 4. EMAIL & ACCOUNT NOTIFICATIONS
+# 4. EMAIL & ACCOUNT NOTIFICATIONS (FIXED HTML SUPPORT)
 # ──────────────────────────────────────────────────────────────────────────────
 
 @login_required
@@ -317,23 +313,23 @@ def admin_reset_password(request, user_id):
 
     subject = "Password Reset Request - Admin Initiated"
     
-    # 1. Render HTML content
+    # 1. Render the HTML template
     html_message = render_to_string("emails/admin_reset_password.html", {
         "user": user,
         "reset_url": reset_url,
     })
     
-    # 2. Create plain text alternative for fallback
+    # 2. Create plain text version by stripping tags
     plain_message = strip_tags(html_message)
 
     try:
         send_mail(
             subject,
-            plain_message, # Pass plain text as primary message
+            plain_message, # Main message body (text/plain)
             settings.DEFAULT_FROM_EMAIL,
             [user.email],
             fail_silently=False,
-            html_message=html_message # Pass HTML version
+            html_message=html_message # Alternative body (text/html)
         )
         messages.success(request, f"Password reset email sent to {user.email}")
     except Exception as e:
@@ -347,7 +343,6 @@ def admin_reset_password(request, user_id):
 def resend_welcome_email(request, user_id):
     """
     Manually resend the welcome email with account details and a setup link.
-    Useful if the initial onboarding email was lost or expired.
     """
     user = get_object_or_404(User, id=user_id)
     
@@ -365,20 +360,20 @@ def resend_welcome_email(request, user_id):
         'login_url': request.build_absolute_uri(reverse('login'))
     }
     
-    # 1. Render HTML content
+    # 1. Render the HTML template
     html_message = render_to_string("emails/account_welcome.html", context)
     
-    # 2. Create plain text alternative for fallback
+    # 2. Create plain text version
     plain_message = strip_tags(html_message)
     
     try:
         send_mail(
             subject,
-            plain_message, # Pass plain text as primary message
+            plain_message, # Main message body (text/plain)
             settings.DEFAULT_FROM_EMAIL,
             [user.email],
             fail_silently=False,
-            html_message=html_message # Pass HTML version
+            html_message=html_message # Alternative body (text/html)
         )
         messages.success(request, f"Welcome email with setup instructions sent to {user.email}.")
     except Exception as e:
