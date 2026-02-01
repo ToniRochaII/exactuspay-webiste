@@ -16,6 +16,11 @@ from django.template.loader import render_to_string
 from django.conf import settings
 from django.core.cache import cache
 
+# --- CORRECTED IMPORTS HERE ---
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+# ------------------------------
+
 from django.contrib.auth import get_user_model, authenticate, login, logout as auth_logout, views as auth_views
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.tokens import default_token_generator
@@ -25,8 +30,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db import transaction
 from django.db.models import Q, Count, Sum, F
 from django.db.models.functions import TruncMonth
-from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
 
 # Internal Exactus Imports
 from Exactus.company import admin
@@ -55,9 +58,6 @@ User = get_user_model()
 def get_pending_regulation_updates():
     """
     Return the number of regulations that still require an update.
-    Attempts to use a `regulations` app if it exists, otherwise defaults to 0
-    so the dashboard continues to function even when the compliance app
-    hasn't been installed yet.
     """
     candidates = ("RegulationUpdate", "Regulation")
     RegulationModel = None
@@ -288,8 +288,6 @@ def apply_business_logic_protections(permissions, role):
 # 4. EMAIL & ACCOUNT NOTIFICATIONS
 # ──────────────────────────────────────────────────────────────────────────────
 
-# Exactus/accounts/views.py
-
 @login_required
 @role_required("EXEC", "ADMIN")
 def admin_reset_password(request, user_id):
@@ -306,9 +304,9 @@ def admin_reset_password(request, user_id):
 
     token = default_token_generator.make_token(user)
     
-    # --- FIX: Use imported utility functions directly ---
+    # --- CORRECT USAGE HERE ---
     uid = urlsafe_base64_encode(force_bytes(user.pk))
-    # ----------------------------------------------------
+    # --------------------------
     
     # Construct reset URL
     reset_url = request.build_absolute_uri(reverse('password_reset_confirm', args=[uid, token]))
@@ -347,10 +345,10 @@ def resend_welcome_email(request, user_id):
     # Generate a fresh token for password setup/reset
     token = default_token_generator.make_token(user)
     
-    # --- FIX: Use imported utility functions directly ---
+    # --- CORRECT USAGE HERE ---
     uid = urlsafe_base64_encode(force_bytes(user.pk))
-    # ----------------------------------------------------
-
+    # --------------------------
+    
     setup_url = request.build_absolute_uri(reverse('password_reset_confirm', args=[uid, token]))
     
     subject = "Welcome to Exactus - Account Details"
@@ -362,50 +360,6 @@ def resend_welcome_email(request, user_id):
         'login_url': request.build_absolute_uri(reverse('login'))
     }
     
-    try:
-        message = render_to_string("emails/account_welcome.html", context)
-        send_mail(
-            subject,
-            message,
-            settings.DEFAULT_FROM_EMAIL,
-            [user.email],
-            fail_silently=False
-        )
-        messages.success(request, f"Welcome email with setup instructions sent to {user.email}.")
-    except Exception as e:
-        messages.error(request, f"Error sending welcome email: {str(e)}")
-        
-    return redirect("user_edit", user_id=user_id)
-
-
-
-
-
-
-@login_required
-@role_required("EXEC", "ADMIN")
-def resend_welcome_email(request, user_id):
-    """
-    Manually resend the welcome email with account details and a setup link.
-    Useful if the initial onboarding email was lost or expired.
-    """
-    user = get_object_or_404(User, id=user_id)
-    
-    # Generate a fresh token for password setup/reset
-    token = default_token_generator.make_token(user)
-    uid = auth_views.utils.urlsafe_base64_encode(auth_views.utils.force_bytes(user.pk))
-    setup_url = request.build_absolute_uri(reverse('password_reset_confirm', args=[uid, token]))
-    
-    subject = "Welcome to Exactus - Account Details"
-    context = {
-        'user': user,
-        'username': user.username,
-        'role': user.get_role_display(),
-        'setup_url': setup_url,
-        'login_url': request.build_absolute_uri(reverse('login'))
-    }
-    
-    # We use a dedicated welcome template. If it doesn't exist, ensure you create 'emails/account_welcome.html'
     try:
         message = render_to_string("emails/account_welcome.html", context)
         send_mail(
@@ -658,7 +612,6 @@ def user_list(request):
     Admin user list with filtering and search.
     Updated access to allow all internal roles to view the directory.
     """
-    # Expanded role list to match export_users_csv for consistency
     ALLOWED_ROLES = {
         "EXEC", "ADMIN", "BILLING", "IMPLEMENTATION", 
         "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE"
