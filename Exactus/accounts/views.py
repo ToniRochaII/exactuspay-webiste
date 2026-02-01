@@ -122,11 +122,15 @@ def profile(request):
     return unified_profile(request, user_id=None)
 
 
+# Exactus/accounts/views.py
+
 class CustomPasswordResetView(auth_views.PasswordResetView):
-    """Custom password reset view."""
     template_name = 'auth/password_reset.html'
     email_template_name = 'auth/password_reset_email.html'
-    success_url = reverse_lazy('auth/password_reset_done')
+    
+    # --- FIX 1: Remove 'auth/' prefix ---
+    success_url = reverse_lazy('password_reset_done') 
+    # ------------------------------------
 
     def form_valid(self, form):
         messages.info(self.request, "If your email exists, you'll receive reset instructions shortly.")
@@ -134,14 +138,15 @@ class CustomPasswordResetView(auth_views.PasswordResetView):
 
 
 class CustomPasswordResetDoneView(auth_views.PasswordResetDoneView):
-    """Custom password reset done view."""
     template_name = 'auth/password_reset_done.html'
 
 
 class CustomPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
-    """Custom password reset confirm view."""
     template_name = 'auth/password_reset_confirm.html'
-    success_url = reverse_lazy('auth/password_reset_complete')
+    
+    # --- FIX 2: Remove 'auth/' prefix ---
+    success_url = reverse_lazy('password_reset_complete')
+    # ------------------------------------
 
     def form_valid(self, form):
         messages.success(self.request, "Your password has been changed successfully.")
@@ -149,7 +154,6 @@ class CustomPasswordResetConfirmView(auth_views.PasswordResetConfirmView):
 
 
 class CustomPasswordResetCompleteView(auth_views.PasswordResetCompleteView):
-    """Custom password reset complete view."""
     template_name = 'auth/password_reset_complete.html'
 
 
