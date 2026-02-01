@@ -257,10 +257,10 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 # 1. Determine Backend:
 # If DEBUG is True, use Console (prints to terminal) to prevent browser hanging during local dev.
 # If DEBUG is False (Production), use SMTP.
-if DEBUG:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-else:
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+
+    
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # Hostinger SMTP Settings
 EMAIL_HOST = 'smtp.hostinger.com'
