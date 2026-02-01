@@ -146,6 +146,7 @@ else:
     CACHES = {
         'default': {
             'BACKEND': 'django.core.cache.backends.redis.RedisCache',
+            # Use Render's REDIS_URL if available, fallback to localhost
             'LOCATION': os.environ.get("REDIS_URL", "redis://127.0.0.1:6379/1"),
         }
     }
@@ -253,8 +254,9 @@ SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 # ================================
 # EMAIL CONFIGURATION (FIXED)
 # ================================
-# If DEBUG is True, we use Console Backend (prints to terminal) to prevent browser hanging.
-# If DEBUG is False (Production), we use SMTP.
+# 1. Determine Backend:
+# If DEBUG is True, use Console (prints to terminal) to prevent browser hanging during local dev.
+# If DEBUG is False (Production), use SMTP.
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:
@@ -264,15 +266,17 @@ else:
 EMAIL_HOST = 'smtp.hostinger.com'
 EMAIL_PORT = 465
 
-# --- SSL FIX: Use SSL=True for port 465 to prevent hanging ---
+# --- CRITICAL FIX START ---
+# Port 465 requires Implicit SSL. 
+# We MUST set USE_SSL=True and USE_TLS=False to avoid hanging connections.
 EMAIL_USE_SSL = True   
 EMAIL_USE_TLS = False  
-# -------------------------------------------------------------
+# --- CRITICAL FIX END ---
 
 EMAIL_HOST_USER = 'no-reply@exactuspay.com'
 
-# Ideally, set this environment variable in Render. 
-# If not set, it falls back to the hardcoded string (replace 'PASSWORD_HERE' with your actual password).
+# SECURITY: Try to get password from Environment Variable first.
+# If you haven't set the Env Var yet, replace "PASSWORD_HERE" with the real password.
 EMAIL_HOST_PASSWORD = os.environ.get("TlBFI=[b2L") 
 
 DEFAULT_FROM_EMAIL = 'Exactus Support <no-reply@exactuspay.com>'
