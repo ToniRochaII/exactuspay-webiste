@@ -4,111 +4,145 @@
 {% block title %}Countries | ExactusPay{% endblock %}
 {% block page_title %}Countries{% endblock %}
 
-{% block breadcrumbs %}
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Countries</li>
-  </ol>
-</nav>
+{% block page_actions %}
+{% if user.is_superuser %}
+<a href="{% url 'country:country_create' %}" class="btn btn-primary">
+    <i class="fas fa-plus me-2"></i> Add Country
+</a>
+{% endif %}
+{% endblock %}
+
+{% block extra_head %}
+<link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.bootstrap5.min.css" rel="stylesheet">
+
+<style>
+
+    body { background-color: #F4F4F4 !important; }
+    .wrapper:before { background: #F4F4F4 !important; }
+    :root { --card-radius: 16px; --kpi-radius: 20px; --border-color: #f0f0f0; }
+
+    /* Specific styling for the 'Hover Function' and Roundness */
+    .card-hover-effect {
+        border-radius: 16px; /* Explicitly Rounded */
+        border: none;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        overflow: hidden; /* Crucial: Clips the table to fit the rounded corners */
+    }
+
+    .card-hover-effect:hover {
+        transform: translateY(0px); /* The "Lift" */
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    /* Ensure the table header matches the rounded top */
+    .card-header {
+        background-color: #fff;
+        border-bottom: 1px solid #f0f0f0;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
-<div class="card shadow-sm">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">Countries</h5>
-        <a href="{% url 'country:country_create' %}" class="btn btn-primary btn-sm">
-            <i class="bi bi-plus-circle"></i> Add Country
-        </a>
-    </div>
-
-    {% if countries %}
-    <div class="card-body">
-        <div class="table-responsive">
-            <table id="datatable-countries" class="table table-striped table-hover align-middle" style="width:100%">
-                <thead class="table-light">
-                    <tr>
-                        <th>Flag</th>
-                        <th>Country</th>
-                        <th>Language</th>
-                        <th>Currency</th>
-                        <th>Companies</th>
-                        <th>Status</th>
-                        <th class="text-end">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for country in countries %}
-                    <tr>
-                        <td>
-                            <img src="{% static 'dis/img/flags/' %}{{ country.iso2_code|lower }}.png"
-                                 alt="{{ country.name }} flag"
-                                 width="40" height="25"
-                                 class="rounded border shadow-sm">
-                        </td>
-
-                        <td><strong>{{ country.name }}</strong></td>
-
-                        <td>{{ country.official_language }}</td>
-
-                        <td>
-                            <strong>{{ country.currency_code }}</strong><br>
-                            <small class="text-muted">{{ country.currency_name }}</small>
-                        </td>
-
-                        <td>{{ country.companies.count }}</td>
-
-                        <td>{{ country.status }}</td>
-
-                        <td class="text-end">
-                            <a href="{% url 'companies:company' country.slug %}"
-                               class="btn btn-sm btn-primary">
-                                <i class="bi bi-arrow-right-circle"></i> Enter
-                            </a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+<div class="row">
+    <div class="col-12">
+        
+        <div class="card card-hover-effect shadow-sm">
+            <div class="card-header pt-4 px-4">
+                <h5 class="card-title mb-0">Country Configurations</h5>
+                <h6 class="card-subtitle text-muted mt-1">
+                    Manage supported countries, currencies, and global settings.
+                </h6>
+            </div>
+            
+            <div class="card-body p-0"> 
+                <div class="p-4"> 
+                    <table id="datatables-reponsive" class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th class="text-center">ISO Code</th>
+                                <th>Name</th>
+                                <th class="text-center">Currency</th>
+                                <th class="text-center">Language</th>
+                                {% if user.is_superuser %}
+                                <th class="text-center">Actions</th>
+                                {% endif %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for country in countries %}
+                            <tr>
+                                <td class="text-center">
+                                    <strong>{{ country.iso2_code }}</strong><br>
+                                    <small class="text-muted">{{ country.iso3_code }}</small>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="{% static 'dis/img/flags/' %}{{ country.iso2_code|lower }}.png" 
+                                             alt="{{ country.iso2_code }}" 
+                                             width="24" 
+                                             class="me-2 border rounded-1"
+                                             onerror="this.style.display='none'">
+                                        
+                                        <a href="{% url 'companies:company' country.slug %}" class="fw-bold text-dark text-decoration-none">
+                                            {{ country.name }}
+                                        </a>
+                                    </div>
+                                </td>
+                                <td class="text-center">
+                                    <strong>{{ country.currency_code }}</strong><br>
+                                    <small class="text-muted">{{ country.currency_name }}</small>
+                                </td>
+                                <td class="text-center">{{ country.official_language }}</td>
+                                {% if user.is_superuser %}
+                                <td class="text-center table-action" style="position: relative; z-index: 2;"> 
+                                    <a href="{% url 'country:country_delete' country.slug %}" class="text-danger" title="Archive" onclick="return confirm('Are you sure?');">
+                                        <i class="align-middle fas fa-archive"></i>
+                                    </a>
+                                </td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
-
-    {% else %}
-    <div class="text-center py-5">
-        <p class="text-muted mb-3">No countries found.</p>
-        <a href="{% url 'country:country_create' %}" class="btn btn-primary">
-            <i class="bi bi-plus-circle"></i> Add First Country
-        </a>
-    </div>
-    {% endif %}
 </div>
 {% endblock %}
 
-{% block extra_scripts %}
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/responsive.bootstrap5.min.js"></script>
+
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    $("#datatable-countries").DataTable({
-        responsive: true,
-        pageLength: 10,
-        order: [[1, 'asc']],
-        autoWidth: false,
-        language: {
-            search: "Search:",
-            lengthMenu: "Show _MENU_ entries",
-            zeroRecords: "No matching countries found.",
-            info: "Showing _START_–_END_ of _TOTAL_ countries",
-            infoEmpty: "No countries to display",
-            paginate: {
-                previous: "‹",
-                next: "›"
+    document.addEventListener("DOMContentLoaded", function() {
+        $("#datatables-reponsive").DataTable({
+            responsive: true,
+            lengthChange: true,
+            pageLength: 10,
+            lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]], 
+            
+            language: {
+                search: "",
+                searchPlaceholder: "Search Countries",
+                lengthMenu: "Show _MENU_ entries"
+            },
+
+            // Adjusted DOM for alignment
+            dom: '<"row mb-3"<"col-md-6 d-flex align-items-center"l><"col-md-6"f>>' + 
+                 '<"row"<"col-sm-12"tr>>' + 
+                 '<"row mt-3"<"col-md-5"i><"col-md-7"p>>',
+
+            initComplete: function() {
+                $('.dataTables_filter input').addClass('form-control');
+                $('.dataTables_length select').addClass('form-select');
             }
-        },
-        columnDefs: [
-            { responsivePriority: 1, targets: 1 },
-            { responsivePriority: 2, targets: -1 },
-            { responsivePriority: 3, targets: 0 },
-        ]
+        });
     });
-});
 </script>
 {% endblock %}

@@ -16,7 +16,7 @@
 
     <title>{% block title %}ExactusPay{% endblock %}</title>
 
-    <link href="{% static 'dis/css/light.css' %}" rel="stylesheet">
+    <link href="{% static 'dis/css/ExactusPay.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="{% static 'js/session_manager.js' %}"></script>
@@ -87,9 +87,9 @@
                     {% if user.is_authenticated %}
 
                     {# --- System Configuration --- #}
-                    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
+                    {# FIX APPLIED: Role check allows Directors/Managers. Inner permission check removed. #}
+                    {% if request.user.role in 'EXEC,ADMIN,COMPLIANCE,DIRECTOR,MANAGER' or request.user.is_superuser %}
 
-                    {% if user|can:"COMPANY:READ" %}
                     <li class="sidebar-item">
                         <a data-bs-target="#nav-config-country"
                            data-bs-toggle="collapse"
@@ -105,6 +105,8 @@
                                     <i class="fas fa-list me-2"></i>All Countries
                                 </a>
                             </li>
+                            
+                            {# Restricted Actions (Create/Delete) still require specific permissions #}
                             {% if user|can:"COMPANY:CREATE" %}
                             <li class="sidebar-item">
                                 <a class="sidebar-link" href="{% url 'country:country_create' %}">
@@ -112,7 +114,7 @@
                                 </a>
                             </li>
                             <li class="sidebar-item">
-                                <a class="sidebar-link" href="{% url 'country:country_delete' %}">
+                                <a class="sidebar-link" href="{% url 'country:country_delete' country_slug%}">
                                     <i class="fas fa-solid fa-trash-arrow-up"></i>Restore Country
                                 </a>
                             </li>
@@ -122,6 +124,7 @@
                                 </a>
                             </li>
                             {% endif %}
+
                             {% if user|can:"COMPANY:CREATE" %}
                                 {% if country or country_slug %}
                             <li class="sidebar-divider"></li>
@@ -132,11 +135,15 @@
                                     <i class="fas fa-edit me-2"></i>Edit {{ country.name|default:"Country" }}
                                 </a>
                             </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{% url 'country:country_delete' country_slug %}">
+                                    <i class="fas fa-upload me-2"></i>Delete Country
+                                </a>
+                            </li>
                                 {% endif %}
                             {% endif %}
                         </ul>
                     </li>
-                    {% endif %}
 
                     {% if country_slug and user|can:"PAYROLL:READ" %}
                     <li class="sidebar-item">
@@ -526,13 +533,15 @@
 
                     {% endif %} {# /Payroll Operations roles #}
 
-                    {# --- Administration (System Settings) - Moved to Bottom --- #}
-                    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE" %}
+{# --- Administration (System Settings) --- #}
+                    {# UPDATED: Added IMPLEMENTATION and OPERATION to this check so they can see the menu #}
+                    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,IMPLEMENTATION,OPERATION" %}
 
                     {% check_permission user "USER" "READ" as can_view_users %}
                     {% check_permission user "ROLE" "READ" as can_view_roles %}
 
-                    {% if can_view_users or can_view_roles or user|can:"USER:CREATE" %}
+                    {# We check if they have access to ANY of the items inside before showing the parent #}
+                    {% if can_view_users or can_view_roles or user|can:"USER:CREATE" or user|has_role:"EXEC,ADMIN,COMPLIANCE,IMPLEMENTATION,OPERATION" %}
                     <li class="sidebar-item">
                         <a data-bs-target="#nav-admin-settings"
                            data-bs-toggle="collapse"
@@ -543,6 +552,8 @@
                         <ul id="nav-admin-settings"
                             class="sidebar-dropdown list-unstyled collapse"
                             data-bs-parent="#sidebar">
+                            
+                            {# 1. User Management (Restricted to Permissions) #}
                             {% if can_view_users %}
                             <li class="sidebar-item">
                                 <a class="sidebar-link" href="{% url 'user_list' %}">
@@ -550,6 +561,20 @@
                                 </a>
                             </li>
                             {% endif %}
+
+                            {# 2. NEW: Company Allocations #}
+                            {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,IMPLEMENTATION,OPERATION" %}
+
+                            {# Sub-item: Client Groups #}
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{% url 'companies:client_group_list' 'global' %}">
+                                    <i class="fas fa-layer-group me-2"></i>Client Groups
+                                </a>
+                            </li>
+                            
+                            {% endif %}
+
+                            {# 3. Create User (Restricted) #}
                             {% if user|can:"USER:CREATE" %}
                             <li class="sidebar-item">
                                 <a class="sidebar-link" href="{% url 'register' %}">
@@ -557,6 +582,8 @@
                                 </a>
                             </li>
                             {% endif %}
+
+                            {# 4. Role Management (Restricted) #}
                             {% if can_view_roles %}
                             <li class="sidebar-item">
                                 <a class="sidebar-link" href="{% url 'role_management' %}">
@@ -607,7 +634,7 @@
                                     {% if ctx.company %}
                                     <li>
                                         <a class="dropdown-item" 
-                                           href="{% url 'switch_context' ctx.company.id %}">
+                                           href=" {% url 'switch_context' ctx.company.pk %} ">
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <span><i class="fas fa-building me-2 text-muted"></i>{{ ctx.company.trade_name }}</span>
                                                 <span class="badge bg-light text-dark border ms-2">{{ ctx.role }}</span>

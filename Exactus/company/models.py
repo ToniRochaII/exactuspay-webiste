@@ -1,13 +1,8 @@
-
-
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django.conf import settings  # <--- CRITICAL IMPORT
 
 class ClientGroup(models.Model):
-    """
-    Represents a group of companies (e.g., 'Smith Holdings') to allow 
-    efficient bulk access assignment for Directors/Managers.
-    """
     name = models.CharField(max_length=150, unique=True)
     companies = models.ManyToManyField(
         'Company', 
@@ -26,10 +21,6 @@ class ClientGroup(models.Model):
 
 
 class Company(models.Model):
-    """
-    Company model representing businesses in different countries.
-    """
-    
     # --- Choices ---
     ACCOUNT_STATUS_CHOICES = [
         ("ACTIVE", "Active"),
@@ -74,7 +65,7 @@ class Company(models.Model):
     )
     logo = models.ImageField(upload_to='company_logos/', blank=True)
 
-    # --- contact ---
+    # --- Contact ---
     contact = models.CharField(_("contact"), max_length=150, blank=True, null=True)
     phone = models.CharField(_("telephone"), max_length=150, blank=True, null=True)
     email = models.CharField(_("email"), max_length=150, blank=True, null=True)
@@ -95,7 +86,7 @@ class Company(models.Model):
         verbose_name=_("Country")
     )
     
-    # --- Tax IDs (Generic slots for country-specific usage) ---
+    # --- Tax IDs ---
     tax_id_01 = models.CharField(_("Tax ID 1"), max_length=50, blank=True, null=True)
     tax_id_02 = models.CharField(_("Tax ID 2"), max_length=50, blank=True, null=True)
     tax_id_03 = models.CharField(_("Tax ID 3"), max_length=50, blank=True, null=True)
@@ -117,45 +108,22 @@ class Company(models.Model):
     tax_id_19 = models.CharField(_("Tax ID 19"), max_length=50, blank=True, null=True)
     tax_id_20 = models.CharField(_("Tax ID 20"), max_length=50, blank=True, null=True)
     
-    # --- RTI (Real Time Information) credentials ---
-    rti_user_id = models.CharField(
-        _("RTI User ID"), max_length=100, blank=True, null=True,
-        help_text=_("Username for payroll reporting")
-    )
-    
-    rti_password = models.CharField(
-        _("RTI Password"), max_length=100, blank=True, null=True,
-        help_text=_("Password for payroll reporting")
-    )
-    agent_full_name = models.CharField(
-        _("Full Name"), max_length=150, blank=True, null=True,
-        help_text=_("Full name for payroll reporting")
-    )
-    agent_road_name_1 = models.CharField(
-        _("Road Name 1"), max_length=150, blank=True, null=True,
-        help_text=_("Road name for payroll reporting")
-    )
-    agent_road_name_2 = models.CharField(
-        _("Road Name"), max_length=150, blank=True, null=True,
-        help_text=_("Road name for payroll reporting")
-    )
-    agent_town = models.CharField(
-        _("Town"), max_length=150, blank=True, null=True,
-        help_text=_("Road name for payroll reporting")
-    )
-    agent_post_code = models.CharField(
-        _("Post Code"), max_length=20, blank=True, null=True,
-        help_text=_("Post code for payroll reporting")
-    )
+    # --- RTI ---
+    rti_user_id = models.CharField(_("RTI User ID"), max_length=100, blank=True, null=True)
+    rti_password = models.CharField(_("RTI Password"), max_length=100, blank=True, null=True)
+    agent_full_name = models.CharField(_("Full Name"), max_length=150, blank=True, null=True)
+    agent_road_name_1 = models.CharField(_("Road Name 1"), max_length=150, blank=True, null=True)
+    agent_road_name_2 = models.CharField(_("Road Name"), max_length=150, blank=True, null=True)
+    agent_town = models.CharField(_("Town"), max_length=150, blank=True, null=True)
+    agent_post_code = models.CharField(_("Post Code"), max_length=20, blank=True, null=True)
 
-    # --- Account Status ---
+    # --- Status ---
     account_status = models.CharField(
         _("Account Status"),
         max_length=10,
         choices=ACCOUNT_STATUS_CHOICES,
         default="ACTIVE"
     )
-    
     account_archive = models.CharField(
         _("Account Archive"),
         max_length=10,
@@ -184,6 +152,13 @@ class Company(models.Model):
     bank_18 = models.CharField(max_length=100, null=True, blank=True)
     bank_19 = models.CharField(max_length=100, null=True, blank=True)
     bank_20 = models.CharField(max_length=100, null=True, blank=True)
+
+    # --- USERS FIELD (The Fix) ---
+    users = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,  # <--- MUST be settings.AUTH_USER_MODEL
+        related_name='accessible_companies',
+        blank=True
+    )
     
     class Meta:
         verbose_name = _("Company")

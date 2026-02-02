@@ -56,7 +56,7 @@ def compensation_list(request, country_slug, company_id, employee_id):
         "archived_components": archived_components,
         "country_slug": country_slug,
     }
-    return render(request, "compensation/list.html", context)
+    return render(request, "compensation/index.html", context)
 
 
 @login_required

@@ -503,3 +503,31 @@ def role_based_redirect(request):
     if role in ['IMPLEMENTATION', 'BILLING', 'COMPLIANCE', 'OPERATION']: return redirect('/dashboard/general/')
     if role == 'EMPLOYEE': return redirect('/dashboard/employee/')
     return redirect('/dashboard/')
+
+
+
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from Exactus.company.models import Company
+
+@login_required
+def switch_context(request, company_id):
+    """
+    Redirects the user to the specific dashboard for the selected company.
+    """
+    # 1. Get the company
+    company = get_object_or_404(Company, pk=company_id)
+    
+    # 2. (Optional) Verify the user actually has access before redirecting
+    # This prevents users from manually guessing IDs in the URL
+    if not request.user.contexts.filter(company=company).exists() and not request.user.is_superuser:
+         messages.error(request, "Access Denied.")
+         return redirect("dashboard")
+
+    # 3. Redirect to the Company Dashboard
+    # We need the country_slug for the URL pattern we defined earlier
+    return redirect(
+        'companies:company_dashboard', 
+        country_slug=company.country.slug, 
+        company_id=company.pk
+    )

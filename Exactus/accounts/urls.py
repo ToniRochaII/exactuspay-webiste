@@ -41,6 +41,7 @@ urlpatterns = [
     path('users/<int:user_id>/edit/', views.user_edit, name='user_edit'),
     path("users/<int:user_id>/reset-password/", views.admin_reset_password, name="admin_reset_password"),
     path("users/<int:user_id>/resend-welcome/", views.resend_welcome_email, name="resend_welcome_email"),
+    path('switch-context/<int:company_id>/', views.switch_context, name='switch_context'),
     
     # 6. Roles
     path('roles/', views.role_management, name='role_management'),

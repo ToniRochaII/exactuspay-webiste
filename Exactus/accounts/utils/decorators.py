@@ -7,8 +7,8 @@ def role_required(*allowed_roles):
     Decorator that restricts access to users with specific roles.
     
     SAFE MODE:
-    - Removes 'country_slug' redirection to prevent infinite loops.
     - Unauthorized users are always sent to 'dashboard'.
+    - Prevents infinite redirect loops.
     """
     def decorator(view_func):
         @wraps(view_func)
@@ -29,7 +29,6 @@ def role_required(*allowed_roles):
             # 4. Permission Check
             if user_role not in allowed:
                 messages.error(request, "Access denied — insufficient permissions.")
-                # Safe redirect to prevent loops
                 return redirect("dashboard")
 
             return view_func(request, *args, **kwargs)
@@ -67,7 +66,6 @@ def company_access_required(view_func):
 
         # 3. Check Assignment (Contexts)
         # We filter the user's contexts to see if they are linked to this Company ID.
-        # Note: We use 'company_id' (the Foreign Key ID) to avoid a heavy DB lookup.
         has_access = request.user.contexts.filter(company_id=company_id).exists()
 
         if not has_access:

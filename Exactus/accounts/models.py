@@ -299,3 +299,48 @@ class UserPermissionHelper:
     @staticmethod
     def get_user_companies(user):
         return user.get_accessible_companies()
+    
+
+from django.db import models
+from django.conf import settings
+from Exactus.company.models import Company  # Ensure this import exists
+
+class UserContext(models.Model):
+    """
+    Links a User to a specific Company with a specific Role.
+    Allows a Director to see only their assigned companies.
+    """
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="contexts"  # <--- This fixes "user.contexts" error
+    )
+    company = models.ForeignKey(
+        Company,
+        on_delete=models.CASCADE,
+        related_name="user_contexts"
+    )
+    role = models.CharField(
+        max_length=50,
+        choices=[
+            ("DIRECTOR", "Director"),
+            ("MANAGER", "Manager"),
+            ("SPECIALIST", "Specialist"),
+            ("FINANCE", "Finance"),
+            ("VIEWER", "Read Only"),
+        ],
+        default="VIEWER"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        # Ensures a user isn't assigned to the same company twice
+        unique_together = ('user', 'company')
+        verbose_name = "User Assignment"
+        verbose_name_plural = "User Assignments"
+
+    def __str__(self):
+        return f"{self.user.email} -> {self.company.trade_name} ({self.role})"
+    
+
+    

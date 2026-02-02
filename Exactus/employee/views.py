@@ -14,7 +14,8 @@ from django.http import HttpResponse
 from django.views import View
 from django.db import transaction
 from django.contrib.auth import get_user_model
-from django.utils.crypto import get_random_string  # <-- CRITICAL FIX
+from django.utils.crypto import get_random_string 
+from django.db.models import Q
 
 # Models
 from Exactus.company.models import Company
@@ -29,7 +30,8 @@ from Exactus.employee.forms import (
 )
 
 # Utils & Permissions
-from Exactus.country.utils.decorators import role_required
+# FIXED: Pointing to the correct location of your safe decorator
+from Exactus.accounts.utils.decorators import role_required
 
 User = get_user_model()
 
@@ -38,32 +40,50 @@ User = get_user_model()
 # ──────────────────────────────────────────────────────────────────────────────
 
 def validate_company_access(user, company):
-    """Verifies if the current user is allowed to access the specific company."""
-    if user.is_superuser or getattr(user, 'role', '') in ["EXEC", "ADMIN"]:
+    """
+    Verifies if the current user is allowed to access the specific company.
+    
+    Logic:
+    1. Global Roles (EXEC, ADMIN, COMPLIANCE) -> ALLOWED.
+    2. Restricted Roles -> Must be linked via 'user.contexts'.
+    """
+    # 1. Superusers and Global Roles always pass
+    # Added "COMPLIANCE" here so they never get blocked
+    global_roles = ["EXEC", "ADMIN", "COMPLIANCE"]
+    user_role = getattr(user, 'role', '').upper()
+    
+    if user.is_superuser or user_role in global_roles:
         return True
-    if hasattr(user, 'get_accessible_companies'):
-        if company in user.get_accessible_companies():
-            return True
+
+    # 2. Check for direct assignment (The context link)
+    # Checks if the user has a context entry for this specific company
+    if user.contexts.filter(company=company).exists():
+        return True
+        
     return False
 
 # ──────────────────────────────────────────────────────────────────────────────
-# EMPLOYEE CRUD (RESTRICTED TO EXEC & ADMIN)
+# EMPLOYEE CRUD
 # ──────────────────────────────────────────────────────────────────────────────
 
 @login_required
 @role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATIONS", "DIRECTOR", "MANAGER", "SPECIALIST")
 def employee_list(request, country_slug, company_id):
-    """List employees for a specific company - Restricted to EXEC and ADMIN."""
+    """
+    List employees for a specific company.
+    """
     country = get_object_or_404(Country, slug=country_slug)
-    company = get_object_or_404(Company, pk=company_id)
-    
+    # We use pk=company_id to support custom primary keys safely
+    company = get_object_or_404(Company, pk=company_id) 
+
+    # Security Check
     if not validate_company_access(request.user, company):
-        messages.error(request, "Access Denied.")
+        messages.error(request, "Access Denied: You are not assigned to this company.")
         return redirect("dashboard")
 
     employees = Employee.objects.filter(company=company).order_by("employee_number")
     
-    return render(request, "employee/list.html", {
+    return render(request, "employee/index.html", {
         "company": company, 
         "employees": employees,
         "country": country,
@@ -73,7 +93,9 @@ def employee_list(request, country_slug, company_id):
 @login_required
 @role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATIONS", "DIRECTOR", "MANAGER", "SPECIALIST")
 def employee_create(request, country_slug, company_id):
-    """Create a new employee record - Restricted to EXEC and ADMIN."""
+    """
+    Create a new employee record.
+    """
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
 
@@ -102,8 +124,7 @@ def employee_create(request, country_slug, company_id):
 @role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATIONS", "DIRECTOR", "MANAGER", "SPECIALIST")
 def employee_edit(request, country_slug, company_id, employee_id):
     """
-    Edit an existing employee record - Restricted to EXEC and ADMIN.
-    Includes logic to create User account if missing.
+    Edit an existing employee record.
     """
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
@@ -117,7 +138,7 @@ def employee_edit(request, country_slug, company_id, employee_id):
     FormClass = get_employee_form_for_country(country)
 
     if request.method == "POST":
-        # --- NEW LOGIC: Handle User Account Creation (Fixed) ---
+        # --- Handle User Account Creation ---
         if 'create_user_account' in request.POST:
             if not employee.email:
                 messages.error(request, "Employee must have an email address to create a user account.")
@@ -125,10 +146,10 @@ def employee_edit(request, country_slug, company_id, employee_id):
                 messages.warning(request, "User account already exists.")
             else:
                 try:
-                    # 1. Generate Secure Password manually using utils
+                    # 1. Generate Secure Password
                     temp_password = get_random_string(length=12)
                     
-                    # 2. Create User manually to bypass Manager errors
+                    # 2. Create User
                     new_user = User.objects.create_user(
                         username=employee.email,
                         email=employee.email,
@@ -141,14 +162,12 @@ def employee_edit(request, country_slug, company_id, employee_id):
                     new_user.last_name = employee.employee_surname
                     new_user.save()
                     
-                    # 4. Success Message (In production, send this via email)
                     messages.success(request, f"User account created! Temporary Password: {temp_password}")
                     return redirect("employee:employee_edit", country_slug=country_slug, company_id=company.company_id, employee_id=employee.id)
                     
                 except Exception as e:
                     messages.error(request, f"Error creating user account: {str(e)}")
             
-            # Refresh to show message if we didn't redirect
             return redirect("employee:employee_edit", country_slug=country_slug, company_id=company.company_id, employee_id=employee.id)
 
         # --- Standard Form Handling ---
@@ -171,11 +190,12 @@ def employee_edit(request, country_slug, company_id, employee_id):
     })
 
 # ──────────────────────────────────────────────────────────────────────────────
-# MULTI-FORMAT UPLOAD (RESTRICTED TO EXEC & ADMIN)
+# MULTI-FORMAT UPLOAD
 # ──────────────────────────────────────────────────────────────────────────────
 
 class EmployeeUploadView(View):
-    """Handle bulk employee uploads - Restricted to EXEC and ADMIN."""
+    """Handle bulk employee uploads."""
+    
     @method_decorator(login_required)
     @method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATIONS", "DIRECTOR", "MANAGER", "SPECIALIST"))
     def dispatch(self, request, *args, **kwargs):
@@ -184,6 +204,12 @@ class EmployeeUploadView(View):
     def get(self, request, country_slug=None, company_id=None):
         country = get_object_or_404(Country, slug=country_slug) if country_slug else None
         company = get_object_or_404(Company, pk=company_id) if company_id else None
+        
+        # Security Check for GET
+        if company and not validate_company_access(request.user, company):
+            messages.error(request, "Access Denied.")
+            return redirect("dashboard")
+
         return render(request, "employee/upload_form.html", {
             "form": EmployeeUploadForm(),
             "company": company,
@@ -193,6 +219,14 @@ class EmployeeUploadView(View):
 
     @transaction.atomic
     def post(self, request, country_slug=None, company_id=None):
+        country = get_object_or_404(Country, slug=country_slug) if country_slug else None
+        company = get_object_or_404(Company, pk=company_id) if company_id else None
+
+        # Security Check for POST
+        if company and not validate_company_access(request.user, company):
+            messages.error(request, "Access Denied.")
+            return redirect("dashboard")
+
         form = EmployeeUploadForm(request.POST, request.FILES)
         if not form.is_valid():
             return self.get(request, country_slug, company_id)
@@ -235,17 +269,23 @@ class EmployeeUploadView(View):
 
             success_count = 0
             error_log = []
+            
+            # Cache companies to avoid repeated DB hits
             company_cache = {c.company_code: c for c in Company.objects.all()}
 
             for index, data in enumerate(data_rows, start=2):
                 try:
-                    c_code = str(data.get('company_code', '')).strip()
-                    company_obj = company_cache.get(c_code)
-                    
-                    if not company_obj:
-                        error_log.append(f"Row {index}: Company code '{c_code}' not found.")
-                        continue
-                    
+                    # Logic: If company_id is provided in URL, force that company.
+                    # Otherwise, look for 'company_code' in the file.
+                    if company:
+                        target_company = company
+                    else:
+                        c_code = str(data.get('company_code', '')).strip()
+                        target_company = company_cache.get(c_code)
+                        if not target_company:
+                            error_log.append(f"Row {index}: Company code '{c_code}' not found.")
+                            continue
+
                     emp_num = data.get('employee_number')
                     if not emp_num:
                         error_log.append(f"Row {index}: Missing employee_number.")
@@ -263,6 +303,7 @@ class EmployeeUploadView(View):
                         'employment_start_date': data.get('employment_start_date'),
                     }
 
+                    # Optional fields
                     if 'ni_number' in data: defaults['tax_info_01'] = data['ni_number']
                     if 'tax_code' in data: defaults['tax_info_03'] = data['tax_code']
                     if 'cpf' in data: defaults['tax_info_01'] = data['cpf']
@@ -270,7 +311,7 @@ class EmployeeUploadView(View):
 
                     if not dry_run:
                         Employee.objects.update_or_create(
-                            company=company_obj,
+                            company=target_company,
                             employee_number=emp_num,
                             defaults=defaults
                         )
@@ -294,13 +335,13 @@ class EmployeeUploadView(View):
             return self.get(request, country_slug, company_id)
 
 # ──────────────────────────────────────────────────────────────────────────────
-# RESULT VIEWS (RESTRICTED TO EXEC & ADMIN)
+# RESULT VIEWS
 # ──────────────────────────────────────────────────────────────────────────────
 
 @login_required
 @role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATIONS", "DIRECTOR", "MANAGER", "SPECIALIST")
 def employee_upload_result_view(request, country_slug=None, company_id=None):
-    """Display upload outcome - Restricted to EXEC and ADMIN."""
+    """Display upload outcome."""
     result = request.session.pop("upload_result", None)
     if not result:
         messages.warning(request, "No upload results found.")
@@ -309,6 +350,10 @@ def employee_upload_result_view(request, country_slug=None, company_id=None):
     country = get_object_or_404(Country, slug=country_slug) if country_slug else None
     company = get_object_or_404(Company, pk=company_id) if company_id else None
 
+    if company and not validate_company_access(request.user, company):
+        messages.error(request, "Access Denied.")
+        return redirect("dashboard")
+
     return render(request, "employee/upload_result.html", {
         "result": result, "company": company, "country": country, "country_slug": country_slug
     })
@@ -316,17 +361,17 @@ def employee_upload_result_view(request, country_slug=None, company_id=None):
 @login_required
 @role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATIONS", "DIRECTOR", "MANAGER", "SPECIALIST")
 def global_upload_result_view(request, country_slug):
-    """Alias for global route consistency - Restricted to EXEC and ADMIN."""
+    """Alias for global route consistency."""
     return employee_upload_result_view(request, country_slug=country_slug)
 
 # ──────────────────────────────────────────────────────────────────────────────
-# TEMPLATE DOWNLOAD (RESTRICTED TO EXEC & ADMIN)
+# TEMPLATE DOWNLOAD
 # ──────────────────────────────────────────────────────────────────────────────
 
 @login_required
 @role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATIONS", "DIRECTOR", "MANAGER", "SPECIALIST")
 def download_employees_template(request, country_slug, company_id=None):
-    """Generate Excel template - Restricted to EXEC and ADMIN."""
+    """Generate Excel template."""
     wb = openpyxl.Workbook()
     ws = wb.active
     ws.title = "Employee Import"
@@ -336,6 +381,7 @@ def download_employees_template(request, country_slug, company_id=None):
         'employee_surname', 'gender', 'date_of_birth', 'email', 'employment_start_date'
     ]
 
+    # Country-specific fields
     if country_slug in ['united-kingdom', 'uk', 'gb']:
         headers += ['ni_number', 'tax_code']
     elif country_slug in ['brazil', 'br']:
@@ -352,7 +398,9 @@ def download_employees_template(request, country_slug, company_id=None):
 
     if company_id:
         company = get_object_or_404(Company, pk=company_id)
-        ws.cell(row=2, column=1, value=company.company_code)
+        # Security check before pre-filling
+        if validate_company_access(request.user, company):
+            ws.cell(row=2, column=1, value=company.company_code)
 
     gender_dv = DataValidation(type="list", formula1='"Male,Female"', allow_blank=True)
     ws.add_data_validation(gender_dv)

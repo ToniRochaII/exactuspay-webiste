@@ -11,24 +11,48 @@ from django.db.models import Count, Q
 from Exactus.country.models import Country
 
 # -------------------------------------------------------------------------
-# COUNTRY MANAGEMENT VIEWS (RESTRICTED TO EXEC & ADMIN)
+# COUNTRY MANAGEMENT VIEWS
 # -------------------------------------------------------------------------
 
 @login_required
-@role_required("EXEC", "ADMIN","COMPLIANCE")
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE")
 def country(request):
     """
     List countries with a count of Calculation Bases for Fiscal Year 2025.
-    Restricted to EXEC and ADMIN.
+    
+    ISOLATION LOGIC:
+    - Global Roles (EXEC, ADMIN, COMPLIANCE): See ALL countries.
+    - Restricted Roles (Director, Manager, etc.): See ONLY countries where they have a company assignment.
     """
-    # Annotate the queryset to count CalculationBases via the Regulations relationship
-    # Filter strictly for Regulations where fiscal_year is 2025
-    countries = Country.objects.annotate(
+    
+    # 1. Base Query (Includes your specific annotation)
+    # We build the query but don't execute it yet.
+    base_queryset = Country.objects.annotate(
         calc_bases_2025_count=Count(
             'regulations__calculation_bases',
             filter=Q(regulations__fiscal_year=2025)
         )
-    ).order_by('name')
+    )
+
+    # 2. Define Global Roles
+    global_roles = ["EXEC", "ADMIN", "COMPLIANCE"]
+    user_role = getattr(request.user, "role", "").upper()
+
+    # 3. Filter Logic
+    if request.user.is_superuser or user_role in global_roles:
+        # Global View: See everything
+        countries = base_queryset.order_by('name')
+    else:
+        # Restricted View:
+        # Step A: Get IDs of companies assigned to this user (from UserContext)
+        assigned_company_ids = request.user.contexts.values_list('company_id', flat=True)
+
+        # Step B: Filter countries that contain these specific companies
+        # We use 'companies__pk__in' to look up the reverse relationship from Country -> Company
+        # .distinct() is crucial here so a country doesn't appear twice if user has 2 companies there.
+        countries = base_queryset.filter(
+            companies__pk__in=assigned_company_ids
+        ).distinct().order_by('name')
 
     return render(request, 'country/index.html', {
         'countries': countries
@@ -36,7 +60,7 @@ def country(request):
 
 
 @login_required
-@role_required("EXEC", "ADMIN","COMPLIANCE")
+@role_required("EXEC", "ADMIN", "COMPLIANCE")
 def country_delete(request):
     """Show archived (deleted) countries only. Restricted to EXEC and ADMIN."""
     countries = Country.objects.filter(archive="Y").order_by("name")
@@ -44,7 +68,7 @@ def country_delete(request):
 
 
 @login_required
-@role_required("EXEC", "ADMIN","COMPLIANCE")
+@role_required("EXEC", "ADMIN", "COMPLIANCE")
 def country_create(request):
     """Create a new country. Restricted to EXEC and ADMIN."""
     if request.method == "POST":
@@ -60,7 +84,7 @@ def country_create(request):
 
 
 @login_required
-@role_required("EXEC", "ADMIN","COMPLIANCE")
+@role_required("EXEC", "ADMIN", "COMPLIANCE")
 def country_edit(request, slug):
     """Edit a country. Restricted to EXEC and ADMIN."""
     country = get_object_or_404(Country, slug=slug)
@@ -82,7 +106,7 @@ def country_edit(request, slug):
 
 
 @login_required
-@role_required("EXEC", "ADMIN","COMPLIANCE")
+@role_required("EXEC", "ADMIN", "COMPLIANCE")
 def country_upload_view(request):
     """Upload countries via CSV. Restricted to EXEC and ADMIN."""
     if request.method == "POST":
@@ -102,7 +126,7 @@ def country_upload_view(request):
 
 
 @login_required
-@role_required("EXEC", "ADMIN","COMPLIANCE")
+@role_required("EXEC", "ADMIN", "COMPLIANCE")
 def country_upload_result_view(request):
     """View upload results. Restricted to EXEC and ADMIN."""
     result = request.session.get("upload_result")
@@ -110,7 +134,7 @@ def country_upload_result_view(request):
 
 
 @login_required
-@role_required("EXEC", "ADMIN","COMPLIANCE")
+@role_required("EXEC", "ADMIN", "COMPLIANCE")
 def download_csv_template(request):
     """Download a CSV template for country imports. Restricted to EXEC and ADMIN."""
     response = HttpResponse(content_type='text/csv')
@@ -141,7 +165,7 @@ def download_csv_template(request):
 
 
 @login_required
-@role_required("EXEC", "ADMIN","COMPLIANCE")
+@role_required("EXEC", "ADMIN", "COMPLIANCE")
 def dashboard_country_map(request):
     """Return ISO2 country codes for the dashboard world map. Restricted to EXEC and ADMIN."""
     try:
