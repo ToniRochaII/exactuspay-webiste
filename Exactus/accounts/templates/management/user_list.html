@@ -58,7 +58,7 @@
                             <th class="ps-4">User</th>
                             <th>Role</th>
                             <th>Status</th>
-                            <th>Joined</th>
+                            <th>Last Login</th>
                             <th class="text-end pe-4">Actions</th>
                         </tr>
                     </thead>
@@ -91,7 +91,7 @@
                                     <span class="badge bg-secondary">Inactive</span>
                                 {% endif %}
                             </td>
-                            <td>{{ user.date_joined|date:"M d, Y" }}</td>
+                            <td>{{ user.last_login|date:"d, M, Y g:i A"|default:"Never" }}</td>
                             <td class="text-end pe-4">
                                 <div class="btn-group">
                                     <a href="{% url 'user_edit' user.id %}" class="btn btn-sm btn-outline-primary" title="Edit Profile">
