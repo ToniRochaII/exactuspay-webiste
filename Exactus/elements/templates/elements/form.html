@@ -1,0 +1,345 @@
+{% extends "base.html" %}
+{% load static %}
+{% load element_role_filters %}
+
+{% block title %}Add Element — {{ country.name }} | ExactusPay{% endblock %}
+
+{% block page_title %}
+<i class="fas fa-plus-circle me-2"></i>Add Element
+{% endblock %}
+
+{% block extra_head %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+
+<style>
+    /* --- GOLD STANDARD FORM CSS --- */
+    
+    /* Global Background */
+    body { background-color: #F4F4F4 !important; }
+    .wrapper:before { background: #F4F4F4 !important; }
+    :root { --card-radius: 16px; --input-radius: 10px; --border-color: #f0f0f0; }
+
+    /* ExactusPay Standard Card Styling */
+    .card-hover-effect {
+        border-radius: var(--card-radius);
+        border: none;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        overflow: hidden;
+    }
+    .card-hover-effect:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+    }
+    .card-header {
+        background-color: #fff;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    /* --- UNIFIED INPUT STYLING (Standard Inputs + Selects) --- */
+    .form-control, 
+    .form-select {
+        border-radius: var(--input-radius) !important;
+        font-size: 1rem !important;
+        border: 1px solid #ced4da;
+        padding-top: 1.625rem; /* Space for floating label */
+        padding-bottom: 0.625rem;
+        height: 58px;
+    }
+
+    /* --- SELECT2 STYLING TO MATCH --- */
+    
+    /* 1. The Box itself */
+    .select2-container .select2-selection--single {
+        height: 58px !important; 
+        border-radius: var(--input-radius) !important;
+        border: 1px solid #ced4da;
+        display: flex;
+        align-items: center; 
+    }
+
+    /* 2. The Text inside */
+    .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+        margin-top: 16px !important; /* Push text down to align with inputs */
+        margin-left: 2px;
+        color: #212529;
+        font-size: 1rem !important; /* FORCE Same Font Size */
+        font-weight: 400;
+    }
+
+    /* 3. The Arrow */
+    .select2-container--bootstrap-5 .select2-selection__arrow {
+        top: 50% !important;
+        transform: translateY(-50%);
+        right: 15px !important;
+    }
+    
+    /* 4. Fix Label Position */
+    .form-floating > .select2-container {
+        padding-top: 0;
+    }
+    .form-floating > label {
+        padding-left: 14px;
+    }
+
+    /* --- CUSTOM SWITCH CARDS (Taxation) --- */
+    .switch-card {
+        border: 1px solid #ced4da;
+        border-radius: var(--input-radius);
+        padding: 12px 16px;
+        background-color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 58px; /* Match Input Height */
+    }
+    .form-switch .form-check-input {
+        width: 3em;
+        height: 1.5em;
+        cursor: pointer;
+    }
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'elements:elements' country_slug %}">Elements — {{ country.name }}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Add Element</li>
+  </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        
+        <div class="card card-hover-effect shadow-sm">
+            <div class="card-header pt-4 px-4 pb-3">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-plus-circle me-2 text-primary"></i>Add New Element
+                </h5>
+                <h6 class="card-subtitle text-muted mt-1">
+                    Configure earning, deduction, or informational elements for {{ country.name }}.
+                </h6>
+            </div>
+
+            <div class="card-body p-4">
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-3 mb-4">
+                            <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %} me-2"></i>
+                            {{ message }}
+                            <button class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <form method="post" novalidate id="element-form">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger rounded-3">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    <h6 class="text-uppercase text-muted mb-3 fw-bold small ls-1">
+                        <i class="fas fa-info-circle me-2"></i>Element Details
+                    </h6>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                {{ form.element_code }}
+                                <label for="{{ form.element_code.id_for_label }}">Element Code *</label>
+                            </div>
+                            {% if form.element_code.errors %}
+                                <div class="text-danger small mt-1">{{ form.element_code.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                {{ form.element_name }}
+                                <label for="{{ form.element_name.id_for_label }}">Element Name *</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                {{ form.element_description }}
+                                <label for="{{ form.element_description.id_for_label }}">Description</label>
+                            </div>
+                            <div class="d-flex justify-content-between mt-1 px-1">
+                                <small class="text-muted">Optional</small>
+                                <small id="description-counter" class="text-muted">0/255</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="text-muted opacity-25">
+
+                    <h6 class="text-uppercase text-muted my-3 fw-bold small ls-1">
+                        <i class="fas fa-tags me-2"></i>Classification
+                    </h6>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                {{ form.element_status }}
+                                <label for="{{ form.element_status.id_for_label }}">Status *</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                {{ form.element_frequency }}
+                                <label for="{{ form.element_frequency.id_for_label }}">Frequency *</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                {{ form.element_type }}
+                                <label for="{{ form.element_type.id_for_label }}">Type *</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                {{ form.element_class }}
+                                <label for="{{ form.element_class.id_for_label }}">Class *</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                {{ form.element_category }}
+                                <label for="{{ form.element_category.id_for_label }}">Category</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                {{ form.element_categorytype }}
+                                <label for="{{ form.element_categorytype.id_for_label }}">Category Type</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="text-muted opacity-25">
+
+                    <h6 class="text-uppercase text-muted my-3 fw-bold small ls-1">
+                        <i class="fas fa-book me-2"></i>Accounting
+                    </h6>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                {{ form.element_account }}
+                                <label for="{{ form.element_account.id_for_label }}">Account</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                {{ form.element_map_code }}
+                                <label for="{{ form.element_map_code.id_for_label }}">Map Code</label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                {{ form.element_gl_account }}
+                                <label for="{{ form.element_gl_account.id_for_label }}">GL Account</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr class="text-muted opacity-25">
+
+                    <h6 class="text-uppercase text-muted my-3 fw-bold small ls-1">
+                        <i class="fas fa-shield-alt me-2"></i>Taxation Settings
+                    </h6>
+
+                    <div class="row g-3 mb-4">
+                        {% for field in form|get_tax_fields %}
+                        <div class="col-md-3 col-6">
+                            <div class="switch-card">
+                                <div>
+                                    <h6 class="fw-semibold mb-0 text-dark" style="font-size: 0.95rem;">{{ field.label }}</h6>
+                                </div>
+                                <div class="form-check form-switch ms-2 mb-0">
+                                    {{ field }}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="d-flex justify-content-end align-items-center mt-4 pt-3 border-top">
+                        <a href="{% url 'elements:elements' country_slug %}" class="btn btn-danger me-2">
+                            Cancel
+                        </a>
+                        <button class="btn btn-primary px-4" id="submit-btn" type="submit">
+                            Save
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    
+    // 1. Initialize Select2
+    $("select").select2({
+        theme: "bootstrap-5",
+        width: '100%',
+        dropdownParent: $('body')
+    });
+
+    // 2. Character Counter for Description
+    const descriptionField = document.getElementById('{{ form.element_description.id_for_label }}');
+    const counter = document.getElementById('description-counter');
+    
+    if (descriptionField && counter) {
+        descriptionField.addEventListener('input', function() {
+            const length = this.value.length;
+            counter.textContent = `${length}/255`;
+            counter.classList.toggle('text-danger', length > 255);
+        });
+    }
+
+    // 3. Optional: Element Code Uppercase Logic
+    const codeField = document.getElementById('{{ form.element_code.id_for_label }}');
+    if (codeField) {
+        codeField.addEventListener('input', function() {
+            this.value = this.value.toUpperCase();
+        });
+    }
+
+    // 4. Form Submission Loading State
+    const form = document.getElementById('element-form');
+    form.addEventListener('submit', function(e) {
+        const btn = document.getElementById('submit-btn');
+        // Simple client-side validation check
+        if(form.checkValidity()) {
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
+            btn.disabled = true;
+        }
+    });
+});
+</script>
+{% endblock %}

@@ -41,7 +41,7 @@ def country(request):
     # 3. Filter Logic
     if request.user.is_superuser or user_role in global_roles:
         # Global View: See everything
-        countries = base_queryset.order_by('name')
+        countries = Country.objects.filter(archive="N").order_by("name")
     else:
         # Restricted View:
         # Step A: Get IDs of companies assigned to this user (from UserContext)
@@ -80,7 +80,7 @@ def country_create(request):
     else:
         form = CountryForm()
 
-    return render(request, "country/create.html", {"form": form})
+    return render(request, "country/form.html", {"form": form})
 
 
 @login_required
@@ -98,7 +98,7 @@ def country_edit(request, slug):
     else:
         form = CountryForm(instance=country)
 
-    return render(request, "country/edit.html", {
+    return render(request, "country/form.html", {
         "form": form, 
         "country": country, 
         "country_slug": country.slug

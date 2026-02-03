@@ -54,7 +54,7 @@ def regulations_create(request, country_slug):
 
     return render(
         request,
-        "regulations/create.html",
+        "regulations/form.html",
         {"form": form, "country": country, "country_slug": country_slug},
     )
 
@@ -83,7 +83,7 @@ def regulations_edit(request, country_slug, regulations_id):
 
     return render(
         request,
-        "regulations/edit.html",
+        "regulations/form.html",
         {"form": form, "country": country, "regulations": regulations, "country_slug": country_slug},
     )
 

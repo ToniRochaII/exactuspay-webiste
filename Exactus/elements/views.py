@@ -59,7 +59,7 @@ def element_create(request, country_slug):
 
     return render(
         request,
-        "elements/create.html",
+        "elements/form.html",
         {
             "form": form,
             "country": country,
@@ -92,7 +92,7 @@ def element_edit(request, country_slug, element_code):
 
     return render(
         request,
-        "elements/edit.html",
+        "elements/form.html",
         {
             "form": form,
             "element": element,

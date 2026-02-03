@@ -9,6 +9,7 @@
 {% block page_title %}Payroll Periods{% endblock %}
 
 
+
 {% block extra_head %}
 <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
 <link href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.bootstrap5.min.css" rel="stylesheet">
@@ -28,7 +29,7 @@
     }
 
     .card-hover-effect:hover {
-        transform: translateY(-5px);
+        transform: translateY(0px);
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
     }
 
@@ -72,18 +73,18 @@
                     <table id="datatables-reponsive" class="table table-striped" style="width:100%">
                         <thead>
                             <tr>
-                                <th class="text-center" style="width: 50px;">#</th>
+                                <th class="text-center" style="width: 50px;">Run ID</th>
                                 <th>Name</th>
                                 <th class="text-center">Date Range</th>
                                 <th class="text-center">Status</th>
                                 <th class="text-end">Total Net</th>
-                                <th class="text-end">Actions</th>
+                                <th class="text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for p in periods %}
                             <tr>
-                                <td class="text-center text-muted">
+                                <td class="text-center text-muted fw-bold">
                                     {{ p.period_number }}
                                 </td>
 
@@ -93,10 +94,9 @@
                                     </a>
                                 </td>
 
-                                <td class="text-center text-muted small">
-                                    {{ p.start_date|date:"Y-m-d" }} 
-                                    <i class="fas fa-arrow-right mx-1 text-light-gray"></i> 
-                                    {{ p.end_date|date:"Y-m-d" }}
+                                <td class="text-center small">
+                                    <small>{{ p.start_date|date:"d/m/Y" }}</small><br>
+                                    <strong class="fw-bold text-dark">{{ p.end_date|date:"d/m/Y" }}</strong>
                                 </td>
 
                                 <td class="text-center">
@@ -113,11 +113,10 @@
                                     {{ p.total_net|floatformat:2|intcomma }}
                                 </td>
 
-                                <td class="text-end table-action" style="position: relative; z-index: 2;">
-                                    <a href="{% url 'payroll:period_detail' country_slug company.company_id payroll.id p.id %}" class="text-brand me-2" title="View Report">
+                                <td class="text-center table-action" style="position: relative; z-index: 2;">
+                                    <a href="{% url 'payroll:period_detail' country_slug company.company_id payroll.id p.id %}" class="text-brand me-2" title="View Period">
                                         <i class="align-middle fas fa-eye"></i>
                                     </a>
-                                    
                                     </td>
                             </tr>
                             {% endfor %}
@@ -156,9 +155,9 @@
             $("#datatables-reponsive").DataTable({
                 responsive: true,
                 lengthChange: true,
-                pageLength: 12, // Useful for monthly periods
+                pageLength: 12, // Default to 12 for monthly view
                 lengthMenu: [[12, 24, 50, -1], [12, 24, 50, "All"]],
-                order: [[0, "desc"]], // Sort by Period # Descending
+                order: [[0, "desc"]], // Sort by Period Number Descending
                 
                 language: {
                     search: "",

@@ -89,7 +89,7 @@ def pdcode_create(request, country_slug, company_id):
 
     return render(
         request,
-        "pdcodes/create.html",
+        "pdcodes/form.html",
         {
             "country": country,
             "country_slug": country_slug,
@@ -135,7 +135,7 @@ def pdcode_edit(request, country_slug, company_id, pdcode_code):
 
     return render(
         request,
-        "pdcodes/edit.html",
+        "pdcodes/form.html",
         {
             "country": country,
             "country_slug": country_slug,

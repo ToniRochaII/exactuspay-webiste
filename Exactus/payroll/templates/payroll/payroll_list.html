@@ -82,13 +82,11 @@
                                         {{ payroll.fiscal_year }}
                                     </a>
                                 </td>
-
                                 <td class="text-center">
-                                    <span class="text-center">
-                                        {{ payroll.regulations.fiscal_year }}
+                                    <span class="text-dark">
+                                        {{ payroll.regulation }}
                                     </span>
                                 </td>
-
                                 <td class="text-center table-action" style="position: relative; z-index: 2;">
                                     
                                     <a href="{% url 'payroll:period_list' country_slug company.company_id payroll.id %}" class="text-dark me-2" title="View Periods">

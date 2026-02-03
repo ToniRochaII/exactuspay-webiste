@@ -6,18 +6,123 @@
 
 {% block title %}
     {% if company %}
-        Edit {{ country.iso2_code }} Company — {{ country.name }} | ExactusPay
+        Edit {{ country.iso2_code }} Company | ExactusPay
     {% else %}
-        Create {{ country.iso2_code }} Company — {{ country.name }} | ExactusPay
+        Create {{ country.iso2_code }} Company | ExactusPay
     {% endif %}
 {% endblock %}
 
 {% block page_title %}
     {% if company %}
-        <i class="bi bi-building me-2"></i>Edit {{ country.iso2_code }} Company – {{ company.trade_name }}
+        <i class="fas fa-building me-2"></i>Edit Company
     {% else %}
-        <i class="bi bi-building-add me-2"></i>Create {{ country.iso2_code }} Company
+        <i class="fas fa-plus-circle me-2"></i>Create Company
     {% endif %}
+{% endblock %}
+
+{% block extra_head %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+
+<style>
+    /* --- GOLD STANDARD FORM CSS --- */
+    
+    /* Global Background */
+    body { background-color: #F4F4F4 !important; }
+    .wrapper:before { background: #F4F4F4 !important; }
+    :root { --card-radius: 16px; --input-radius: 10px; --border-color: #f0f0f0; }
+
+    /* ExactusPay Standard Card Styling */
+    .card-hover-effect {
+        border-radius: var(--card-radius);
+        border: none;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        overflow: hidden;
+    }
+    .card-hover-effect:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+    }
+    .card-header {
+        background-color: #fff;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    /* --- UNIFIED INPUT STYLING --- */
+    .form-control, 
+    .form-select {
+        border-radius: var(--input-radius) !important;
+        font-size: 1rem !important;
+        border: 1px solid #ced4da;
+        padding-top: 1.625rem; /* Space for floating label */
+        padding-bottom: 0.625rem;
+        height: 58px;
+    }
+
+    /* --- SELECT2 STYLING --- */
+    .select2-container .select2-selection--single {
+        height: 58px !important; 
+        border-radius: var(--input-radius) !important;
+        border: 1px solid #ced4da;
+        display: flex;
+        align-items: center; 
+    }
+
+    .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+        margin-top: 16px !important; 
+        margin-left: 2px;
+        color: #212529;
+        font-size: 1rem !important; 
+        font-weight: 400;
+    }
+
+    .select2-container--bootstrap-5 .select2-selection__arrow {
+        top: 50% !important;
+        transform: translateY(-50%);
+        right: 15px !important;
+    }
+    
+    /* Fix Label Position */
+    .form-floating > .select2-container {
+        padding-top: 0;
+    }
+    .form-floating > label {
+        padding-left: 14px;
+    }
+
+    /* --- TAB STYLING --- */
+    .nav-tabs {
+        border-bottom: 2px solid #e9ecef;
+    }
+    .nav-tabs .nav-link {
+        border: none;
+        border-bottom: 3px solid transparent;
+        color: #6c757d;
+        font-weight: 500;
+        padding: 1rem 1.5rem;
+        transition: all 0.2s;
+        margin-bottom: -2px;
+    }
+    .nav-tabs .nav-link:hover {
+        color: #0d6efd;
+    }
+    .nav-tabs .nav-link.active {
+        color: #0d6efd;
+        border-bottom: 3px solid #0d6efd;
+        background: transparent;
+    }
+    
+    /* Section Headers */
+    h6.section-header {
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 1px;
+        color: #6c757d;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        margin-top: 0.5rem;
+    }
+</style>
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -27,1209 +132,556 @@
     <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
     <li class="breadcrumb-item"><a href="{% url 'companies:company' country.slug %}">{{ country.name }} Companies</a></li>
     <li class="breadcrumb-item active" aria-current="page">
-      {% if company %}Edit {{ country.iso2_code }} Company{% else %}Create {{ country.iso2_code }} Company{% endif %}
+      {% if company %}Edit{% else %}Create{% endif %} Company
     </li>
   </ol>
 </nav>
 {% endblock %}
 
 {% block content %}
-
-<div class="card shadow-sm border-0">
-    
-    <!-- HEADER -->
-    <div class="card-header 
-        {% if company %} text-dark 
-        {% else %}  text-white {% endif %}
-        d-flex justify-content-between align-items-center">
-
-        <h5 class="mb-0 fw-semibold">
-            {% if company %}
-                <i class="bi bi-pencil-square me-2"></i>Edit {{ country.iso2_code }} Company — {{ company.trade_name|default:company.legal_name }}
-            {% else %}
-                <i class="bi bi-plus-circle me-2"></i>Create New {{ country.iso2_code }} Company
-            {% endif %}
-        </h5>
-
-        <span class="badge {% if company %}bg-dark text-white{% else %}bg-dark text-light{% endif %} fw-semibold px-3 py-2">
-            <i class="bi bi-flag me-1"></i>{{ country.name }}
-        </span>
-    </div>
-
-    <div class="card-body">
-
-        {% if form.non_field_errors %}
-        <div class="alert alert-danger">{{ form.non_field_errors }}</div>
-        {% endif %}
-
-        <form method="post" enctype="multipart/form-data" id="company-form" novalidate>
-            {% csrf_token %}
-
-            {% for hidden in form.hidden_fields %}
-                {{ hidden }}
-            {% endfor %}
-
-            <!-- TABS HEADER -->
-            <ul class="nav nav-tabs mb-4" id="companyTabs" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="company-tab" data-bs-toggle="tab" data-bs-target="#tab-company" type="button" role="tab" aria-controls="tab-company" aria-selected="true">
-                        Company
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="communication-tab" data-bs-toggle="tab" data-bs-target="#tab-communication" type="button" role="tab" aria-controls="tab-communication" aria-selected="false">
-                        Communication
-                    </button>
-                </li>
-                {% if country.iso2_code == "GB" %}
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="taxation-tab" data-bs-toggle="tab" data-bs-target="#tab-taxation" type="button" role="tab" aria-controls="tab-taxation" aria-selected="false">
-                        Taxation
-                    </button>
-                </li>
-                {% elif country.iso2_code == "BR" %}
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="taxation-tab" data-bs-toggle="tab" data-bs-target="#tab-taxation" type="button" role="tab" aria-controls="tab-taxation" aria-selected="false">
-                        Taxation (Brazil)
-                    </button>
-                </li>
-                {% endif %}
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="rti-tab" data-bs-toggle="tab" data-bs-target="#tab-rti" type="button" role="tab" aria-controls="tab-rti" aria-selected="false">
-                        {% if country.iso2_code == "BR" %}Agent Settings{% else %}RTI Settings{% endif %}
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="banking-tab" data-bs-toggle="tab" data-bs-target="#tab-banking" type="button" role="tab" aria-controls="tab-banking" aria-selected="false">
-                        Banking
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="account-tab" data-bs-toggle="tab" data-bs-target="#tab-account" type="button" role="tab" aria-controls="tab-account" aria-selected="false">
-                        Account Settings
-                    </button>
-                </li>
-            </ul>
-
-            <!-- TABS CONTENT -->
-            <div class="tab-content" id="companyTabsContent">
-
-                <!-- TAB 1 — COMPANY (Same for all countries) -->
-                <div class="tab-pane fade show active" id="tab-company" role="tabpanel" aria-labelledby="company-tab">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                <input type="text" class="form-control" 
-                                       value="{% if company %}{{ company.company_id }}{% else %}Auto-generated{% endif %}" 
-                                       readonly>
-                                <label>Company ID</label>
-                                <div class="form-text small text-muted">Auto-generated company identifier</div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.company_code }}
-                                <label for="{{ form.company_code.id_for_label }}">Company Code</label>
-                            </div>
-                            {% if form.company_code.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.company_code.errors }}
-                            </div>
+<div class="row">
+    <div class="col-12">
+        
+        <div class="card card-hover-effect shadow-sm">
+            
+            <div class="card-header pt-4 px-4 pb-0 border-0">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h5 class="card-title mb-0">
+                            {% if company %}
+                                <i class="fas fa-edit me-2 text-primary"></i>Edit Company
+                            {% else %}
+                                <i class="fas fa-plus-circle me-2 text-primary"></i>Create Company
                             {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.company_number }}
-                                <label for="{{ form.company_number.id_for_label }}">Company Number</label>
-                            </div>
-                            {% if form.company_number.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.company_number.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.trade_name }}
-                                <label for="{{ form.trade_name.id_for_label }}">Business Trade Name</label>
-                            </div>
-                            {% if form.trade_name.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.trade_name.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.legal_name }}
-                                <label for="{{ form.legal_name.id_for_label }}">Legal Trade Name</label>
-                            </div>
-                            {% if form.legal_name.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.legal_name.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
+                        </h5>
+                        <h6 class="card-subtitle text-muted mt-1">
+                            {{ country.name }} ({{ country.iso2_code }})
+                        </h6>
                     </div>
+                    <span class="badge bg-dark text-white rounded-pill px-3 py-2">
+                        <i class="fas fa-flag me-2"></i>{{ country.name }}
+                    </span>
                 </div>
 
-                <!-- TAB 2 — COMMUNICATION (Same for all countries) -->
-                <div class="tab-pane fade" id="tab-communication" role="tabpanel" aria-labelledby="communication-tab">
-                    <!-- Business Details Section -->
-                    <h6 class="mb-3 fw-semibold text-primary">
-                        <i class="bi bi-person-lines-fill me-2"></i>Business Details
-                    </h6>
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.contact }}
-                                <label for="{{ form.contact.id_for_label }}">Contact</label>
-                            </div>
-                            {% if form.contact.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.contact.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
+                <ul class="nav nav-tabs" id="companyTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="company-tab" data-bs-toggle="tab" data-bs-target="#tab-company" type="button" role="tab">
+                            Company
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="communication-tab" data-bs-toggle="tab" data-bs-target="#tab-communication" type="button" role="tab">
+                            Communication
+                        </button>
+                    </li>
+                    {% if country.iso2_code == "GB" %}
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="taxation-tab" data-bs-toggle="tab" data-bs-target="#tab-taxation" type="button" role="tab">
+                            Taxation
+                        </button>
+                    </li>
+                    {% elif country.iso2_code == "BR" %}
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="taxation-tab" data-bs-toggle="tab" data-bs-target="#tab-taxation" type="button" role="tab">
+                            Taxation (Brazil)
+                        </button>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="rti-tab" data-bs-toggle="tab" data-bs-target="#tab-rti" type="button" role="tab">
+                            {% if country.iso2_code == "BR" %}Agent Settings{% else %}RTI Settings{% endif %}
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="banking-tab" data-bs-toggle="tab" data-bs-target="#tab-banking" type="button" role="tab">
+                            Banking
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="account-tab" data-bs-toggle="tab" data-bs-target="#tab-account" type="button" role="tab">
+                            Account Settings
+                        </button>
+                    </li>
+                </ul>
+            </div>
 
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.phone }}
-                                <label for="{{ form.phone.id_for_label }}">Telephone</label>
-                            </div>
-                            {% if form.phone.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.phone.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
+            <div class="card-body p-4">
 
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.email }}
-                                <label for="{{ form.email.id_for_label }}">eMail</label>
-                            </div>
-                            {% if form.email.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.email.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.website }}
-                                <label for="{{ form.website.id_for_label }}">Website</label>
-                            </div>
-                            {% if form.website.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.website.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <!-- Business Address Section -->
-                    <h6 class="mb-3 fw-semibold text-primary">
-                        <i class="bi bi-geo-alt me-2"></i>Business Address
-                    </h6>
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.building_name }}
-                                <label for="{{ form.building_name.id_for_label }}">Building Name</label>
-                            </div>
-                            {% if form.building_name.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.building_name.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.road_name_1 }}
-                                <label for="{{ form.road_name_1.id_for_label }}">Road Name</label>
-                            </div>
-                            {% if form.road_name_1.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.road_name_1.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.road_name_2 }}
-                                <label for="{{ form.road_name_2.id_for_label }}">Road Name line 2</label>
-                            </div>
-                            {% if form.road_name_2.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.road_name_2.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.town }}
-                                <label for="{{ form.town.id_for_label }}">Town</label>
-                            </div>
-                            {% if form.town.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.town.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.post_code }}
-                                <label for="{{ form.post_code.id_for_label }}">Post Code</label>
-                            </div>
-                            {% if form.post_code.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.post_code.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.county }}
-                                <label for="{{ form.county.id_for_label }}">County</label>
-                            </div>
-                            {% if form.county.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.county.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                <input type="text" class="form-control" value="{{ country.name }}" readonly>
-                                <label>Country</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- TAB 3 — TAXATION (Country Specific) -->
-                {% if country.iso2_code == "GB" %}
-                <!-- UK Taxation Fields -->
-                <div class="tab-pane fade" id="tab-taxation" role="tabpanel" aria-labelledby="taxation-tab">
-                    <!-- UK specific fields (keep your existing UK code) -->
-                    <!-- Employer Settings Section -->
-                    <h6 class="mb-3 fw-semibold text-primary">
-                        <i class="bi bi-building-gear me-2"></i>Employer Settings
-                    </h6>
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.tax_id_01 }}
-                                <label for="{{ form.tax_id_01.id_for_label }}">Employer PAYE Reference Office No.</label>
-                            </div>
-                            {% if form.tax_id_01.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.tax_id_01.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.tax_id_02 }}
-                                <label for="{{ form.tax_id_02.id_for_label }}">Employer PAYE Reference Number</label>
-                            </div>
-                            {% if form.tax_id_02.errors %}
-                            <div="invalid-feedback d-block">
-                                {{ form.tax_id_02.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.tax_id_03 }}
-                                <label for="{{ form.tax_id_03.id_for_label }}">Accounts Office Number</label>
-                            </div>
-                            {% if form.tax_id_03.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.tax_id_03.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <!-- UTR Section -->
-                    <h6 class="mb-3 fw-semibold text-primary">
-                        <i class="bi bi-card-checklist me-2"></i>UTR
-                    </h6>
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.tax_id_04 }}
-                                <label for="{{ form.tax_id_04.id_for_label }}">Company CT UTR</label>
-                            </div>
-                            {% if form.tax_id_04.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.tax_id_04.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.tax_id_05 }}
-                                <label for="{{ form.tax_id_05.id_for_label }}">SA UTR</label>
-                            </div>
-                            {% if form.tax_id_05.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.tax_id_05.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <!-- ECON Section -->
-                    <h6 class="mb-3 fw-semibold text-primary">
-                        <i class="bi bi-envelope-paper me-2"></i>ECON
-                    </h6>
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.tax_id_06 }}
-                                <label for="{{ form.tax_id_06.id_for_label }}">Contact Full Name</label>
-                            </div>
-                            {% if form.tax_id_06.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.tax_id_06.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.tax_id_07 }}
-                                <label for="{{ form.tax_id_07.id_for_label }}">ECON Reference</label>
-                            </div>
-                            {% if form.tax_id_07.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.tax_id_07.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <!-- Statutory Section -->
-                    <h6 class="mb-3 fw-semibold text-primary">
-                        <i class="bi bi-file-earmark-text me-2"></i>Statutory
-                    </h6>
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <div class="form-floating">
-                                {{ form.tax_id_08 }}
-                                <label for="{{ form.tax_id_08.id_for_label }}">Eligible for Small Employer Relief?</label>
-                            </div>
-                            {% if form.tax_id_08.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.tax_id_08.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.tax_id_09 }}
-                                <label for="{{ form.tax_id_09.id_for_label }}">Apprentice Levy Due?</label>
-                            </div>
-                            {% if form.tax_id_09.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.tax_id_09.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.tax_id_10 }}
-                                <label for="{{ form.tax_id_10.id_for_label }}">VAT number</label>
-                            </div>
-                            {% if form.tax_id_10.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.tax_id_10.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-                
-                {% elif country.iso2_code == "BR" %}
-                <!-- Brazil Taxation Fields -->
-                <div class="tab-pane fade" id="tab-taxation" role="tabpanel" aria-labelledby="taxation-tab">
-                    <!-- Employer Settings Section -->
-                    <h6 class="mb-3 fw-semibold text-primary">
-                        <i class="bi bi-building-gear me-2"></i>Employer Settings (Brazil)
-                    </h6>
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.tax_id_01 }}
-                                <label for="{{ form.tax_id_01.id_for_label }}">CNPJ</label>
-                                <div class="form-text small text-muted">Cadastro Nacional da Pessoa Jurídica</div>
-                            </div>
-                            {% if form.tax_id_01.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.tax_id_01.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.tax_id_02 }}
-                                <label for="{{ form.tax_id_02.id_for_label }}">Registration Date</label>
-                            </div>
-                            {% if form.tax_id_02.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.tax_id_02.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.tax_id_03 }}
-                                <label for="{{ form.tax_id_03.id_for_label }}">Primary Economical Registration Code</label>
-                                <div class="form-text small text-muted">Código de Atividade Econômica Principal (CNAE)</div>
-                            </div>
-                            {% if form.tax_id_03.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.tax_id_03.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.tax_id_04 }}
-                                <label for="{{ form.tax_id_04.id_for_label }}">Secondary Economical Registration</label>
-                                <div class="form-text small text-muted">Código de Atividade Econômica Secundária</div>
-                            </div>
-                            {% if form.tax_id_04.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.tax_id_04.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.tax_id_05 }}
-                                <label for="{{ form.tax_id_05.id_for_label }}">Business Type Code</label>
-                                <div class="form-text small text-muted">Tipo de Empresa</div>
-                            </div>
-                            {% if form.tax_id_05.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.tax_id_05.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger rounded-3 mb-4">{{ form.non_field_errors }}</div>
                 {% endif %}
 
-                <!-- TAB 4 — RTI/AGENT SETTINGS -->
-                <div class="tab-pane fade" id="tab-rti" role="tabpanel" aria-labelledby="rti-tab">
-                    {% if country.iso2_code == "GB" %}
-                    <!-- UK RTI Settings -->
-                    <!-- User Details Section -->
-                    <h6 class="mb-3 fw-semibold text-primary">
-                        <i class="bi bi-person-badge me-2"></i>User Details
-                    </h6>
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.rti_user_id }}
-                                <label for="{{ form.rti_user_id.id_for_label }}">User ID</label>
+                <form method="post" enctype="multipart/form-data" id="company-form" novalidate>
+                    {% csrf_token %}
+
+                    {% for hidden in form.hidden_fields %}
+                        {{ hidden }}
+                    {% endfor %}
+
+                    <div class="tab-content" id="companyTabsContent">
+
+                        <div class="tab-pane fade show active" id="tab-company" role="tabpanel">
+                            <h6 class="section-header"><i class="fas fa-info-circle me-2"></i>Core Details</h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        <input type="text" class="form-control" 
+                                               value="{% if company %}{{ company.company_id }}{% else %}Auto-generated{% endif %}" 
+                                               readonly>
+                                        <label>Company ID</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.company_code }}
+                                        <label for="{{ form.company_code.id_for_label }}">Company Code</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.company_number }}
+                                        <label for="{{ form.company_number.id_for_label }}">Company Number</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.trade_name }}
+                                        <label for="{{ form.trade_name.id_for_label }}">Business Trade Name</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.legal_name }}
+                                        <label for="{{ form.legal_name.id_for_label }}">Legal Trade Name</label>
+                                    </div>
+                                </div>
                             </div>
-                            {% if form.rti_user_id.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.rti_user_id.errors }}
-                            </div>
-                            {% endif %}
                         </div>
 
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.rti_password }}
-                                <label for="{{ form.rti_password.id_for_label }}">Password</label>
-                            </div>
-                            {% if form.rti_password.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.rti_password.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-                    </div>
-                    {% endif %}
+                        <div class="tab-pane fade" id="tab-communication" role="tabpanel">
+                            <h6 class="section-header"><i class="fas fa-address-card me-2"></i>Contact Information</h6>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.contact }}
+                                        <label for="{{ form.contact.id_for_label }}">Contact Person</label>
+                                    </div>
+                                </div>
 
-                    <!-- Agent Address Section -->
-                    <h6 class="mb-3 fw-semibold text-primary">
-                        <i class="bi bi-house-door me-2"></i>Agent Address
-                    </h6>
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.agent_full_name }}
-                                <label for="{{ form.agent_full_name.id_for_label }}">Contact Full Name</label>
-                            </div>
-                            {% if form.agent_full_name.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.agent_full_name.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.phone }}
+                                        <label for="{{ form.phone.id_for_label }}">Telephone</label>
+                                    </div>
+                                </div>
 
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.agent_road_name_1 }}
-                                <label for="{{ form.agent_road_name_1.id_for_label }}">Road Name</label>
-                            </div>
-                            {% if form.agent_road_name_1.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.agent_road_name_1.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.email }}
+                                        <label for="{{ form.email.id_for_label }}">Email</label>
+                                    </div>
+                                </div>
 
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.agent_road_name_2 }}
-                                <label for="{{ form.agent_road_name_2.id_for_label }}">Road Name line 2</label>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.website }}
+                                        <label for="{{ form.website.id_for_label }}">Website</label>
+                                    </div>
+                                </div>
                             </div>
-                            {% if form.agent_road_name_2.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.agent_road_name_2.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
 
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.agent_town }}
-                                <label for="{{ form.agent_town.id_for_label }}">Town</label>
-                            </div>
-                            {% if form.agent_town.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.agent_town.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.agent_post_code }}
-                                <label for="{{ form.agent_post_code.id_for_label }}">Post Code</label>
-                            </div>
-                            {% if form.agent_post_code.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.agent_post_code.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-
-                <!-- TAB 5 — BANKING (Same for all countries) -->
-                <div class="tab-pane fade" id="tab-banking" role="tabpanel" aria-labelledby="banking-tab">
-                    <!-- Bank Account Details Section -->
-                    <h6 class="mb-3 fw-semibold text-primary">
-                        <i class="bi bi-credit-card me-2"></i>Bank Account details
-                    </h6>
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.bank_01 }}
-                                <label for="{{ form.bank_01.id_for_label }}">Account Name</label>
-                            </div>
-                            {% if form.bank_01.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.bank_01.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.bank_02 }}
-                                <label for="{{ form.bank_02.id_for_label }}">Bank Name</label>
-                            </div>
-                            {% if form.bank_02.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.bank_02.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.bank_03 }}
-                                <label for="{{ form.bank_03.id_for_label }}">Branch Code</label>
-                            </div>
-                            {% if form.bank_03.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.bank_03.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.bank_04 }}
-                                <label for="{{ form.bank_04.id_for_label }}">Bank Account Number</label>
-                            </div>
-                            {% if form.bank_04.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.bank_04.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.bank_05 }}
-                                <label for="{{ form.bank_05.id_for_label }}">Swift/BIC</label>
-                            </div>
-                            {% if form.bank_05.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.bank_05.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.bank_06 }}
-                                <label for="{{ form.bank_06.id_for_label }}">IBAN</label>
-                            </div>
-                            {% if form.bank_06.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.bank_06.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <!-- Bank Address Section -->
-                    <h6 class="mb-3 fw-semibold text-primary">
-                        <i class="bi bi-geo-alt me-2"></i>Bank Address
-                    </h6>
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.bank_07 }}
-                                <label for="{{ form.bank_07.id_for_label }}">Road Name</label>
-                            </div>
-                            {% if form.bank_07.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.bank_07.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.bank_08 }}
-                                <label for="{{ form.bank_08.id_for_label }}">Road Name line 2</label>
-                            </div>
-                            {% if form.bank_08.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.bank_08.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.bank_09 }}
-                                <label for="{{ form.bank_09.id_for_label }}">Town</label>
-                            </div>
-                            {% if form.bank_09.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.bank_09.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.bank_10 }}
-                                <label for="{{ form.bank_10.id_for_label }}">Post Code</label>
-                            </div>
-                            {% if form.bank_10.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.bank_10.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.bank_11 }}
-                                <label for="{{ form.bank_11.id_for_label }}">Country</label>
-                            </div>
-                            {% if form.bank_11.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.bank_11.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.bank_12 }}
-                                <label for="{{ form.bank_12.id_for_label }}">Country</label>
-                            </div>
-                            {% if form.bank_12.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.bank_12.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <!-- Bacs Details Section (UK Only) -->
-                    {% if country.iso2_code == "GB" %}
-                    <h6 class="mb-3 fw-semibold text-primary">
-                        <i class="bi bi-cash-coin me-2"></i>Bacs details
-                    </h6>
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <div class="form-floating">
-                                {{ form.bank_13 }}
-                                <label for="{{ form.bank_13.id_for_label }}">Bureau Number</label>
-                            </div>
-                            {% if form.bank_13.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.bank_13.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-floating">
-                                {{ form.bank_14 }}
-                                <label for="{{ form.bank_14.id_for_label }}">BACS User Number/Ref</label>
-                            </div>
-                            {% if form.bank_14.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.bank_14.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-floating">
-                                {{ form.bank_15 }}
-                                <label for="{{ form.bank_15.id_for_label }}">BACS Application Number</label>
-                            </div>
-                            {% if form.bank_15.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.bank_15.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-                    </div>
-                    {% endif %}
-                </div>
-
-                <!-- TAB 6 — ACCOUNT SETTINGS (Same for all countries) -->
-                <div class="tab-pane fade" id="tab-account" role="tabpanel" aria-labelledby="account-tab">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.account_status }}
-                                <label for="{{ form.account_status.id_for_label }}">Account Status</label>
-                            </div>
-                            {% if form.account_status.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.account_status.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.account_archive }}
-                                <label for="{{ form.account_archive.id_for_label }}">Account Archive</label>
-                            </div>
-                            {% if form.account_archive.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.account_archive.errors }}
-                            </div>
-                            {% endif %}
-                        </div>
-
-                        <!-- Logo field -->
-                        <div class="col-md-12 mt-3">
-                            <div class="form-floating">
-                                {{ form.logo }}
-                                <label for="{{ form.logo.id_for_label }}">Company Logo</label>
-                            </div>
-                            {% if form.logo.errors %}
-                            <div class="invalid-feedback d-block">
-                                {{ form.logo.errors }}
-                            </div>
-                            {% endif %}
+                            <hr class="text-muted opacity-25">
                             
-                            {% if company and company.logo %}
-                            <div class="mt-3">
-                                <img src="{{ company.logo.url }}" class="img-thumbnail" style="max-height:120px;">
-                                <div class="form-text">Current logo</div>
+                            <h6 class="section-header mt-3"><i class="fas fa-map-marker-alt me-2"></i>Address</h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.building_name }}
+                                        <label for="{{ form.building_name.id_for_label }}">Building Name</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.road_name_1 }}
+                                        <label for="{{ form.road_name_1.id_for_label }}">Road Name</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.road_name_2 }}
+                                        <label for="{{ form.road_name_2.id_for_label }}">Road Name (Line 2)</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.town }}
+                                        <label for="{{ form.town.id_for_label }}">Town/City</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.post_code }}
+                                        <label for="{{ form.post_code.id_for_label }}">Post Code</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.county }}
+                                        <label for="{{ form.county.id_for_label }}">County</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if country.iso2_code == "GB" %}
+                        <div class="tab-pane fade" id="tab-taxation" role="tabpanel">
+                            <h6 class="section-header"><i class="fas fa-landmark me-2"></i>HMRC Settings</h6>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.tax_id_01 }}
+                                        <label for="{{ form.tax_id_01.id_for_label }}">Employer PAYE Ref Office No.</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.tax_id_02 }}
+                                        <label for="{{ form.tax_id_02.id_for_label }}">Employer PAYE Ref Number</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.tax_id_03 }}
+                                        <label for="{{ form.tax_id_03.id_for_label }}">Accounts Office Number</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h6 class="section-header"><i class="fas fa-list-ol me-2"></i>UTR & ECON</h6>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.tax_id_04 }}
+                                        <label for="{{ form.tax_id_04.id_for_label }}">Company CT UTR</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.tax_id_05 }}
+                                        <label for="{{ form.tax_id_05.id_for_label }}">SA UTR</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.tax_id_07 }}
+                                        <label for="{{ form.tax_id_07.id_for_label }}">ECON Reference</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <h6 class="section-header"><i class="fas fa-check-square me-2"></i>Statutory</h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.tax_id_08 }}
+                                        <label for="{{ form.tax_id_08.id_for_label }}">Small Employer Relief?</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.tax_id_09 }}
+                                        <label for="{{ form.tax_id_09.id_for_label }}">Apprentice Levy Due?</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.tax_id_10 }}
+                                        <label for="{{ form.tax_id_10.id_for_label }}">VAT Number</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {% elif country.iso2_code == "BR" %}
+                        <div class="tab-pane fade" id="tab-taxation" role="tabpanel">
+                            <h6 class="section-header"><i class="fas fa-landmark me-2"></i>Receita Federal</h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.tax_id_01 }}
+                                        <label for="{{ form.tax_id_01.id_for_label }}">CNPJ</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.tax_id_02 }}
+                                        <label for="{{ form.tax_id_02.id_for_label }}">Registration Date</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.tax_id_03 }}
+                                        <label for="{{ form.tax_id_03.id_for_label }}">CNAE (Primary)</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.tax_id_04 }}
+                                        <label for="{{ form.tax_id_04.id_for_label }}">CNAE (Secondary)</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.tax_id_05 }}
+                                        <label for="{{ form.tax_id_05.id_for_label }}">Business Type Code</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="tab-pane fade" id="tab-rti" role="tabpanel">
+                            {% if country.iso2_code == "GB" %}
+                            <h6 class="section-header"><i class="fas fa-user-lock me-2"></i>Authentication</h6>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.rti_user_id }}
+                                        <label for="{{ form.rti_user_id.id_for_label }}">User ID</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.rti_password }}
+                                        <label for="{{ form.rti_password.id_for_label }}">Password</label>
+                                    </div>
+                                </div>
                             </div>
                             {% endif %}
+
+                            <h6 class="section-header"><i class="fas fa-briefcase me-2"></i>Agent Details</h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.agent_full_name }}
+                                        <label for="{{ form.agent_full_name.id_for_label }}">Agent Name</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.agent_road_name_1 }}
+                                        <label for="{{ form.agent_road_name_1.id_for_label }}">Road Name</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.agent_town }}
+                                        <label for="{{ form.agent_town.id_for_label }}">Town</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.agent_post_code }}
+                                        <label for="{{ form.agent_post_code.id_for_label }}">Post Code</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="tab-banking" role="tabpanel">
+                            <h6 class="section-header"><i class="fas fa-university me-2"></i>Bank Details</h6>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.bank_01 }}
+                                        <label for="{{ form.bank_01.id_for_label }}">Account Name</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.bank_02 }}
+                                        <label for="{{ form.bank_02.id_for_label }}">Bank Name</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.bank_04 }}
+                                        <label for="{{ form.bank_04.id_for_label }}">Account Number</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.bank_03 }}
+                                        <label for="{{ form.bank_03.id_for_label }}">Branch Code</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.bank_06 }}
+                                        <label for="{{ form.bank_06.id_for_label }}">IBAN</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.bank_05 }}
+                                        <label for="{{ form.bank_05.id_for_label }}">BIC/Swift</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="tab-account" role="tabpanel">
+                            <h6 class="section-header"><i class="fas fa-cog me-2"></i>Account Configuration</h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.account_status }}
+                                        <label for="{{ form.account_status.id_for_label }}">Account Status</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.account_archive }}
+                                        <label for="{{ form.account_archive.id_for_label }}">Archive Status</label>
+                                    </div>
+                                </div>
+                                <div class="col-12 mt-4">
+                                    <div class="form-floating">
+                                        {{ form.logo }}
+                                        <label for="{{ form.logo.id_for_label }}">Company Logo</label>
+                                    </div>
+                                    {% if company and company.logo %}
+                                    <div class="mt-3">
+                                        <img src="{{ company.logo.url }}" class="img-thumbnail rounded-3 border-0 shadow-sm" style="max-height:100px;">
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-5 pt-3 border-top">
+                        <div>
+                            <button type="button" class="btn btn-outline-secondary me-2" id="prevTab" disabled>
+                                <i class="fas fa-chevron-left me-1"></i> Previous
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" id="nextTab">
+                                Next <i class="fas fa-chevron-right ms-1"></i>
+                            </button>
+                        </div>
+                        <div>
+                            <a href="{% url 'companies:company' country.slug %}" class="btn btn-danger px-4 me-2">
+                                Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary px-4" id="submit-btn">
+                                Save
+                            </button>
                         </div>
                     </div>
-                </div>
 
+                </form>
             </div>
-
-            <!-- BUTTONS -->
-            <div class="d-flex justify-content-between mt-4 pt-3 border-top">
-                <div>
-                    <button type="button" class="btn btn-outline-secondary" id="prevTab">
-                        <i class="bi bi-chevron-left"></i> Previous
-                    </button>
-                    <button type="button" class="btn btn-outline-secondary" id="nextTab">
-                        Next <i class="bi bi-chevron-right"></i>
-                    </button>
-                </div>
-                <div>
-                    <button class="btn {% if company %}btn-primary{% else %}btn-primary{% endif %} px-5" id="submit-btn" type="submit">
-                        <i class="bi {% if company %}bi-save{% else %}bi-check-lg{% endif %} me-1"></i>
-                        <span id="submit-text">{% if company %}Save Changes{% else %}Create Company{% endif %}</span>
-                        <span id="submit-loading" class="spinner-border spinner-border-sm d-none ms-2"></span>
-                    </button>
-
-                    <a href="{% url 'companies:company' country.slug %}" class="btn btn-danger px-4 ms-2">
-                        <i class="bi bi-x-lg me-1"></i>Cancel
-                    </a>
-                </div>
-            </div>
-
-        </form>
-
+        </div>
     </div>
 </div>
-
 {% endblock %}
 
 {% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Tab navigation functionality
+    
+    // 1. Initialize Select2
+    $("select").select2({
+        theme: "bootstrap-5",
+        width: '100%',
+        dropdownParent: $('body')
+    });
+    
+    // 2. Tab Navigation Logic
     const tabs = document.querySelectorAll('#companyTabs .nav-link');
     const prevBtn = document.getElementById('prevTab');
     const nextBtn = document.getElementById('nextTab');
-    
     let currentTabIndex = 0;
     
-    // Get all tab panes
-    const tabPanes = document.querySelectorAll('.tab-pane');
-    
-    // Initialize Bootstrap tabs
+    // Init Tabs
     const tabList = document.querySelector('#companyTabs');
     const bsTabs = new bootstrap.Tab(tabList.querySelector('.nav-link.active'));
     
-    // Update current tab index when a tab is shown
+    // Listen for Tab Changes
     tabs.forEach((tab, index) => {
         tab.addEventListener('shown.bs.tab', function (event) {
             currentTabIndex = Array.from(tabs).indexOf(event.target);
             updateNavButtons();
+            
+            // Re-init select2 focus on tab switch if needed
+            $('select').select2({ theme: "bootstrap-5", width: '100%' });
         });
     });
     
-    // Previous button click
-    prevBtn.addEventListener('click', function() {
-        if (currentTabIndex > 0) {
-            const prevTab = tabs[currentTabIndex - 1];
-            bootstrap.Tab.getOrCreateInstance(prevTab).show();
-        }
+    // Navigation Buttons
+    prevBtn.addEventListener('click', () => {
+        if (currentTabIndex > 0) bootstrap.Tab.getOrCreateInstance(tabs[currentTabIndex - 1]).show();
     });
     
-    // Next button click
-    nextBtn.addEventListener('click', function() {
-        if (currentTabIndex < tabs.length - 1) {
-            const nextTab = tabs[currentTabIndex + 1];
-            bootstrap.Tab.getOrCreateInstance(nextTab).show();
-        }
+    nextBtn.addEventListener('click', () => {
+        if (currentTabIndex < tabs.length - 1) bootstrap.Tab.getOrCreateInstance(tabs[currentTabIndex + 1]).show();
     });
     
-    // Update navigation button states
     function updateNavButtons() {
         prevBtn.disabled = currentTabIndex === 0;
         nextBtn.disabled = currentTabIndex === tabs.length - 1;
         
-        // Update next button text on last tab
         if (currentTabIndex === tabs.length - 1) {
-            nextBtn.innerHTML = 'Review <i class="bi bi-chevron-right"></i>';
-            nextBtn.classList.remove('btn-outline-secondary');
-            nextBtn.classList.add('btn-primary');
+            nextBtn.classList.add('invisible'); // Hide Next on last tab
         } else {
-            nextBtn.innerHTML = 'Next <i class="bi bi-chevron-right"></i>';
-            nextBtn.classList.remove('btn-primary');
-            nextBtn.classList.add('btn-outline-secondary');
+            nextBtn.classList.remove('invisible');
         }
     }
     
-    // Initialize button states
-    updateNavButtons();
-    
-    // Form validation
+    // 3. Form Validation & Loading State
     const form = document.getElementById('company-form');
     form.addEventListener('submit', function(event) {
-        // Validate all tabs before submission
-        let isValid = true;
-        const firstInvalidField = [];
-        
-        tabPanes.forEach(pane => {
-            const inputs = pane.querySelectorAll('input, select, textarea');
-            inputs.forEach(input => {
-                if (!input.checkValidity()) {
-                    isValid = false;
-                    input.classList.add('is-invalid');
-                    
-                    if (firstInvalidField.length === 0) {
-                        firstInvalidField.push(input);
-                        // Switch to the tab containing the invalid field
-                        const tabId = pane.id.replace('tab-', '');
-                        const tabButton = document.querySelector(`[data-bs-target="#${pane.id}"]`);
-                        if (tabButton) {
-                            bootstrap.Tab.getOrCreateInstance(tabButton).show();
-                        }
-                    }
-                }
-            });
-        });
-        
-        if (!isValid) {
+        if (!form.checkValidity()) {
             event.preventDefault();
             event.stopPropagation();
             
-            // Show validation error message
-            if (firstInvalidField.length > 0) {
-                firstInvalidField[0].focus();
-                
-                // Show alert
-                const alertHTML = `
-                    <div class="alert alert-danger alert-dismissible fade show position-fixed" 
-                         style="top: 20px; right: 20px; z-index: 9999; min-width: 300px;">
-                        <i class="bi bi-exclamation-triangle me-2"></i>
-                        Please fill in all required fields correctly.
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                `;
-                
-                document.body.insertAdjacentHTML('beforeend', alertHTML);
-                
-                // Auto-remove after 5 seconds
-                setTimeout(() => {
-                    const alert = document.querySelector('.alert.position-fixed');
-                    if (alert) {
-                        bootstrap.Alert.getInstance(alert)?.close();
-                    }
-                }, 5000);
+            // Find first invalid field and switch to that tab
+            const invalidInput = form.querySelector('input:invalid, select:invalid');
+            if(invalidInput) {
+                const tabPane = invalidInput.closest('.tab-pane');
+                const tabId = tabPane.getAttribute('id');
+                const tabBtn = document.querySelector(`[data-bs-target="#${tabId}"]`);
+                bootstrap.Tab.getOrCreateInstance(tabBtn).show();
+                setTimeout(() => invalidInput.focus(), 100);
             }
-        }
-        
-        form.classList.add('was-validated');
-    });
-    
-    // Remove invalid class when user starts typing
-    form.addEventListener('input', function(event) {
-        if (event.target.classList.contains('is-invalid')) {
-            event.target.classList.remove('is-invalid');
+            form.classList.add('was-validated');
+        } else {
+            // Loading State
+            const btn = document.getElementById('submit-btn');
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
+            btn.disabled = true;
         }
     });
-    
-    // Auto-focus first field in each tab when switching
-    tabs.forEach(tab => {
-        tab.addEventListener('shown.bs.tab', function(event) {
-            const targetId = event.target.getAttribute('data-bs-target');
-            const targetPane = document.querySelector(targetId);
-            const firstInput = targetPane.querySelector('input, select, textarea');
-            if (firstInput) {
-                setTimeout(() => {
-                    firstInput.focus();
-                }, 100);
-            }
-        });
-    });
-    
-    // Keyboard navigation support
-    document.addEventListener('keydown', function(event) {
-        // Ctrl + Right Arrow for next tab
-        if (event.ctrlKey && event.key === 'ArrowRight') {
-            if (currentTabIndex < tabs.length - 1) {
-                event.preventDefault();
-                const nextTab = tabs[currentTabIndex + 1];
-                bootstrap.Tab.getOrCreateInstance(nextTab).show();
-            }
-        }
-        
-        // Ctrl + Left Arrow for previous tab
-        if (event.ctrlKey && event.key === 'ArrowLeft') {
-            if (currentTabIndex > 0) {
-                event.preventDefault();
-                const prevTab = tabs[currentTabIndex - 1];
-                bootstrap.Tab.getOrCreateInstance(prevTab).show();
-            }
-        }
-        
-        // Enter key to go to next tab (except in textareas)
-        if (event.key === 'Enter' && !event.shiftKey) {
-            const activeElement = document.activeElement;
-            if (activeElement.tagName !== 'TEXTAREA' && 
-                activeElement.type !== 'submit' && 
-                activeElement.type !== 'button' && 
-                !activeElement.classList.contains('btn')) {
-                
-                if (currentTabIndex < tabs.length - 1) {
-                    event.preventDefault();
-                    const nextTab = tabs[currentTabIndex + 1];
-                    bootstrap.Tab.getOrCreateInstance(nextTab).show();
-                }
-            }
-        }
-    });
-    
-    // Progress indicator
-    function updateProgressIndicator() {
-        const requiredFields = form.querySelectorAll('[required]');
-        const completedFields = Array.from(form.querySelectorAll('input, select, textarea')).filter(field => 
-            field.value && field.value.toString().trim() !== ''
-        ).length;
-        const totalFields = form.querySelectorAll('input, select, textarea').length;
-        
-        const progress = totalFields ? Math.round((completedFields / totalFields) * 100) : 0;
-        
-        // You could add a progress bar here if needed
-        console.log(`Form progress: ${progress}%`);
+
+    // 4. Auto-Uppercase Company Code
+    const compCode = document.getElementById("{{ form.company_code.id_for_label }}");
+    if(compCode) {
+        compCode.addEventListener("input", function() { this.value = this.value.toUpperCase(); });
     }
     
-    // Update progress on field changes
-    form.addEventListener('input', updateProgressIndicator);
-    
-    // Initialize progress
-    updateProgressIndicator();
+    updateNavButtons();
 });
 </script>
-
-<style>
-/* Tab styling */
-#companyTabs .nav-link {
-    border: none;
-    border-bottom: 3px solid transparent;
-    color: #6c757d;
-    transition: all 0.3s;
-    margin-bottom: -1px;
-    padding: 0.75rem 1rem;
-}
-
-#companyTabs .nav-link:hover {
-    color: #0d6efd;
-    border-bottom-color: #dee2e6;
-}
-
-#companyTabs .nav-link.active {
-    color: #0d6efd;
-    border-bottom-color: #0d6efd;
-    background-color: transparent;
-}
-
-/* Form floating label enhancement */
-.form-floating {
-    position: relative;
-}
-
-.form-floating > .form-control,
-.form-floating > .form-select {
-    height: calc(3.5rem + 2px);
-    padding: 1rem 0.75rem;
-}
-
-.form-floating > label {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    padding: 1rem 0.75rem;
-    pointer-events: none;
-    border: 1px solid transparent;
-    transform-origin: 0 0;
-    transition: opacity .1s ease-in-out, transform .1s ease-in-out;
-}
-
-.form-floating > .form-control:focus,
-.form-floating > .form-control:not(:placeholder-shown),
-.form-floating > .form-select {
-    padding-top: 1.625rem;
-    padding-bottom: 0.625rem;
-}
-
-.form-floating > .form-control:focus ~ label,
-.form-floating > .form-control:not(:placeholder-shown) ~ label,
-.form-floating > .form-select ~ label {
-    opacity: .65;
-    transform: scale(.85) translateY(-0.5rem) translateX(0.15rem);
-}
-
-/* Button styling */
-#prevTab:disabled, #nextTab:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-/* Section headers styling */
-h6.fw-semibold.text-primary {
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid #e9ecef;
-    margin-bottom: 1.5rem;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .d-flex.justify-content-between {
-        flex-direction: column;
-        gap: 1rem;
-    }
-    
-    .d-flex.justify-content-between > div {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        gap: 0.5rem;
-    }
-    
-    #companyTabs {
-        flex-wrap: wrap;
-    }
-    
-    #companyTabs .nav-item {
-        flex: 1 0 50%;
-        text-align: center;
-    }
-    
-    #companyTabs .nav-link {
-        font-size: 0.9rem;
-        padding: 0.5rem;
-    }
-}
-</style>
 {% endblock %}

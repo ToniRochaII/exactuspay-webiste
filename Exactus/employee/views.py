@@ -116,7 +116,7 @@ def employee_create(request, country_slug, company_id):
     else:
         form = FormClass()
 
-    return render(request, "employee/create.html", {
+    return render(request, "employee/form.html", {
         "form": form, "company": company, "country": country, "country_slug": country_slug
     })
 
@@ -184,7 +184,7 @@ def employee_edit(request, country_slug, company_id, employee_id):
         form = FormClass(instance=employee)
         access_form = EmployeeAccessForm(instance=linked_user) if linked_user else None
 
-    return render(request, "employee/edit.html", {
+    return render(request, "employee/form.html", {
         "form": form, "access_form": access_form, "linked_user": linked_user,
         "employee": employee, "company": company, "country": country, "country_slug": country_slug,
     })

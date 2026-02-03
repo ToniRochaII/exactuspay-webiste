@@ -2,123 +2,188 @@
 {% load static %}
 {% load country_role_filters %}
 
-{% block title %}Restore countries | ExactusPay{% endblock %}
-{% block page_title %}Restore countries{% endblock %}
+{% block title %}Restore Countries | ExactusPay{% endblock %}
+
+{% block page_title %}Restore Countries{% endblock %}
+
+{% block extra_head %}
+<link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.bootstrap5.min.css" rel="stylesheet">
+
+<style>
+    /* --- GOLD STANDARD CSS --- */
+    body { background-color: #F4F4F4 !important; }
+    .wrapper:before { background: #F4F4F4 !important; }
+    :root { --card-radius: 16px; --border-color: #f0f0f0; }
+
+    /* Card Styling */
+    .card-hover-effect {
+        border-radius: var(--card-radius);
+        border: none;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        overflow: hidden;
+    }
+    .card-hover-effect:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+    }
+    .card-header {
+        background-color: #fff;
+        border-bottom: 1px solid #f0f0f0;
+    }
+</style>
+{% endblock %}
 
 {% block breadcrumbs %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Restore countries</li>
+    <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
+    <li class="breadcrumb-item active">Restore</li>
   </ol>
 </nav>
 {% endblock %}
 
 {% block content %}
-<div class="card shadow-sm border-0">
-  
-  <!-- HEADER -->
-  <div class="card-header d-flex justify-content-between align-items-center">
-    <div>
-      <h5 class="mb-0 fw-semibold">Restore countries</h5>
-      <small class="text-muted">Manage all supported global payroll countries</small>
-    </div>
-
-    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
-    <a href="{% url 'country:country_create' %}" class="btn btn-primary">
-      <i class="bi bi-plus-circle me-1"></i> Add Country
-    </a>
-    {% endif %}
-  </div>
-
-  <!-- BODY -->
-  <div class="card-body">
-
-    <!-- MESSAGES -->
-    {% if messages %}
-      {% for message in messages %}
-      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-        {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-      </div>
-      {% endfor %}
-    {% endif %}
-
-    {% if countries %}
-      <div class="table-responsive">
-        <table id="datatable-countries"
-               class="table table-striped table-hover align-middle"
-               style="width:100%">
-          <thead class="table-light">
-            <tr>
-              <th>ISO 3</th>
-              <th>Country</th>
-              <th>Language</th>
-              <th>Currency Code</th>
-              <th>Currency Name</th>
-              <th>Status</th>
-              <th class="text-end">Actions</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {% for country in countries %}
-            <tr>
-              <td class="fw-semibold">{{ country.iso3_code }}</td>
-              <td>{{ country.name }}</td>
-              <td>{{ country.official_language }}</td>
-              <td>{{ country.currency_code }}</td>
-              <td>{{ country.currency_name }}</td>
-              <td>{{ country.status }} </td>
-
-              <!-- ACTIONS -->
-              <td class="text-end">
-                <div class="btn-group" role="group">
-                  <a href="{% url 'country:country_edit' country.slug %}"
-                     class="btn btn-sm btn-outline-primary">
-                    <i class="bi bi-pencil-square"></i> Edit
-                  </a>
-
-                  <a href="{% url 'companies:company' country.slug %}"
-                     class="btn btn-sm btn-outline-secondary">
-                    <i class="bi bi-arrow-right-circle"></i> Enter
-                  </a>
+<div class="row">
+    <div class="col-12">
+        
+        <div class="card card-hover-effect shadow-sm">
+            <div class="card-header pt-4 px-4 pb-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-trash-restore me-2 text-primary"></i>Restore Countries
+                        </h5>
+                        <h6 class="card-subtitle text-muted mt-1">
+                            Recover archived or deleted global payroll countries.
+                        </h6>
+                    </div>
+                    
+                    {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
+                    <a href="{% url 'country:country_create' %}" class="btn btn-primary">
+                        <i class="fas fa-plus me-2"></i>Add Country
+                    </a>
+                    {% endif %}
                 </div>
-              </td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
+            </div>
 
-    {% else %}
-      <div class="text-center py-5">
-        <p class="text-muted mb-3">No countries to restore found.</p>
-        <a href="{% url 'country:country_create' %}" class="btn btn-primary">
-          <i class="bi bi-plus-circle"></i> Add country
-        </a>
-      </div>
-    {% endif %}
-  </div>
+            <div class="card-body p-0">
+                <div class="p-4">
+                    {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-3 mb-4">
+                            <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-info-circle{% endif %} me-2"></i>
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    {% if countries %}
+                    <table id="datatables-reponsive" class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th class="text-center" style="width: 60px;">ISO 3</th>
+                                <th>Country</th>
+                                <th>Language</th>
+                                <th>Currency</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for country in countries %}
+                            <tr>
+                                <td class="text-center fw-bold text-muted">
+                                    {{ country.iso3_code }}
+                                </td>
+                                
+                                <td class="fw-bold text-dark">
+                                    {{ country.name }}
+                                </td>
+                                
+                                <td>
+                                    {{ country.official_language }}
+                                </td>
+                                
+                                <td>
+                                    <span class="fw-bold">{{ country.currency_code }}</span> 
+                                    <span class="text-muted small">({{ country.currency_name }})</span>
+                                </td>
+                                
+                                <td class="text-center">
+                                    <span class="badge bg-secondary">Archived</span>
+                                </td>
+
+                                <td class="text-end table-action">
+                                    <a href="{% url 'country:country_edit' country.slug %}" 
+                                       class="text-primary me-2" 
+                                       title="Edit / Restore">
+                                        <i class="align-middle fas fa-edit"></i>
+                                    </a>
+
+                                    <a href="{% url 'companies:company' country.slug %}" 
+                                       class="text-dark" 
+                                       title="Enter">
+                                        <i class="align-middle fas fa-arrow-right"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <div class="mb-3">
+                                <i class="fas fa-recycle fa-3x text-muted opacity-25"></i>
+                            </div>
+                            <h5 class="text-muted">No countries to restore</h5>
+                            <p class="text-muted small mb-3">All countries are currently active.</p>
+                            <a href="{% url 'country:country_create' %}" class="btn btn-primary">
+                                <i class="fas fa-plus me-2"></i>Add Country
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
 
-{% block extra_scripts %}
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/responsive.bootstrap5.min.js"></script>
+
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
-    $("#datatable-countries").DataTable({
-      responsive: true,
-      pageLength: 10,
-      order: [[1, "asc"]],
-      language: {
-        search: "Search:",
-        lengthMenu: "Show _MENU_ countries",
-        zeroRecords: "No matching countries found.",
-        info: "Showing _START_–_END_ of _TOTAL_ countries",
-        infoEmpty: "No countries to display",
-        paginate: { previous: "‹", next: "›" }
-      }
+    document.addEventListener("DOMContentLoaded", function() {
+        if (document.getElementById("datatables-reponsive")) {
+            $("#datatables-reponsive").DataTable({
+                responsive: true,
+                lengthChange: true,
+                pageLength: 10,
+                order: [[1, "asc"]], // Sort by Country Name
+                
+                language: {
+                    search: "",
+                    searchPlaceholder: "Search Archived...",
+                    lengthMenu: "Show _MENU_ entries"
+                },
+
+                dom: '<"row mb-3"<"col-md-6 d-flex align-items-center"l><"col-md-6"f>>' + 
+                     '<"row"<"col-sm-12"tr>>' + 
+                     '<"row mt-3"<"col-md-5"i><"col-md-7"p>>',
+
+                initComplete: function() {
+                    $('.dataTables_filter input').addClass('form-control');
+                    $('.dataTables_length select').addClass('form-select');
+                }
+            });
+        }
     });
-  });
 </script>
 {% endblock %}
