@@ -91,7 +91,7 @@
                                     <span class="badge bg-secondary">Inactive</span>
                                 {% endif %}
                             </td>
-                            <td>{{ user.last_login|date:"d, M, Y g:i A"|default:"Never" }}</td>
+                            <td>{{ user.last_login|date:"d, M, Y H:i"|default:"Never" }}</td>
                             <td class="text-end pe-4">
                                 <div class="btn-group">
                                     <a href="{% url 'user_edit' user.id %}" class="btn btn-sm btn-outline-primary" title="Edit Profile">
