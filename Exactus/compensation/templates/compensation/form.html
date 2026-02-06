@@ -1,14 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}
-    {% if is_edit %}
-        Edit Compensation — {{ employee.employee_name }} {{ employee.employee_surname }} | ExactusPay
-    {% else %}
-        Add Compensation — {{ employee.employee_name }} {{ employee.employee_surname }} | ExactusPay
-    {% endif %}
-{% endblock %}
-
 {% block page_title %}
     {% if is_edit %}
         <i class="fas fa-edit me-2"></i>Edit Compensation
@@ -37,7 +29,7 @@
         overflow: hidden;
     }
     .card-hover-effect:hover {
-        transform: translateY(-5px);
+        transform: translateY(0px);
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
     }
     .card-header {

@@ -578,3 +578,5 @@ def payslip_run(request, country_slug, company_id):
         'company': company,
         'periods': periods
     })
+
+

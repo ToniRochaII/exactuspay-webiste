@@ -25,7 +25,7 @@
     }
 
     .card-hover-effect:hover {
-        transform: translateY(-5px); /* The "Lift" */
+        transform: translateY(0px); /* The "Lift" */
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
     }
 
@@ -63,13 +63,13 @@
                         <tbody>
                             {% for employee in employees %}
                             <tr>
-                                <td>
+                                <td  class="text-center">
                                     <span class="text-muted">{{ employee.employee_id }}</span>
                                 </td>
 
                                 <td>
                                     <a href="{% url 'employee:employee_edit' country_slug company.company_id employee.id %}" class="fw-bold text-dark text-decoration-none">
-                                    <strong>{{ employee.employee_surname }}</strong><br>
+                                    <strong>{{ employee.employee_surname }},</strong>
                                     <small class="text-muted">{{ employee.employee_name }}</small>
                                     </a>
                                 </td>

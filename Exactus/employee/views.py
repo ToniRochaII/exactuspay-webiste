@@ -1,6 +1,7 @@
 import csv
 import openpyxl
 import uuid
+import logging
 from io import BytesIO
 from datetime import datetime
 from openpyxl.styles import Font, PatternFill
@@ -30,8 +31,16 @@ from Exactus.employee.forms import (
 )
 
 # Utils & Permissions
-# FIXED: Pointing to the correct location of your safe decorator
 from Exactus.accounts.utils.decorators import role_required
+
+# Service Import (Robust handling)
+try:
+    from Exactus.accounts.services.onboarding import OnboardingService
+except ImportError:
+    # Log error if service is missing so it doesn't crash the app on load
+    logger = logging.getLogger(__name__)
+    logger.error("Could not import OnboardingService. Check file Exactus/accounts/services/onboarding.py")
+    OnboardingService = None
 
 User = get_user_model()
 
@@ -42,21 +51,18 @@ User = get_user_model()
 def validate_company_access(user, company):
     """
     Verifies if the current user is allowed to access the specific company.
-    
     Logic:
     1. Global Roles (EXEC, ADMIN, COMPLIANCE) -> ALLOWED.
     2. Restricted Roles -> Must be linked via 'user.contexts'.
     """
-    # 1. Superusers and Global Roles always pass
-    # Added "COMPLIANCE" here so they never get blocked
     global_roles = ["EXEC", "ADMIN", "COMPLIANCE"]
     user_role = getattr(user, 'role', '').upper()
     
+    # 1. Superusers and Global Roles always pass
     if user.is_superuser or user_role in global_roles:
         return True
 
-    # 2. Check for direct assignment (The context link)
-    # Checks if the user has a context entry for this specific company
+    # 2. Check for direct assignment
     if user.contexts.filter(company=company).exists():
         return True
         
@@ -73,7 +79,6 @@ def employee_list(request, country_slug, company_id):
     List employees for a specific company.
     """
     country = get_object_or_404(Country, slug=country_slug)
-    # We use pk=company_id to support custom primary keys safely
     company = get_object_or_404(Company, pk=company_id) 
 
     # Security Check
@@ -124,7 +129,7 @@ def employee_create(request, country_slug, company_id):
 @role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATIONS", "DIRECTOR", "MANAGER", "SPECIALIST")
 def employee_edit(request, country_slug, company_id, employee_id):
     """
-    Edit an existing employee record.
+    Edit an existing employee record and handle User Account creation.
     """
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
@@ -138,31 +143,25 @@ def employee_edit(request, country_slug, company_id, employee_id):
     FormClass = get_employee_form_for_country(country)
 
     if request.method == "POST":
-        # --- Handle User Account Creation ---
+        # --- Handle User Account Creation (Fixed using Service) ---
         if 'create_user_account' in request.POST:
             if not employee.email:
                 messages.error(request, "Employee must have an email address to create a user account.")
             elif linked_user:
                 messages.warning(request, "User account already exists.")
+            elif not OnboardingService:
+                messages.error(request, "Onboarding Service is not available. Please contact support.")
             else:
                 try:
-                    # 1. Generate Secure Password
-                    temp_password = get_random_string(length=12)
-                    
-                    # 2. Create User
-                    new_user = User.objects.create_user(
+                    # USE THE SERVICE instead of manual creation
+                    OnboardingService.onboard_employee(
                         username=employee.email,
                         email=employee.email,
-                        password=temp_password
+                        role='EMPLOYEE',
+                        created_by_user=request.user
                     )
                     
-                    # 3. Set Attributes
-                    new_user.role = 'EMPLOYEE'
-                    new_user.first_name = employee.employee_name
-                    new_user.last_name = employee.employee_surname
-                    new_user.save()
-                    
-                    messages.success(request, f"User account created! Temporary Password: {temp_password}")
+                    messages.success(request, f"User account created for {employee.email}. A welcome email has been sent.")
                     return redirect("employee:employee_edit", country_slug=country_slug, company_id=company.company_id, employee_id=employee.id)
                     
                 except Exception as e:
@@ -185,16 +184,21 @@ def employee_edit(request, country_slug, company_id, employee_id):
         access_form = EmployeeAccessForm(instance=linked_user) if linked_user else None
 
     return render(request, "employee/form.html", {
-        "form": form, "access_form": access_form, "linked_user": linked_user,
-        "employee": employee, "company": company, "country": country, "country_slug": country_slug,
+        "form": form, 
+        "access_form": access_form, 
+        "linked_user": linked_user,
+        "employee": employee, 
+        "company": company, 
+        "country": country, 
+        "country_slug": country_slug,
     })
 
 # ──────────────────────────────────────────────────────────────────────────────
-# MULTI-FORMAT UPLOAD
+# MULTI-FORMAT UPLOAD (Class-Based View)
 # ──────────────────────────────────────────────────────────────────────────────
 
 class EmployeeUploadView(View):
-    """Handle bulk employee uploads."""
+    """Handle bulk employee uploads via CSV or Excel."""
     
     @method_decorator(login_required)
     @method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATIONS", "DIRECTOR", "MANAGER", "SPECIALIST"))
@@ -238,6 +242,7 @@ class EmployeeUploadView(View):
         try:
             data_rows = []
             
+            # --- CSV Processing ---
             if filename.endswith('.csv'):
                 file.seek(0)
                 content = file.read().decode('utf-8-sig').splitlines()
@@ -251,6 +256,7 @@ class EmployeeUploadView(View):
                     if any(row):
                         data_rows.append(dict(zip(headers, row)))
 
+            # --- Excel Processing ---
             elif filename.endswith(('.xlsx', '.xls')):
                 file.seek(0)
                 wb = openpyxl.load_workbook(file, data_only=True)
@@ -270,7 +276,7 @@ class EmployeeUploadView(View):
             success_count = 0
             error_log = []
             
-            # Cache companies to avoid repeated DB hits
+            # Cache companies to avoid repeated DB hits if global upload
             company_cache = {c.company_code: c for c in Company.objects.all()}
 
             for index, data in enumerate(data_rows, start=2):
@@ -303,7 +309,7 @@ class EmployeeUploadView(View):
                         'employment_start_date': data.get('employment_start_date'),
                     }
 
-                    # Optional fields
+                    # Optional fields mapping
                     if 'ni_number' in data: defaults['tax_info_01'] = data['ni_number']
                     if 'tax_code' in data: defaults['tax_info_03'] = data['tax_code']
                     if 'cpf' in data: defaults['tax_info_01'] = data['cpf']
@@ -355,7 +361,10 @@ def employee_upload_result_view(request, country_slug=None, company_id=None):
         return redirect("dashboard")
 
     return render(request, "employee/upload_result.html", {
-        "result": result, "company": company, "country": country, "country_slug": country_slug
+        "result": result, 
+        "company": company, 
+        "country": country, 
+        "country_slug": country_slug
     })
 
 @login_required

@@ -67,19 +67,20 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
         if self.period and self.period.payroll and CALCULATION_BASE_AVAILABLE:
             self._apply_calculation_rules()
         
+        # --- GROSS PAY CALCULATION (User Defined Formula) ---
+        # 5000 = (1000-1999) - (2000-2999) + (3000-4999)
+        self._calculate_gross_pay()
+        # ----------------------------------------------------
+
         # --- CONSOLIDATION STEP ---
         self._consolidate_reporting_codes()
         # --------------------------
         
         # 6. Final Net Pay Calculation
-        if '85000' in self.results_dict:
-            self.results_dict['5000'] = self.results_dict['85000']
-        elif '5999' in self.results_dict:
-            self.results_dict['5000'] = self.results_dict['5999']
-
+        # Use the calculated Gross (5000) as the starting point
         gross_val = self.results_dict.get('5000', Decimal('0.00'))
         
-        total_deductions = Decimal('0.00')
+        total_post_gross_deductions = Decimal('0.00')
         
         # Iterate over a list copy to be safe
         for code, val in list(self.results_dict.items()):
@@ -87,33 +88,43 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
                 # 1. Skip if value is effectively zero
                 if not val: continue
                 
-                # 2. Skip duplicates
+                # 2. Skip duplicates / Salary Sacrifice
                 if code in self.salary_sacrifice_codes: continue
+
+                # 3. Explicit Deductions (marked in DB as 'Deduction')
                 if code in self.deduction_codes:
-                    total_deductions += abs(val)
+                    code_int = int(code)
+                    # [CRITICAL FIX]
+                    # If this deduction is in range 2000-2999, it was ALREADY subtracted 
+                    # to calculate Gross Pay (5000). Do NOT subtract it again.
+                    if 2000 <= code_int <= 2999:
+                        continue
+                    
+                    total_post_gross_deductions += abs(val)
                     continue
                 
-                # 3. NET PAY PROTECTION
-                # A. Skip Reporting Totals (6000, 7000, 9000)
+                # 4. NET PAY PROTECTION
+                # Skip Reporting Totals (6000, 7000, 9000)
                 if code in ["6000", "7000", "9000"]: 
                     continue
                 
-                # B. [REMOVED] Skip Employer NI (7010) logic deleted.
-                # Code 7010 IS NOW DEDUCTED.
-                
                 code_int = int(code)
-                is_input_deduction = (2000 <= code_int <= 2999)
-                is_tax_calc = (6001 <= code_int <= 6999)
-                is_ni_calc  = (7001 <= code_int <= 7999)
-                is_oth_calc = (9001 <= code_int <= 9999)
 
-                if is_input_deduction or is_tax_calc or is_ni_calc or is_oth_calc:
-                    total_deductions += abs(val)
+                # 5. Ranges
+                # Input Deductions (2000-2999) -> REMOVED from here (Already in Gross)
+                # Tax (6001-6999)
+                is_tax_calc = (6001 <= code_int <= 6299)
+                # NI (7001-7999)
+                is_ni_calc  = (7001 <= code_int <= 7299)
+
+                if is_tax_calc or is_ni_calc:
+                    total_post_gross_deductions += abs(val)
 
             except (ValueError, TypeError):
                 continue
             
-        net_pay = gross_val - total_deductions
+        # Net Pay = Gross (which is already net of input deductions) - Taxes/NI/Other
+        net_pay = gross_val - total_post_gross_deductions
         
         self.results_dict['8000'] = Decimal("0.00")
         self.results_dict['88000'] = Decimal("0.00")
@@ -124,6 +135,42 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
         self.results_dict['98000'] = net_pay 
 
         return self._build_return(net_pay)
+
+    def _calculate_gross_pay(self):
+        """
+        Calculates Gross Pay (5000) based on specific ranges:
+        + (1000 - 1999) : Basic Payments
+        - (2000 - 2999) : Input Deductions
+        + (3000 - 4999) : Other Payments
+        """
+        gross_sum = Decimal('0.00')
+
+        for code, val in self.results_dict.items():
+            try:
+                if not val: continue
+                code_int = int(code)
+
+                # Range 1: 1000 - 1999 (Add)
+                if 1000 <= code_int <= 1999:
+                    gross_sum += val
+                
+                # Range 2: 2000 - 2999 (Subtract)
+                elif 2000 <= code_int <= 2999:
+                    gross_sum -= abs(val) # Ensure we subtract absolute value
+                
+                # Range 3: 3000 - 4999 (Add)
+                elif 3000 <= code_int <= 4999:
+                    gross_sum += val
+
+            except (ValueError, TypeError):
+                continue
+
+        # Register the calculated Gross
+        self.results_dict['5000'] = gross_sum
+        
+        # Ensure legacy tax base (85000) matches if not explicitly set by overrides
+        if '85000' not in self.results_dict or self.results_dict['85000'] == 0:
+            self.results_dict['85000'] = gross_sum
 
     def _consolidate_reporting_codes(self):
         """
@@ -144,7 +191,6 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
                 
                 # NI Range (Exclude 7000)
                 elif 7001 <= code_int <= 7999:
-                    # [STRICT] Code 7010 is INCLUDED here.
                     total_ni += val/2
                     
                 # Other Range (Exclude 9000)
@@ -154,8 +200,7 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
             except (ValueError, TypeError):
                 continue
 
-        # --- FIX: FORCE INITIALIZATION ---
-        # Ensure these keys exist in the dict, so _register_total picks them up even if 0.00
+        # Force Initialization
         for key in ["6000", "7000", "9000"]:
             if key not in self.results_dict:
                 self.results_dict[key] = Decimal("0.00")
@@ -163,7 +208,7 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
         # Register Totals
         self._register_total("6000", "PAYE Income Tax Total", total_tax)
         self._register_total("7000", "National Insurance Total", total_ni)
-        self._register_total("9000", "Other Deductions Total", total_other)
+        self._register_total("9000", "Other Deductions Total", -total_other)
 
     def _register_total(self, code, name, amount):
         if amount != 0 or code in self.results_dict:
@@ -195,17 +240,14 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
                 
                 target_code = str(rule.element.element_code).strip()
                 
-                # --- REDIRECT LOGIC ---
                 effective_code = target_code
                 if target_code == "6000": effective_code = "6001"
                 elif target_code == "7000": effective_code = self.active_ni_code
                 elif target_code == "9000": effective_code = "9001"
 
-                # 1. LOCK CHECK
                 if effective_code in blocked_codes:
                     continue
 
-                # 2. FAIL-SAFE
                 current_val = self.results_dict.get(effective_code, Decimal("0.00"))
                 if current_val != 0:
                     continue
@@ -215,8 +257,6 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
                     base_code = rule.element_base.element_code
                     base_val = self.results_dict.get(base_code, Decimal('0.00'))
                 else:
-                    # --- CONVENTION: Automatic Base Lookup for 9000 Series ---
-                    # If no explicit base is defined for 9001-9999, look for 89001-89999
                     try:
                         tgt_int = int(target_code)
                         if 9001 <= tgt_int <= 9999:
@@ -353,7 +393,7 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
                                 self.results_dict[base] = self.results_dict.get(base, Decimal('0.00')) + amt
                                 self.results_dict[f'9{base[1:]}'] = self.results_dict.get(f'9{base[1:]}', Decimal('0.00')) + amt
 
-    def _build_return(self, net_pay, er_cost=0):  # Added er_cost to arguments
+    def _build_return(self, net_pay, er_cost=0):
         return {
             'breakdown': self.breakdown,
             'elements': self.results_dict,
@@ -361,7 +401,7 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
             'totals': {
                 'gross': self.results_dict.get('5000', 0), 
                 'net': net_pay
-            },  # <--- Added missing comma here
+            },
             'ER Cost': {
                 'ER Cost': self.results_dict.get('9000', 0), 
                 'er_gross': er_cost

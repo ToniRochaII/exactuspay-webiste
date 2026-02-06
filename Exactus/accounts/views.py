@@ -344,8 +344,10 @@ def get_dashboard_context(request):
     today = timezone.now().date()
     one_year_ago = today - timedelta(days=365)
 
+    # 1. PAYROLL RESULTS: Filter strictly for ACTIVE companies only.
     results_qs = PayrollResult.objects.filter(
-        period__payment_date__gte=one_year_ago
+        period__payment_date__gte=one_year_ago,
+        period__payroll__company__account_status='ACTIVE'
     ).select_related('period', 'period__payroll__company__country')
 
     totals = results_qs.aggregate(total_gross=Sum('gross_pay'), total_net=Sum('net_pay'), total_count=Count('id'))
@@ -365,17 +367,30 @@ def get_dashboard_context(request):
     gross_value_trend = [float(s['monthly_gross'] or 0) for s in monthly_stats]
     net_value_trend = [float(s['monthly_net'] or 0) for s in monthly_stats]
 
+    # 2. COMPANIES LIST: Strictly ACTIVE only.
     active_companies_qs = Company.objects.filter(account_status='ACTIVE')
-    active_headcount = Employee.objects.filter(Q(employment_end_date__isnull=True) | Q(employment_end_date__gt=today)).count()
+    
+    # 3. HEADCOUNT: Strictly employees of ACTIVE companies only.
+    active_headcount = Employee.objects.filter(
+        company__account_status='ACTIVE'
+    ).filter(
+        Q(employment_end_date__isnull=True) | Q(employment_end_date__gt=today)
+    ).count()
 
+    # 4. COUNTRY CHART STATS:
+    # We use the exact same logic here: Annotate with active count, then filter > 0.
+    # This ensures the chart only displays countries that actually have active companies.
     top_countries = list(
-        Country.objects.filter(companies__account_status='ACTIVE')
-        .annotate(company_count=Count('companies'))
-        .select_related('-company_count')[:10]
-        .values_list('name', 'company_count')
+        Country.objects.annotate(
+            active_company_count=Count('companies', filter=Q(companies__account_status='ACTIVE'))
+        )
+        .filter(active_company_count__gt=0)
+        .order_by('-active_company_count')[:10]
+        .values_list('name', 'active_company_count')
     )
     top_country_names = [c[0] for c in top_countries]
 
+    # Calculate monthly stats only for the active countries found above
     country_monthly_qs = (
         results_qs.filter(period__payroll__company__country__name__in=top_country_names)
         .annotate(month=TruncMonth('period__payment_date'))
@@ -392,15 +407,25 @@ def get_dashboard_context(request):
         bar_datasets_raw.append({'label': country, 'data': country_data})
 
     return {
-        'active_countries_count': Country.objects.filter(companies__account_status='ACTIVE').distinct().count(),
+        # KPI: Active Countries (Must have > 0 active companies)
+        # Using the specific annotation logic you requested to be 100% strict
+        'active_countries_count': Country.objects.annotate(
+            active_count=Count('companies', filter=Q(companies__account_status='ACTIVE'))
+        ).filter(active_count__gt=0).count(),
+        
         'active_companies_count': active_companies_qs.count(),
         'user_employees_count': active_headcount,
         'payrolls_completed_count': results_qs.values('period').distinct().count(),
         'total_payslips_processed': total_payslips,
         'total_gross_amount': total_gross_amount,
         'total_net_amount': total_net_amount,
+        
+        # LIST: "Recent Portfolio" - shows ONLY active companies.
         'user_companies': active_companies_qs.order_by('-company_id')[:5],
+        
+        # CHART: "Companies by Country" - shows ONLY active counts.
         'country_stats': top_countries,
+        
         'bar_labels': json.dumps(bar_labels),
         'bar_datasets_raw': json.dumps(bar_datasets_raw),
         'payslip_trend_data': json.dumps(payslip_trend_data),
@@ -500,34 +525,48 @@ def role_based_redirect(request):
     role = getattr(request.user, 'role', 'EMPLOYEE') 
     if role == 'EXEC': return redirect('/dashboard/exec/')
     if role == 'ADMIN': return redirect('/dashboard/admin/')
-    if role in ['IMPLEMENTATION', 'BILLING', 'COMPLIANCE', 'OPERATION']: return redirect('/dashboard/general/')
-    if role == 'EMPLOYEE': return redirect('/dashboard/employee/')
+    if role in ['IMPLEMENTATION', 'BILLING', 'COMPLIANCE', 'OPERATION']: return redirect('/dashboard/')
+    if role == 'EMPLOYEE': return redirect('/ess/dashboard/')
     return redirect('/dashboard/')
 
-
-
-from django.shortcuts import get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
-from Exactus.company.models import Company
 
 @login_required
 def switch_context(request, company_id):
     """
     Redirects the user to the specific dashboard for the selected company.
     """
-    # 1. Get the company
     company = get_object_or_404(Company, pk=company_id)
-    
-    # 2. (Optional) Verify the user actually has access before redirecting
-    # This prevents users from manually guessing IDs in the URL
     if not request.user.contexts.filter(company=company).exists() and not request.user.is_superuser:
          messages.error(request, "Access Denied.")
          return redirect("dashboard")
 
-    # 3. Redirect to the Company Dashboard
-    # We need the country_slug for the URL pattern we defined earlier
     return redirect(
         'companies:company_dashboard', 
         country_slug=company.country.slug, 
         company_id=company.pk
     )
+
+# ──────────────────────────────────────────────────────────────────────────────
+# 9. MAP DATA (Ensures strict filtering for Map as well)
+# ──────────────────────────────────────────────────────────────────────────────
+
+@login_required
+def dashboard_country_map(request):
+    """
+    Returns list of country codes that have at least one ACTIVE company.
+    Applies strict annotation filtering to match the KPI logic.
+    """
+    Country = apps.get_model('country', 'Country')
+    
+    # Using the same logic as the KPI to ensure consistency:
+    # 1. Annotate active count
+    # 2. Filter > 0
+    active_country_codes = list(
+        Country.objects.annotate(
+            active_count=Count('companies', filter=Q(companies__account_status='ACTIVE'))
+        )
+        .filter(active_count__gt=0)
+        .values_list('iso_code', flat=True)
+    )
+    
+    return JsonResponse({'countries': active_country_codes})

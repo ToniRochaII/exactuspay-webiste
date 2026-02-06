@@ -120,7 +120,14 @@
     <div class="row mb-4">
         <div class="col-12">
             <div class="card dashboard-panel-card">
-                <div class="panel-header"><h5 class="section-title">Earnings History (Last 12 Months)</h5></div>
+                <div class="panel-header d-flex justify-content-between align-items-center">
+                    <h5 class="section-title">Earnings History</h5>
+                    
+                    <div class="form-check form-switch d-flex align-items-center gap-2 m-0">
+                        <input class="form-check-input" type="checkbox" id="chartViewToggle" style="cursor: pointer;" checked>
+                        <label class="form-check-label small fw-bold text-muted" for="chartViewToggle">Detailed View</label>
+                    </div>
+                </div>
                 <div class="card-body p-4">
                     <div style="height: 300px; width: 100%;">
                         <canvas id="earningsBarChart"></canvas>
@@ -273,7 +280,7 @@
                     </div>
                 </div>
             </form>
-            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
@@ -282,33 +289,140 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    const colors = ['#172E7F', '#386CA8', '#81BCDB', '#ACDEEF', '#90CCDE', '#CEF2EA'];
+    
+    // --- DATA FROM DJANGO ---
+    const rawData = {{ chart_details_json|safe }}; 
+    const labels = {{ bar_labels|safe }};
+    const codeMap = {{ code_map_json|safe }}; // The dictionary: {'1001': 'Bonus', ...}
 
-    // Bar Chart
-    const barCanvas = document.getElementById('earningsBarChart');
-    if(barCanvas) {
-        new Chart(barCanvas, {
+    // --- CHART CONFIG ---
+    let chartInstance = null;
+    const ctx = document.getElementById('earningsBarChart');
+    const toggle = document.getElementById('chartViewToggle');
+
+    // Helper: Generate consistent colors
+    const getColor = (code) => {
+        const c = parseInt(code);
+        if(c === 5000) return '#172E7F'; // Gross - Primary Blue
+        if(c >= 1000 && c < 2000) return '#386CA8'; // Basic Pay
+        if(c >= 2000 && c < 5000) return '#81BCDB'; // Other Earnings
+        if(c === 6000) return '#ef4444'; // Tax Total - Red
+        if(c >= 6300 && c < 7000) return '#f87171'; // Tax Breakdowns
+        if(c === 7000) return '#10b981'; // NI Total - Green
+        if(c >= 7300 && c < 8000) return '#34d399'; // NI Breakdowns
+        return '#9ca3af'; 
+    };
+
+    function buildDatasets(isDetailed) {
+        let relevantCodes = new Set();
+
+        rawData.forEach(periodData => {
+            Object.keys(periodData).forEach(key => {
+                const code = parseInt(key);
+                const val = parseFloat(periodData[key]);
+                if (Math.abs(val) < 0.01) return; 
+
+                const isTaxSummary = (code === 6000);
+                const isTaxDetail  = (code >= 6300 && code <= 6999);
+                const isNISummary  = (code === 7000);
+                const isNIDetail   = (code >= 7300 && code <= 7999);
+                
+                if (isTaxSummary || isTaxDetail || isNISummary || isNIDetail) {
+                    relevantCodes.add(key);
+                }
+
+                if (isDetailed) {
+                    if (code >= 1000 && code <= 4999) relevantCodes.add(key);
+                } else {
+                    if (code === 5000) relevantCodes.add(key);
+                }
+            });
+        });
+
+        const sortedCodes = Array.from(relevantCodes).sort((a, b) => parseInt(a) - parseInt(b));
+
+        return sortedCodes.map(code => {
+            const dataPoints = rawData.map(period => {
+                const val = parseFloat(period[code] || 0);
+                return Math.abs(val); 
+            });
+
+            // --- USE THE MAP HERE ---
+            // Try to find the name in codeMap, otherwise fallback to "Code 1001"
+            let label = codeMap[code] || ("Code " + code);
+
+            return {
+                label: label,
+                data: dataPoints,
+                backgroundColor: getColor(code),
+                borderRadius: 4,
+            };
+        });
+    }
+
+    // --- RENDER CHART ---
+    function updateChart() {
+        // Toggle Logic: Checked = Detailed (On), Unchecked = Summary (Off)
+        // Default is checked in HTML
+        const isDetailed = toggle.checked;
+        const datasets = buildDatasets(isDetailed);
+
+        if (chartInstance) {
+            chartInstance.destroy();
+        }
+
+        chartInstance = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: {{ bar_labels|safe }},
-                datasets: [
-                    { label: 'Gross Pay', data: {{ gross_data|safe }}, backgroundColor: colors[1], borderRadius: 4, barPercentage: 0.5 },
-                    { label: 'Total Deductions', data: {{ tax_data|safe }}, backgroundColor: colors[2], borderRadius: 4, barPercentage: 0.5 },
-                    { label: 'Net Pay', data: {{ net_data|safe }}, backgroundColor: colors[0], borderRadius: 4, barPercentage: 0.5 }
-                ]
+                labels: labels,
+                datasets: datasets
             },
             options: {
-                responsive: true, maintainAspectRatio: false,
-                scales: { 
-                    x: { grid: { display: false } }, 
-                    y: { beginAtZero: true, grid: { borderDash: [5, 5] } } 
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
                 },
-                plugins: { legend: { position: 'top', align: 'end' } }
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { 
+                        beginAtZero: true, 
+                        grid: { borderDash: [5, 5] },
+                        ticks: {
+                            callback: function(value) { return value.toLocaleString(); }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { 
+                        position: 'top', 
+                        align: 'end',
+                        labels: { boxWidth: 12, usePointStyle: true }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) { label += ': '; }
+                                if (context.parsed.y !== null) {
+                                    label += context.parsed.y.toLocaleString(undefined, {minimumFractionDigits: 2});
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                }
             }
         });
     }
 
-    // Pie Chart
+    if(ctx) {
+        updateChart(); 
+        toggle.addEventListener('change', updateChart);
+    }
+
+    // --- PIE CHART (Unchanged) ---
     const pieCanvas = document.getElementById('payPieChart');
     if(pieCanvas) {
         new Chart(pieCanvas, {

@@ -4,13 +4,6 @@
 {% block title %}Countries | ExactusPay{% endblock %}
 {% block page_title %}Countries{% endblock %}
 
-{% block page_actions %}
-{% if user.is_superuser %}
-<a href="{% url 'country:country_create' %}" class="btn btn-primary">
-    <i class="fas fa-plus me-2"></i> Add Country
-</a>
-{% endif %}
-{% endblock %}
 
 {% block extra_head %}
 <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
@@ -80,8 +73,7 @@
                                              width="24" 
                                              class="me-2 border rounded-1"
                                              onerror="this.style.display='none'">
-                                        
-                                        <a href="{% url 'companies:company' country.slug %}" class="fw-bold text-dark text-decoration-none">
+                                        <a href="{% url 'companies:company' country.slug %}" class="text-dark text-decoration-none">
                                             {{ country.name }}
                                         </a>
                                     </div>

@@ -29,7 +29,7 @@
         overflow: hidden;
     }
     .card-hover-effect:hover {
-        transform: translateY(-5px);
+        transform: translateY(0px);
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
     }
     .card-header {
@@ -141,7 +141,11 @@
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div>
                         <h5 class="card-title mb-0">
-                            <i class="fas fa-user-plus me-2 text-primary"></i>Add New Employee
+                            {% if employee %}
+                                <i class="fas fa-user-edit me-2 text-primary"></i>Edit Employee
+                            {% else %}
+                                <i class="fas fa-user-plus me-2 text-primary"></i>Add New Employee
+                            {% endif %}
                         </h5>
                         <h6 class="card-subtitle text-muted mt-1">
                             {{ company.trade_name }}
@@ -156,7 +160,7 @@
                     <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#job" type="button">Employment</button></li>
                     <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tax" type="button">Taxation</button></li>
                     <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#pay" type="button">Compensation</button></li>
-                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#account" type="button">Account</button></li>
+                    <li class="nav-item"><button class="nav-link fw-bold text-primary" data-bs-toggle="tab" data-bs-target="#account" type="button">Account</button></li>
                 </ul>
             </div>
 
@@ -346,11 +350,61 @@
                         </div>
 
                         <div class="tab-pane fade" id="account">
-                            <h6 class="section-header"><i class="fas fa-cog me-2"></i>Account Management</h6>
-                            <div class="alert alert-light border border-dashed rounded-3">
-                                <i class="fas fa-info-circle me-2"></i>Account settings are visible to all administrators.
-                            </div>
-                            <div class="text-muted fst-italic small">No specific account fields configured yet.</div>
+                            <h6 class="section-header"><i class="fas fa-cog me-2"></i>ExactusPay Access</h6>
+                            
+                            {% if linked_user %}
+                                <div class="alert alert-success border-success d-flex align-items-center p-3">
+                                    <i class="fas fa-user-check fa-2x text-success me-3"></i>
+                                    <div>
+                                        <h6 class="alert-heading fw-bold mb-1">User Account Active</h6>
+                                        <p class="mb-0 small text-muted">Username: <strong>{{ linked_user.username }}</strong></p>
+                                        <p class="mb-0 small text-muted">Last Login: {{ linked_user.last_login|default:"Never" }}</p>
+                                    </div>
+                                </div>
+
+                                {% if access_form %}
+                                    <h6 class="section-header mt-4">Permissions & Status</h6>
+                                    <div class="row g-3">
+                                        {% for field in access_form %}
+                                        <div class="col-md-6">
+                                            <div class="form-floating">
+                                                {{ field }}
+                                                <label>{{ field.label }}</label>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+
+                            {% else %}
+                                <div class="alert alert-warning border-warning d-flex align-items-center p-3">
+                                    <i class="fas fa-user-lock fa-2x text-warning me-3"></i>
+                                    <div>
+                                        <h6 class="alert-heading fw-bold mb-1">No Access Enabled</h6>
+                                        <p class="mb-0 small text-muted">This employee cannot log in to the employee portal.</p>
+                                    </div>
+                                </div>
+
+                                {% if form.email.value or employee.email %}
+                                    <div class="card bg-light border-0 mt-3">
+                                        <div class="card-body">
+                                            <h6 class="fw-bold"><i class="fas fa-magic me-2"></i>Enable Portal Access</h6>
+                                            <p class="text-muted small">This will create a user account linked to <strong>{{ form.email.value|default:employee.email }}</strong> and email them a secure password setup link.</p>
+                                            
+                                            <button type="submit" name="create_user_account" value="true" class="btn btn-success mt-2">
+                                                <i class="fas fa-paper-plane me-2"></i>Create Account & Send Welcome Email
+                                            </button>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="alert alert-danger mt-3">
+                                        <i class="fas fa-exclamation-triangle me-2"></i>
+                                        <strong>Email Required:</strong> Please enter an email address in the 
+                                        <a href="#" onclick="document.querySelector('[data-bs-target=\'#communication\']').click()">Communication Tab</a> 
+                                        and save changes before creating an account.
+                                    </div>
+                                {% endif %}
+                            {% endif %}
                         </div>
 
                     </div>
@@ -429,6 +483,11 @@ document.addEventListener("DOMContentLoaded", function () {
     // 3. Validation & Loading
     const form = document.getElementById('employee-form');
     form.addEventListener('submit', function(event) {
+        // If the submitter is the "Create Account" button, we might want to allow it even if unrelated fields are invalid?
+        // But for safety, let's keep validation unless it becomes a blocker.
+        // To detect which button submitted:
+        // (Not easily available in 'submit' event, but assuming standard flow).
+        
         if (!form.checkValidity()) {
             event.preventDefault();
             event.stopPropagation();
@@ -437,15 +496,22 @@ document.addEventListener("DOMContentLoaded", function () {
             if(invalidInput) {
                 const tabPane = invalidInput.closest('.tab-pane');
                 const tabId = tabPane.getAttribute('id');
+                // Fix for finding the tab button by target ID
                 const tabBtn = document.querySelector(`[data-bs-target="#${tabId}"]`);
-                bootstrap.Tab.getOrCreateInstance(tabBtn).show();
+                if(tabBtn) {
+                    bootstrap.Tab.getOrCreateInstance(tabBtn).show();
+                }
                 setTimeout(() => invalidInput.focus(), 100);
             }
             form.classList.add('was-validated');
         } else {
+            // Only show loading if valid
             const btn = document.getElementById('submit-btn');
-            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
-            btn.disabled = true;
+            // Check if we are submitting via the main save button
+            if (document.activeElement && document.activeElement.id === 'submit-btn') {
+                 btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
+                 btn.disabled = true;
+            }
         }
     });
 

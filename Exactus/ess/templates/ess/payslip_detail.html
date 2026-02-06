@@ -1,281 +1,283 @@
-{% extends "base.html" %}
 {% load humanize %}
-
-{% block title %}Payslip | {{ payslip.period.payment_date|date:"M Y" }}{% endblock %}
-
-{% block extra_head %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
-<style>
-    /* 1. Reset & Background */
-    body { background-color: #F4F4F4 !important; }
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payslip - {{ company.trade_name }}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    :root { 
-        --text-black: #000000;
-        --text-dark: #1f2937;
-        --text-gray: #6b7280;
-        --border-color: #000000;
-        --bg-strip: #f3f3f3;
-        --net-pay-bg: #d1f3f6;
-        --net-pay-border: #2dd4bf;
-        --primary-blue: #172E7F;
-    }
+    <style>
+        body { font-family: 'Helvetica', 'Arial', sans-serif; font-size: 12px; margin: 0; background: #eee; }
+        
+        /* Centered Page Container */
+        .page-container { 
+            width: 210mm; 
+            margin: 20px auto; 
+            background: white; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+        }
+        
+        .payslip-page {
+            width: 210mm;
+            height: 297mm; /* A4 Size */
+            padding: 15mm;
+            box-sizing: border-box;
+            background: white;
+            position: relative;
+            page-break-after: always;
+        }
 
-    /* 2. Document Container */
-    .payslip-wrapper {
-        max-width: 900px;
-        margin: 0 auto 60px auto; 
-        background: #ffffff;
-        padding: 50px;
-        box-shadow: 0 4px 25px rgba(0,0,0,0.08);
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        position: relative;
-        z-index: 10;
-    }
+        /* HEADER */
+        .header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start;
+            border-bottom: 2px solid #333; 
+            padding-bottom: 10px; 
+            margin-bottom: 20px; 
+            min-height: 80px;
+        }
 
-    /* 3. Header & Logo */
-    .header-top {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        margin-bottom: 20px;
-    }
-    
-    .company-logo-img {
-        width: 150px; 
-        height: auto;
-        object-fit: contain;
-        display: block;
-    }
+        .company-info { display: flex; flex-direction: column; justify-content: center; }
+        
+        .company-logo {
+            max-height: 80px;
+            max-width: 250px;
+            object-fit: contain;
+            margin-bottom: 5px;
+            display: block;
+        }
 
-    .brand-large {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: var(--text-black);
-        letter-spacing: -1px;
-    }
+        .company-info h1 { margin: 0; font-size: 18px; text-transform: uppercase; }
+        .period-info { text-align: right; }
 
-    .header-meta {
-        text-align: right;
-        font-size: 0.8rem;
-        font-weight: 700;
-        color: var(--text-black);
-        line-height: 1.4;
-        text-transform: uppercase;
-    }
+        /* EMPLOYEE DETAILS GRID */
+        .emp-details { 
+            display: grid; 
+            grid-template-columns: repeat(5, 1fr); 
+            gap: 10px; 
+            background: #f8f9fa; 
+            padding: 12px; 
+            border-radius: 4px; 
+            margin-bottom: 20px;
+            border: 1px solid #e9ecef;
+        }
+        .label { font-size: 10px; color: #666; text-transform: uppercase; display: block; margin-bottom: 2px; }
+        .value { font-weight: bold; font-size: 12px; color: #000; }
 
-    .company-name-sub {
-        font-size: 1rem;
-        margin-bottom: 15px;
-        color: var(--text-black);
-        font-weight: 500;
-    }
+        /* PAYMENTS / DEDUCTIONS GRID */
+        .pay-grid { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 30px; 
+            margin-bottom: 20px; 
+            height: 500px; /* Fixed height to push footer down */
+        }
 
-    /* 4. Divider Line */
-    .thick-divider {
-        border-bottom: 2px solid var(--text-black);
-        margin-bottom: 20px;
-    }
+        .pay-column {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            border-right: 1px dashed #ddd; 
+            padding-right: 15px;
+        }
+        .pay-column:last-child { border-right: none; padding-right: 0; padding-left: 15px; }
 
-    /* 5. Info Strip */
-    .info-strip {
-        background-color: var(--bg-strip);
-        padding: 20px;
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 40px;
-    }
+        .col-header { 
+            font-weight: bold; 
+            border-bottom: 2px solid #ccc; 
+            padding-bottom: 5px; 
+            margin-bottom: 10px; 
+            text-transform: uppercase; 
+            font-size: 11px;
+        }
 
-    .info-item { display: flex; flex-direction: column; }
-    .info-label { font-size: 0.65rem; text-transform: uppercase; color: var(--text-gray); font-weight: 700; margin-bottom: 6px; }
-    .info-value { font-size: 0.95rem; font-weight: 700; color: var(--text-black); }
+        .items-container { flex-grow: 1; }
 
-    /* 6. Columns */
-    .columns-container {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 60px;
-        margin-bottom: 40px;
-    }
+        .line-item { 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 4px 0; 
+            border-bottom: 1px dotted #eee; 
+            font-size: 12px;
+        }
 
-    .col-header {
-        font-size: 0.85rem;
-        font-weight: 800;
-        text-transform: uppercase;
-        border-bottom: 1px solid #e5e7eb;
-        padding-bottom: 10px;
-        margin-bottom: 20px;
-        color: var(--text-black);
-    }
+        .total-row {
+            margin-top: auto; 
+            padding-top: 10px;
+            border-top: 2px solid #333;
+            font-weight: bold;
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+        }
 
-    .line-item { display: flex; justify-content: space-between; font-size: 0.95rem; margin-bottom: 12px; color: var(--text-dark); }
+        /* FOOTER */
+        .footer { 
+            border-top: 2px solid #333; 
+            padding-top: 15px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        
+        .net-pay-box { 
+            background: #e0f7fa; 
+            padding: 10px 25px; 
+            border: 1px solid #00acc1; 
+            text-align: center; 
+            border-radius: 4px;
+        }
+        .net-label { font-size: 10px; text-transform: uppercase; color: #006064; font-weight: bold; }
+        .net-value { font-size: 18px; font-weight: bold; color: #006064; margin-top: 2px; }
 
-    .total-row {
-        display: flex; justify-content: space-between; font-weight: 800;
-        border-top: 2px solid var(--text-black); padding-top: 15px; margin-top: 100px;
-        font-size: 1rem;
-    }
+        /* NAVIGATION BAR (Hidden on Print) */
+        .control-bar {
+            width: 210mm; margin: 0 auto; padding: 15px 0;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .btn {
+            text-decoration: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; font-size: 14px; cursor: pointer; border: none; font-family: sans-serif; display: inline-flex; align-items: center;
+        }
+        .btn-back { background: #6c757d; color: white; }
+        .btn-print { background: #172E7F; color: white; }
+        .btn i { margin-right: 8px; }
+        .btn:hover { opacity: 0.9; }
 
-    /* 7. Footer */
-    .footer-section {
-        display: flex; justify-content: space-between; align-items: flex-end;
-        border-top: 1px solid #e5e7eb; padding-top: 20px; margin-top: 20px;
-    }
+        /* PRINT SETTINGS */
+        @media print {
+            body { background: white; margin: 0; }
+            .page-container { width: 100%; margin: 0; box-shadow: none; }
+            .payslip-page { height: 100vh; margin: 0; border: none; page-break-after: always; }
+            .control-bar { display: none !important; }
+            @page { margin: 0; }
+        }
+    </style>
+</head>
+<body>
 
-    .ytd-info { font-size: 0.75rem; color: var(--text-black); line-height: 1.6; font-weight: 600; }
-    .ytd-label { font-weight: 700; color: var(--text-gray); }
-
-    .net-pay-box {
-        background-color: var(--net-pay-bg);
-        border: 1px solid var(--net-pay-border);
-        padding: 15px 30px; text-align: center; min-width: 220px;
-    }
-
-    .net-label { color: #0d9488; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; }
-    .net-value { color: #0f766e; font-size: 1.5rem; font-weight: 800; }
-
-    /* Buttons */
-    .btn-action {
-        border-radius: 6px; font-weight: 600; font-size: 0.9rem; padding: 10px 20px;
-        transition: 0.2s; text-decoration: none; display: inline-flex; align-items: center; cursor: pointer;
-    }
-    .btn-pdf { background-color: var(--primary-blue); color: white; border: none; margin-left: 10px; }
-    .btn-back { color: #6b7280; }
-
-    /* PRINT STYLES (Backup) */
-    @media print {
-        body * { visibility: hidden; }
-        .payslip-wrapper, .payslip-wrapper * { visibility: visible; }
-        .payslip-wrapper { position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 20px; box-shadow: none; }
-        nav, header, .sidebar, .no-print { display: none !important; }
-    }
-</style>
-{% endblock %}
-
-{% block content %}
-<div class="container-fluid no-print" style="max-width: 900px; margin: 0 auto 20px auto; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 20;">
-    <a href="{% url 'ess:dashboard' %}" class="btn-action btn-back">
-        <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
-    </a>
-    <div>
-        <button id="download-pdf-btn" class="btn-action btn-pdf shadow-sm">
-            <i class="fas fa-download me-2"></i> Download PDF
+    <div class="control-bar">
+        <a href="{% url 'ess:dashboard' %}" class="btn btn-back">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+        <button onclick="window.print()" class="btn btn-print">
+            <i class="fas fa-print"></i> Print / Save as PDF
         </button>
     </div>
-</div>
 
-<div class="payslip-wrapper" id="payslip-content">
-    
-    <div class="header-top">
-        <div>
-            {% if payslip.period.payroll.company.logo %}
-                <img src="{{ payslip.period.payroll.company.logo.url }}" 
-                     alt="{{ payslip.period.payroll.company.trade_name }}" 
-                     class="company-logo-img">
-            {% else %}
-                <div class="brand-large">{{ payslip.period.payroll.company.trade_name }}</div>
-            {% endif %}
-        </div>
-
-        <div class="header-meta">
-            <div>PAY DATE<br>{{ payslip.period.payment_date|date:"d M Y" }}</div>
-            <div style="margin-top: 10px;">PERIOD<br>{{ payslip.period.period_number }}</div>
-        </div>
-    </div>
-
-    <div class="company-name-sub">{{ payslip.period.payroll.company.trade_name }}</div>
-    <div class="thick-divider"></div>
-
-    <div class="info-strip">
-        <div class="info-item">
-            <span class="info-label">EMPLOYEE NAME</span>
-            <span class="info-value">{{ payslip.employee.employee_name }} {{ payslip.employee.employee_surname }}</span>
-        </div>
-        <div class="info-item">
-            <span class="info-label">EMPLOYEE ID</span>
-            <span class="info-value">{{ payslip.employee.employee_number }}</span>
-        </div>
-        <div class="info-item">
-            <span class="info-label">NI NUMBER</span>
-            <span class="info-value">{{ payslip.employee.tax_info_01|default:"--" }}</span>
-        </div>
-        <div class="info-item">
-            <span class="info-label">NI CATEGORY</span>
-            <span class="info-value">{{ payslip.employee.tax_info_05|default:"A" }}</span>
-        </div>
-        <div class="info-item">
-            <span class="info-label">TAX CODE</span>
-            <span class="info-value">{{ payslip.employee.tax_info_03|default:"1257L" }}</span>
-        </div>
-    </div>
-
-    <div class="columns-container">
+    <div class="page-container">
         
-        <div>
-            <div class="col-header">PAYMENTS</div>
-            <div class="line-item">
-                <span>Basic Salary</span>
-                <span>{{ payslip.gross_pay|intcomma }}</span>
-            </div>
-            <div class="total-row">
-                <span>Total Payments</span>
-                <span>{{ payslip.gross_pay|intcomma }}</span>
-            </div>
-        </div>
-
-        <div>
-            <div class="col-header">DEDUCTIONS</div>
-            {% if payslip.total_deductions > 0 %}
-            <div class="line-item">
-                <span>Income Tax & NI</span>
-                <span>{{ payslip.total_deductions|intcomma }}</span>
-            </div>
-            {% else %}
-            <div class="line-item">
-                <span>-</span>
-                <span>0.00</span>
-            </div>
-            {% endif %}
+        {% for p in payslips %}
+        <div class="payslip-page">
             
-            <div class="total-row">
-                <span>Total Deductions</span>
-                <span>{{ payslip.total_deductions|intcomma }}</span>
+            <div class="header">
+                <div class="company-info">
+                    {% if company.logo %}
+                        <img src="{{ company.logo.url }}" alt="{{ company.trade_name }}" class="company-logo">
+                    {% else %}
+                        <h1>{{ company.trade_name }}</h1>
+                    {% endif %}
+                    
+                    <div style="font-size: 11px; color: #555; margin-top: 4px;">
+                        {{ company.trade_name }}<br>
+                        {{ company.town|default:"" }}
+                    </div>
+                </div>
+
+                <div class="period-info">
+                    <span class="label">Pay Date</span>
+                    <span class="value">{{ p.period.date|date:"d M Y" }}</span>
+                    <br>
+                    <span class="label">Period</span>
+                    <span class="value">{{ p.period.tax_period|default:"-" }}</span>
+                </div>
             </div>
+
+            <div class="emp-details">
+                <div>
+                    <span class="label">Employee Name</span>
+                    <span class="value">{{ p.employee.name }}</span>
+                </div>
+                <div>
+                    <span class="label">Employee ID</span>
+                    <span class="value">{{ p.employee.id }}</span>
+                </div>
+                <div>
+                    <span class="label">NI Number</span>
+                    <span class="value">{{ p.employee.ni_number|default:"--" }}</span>
+                </div>
+                <div>
+                    <span class="label">NI Category</span>
+                    <span class="value">{{ p.employee.ni_category|default:"A" }}</span>
+                </div>
+                <div>
+                    <span class="label">Tax Code</span>
+                    <span class="value">{{ p.employee.tax_code|default:"1257L" }}</span>
+                </div>
+            </div>
+
+            <div class="pay-grid">
+                
+                <div class="pay-column">
+                    <div class="col-header">Payments</div>
+                    
+                    <div class="items-container">
+                        {% for item in p.payments %}
+                        <div class="line-item">
+                            <span>{{ item.desc }}</span>
+                            <span>{{ item.val|floatformat:2|intcomma }}</span>
+                        </div>
+                        {% empty %}
+                        <div class="line-item" style="color:#999;">
+                            <span>Basic Pay</span>
+                            <span>0.00</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="total-row">
+                        <span>Total Payments</span>
+                        <span>{{ p.totals.payments|floatformat:2|intcomma }}</span>
+                    </div>
+                </div>
+
+                <div class="pay-column">
+                    <div class="col-header">Deductions</div>
+                    
+                    <div class="items-container">
+                        {% for item in p.deductions %}
+                        <div class="line-item">
+                            <span>{{ item.desc }}</span>
+                            <span>{{ item.val|floatformat:2|intcomma }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="total-row">
+                        <span>Total Deductions</span>
+                        <span>{{ p.totals.deductions|floatformat:2|intcomma }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer">
+                <div class="ytd-info">
+                    <span class="label">Taxable Pay YTD:</span> <span class="value">0.00</span> &nbsp;|&nbsp;
+                    <span class="label">Tax Paid YTD:</span> <span class="value">0.00</span>
+                </div>
+                
+                <div class="net-pay-box">
+                    <div class="net-label">Net Pay</div>
+                    <div class="net-value">
+                        {{ company.currency_symbol|default:"£" }} {{ p.totals.net|floatformat:2|intcomma }}
+                    </div>
+                </div>
+            </div>
+
         </div>
+        {% endfor %}
     </div>
 
-    <div class="footer-section">
-        <div class="ytd-info">
-            <div>TAXABLE PAY YTD: <span style="font-weight:400;">0.00</span></div>
-            <div>TAX PAID YTD: <span style="font-weight:400;">0.00</span></div>
-        </div>
-
-        <div class="net-pay-box">
-            <div class="net-label">NET PAY</div>
-            <div class="net-value">
-                {{ payslip.period.payroll.company.country.currency_code }} {{ payslip.net_pay|intcomma }}
-            </div>
-        </div>
-    </div>
-
-</div>
-{% endblock %}
-
-{% block extra_js %}
-<script>
-    document.getElementById('download-pdf-btn').addEventListener('click', function () {
-        var element = document.getElementById('payslip-content');
-        
-        var opt = {
-            margin:       [10, 10, 10, 10], // Margin in mm
-            filename:     'Payslip_{{ payslip.employee.employee_number }}_{{ payslip.period.payment_date|date:"Ymd" }}.pdf',
-            image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 2, useCORS: true }, // High res
-            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-        };
-
-        // Generate PDF
-        html2pdf().set(opt).from(element).save();
-    });
-</script>
-{% endblock %}
+</body>
+</html>

@@ -184,7 +184,7 @@ def company_create(request, country_slug):
     country = get_object_or_404(Country, slug=country_slug)
     
     if request.method == "POST":
-        form = CompanyForm(request.POST)
+        form = CompanyForm(request.POST, request.FILES)
         if form.is_valid():
             comp = form.save(commit=False)
             comp.country = country
@@ -221,7 +221,7 @@ def company_edit(request, country_slug, company_id):
     company = get_object_or_404(Company, pk=company_id, country=country)
     
     if request.method == "POST":
-        form = CompanyForm(request.POST, instance=company)
+        form = CompanyForm(request.POST, request.FILES, instance=company)
         if form.is_valid():
             form.save()
             messages.success(request, "Company updated successfully.")

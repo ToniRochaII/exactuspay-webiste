@@ -183,7 +183,7 @@
                     {% elif country.iso2_code == "BR" %}
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="taxation-tab" data-bs-toggle="tab" data-bs-target="#tab-taxation" type="button" role="tab">
-                            Taxation (Brazil)
+                            Taxation
                         </button>
                     </li>
                     {% endif %}
@@ -206,20 +206,15 @@
             </div>
 
             <div class="card-body p-4">
-
                 {% if form.non_field_errors %}
                 <div class="alert alert-danger rounded-3 mb-4">{{ form.non_field_errors }}</div>
                 {% endif %}
-
                 <form method="post" enctype="multipart/form-data" id="company-form" novalidate>
                     {% csrf_token %}
-
                     {% for hidden in form.hidden_fields %}
                         {{ hidden }}
                     {% endfor %}
-
                     <div class="tab-content" id="companyTabsContent">
-
                         <div class="tab-pane fade show active" id="tab-company" role="tabpanel">
                             <h6 class="section-header"><i class="fas fa-info-circle me-2"></i>Core Details</h6>
                             <div class="row g-3">

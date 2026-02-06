@@ -1,6 +1,7 @@
 # Exactus/accounts/urls.py
 from django.urls import path
 from django.contrib.auth import views as auth_views
+from django.contrib.auth.views import LoginView
 from Exactus.accounts import views
 
 urlpatterns = [
@@ -19,7 +20,10 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     
     # --- FIX 1: Use custom_login instead of default LoginView ---
-    path('login/', views.custom_login, name='login'),
+    path('login/', LoginView.as_view(
+        template_name='login.html',           # Point to your existing template
+        redirect_authenticated_user=True      # Redirects users who are already logged in
+    ), name='login'),
     # ------------------------------------------------------------
     
     path('logout/', views.enhanced_logout, name='enhanced_logout'),
@@ -45,6 +49,7 @@ urlpatterns = [
     
     # 6. Roles
     path('roles/', views.role_management, name='role_management'),
+    path('role-redirect/', views.role_based_redirect, name='role_based_redirect'),
     
     # 7. Utilities (Optional but good for completeness based on views.py)
     path('session-status/', views.session_status, name='session_status'),
