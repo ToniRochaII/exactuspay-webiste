@@ -14,6 +14,10 @@ urlpatterns = [
     path("<slug:country_slug>/<int:company_id>/upload/result/", views.employee_upload_result_view, name="employee_upload_result"),
     path("<slug:country_slug>/<int:company_id>/upload/template/", views.download_employees_template, name="download_employees_template"),
 
+    path("<slug:country_slug>/<int:company_id>/edit/<int:employee_id>/", views.employee_edit, name="employee_edit"),
+    
+    path("<slug:country_slug>/<int:company_id>/edit/<int:employee_id>/compensation/", views.employee_compensation, name="employee_compensation"),
+
 
         # ────────────────────────────────────────────────
     # GLOBAL ROUTES (Now correctly named for the template tag)

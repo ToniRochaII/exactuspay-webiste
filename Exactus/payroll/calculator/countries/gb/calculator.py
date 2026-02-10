@@ -1,149 +1,226 @@
 from decimal import Decimal, ROUND_HALF_UP, ROUND_FLOOR
-from .uk_tax_logic import UKTaxLogic
+import logging
 
+logger = logging.getLogger(__name__)
+
+# =========================================================
+# 1. INTERNAL LOGIC CLASS (Merged here to prevent Import Errors)
+# =========================================================
+class UKTaxLogic:
+    def __init__(self, raw_code, explicit_basis="Cumulative"):
+        self.raw_code = str(raw_code).upper().strip()
+        self.basis = explicit_basis.lower()
+        
+        self.is_scottish = False
+        self.is_welsh = False
+        self.is_k_code = False
+        
+        self.code_number = 0
+        self.suffix = ""
+        
+        self._parse_code()
+
+    def _parse_code(self):
+        code = self.raw_code
+        
+        # 1. Handle Country Prefixes
+        if code.startswith('S'):
+            self.is_scottish = True
+            code = code[1:]
+        elif code.startswith('C'):
+            self.is_welsh = True
+            code = code[1:]
+            
+        # 2. Handle Zero/Special Codes
+        special_codes = ['BR', 'D0', 'D1', 'D2', 'NT', '0T', '0L']
+        if code in special_codes:
+            self.suffix = code
+            self.code_number = 0
+            return
+
+        # 3. Handle 'K' Prefix
+        if code.startswith('K'):
+            self.is_k_code = True
+            code = code[1:]
+            
+        # 4. Separate Number and Suffix
+        number_str = ""
+        suffix_str = ""
+        
+        for char in code:
+            if char.isdigit():
+                number_str += char
+            else:
+                suffix_str += char
+        
+        self.code_number = int(number_str) if number_str else 0
+        self.suffix = suffix_str.strip()
+
+    def get_annual_allowance(self):
+        if self.suffix in ['BR', 'D0', 'D1', 'D2', 'NT', '0T', '0L']:
+            return Decimal("0.00")
+            
+        if self.code_number == 0:
+            return Decimal("0.00")
+
+        # Standard Calculation: (Code * 10) + 9
+        total = (self.code_number * 10) + 9
+        return Decimal(str(total))
+
+    def get_period_allowance(self, frequency, period=1):
+        annual_total = self.get_annual_allowance()
+        
+        if "week" in str(frequency).lower():
+            divisor = Decimal("52")
+        else:
+            divisor = Decimal("12")
+
+        multiplier = Decimal("-1.00") if self.is_k_code else Decimal("1.00")
+        is_non_cumulative = any(x in self.basis for x in ["week1", "month1", "w1", "m1"])
+
+        if is_non_cumulative:
+            period_allowance = (annual_total / divisor)
+        else:
+            period_allowance = (annual_total / divisor) * Decimal(str(period))
+
+        final_adjustment = (period_allowance * multiplier).quantize(Decimal("0.01"), rounding=ROUND_FLOOR)
+        return final_adjustment
+
+# =========================================================
+# 2. MAIN STRATEGY CLASS
+# =========================================================
 class UnitedKingdomPayrollStrategy:
     def __init__(self, payroll_calculator):
         self.calc = payroll_calculator
         self.employee = payroll_calculator.employee
-        
-        # Standard UK Tax Bands
-        self.tax_bands = {
-            'rUK': [
-                (Decimal('37700.00'), Decimal('0.20')),
-                (Decimal('125140.00'), Decimal('0.40')),
-                (Decimal('999999999.00'), Decimal('0.45')),
-            ]
-        }
+        self.period = payroll_calculator.period
 
     def process_nuances(self):
-        # 1. FETCH DATA
+        # DEBUG MARKER: Watch your terminal for this!
+        print(f"🔥🔥🔥 UK STRATEGY LOADED: Code {self.employee.tax_info_03} 🔥🔥🔥")
+
+        # 1. FETCH EMPLOYEE DATA
         raw_code = getattr(self.employee, 'tax_info_03', '1257L') or '1257L'
         raw_basis = getattr(self.employee, 'tax_info_04', 'Cumulative') or 'Cumulative'
-        
         ni_category = getattr(self.employee, 'tax_info_05', 'A') or 'A'
-        ni_category = str(ni_category).upper().strip()
         
-        # 2. INITIALIZE PARSER
+        # 2. INITIALIZE LOGIC (Using the internal class)
         tax_logic = UKTaxLogic(raw_code, explicit_basis=raw_basis)
-        freq = self.calc.period.frequency if self.calc.period else "monthly"
-        period_num = self.calc.period.period_number if self.calc.period else 1
-
-        # 3. REGISTER ALLOWANCE
-        adjustment_amount = tax_logic.get_period_allowance(freq, period=period_num)
-        desc = f"Tax Code {tax_logic.raw_code}"
         
-        if "K" in tax_logic.prefix: 
-            desc += " (Negative Allowance / Add to Pay)"
-        else: 
-            desc += " (Tax Free Allowance)"
-
-        self.calc.results_dict['5500'] = adjustment_amount
-        self.calc.register("Tax Adjustment", adjustment_amount, "5500", description=desc)
-
-        # 4. PREPARE TAXABLE BASE
-        gross_source = self.calc.results_dict.get('85000', Decimal('0.00'))
-        adjusted_base = tax_logic.calculate_taxable_pay(gross_source, freq, period_num)
-        self.calc.results_dict['86000'] = adjusted_base 
+        freq = self.period.frequency if self.period else "monthly"
+        period_num = self.period.period_number if self.period else 1
+        is_cumulative = not any(x in raw_basis.lower() for x in ["week1", "month1", "w1", "m1"])
         
-        # ====================================================
-        # 5. INCOME TAX ROUTING (6000 Series)
-        # ====================================================
-        managed_tax_codes = ["6001", "6100", "6200", "6300", "6400"]
-        current_code = tax_logic.clean_code
-        active_tax_code = None
-        is_manual_calc = False
+        periodic_gross = self.calc.results_dict.get('5000', Decimal('0.00'))
+        
+        # --- PROCESS SECTIONS ---
+        self._process_income_tax(tax_logic, freq, period_num, is_cumulative, periodic_gross)
+        self._process_national_insurance(ni_category, period_num, is_cumulative)
+        self._process_employer_ni(period_num, is_cumulative)
+        self._process_apprenticeship_levy(period_num)
 
-        if current_code == "BR": active_tax_code = "6100"
-        elif current_code == "D0": active_tax_code = "6200"
-        elif current_code == "D1": active_tax_code = "6300"
-        elif current_code == "NT": active_tax_code = None 
-        elif current_code == "0T":
-            is_manual_calc = True
-            active_tax_code = "6001"
-        else:
-            active_tax_code = "6001"
+    def _process_income_tax(self, tax_logic, freq, period_num, is_cumulative, periodic_gross):
+        # [STEP 1] Calculate Allowance
+        tax_free_allowance = tax_logic.get_period_allowance(freq, period=period_num)
+        print(f"   -> Allowance Calculated: £{tax_free_allowance}")
+        
+        clean_code = tax_logic.raw_code
+        if tax_logic.is_scottish or tax_logic.is_welsh:
+            clean_code = clean_code[1:]
 
-        self.calc.results_dict["6000"] = Decimal("0.00")
-        self.calc.explicit_overrides.add("6000")
+        # Determine Target Codes
+        base_suffix = "001"
+        tax_target_code = "6001"
+        if clean_code.startswith("BR"):
+            base_suffix = "100"; tax_target_code = "6100"
+        elif clean_code.startswith("D0"):
+            base_suffix = "200"; tax_target_code = "6200"
+        elif clean_code.startswith("D1"):
+            base_suffix = "300"; tax_target_code = "6300"
 
-        if is_manual_calc and current_code == "0T":
-            bands = self.tax_bands['rUK']
-            if "week" in freq.lower(): periods = Decimal("52")
-            else: periods = Decimal("12")
-            remaining = adjusted_base
-            tax_calc = Decimal("0.00")
-            prev_th = Decimal("0.00")
-            for th, rate in bands:
-                p_th = (th / periods).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
-                width = p_th - prev_th
-                if remaining <= 0: break
-                if th > Decimal('900000000'): taxable = remaining
-                else: taxable = min(remaining, width)
-                tax_calc += taxable * rate
-                remaining -= taxable
-                prev_th = p_th
-            final_tax = tax_calc.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+        prefix = "96" if is_cumulative else "86"
+        taxable_base_code = f"{prefix}{base_suffix}"
+
+        # [STEP 2] Apply Allowance
+        taxable_source = self.calc.results_dict.get('86000', Decimal('0.00'))
+        adjusted_base = taxable_source - tax_free_allowance
+        
+        # Prevent negative taxable pay (Standard L/N/M codes)
+        if not tax_logic.is_k_code and adjusted_base < 0:
+            adjusted_base = Decimal("0.00")
             
-            self.calc.results_dict['6001'] = -final_tax
-            self.calc.register("PAYE Income Tax", -final_tax, "6001")
-            self.calc.explicit_overrides.add('6001')
-            for code in managed_tax_codes:
-                if code != "6001":
-                    self.calc.results_dict[code] = Decimal("0.00")
-                    self.calc.explicit_overrides.add(code)
-        else:
-            for code in managed_tax_codes:
-                if code == active_tax_code:
-                    self.calc.explicit_overrides.discard(code)
-                else:
-                    self.calc.results_dict[code] = Decimal("0.00")
-                    self.calc.explicit_overrides.add(code)
-
-        # ====================================================
-        # 6. NATIONAL INSURANCE ROUTING (7000 Series)
-        # ====================================================
-        ni_map = {
-            'A': '7001', 
-            'B': '7010', # <--- STRICT RULE APPLIED: B IS 7010
-            'C': '7003', 'D': '7030', 'E': '7040', 
-            'F': '7050', 'H': '7060', 'I': '7070','J': '7080',  'K': '7090', 
-            'L': '7100', 'M': '7110', 'N': '7120', 'S': '7130', 'V': '7140',
-            'Z': '7150', 'X': '7160'
-        }
-        active_ni_code = ni_map.get(ni_category, '7001')
-        self.calc.active_ni_code = active_ni_code
-
-        # Block Reporting Code
-        self.calc.results_dict["7000"] = Decimal("0.00")
-        self.calc.explicit_overrides.add("7000")
+        self.calc.results_dict[taxable_base_code] = adjusted_base
+        print(f"   -> Taxable Base (Code {taxable_base_code}): £{adjusted_base}")
         
-        # Manage Calculation Codes
-        # Ensure Active Employee NI is unlocked.
-        # Ensure 7010 is unlocked (it acts as Employer NI usually, but here it is also Employee Cat B)
-        all_ni_codes = set(ni_map.values())
-        all_ni_codes.add("7010") 
+        # [STEP 3] Calculate Tax
+        tax_amount = self._calculate_tax_with_limit(
+            tax_target_code, adjusted_base, period_num, is_cumulative, periodic_gross
+        )
+        
+        self.calc.results_dict[tax_target_code] = tax_amount
+        self.calc.register(f"Income Tax ({tax_logic.raw_code})", tax_amount, tax_target_code)
+        
+        # Block engine from doubling up
+        for i in range(6001, 6400):
+            self.calc.explicit_overrides.add(str(i))
 
-        for code in all_ni_codes:
-            if code == active_ni_code:
-                self.calc.explicit_overrides.discard(code) # UNLOCK Employee NI
-            elif code == "7010" and ni_category != 'X':
-                self.calc.explicit_overrides.discard(code) # UNLOCK Employer NI/Cat B
-            else:
-                self.calc.results_dict[code] = Decimal("0.00")
-                self.calc.explicit_overrides.add(code) # LOCK others
+    def _process_national_insurance(self, ni_category, period_num, is_cumulative):
+        mapping = {"B": "7010", "C": "7020", "H": "7030", "J": "7040", "M": "7050", "Z": "7060"}
+        target_ni_code = mapping.get(ni_category.upper(), "7001")
+        self.calc.active_ni_code = target_ni_code
+        
+        prefix = "97" if is_cumulative else "87"
+        ni_base_code = f"{prefix}000"
+        ni_base_val = self.calc.results_dict.get('87000', Decimal('0.00'))
+        self.calc.results_dict[ni_base_code] = ni_base_val
 
-        # ====================================================
-        # 7. OTHER DEDUCTIONS ROUTING (9000 Series)
-        # ====================================================
-        self.calc.results_dict["9000"] = Decimal("0.00")
+        self._calculate_and_register(target_ni_code, ni_base_val, period_num, is_cumulative, f"NI Category {ni_category}")
+
+        for i in range(7001, 7400):
+            self.calc.explicit_overrides.add(str(i))
+
+    def _process_employer_ni(self, period_num, is_cumulative):
+        prefix = "99" if is_cumulative else "89"
+        er_base_code = f"{prefix}000"
+        er_base_val = self.calc.results_dict.get('89000', Decimal('0.00'))
+        self.calc.results_dict[er_base_code] = er_base_val
+        self._calculate_and_register("9000", er_base_val, period_num, is_cumulative, "Employer NI")
         self.calc.explicit_overrides.add("9000")
-        
-        managed_other_codes = ["9001"]
-        active_other_code = "9001"
 
-        for code in managed_other_codes:
-            if code == active_other_code:
-                self.calc.explicit_overrides.discard(code)
-            else:
-                self.calc.results_dict[code] = Decimal("0.00")
-                self.calc.explicit_overrides.add(code)
+    def _process_apprenticeship_levy(self, period_num):
+        ni_gross = self.calc.results_dict.get('87000', Decimal('0.00'))
+        levy_amount = -(ni_gross * Decimal("0.005")).quantize(Decimal("0.01"), ROUND_HALF_UP)
+        target_code = "9001"
+        self.calc.results_dict[target_code] = levy_amount
+        self.calc.register("Apprenticeship Levy", levy_amount, target_code)
+        self.calc.explicit_overrides.add(target_code)
+
+    def _calculate_tax_with_limit(self, target_code, base_val, period_num, is_cumulative, periodic_gross):
+        raw_tax = self._get_engine_result(target_code, base_val, period_num, is_cumulative)
+        max_tax = periodic_gross * Decimal("0.50")
+        final_tax = min(abs(raw_tax), max_tax)
+        return -abs(final_tax.quantize(Decimal("0.01"), ROUND_HALF_UP))
+
+    def _calculate_and_register(self, target_code, base_val, period_num, is_cumulative, label):
+        amount = self._get_engine_result(target_code, base_val, period_num, is_cumulative)
+        result = -abs(amount.quantize(Decimal("0.01"), ROUND_HALF_UP))
+        self.calc.results_dict[target_code] = result
+        self.calc.register(label, result, target_code)
+        self.calc.explicit_overrides.add(target_code)
+
+    def _get_engine_result(self, target_code, base_val, period_num, is_cumulative):
+        from Exactus.payroll.calculator.engine import TaxEngine
+        from Exactus.calculationbase.models import CalculationBase
+
+        rule = CalculationBase.objects.filter(
+            element__element_code=target_code,
+            regulations=self.period.payroll.regulation,
+            base_frequency=self.period.frequency
+        ).first()
+
+        if not rule:
+            return Decimal("0.00")
+
+        return TaxEngine.calculate_progressive_tax(
+            base_val, rule, period=period_num if is_cumulative else 1
+        )

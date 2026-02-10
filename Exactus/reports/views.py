@@ -229,7 +229,6 @@ def report_run(request, country_slug, company_id, report_id):
 
             # --- 2. DETECT COMPARISON MODE ---
             is_comparison = getattr(report_def, 'is_comparison', False)
-            # Robust Check: If name contains 'comparison' or 'variance', force it
             if 'comparison' in report_def.name.lower() or 'variance' in report_def.name.lower():
                 is_comparison = True
 
@@ -257,32 +256,47 @@ def report_run(request, country_slug, company_id, report_id):
             all_codes = curr_codes.union(prev_codes)
             all_emp_ids = set(curr_map.keys()).union(set(prev_map.keys()))
 
-            # --- 4. PD CODE LOOKUP ---
-            pd_lookup = {}
+            # --- 4. CODE DESCRIPTION LOOKUP (PD Codes + Elements) ---
+            code_lookup = {}
+            
+            # A. Fetch PD Codes (Company Specific)
             try:
                 PDCodeModel = None
                 try: PDCodeModel = apps.get_model('pdcodes', 'PDCode')
                 except LookupError: PDCodeModel = apps.get_model('pdcodes', 'PDcode')
+                
                 if PDCodeModel:
                     pd_objs = PDCodeModel.objects.filter(company_id=company_id)
-                    pd_lookup = {pd.pdcode_code: pd.pdcode_description for pd in pd_objs}
-            except: pass
+                    for pd in pd_objs:
+                        code_lookup[str(pd.pdcode_code)] = pd.pdcode_description
+            except: 
+                pass
 
-            main_totals_map = {'5000': 'Gross', '6000': 'Tax', '7000': 'NI', '8000': 'Net Pay'}
-            CODES_TO_INVERT = ['6000', '7000']
+            # B. Fetch Elements (Country Specific)
+            try:
+                ElementModel = apps.get_model('elements', 'Element')
+                el_objs = ElementModel.objects.filter(country=country)
+                for el in el_objs:
+                    code_lookup[str(el.element_code)] = el.element_description
+            except LookupError: 
+                pass
+
+            # Standard Hardcoded Totals
+            main_totals_map = {'5000': 'Gross Pay', '6000': 'Tax', '7000': 'NI', '8000': 'Net Pay'}
+            CODES_TO_INVERT = ['6000', '7000'] 
 
             # --- 5. BUILD CONFIG ---
             sorted_codes = sorted([c for c in all_codes if c.isdigit()], key=int)
             temp_cols_config = []
             
             for code in sorted_codes:
-                is_payment = 1000 <= int(code) <= 4999
-                is_main = code in main_totals_map
-                is_user = code in pd_lookup
-                if is_payment or is_main or is_user:
-                    base_name = main_totals_map.get(code) or pd_lookup.get(code) or f"Code {code}"
-                    if code == '1000': base_name = 'Basic Salary'
-                    temp_cols_config.append({'code': code, 'name': base_name})
+                # Priority: Hardcoded Totals > Database Lookup > Fallback to "Code X"
+                base_name = main_totals_map.get(code) or code_lookup.get(code) or f"Code {code}"
+                
+                if code == '1000': base_name = 'Basic Salary'
+                
+                # UPDATED: We include everything found in 'details', not just specific ranges
+                temp_cols_config.append({'code': code, 'name': base_name})
 
             # --- 6. FILTER EMPTY COLUMNS (Zero Filter) ---
             final_cols_config = []
@@ -302,9 +316,8 @@ def report_run(request, country_slug, company_id, report_id):
             
             if is_comparison:
                 # === VERTICAL LAYOUT (COMPARISON) ===
-                # ID | Employee | Code | Desc | Curr | Prev | Balance
                 table_headers = ["ID", "Employee Name", "Code", "Description", curr_date_label, prev_date_label, "Balance"]
-                table_codes = [] # Not needed for vertical
+                table_codes = [] 
 
                 for emp_id in sorted(all_emp_ids, key=lambda x: int(float(x)) if x.replace('.','',1).isdigit() else x):
                     c_row = curr_map.get(emp_id, {})
@@ -318,16 +331,11 @@ def report_run(request, country_slug, company_id, report_id):
                     c_details = c_row.get('parsed_details', {})
                     p_details = p_row.get('parsed_details', {})
 
-                    # Use temp_cols_config here because we want to check individual rows, 
-                    # but we can also use final_cols_config to be consistent.
-                    # Using temp to be safe and hide rows dynamically below.
                     for col in temp_cols_config:
                         code = col['code']
-                        
                         val_curr = c_details.get(code, 0.0)
                         val_prev = p_details.get(code, 0.0)
                         
-                        # HIDE ROW IF ZERO
                         if abs(val_curr) < 0.001 and abs(val_prev) < 0.001:
                             continue
 
@@ -352,7 +360,6 @@ def report_run(request, country_slug, company_id, report_id):
 
             else:
                 # === HORIZONTAL LAYOUT (STANDARD GRID) ===
-                # Use final_cols_config (Empty columns removed)
                 table_headers = ["ID", "Employee", "Date"] + [col['name'] for col in final_cols_config]
                 table_codes = ["", "", ""] + [col['code'] for col in final_cols_config]
 
@@ -366,7 +373,6 @@ def report_run(request, country_slug, company_id, report_id):
                     full_name = f"{row.get('employee__employee_name', '')} {row.get('employee__employee_surname', '')}".strip()
                     row_values.append(full_name)
                     
-                    # Date Handling
                     pay_date_val = row.get('period__payment_date')
                     if not pay_date_val and current_payroll:
                         pay_date_val = get_payroll_date(current_payroll)
@@ -409,15 +415,13 @@ def rti_run(request, country_slug, company_id):
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
     
-    # We fetch specific PayrollPeriod objects (e.g. "April 2025")
-    # Using 'PayrollPeriod' model to ensure we get specific periods
     periods = PayrollPeriod.objects.filter(
         payroll__company=company
     ).select_related('payroll').order_by('-payment_date')
     
     if request.method == 'POST':
         selected_period_id = request.POST.get('period_id')
-        output_format = request.POST.get('format') # 'xml' or 'csv'
+        output_format = request.POST.get('format') 
         
         if selected_period_id:
             generator = RTIGenerator(company_id, selected_period_id)
@@ -449,7 +453,6 @@ def payslip_run(request, country_slug, company_id):
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
     
-    # Fetch Periods
     periods = PayrollPeriod.objects.filter(
         payroll__company=company
     ).select_related('payroll').order_by('-payment_date')
@@ -479,7 +482,6 @@ def payslip_run(request, country_slug, company_id):
         engine = ReportEngine(report_def, company_id)
         raw_results = engine.generate(payroll_id=period.payroll.id)
         
-        # --- DEDUPLICATION LOGIC ---
         try: raw_results.sort(key=lambda x: x.get('id', 0))
         except: pass
 
@@ -509,12 +511,8 @@ def payslip_run(request, country_slug, company_id):
 
             payments = []
             deductions = []
-            
-            # --- NEW: Running Totals (Float) ---
             running_total_pay = 0.0
             running_total_ded = 0.0
-            
-            # Structural Totals (Net Pay still needs 8000)
             net_pay = 0.0
 
             for code, val_str in details.items():
@@ -523,12 +521,10 @@ def payslip_run(request, country_slug, company_id):
                 
                 if abs(val) < 0.01: continue 
 
-                # Capture Net Pay specifically for footer
                 if code == '8000': 
                     net_pay = val
-                    continue # Do not add to line items
+                    continue 
 
-                # Visibility Check
                 meta = code_meta.get(code)
                 if not meta or meta['status'] != 'Visible': continue
 
@@ -536,14 +532,13 @@ def payslip_run(request, country_slug, company_id):
                 try: code_int = int(code)
                 except: continue
 
-                # Categorize & Sum
                 if 1000 <= code_int <= 4999:
                     payments.append({'desc': desc, 'val': val})
                     running_total_pay += val
 
                 elif 6000 <= code_int <= 9999:
                     deductions.append({'desc': desc, 'val': abs(val)})
-                    running_total_ded += abs(val) # Sum the positive display value
+                    running_total_ded += abs(val) 
 
             payslips.append({
                 'employee': {
@@ -557,8 +552,8 @@ def payslip_run(request, country_slug, company_id):
                 'payments': payments,
                 'deductions': deductions,
                 'totals': {
-                    'payments': running_total_pay,  # Exact sum of list
-                    'deductions': running_total_ded, # Exact sum of list
+                    'payments': running_total_pay,  
+                    'deductions': running_total_ded, 
                     'net': net_pay
                 },
                 'period': {
@@ -578,5 +573,3 @@ def payslip_run(request, country_slug, company_id):
         'company': company,
         'periods': periods
     })
-
-

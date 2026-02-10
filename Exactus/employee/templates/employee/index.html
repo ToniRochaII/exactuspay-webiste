@@ -62,27 +62,32 @@
                         </thead>
                         <tbody>
                             {% for employee in employees %}
-                            <tr>
-                                <td  class="text-center">
+                            <tr class="position-relative" style="transform: rotate(0);">
+                                <td class="text-center align-middle">
                                     <span class="text-muted">{{ employee.employee_id }}</span>
                                 </td>
 
-                                <td>
-                                    <a href="{% url 'employee:employee_edit' country_slug company.company_id employee.id %}" class="fw-bold text-dark text-decoration-none">
-                                    <strong>{{ employee.employee_surname }},</strong>
-                                    <small class="text-muted">{{ employee.employee_name }}</small>
-                                    </a>
+                                <td class="align-middle">
+                                    <div class="d-flex align-items-center">
+                                        <a href="{% url 'employee:employee_edit' country_slug company.company_id employee.id %}" class="fw-bold text-dark text-decoration-none stretched-link">
+                                            <strong>{{ employee.employee_surname }},</strong>
+                                            <small class="text-muted">{{ employee.employee_name }}</small>
+                                        </a>
+                                    </div>
                                 </td>
-                                <td class="text-center">
+                                
+                                <td class="text-center align-middle">
                                     <span class="">
                                         {{ employee.gender|default:"—" }}
                                     </span>
                                 </td>
-                                <td>
+                                
+                                <td class="align-middle">
                                     <strong>{{ employee.job_title }}</strong><br>
                                     <small class="text-muted">{{ employee.department }}</small>
                                 </td>
-                                <td class="text-center table-action" style="position: relative; z-index: 2;">
+                                
+                                <td class="text-center align-middle table-action" style="position: relative; z-index: 2;">
                                     <a href="{% url 'employee:employee_edit' country_slug company.company_id employee.id %}" class="text-dark me-3" title="Enter Calculation Base">
                                         <i class="align-middle fas fa-arrow-right"></i>
                                     </a>

@@ -49,92 +49,72 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
                 self.country_slug = raw_slug.replace("-", "_")
 
     def calculate(self):
-        self.results_dict = {} 
-        self.breakdown = []
-        self.explicit_overrides = set() 
-        self.active_ni_code = "7001"
-        
-        # 2. Aggregation
-        self._aggregate_compensations()
-
-        # 3. Collect UI info
-        self._collect_pd_codes()
-        
-        # 4. Country Nuances
-        self._apply_country_nuances()
-
-        # 5. Standard Calculation Rules
-        if self.period and self.period.payroll and CALCULATION_BASE_AVAILABLE:
-            self._apply_calculation_rules()
-        
-        # --- GROSS PAY CALCULATION (User Defined Formula) ---
-        # 5000 = (1000-1999) - (2000-2999) + (3000-4999)
-        self._calculate_gross_pay()
-        # ----------------------------------------------------
-
-        # --- CONSOLIDATION STEP ---
-        self._consolidate_reporting_codes()
-        # --------------------------
-        
-        # 6. Final Net Pay Calculation
-        # Use the calculated Gross (5000) as the starting point
-        gross_val = self.results_dict.get('5000', Decimal('0.00'))
-        
-        total_post_gross_deductions = Decimal('0.00')
-        
-        # Iterate over a list copy to be safe
-        for code, val in list(self.results_dict.items()):
-            try:
-                # 1. Skip if value is effectively zero
-                if not val: continue
-                
-                # 2. Skip duplicates / Salary Sacrifice
-                if code in self.salary_sacrifice_codes: continue
-
-                # 3. Explicit Deductions (marked in DB as 'Deduction')
-                if code in self.deduction_codes:
-                    code_int = int(code)
-                    # [CRITICAL FIX]
-                    # If this deduction is in range 2000-2999, it was ALREADY subtracted 
-                    # to calculate Gross Pay (5000). Do NOT subtract it again.
-                    if 2000 <= code_int <= 2999:
-                        continue
-                    
-                    total_post_gross_deductions += abs(val)
-                    continue
-                
-                # 4. NET PAY PROTECTION
-                # Skip Reporting Totals (6000, 7000, 9000)
-                if code in ["6000", "7000", "9000"]: 
-                    continue
-                
-                code_int = int(code)
-
-                # 5. Ranges
-                # Input Deductions (2000-2999) -> REMOVED from here (Already in Gross)
-                # Tax (6001-6999)
-                is_tax_calc = (6001 <= code_int <= 6299)
-                # NI (7001-7999)
-                is_ni_calc  = (7001 <= code_int <= 7299)
-
-                if is_tax_calc or is_ni_calc:
-                    total_post_gross_deductions += abs(val)
-
-            except (ValueError, TypeError):
-                continue
+            self.results_dict = {} 
+            self.breakdown = []
+            self.explicit_overrides = set() 
+            self.active_ni_code = "7001"
             
-        # Net Pay = Gross (which is already net of input deductions) - Taxes/NI/Other
-        net_pay = gross_val - total_post_gross_deductions
-        
-        self.results_dict['8000'] = Decimal("0.00")
-        self.results_dict['88000'] = Decimal("0.00")
-        self.results_dict['98000'] = Decimal("0.00")
+            # 2. Aggregation
+            self._aggregate_compensations()
 
-        self.register("Net Salary", net_pay, "8000")
-        self.results_dict['88000'] = net_pay
-        self.results_dict['98000'] = net_pay 
+            # 3. Collect UI info
+            self._collect_pd_codes()
+            
+            # 4. Country Nuances
+            self._apply_country_nuances()
 
-        return self._build_return(net_pay)
+            # 5. Standard Calculation Rules
+            if self.period and self.period.payroll and CALCULATION_BASE_AVAILABLE:
+                self._apply_calculation_rules()
+            
+            # --- GROSS PAY CALCULATION ---
+            self._calculate_gross_pay()
+
+            # --- CONSOLIDATION STEP ---
+            # This populates 6000 and 7000 (divided by 2 as requested)
+            self._consolidate_reporting_codes()
+            
+            # --- 6. FINAL NET PAY CALCULATION (USER FORMULA) ---
+            # Formula: Net = 5000 - 6000 - 7000 - (6400-6999) - (7400-7999)
+            
+            # A. Get Base Values
+            gross_val = self.results_dict.get('5000', Decimal('0.00'))
+            tax_total = self.results_dict.get('6000', Decimal('0.00')) # This is the /2 value
+            ni_total  = self.results_dict.get('7000', Decimal('0.00')) # This is the /2 value
+            
+            # B. Calculate "Others" (Ranges 6400-6999 and 7400-7999)
+            other_deductions = Decimal('0.00')
+            
+            for code, val in self.results_dict.items():
+                try:
+                    if not val: continue
+                    code_int = int(code)
+                    
+                    # Check User-Defined Deduction Ranges
+                    in_tax_other_range = (6400 <= code_int <= 6999)
+                    in_ni_other_range  = (7400 <= code_int <= 7999)
+                    
+                    if in_tax_other_range or in_ni_other_range:
+                        other_deductions += abs(val)
+
+                except (ValueError, TypeError):
+                    continue
+                
+            # C. Apply Formula
+            # We use abs() to ensure we subtract the magnitude, regardless of how the sign is stored.
+            # Net = Gross - Tax(6000) - NI(7000) - Others
+            net_pay = gross_val - abs(tax_total) - abs(ni_total) - abs(other_deductions)
+            
+            # D. Store Result
+            self.results_dict['8000'] = Decimal("0.00")
+            self.results_dict['88000'] = Decimal("0.00")
+            self.results_dict['98000'] = Decimal("0.00")
+
+            self.register("Net Salary", net_pay, "8000")
+            self.results_dict['88000'] = net_pay
+            self.results_dict['98000'] = net_pay 
+
+            return self._build_return(net_pay)
 
     def _calculate_gross_pay(self):
         """
@@ -168,47 +148,70 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
         # Register the calculated Gross
         self.results_dict['5000'] = gross_sum
         
-        # Ensure legacy tax base (85000) matches if not explicitly set by overrides
-        if '85000' not in self.results_dict or self.results_dict['85000'] == 0:
-            self.results_dict['85000'] = gross_sum
+        # Ensure legacy tax base (86000) matches if not explicitly set by overrides
+        if '86000' not in self.results_dict or self.results_dict['86000'] == 0:
+            self.results_dict['86000'] = gross_sum
+
 
     def _consolidate_reporting_codes(self):
         """
-        Scans values for Tax/NI/Other and sums them into 6000/7000/9000.
+        FIXED: VLOOKUP STYLE CONSOLIDATION WITH /2 ADJUSTMENT FOR ALL
+        Picks the specific tax/NI code based on Employee Settings, ignoring duplicates.
         """
-        total_tax = Decimal("0.00")
-        total_ni = Decimal("0.00")
-        total_other = Decimal("0.00")
+        # --- 1. GET EMPLOYEE DATA ---
+        raw_tax_code = getattr(self.employee, 'tax_info_03', 'BR') or 'BR'
+        clean_tax_code = raw_tax_code.upper().strip()
         
-        for code, val in list(self.results_dict.items()):
+        # Remove Country Prefixes for clean mapping
+        if self.country_slug == 'gb' and (clean_tax_code.startswith('S') or clean_tax_code.startswith('C')):
+             clean_tax_code = clean_tax_code[1:]
+
+        ni_category = getattr(self.employee, 'tax_info_05', 'A') or 'A'
+
+        # --- 2. MAP TO TARGET CODES (VLOOKUP) ---
+        
+        # Tax Mapping
+        target_tax_code = "6001" # Default (Standard)
+        if clean_tax_code.startswith("BR"):
+            target_tax_code = "6100"
+        elif clean_tax_code.startswith("D0"):
+            target_tax_code = "6200"
+        elif clean_tax_code.startswith("D1"):
+            target_tax_code = "6300"
+
+        # NI Mapping
+        ni_map = {
+            "A": "7001", "B": "7010", "C": "7020", 
+            "H": "7030", "J": "7040", "M": "7050", "Z": "7060"
+        }
+        target_ni_code = ni_map.get(ni_category.upper(), "7001")
+
+        # --- 3. FETCH SINGLE CORRECT VALUE ---
+        total_tax = self.results_dict.get(target_tax_code, Decimal("0.00"))
+        total_ni = self.results_dict.get(target_ni_code, Decimal("0.00"))
+
+        # --- 4. FETCH OTHER (Sum Range for Employer Costs) ---
+        total_other = Decimal("0.00")
+        for code, val in self.results_dict.items():
+            if not val: continue
             try:
-                code_int = int(code)
-                if not val: continue
-
-                # Tax Range (Exclude 6000)
-                if 6001 <= code_int <= 6999:
-                    total_tax += val/2
-                
-                # NI Range (Exclude 7000)
-                elif 7001 <= code_int <= 7999:
-                    total_ni += val/2
-                    
-                # Other Range (Exclude 9000)
-                elif 9001 <= code_int <= 9999:
-                    total_other += val/2
-
+                c_int = int(code)
+                if 9001 <= c_int <= 9399:
+                    total_other += val
             except (ValueError, TypeError):
                 continue
 
-        # Force Initialization
+        # --- 5. REGISTER TOTALS ---
         for key in ["6000", "7000", "9000"]:
             if key not in self.results_dict:
                 self.results_dict[key] = Decimal("0.00")
 
-        # Register Totals
-        self._register_total("6000", "PAYE Income Tax Total", total_tax)
-        self._register_total("7000", "National Insurance Total", total_ni)
-        self._register_total("9000", "Other Deductions Total", -total_other)
+        # [REQUESTED CHANGE] Divide ALL Reporting Totals by 2
+        self._register_total("6000", "PAYE Income Tax Total", total_tax / 2)
+        self._register_total("7000", "National Insurance Total", total_ni / 2)
+        
+        # Note: -total_other flips it to a cost, then we divide by 2
+        self._register_total("9000", "Other Deductions Total", (-total_other) / 2)
 
     def _register_total(self, code, name, amount):
         if amount != 0 or code in self.results_dict:
@@ -259,7 +262,7 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
                 else:
                     try:
                         tgt_int = int(target_code)
-                        if 9001 <= tgt_int <= 9999:
+                        if 9001 <= tgt_int <= 9399:
                             auto_base = f"8{target_code}"
                             base_val = self.results_dict.get(auto_base, Decimal('0.00'))
                     except (ValueError, TypeError):
@@ -276,9 +279,15 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
             except Exception as e:
                 logger.error(f"Error calculating rule {rule}: {e}")
                 
+
     def _apply_country_nuances(self):
-        if not self.country_slug: return
+        if not self.country_slug: 
+            print("❌ [Universal] No Country Slug found!")
+            return
+
         module_path = f"Exactus.payroll.calculator.countries.{self.country_slug}.calculator"
+        print(f"--- 🌍 ATTEMPTING TO LOAD: {module_path} ---")
+
         try:
             module = importlib.import_module(module_path)
             strategy_class = None
@@ -286,12 +295,26 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
                 if attr.lower().endswith("payrollstrategy") and attr != "BasePayrollStrategy":
                     strategy_class = getattr(module, attr)
                     break
+            
             if strategy_class:
+                print(f"   ✅ FOUND STRATEGY: {strategy_class.__name__}")
                 strategy = strategy_class(self)
                 strategy.process_nuances()
-                logger.info(f"Applied country strategy from {module_path}")
-        except ImportError: pass
-        except Exception as e: logger.error(f"Error applying country strategy for {self.country_slug}: {e}")
+                print(f"   🚀 EXECUTED STRATEGY SUCCESSFULLY")
+            else:
+                print(f"   ❌ NO STRATEGY CLASS FOUND IN {module_path}")
+
+        except ImportError as e:
+            print(f"   🔥 IMPORT ERROR: Could not load {module_path}")
+            print(f"   🔥 REASON: {e}")
+            # Do NOT pass. Let it print so we see it in the logs.
+        except Exception as e:
+            print(f"   🔥 GENERAL ERROR loading strategy: {e}")
+            import traceback
+            traceback.print_exc()
+
+
+
 
     def _get_compensation_list(self):
         for attr in ['compensationcomponent_set', 'compensations', 'components', 'compensation_components']:
@@ -326,26 +349,13 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
     def _aggregate_compensations(self):
         comps = self._get_compensation_list()
         if not comps: return
-        active_comps = comps.filter(is_active=True, processed=False)
-        if self.period:
-            active_comps = active_comps.filter(start_date__lte=self.period.end_date).select_related('pd_code')
-            if getattr(self.period, 'is_additional', False):
-                active_comps = active_comps.filter(Q(category='VARIABLE') | Q(frequency='one_time'))
+        active_comps = comps.filter(is_active=True, processed=False).select_related('pd_code')
         for comp in active_comps:
-            if self.period:
-                if comp.start_date > self.period.end_date: continue 
-                is_ended_in_past = comp.end_date and comp.end_date < self.period.start_date
-                if is_ended_in_past:
-                    if comp.category == 'PERMANENT': continue 
-                    else: amt = comp.amount
-                else: amt = comp.get_period_amount(self.period.start_date, self.period.end_date)
-            else: amt = comp.amount
-            amt = Decimal(str(amt))
+            amt = Decimal(str(comp.amount))
             pd = getattr(comp, 'pdcode', getattr(comp, 'pd_code', None))
             if pd and pd.pdcode_code:
                 code = pd.pdcode_code
-                cat = getattr(pd, 'category', getattr(pd, 'pdcode_category', ''))
-                is_deduction = str(cat).upper() == 'DEDUCTION'
+                is_deduction = str(getattr(pd, 'category', '')).upper() == 'DEDUCTION'
                 if is_deduction:
                     self.results_dict[code] = self.results_dict.get(code, Decimal('0.00')) + amt
                     self.deduction_codes.add(code)

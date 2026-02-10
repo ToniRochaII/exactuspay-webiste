@@ -56,34 +56,33 @@
                                 <th class="text-center">ISO Code</th>
                                 <th>Name</th>
                                 <th class="text-center">Currency</th>
-                                <th class="text-center">Language</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for country in countries %}
-                            <tr>
-                                <td class="text-center">
-                                    <strong>{{ country.iso2_code }}</strong><br>
-                                    <small class="text-muted">{{ country.iso3_code }}</small>
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <img src="{% static 'dis/img/flags/' %}{{ country.iso2_code|lower }}.png" 
-                                             alt="{{ country.iso2_code }}" 
-                                             width="24" 
-                                             class="me-2 border rounded-1"
-                                             onerror="this.style.display='none'">
-                                        <a href="{% url 'companies:company' country.slug %}" class="text-dark text-decoration-none">
-                                            {{ country.name }}
-                                        </a>
-                                    </div>
-                                </td>
-                                <td class="text-center">
-                                    <strong>{{ country.currency_code }}</strong><br>
-                                    <small class="text-muted">{{ country.currency_name }}</small>
-                                </td>
-                                <td class="text-center">{{ country.official_language }}</td>
-                            </tr>
+<tr class="clickable-row position-relative" style="transform: rotate(0);">
+    <td class="text-center">
+        <strong>{{ country.iso2_code }}</strong><br>
+        <small class="text-muted">{{ country.iso3_code }}</small>
+    </td>
+    <td>
+        <div class="d-flex align-items-center">
+            <img src="{% static 'dis/img/flags/' %}{{ country.iso2_code|lower }}.png" 
+                 alt="{{ country.iso2_code }}" 
+                 width="30" 
+                 class="me-2 border rounded-1"
+                 onerror="this.style.display='none'">
+            
+            <a href="{% url 'companies:company' country.slug %}" class="text-dark text-decoration-none stretched-link">
+                {{ country.name }}
+            </a>
+        </div>
+    </td>
+    <td class="text-center">
+        <strong>{{ country.currency_code }}</strong><br>
+        <small class="text-muted">{{ country.currency_name }}</small>
+    </td>
+</tr>
                             {% endfor %}
                         </tbody>
                     </table>

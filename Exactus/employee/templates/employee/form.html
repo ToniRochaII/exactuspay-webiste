@@ -2,6 +2,7 @@
 {% load static %}
 {% load employee_role_filters %}
 {% load form_helpers %}
+{% load humanize %}  {# <--- ADD THIS LINE #}
 
 {% block title %}Add Employee — {{ company.trade_name }} | ExactusPay{% endblock %}
 
@@ -148,7 +149,7 @@
                             {% endif %}
                         </h5>
                         <h6 class="card-subtitle text-muted mt-1">
-                            {{ company.trade_name }}
+                            {{ employee.employee_id }}| {{ employee.employee_name }} {{ employee.employee_surname }}
                         </h6>
                     </div>
                 </div>
@@ -335,19 +336,123 @@
                                 </div>
                             {% endif %}
                         </div>
+                        
+<div class="tab-pane fade" id="pay">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="section-header mb-0">
+            <i class="fas fa-coins me-2"></i>Compensation Overview
+        </h6>
+        <a href="{% url 'compensation:compensation_create' country_slug company.pk employee.pk %}" class="btn btn-sm btn-primary shadow-sm">
+            <i class="fas fa-plus me-1"></i> Add Component
+        </a>
+    </div>
 
-                        <div class="tab-pane fade" id="pay">
-                            <div class="text-center py-5">
-                                <div class="mb-3">
-                                    <i class="fas fa-piggy-bank fa-3x text-muted opacity-25"></i>
+    <div class="card shadow-none border mb-4">
+        <div class="card-body p-0"> 
+            <div class="p-4"> 
+                <table id="datatables-reponsive" class="table table-striped" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Code</th>
+                            <th>Description</th>
+                            <th class="text-center">Category</th>
+                            <th class="text-center">Amount</th>
+                            <th class="text-center">Frequency</th>
+                            <th class="text-center">Dates</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in active_components %}
+                        <tr>
+                            <td class="fw-bold text-center">
+                                <span class="text-brand">
+                                    {% if c.pd_code %}
+                                        {{ c.pd_code.pdcode_code }}
+                                    {% elif c.element %}
+                                        {{ c.element.element_code }}
+                                    {% else %}
+                                        #{{ c.pk }}
+                                    {% endif %}
+                                </span>
+                            </td>
+
+                            <td>
+                                <div class="fw-bold text-dark">
+                                    {% if c.pd_code %}
+                                        {{ c.pd_code.pdcode_name }}
+                                    {% elif c.element %}
+                                        {{ c.element.element_name }}
+                                    {% else %}
+                                        <span class="text-muted">Unknown</span>
+                                    {% endif %}
                                 </div>
-                                <h5 class="text-secondary fw-bold">Compensation Details</h5>
-                                <p class="text-muted">Please save the employee profile first to add salary and benefits.</p>
-                                <button type="submit" class="btn btn-primary px-4 mt-2">
-                                    <i class="fas fa-save me-2"></i>Save & Continue
-                                </button>
-                            </div>
-                        </div>
+                                <small class="text-muted">
+                                    {% if c.pd_code %}
+                                        {{ c.pd_code.pdcode_description|truncatechars:40 }}
+                                    {% elif c.element %}
+                                        {{ c.element.element_description|truncatechars:40 }}
+                                    {% endif %}
+                                </small>
+                            </td>
+
+                            <td class="text-center">
+                                {% if c.pd_code %}
+                                    <span class="badge {% if c.pd_code.pdcode_category == 'Payment' %}bg-success-subtle text-success{% elif c.pd_code.pdcode_category == 'Deduction' %}bg-danger-subtle text-danger{% else %}bg-info-subtle text-info{% endif %} rounded-pill">
+                                        {{ c.pd_code.get_pdcode_category_display }}
+                                    </span>
+                                {% elif c.element %}
+                                    <span class="badge {% if c.element.element_category == 'Payment' %}bg-success-subtle text-success{% elif c.element.element_category == 'Deduction' %}bg-danger-subtle text-danger{% else %}bg-info-subtle text-info{% endif %} rounded-pill">
+                                        {{ c.element.get_element_category_display }}
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-secondary rounded-pill">Unknown</span>
+                                {% endif %}
+                            </td>
+                            
+                            <td class="text-center">
+                                 <strong class="text-center">{{ c.amount|floatformat:2|intcomma }}</strong><br>
+                                 <small class="text-muted">{{country.currency_code}}</small>
+                            </td>
+                            <td class="text-center">
+                                <span class="text-dark">
+                                    <strong>{{ c.get_frequency_display }}</strong><br>
+                                    <small class="text-muted">{{ c.get_category_display }}</small>
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <strong>{{ c.start_date|date:"d/m/Y" }}</strong><br>
+                                <small class="text-muted">
+                                    {% if c.end_date %}
+                                        {{ c.end_date|date:"d/m/Y" }}
+                                    {% else %}
+                                        <span class="fst-italic text-success">Ongoing</span>
+                                    {% endif %}
+                                </small>
+                            </td>
+
+                            <td class="text-center table-action" style="position: relative; z-index: 2;">
+                                <a href="{% url 'compensation:compensation_edit' country_slug company.pk employee.pk c.pk %}" class="text-brand me-2" title="Edit">
+                                    <i class="align-middle fas fa-pen"></i>
+                                </a>
+                                <a href="{% url 'compensation:compensation_delete' country_slug company.pk employee.pk c.pk %}" class="text-danger" title="Delete" onclick="return confirm('Are you sure you want to delete this component?');">
+                                    <i class="align-middle fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center py-4 text-muted">
+                                <i class="fas fa-info-circle me-1"></i> No active compensation components found.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 
                         <div class="tab-pane fade" id="account">
                             <h6 class="section-header"><i class="fas fa-cog me-2"></i>ExactusPay Access</h6>
@@ -483,11 +588,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // 3. Validation & Loading
     const form = document.getElementById('employee-form');
     form.addEventListener('submit', function(event) {
-        // If the submitter is the "Create Account" button, we might want to allow it even if unrelated fields are invalid?
-        // But for safety, let's keep validation unless it becomes a blocker.
-        // To detect which button submitted:
-        // (Not easily available in 'submit' event, but assuming standard flow).
-        
         if (!form.checkValidity()) {
             event.preventDefault();
             event.stopPropagation();
@@ -496,7 +596,6 @@ document.addEventListener("DOMContentLoaded", function () {
             if(invalidInput) {
                 const tabPane = invalidInput.closest('.tab-pane');
                 const tabId = tabPane.getAttribute('id');
-                // Fix for finding the tab button by target ID
                 const tabBtn = document.querySelector(`[data-bs-target="#${tabId}"]`);
                 if(tabBtn) {
                     bootstrap.Tab.getOrCreateInstance(tabBtn).show();
@@ -505,9 +604,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             form.classList.add('was-validated');
         } else {
-            // Only show loading if valid
             const btn = document.getElementById('submit-btn');
-            // Check if we are submitting via the main save button
             if (document.activeElement && document.activeElement.id === 'submit-btn') {
                  btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
                  btn.disabled = true;

@@ -27,7 +27,8 @@ from Exactus.country.models import Country
 from Exactus.employee.forms import (
     get_employee_form_for_country, 
     EmployeeUploadForm, 
-    EmployeeAccessForm
+    EmployeeAccessForm,
+    CompensationForm,
 )
 
 # Utils & Permissions
@@ -125,6 +126,9 @@ def employee_create(request, country_slug, company_id):
         "form": form, "company": company, "country": country, "country_slug": country_slug
     })
 
+
+from Exactus.compensation.models import CompensationComponent
+
 @login_required
 @role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATIONS", "DIRECTOR", "MANAGER", "SPECIALIST")
 def employee_edit(request, country_slug, company_id, employee_id):
@@ -140,36 +144,21 @@ def employee_edit(request, country_slug, company_id, employee_id):
 
     employee = get_object_or_404(Employee, pk=employee_id, company=company)
     linked_user = User.objects.filter(email=employee.email).first() if employee.email else None
+    
+    # FETCH COMPENSATION COMPONENTS
+    # We exclude hidden PD codes as done in your compensation_list view
+    active_components = CompensationComponent.objects.filter(
+        employee=employee,
+        processed=False,
+    ).exclude(
+        pd_code__pdcode_status="Hidden"
+    ).select_related("pd_code", "element")
+
     FormClass = get_employee_form_for_country(country)
 
     if request.method == "POST":
-        # --- Handle User Account Creation (Fixed using Service) ---
-        if 'create_user_account' in request.POST:
-            if not employee.email:
-                messages.error(request, "Employee must have an email address to create a user account.")
-            elif linked_user:
-                messages.warning(request, "User account already exists.")
-            elif not OnboardingService:
-                messages.error(request, "Onboarding Service is not available. Please contact support.")
-            else:
-                try:
-                    # USE THE SERVICE instead of manual creation
-                    OnboardingService.onboard_employee(
-                        username=employee.email,
-                        email=employee.email,
-                        role='EMPLOYEE',
-                        created_by_user=request.user
-                    )
-                    
-                    messages.success(request, f"User account created for {employee.email}. A welcome email has been sent.")
-                    return redirect("employee:employee_edit", country_slug=country_slug, company_id=company.company_id, employee_id=employee.id)
-                    
-                except Exception as e:
-                    messages.error(request, f"Error creating user account: {str(e)}")
-            
-            return redirect("employee:employee_edit", country_slug=country_slug, company_id=company.company_id, employee_id=employee.id)
+        # ... (keep existing 'create_user_account' logic) ...
 
-        # --- Standard Form Handling ---
         form = FormClass(request.POST, instance=employee)
         access_form = EmployeeAccessForm(request.POST, instance=linked_user) if linked_user else None
 
@@ -191,7 +180,9 @@ def employee_edit(request, country_slug, company_id, employee_id):
         "company": company, 
         "country": country, 
         "country_slug": country_slug,
+        "active_components": active_components, # Pass this to the template
     })
+
 
 # ──────────────────────────────────────────────────────────────────────────────
 # MULTI-FORMAT UPLOAD (Class-Based View)
@@ -419,3 +410,43 @@ def download_employees_template(request, country_slug, company_id=None):
     response["Content-Disposition"] = f'attachment; filename=Employee_Template_{country_slug}.xlsx'
     wb.save(response)
     return response
+
+# ... (imports) ...
+from Exactus.employee.models import Compensation
+from Exactus.employee.forms import CompensationForm
+
+@login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATIONS", "DIRECTOR", "MANAGER", "SPECIALIST")
+def employee_compensation(request, country_slug, company_id, employee_id):
+    """
+    Manage Compensation History for an Employee.
+    """
+    country = get_object_or_404(Country, slug=country_slug)
+    company = get_object_or_404(Company, pk=company_id)
+    
+    if not validate_company_access(request.user, company):
+        messages.error(request, "Access Denied.")
+        return redirect("dashboard")
+
+    employee = get_object_or_404(Employee, pk=employee_id, company=company)
+    compensations = employee.compensations.all() # Ordered by -effective_date via Meta
+
+    if request.method == "POST":
+        form = CompensationForm(request.POST)
+        if form.is_valid():
+            comp_record = form.save(commit=False)
+            comp_record.employee = employee
+            comp_record.save()
+            messages.success(request, "Compensation record added successfully.")
+            return redirect("employee:employee_compensation", country_slug=country_slug, company_id=company_id, employee_id=employee_id)
+    else:
+        form = CompensationForm()
+
+    return render(request, "employee/compensation.html", {
+        "employee": employee,
+        "company": company,
+        "country": country,
+        "country_slug": country_slug,
+        "compensations": compensations,
+        "form": form
+    })

@@ -59,39 +59,31 @@
                                 <th class="text-center">Number</th>
                                 <th>Company Name</th>
                                 <th class="text-center">Employees</th>
-                                <th  class="text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {% for company in companies %}
-                            <tr>
-                                <td class="text-center">
-                                    <span class="text-muted" >{{ company.company_number }}</span>
+                            <tr class="position-relative" style="transform: rotate(0);">
+                                <td class="text-center align-middle">
+                                    <span class="text-muted">{{ company.company_number }}</span>
                                 </td>
 
-                                <td>
+                                <td class="align-middle">
                                     <div class="d-flex align-items-center">
-                                        <a href="{% url 'employee:employee' country_slug company.company_id %}" class="fw-bold text-dark text-decoration-none">
-                                            <strong>{{ company.trade_name }}</strong><br>
-                                        <small class="text-muted">{{ company.account_status }}</small>
+                                        {% if company.logo %}
+                                            <img src="{{ company.logo.url }}" alt="{{ company.trade_name }}" class="me-3 rounded-5" style="width: 50px; height: 50px; object-fit: cover;">
+                                        {% endif %}
+
+                                        <a href="{% url 'employee:employee' country_slug company.company_id %}" class="text-dark text-decoration-none stretched-link">
+                                            <strong>{{ company.trade_name }}</strong>
                                         </a>
                                     </div>
                                 </td>
                                 
-                                <td class="text-center">
+                                <td class="text-center align-middle">
                                     <span class="text-dark">
                                         {{ company.total_employees }}
                                     </span>
-                                </td>
-
-                                <td class="text-center table-action" style="position: relative; z-index: 2;">
-                                    <a href="{% url 'employee:employee' country_slug company.company_id %}" class="text-dark text-muted me-3" title="Enter Company">
-                                        <i class="align-middle fas fa-arrow-right"></i>
-                                    </a>
-                                    
-                                    <a href="{% url 'companies:company_edit' country_slug company.company_id %}" class="text-dark texct-muted me-3" title="Edit Company">
-                                        <i class="align-middle fas fa-pen"></i>
-                                    </a>
                                 </td>
                             </tr>
                             {% endfor %}

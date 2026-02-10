@@ -126,3 +126,31 @@ class Employee(models.Model):
 
     def __str__(self):
         return f"{self.employee_name} {self.employee_surname} ({self.company.trade_name})"
+    
+
+class Compensation(models.Model):
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name="compensations")
+    effective_date = models.DateField("Effective Date")
+    
+    PAY_FREQUENCY_CHOICES = [
+        ("Annual", "Annual"),
+        ("Monthly", "Monthly"),
+        ("Hourly", "Hourly"),
+    ]
+    pay_frequency = models.CharField("Pay Frequency", max_length=20, choices=PAY_FREQUENCY_CHOICES, default="Annual")
+    
+    currency = models.CharField("Currency", max_length=3, default="GBP", help_text="ISO Code (e.g. GBP, USD)")
+    amount = models.DecimalField("Amount", max_digits=12, decimal_places=2)
+    
+    reason = models.CharField("Reason for Change", max_length=100, blank=True, help_text="e.g. Merit Increase, Promotion")
+    comments = models.TextField("Comments", blank=True, null=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name_plural = "Compensation History"
+        ordering = ["-effective_date", "-created_at"]
+
+    def __str__(self):
+        return f"{self.employee} - {self.amount} ({self.effective_date})"
