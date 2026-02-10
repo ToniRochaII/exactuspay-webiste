@@ -172,18 +172,11 @@ STATICFILES_DIRS = [
 ]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-# --- "IN-HOUSE" PERSISTENT STORAGE ---
+# --- MEDIA FILES (UPLOADS) ---
+MEDIA_URL = '/media/'
 
-# URL that the browser uses to access the file
-MEDIA_URL = "/media/"
-
-# RENDER_EXTERNAL_HOSTNAME is only present in Production
-if 'RENDER_EXTERNAL_HOSTNAME' in os.environ:
-    # PRODUCTION: Save to the Persistent Disk mount path we defined in Dashboard
-    MEDIA_ROOT = '/var/lib/media'
-else:
-    # LOCAL: Save to the project folder
-    MEDIA_ROOT = BASE_DIR / "media"
+# FIX: Always save to project directory (works on Local & Render Standard)
+MEDIA_ROOT = BASE_DIR / "media"
 
 
 # ================================
