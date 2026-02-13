@@ -1,71 +1,102 @@
 from django.db import models
-from django.contrib.auth import get_user_model
-from Exactus.company.models import Company
-from Exactus.country.models import Country
+
+# Create your models here.
+import os
+from django.db import models
+from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
-User = get_user_model()
+# We use string references to avoid circular imports
+# Ensure these match your actual app labels
+COMPANY_MODEL = 'company.Company'
+COUNTRY_MODEL = 'country.Country'
 
-class ReportDefinition(models.Model):
+class ReportCategory(models.Model):
     """
-    The 'Reported Model'. Stores the structure of a custom report
-    so it can be run dynamically with different parameters.
+    Groups reports: e.g., 'Payroll Reports', 'Statutory (P45/P60)', 'Internal Ops'
     """
-    SOURCE_MODEL_CHOICES = [
-        ('PayrollResult', 'Payroll Results (Payslips)'),
-        ('Employee', 'Employee Data'),
-        ('PayrollPeriod', 'Payroll Periods Summary'),
-    ]
+    name = models.CharField(max_length=100)
+    slug = models.SlugField(unique=True)
 
-    name = models.CharField(max_length=100, verbose_name="Report Name")
-    description = models.TextField(blank=True, verbose_name="Description")
-    
-    company = models.ForeignKey(
-        Company, 
-        on_delete=models.CASCADE, 
-        null=True, 
-        blank=True
-    )
-    
-    country = models.ForeignKey(
-        Country, 
-        on_delete=models.CASCADE, 
-        null=True, 
-        blank=True
-    )
-    
-    source_model = models.CharField(
-        max_length=50, 
-        choices=SOURCE_MODEL_CHOICES,
-        default='PayrollResult'
-    )
+    def __str__(self):
+        return self.name
 
-    selected_fields = models.JSONField(
-        default=list,
-        help_text="List of fields to include in the report"
-    )
+class ReportType(models.Model):
+    """
+    Defines the specific report: e.g., 'Standard Payslip', 'General Ledger', 'P45'
+    """
+    category = models.ForeignKey(ReportCategory, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    code = models.CharField(max_length=50, unique=True, help_text="Internal reference, e.g., 'PAYSLIP_STD'")
+    description = models.TextField(blank=True)
 
-    # 3. Parameters
-    allow_date_range = models.BooleanField(default=True, verbose_name="Filter by Date Range")
-    allow_payroll_selection = models.BooleanField(default=True, verbose_name="Filter by Specific Payroll")
+    # Access Level Flags
+    is_employee_accessible = models.BooleanField(default=False, help_text="Can employees see this via ESS?")
+    is_statutory = models.BooleanField(default=False, help_text="Is this a legal requirement?")
 
-    # --- NEW: YEAR TO DATE FLAG ---
-    is_ytd = models.BooleanField(
-        default=False, 
-        verbose_name="Year To Date (YTD)",
-        help_text="If checked, values will be summed from the start of the tax year up to the selected period."
-    )
+    def __str__(self):
+        return self.name
 
-    is_comparison = models.BooleanField(
-        default=False,
-        verbose_name="Comparison Report",
-        help_text="If checked, compares the selected period against the previous period."
-    )
-
-    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+class ReportLayout(models.Model):
+    """
+    Stores the actual HTML template files.
+    Allows multiple designs for the same ReportType (e.g., 'Payslip Modern', 'Payslip Classic').
+    """
+    report_type = models.ForeignKey(ReportType, on_delete=models.CASCADE, related_name='layouts')
+    name = models.CharField(max_length=100, help_text="e.g., 'UK Modern Blue'")
+    template_file = models.FileField(upload_to='report_templates/', help_text="Upload the .html file here")
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        type_label = "YTD" if self.is_ytd else "Period"
-        scope = self.country.name if self.country else (self.company.trade_name if self.company else "System")
-        return f"{self.name} ({scope} - {type_label})"
+        return f"{self.report_type.name} - {self.name}"
+
+class ReportConfiguration(models.Model):
+    """
+    The 'Linker' table.
+    Determines which Layout + Settings are used for a specific scope.
+    Implements the Inheritance: System -> Country -> Company.
+    """
+    # Scope Fields (Only one should be set, or none for System Default)
+    company = models.ForeignKey(COMPANY_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    country = models.ForeignKey(COUNTRY_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+
+    # The Logic
+    report_type = models.ForeignKey(ReportType, on_delete=models.CASCADE)
+    selected_layout = models.ForeignKey(ReportLayout, on_delete=models.SET_NULL, null=True, help_text="The HTML design to use")
+    
+    # "Option A" - Toggle Settings
+    # Stores JSON like: {"show_logo": true, "mask_bank_account": false, "columns": ["gross", "tax", "net"]}
+    data_settings = models.JSONField(default=dict, blank=True, help_text="Toggle data fields (e.g., Show Bonus: True/False)")
+
+    # Hierarchy Level Helper
+    LEVEL_CHOICES = [
+        ('SYSTEM', 'System Default'),
+        ('COUNTRY', 'Country Default'),
+        ('COMPANY', 'Company Specific'),
+    ]
+    level = models.CharField(max_length=20, choices=LEVEL_CHOICES, editable=False)
+
+    class Meta:
+        # Prevent duplicate configs for the same scope + report type
+        unique_together = [
+            ('company', 'report_type'),
+            ('country', 'report_type'),
+        ]
+        verbose_name = "Report Setting"
+
+    def save(self, *args, **kwargs):
+        # Auto-detect level
+        if self.company:
+            self.level = 'COMPANY'
+        elif self.country:
+            self.level = 'COUNTRY'
+        else:
+            self.level = 'SYSTEM'
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.report_type} Config ({self.get_level_display()})"
+
+
+
+

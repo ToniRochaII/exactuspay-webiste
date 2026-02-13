@@ -1,575 +1,658 @@
-import csv
+# Exactus/reports/views.py
+
+from __future__ import annotations
+
+from datetime import datetime
 import json
-import datetime
-from dateutil.relativedelta import relativedelta
-from collections import defaultdict
-from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, HttpResponseForbidden
-from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from decimal import Decimal
+
 from django.apps import apps
-from django.utils.dateparse import parse_date
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.exceptions import PermissionDenied
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, render
+from django.urls import reverse_lazy
+from django.views import View
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
-# Models & Forms
-from .models import ReportDefinition
-from .forms import RunReportForm
-from .engine import ReportEngine
-from .rti_engine import RTIGenerator
-from Exactus.company.models import Company
-from Exactus.country.models import Country
-from Exactus.payroll.models import Payroll, PayrollPeriod
-from Exactus.employee.models import Employee 
+from .models import ReportConfiguration, ReportCategory, ReportType, ReportLayout
+from .forms import ReportTypeForm, ReportLayoutForm, ReportConfigForm
+from .services import ReportEngine
+from .utils import render_to_pdf, render_to_csv
 
-# Access Control
-from Exactus.country.utils.decorators import role_required
+from Exactus.payroll.models import PayrollPeriod, PeriodStatus
 
-# ==========================================
-#               HELPER FUNCTIONS
-# ==========================================
 
-def get_payroll_date(payroll_obj):
-    """
-    Safely tries to find the payment date from a Payroll object
-    by checking common field names and relationships.
-    """
-    if not payroll_obj:
+# =========================================================
+# 0) PERMISSIONS
+# =========================================================
+
+def can_edit(user) -> bool:
+    allowed_roles = {"Executive", "Admin", "Implementation", "Operation", "Compliance"}
+    if getattr(user, "is_superuser", False):
+        return True
+    if hasattr(user, "role"):
+        return str(user.role) in allowed_roles
+    return False
+
+
+class AdminRequiredMixin(UserPassesTestMixin):
+    def test_func(self):
+        return can_edit(self.request.user)
+
+
+# =========================================================
+# 1) PERIOD HELPERS
+# =========================================================
+
+def get_processed_periods(country=None, company=None):
+    qs = PayrollPeriod.objects.select_related("payroll").all()
+
+    if company:
+        qs = qs.filter(payroll__company=company)
+
+    if country:
+        qs = qs.filter(payroll__country=country)
+
+    # Removed the status filter so it returns periods in ANY status
+    return qs.order_by("-payment_date", "-id")
+
+
+# =========================================================
+# 2) PAYSLIP CONSTANTS
+# =========================================================
+
+EXCLUDE_ITEMISED_CODES = {5000, 8000}
+
+# Hide sub-codes completely based on your setup
+HIDE_CODE_BANDS = [
+    (6001, 6399),
+    (7001, 7399),
+]
+
+
+# =========================================================
+# 3) SAFE HELPERS
+# =========================================================
+
+def safe_json(details):
+    if isinstance(details, dict):
+        return details
+    if isinstance(details, str):
+        try:
+            return json.loads(details)
+        except Exception:
+            return {}
+    return {}
+
+def money(x) -> Decimal:
+    try:
+        return Decimal(str(x or "0"))
+    except Exception:
+        return Decimal("0")
+
+def int_or_none(x):
+    try:
+        return int(str(x).strip())
+    except Exception:
         return None
-    
-    # 1. Try Direct Attribute
-    if hasattr(payroll_obj, 'payment_date'):
-        return payroll_obj.payment_date
-    
-    # 2. Try Related Period (Most common in Exactus structures)
-    if hasattr(payroll_obj, 'period') and hasattr(payroll_obj.period, 'payment_date'):
-        return payroll_obj.period.payment_date
-        
-    # 3. Fallbacks
-    for attr in ['pay_date', 'date', 'period_end_date', 'end_date']:
-        if hasattr(payroll_obj, attr):
-            return getattr(payroll_obj, attr)
-            
-    return datetime.date.today() 
 
-def format_localized(value, data_type, country):
-    """
-    Formats dates and numbers based on the Country model configuration.
-    """
-    if value is None or value == '': return "0.00"
-    
-    # 1. HANDLE DATES
-    if data_type == 'date':
-        date_obj = value
-        if isinstance(value, str):
-            date_obj = parse_date(value)
-            if not date_obj: return value 
-        
-        # Ensure we have a date object before formatting
-        if not isinstance(date_obj, (datetime.date, datetime.datetime)):
-             return str(value)
+def is_visible(item) -> bool:
+    if not isinstance(item, dict):
+        return True
 
-        fmt_map = {
-            "DD/MM/YYYY": "%d/%m/%Y",
-            "MM/DD/YYYY": "%m/%d/%Y",
-            "YYYY/MM/DD": "%Y/%m/%d",
-            "YYYY/DD/MM": "%Y/%d/%m",
-        }
-        py_fmt = fmt_map.get(country.date_format, "%Y-%m-%d")
-        return date_obj.strftime(py_fmt)
+    if "is_visible" in item:
+        return bool(item.get("is_visible"))
 
-    # 2. HANDLE NUMBERS
-    if data_type == 'number':
-        try:
-            float_val = float(value)
-        except (ValueError, TypeError):
-            return "0.00"
+    if "visible" in item:
+        return bool(item.get("visible"))
 
-        decimals = getattr(country, 'decimals', 2)
-        fmt_string = f"{{:,.{decimals}f}}"
-        formatted = fmt_string.format(float_val)
+    status = item.get("status", None)
+    if status is None:
+        return True
 
-        # Handle Separators (Swap dot/comma if country uses 1.000,00)
-        if country.numbering_format == "1.000,00":
-            formatted = formatted.translate(str.maketrans(',.', '.,'))
-        
-        return formatted
+    if isinstance(status, bool):
+        return status
 
-    return str(value)
+    if isinstance(status, str):
+        s = status.strip().lower()
+        if s in {"hidden", "hide", "false", "no", "0"}:
+            return False
+        if s in {"visible", "show", "true", "yes", "1"}:
+            return True
 
-def parse_engine_results(raw_results):
-    """
-    Parses the raw JSON details from the engine into a clean dictionary.
-    Returns a dictionary keyed by Employee ID.
-    """
-    parsed_map = {}
-    all_codes = set()
+    return True
 
-    if not raw_results:
-        return parsed_map, all_codes
-
-    for row in raw_results:
-        clean_row = row.copy()
-        
-        # Parse JSON
-        raw_details = clean_row.get('details')
-        details_data = {}
-        if isinstance(raw_details, dict):
-            details_data = raw_details
-        elif isinstance(raw_details, str) and raw_details.strip():
-            try:
-                details_data = json.loads(raw_details)
-            except:
-                details_data = {}
-        
-        # Clean Floats
-        clean_details = {}
-        for k, v in details_data.items():
-            try:
-                val = float(v)
-                clean_details[k] = val
-                all_codes.add(k)
-            except (ValueError, TypeError):
-                clean_details[k] = 0.0
-        
-        clean_row['parsed_details'] = clean_details
-        
-        emp_id = clean_row.get('employee__employee_code')
-        if emp_id:
-            parsed_map[str(emp_id)] = clean_row
-
-    return parsed_map, all_codes
-
-def export_to_csv(filename, headers, codes, matrix):
-    """
-    Export helper for standard reports.
-    """
-    response = HttpResponse(content_type='text/csv; charset=utf-8')
-    response['Content-Disposition'] = f'attachment; filename="{filename}.csv"'
-    writer = csv.writer(response)
-    response.write(u'\ufeff'.encode('utf8'))
-    
-    writer.writerow(headers)
-    if any(codes):
-        writer.writerow(codes)
-        
-    for row in matrix:
-        writer.writerow(row)
-    return response
+def make_row(code_int, name, amount, ytd_val=Decimal("0")):
+    return {
+        "code": str(code_int),
+        "name": name or "-",
+        "amount": money(amount),
+        "ytd": money(ytd_val),
+    }
 
 
-# ==========================================
-#                 VIEWS
-# ==========================================
+# =========================================================
+# 4) DB LABEL MAPS
+# =========================================================
 
-@login_required
-@role_required("EXEC", "ADMIN", "COMPLIANCE","IMPLEMENTATION","BILLING","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE")
-def report_list(request, country_slug, company_id):
-    """Restricted to EXEC and ADMIN."""
-    country = get_object_or_404(Country, slug=country_slug)
-    company = get_object_or_404(Company, pk=company_id)
-    
-    reports = ReportDefinition.objects.filter(
-        Q(company=company) | Q(country=country)
-    )
+def _has_field(model_cls, field_name: str) -> bool:
+    return any(getattr(f, "name", None) == field_name for f in getattr(model_cls, "_meta", []).fields)
 
-    periods = PayrollPeriod.objects.filter(
-        payroll__company=company
-    ).select_related('payroll').order_by('-payment_date')
-    
-    return render(request, 'reports/list.html', {
-        'company': company, 
-        'reports': reports, 
-        'country': country,
-        'periods': periods
-    })
+def build_label_maps(country=None, company=None):
+    element_map = {}
+    pdcode_map = {}
 
-@login_required
-@role_required("EXEC", "ADMIN", "COMPLIANCE","IMPLEMENTATION","BILLING","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE")
-def report_run(request, country_slug, company_id, report_id):
-    """Restricted to EXEC and ADMIN."""
-    country = get_object_or_404(Country, slug=country_slug)
-    company = get_object_or_404(Company, pk=company_id)
-    report_def = get_object_or_404(ReportDefinition, pk=report_id)
+    try:
+        Element = apps.get_model("elements", "Element")
+        qs = Element.objects.all()
 
-    table_headers = []
-    table_codes = [] 
-    html_matrix = []
+        if country and _has_field(Element, "country"):
+            qs = qs.filter(country=country)
+        if company and _has_field(Element, "company"):
+            qs = qs.filter(company=company)
 
-    if request.method == 'POST':
-        form = RunReportForm(request.POST, company_id=company_id, report_def=report_def)
-        if form.is_valid():
-            # --- 1. DETERMINE PERIODS ---
-            current_payroll = form.cleaned_data.get('payroll')
-            s_date = form.cleaned_data.get('start_date')
-            e_date = form.cleaned_data.get('end_date')
+        for el in qs:
+            code = getattr(el, "element_code", getattr(el, "code", None))
+            if code is None:
+                continue
 
-            prev_s_date = None
-            prev_e_date = None
-            prev_payroll_id = None
-            
-            curr_date_label = "Current"
-            prev_date_label = "Previous"
+            name = (getattr(el, "element_name", getattr(el, "name", None)) or "").strip()
+            desc = (getattr(el, "element_description", getattr(el, "description", None)) or "").strip()
 
-            if current_payroll:
-                c_date = get_payroll_date(current_payroll)
-                curr_date_label = format_localized(c_date, 'date', country)
-                
-                prev_payroll = Payroll.objects.filter(
-                    company=company, 
-                    id__lt=current_payroll.id
-                ).order_by('-id').first()
-                if prev_payroll:
-                    prev_payroll_id = prev_payroll.id
-                    p_date = get_payroll_date(prev_payroll)
-                    prev_date_label = format_localized(p_date, 'date', country)
-            elif s_date and e_date:
-                curr_date_label = f"{format_localized(s_date, 'date', country)} - {format_localized(e_date, 'date', country)}"
-                prev_s_date = s_date - relativedelta(months=1)
-                prev_e_date = e_date - relativedelta(months=1)
-                prev_date_label = f"{format_localized(prev_s_date, 'date', country)} - {format_localized(prev_e_date, 'date', country)}"
+            element_map[str(code)] = {"name": name, "description": desc}
+    except Exception as e:
+        print(f"DEBUG - Element lookup failed: {e}")
 
-            # --- 2. DETECT COMPARISON MODE ---
-            is_comparison = getattr(report_def, 'is_comparison', False)
-            if 'comparison' in report_def.name.lower() or 'variance' in report_def.name.lower():
-                is_comparison = True
+    try:
+        PDcode = apps.get_model("pdcodes", "PDcode")
+        qs = PDcode.objects.all()
 
-            # --- 3. RUN ENGINE ---
-            engine = ReportEngine(report_def, company_id)
-            
-            # Run A: Current
-            curr_raw = engine.generate(
-                start_date=s_date, end_date=e_date, 
-                payroll_id=current_payroll.id if current_payroll else None
-            )
-            curr_map, curr_codes = parse_engine_results(curr_raw)
+        if country and _has_field(PDcode, "country"):
+            qs = qs.filter(country=country)
+        if company and _has_field(PDcode, "company"):
+            qs = qs.filter(company=company)
 
-            # Run B: Previous (Only if Comparison)
-            prev_map = {}
-            prev_codes = set()
-            if is_comparison:
-                if prev_payroll_id or (prev_s_date and prev_e_date):
-                    prev_raw = engine.generate(
-                        start_date=prev_s_date, end_date=prev_e_date, 
-                        payroll_id=prev_payroll_id
-                    )
-                    prev_map, prev_codes = parse_engine_results(prev_raw)
+        for pd in qs:
+            code = getattr(pd, "pdcode_code", getattr(pd, "code", None))
+            if code is None:
+                continue
 
-            all_codes = curr_codes.union(prev_codes)
-            all_emp_ids = set(curr_map.keys()).union(set(prev_map.keys()))
+            name = (getattr(pd, "pdcode_name", getattr(pd, "name", None)) or "").strip()
+            desc = (getattr(pd, "pdcode_description", getattr(pd, "description", None)) or "").strip()
 
-            # --- 4. CODE DESCRIPTION LOOKUP (PD Codes + Elements) ---
-            code_lookup = {}
-            
-            # A. Fetch PD Codes (Company Specific)
-            try:
-                PDCodeModel = None
-                try: PDCodeModel = apps.get_model('pdcodes', 'PDCode')
-                except LookupError: PDCodeModel = apps.get_model('pdcodes', 'PDcode')
-                
-                if PDCodeModel:
-                    pd_objs = PDCodeModel.objects.filter(company_id=company_id)
-                    for pd in pd_objs:
-                        code_lookup[str(pd.pdcode_code)] = pd.pdcode_description
-            except: 
-                pass
+            pdcode_map[str(code)] = {"name": name, "description": desc}
+    except Exception as e:
+        print(f"DEBUG - PDcode lookup failed: {e}")
 
-            # B. Fetch Elements (Country Specific)
-            try:
-                ElementModel = apps.get_model('elements', 'Element')
-                el_objs = ElementModel.objects.filter(country=country)
-                for el in el_objs:
-                    code_lookup[str(el.element_code)] = el.element_description
-            except LookupError: 
-                pass
+    return element_map, pdcode_map
 
-            # Standard Hardcoded Totals
-            main_totals_map = {'5000': 'Gross Pay', '6000': 'Tax', '7000': 'NI', '8000': 'Net Pay'}
-            CODES_TO_INVERT = ['6000', '7000'] 
 
-            # --- 5. BUILD CONFIG ---
-            sorted_codes = sorted([c for c in all_codes if c.isdigit()], key=int)
-            temp_cols_config = []
-            
-            for code in sorted_codes:
-                # Priority: Hardcoded Totals > Database Lookup > Fallback to "Code X"
-                base_name = main_totals_map.get(code) or code_lookup.get(code) or f"Code {code}"
-                
-                if code == '1000': base_name = 'Basic Salary'
-                
-                # UPDATED: We include everything found in 'details', not just specific ranges
-                temp_cols_config.append({'code': code, 'name': base_name})
+def resolve_db_label(code_int, element_map, pdcode_map, prefer="description") -> str:
+    code_key = str(code_int) if code_int is not None else ""
+    if not code_key:
+        return "Code"
 
-            # --- 6. FILTER EMPTY COLUMNS (Zero Filter) ---
-            final_cols_config = []
-            for col in temp_cols_config:
-                code = col['code']
-                total_val = 0.0
-                for emp_id in all_emp_ids:
-                    v1 = curr_map.get(emp_id, {}).get('parsed_details', {}).get(code, 0.0)
-                    v2 = prev_map.get(emp_id, {}).get('parsed_details', {}).get(code, 0.0)
-                    total_val += abs(v1) + abs(v2)
-                
-                # Only keep column if the total value across all employees is non-zero
-                if total_val > 0.01:
-                    final_cols_config.append(col)
+    fallback_map = {
+        "6000": "Income Tax",
+        "7000": "Social Security",
+        "8000": "Student Loan",
+        "8001": "Postgraduate Loan",
+        "9000": "Employer NI",
+        "9001": "Employer Pension"
+    }
 
-            # --- 7. GENERATE REPORT MATRIX ---
-            
-            if is_comparison:
-                # === VERTICAL LAYOUT (COMPARISON) ===
-                table_headers = ["ID", "Employee Name", "Code", "Description", curr_date_label, prev_date_label, "Balance"]
-                table_codes = [] 
+    el = element_map.get(code_key)
+    if el:
+        primary = (el.get(prefer) or "").strip()
+        secondary = (el.get("description" if prefer == "name" else "name") or "").strip()
+        if primary: return primary
+        if secondary: return secondary
 
-                for emp_id in sorted(all_emp_ids, key=lambda x: int(float(x)) if x.replace('.','',1).isdigit() else x):
-                    c_row = curr_map.get(emp_id, {})
-                    p_row = prev_map.get(emp_id, {})
-                    base_info = c_row if c_row else p_row
-                    
-                    full_name = f"{base_info.get('employee__employee_name', '')} {base_info.get('employee__employee_surname', '')}".strip()
-                    try: fmt_id = str(int(float(emp_id)))
-                    except: fmt_id = str(emp_id)
+    pd = pdcode_map.get(code_key)
+    if pd:
+        primary = (pd.get(prefer) or "").strip()
+        secondary = (pd.get("description" if prefer == "name" else "name") or "").strip()
+        if primary: return primary
+        if secondary: return secondary
 
-                    c_details = c_row.get('parsed_details', {})
-                    p_details = p_row.get('parsed_details', {})
+    fallback = fallback_map.get(code_key)
+    if fallback:
+        return fallback
 
-                    for col in temp_cols_config:
-                        code = col['code']
-                        val_curr = c_details.get(code, 0.0)
-                        val_prev = p_details.get(code, 0.0)
-                        
-                        if abs(val_curr) < 0.001 and abs(val_prev) < 0.001:
-                            continue
+    return f"Code {code_key}"
 
-                        val_diff = val_curr - val_prev
-                        
-                        if code in CODES_TO_INVERT:
-                            disp_curr = abs(val_curr)
-                            disp_prev = abs(val_prev)
-                            disp_diff = disp_curr - disp_prev
-                        else:
-                            disp_curr = val_curr
-                            disp_prev = val_prev
-                            disp_diff = val_diff
 
-                        row_values = [
-                            fmt_id, full_name, code, col['name'],
-                            format_localized(disp_curr, 'number', country),
-                            format_localized(disp_prev, 'number', country),
-                            format_localized(disp_diff, 'number', country)
-                        ]
-                        html_matrix.append(row_values)
+# =========================================================
+# 5) PAYSLIP BUILDER (WITH COUNTRY FORMATTING)
+# =========================================================
 
+def build_payslips(results, *, country=None, company=None, prefer_label="description"):
+    element_map, pdcode_map = build_label_maps(country=country, company=company)
+
+    # Extract Country Settings
+    c_fmt = getattr(country, 'numbering_format', "1,000.00") if country else "1,000.00"
+    c_pos = getattr(country, 'currency_position', "BEFORE") if country else "BEFORE"
+    c_dec = getattr(country, 'decimals', 2) if country else 2
+    c_code = getattr(country, 'currency_code', "£") if country else "£"
+    d_fmt_setting = getattr(country, 'date_format', "DD/MM/YYYY") if country else "DD/MM/YYYY"
+
+    date_mapping = {
+        "DD/MM/YYYY": "%d/%m/%Y",
+        "MM/DD/YYYY": "%m/%d/%Y",
+        "YYYY/MM/DD": "%Y/%m/%d",
+        "YYYY/DD/MM": "%Y/%d/%m",
+    }
+    strftime_fmt = date_mapping.get(d_fmt_setting, "%d/%m/%Y")
+
+    def fmt_num(val):
+        v = money(val)
+        s = f"{v:,.{c_dec}f}"
+        if c_fmt == "1.000,00":
+            s = s.replace(",", "X").replace(".", ",").replace("X", ".")
+        return s
+
+    def fmt_cur(val):
+        s = fmt_num(val)
+        if c_pos == "AFTER":
+            return f"{s} {c_code}"
+        return f"{c_code} {s}"
+
+    payslips = []
+
+    for res in results:
+        d = safe_json(getattr(res, "details", None))
+
+        pd_codes = d.get("pd_codes", d.get("pdcodes", []))
+        elements = d.get("elements", d.get("statutory", []))
+
+        earnings = []
+        deductions = []
+        employer_costs = []
+
+        used_codes = set()
+
+        def add_to_bucket(row, code_int: int):
+            if 1000 <= code_int <= 4999:
+                earnings.append(row)
+                return
+            if 6000 <= code_int <= 7999:
+                row["amount"] = abs(money(row["amount"]))
+                row["ytd"] = abs(money(row["ytd"]))
+                deductions.append(row)
+                return
+            if code_int >= 9000:
+                employer_costs.append(row)
+                return
+
+            if money(row["amount"]) < 0:
+                row["amount"] = abs(money(row["amount"]))
+                row["ytd"] = abs(money(row["ytd"]))
+                deductions.append(row)
             else:
-                # === HORIZONTAL LAYOUT (STANDARD GRID) ===
-                table_headers = ["ID", "Employee", "Date"] + [col['name'] for col in final_cols_config]
-                table_codes = ["", "", ""] + [col['code'] for col in final_cols_config]
+                earnings.append(row)
 
-                for emp_id in sorted(all_emp_ids, key=lambda x: int(float(x)) if x.replace('.','',1).isdigit() else x):
-                    row = curr_map.get(emp_id, {})
-                    row_values = []
-                    
-                    try: row_values.append(str(int(float(emp_id))))
-                    except: row_values.append(emp_id)
+        if isinstance(pd_codes, list):
+            for item in pd_codes:
+                if not is_visible(item): continue
 
-                    full_name = f"{row.get('employee__employee_name', '')} {row.get('employee__employee_surname', '')}".strip()
-                    row_values.append(full_name)
-                    
-                    pay_date_val = row.get('period__payment_date')
-                    if not pay_date_val and current_payroll:
-                        pay_date_val = get_payroll_date(current_payroll)
-                    
-                    row_values.append(format_localized(pay_date_val, 'date', country))
+                code_int = int_or_none(item.get("code"))
+                if code_int is None or code_int in EXCLUDE_ITEMISED_CODES: continue
 
-                    details = row.get('parsed_details', {})
-                    for col in final_cols_config:
-                        code = col['code']
-                        val = details.get(col['code'], 0.0)
-                        if code in CODES_TO_INVERT: val = abs(val)
-                        row_values.append(format_localized(val, 'number', country))
-                    
-                    html_matrix.append(row_values)
+                hidden = False
+                for start, end in HIDE_CODE_BANDS:
+                    if start <= code_int <= end:
+                        hidden = True
+                        break
+                if hidden: continue
 
-            if 'export_csv' in request.POST:
-                return export_to_csv(report_def.name, table_headers, table_codes, html_matrix)
+                used_codes.add(code_int)
+                display_name = resolve_db_label(code_int, element_map, pdcode_map, prefer=prefer_label)
 
-    else:
-        form = RunReportForm(company_id=company_id, report_def=report_def)
+                row = make_row(code_int, display_name, item.get("amount"), item.get("ytd"))
+                add_to_bucket(row, code_int)
 
-    return render(request, 'reports/run.html', {
-        'country': country,
-        'company': company, 
-        'report_def': report_def, 
-        'form': form,
-        'table_headers': table_headers,
-        'table_codes': table_codes,
-        'html_matrix': html_matrix
-    })
+        if isinstance(elements, list):
+            element_items = elements
+        elif isinstance(elements, dict):
+            element_items = [{"code": k, "amount": v} for k, v in elements.items()]
+        else:
+            element_items = []
 
+        for item in element_items:
+            if not is_visible(item): continue
 
-@login_required
-@role_required("EXEC", "ADMIN", "COMPLIANCE","IMPLEMENTATION","BILLING","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE")
-def rti_run(request, country_slug, company_id):
-    """
-    Dedicated view for generating HMRC Real Time Information (RTI) submissions.
-    Restricted to EXEC and ADMIN.
-    """
-    country = get_object_or_404(Country, slug=country_slug)
-    company = get_object_or_404(Company, pk=company_id)
-    
-    periods = PayrollPeriod.objects.filter(
-        payroll__company=company
-    ).select_related('payroll').order_by('-payment_date')
-    
-    if request.method == 'POST':
-        selected_period_id = request.POST.get('period_id')
-        output_format = request.POST.get('format') 
-        
-        if selected_period_id:
-            generator = RTIGenerator(company_id, selected_period_id)
+            code_int = int_or_none(item.get("code"))
+            if code_int is None or code_int in EXCLUDE_ITEMISED_CODES: continue
+
+            hidden = False
+            for start, end in HIDE_CODE_BANDS:
+                if start <= code_int <= end:
+                    hidden = True
+                    break
+            if hidden: continue
+
+            if code_int in used_codes: continue
+
+            display_name = resolve_db_label(code_int, element_map, pdcode_map, prefer=prefer_label)
+
+            row = make_row(code_int, display_name, item.get("amount"), item.get("ytd"))
+            add_to_bucket(row, code_int)
+
+        def sort_key(r):
+            return int_or_none(r.get("code")) or 999999
+
+        earnings.sort(key=sort_key)
+        deductions.sort(key=sort_key)
+        employer_costs.sort(key=sort_key)
+
+        for r in earnings + deductions + employer_costs:
+            r["fmt_amount"] = fmt_num(r["amount"])
+            r["fmt_ytd"] = fmt_num(r["ytd"])
+
+        total_gross = sum((money(i["amount"]) for i in earnings), Decimal("0"))
+        total_ded = sum((money(i["amount"]) for i in deductions), Decimal("0"))
+        net_pay = total_gross - total_ded
+
+        ytd_summary = d.get("ytd_summary", {})
+        if not isinstance(ytd_summary, dict):
+            ytd_summary = {}
             
-            if output_format == 'xml':
-                xml_content = generator.generate_xml()
-                response = HttpResponse(xml_content, content_type='application/xml')
-                response['Content-Disposition'] = f'attachment; filename="RTI_FPS_Period_{selected_period_id}.xml"'
-                return response
-                
-            elif output_format == 'csv':
-                csv_content = generator.generate_csv()
-                response = HttpResponse(csv_content, content_type='text/csv')
-                response['Content-Disposition'] = f'attachment; filename="RTI_Check_Report_Period_{selected_period_id}.csv"'
-                return response
+        run_gross = getattr(res, "gross_pay", None)
+        if run_gross is None: run_gross = total_gross
+        run_ded = getattr(res, "total_deductions", None)
+        if run_ded is None: run_ded = total_ded
+        run_net = getattr(res, "net_pay", None)
+        if run_net is None: run_net = net_pay
 
-    return render(request, 'reports/rti_run.html', {
-        'company': company,
-        'periods': periods 
-    })
+        dt = getattr(res.period, "payment_date", None)
+        fmt_date = dt.strftime(strftime_fmt) if dt else "-"
 
-
-@login_required
-@role_required("EXEC", "ADMIN", "COMPLIANCE","IMPLEMENTATION","BILLING","OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE")
-def payslip_run(request, country_slug, company_id):
-    """
-    Generates HTML Printable Payslips. Restricted to EXEC and ADMIN.
-    """
-    country = get_object_or_404(Country, slug=country_slug)
-    company = get_object_or_404(Company, pk=company_id)
-    
-    periods = PayrollPeriod.objects.filter(
-        payroll__company=company
-    ).select_related('payroll').order_by('-payment_date')
-    
-    if request.method == 'POST':
-        selected_period_id = request.POST.get('period_id')
-        period = get_object_or_404(PayrollPeriod, pk=selected_period_id)
-        
-        # 1. SETUP & VISIBILITY MAP
-        code_meta = {} 
-        try:
-            ElementModel = apps.get_model('elements', 'Element')
-            elements = ElementModel.objects.filter(country=country)
-            for e in elements:
-                code_meta[e.element_code] = {'status': e.element_status, 'desc': e.element_description}
-        except LookupError: pass
-
-        try:
-            PDCodeModel = apps.get_model('pdcodes', 'PDCode')
-            pdcodes = PDCodeModel.objects.filter(company=company)
-            for p in pdcodes:
-                code_meta[p.pdcode_code] = {'status': p.pdcode_status, 'desc': p.pdcode_description}
-        except LookupError: pass
-        
-        # 2. GENERATE DATA
-        report_def = ReportDefinition(name="Payslip Run", is_comparison=False) 
-        engine = ReportEngine(report_def, company_id)
-        raw_results = engine.generate(payroll_id=period.payroll.id)
-        
-        try: raw_results.sort(key=lambda x: x.get('id', 0))
-        except: pass
-
-        unique_results_map = {}
-        emp_ids = set()
-        for row in raw_results:
-            eid = row.get('employee_id') or row.get('employee__id') or row.get('employee')
-            if eid:
-                unique_results_map[eid] = row
-                emp_ids.add(eid)
-        
-        employees_map = Employee.objects.in_bulk(list(emp_ids))
-
-        # 3. PROCESS UNIQUE ROWS
-        payslips = []
-        
-        for eid, row in unique_results_map.items():
-            employee = employees_map.get(eid)
-            if not employee: continue 
-
-            details_json = row.get('details', {})
-            if isinstance(details_json, str):
-                try: details = json.loads(details_json)
-                except: details = {}
-            else:
-                details = details_json or {}
-
-            payments = []
-            deductions = []
-            running_total_pay = 0.0
-            running_total_ded = 0.0
-            net_pay = 0.0
-
-            for code, val_str in details.items():
-                try: val = float(val_str)
-                except: val = 0.0
-                
-                if abs(val) < 0.01: continue 
-
-                if code == '8000': 
-                    net_pay = val
-                    continue 
-
-                meta = code_meta.get(code)
-                if not meta or meta['status'] != 'Visible': continue
-
-                desc = meta['desc'] or f"Code {code}"
-                try: code_int = int(code)
-                except: continue
-
-                if 1000 <= code_int <= 4999:
-                    payments.append({'desc': desc, 'val': val})
-                    running_total_pay += val
-
-                elif 6000 <= code_int <= 9999:
-                    deductions.append({'desc': desc, 'val': abs(val)})
-                    running_total_ded += abs(val) 
-
-            payslips.append({
-                'employee': {
-                    'name': f"{employee.employee_name} {employee.employee_surname}",
-                    'id': str(employee.employee_code),
-                    'ni_number': employee.tax_info_01,  
-                    'ni_category': employee.tax_info_04,
-                    'tax_code': employee.tax_info_03,
-                    'dept': employee.department
-                },
-                'payments': payments,
-                'deductions': deductions,
-                'totals': {
-                    'payments': running_total_pay,  
-                    'deductions': running_total_ded, 
-                    'net': net_pay
-                },
-                'period': {
-                    'date': period.payment_date,
-                    'tax_period': period.period_number
-                }
-            })
-
-        payslips.sort(key=lambda x: x['employee']['name'])
-
-        return render(request, 'reports/payslip_view.html', {
-            'company': company,
-            'payslips': payslips
+        payslips.append({
+            "run": res,
+            "earnings": earnings,
+            "deductions": deductions,
+            "employer_costs": employer_costs,
+            "total_gross": total_gross,
+            "total_deductions": total_ded,
+            "net_pay": net_pay,
+            "ytd_summary": {
+                "gross": money(ytd_summary.get("gross")),
+                "tax": money(ytd_summary.get("tax")),
+            },
+            
+            "fmt_date": fmt_date,
+            "fmt_run_gross": fmt_num(run_gross),
+            "fmt_run_ded": fmt_num(run_ded),
+            "fmt_run_net_cur": fmt_cur(run_net),
+            "fmt_ytd_gross": fmt_num(ytd_summary.get("gross", 0)),
+            "fmt_ytd_tax": fmt_num(ytd_summary.get("tax", 0)),
         })
 
-    return render(request, 'reports/list.html', {
-        'company': company,
-        'periods': periods
-    })
+    return payslips
+
+
+# =========================================================
+# 6) DASHBOARDS
+# =========================================================
+
+class BaseReportDashboard(LoginRequiredMixin, View):
+    template_name = "reports/dashboard_hierarchical.html"
+
+    def get_common_context(self, request, country=None, company=None):
+        processed_periods = get_processed_periods(country=country, company=company)
+
+        selected_period_id = request.GET.get("period_id") or ""
+        selected_period = processed_periods.filter(id=selected_period_id).first() if selected_period_id else None
+
+        return {
+            "categories": ReportCategory.objects.prefetch_related("reporttype_set").all(),
+            "processed_periods": processed_periods,
+            "selected_period_id": selected_period_id,
+            "selected_period": selected_period,
+        }
+
+
+class SystemReportDashboard(BaseReportDashboard):
+    def get(self, request):
+        if not can_edit(request.user):
+            raise PermissionDenied()
+
+        configs = ReportConfiguration.objects.filter(level="SYSTEM")
+        context = self.get_common_context(request)
+        context.update({"scope": "SYSTEM", "configs": configs, "can_edit": True})
+        return render(request, self.template_name, context)
+
+
+class CountryReportDashboard(BaseReportDashboard):
+    def get(self, request, country_slug):
+        Country = apps.get_model("country", "Country")
+        country = get_object_or_404(Country, slug=country_slug)
+
+        system_configs = ReportConfiguration.objects.filter(level="SYSTEM")
+        country_configs = ReportConfiguration.objects.filter(country=country, company__isnull=True)
+
+        context = self.get_common_context(request, country=country)
+        context.update({
+            "scope": "COUNTRY",
+            "target_country": country,
+            "inherited_configs": system_configs,
+            "scoped_configs": country_configs,
+            "can_edit": can_edit(request.user),
+        })
+        return render(request, self.template_name, context)
+
+
+class CompanyReportDashboard(BaseReportDashboard):
+    def get(self, request, country_slug, company_id):
+        Company = apps.get_model("company", "Company")
+        company = get_object_or_404(Company, pk=company_id, country__slug=country_slug)
+
+        system_configs = ReportConfiguration.objects.filter(level="SYSTEM")
+        country_configs = ReportConfiguration.objects.filter(country=company.country, company__isnull=True)
+
+        inherited = list(system_configs) + list(country_configs)
+        company_configs = ReportConfiguration.objects.filter(company=company)
+
+        context = self.get_common_context(request, country=company.country, company=company)
+        context.update({
+            "scope": "COMPANY",
+            "target_company": company,
+            "target_country": company.country,
+            "inherited_configs": inherited,
+            "scoped_configs": company_configs,
+            "can_edit": can_edit(request.user),
+        })
+        return render(request, self.template_name, context)
+
+
+# =========================================================
+# 7) MANAGEMENT HUB
+# =========================================================
+
+class ReportManagementHub(LoginRequiredMixin, AdminRequiredMixin, View):
+    def get(self, request):
+        return render(request, "reports/management/hub.html", {
+            "total_types": ReportType.objects.count(),
+            "total_layouts": ReportLayout.objects.count(),
+            "total_configs": ReportConfiguration.objects.count(),
+        })
+
+
+class ReportTypeListView(LoginRequiredMixin, AdminRequiredMixin, ListView):
+    model = ReportType
+    template_name = "reports/management/type_list.html"
+    context_object_name = "types"
+
+
+class ReportTypeCreateView(LoginRequiredMixin, AdminRequiredMixin, CreateView):
+    model = ReportType
+    form_class = ReportTypeForm
+    template_name = "reports/management/form.html"
+    success_url = reverse_lazy("manage_types_list")
+    extra_context = {"title": "Add Report Type"}
+
+
+class ReportTypeUpdateView(LoginRequiredMixin, AdminRequiredMixin, UpdateView):
+    model = ReportType
+    form_class = ReportTypeForm
+    template_name = "reports/management/form.html"
+    success_url = reverse_lazy("manage_types_list")
+    extra_context = {"title": "Edit Report Type"}
+
+
+class ReportTypeDeleteView(LoginRequiredMixin, AdminRequiredMixin, DeleteView):
+    model = ReportType
+    template_name = "reports/management/confirm_delete.html"
+    success_url = reverse_lazy("manage_types_list")
+
+
+class ReportLayoutListView(LoginRequiredMixin, AdminRequiredMixin, ListView):
+    model = ReportLayout
+    template_name = "reports/management/layout_list.html"
+    context_object_name = "layouts"
+
+
+class ReportLayoutCreateView(LoginRequiredMixin, AdminRequiredMixin, CreateView):
+    model = ReportLayout
+    form_class = ReportLayoutForm
+    template_name = "reports/management/form.html"
+    success_url = reverse_lazy("manage_layouts_list")
+    extra_context = {"title": "Upload Report Layout"}
+
+
+class ReportLayoutUpdateView(LoginRequiredMixin, AdminRequiredMixin, UpdateView):
+    model = ReportLayout
+    form_class = ReportLayoutForm
+    template_name = "reports/management/form.html"
+    success_url = reverse_lazy("manage_layouts_list")
+    extra_context = {"title": "Edit Layout"}
+
+
+class ReportLayoutDeleteView(LoginRequiredMixin, AdminRequiredMixin, DeleteView):
+    model = ReportLayout
+    template_name = "reports/management/confirm_delete.html"
+    success_url = reverse_lazy("manage_layouts_list")
+
+
+class ReportConfigListView(LoginRequiredMixin, AdminRequiredMixin, ListView):
+    model = ReportConfiguration
+    template_name = "reports/management/config_list.html"
+    context_object_name = "configs"
+
+
+class ReportConfigCreateView(LoginRequiredMixin, AdminRequiredMixin, CreateView):
+    model = ReportConfiguration
+    form_class = ReportConfigForm
+    template_name = "reports/management/form.html"
+    success_url = reverse_lazy("manage_configs_list")
+    extra_context = {"title": "Create Configuration Rule"}
+
+
+class ReportConfigUpdateView(LoginRequiredMixin, AdminRequiredMixin, UpdateView):
+    model = ReportConfiguration
+    form_class = ReportConfigForm
+    template_name = "reports/management/form.html"
+    success_url = reverse_lazy("manage_configs_list")
+    extra_context = {"title": "Edit Configuration"}
+
+
+class ReportConfigDeleteView(LoginRequiredMixin, AdminRequiredMixin, DeleteView):
+    model = ReportConfiguration
+    template_name = "reports/management/confirm_delete.html"
+    success_url = reverse_lazy("manage_configs_list")
+
+
+# =========================================================
+# 8) GENERATION ENGINE
+# =========================================================
+
+class GenerateReportView(LoginRequiredMixin, View):
+    """
+    Run a report for a specific processed period.
+    Querystring: ?period_id=<PayrollPeriod.id>&format=html|pdf|csv
+    """
+
+    def get(self, request, report_code, company_id=None, country_slug=None):
+        PayrollResult = apps.get_model("payroll", "PayrollResult")
+        Company = apps.get_model("company", "Company")
+        Country = apps.get_model("country", "Country")
+
+        company = None
+        country = None
+
+        if country_slug:
+            country = get_object_or_404(Country, slug=country_slug)
+
+        if company_id and int(company_id) != 0:
+            company = get_object_or_404(Company, pk=company_id)
+
+        config = ReportEngine.get_configuration(report_code, company=company)
+        if not config:
+            return HttpResponse("No report layout found.", status=404)
+
+        export_format = (request.GET.get("format", "html") or "html").lower()
+        period_id = request.GET.get("period_id")
+
+        if not period_id:
+            return HttpResponse("Please select a processed payroll period.", status=400)
+
+        processed_periods = get_processed_periods(country=country, company=company)
+        selected_period = processed_periods.filter(id=period_id).first()
+        if not selected_period:
+            return HttpResponse("Invalid period. Please select a processed payroll period.", status=400)
+
+        results = PayrollResult.objects.select_related("employee", "period", "period__payroll")
+
+        if company:
+            results = results.filter(period__payroll__company=company)
+
+        if country:
+            results = results.filter(period__payroll__country=country)
+
+        results = results.filter(period_id=selected_period.id)
+
+        settings = getattr(config, "data_settings", {}) or {}
+        prefer_label = "description" 
+        if isinstance(settings, dict) and settings.get("payslip_label_preference"):
+            prefer_label = settings.get("payslip_label_preference").lower()
+            if prefer_label not in {"name", "description"}:
+                prefer_label = "description"
+
+        payslips = build_payslips(
+            results,
+            country=country,
+            company=company,
+            prefer_label=prefer_label,
+        )
+
+        context = {
+            "company": company,
+            "country": country,
+            "results": results,
+            "payslips": payslips,
+            "period": selected_period,
+            "processed_periods": processed_periods,
+            "selected_period_id": str(selected_period.id),
+            "base_url": request.build_absolute_uri("/").rstrip("/"),
+            "company_logo_url": None, 
+            "settings": settings,
+            "user": request.user,
+        }
+
+        rendered_html = ReportEngine.render_report(config, context)
+
+        if export_format == "pdf":
+            pdf_file = render_to_pdf(rendered_html, base_url=context["base_url"])
+            response = HttpResponse(pdf_file, content_type="application/pdf")
+            response["Content-Disposition"] = f'inline; filename="{report_code}.pdf"'
+            return response
+
+        if export_format == "csv":
+            csv_fields = settings.get("csv_fields") if isinstance(settings, dict) else None
+            csv_data = render_to_csv(results, field_list=csv_fields)
+            response = HttpResponse(csv_data, content_type="text/csv")
+            response["Content-Disposition"] = f'attachment; filename="{report_code}.csv"'
+            return response
+
+        return HttpResponse(rendered_html)

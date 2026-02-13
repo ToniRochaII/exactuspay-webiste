@@ -1,23 +1,27 @@
 from django.contrib import admin
-from .models import ReportDefinition
+from .models import ReportCategory, ReportType, ReportLayout, ReportConfiguration
 
-@admin.register(ReportDefinition)
-class ReportDefinitionAdmin(admin.ModelAdmin):
-    # Add 'country' to list_display
-    list_display = ('name', 'country', 'company', 'source_model', 'created_at')
+@admin.register(ReportLayout)
+class ReportLayoutAdmin(admin.ModelAdmin):
+    list_display = ('name', 'report_type', 'created_at')
+    list_filter = ('report_type',)
+
+@admin.register(ReportConfiguration)
+class ReportConfigurationAdmin(admin.ModelAdmin):
+    list_display = ('report_type', 'level', 'company', 'country', 'selected_layout')
+    list_filter = ('report_type', 'country')
+    search_fields = ('company__name', 'country__name')
     
-    # Add 'country' to filters
-    list_filter = ('country', 'company', 'source_model')
-    
+    # Organize the JSON settings field to look cleaner
     fieldsets = (
-        (None, {
-            # Add 'country' to the editable fields
-            'fields': ('name', 'description', 'country', 'company', 'created_by')
+        ('Scope (Select One)', {
+            'fields': ('company', 'country'),
+            'description': 'Leave both blank for System Default'
         }),
         ('Configuration', {
-            'fields': ('source_model', 'selected_fields')
-        }),
-        ('Filters', {
-            'fields': ('allow_date_range', 'allow_payroll_selection')
+            'fields': ('report_type', 'selected_layout', 'data_settings')
         }),
     )
+
+admin.site.register(ReportCategory)
+admin.site.register(ReportType)

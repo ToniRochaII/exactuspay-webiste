@@ -1,34 +1,34 @@
+# Exactus/reports/forms.py
 from django import forms
-from Exactus.payroll.models import Payroll
+from .models import ReportType, ReportLayout, ReportConfiguration
 
-class RunReportForm(forms.Form):
-    start_date = forms.DateField(
-        required=False, 
-        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'})
-    )
-    end_date = forms.DateField(
-        required=False, 
-        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'})
-    )
-    payroll = forms.ModelChoiceField(
-        queryset=Payroll.objects.none(),
-        required=False,
-        widget=forms.Select(attrs={'class': 'form-select'}),
-        empty_label="All Payrolls"
-    )
+class ReportTypeForm(forms.ModelForm):
+    class Meta:
+        model = ReportType
+        fields = ['category', 'name', 'code', 'description', 'is_statutory']
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 3}),
+        }
 
-    def __init__(self, *args, company_id=None, report_def=None, **kwargs):
-        super().__init__(*args, **kwargs)
+class ReportLayoutForm(forms.ModelForm):
+    class Meta:
+        model = ReportLayout
+        fields = ['report_type', 'name', 'template_file']
+
+class ReportConfigForm(forms.ModelForm):
+    class Meta:
+        model = ReportConfiguration
+        fields = ['report_type', 'selected_layout', 'country', 'company']
+        help_texts = {
+            'country': 'Leave blank for a Global System Default.',
+            'company': 'Leave blank for a Country or System Default.',
+        }
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        company = cleaned_data.get("company")
+        country = cleaned_data.get("country")
         
-        # Populate Payroll options for this company
-        if company_id:
-            self.fields['payroll'].queryset = Payroll.objects.filter(company_id=company_id)
-
-        # Hide fields if the report definition doesn't allow them
-        if report_def:
-            if not report_def.allow_date_range:
-                self.fields['start_date'].widget = forms.HiddenInput()
-                self.fields['end_date'].widget = forms.HiddenInput()
-            
-            if not report_def.allow_payroll_selection:
-                self.fields['payroll'].widget = forms.HiddenInput()
+        # Validation: Cannot have both Company and Country (Keep it strictly hierarchical)
+        # Or allow it, but warn. For now, we follow your model logic.
+        return cleaned_data

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Payroll Summary Report</title>
+    <style>
+        /* Set page to Landscape */
+        @page {
+            size: A4 landscape;
+            margin: 1cm;
+        }
+        body {
+            font-family: 'Helvetica', sans-serif;
+            font-size: 9pt;
+        }
+        h1 {
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+        .meta-info {
+            margin-bottom: 20px;
+            color: #555;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th {
+            background-color: #333;
+            color: white;
+            padding: 8px;
+            text-align: left;
+        }
+        td {
+            padding: 6px;
+            border-bottom: 1px solid #ddd;
+        }
+        /* Zebra Striping */
+        tr:nth-child(even) { background-color: #f2f2f2; }
+        
+        .numeric { text-align: right; }
+        .total-row {
+            font-weight: bold;
+            background-color: #ddd !important;
+            border-top: 2px solid #333;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Payroll Summary: {{ company.name }}</h1>
+    
+    <div class="meta-info">
+        <strong>Report Date:</strong> {% now "d M Y" %} <br>
+        <strong>Period Filter:</strong> {{ period|default:"All Periods" }}
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Employee Name</th>
+                <th>Department</th>
+                <th class="numeric">Basic</th>
+                <th class="numeric">Gross Pay</th>
+                <th class="numeric">Tax</th>
+                <th class="numeric">NI / SocSec</th>
+                <th class="numeric">Net Pay</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for run in results %}
+            <tr>
+                <td>{{ run.employee.employee_id }}</td>
+                <td>{{ run.employee.last_name }}, {{ run.employee.first_name }}</td>
+                <td>{{ run.employee.department|default:"-" }}</td>
+                <td class="numeric">{{ run.basic_pay|floatformat:2 }}</td>
+                <td class="numeric">{{ run.gross_pay|floatformat:2 }}</td>
+                <td class="numeric">{{ run.tax_deduction|floatformat:2 }}</td>
+                <td class="numeric">{{ run.social_security|floatformat:2 }}</td>
+                <td class="numeric"><strong>{{ run.net_pay|floatformat:2 }}</strong></td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" style="text-align:center; padding: 20px;">No payroll data found for this selection.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</body>
+</html>
