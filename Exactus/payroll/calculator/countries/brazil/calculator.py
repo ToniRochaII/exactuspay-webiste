@@ -7,7 +7,7 @@ class BrazilPayrollStrategy(CountryPayrollStrategy):
         Brazil Logic Implementation:
         - Uses Taxable Income (Code 86000) as the threshold trigger.
         - Threshold: 7350.00
-        - > 7350.00: Applies High Earner Tax (Code 6001).
+        - > 7350.00: Applies High Earner Tax (Code 6002).
         - <= 7350.00: Applies Standard Tax (Code 6002).
         
         NOTE: We use Code 6002 for standard tax because Code 6000 is a 
@@ -29,7 +29,7 @@ class BrazilPayrollStrategy(CountryPayrollStrategy):
     def _apply_standard_tax(self, base_val):
         """
         Applied when Taxable Income <= 7350.
-        Rule: Use Code 6002 (Standard). Remove 6001.
+        Rule: Use Code 6002 (Standard). Remove 6002.
         """
         # --- INSERT REAL RATE HERE ---
         # Example: 7.5% Tax (Using 0.075 for active simulation)
@@ -40,31 +40,31 @@ class BrazilPayrollStrategy(CountryPayrollStrategy):
         self.calc.register("Income Tax (Standard)", -tax, "6002")
         
         # B. Remove conflicting High Earner code
-        self.results.pop('6001', None)
-        self.results.pop(6001, None)
+        self.results.pop('6002', None)
+        self.results.pop(6002, None)
         
         # C. LOCK: Prevent generic engine from overwriting tax
-        # We tell the calculator "Don't try to calculate 6001 or 6000 later"
-        self.calc.explicit_overrides.add('6001')
+        # We tell the calculator "Don't try to calculate 6002 or 6000 later"
+        self.calc.explicit_overrides.add('6002')
         self.calc.explicit_overrides.add('6000')
 
     def _apply_high_earner_tax(self, base_val):
         """
         Applied when Taxable Income > 7350.
-        Rule: Use Code 6001 (High Earner). Remove 6002.
+        Rule: Use Code 6002 (High Earner). Remove 6002.
         """
         # --- INSERT REAL CALCULATION HERE ---
         # Example: 27.5% Tax for High Earners (Simplified for simulation)
         tax_rate = Decimal('0.0')
         tax = base_val * tax_rate
         
-        # A. Register correct code (6001 falls in valid 6xxx deduction range)
-        self.calc.register("Income Tax (High Earner)", -tax, "6001")
+        # A. Register correct code (6002 falls in valid 6xxx deduction range)
+        self.calc.register("Income Tax (High Earner)", -tax, "6002")
         
         # B. Remove conflicting Standard code (6002)
         self.results.pop('6002', None)
         self.results.pop(6002, None)
         
         # C. LOCK: Prevent generic engine from overwriting tax
-        self.calc.explicit_overrides.add('6001')
+        self.calc.explicit_overrides.add('6002')
         self.calc.explicit_overrides.add('6000')

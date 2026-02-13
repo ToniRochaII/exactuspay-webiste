@@ -87,7 +87,6 @@
                     {% if user.is_authenticated %}
 
                     {# --- System Configuration --- #}
-                    {# FIX APPLIED: Role check allows Directors/Managers. Inner permission check removed. #}
                     {% if request.user.role in 'EXEC,ADMIN,COMPLIANCE,DIRECTOR,MANAGER' or request.user.is_superuser %}
 
                     <li class="sidebar-item">
@@ -106,7 +105,6 @@
                                 </a>
                             </li>
                             
-                            {# Restricted Actions (Create/Delete) still require specific permissions #}
                             {% if user|can:"COMPANY:CREATE" %}
                             <li class="sidebar-item">
                                 <a class="sidebar-link" href="{% url 'country:country_create' %}">
@@ -137,13 +135,22 @@
                             </li>
                             <li class="sidebar-item">
                                 <a class="sidebar-link" href="{% url 'country:country_delete' %}">
-                                    <i class="fas fa-upload me-2"></i>Delete Country
+                                    <i class="fas fa-trash me-2"></i>Delete Country
                                 </a>
                             </li>
                                 {% endif %}
                             {% endif %}
                         </ul>
                     </li>
+
+                    {# NEW: Country-Level Reports #}
+                    {% if country_slug %}
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="{% url 'reports:reports_country_dashboard' country_slug %}">
+                            <i class="align-middle me-2 fas fa-chart-area"></i>Country Reports
+                        </a>
+                    </li>
+                    {% endif %}
 
                     {% if country_slug and user|can:"PAYROLL:READ" %}
                     <li class="sidebar-item">
@@ -215,7 +222,6 @@
                     </li>
                     {% endif %}
 
-                    {# Calculation Base (Hidden unless regulation selected) #}
                     {% if country_slug and regulation_id %}
                     <li class="sidebar-item">
                         <a data-bs-target="#nav-config-calculationbase"
@@ -336,9 +342,7 @@
                             {% endif %}
                         </ul>
                     </li>
-                    {% endif %}
 
-                    {% if country_slug and company and company.company_id %}
                     <li class="sidebar-item">
                         <a data-bs-target="#nav-payroll-employees"
                            data-bs-toggle="collapse"
@@ -380,6 +384,7 @@
                             {% endif %}
                         </ul>
                     </li>
+                    {% endif %}
 
                     {% if employee and employee.id %}
                     <li class="sidebar-item">
@@ -414,7 +419,6 @@
                             {% endif %}
                         </ul>
                     </li>
-                    {% endif %}
                     {% endif %}
 
                     {% if country_slug %}
@@ -496,7 +500,6 @@
                                         </a>
                                     </li>
                                 {% endif %}
-                            {% else %}
                             {% endif %}
                         </ul>
                     </li>
@@ -533,14 +536,12 @@
 
                     {% endif %} {# /Payroll Operations roles #}
 
-{# --- Administration (System Settings) --- #}
-                    {# UPDATED: Added IMPLEMENTATION and OPERATION to this check so they can see the menu #}
+                    {# --- Administration (System Settings) --- #}
                     {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,IMPLEMENTATION,OPERATION" %}
 
                     {% check_permission user "USER" "READ" as can_view_users %}
                     {% check_permission user "ROLE" "READ" as can_view_roles %}
 
-                    {# We check if they have access to ANY of the items inside before showing the parent #}
                     {% if can_view_users or can_view_roles or user|can:"USER:CREATE" or user|has_role:"EXEC,ADMIN,COMPLIANCE,IMPLEMENTATION,OPERATION" %}
                     <li class="sidebar-item">
                         <a data-bs-target="#nav-admin-settings"
@@ -553,7 +554,6 @@
                             class="sidebar-dropdown list-unstyled collapse"
                             data-bs-parent="#sidebar">
                             
-                            {# 1. User Management (Restricted to Permissions) #}
                             {% if can_view_users %}
                             <li class="sidebar-item">
                                 <a class="sidebar-link" href="{% url 'user_list' %}">
@@ -562,19 +562,14 @@
                             </li>
                             {% endif %}
 
-                            {# 2. NEW: Company Allocations #}
                             {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,IMPLEMENTATION,OPERATION" %}
-
-                            {# Sub-item: Client Groups #}
                             <li class="sidebar-item">
                                 <a class="sidebar-link" href="{% url 'companies:client_group_list' 'global' %}">
                                     <i class="fas fa-layer-group me-2"></i>Client Groups
                                 </a>
                             </li>
-                            
                             {% endif %}
 
-                            {# 3. Create User (Restricted) #}
                             {% if user|can:"USER:CREATE" %}
                             <li class="sidebar-item">
                                 <a class="sidebar-link" href="{% url 'register' %}">
@@ -583,7 +578,6 @@
                             </li>
                             {% endif %}
 
-                            {# 4. Role Management (Restricted) #}
                             {% if can_view_roles %}
                             <li class="sidebar-item">
                                 <a class="sidebar-link" href="{% url 'role_management' %}">
@@ -591,6 +585,20 @@
                                 </a>
                             </li>
                             {% endif %}
+
+                            {# NEW: System Reports and Management Hub #}
+                            <li class="sidebar-divider"></li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{% url 'reports:reports_system_dashboard' %}">
+                                    <i class="fas fa-chart-pie me-2"></i>Global Reports
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{% url 'reports:report_manage_hub' %}">
+                                    <i class="fas fa-tools me-2"></i>Report Management
+                                </a>
+                            </li>
+
                         </ul>
                     </li>
                     {% endif %}

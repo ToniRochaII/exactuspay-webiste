@@ -3,222 +3,269 @@
 {% load role_filters %}
 
 {% block title %}{{ title }} | ExactusPay{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
 
-{% block extra_css %}
+{% block extra_head %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+
 <style>
+    body { background-color: #F4F4F4 !important; }
+    .wrapper:before { background: #F4F4F4 !important; }
+    :root { --card-radius: 16px; --input-radius: 10px; --border-color: #f0f0f0; }
+
+    .card-hover-effect {
+        border-radius: var(--card-radius);
+        border: none;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        overflow: hidden;
+    }
+    .card-hover-effect:hover {
+        transform: translateY(0px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+    }
+    .card-header {
+        background-color: #fff;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    /* --- UNIFIED FLOATING INPUT STYLING --- */
+    .form-control, 
+    .form-select {
+        border-radius: var(--input-radius) !important;
+        font-size: 1rem !important;
+        border: 1px solid #ced4da;
+        height: 58px !important;
+    }
+
+    /* Select2 Alignment with Floating Labels */
+    .select2-container--bootstrap-5 .select2-selection {
+        height: 58px !important; 
+        border-radius: var(--input-radius) !important;
+        padding-top: 1.3rem !important; /* Push selection text down for the label */
+    }
+
+    /* Custom Bracket Row Styling */
+    .bracket-row {
+        background-color: #fcfcfc;
+        border: 1px solid #f0f0f0;
+        border-radius: 12px;
+        padding: 15px;
+        transition: all 0.2s;
+    }
     .calc-value {
-        padding: 0.25rem;
-        background: #f8f9fa;
-        border-radius: 4px;
-        font-weight: 600;
+        padding: 0.5rem;
+        background: #f1f3f5;
+        border-radius: 8px;
+        font-weight: 700;
         text-align: center;
-        height: 38px;
+        height: 58px; /* Match input height */
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 0.9rem;
+        font-size: 1rem;
+        border: 1px dashed #dee2e6;
     }
-    .bracket-label {
-        font-size: 0.75rem;
-        color: #6c757d;
-        margin-bottom: 2px;
-        display: block;
+    .section-divider {
+        border-top: 2px solid #f4f4f4;
+        margin: 2rem 0;
     }
 </style>
 {% endblock %}
 
-{% block breadcrumbs %}
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Calculation Base</li>
-  </ol>
-</nav>
-{% endblock %}
-
 {% block content %}
-<form method="post" id="baseForm">
-    {% csrf_token %}
+<div class="row justify-content-center">
+    <div class="col-12">
+        <form method="post" id="baseForm" novalidate>
+            {% csrf_token %}
 
-    {% if form.errors %}
-    <div class="alert alert-danger">
-        <strong>Please correct the errors below:</strong>
-        <ul>
-        {% for field in form %}
-            {% for error in field.errors %}
-                <li>{{ field.label }}: {{ error }}</li>
-            {% endfor %}
-        {% endfor %}
-        {% for error in form.non_field_errors %}
-            <li>{{ error }}</li>
-        {% endfor %}
-        </ul>
-    </div>
-    {% endif %}
-
-    <div class="card shadow-sm border-0">
-        <div class="card-header d-flex justify-content-between align-items-center py-3">
-            <h5 class="mb-0"><i class="bi bi-calculator me-2"></i>{{ title }}</h5>
-        </div>
-
-        <div class="card-body">
-
-            <div class="row g-3 mb-4">
-                <div class="col-md-4">
-                    <div class="form-floating">
-                        {{ form.element }}
-                        <label>Target Element (Result)</label>
-                    </div>
+            <div class="card card-hover-effect shadow-sm">
+                <div class="card-header pt-4 px-4 pb-3">
+                    <h5 class="card-title mb-0">
+                        <i class="bi bi-calculator me-2 text-primary"></i>{{ title }}
+                    </h5>
+                    <h6 class="card-subtitle text-muted mt-1">
+                        Define logic for {{ country.name }} payroll calculations.
+                    </h6>
                 </div>
-                <div class="col-md-4">
-                    <div class="form-floating">
-                        {{ form.element_base }}
-                        <label>Base Element (Source)</label>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="form-floating">
-                        {{ form.base_frequency }}
-                        <label>Frequency</label>
-                    </div>
-                </div>
-            </div>
 
-            <div class="row g-3 mb-4">
-                 <div class="col-md-6">
-                    <label class="form-label small fw-bold text-muted">Base Rounding (Global)</label>
-                    <div class="input-group">
-                        {{ form.rounding_base }}
-                        <span class="input-group-text">Dec</span>
-                        {{ form.rounding_base_decimals }}
+                <div class="card-body p-4">
+                    {% if form.errors %}
+                    <div class="alert alert-danger border-0 shadow-sm mb-4">
+                        <ul class="mb-0">
+                            {% for field in form %}{% for error in field.errors %}<li>{{ field.label }}: {{ error }}</li>{% endfor %}{% endfor %}
+                            {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+                        </ul>
                     </div>
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label small fw-bold text-muted">Taxed Rounding (Global)</label>
-                    <div class="input-group">
-                        {{ form.rounding_taxed }}
-                        <span class="input-group-text">Dec</span>
-                        {{ form.rounding_taxed_decimals }}
+                    {% endif %}
+
+                    <h6 class="text-uppercase text-muted mb-3 fw-bold small ls-1">
+                        <i class="fas fa-cog me-2"></i>General Configuration
+                    </h6>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                {{ form.element }}
+                                <label for="{{ form.element.id_for_label }}">Target Element (Result)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                {{ form.element_base }}
+                                <label for="{{ form.element_base.id_for_label }}">Base Element (Source)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                {{ form.base_frequency }}
+                                <label for="{{ form.base_frequency.id_for_label }}">Frequency</label>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="row g-2 mb-2 fw-bold text-muted small text-uppercase">
-                <div class="col-md-2">Bracket Limit</div>
-                <div class="col-md-2">Rate (%)</div>
-                <div class="col-md-3 text-center">Brackets roundings</div>
-                <div class="col-md-3 text-center">Tax roundings</div>
-                <div class="col-md-2 text-end">Preview</div>
-            </div>
-            <hr class="mt-0 mb-3">
+                    <div class="row g-3 mb-2">
+                         <div class="col-md-6">
+                            <div class="input-group">
+                                <div class="form-floating flex-grow-1">
+                                    {{ form.rounding_base }}
+                                    <label for="{{ form.rounding_base.id_for_label }}">Global Base Rounding</label>
+                                </div>
+                                <div class="form-floating" style="width: 120px;">
+                                    {{ form.rounding_base_decimals }}
+                                    <label for="{{ form.rounding_base_decimals.id_for_label }}">Decimals</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <div class="form-floating flex-grow-1">
+                                    {{ form.rounding_taxed }}
+                                    <label for="{{ form.rounding_taxed.id_for_label }}">Global Taxed Rounding</label>
+                                </div>
+                                <div class="form-floating" style="width: 120px;">
+                                    {{ form.rounding_taxed_decimals }}
+                                    <label for="{{ form.rounding_taxed_decimals.id_for_label }}">Decimals</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-            <div id="bracket-container">
-                {% for i in bracket_range %}
-                <div class="row g-2 mb-3 bracket-row align-items-end" id="row-{{ i }}" style="display:none;">
-                    
-                    <div class="col-md-2">
-                        <span class="bracket-label">Limit {{ i }}</span>
-                        {% with bracket_field="bracket_"|add:i rate_field="rate_"|add:i r_b_log="round_bracket_logic_"|add:i r_b_dec="round_bracket_dec_"|add:i r_r_log="round_result_logic_"|add:i r_r_dec="round_result_dec_"|add:i %}
+                    <div class="section-divider"></div>
+
+                    <h6 class="text-uppercase text-muted mb-3 fw-bold small ls-1">
+                        <i class="fas fa-layer-group me-2"></i>Calculation Brackets
+                    </h6>
+
+                    <div id="bracket-container" class="d-flex flex-column gap-3">
+                        {% for i in bracket_range %}
+                        <div class="row g-3 bracket-row align-items-center mx-0" id="row-{{ i }}" style="display:none;">
                             
-                            {% for field in form %}
-                                {% if field.name == bracket_field %}{{ field }}{% endif %}
-                            {% endfor %}
-                    </div>
+                            {% with bracket_field="bracket_"|add:i rate_field="rate_"|add:i r_b_log="round_bracket_logic_"|add:i r_b_dec="round_bracket_dec_"|add:i r_r_log="round_result_logic_"|add:i r_r_dec="round_result_dec_"|add:i %}
+                            
+                            <div class="col-md-2">
+                                <div class="form-floating">
+                                    {% for field in form %}{% if field.name == bracket_field %}{{ field }}{% endif %}{% endfor %}
+                                    <label>Limit {{ i }}</label>
+                                </div>
+                            </div>
 
-                    <div class="col-md-2">
-                        <span class="bracket-label">Rate {{ i }}</span>
-                            {% for field in form %}
-                                {% if field.name == rate_field %}{{ field }}{% endif %}
-                            {% endfor %}
-                    </div>
+                            <div class="col-md-2">
+                                <div class="form-floating">
+                                    {% for field in form %}{% if field.name == rate_field %}{{ field }}{% endif %}{% endfor %}
+                                    <label>Rate %</label>
+                                </div>
+                            </div>
 
-                    <div class="col-md-3">
-                        <span class="bracket-label text-center">Input Rounding</span>
-                        <div class="input-group input-group-sm">
-                            {% for field in form %}
-                                {% if field.name == r_b_log %}{{ field }}{% endif %}
-                            {% endfor %}
-                            <span class="input-group-text px-1">Dec</span>
-                            {% for field in form %}
-                                {% if field.name == r_b_dec %}{{ field }}{% endif %}
-                            {% endfor %}
+                            <div class="col-md-3">
+                                <div class="input-group input-group-m">
+                                    <div class="form-floating flex-grow-1">
+                                        {% for field in form %}{% if field.name == r_b_log %}{{ field }}{% endif %}{% endfor %}
+                                        <label>Input Rounding</label>
+                                    </div>
+                                    <div class="form-floating" style="width: 20px;">
+                                        {% for field in form %}{% if field.name == r_b_dec %}{{ field }}{% endif %}{% endfor %}
+                                        <label>Dec</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3">
+                                <div class="input-group input-group-m">
+                                    <div class="form-floating flex-grow-1">
+                                        {% for field in form %}{% if field.name == r_r_log %}{{ field }}{% endif %}{% endfor %}
+                                        <label>Result Rounding</label>
+                                    </div>
+                                    <div class="form-floating" style="width: 20px;">
+                                        {% for field in form %}{% if field.name == r_r_dec %}{{ field }}{% endif %}{% endfor %}
+                                        <label>Dec</label>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endwith %}
+
+                            <div class="col-md-2">
+                                 <div class="calc-value text-muted shadow-sm text-end" id="calc-{{ i }}">0.00</div>
+                            </div>
                         </div>
+                        {% endfor %}
                     </div>
 
-                    <div class="col-md-3">
-                        <span class="bracket-label text-center">Result Rounding</span>
-                        <div class="input-group input-group-sm">
-                            {% for field in form %}
-                                {% if field.name == r_r_log %}{{ field }}{% endif %}
-                            {% endfor %}
-                            <span class="input-group-text px-1">Dec</span>
-                            {% for field in form %}
-                                {% if field.name == r_r_dec %}{{ field }}{% endif %}
-                            {% endfor %}
-                        </div>
+                    <div class="text-center mt-4">
+                        <button type="button" id="addRowBtn" class="btn btn-light border btn-sm rounded-pill px-4">
+                            <i class="bi bi-plus-circle me-1 text-primary"></i> Add Next Bracket
+                        </button>
                     </div>
-                        {% endwith %}
 
-                    <div class="col-md-2">
-                         <div class="calc-value text-muted" id="calc-{{ i }}">0.00</div>
+                    <div class="d-flex justify-content-end align-items-center mt-5 border-top pt-4">
+                        <a href="{% url 'calculationbase:list' country.slug regulations.id %}" class="btn btn-danger me-2">
+                            Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary px-4">
+                            Save Calculation Base
+                        </button>
                     </div>
                 </div>
-                {% endfor %}
             </div>
-
-            <div class="text-center mt-3">
-                <button type="button" id="addRowBtn" class="btn btn-outline-primary btn-sm">
-                    <i class="bi bi-plus-circle me-1"></i>Add Next Bracket
-                </button>
-            </div>
-        </div>
-
-        <div class="card-footer bg-white d-flex justify-content-end py-3">
-            <a href="{% url 'calculationbase:list' country.slug regulations.id %}" class="btn btn-outline-danger me-2">Cancel</a>
-            <button class="btn btn-primary px-4" type="submit">Save Calculation Base</button>
-        </div>
+        </form>
     </div>
-</form>
+</div>
 {% endblock %}
 
 {% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <script>
 document.addEventListener("DOMContentLoaded", () => {
     
-    // Config: Maximum brackets
+    // 1. Initialize Select2 with Bootstrap 5 Theme
+    $("select").select2({
+        theme: "bootstrap-5",
+        width: '100%',
+        selectionCssClass: ':all:' // Apply form-select classes to select2
+    });
+
     const MAX_ROWS = 16; 
     let visibleRows = 1;
 
-    // Helper: Excel-style rounding
     function excelRound(value, type, decimals) {
         if (isNaN(value)) return 0;
         const d = parseInt(decimals) || 0;
         const factor = Math.pow(10, d);
-        if (type === 'Round up') {
-            return (value > 0) ? Math.ceil(value * factor) / factor : Math.floor(value * factor) / factor;
-        } else if (type === 'Round down') {
-            return (value > 0) ? Math.floor(value * factor) / factor : Math.ceil(value * factor) / factor;
-        } else if (type === 'Standard') {
-            return Math.round(value * factor) / factor;
-        }
-        return value; // 'None'
+        if (type === 'Round up') return (value > 0) ? Math.ceil(value * factor) / factor : Math.floor(value * factor) / factor;
+        if (type === 'Round down') return (value > 0) ? Math.floor(value * factor) / factor : Math.ceil(value * factor) / factor;
+        if (type === 'Standard') return Math.round(value * factor) / factor;
+        return value;
     }
 
-    // Calculation Logic
     function calculateRow(index) {
         const id = index.toString().padStart(2, '0');
-        
-        // Inputs
         const bracketInput = document.getElementById(`id_bracket_${id}`);
         const rateInput = document.getElementById(`id_rate_${id}`);
-        
-        // Rounding Configs
-        const bracketLog = document.getElementById(`id_round_bracket_logic_${id}`);
-        const bracketDec = document.getElementById(`id_round_bracket_dec_${id}`);
+        const brkLog = document.getElementById(`id_round_bracket_logic_${id}`);
+        const brkDec = document.getElementById(`id_round_bracket_dec_${id}`);
         const resLog = document.getElementById(`id_round_result_logic_${id}`);
         const resDec = document.getElementById(`id_round_result_dec_${id}`);
-        
         const outputDiv = document.getElementById(`calc-${id}`);
 
         if (!bracketInput || !rateInput) return;
@@ -226,67 +273,55 @@ document.addEventListener("DOMContentLoaded", () => {
         let b = parseFloat(bracketInput.value) || 0;
         const r = parseFloat(rateInput.value) || 0;
 
-        // 1. Apply Input Rounding (Simulated on the Limit itself for preview)
-        if (bracketLog && bracketDec) {
-            b = excelRound(b, bracketLog.value, bracketDec.value);
-        }
-
-        // 2. Calculate
-        let result = b * (r / 100 || 0); // Handle if rate is whole number percentage
+        if (brkLog && brkDec) b = excelRound(b, brkLog.value, brkDec.value);
+        let result = b * (r / 100 || 0);
         
-        // 3. Apply Result Rounding
         if (resLog && resDec) {
             result = excelRound(result, resLog.value, resDec.value);
-            // Update display decimals based on config
-            const decToShow = parseInt(resDec.value) || 2;
-            outputDiv.innerHTML = result.toFixed(decToShow);
+            outputDiv.innerHTML = result.toFixed(parseInt(resDec.value) || 2);
         } else {
             outputDiv.innerHTML = result.toFixed(2);
         }
 
-        if (b > 0 || r > 0) outputDiv.classList.add("text-success");
-        else outputDiv.classList.remove("text-success");
+        if (b > 0 || r > 0) {
+            outputDiv.style.color = "#0d6efd";
+            outputDiv.style.backgroundColor = "#e7f1ff";
+        } else {
+            outputDiv.style.color = "#939ba2";
+            outputDiv.style.backgroundColor = "#f1f3f5";
+        }
     }
 
-    // Update Visibility
     function updateVisibility() {
         for(let i=0; i<MAX_ROWS; i++) {
             const id = i.toString().padStart(2, '0');
             const row = document.getElementById(`row-${id}`);
-            if(row) {
-                row.style.display = (i < visibleRows) ? "flex" : "none";
-            }
+            if(row) row.style.display = (i < visibleRows) ? "flex" : "none";
         }
     }
 
-    // Auto-detect existing data to show rows
     function initRows() {
         for(let i=0; i<MAX_ROWS; i++) {
             const id = i.toString().padStart(2, '0');
-            const bracketInput = document.getElementById(`id_bracket_${id}`);
-            const rateInput = document.getElementById(`id_rate_${id}`);
-            if(bracketInput && rateInput) {
-                if(parseFloat(bracketInput.value) > 0 || parseFloat(rateInput.value) > 0) {
+            const bIn = document.getElementById(`id_bracket_${id}`);
+            if(bIn) {
+                if(parseFloat(bIn.value) > 0) {
                     if(i + 1 > visibleRows) visibleRows = i + 1;
                 }
-                // Attach Listeners
-                const allInputs = document.querySelectorAll(
-                    `#id_bracket_${id}, #id_rate_${id}, 
-                     #id_round_bracket_logic_${id}, #id_round_bracket_dec_${id},
-                     #id_round_result_logic_${id}, #id_round_result_dec_${id}`
-                );
-                allInputs.forEach(input => {
-                    input.addEventListener('input', () => calculateRow(i));
-                    input.addEventListener('change', () => calculateRow(i));
+                const ids = [`id_bracket_${id}`, `id_rate_${id}`, `id_round_bracket_logic_${id}`, `id_round_bracket_dec_${id}`, `id_round_result_logic_${id}`, `id_round_result_dec_${id}`];
+                ids.forEach(sid => {
+                    const el = document.getElementById(sid);
+                    if(el) {
+                        el.addEventListener('input', () => calculateRow(i));
+                        $(el).on('change', () => calculateRow(i));
+                    }
                 });
-                // Initial calc
                 calculateRow(i);
             }
         }
         updateVisibility();
     }
 
-    // Add Row Button
     document.getElementById("addRowBtn").addEventListener("click", () => {
         if(visibleRows < MAX_ROWS) {
             visibleRows++;
@@ -294,7 +329,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Run Init
     initRows();
 });
 </script>

@@ -424,6 +424,36 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
         if not found and amount != 0:
             self.breakdown.append({"name": name, "amount": amount, "code": str(code)})
 
+    # ✅ Add inside UniversalPayrollCalculator (e.g. after _register_total)
+
+    def _d(self, v):
+        try:
+            return Decimal(str(v or "0.00"))
+        except Exception:
+            return Decimal("0.00")
+
+    def get_amount(self, code, default="0.00"):
+        code = str(code).strip()
+        return self._d(self.results_dict.get(code, default))
+
+    def force_set(self, code, name, amount):
+        """
+        Hard-set a code value AND prevent CalculationBase from overwriting it.
+        This is what you need for spreadsheet-style totals like 7001/86000/6100.
+        """
+        code = str(code).strip()
+        amount = Decimal(amount).quantize(TWOPLACES, rounding=ROUND_HALF_UP)
+
+        # lock
+        self.explicit_overrides.add(code)
+
+        # set value
+        self.results_dict[code] = amount
+
+        # keep breakdown consistent (so UI shows correct figures)
+        self._register_total(code, name, amount)
+
+
     # ──────────────────────────────────────────────────────────────
     # COUNTRY STRATEGY
     # ──────────────────────────────────────────────────────────────
