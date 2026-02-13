@@ -282,14 +282,48 @@ class PayrollPeriodListView(LoginRequiredMixin, ListView):
 # PERIOD DETAIL VIEW (UPDATED VISIBILITY LOGIC)
 # ============================================================
 
-@method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE"), name='dispatch')
+import json
+import logging
+from decimal import Decimal
+from django.views.generic import DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+from Exactus.payroll.models import PayrollPeriod, PeriodStatus
+from Exactus.employee.models import Employee
+from Exactus.pdcodes.models import PDcode
+
+try:
+    from Exactus.elements.models import Element
+except ImportError:
+    Element = None
+
+try:
+    from Exactus.payroll.calculator.universal import UniversalPayrollCalculator
+except ImportError:
+    UniversalPayrollCalculator = None
+
+logger = logging.getLogger(__name__)
+
+
 class PayrollPeriodDetailView(LoginRequiredMixin, DetailView):
     model = PayrollPeriod
     template_name = "payroll/period_detail.html"
     context_object_name = "period"
 
+    SYSTEM_LABELS = {
+        "5000": "Gross Pay",
+        "6000": "Income Tax",
+        "7000": "National Insurance",
+        "8000": "Net Salary",
+        "9000": "Employer Cost",
+    }
+
+    ALWAYS_VISIBLE_CODES = {"5000", "6000", "7000", "8000", "9000"}
+
+    # ------------------------------------------------------------
+    # Helpers
+    # ------------------------------------------------------------
     def _parse_details(self, details_data):
-        """Helper to safely parse JSON details from stored results."""
         if isinstance(details_data, str):
             try:
                 return json.loads(details_data)
@@ -297,71 +331,190 @@ class PayrollPeriodDetailView(LoginRequiredMixin, DetailView):
                 return {}
         return details_data if isinstance(details_data, dict) else {}
 
-    def _safe_float(self, value):
-        """Helper to safely convert values to float."""
+    def _to_decimal(self, v) -> Decimal:
         try:
-            return float(value)
-        except (ValueError, TypeError):
+            return Decimal(str(v))
+        except Exception:
+            return Decimal("0.00")
+
+    def _to_float(self, v) -> float:
+        try:
+            return float(v)
+        except Exception:
             return 0.0
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        period = self.object
-        eligible_employees = period.get_eligible_employees()
-        company_id = self.kwargs.get("company_id")
-        
-        # Determine if we use stored results or live preview
-        use_stored_results = period.status in [
-            PeriodStatus.PROCESSED, 
-            PeriodStatus.AWAITING_APPROVAL, 
-            PeriodStatus.COMPLETED, 
-            PeriodStatus.LOCKED
-        ]
+    def _norm(self, s: str) -> str:
+        return (s or "").strip().lower()
 
-        # -------------------------------------------------------------
-        # 1. BUILD HEADER & STATUS MAPS
-        # -------------------------------------------------------------
-        # Elements Map: { 'code': {'name': 'Name', 'status': 'Visible/Hidden'} }
+    def _is_gross_header(self, h: dict) -> bool:
+        code = self._norm(str(h.get("code", "")))
+        label = self._norm(h.get("label", ""))
+        # Prefer code match
+        if code == "5000":
+            return True
+        # Label match
+        return ("gross pay" in label) or ("gross salary" in label) or (label == "gross")
+
+    def _is_net_header(self, h: dict) -> bool:
+        code = self._norm(str(h.get("code", "")))
+        label = self._norm(h.get("label", ""))
+        if code == "8000":
+            return True
+        return ("net salary" in label) or ("net pay" in label) or ("take home" in label) or (label == "net")
+
+    def _build_config_maps(self, period, company_id):
         elem_config = {}
+        pd_config = {}
+
+        # Elements
         try:
             if Element:
-                all_elems = Element.objects.filter(country=period.payroll.country)
-                for el in all_elems:
+                qs = Element.objects.filter(country=period.payroll.country)
+                for el in qs:
                     elem_config[str(el.element_code)] = {
-                        'name': el.element_name,
-                        'status': el.element_status 
+                        "name": el.element_name,
+                        "status": el.element_status,
                     }
         except Exception:
             pass
 
-        # PD Codes Map: { 'code': {'name': 'Name', 'status': 'Visible/Hidden'} }
-        pd_config = {}
+        # PD Codes
         try:
-            all_pds = PDcode.objects.filter(company_id=company_id)
-            for pd in all_pds:
+            qs = PDcode.objects.filter(company_id=company_id)
+            for pd in qs:
                 pd_config[str(pd.pdcode_code)] = {
-                    'name': pd.pdcode_name,
-                    'status': pd.pdcode_status 
+                    "name": pd.pdcode_name,
+                    "status": pd.pdcode_status,
                 }
         except Exception:
             pass
 
-        # -------------------------------------------------------------
-        # 2. GATHER DATA
-        # -------------------------------------------------------------
-        report_rows = []
-        active_codes = set() 
+        return elem_config, pd_config
 
+    def _is_visible_code(self, code: str, value: float, elem_config: dict, pd_config: dict) -> bool:
+        # must exist
+        if abs(value) <= 0.001:
+            return False
+
+        # Rule 1: System totals always visible
+        if code in self.ALWAYS_VISIBLE_CODES:
+            return True
+
+        # Rule 2: Configured items (Visible)
+        if code in pd_config:
+            return pd_config[code].get("status") == "Visible"
+        if code in elem_config:
+            return elem_config[code].get("status") == "Visible"
+
+        # Rule 3: Unconfigured fallback ranges
+        if code.isdigit():
+            c = int(code)
+            if (1000 <= c <= 4999) or (6000 <= c <= 6999) or (7000 <= c <= 7999) or (9000 <= c <= 9999):
+                return True
+
+        return False
+
+    def _label_for_code(self, code: str, elem_config: dict, pd_config: dict) -> str:
+        if code in self.SYSTEM_LABELS:
+            return self.SYSTEM_LABELS[code]
+        if code in elem_config:
+            return elem_config[code].get("name") or f"Code {code}"
+        if code in pd_config:
+            return pd_config[code].get("name") or f"Code {code}"
+        return f"Code {code}"
+
+    def _sort_key(self, code: str):
+        try:
+            return int(code)
+        except Exception:
+            return 999999
+
+    def _compute_kpis(self, final_headers: list[dict], grand_totals: list[Decimal]):
+        """
+        REQUIRED RULES:
+        - Total Gross = total of the Gross Pay/Gross Salary column (or code 5000)
+        - Net Pay     = total of the Net Salary/Net Pay column (or code 8000)
+        - Deductions  = sum of ALL columns between Gross and Net (exclusive)
+        """
+        gross_idx = next((i for i, h in enumerate(final_headers) if self._is_gross_header(h)), None)
+        net_idx = next((i for i, h in enumerate(final_headers) if self._is_net_header(h)), None)
+
+        kpi_gross = Decimal("0.00")
+        kpi_net = Decimal("0.00")
+        kpi_deductions = Decimal("0.00")
+
+        if gross_idx is None or net_idx is None:
+            return {
+                "gross": kpi_gross,
+                "deductions": kpi_deductions,
+                "net": kpi_net,
+                "gross_idx": gross_idx,
+                "net_idx": net_idx,
+            }
+
+        left = min(gross_idx, net_idx)
+        right = max(gross_idx, net_idx)
+
+        try:
+            kpi_gross = self._to_decimal(grand_totals[gross_idx])
+        except Exception:
+            pass
+
+        try:
+            kpi_net = self._to_decimal(grand_totals[net_idx])
+        except Exception:
+            pass
+
+        for j in range(left + 1, right):
+            try:
+                kpi_deductions += self._to_decimal(grand_totals[j])
+            except Exception:
+                pass
+
+        # Show deductions as positive (template prints the minus sign)
+        kpi_deductions = abs(kpi_deductions)
+
+        return {
+            "gross": kpi_gross,
+            "deductions": kpi_deductions,
+            "net": kpi_net,
+            "gross_idx": gross_idx,
+            "net_idx": net_idx,
+        }
+
+    # ------------------------------------------------------------
+    # Main
+    # ------------------------------------------------------------
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        period: PayrollPeriod = self.object
+        company_id = self.kwargs.get("company_id")
+
+        eligible_employees = period.get_eligible_employees()
+
+        use_stored_results = period.status in [
+            PeriodStatus.PROCESSED,
+            PeriodStatus.AWAITING_APPROVAL,
+            PeriodStatus.COMPLETED,
+            PeriodStatus.LOCKED,
+        ]
+
+        elem_config, pd_config = self._build_config_maps(period, company_id)
+
+        # Decide loop target
         if use_stored_results:
-            loop_target = period.results.select_related('employee').all()
+            loop_target = period.results.select_related("employee").all()
             if not loop_target.exists():
                 loop_target = eligible_employees
-                use_stored_results = False 
+                use_stored_results = False
         else:
             loop_target = eligible_employees
 
+        report_rows = []
+        active_codes = set()
+
         for obj in loop_target:
-            if hasattr(obj, 'employee'):
+            if hasattr(obj, "employee"):
                 emp = obj.employee
                 stored_result = obj
             else:
@@ -369,135 +522,122 @@ class PayrollPeriodDetailView(LoginRequiredMixin, DetailView):
                 stored_result = None
 
             row_data = {}
-            
-            # --- PATH A: READ FROM DB ---
+
+            # -------- A) Stored results (DB) --------
             if use_stored_results and stored_result:
                 details = self._parse_details(stored_result.details)
-                
-                if 'elements' in details:
-                    # New Structured Format
-                    for k, v in details.get('elements', {}).items():
-                        row_data[str(k)] = self._safe_float(v)
-                    for item in details.get('pd_codes', []):
-                        code = str(item.get('code'))
-                        row_data[code] = self._safe_float(item.get('amount'))
-                else:
-                    # Old Flat Format
-                    for k, v in details.items():
-                        if k == 'Gross Pay': k = '5000'
-                        if k == 'Net Salary': k = '8000'
-                        row_data[str(k)] = self._safe_float(v)
 
-            # --- PATH B: LIVE PREVIEW ---
+                # New structured format
+                if isinstance(details, dict) and "elements" in details:
+                    for k, v in (details.get("elements") or {}).items():
+                        row_data[str(k)] = self._to_float(v)
+
+                    for item in (details.get("pd_codes") or []):
+                        code = str(item.get("code"))
+                        row_data[code] = self._to_float(item.get("amount"))
+
+                # Old flat format fallback
+                else:
+                    for k, v in (details or {}).items():
+                        kk = str(k)
+                        if kk == "Gross Pay":
+                            kk = "5000"
+                        if kk in ("Net Salary", "Net Pay"):
+                            kk = "8000"
+                        row_data[kk] = self._to_float(v)
+
+            # -------- B) Live preview --------
             else:
                 if UniversalPayrollCalculator:
                     try:
                         calc = UniversalPayrollCalculator(period=period, employee=emp)
                         res = calc.calculate()
-                        for k, v in res.get('elements', {}).items():
-                            row_data[str(k)] = self._safe_float(v)
-                        for item in res.get('pd_codes', []):
-                            row_data[str(item['code'])] = self._safe_float(item['amount'])
+
+                        for k, v in (res.get("elements") or {}).items():
+                            row_data[str(k)] = self._to_float(v)
+
+                        for item in (res.get("pd_codes") or []):
+                            row_data[str(item.get("code"))] = self._to_float(item.get("amount"))
+
                     except Exception as e:
                         logger.error(f"Preview Error for {emp}: {e}")
 
-            # -------------------------------------------------------------
-            # 3. COLUMN VISIBILITY LOGIC (FINAL LOGIC)
-            # -------------------------------------------------------------
-            for k, v in row_data.items():
-                if abs(v) > 0.001: # Check: Value exists
-                    is_visible = False
-                    
-                    # RULE 1: System Totals are ALWAYS visible (Override Config)
-                    if k in ['5000', '6000', '7000', '8000', '9000']:
-                        is_visible = True
-                    
-                    # RULE 2: Configured Items (Strict Status Check)
-                    elif k in pd_config:
-                        if pd_config[k]['status'] == 'Visible': is_visible = True
-                    elif k in elem_config:
-                        if elem_config[k]['status'] == 'Visible': is_visible = True
-                        
-                    # RULE 3: Calculated/Unconfigured Fallback (Range Check)
-                    # If it's a dynamic tax/NI/Pension code not yet in Elements table,
-                    # we show it if it falls in standard ranges.
-                    elif k.isdigit():
-                        c = int(k)
-                        if (1000 <= c <= 4999) or (6000 <= c <= 6999) or (7000 <= c <= 7999) or (9000 <= c <= 9999):
-                            is_visible = True
-                    
-                    if is_visible:
-                        active_codes.add(k)
+            # Determine visible columns and collect active codes
+            for code, val in row_data.items():
+                if self._is_visible_code(code, val, elem_config, pd_config):
+                    active_codes.add(code)
 
-            report_rows.append({'employee': emp, 'data': row_data})
+            report_rows.append({"employee": emp, "data": row_data})
 
-        # 4. Sort & Label Headers
-        def sort_key(val):
-            try: return int(val)
-            except: return 999999
-            
-        sorted_codes = sorted(list(active_codes), key=sort_key)
-        
-        final_headers = []
-        system_labels = {
-            '5000': 'Gross Pay', '6000': 'Income Tax', '7000': 'National Insurance',
-            '8000': 'Net Salary', '9000': 'Employer Cost'
-        }
+        # Build final headers
+        sorted_codes = sorted(active_codes, key=self._sort_key)
+        final_headers = [{"code": c, "label": self._label_for_code(c, elem_config, pd_config)} for c in sorted_codes]
 
-        for c in sorted_codes:
-            name = f"Code {c}"
-            if c in system_labels: name = system_labels[c]
-            elif c in elem_config: name = elem_config[c]['name']
-            elif c in pd_config: name = pd_config[c]['name']
-            
-            final_headers.append({'code': c, 'label': name})
-
-        # 5. Totals
+        # Build table rows + grand totals
         table_rows = []
-        grand_totals = [Decimal('0.00')] * len(final_headers)
+        grand_totals = [Decimal("0.00")] * len(final_headers)
 
         for item in report_rows:
+            emp = item["employee"]
+            data = item["data"]
+
             cells = []
             for idx, h in enumerate(final_headers):
-                val = item['data'].get(h['code'], 0.0)
-                cells.append(val)
-                grand_totals[idx] += Decimal(str(val))
-            
-            table_rows.append({
-                'employee_name': f"{item['employee'].employee_name} {item['employee'].employee_surname}",
-                'employee_id': getattr(item['employee'], 'employee_id', item['employee'].id),
-                'cells': cells
-            })
+                v = data.get(h["code"], 0.0)
+                cells.append(v)
+                grand_totals[idx] += self._to_decimal(v)
 
-        # Context Setup
+            table_rows.append(
+                {
+                    "employee_name": f"{emp.employee_name} {emp.employee_surname}",
+                    "employee_id": getattr(emp, "employee_id", emp.id),
+                    "cells": cells,
+                }
+            )
+
+        # KPI totals (meaning-based, order-independent)
+        kpis = self._compute_kpis(final_headers, grand_totals)
+
+        # Approver permission
         user = self.request.user
+        allowed_approvers = [
+            "EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION",
+            "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE"
+        ]
         can_approve = False
-        allowed_approvers = ["EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION",
-                             "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE"]
-        if user.is_superuser:
+        if getattr(user, "is_superuser", False):
             can_approve = True
-        elif hasattr(user, 'roles'):
+        elif hasattr(user, "roles"):
             can_approve = user.roles.filter(name__in=allowed_approvers).exists()
-        elif hasattr(user, 'role'):
-            role_str = str(user.role).upper()
-            can_approve = role_str in allowed_approvers
+        elif hasattr(user, "role"):
+            can_approve = str(user.role).upper() in allowed_approvers
 
-        context.update({
-            'headers': final_headers,
-            'rows': table_rows,
-            'totals': grand_totals,
-            'company_id': company_id,
-            'country_slug': self.kwargs['country_slug'],
-            'payroll_id': self.kwargs['payroll_id'],
-            'can_process': period.status == PeriodStatus.PENDING,
-            'can_reset': period.status == PeriodStatus.PROCESSED,
-            'can_send_approval': period.status == PeriodStatus.PROCESSED,
-            'can_reject': period.status == PeriodStatus.AWAITING_APPROVAL and can_approve,
-            'can_authorize': period.status == PeriodStatus.AWAITING_APPROVAL and can_approve,
-            'is_locked': period.status in [PeriodStatus.COMPLETED, PeriodStatus.LOCKED],
-        })
+        context.update(
+            {
+                "headers": final_headers,
+                "rows": table_rows,
+
+                # keep totals if you still want them for debugging
+                "totals": grand_totals,
+
+                # ✅ NEW: KPI dict used by template
+                "kpis": kpis,
+
+                "company_id": company_id,
+                "country_slug": self.kwargs["country_slug"],
+                "payroll_id": self.kwargs["payroll_id"],
+
+                "can_process": period.status == PeriodStatus.PENDING,
+                "can_reset": period.status == PeriodStatus.PROCESSED,
+                "can_send_approval": period.status == PeriodStatus.PROCESSED,
+
+                "can_reject": period.status == PeriodStatus.AWAITING_APPROVAL and can_approve,
+                "can_authorize": period.status == PeriodStatus.AWAITING_APPROVAL and can_approve,
+
+                "is_locked": period.status in [PeriodStatus.COMPLETED, PeriodStatus.LOCKED],
+            }
+        )
         return context
-
 
 # ============================================================
 # PAYROLL PROCESS VIEW

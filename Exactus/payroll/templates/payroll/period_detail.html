@@ -11,7 +11,6 @@
     .wrapper:before { background: #F4F4F4 !important; }
     :root { --card-radius: 16px; --ep-blue: #0d6efd; }
 
-    /* Core Card Styling */
     .card-hover-effect {
         border-radius: var(--card-radius);
         border: none;
@@ -19,7 +18,6 @@
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     }
 
-    /* KPI Mini Cards */
     .kpi-summary {
         background: #f8f9fa;
         border-radius: 12px;
@@ -37,14 +35,12 @@
         box-shadow: 0 4px 12px rgba(13, 110, 253, 0.08);
     }
 
-    /* Advanced Scroll Logic */
     .gtn-table-container {
         max-height: 60vh;
         overflow: auto;
         position: relative;
     }
 
-    /* Fixed Header Styling */
     .table thead th {
         position: sticky;
         top: 0;
@@ -54,7 +50,6 @@
         padding: 12px 15px;
     }
 
-    /* Fixed Column Shadows */
     .sticky-col-1, .sticky-col-2 {
         position: sticky;
         background-color: #fff !important;
@@ -63,12 +58,11 @@
     .sticky-col-1 { left: 0; min-width: 70px; border-right: 1px solid #f0f0f0; }
     .sticky-col-2 { left: 70px; min-width: 220px; box-shadow: 4px 0 8px -4px rgba(0,0,0,0.08); }
 
-    thead th.sticky-col-1, thead th.sticky-col-2 { 
-        z-index: 12; 
-        background-color: #fcfcfc !important; 
+    thead th.sticky-col-1, thead th.sticky-col-2 {
+        z-index: 12;
+        background-color: #fcfcfc !important;
     }
 
-    /* Financial Data Formatting */
     .font-monospace {
         font-family: 'JetBrains Mono', 'Roboto Mono', monospace !important;
         letter-spacing: -0.5px;
@@ -77,20 +71,15 @@
     .val-positive { color: #2b8a3e; font-weight: 500; }
     .val-negative { color: #e03131; font-weight: 500; }
     .val-zero { color: #adb5bd; opacity: 0.5; }
-    
-    /* Search Input Styling */
-    .search-input-group {
-        width: 300px;
-    }
+
+    .search-input-group { width: 300px; }
     .search-input-group .form-control {
         border-radius: 50px 0 0 50px;
         border-right: none;
         padding-left: 20px;
         background-color: #f8f9fa;
     }
-    .search-input-group .form-control:focus {
-        background-color: #fff;
-    }
+    .search-input-group .form-control:focus { background-color: #fff; }
     .search-input-group .input-group-text {
         border-radius: 0 50px 50px 0;
         background-color: #f8f9fa;
@@ -102,8 +91,7 @@
         background-color: #fff;
         border-color: #86b7fe;
     }
-    
-    /* Table Striping & Hover */
+
     .table-striped > tbody > tr:nth-of-type(odd) > * { --bs-table-accent-bg: rgba(0, 0, 0, 0.015); }
     .table-hover tbody tr:hover td { background-color: #f1f7ff !important; }
 </style>
@@ -112,11 +100,11 @@
 {% block content %}
 <div class="container-fluid py-4 mt-7">
     <div class="row mb-4 align-items-center">
-        
+
         <div class="col-md-4">
             <h2 class="fw-bold mb-1 text-dark">{{ period.name }}</h2>
             <div class="d-flex align-items-center gap-2 mt-1">
-                <span class="badge rounded-pill 
+                <span class="badge rounded-pill
                     {% if period.status == 'PENDING' %}bg-secondary
                     {% elif period.status == 'PROCESSED' %}bg-info
                     {% elif period.status == 'AWAITING_APPROVAL' %}bg-warning text-dark
@@ -127,10 +115,10 @@
                 <span class="text-muted small fw-medium border-start ps-2">Period #{{ period.period_number }}</span>
             </div>
         </div>
-        
+
         <div class="col-md-8 text-md-end mt-3 mt-md-0">
             <div class="d-flex gap-2 justify-content-md-end align-items-center flex-wrap">
-                
+
                 {% if can_process %}
                     <button class="btn btn-primary rounded-pill shadow-sm px-4 fw-bold" id="processBtn">
                         <i class="bi bi-gear-fill me-2"></i>PROCESS PAYROLL
@@ -141,23 +129,24 @@
                     <button class="btn btn-success rounded-pill shadow-sm px-4 fw-bold" id="sendApprovalBtn">
                         <i class="bi bi-send-check-fill me-2"></i>REQUEST APPROVAL
                     </button>
-                    
+
                     <form method="post" action="{% url 'payroll:period_reset' country_slug company_id payroll_id period.id %}" class="d-inline">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-outline-danger rounded-pill px-3 fw-bold" onclick="return confirm('Reset all calculations? This will return the period to Pending.');">
+                        <button type="submit" class="btn btn-outline-danger rounded-pill px-3 fw-bold"
+                                onclick="return confirm('Reset all calculations? This will return the period to Pending.');">
                             <i class="bi bi-arrow-counterclockwise me-1"></i>RESET
                         </button>
                     </form>
                 {% endif %}
 
                 {% if period.status == 'AWAITING_APPROVAL' %}
-                    
+
                     {% if can_reject %}
                         <button class="btn btn-danger rounded-pill shadow-sm px-4 fw-bold" id="rejectBtn">
                             <i class="bi bi-x-circle-fill me-2"></i>REJECT
                         </button>
                     {% endif %}
-                    
+
                     {% if can_authorize %}
                         <button class="btn btn-success rounded-pill shadow-sm px-4 fw-bold" id="authorizeBtn">
                             <i class="bi bi-check-circle-fill me-2"></i>AUTHORIZE
@@ -169,7 +158,7 @@
                             <i class="bi bi-hourglass-split me-1"></i>Waiting for authorized approver...
                         </span>
                     {% endif %}
-                    
+
                 {% endif %}
 
                 {% if is_locked or period.status == 'COMPLETED' %}
@@ -191,35 +180,51 @@
     </div>
 
     <div class="card card-hover-effect mb-4">
-        
         <div class="card-header bg-white pt-4 pb-4 px-4 border-bottom">
             <div class="row align-items-center">
                 <div class="col-lg-3 mb-3 mb-lg-0">
                     <h5 class="fw-bold mb-1 text-dark">Financial Summary</h5>
                     <p class="text-muted small mb-0">Aggregate period totals</p>
                 </div>
-                
+
                 <div class="col-lg-9">
                     <div class="row g-3 justify-content-lg-end">
                         <div class="col-md-4 col-sm-6">
                             <div class="kpi-summary">
-                                <label class="text-muted small fw-bold text-uppercase d-block mb-1"><i class="bi bi-plus-circle me-1"></i>Total Gross</label>
-                                <span class="h4 mb-0 fw-bold font-monospace text-dark">{{ totals.0|default:"0.00"|floatformat:2|intcomma }}</span>
+                                <label class="text-muted small fw-bold text-uppercase d-block mb-1">
+                                    <i class="bi bi-plus-circle me-1"></i>Total Gross
+                                </label>
+                                <span class="h4 mb-0 fw-bold font-monospace text-dark">
+                                    {{ kpis.gross|default:"0.00"|floatformat:2|intcomma }}
+                                </span>
                             </div>
                         </div>
+
                         <div class="col-md-4 col-sm-6">
                             <div class="kpi-summary">
-                                <label class="text-muted small fw-bold text-uppercase d-block mb-1"><i class="bi bi-dash-circle me-1"></i>Deductions</label>
-                                <span class="h4 mb-0 fw-bold font-monospace text-danger">-{{ totals.1|default:"0.00"|floatformat:2|intcomma }}</span>
+                                <label class="text-muted small fw-bold text-uppercase d-block mb-1">
+                                    <i class="bi bi-dash-circle me-1"></i>Deductions
+                                </label>
+                                <span class="h4 mb-0 fw-bold font-monospace text-danger">
+                                    -{{ kpis.deductions|default:"0.00"|floatformat:2|intcomma }}
+                                </span>
                             </div>
                         </div>
+
                         <div class="col-md-4 col-sm-12">
                             <div class="kpi-summary border-primary" style="background-color: #f0f7ff;">
-                                <label class="text-primary small fw-bold text-uppercase d-block mb-1"><i class="bi bi-cash-stack me-1"></i>Net Pay</label>
-                                <span class="h4 mb-0 fw-bold font-monospace text-primary">{{ totals.2|default:"0.00"|floatformat:2|intcomma }}</span>
+                                <label class="text-primary small fw-bold text-uppercase d-block mb-1">
+                                    <i class="bi bi-cash-stack me-1"></i>Net Pay
+                                </label>
+                                <span class="h4 mb-0 fw-bold font-monospace text-primary">
+                                    {{ kpis.net|default:"0.00"|floatformat:2|intcomma }}
+                                </span>
                             </div>
                         </div>
                     </div>
+
+                    {# Optional debug: show which columns were detected #}
+                    {# <div class="text-muted small mt-2">gross_idx={{ kpis.gross_idx }} net_idx={{ kpis.net_idx }}</div> #}
                 </div>
             </div>
         </div>
@@ -242,42 +247,45 @@
                             <th class="sticky-col-1 text-center text-muted">ID</th>
                             <th class="sticky-col-2 ps-3 text-muted">Employee</th>
                             {% for header in headers %}
-                            <th class="text-end" style="min-width: 130px;">
-                                <div class="text-dark fw-bold">{{ header.label }}</div>
-                                <div class="text-muted font-monospace" style="font-size: 0.7rem;">{{ header.code }}</div>
-                            </th>
+                                <th class="text-end" style="min-width: 130px;">
+                                    <div class="text-dark fw-bold">{{ header.label }}</div>
+                                    <div class="text-muted font-monospace" style="font-size: 0.7rem;">{{ header.code }}</div>
+                                </th>
                             {% endfor %}
                         </tr>
                     </thead>
+
                     <tbody>
                         {% for row in rows %}
-                        <tr class="employee-row">
-                            <td class="sticky-col-1 text-center fw-bold text-muted employee-id">{{ row.employee_id }}</td>
-                            <td class="sticky-col-2 ps-3 fw-bold text-dark employee-name">{{ row.employee_name }}</td>
-                            {% for val in row.cells %}
-                            <td class="text-end font-monospace">
-                                {% if val > 0 %}
-                                    <span class="val-positive">{{ val|floatformat:2|intcomma }}</span>
-                                {% elif val < 0 %}
-                                    <span class="val-negative">({{ val|floatformat:2|intcomma|cut:"-" }})</span>
-                                {% else %}
-                                    <span class="val-zero">-</span>
-                                {% endif %}
-                            </td>
-                            {% endfor %}
-                        </tr>
+                            <tr class="employee-row">
+                                <td class="sticky-col-1 text-center fw-bold text-muted employee-id">{{ row.employee_id }}</td>
+                                <td class="sticky-col-2 ps-3 fw-bold text-dark employee-name">{{ row.employee_name }}</td>
+
+                                {% for val in row.cells %}
+                                    <td class="text-end font-monospace">
+                                        {% if val > 0 %}
+                                            <span class="val-positive">{{ val|floatformat:2|intcomma }}</span>
+                                        {% elif val < 0 %}
+                                            <span class="val-negative">({{ val|floatformat:2|intcomma|cut:"-" }})</span>
+                                        {% else %}
+                                            <span class="val-zero">-</span>
+                                        {% endif %}
+                                    </td>
+                                {% endfor %}
+                            </tr>
                         {% empty %}
-                        <tr>
-                            <td colspan="{{ headers|length|add:2 }}" class="text-center py-5 text-muted bg-white">
-                                <i class="bi bi-calculator display-4 d-block mb-3 opacity-25"></i>
-                                <p class="mb-0">No payroll data available for this period.</p>
-                                {% if can_process and period.status == 'PENDING' %}
-                                    <small>Click <strong>Process Payroll</strong> to calculate.</small>
-                                {% endif %}
-                            </td>
-                        </tr>
+                            <tr>
+                                <td colspan="{{ headers|length|add:2 }}" class="text-center py-5 text-muted bg-white">
+                                    <i class="bi bi-calculator display-4 d-block mb-3 opacity-25"></i>
+                                    <p class="mb-0">No payroll data available for this period.</p>
+                                    {% if can_process and period.status == 'PENDING' %}
+                                        <small>Click <strong>Process Payroll</strong> to calculate.</small>
+                                    {% endif %}
+                                </td>
+                            </tr>
                         {% endfor %}
                     </tbody>
+
                 </table>
             </div>
         </div>
@@ -288,29 +296,23 @@
 {% block extra_js %}
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    
-    // --- 1. Search Filter Logic ---
+
+    // Search Filter
     const searchInput = document.getElementById('employeeSearch');
     const tableRows = document.querySelectorAll('.employee-row');
 
-    if(searchInput) {
+    if (searchInput) {
         searchInput.addEventListener('keyup', function() {
             const filterValue = this.value.toLowerCase().trim();
-            
             tableRows.forEach(row => {
                 const idText = row.querySelector('.employee-id')?.textContent.toLowerCase() || '';
                 const nameText = row.querySelector('.employee-name')?.textContent.toLowerCase() || '';
-                
-                if(idText.includes(filterValue) || nameText.includes(filterValue)) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
+                row.style.display = (idText.includes(filterValue) || nameText.includes(filterValue)) ? '' : 'none';
             });
         });
     }
 
-    // --- 2. Workflow Action Logic ---
+    // Workflow Action Logic
     function handleAction(btnId, url, confirmMessage) {
         const btn = document.getElementById(btnId);
         if (!btn) return;
@@ -321,7 +323,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const originalText = btn.innerHTML;
             btn.disabled = true;
             btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>PROCESSING...';
-            
+
             fetch(url, {
                 method: 'POST',
                 headers: {
@@ -337,7 +339,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 return data;
             })
             .then(data => {
-                if(data.success) location.reload();
+                if (data.success) location.reload();
                 else throw new Error(data.error || "Operation failed");
             })
             .catch(err => {
@@ -348,7 +350,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // Attach Listeners to Buttons
     handleAction('processBtn', "{% url 'payroll:period_process' country_slug company_id payroll_id period.id %}", "Start Payroll Calculation for this period?");
     handleAction('sendApprovalBtn', "{% url 'payroll:period_send_approval' country_slug company_id payroll_id period.id %}", "Send for Approval? This will lock the period from further calculations.");
     handleAction('authorizeBtn', "{% url 'payroll:period_authorize' country_slug company_id payroll_id period.id %}", "Authorize Payroll? This action is final and marks the period as Completed.");
