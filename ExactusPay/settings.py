@@ -1,6 +1,17 @@
 import os
 from pathlib import Path
 import dj_database_url
+from django.conf import settings
+
+from django.test.utils import override_settings
+
+ALLOWED = ["testserver", "localhost", "127.0.0.1"]
+
+with override_settings(ALLOWED_HOSTS=ALLOWED):
+    # everything that uses Client() / client.get() must be inside this block
+    ...
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -17,6 +28,7 @@ ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
     "payroll.exactuspay.com",
+    "testserver",
 ]
 
 CSRF_TRUSTED_ORIGINS = [

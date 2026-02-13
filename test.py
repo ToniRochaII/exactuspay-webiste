@@ -1,72 +1,73 @@
-import sqlite3
 import os
+from pathlib import Path
 
-def inspect_employee_2():
-    db_path = 'db.sqlite3'
-    if not os.path.exists(db_path):
-        print("❌ Error: db.sqlite3 not found.")
-        return
+from django.contrib.auth import get_user_model
+from django.test import Client
+from bs4 import BeautifulSoup
 
-    conn = sqlite3.connect(db_path)
-    conn.row_factory = sqlite3.Row
-    cursor = conn.cursor()
+from Exactus.payroll.models import PayrollPeriod
 
-    print(f"--- 🔍 INSPECTING EMPLOYEE ID 2 ---")
+PERIOD_ID = int(os.environ.get("PERIOD_ID", "6"))
+OUT = Path(f"/tmp/period_detail_ui_check_{PERIOD_ID}.html")
 
-    try:
-        # 1. FETCH EMPLOYEE DETAILS
-        cursor.execute("""
-            SELECT id, employee_name, employee_surname, tax_info_03 
-            FROM employee_employee 
-            WHERE id = 2
-        """)
-        emp = cursor.fetchone()
-        
-        if not emp:
-            print("❌ Employee with ID 2 not found.")
-            return
+period = PayrollPeriod.objects.select_related(
+    "payroll__country", "payroll__company"
+).get(pk=PERIOD_ID)
 
-        print(f"👤 Employee: {emp['employee_name']} {emp['employee_surname']} (ID: 2)")
-        print(f"   Tax Code Setting: {emp['tax_info_03']}") # Should be 1000N
+url = f"/{period.payroll.country.slug}/{period.payroll.company.company_id}/payroll/{period.payroll.id}/period/{period.id}/"
 
-        # 2. GET LATEST PAYROLL RESULT FOR THIS EMPLOYEE
-        cursor.execute("""
-            SELECT * FROM payroll_payrollresult 
-            WHERE employee_id = 2 
-            ORDER BY id DESC LIMIT 1
-        """)
-        result = cursor.fetchone()
+User = get_user_model()
+user = User.objects.filter(is_superuser=True).first() or User.objects.first()
+assert user, "No users found"
 
-        if not result:
-            print("❌ No calculated payroll results found for Employee 2.")
-            return
+c = Client()
+c.force_login(user)
 
-        print("\n📊 STORED DATABASE VALUES (What the website shows):")
-        print(f"   Result ID:  {result['id']}")
-        print("-" * 30)
-        print(f"   Gross Pay:  £{result['gross_pay']}")
-        print(f"   Total Tax:  £{result['total_tax']}") 
-        print(f"   Net Pay:    £{result['net_pay']}")
-        print("-" * 30)
+print("=" * 80)
+print("UI CHECK (authenticated HTTP)")
+print("=" * 80)
+print("URL:", url)
+print("User:", user)
+print("Period:", period)
 
-        # 3. DIAGNOSIS
-        stored_tax = float(result['total_tax'])
-        
-        # Expected Tax ~2038.03 | Old Wrong Tax ~2371.80
-        if abs(stored_tax - 2038) < 50:
-            print("   ✅ The database has the CORRECT number (~£2038).")
-            print("      (If you see the old number on the site, clear your browser cache).")
-        elif abs(stored_tax - 2371) < 50:
-            print("   ⚠️  The database has the OLD wrong number (~£2371).")
-            print("      (The fix works, but you haven't re-processed this specific payroll yet).")
-            print("      -> Restart Server -> Go to Page -> Click 'Process Payroll'.")
-        else:
-            print(f"   ❓ Stored value is unexpected: £{stored_tax}")
+# Force host so it doesn't crash on ALLOWED_HOSTS
+resp = c.get(url, SERVER_NAME="127.0.0.1", SERVER_PORT="8000", HTTP_HOST="127.0.0.1")
+print("HTTP status:", resp.status_code)
 
-    except Exception as e:
-        print(f"❌ Database Error: {e}")
-    finally:
-        conn.close()
+html = resp.content.decode("utf-8", errors="ignore")
+OUT.write_text(html, encoding="utf-8")
+print("Saved:", str(OUT), "len:", len(html))
 
-if __name__ == "__main__":
-    inspect_employee_2()
+# Basic string checks
+for s in ["Gross Pay", "Net Salary", "Income Tax", "National Insurance"]:
+    print(f"Contains '{s}'?:", s in html)
+
+soup = BeautifulSoup(html, "html.parser")
+
+ths = soup.find_all("th")
+print("\nTH total:", len(ths))
+
+th_texts = []
+hidden_ths = []
+
+for th in ths:
+    text = " ".join(th.get_text(" ", strip=True).split())
+    if not text:
+        continue
+    th_texts.append(text)
+
+    style = (th.get("style") or "").lower()
+    cls = " ".join(th.get("class") or []).lower()
+
+    if "display:none" in style or "d-none" in cls or "hidden" in cls:
+        hidden_ths.append(text)
+
+print("\nFirst 30 TH labels:")
+for t in th_texts[:30]:
+    print(" -", t)
+
+print("\nHidden TH labels (inline/class):")
+for t in hidden_ths[:50]:
+    print(" -", t)
+
+print("\nDONE.")

@@ -2,7 +2,7 @@
 {% load static %}
 {% load employee_role_filters %}
 {% load form_helpers %}
-{% load humanize %}  {# <--- ADD THIS LINE #}
+{% load humanize %}
 
 {% block title %}Add Employee — {{ company.trade_name }} | ExactusPay{% endblock %}
 
@@ -16,13 +16,10 @@
 
 <style>
     /* --- GOLD STANDARD FORM CSS --- */
-    
-    /* Global Background */
     body { background-color: #F4F4F4 !important; }
     .wrapper:before { background: #F4F4F4 !important; }
     :root { --card-radius: 16px; --input-radius: 10px; --border-color: #f0f0f0; }
 
-    /* ExactusPay Standard Card Styling */
     .card-hover-effect {
         border-radius: var(--card-radius);
         border: none;
@@ -38,18 +35,15 @@
         border-bottom: 1px solid #f0f0f0;
     }
 
-    /* --- UNIFIED INPUT STYLING --- */
-    .form-control, 
-    .form-select {
+    .form-control, .form-select {
         border-radius: var(--input-radius) !important;
         font-size: 1rem !important;
         border: 1px solid #ced4da;
-        padding-top: 1.625rem; /* Space for floating label */
+        padding-top: 1.625rem;
         padding-bottom: 0.625rem;
         height: 58px;
     }
 
-    /* --- SELECT2 STYLING --- */
     .select2-container .select2-selection--single {
         height: 58px !important; 
         border-radius: var(--input-radius) !important;
@@ -72,15 +66,9 @@
         right: 15px !important;
     }
     
-    /* Fix Label Position */
-    .form-floating > .select2-container {
-        padding-top: 0;
-    }
-    .form-floating > label {
-        padding-left: 14px;
-    }
+    .form-floating > .select2-container { padding-top: 0; }
+    .form-floating > label { padding-left: 14px; }
 
-    /* --- SWITCH CARD (For Booleans) --- */
     .switch-card {
         border: 1px solid #ced4da;
         border-radius: var(--input-radius);
@@ -91,16 +79,9 @@
         justify-content: space-between;
         min-height: 58px;
     }
-    .form-switch .form-check-input {
-        width: 3em;
-        height: 1.5em;
-        cursor: pointer;
-    }
+    .form-switch .form-check-input { width: 3em; height: 1.5em; cursor: pointer; }
 
-    /* --- TAB STYLING --- */
-    .nav-tabs {
-        border-bottom: 2px solid #e9ecef;
-    }
+    .nav-tabs { border-bottom: 2px solid #e9ecef; }
     .nav-tabs .nav-link {
         border: none;
         border-bottom: 3px solid transparent;
@@ -110,16 +91,13 @@
         transition: all 0.2s;
         margin-bottom: -2px;
     }
-    .nav-tabs .nav-link:hover {
-        color: #0d6efd;
-    }
+    .nav-tabs .nav-link:hover { color: #0d6efd; }
     .nav-tabs .nav-link.active {
         color: #0d6efd;
         border-bottom: 3px solid #0d6efd;
         background: transparent;
     }
     
-    /* Section Headers */
     h6.section-header {
         text-transform: uppercase;
         font-size: 0.75rem;
@@ -135,9 +113,7 @@
 {% block content %}
 <div class="row">
     <div class="col-12">
-        
         <div class="card card-hover-effect shadow-sm">
-            
             <div class="card-header pt-4 px-4 pb-0 border-0">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <div>
@@ -149,7 +125,7 @@
                             {% endif %}
                         </h5>
                         <h6 class="card-subtitle text-muted mt-1">
-                            {{ employee.employee_id }}| {{ employee.employee_name }} {{ employee.employee_surname }}
+                            {{ employee.employee_id|default:"New" }} | {{ employee.employee_name|default:"" }} {{ employee.employee_surname|default:"" }}
                         </h6>
                     </div>
                 </div>
@@ -166,7 +142,6 @@
             </div>
 
             <div class="card-body p-4">
-
                 <form method="post" class="needs-validation" novalidate id="employee-form">
                     {% csrf_token %}
                     {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
@@ -337,122 +312,135 @@
                             {% endif %}
                         </div>
                         
-<div class="tab-pane fade" id="pay">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <h6 class="section-header mb-0">
-            <i class="fas fa-coins me-2"></i>Compensation Overview
-        </h6>
-        <a href="{% url 'compensation:compensation_create' country_slug company.pk employee.pk %}" class="btn btn-sm btn-primary shadow-sm">
-            <i class="fas fa-plus me-1"></i> Add Component
-        </a>
-    </div>
-
-    <div class="card shadow-none border mb-4">
-        <div class="card-body p-0"> 
-            <div class="p-4"> 
-                <table id="datatables-reponsive" class="table table-striped" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th class="text-center">Code</th>
-                            <th>Description</th>
-                            <th class="text-center">Category</th>
-                            <th class="text-center">Amount</th>
-                            <th class="text-center">Frequency</th>
-                            <th class="text-center">Dates</th>
-                            <th class="text-center">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for c in active_components %}
-                        <tr>
-                            <td class="fw-bold text-center">
-                                <span class="text-brand">
-                                    {% if c.pd_code %}
-                                        {{ c.pd_code.pdcode_code }}
-                                    {% elif c.element %}
-                                        {{ c.element.element_code }}
-                                    {% else %}
-                                        #{{ c.pk }}
-                                    {% endif %}
-                                </span>
-                            </td>
-
-                            <td>
-                                <div class="fw-bold text-dark">
-                                    {% if c.pd_code %}
-                                        {{ c.pd_code.pdcode_name }}
-                                    {% elif c.element %}
-                                        {{ c.element.element_name }}
-                                    {% else %}
-                                        <span class="text-muted">Unknown</span>
-                                    {% endif %}
-                                </div>
-                                <small class="text-muted">
-                                    {% if c.pd_code %}
-                                        {{ c.pd_code.pdcode_description|truncatechars:40 }}
-                                    {% elif c.element %}
-                                        {{ c.element.element_description|truncatechars:40 }}
-                                    {% endif %}
-                                </small>
-                            </td>
-
-                            <td class="text-center">
-                                {% if c.pd_code %}
-                                    <span class="badge {% if c.pd_code.pdcode_category == 'Payment' %}bg-success-subtle text-success{% elif c.pd_code.pdcode_category == 'Deduction' %}bg-danger-subtle text-danger{% else %}bg-info-subtle text-info{% endif %} rounded-pill">
-                                        {{ c.pd_code.get_pdcode_category_display }}
-                                    </span>
-                                {% elif c.element %}
-                                    <span class="badge {% if c.element.element_category == 'Payment' %}bg-success-subtle text-success{% elif c.element.element_category == 'Deduction' %}bg-danger-subtle text-danger{% else %}bg-info-subtle text-info{% endif %} rounded-pill">
-                                        {{ c.element.get_element_category_display }}
-                                    </span>
+                        <div class="tab-pane fade" id="pay">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="section-header mb-0">
+                                    <i class="fas fa-coins me-2"></i>Compensation Overview
+                                </h6>
+                                {% if employee.pk %}
+                                    <a href="{% url 'compensation:compensation_create' country_slug company.pk employee.pk %}" class="btn btn-sm btn-primary shadow-sm">
+                                        <i class="fas fa-plus me-1"></i> Add Component
+                                    </a>
                                 {% else %}
-                                    <span class="badge bg-secondary rounded-pill">Unknown</span>
+                                    <button class="btn btn-sm btn-secondary shadow-sm" disabled title="Save employee first">
+                                        <i class="fas fa-plus me-1"></i> Add Component
+                                    </button>
                                 {% endif %}
-                            </td>
-                            
-                            <td class="text-center">
-                                 <strong class="text-center">{{ c.amount|floatformat:2|intcomma }}</strong><br>
-                                 <small class="text-muted">{{country.currency_code}}</small>
-                            </td>
-                            <td class="text-center">
-                                <span class="text-dark">
-                                    <strong>{{ c.get_frequency_display }}</strong><br>
-                                    <small class="text-muted">{{ c.get_category_display }}</small>
-                                </span>
-                            </td>
-                            <td class="text-center">
-                                <strong>{{ c.start_date|date:"d/m/Y" }}</strong><br>
-                                <small class="text-muted">
-                                    {% if c.end_date %}
-                                        {{ c.end_date|date:"d/m/Y" }}
-                                    {% else %}
-                                        <span class="fst-italic text-success">Ongoing</span>
-                                    {% endif %}
-                                </small>
-                            </td>
+                            </div>
 
-                            <td class="text-center table-action" style="position: relative; z-index: 2;">
-                                <a href="{% url 'compensation:compensation_edit' country_slug company.pk employee.pk c.pk %}" class="text-brand me-2" title="Edit">
-                                    <i class="align-middle fas fa-pen"></i>
-                                </a>
-                                <a href="{% url 'compensation:compensation_delete' country_slug company.pk employee.pk c.pk %}" class="text-danger" title="Delete" onclick="return confirm('Are you sure you want to delete this component?');">
-                                    <i class="align-middle fas fa-trash"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="7" class="text-center py-4 text-muted">
-                                <i class="fas fa-info-circle me-1"></i> No active compensation components found.
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-</div>
+                            {% if employee.pk %}
+                                <div class="card shadow-none border mb-4">
+                                    <div class="card-body p-0"> 
+                                        <div class="p-4"> 
+                                            <table id="datatables-reponsive" class="table table-striped" style="width:100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center">Code</th>
+                                                        <th>Description</th>
+                                                        <th class="text-center">Category</th>
+                                                        <th class="text-center">Amount</th>
+                                                        <th class="text-center">Frequency</th>
+                                                        <th class="text-center">Dates</th>
+                                                        <th class="text-center">Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for c in active_components %}
+                                                    <tr>
+                                                        <td class="fw-bold text-center">
+                                                            <span class="text-brand">
+                                                                {% if c.pd_code %}
+                                                                    {{ c.pd_code.pdcode_code }}
+                                                                {% elif c.element %}
+                                                                    {{ c.element.element_code }}
+                                                                {% else %}
+                                                                    #{{ c.pk }}
+                                                                {% endif %}
+                                                            </span>
+                                                        </td>
+
+                                                        <td>
+                                                            <div class="fw-bold text-dark">
+                                                                {% if c.pd_code %}
+                                                                    {{ c.pd_code.pdcode_name }}
+                                                                {% elif c.element %}
+                                                                    {{ c.element.element_name }}
+                                                                {% else %}
+                                                                    <span class="text-muted">Unknown</span>
+                                                                {% endif %}
+                                                            </div>
+                                                            <small class="text-muted">
+                                                                {% if c.pd_code %}
+                                                                    {{ c.pd_code.pdcode_description|truncatechars:40 }}
+                                                                {% elif c.element %}
+                                                                    {{ c.element.element_description|truncatechars:40 }}
+                                                                {% endif %}
+                                                            </small>
+                                                        </td>
+
+                                                        <td class="text-center">
+                                                            {% if c.pd_code %}
+                                                                <span class="badge {% if c.pd_code.pdcode_category == 'Payment' %}bg-success-subtle text-success{% elif c.pd_code.pdcode_category == 'Deduction' %}bg-danger-subtle text-danger{% else %}bg-info-subtle text-info{% endif %} rounded-pill">
+                                                                    {{ c.pd_code.get_pdcode_category_display }}
+                                                                </span>
+                                                            {% elif c.element %}
+                                                                <span class="badge {% if c.element.element_category == 'Payment' %}bg-success-subtle text-success{% elif c.element.element_category == 'Deduction' %}bg-danger-subtle text-danger{% else %}bg-info-subtle text-info{% endif %} rounded-pill">
+                                                                    {{ c.element.get_element_category_display }}
+                                                                </span>
+                                                            {% else %}
+                                                                <span class="badge bg-secondary rounded-pill">Unknown</span>
+                                                            {% endif %}
+                                                        </td>
+                                                        
+                                                        <td class="text-center">
+                                                             <strong class="text-center">{{ c.amount|floatformat:2|intcomma }}</strong><br>
+                                                             <small class="text-muted">{{country.currency_code}}</small>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <span class="text-dark">
+                                                                <strong>{{ c.get_frequency_display }}</strong><br>
+                                                                <small class="text-muted">{{ c.get_category_display }}</small>
+                                                            </span>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <strong>{{ c.start_date|date:"d/m/Y" }}</strong><br>
+                                                            <small class="text-muted">
+                                                                {% if c.end_date %}
+                                                                    {{ c.end_date|date:"d/m/Y" }}
+                                                                {% else %}
+                                                                    <span class="fst-italic text-success">Ongoing</span>
+                                                                {% endif %}
+                                                            </small>
+                                                        </td>
+
+                                                        <td class="text-center table-action" style="position: relative; z-index: 2;">
+                                                            <a href="{% url 'compensation:compensation_edit' country_slug company.pk employee.pk c.pk %}" class="text-brand me-2" title="Edit">
+                                                                <i class="align-middle fas fa-pen"></i>
+                                                            </a>
+                                                            <a href="{% url 'compensation:compensation_delete' country_slug company.pk employee.pk c.pk %}" class="text-danger" title="Delete" onclick="return confirm('Are you sure you want to delete this component?');">
+                                                                <i class="align-middle fas fa-trash"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    {% empty %}
+                                                    <tr>
+                                                        <td colspan="7" class="text-center py-4 text-muted">
+                                                            <i class="fas fa-info-circle me-1"></i> No active compensation components found.
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="alert alert-info shadow-sm">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Please <strong>save the new employee</strong> first. You can add compensation details after the employee profile is created.
+                                </div>
+                            {% endif %}
+                        </div>
 
                         <div class="tab-pane fade" id="account">
                             <h6 class="section-header"><i class="fas fa-cog me-2"></i>ExactusPay Access</h6>
@@ -490,11 +478,12 @@
                                     </div>
                                 </div>
 
-                                {% if form.email.value or employee.email %}
+                                {% if form.email.value or employee and employee.email %}
                                     <div class="card bg-light border-0 mt-3">
                                         <div class="card-body">
                                             <h6 class="fw-bold"><i class="fas fa-magic me-2"></i>Enable Portal Access</h6>
-                                            <p class="text-muted small">This will create a user account linked to <strong>{{ form.email.value|default:employee.email }}</strong> and email them a secure password setup link.</p>
+                                            
+                                            <p class="text-muted small">This will create a user account linked to <strong>{% firstof form.email.value employee.email %}</strong> and email them a secure password setup link.</p>
                                             
                                             <button type="submit" name="create_user_account" value="true" class="btn btn-success mt-2">
                                                 <i class="fas fa-paper-plane me-2"></i>Create Account & Send Welcome Email

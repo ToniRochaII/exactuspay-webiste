@@ -32,8 +32,8 @@ class BrazilPayrollStrategy(CountryPayrollStrategy):
         Rule: Use Code 6002 (Standard). Remove 6001.
         """
         # --- INSERT REAL RATE HERE ---
-        # Example: 7.5% Tax
-        tax_rate = Decimal('0.00') # Update this with actual rate (e.g. 0.075)
+        # Example: 7.5% Tax (Using 0.075 for active simulation)
+        tax_rate = Decimal('0.075') 
         tax = base_val * tax_rate
         
         # A. Register correct code (6002 falls in valid 6xxx deduction range)
@@ -54,8 +54,9 @@ class BrazilPayrollStrategy(CountryPayrollStrategy):
         Rule: Use Code 6001 (High Earner). Remove 6002.
         """
         # --- INSERT REAL CALCULATION HERE ---
-        # Example: Fixed ceiling or higher rate
-        tax = Decimal('0.00') 
+        # Example: 27.5% Tax for High Earners (Simplified for simulation)
+        tax_rate = Decimal('0.0')
+        tax = base_val * tax_rate
         
         # A. Register correct code (6001 falls in valid 6xxx deduction range)
         self.calc.register("Income Tax (High Earner)", -tax, "6001")

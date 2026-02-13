@@ -208,6 +208,8 @@ class UnitedKingdomPayrollStrategy:
         self.calc.register(label, result, target_code)
         self.calc.explicit_overrides.add(target_code)
 
+    from decimal import Decimal
+
     def _get_engine_result(self, target_code, base_val, period_num, is_cumulative):
         from Exactus.payroll.calculator.engine import TaxEngine
         from Exactus.calculationbase.models import CalculationBase
@@ -215,12 +217,11 @@ class UnitedKingdomPayrollStrategy:
         rule = CalculationBase.objects.filter(
             element__element_code=target_code,
             regulations=self.period.payroll.regulation,
-            base_frequency=self.period.frequency
+            base_frequency=self.period.frequency,
         ).first()
 
         if not rule:
             return Decimal("0.00")
 
-        return TaxEngine.calculate_progressive_tax(
-            base_val, rule, period=period_num if is_cumulative else 1
-        )
+        # TaxEngine signature is: calculate_progressive_tax(base_value, rule)
+        return TaxEngine.calculate_progressive_tax(base_val, rule)

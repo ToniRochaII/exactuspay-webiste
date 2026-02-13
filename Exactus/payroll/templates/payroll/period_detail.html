@@ -2,234 +2,173 @@
 {% load static %}
 {% load humanize %}
 
-{% block title %}Payroll Report — {{ period.name }} | ExactusPay{% endblock %}
+{% block title %}Payroll - {{ period.name }}{% endblock %}
 
-{% block page_title %}Payroll Report{% endblock %}
-
-{% block extra_head %}
+{% block content %}
 <style>
-    /* --- GOLD STANDARD CSS --- */
-    body { background-color: #F4F4F4 !important; }
-    .wrapper:before { background: #F4F4F4 !important; }
-    :root { --card-radius: 16px; --border-color: #f0f0f0; }
-
-    .card-hover-effect {
-        border-radius: var(--card-radius);
-        border: none;
-        transition: transform 0.25s ease, box-shadow 0.25s ease;
-        overflow: hidden;
-    }
-    .card-hover-effect:hover {
-        transform: translateY(-2px); /* Subtle lift for detail views */
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
-    }
-    .card-header {
-        background-color: #fff;
-        border-bottom: 1px solid #f0f0f0;
-    }
-
-    /* --- GTN REPORT SPECIFIC STYLES --- */
-    /* Container for the scrollable table */
+    /* Custom Scrollbar Logic for GTN Report */
     .gtn-table-container {
+        /* This sets the height to 70% of the screen height, forcing vertical scroll */
         max-height: 70vh; 
+        /* Enables scrollbars for both directions when needed */
         overflow: auto; 
+        /* specific border handling for scrolling */
+        border: 1px solid #dee2e6;
         position: relative;
-        border-top: 1px solid #dee2e6;
     }
 
-    /* Sticky Headers */
+    /* Make the Header Sticky so it stays visible when scrolling down */
     .gtn-table-container thead th {
         position: sticky;
         top: 0;
-        background-color: #f8f9fa;
+        background-color: #f8f9fa; /* Light gray background to cover moving data */
         z-index: 10;
         box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1);
-        vertical-align: middle;
-        white-space: nowrap;
     }
 
-    /* Sticky First Columns (ID & Name) */
+    /* Ensure cells don't wrap text, forcing horizontal scroll */
+    .gtn-table-container td, 
+    .gtn-table-container th {
+        white-space: nowrap;
+        vertical-align: middle;
+    }
+
+    /* Optional: Make the first two columns (ID and Name) sticky to the left 
+       so you know who the data belongs to while scrolling right */
     .gtn-table-container td:nth-child(1),
     .gtn-table-container th:nth-child(1) {
         position: sticky;
         left: 0;
         background-color: #fff;
-        z-index: 11;
-        border-right: 2px solid #e9ecef; /* Visual separator */
+        z-index: 11; /* Higher than normal header */
     }
     .gtn-table-container td:nth-child(2),
     .gtn-table-container th:nth-child(2) {
         position: sticky;
-        left: 0; /* Adjust based on width of first col if not sticking properly, or group them */
+        left: 0; /* Adjust this if you want ID and Name separate, or stick them together */
         background-color: #fff;
         z-index: 11;
-        border-right: 2px solid #e9ecef;
     }
-
-    /* Corner Fix (Header + Left Column intersection) */
+    /* Fix z-index for the top-left corner intersection */
     .gtn-table-container thead th:nth-child(1),
     .gtn-table-container thead th:nth-child(2) {
         z-index: 12;
         background-color: #f8f9fa;
     }
-
-    /* Cell Formatting */
-    .gtn-table-container td {
-        white-space: nowrap;
-        vertical-align: middle;
-    }
-    
-    /* Hover Row Effect on the sticky columns */
-    .gtn-table-container tbody tr:hover td:nth-child(1),
-    .gtn-table-container tbody tr:hover td:nth-child(2) {
-        background-color: #ececec; /* Match bootstrap hover */
-    }
 </style>
-{% endblock %}
 
-{% block breadcrumbs %}
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'companies:company' country_slug %}">Companies</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'payroll:payroll_list' country_slug company_id %}">Payrolls</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'payroll:payroll_detail' country_slug company_id payroll_id %}">{{ period.payroll.fiscal_year }}</a></li>
-    <li class="breadcrumb-item active">{{ period.name }}</li>
-  </ol>
-</nav>
-{% endblock %}
-
-{% block content %}
-<div class="row">
-    <div class="col-12">
-        
-        <div class="card card-hover-effect shadow-sm">
-            
-            <div class="card-header pt-4 px-4 pb-3">
-                <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
-                    
-                    <div>
-                        <div class="d-flex align-items-center gap-2">
-                            <h5 class="card-title mb-0 text-primary fw-bold">
-                                <i class="fas fa-file-invoice-dollar me-2"></i>{{ period.name }}
-                            </h5>
-                            <span class="badge rounded-pill
-                                {% if period.status == 'PENDING' %}bg-secondary
-                                {% elif period.status == 'PROCESSED' %}bg-info
-                                {% elif period.status == 'AWAITING_APPROVAL' %}bg-warning text-dark
-                                {% elif period.status == 'COMPLETED' %}bg-success
-                                {% else %}bg-secondary{% endif %}">
-                                {{ period.get_status_display }}
-                            </span>
-                        </div>
-                        <h6 class="card-subtitle text-muted mt-1 ms-1">
-                            Period #{{ period.period_number }} — Gross to Net Report
-                        </h6>
-                    </div>
-
-                    <div class="d-flex gap-2 flex-wrap">
-                        {% if can_process %}
-                            <button class="btn btn-primary" id="processBtn">
-                                <i class="fas fa-cogs me-2"></i>Process Payroll
-                            </button>
-                        {% endif %}
-
-                        {% if period.status == 'PROCESSED' %}
-                            <form method="post" action="{% url 'payroll:period_reset' country_slug company_id payroll_id period.id %}" class="d-inline">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Are you sure? This will delete all calculations.');">
-                                    <i class="fas fa-undo me-1"></i> Reset
-                                </button>
-                            </form>
-
-                            <button class="btn btn-success" id="sendApprovalBtn">
-                                <i class="fas fa-paper-plane me-2"></i>Send for Approval
-                            </button>
-                        {% endif %}
-
-                        {% if period.status == 'AWAITING_APPROVAL' %}
-                            {% if can_reject %}
-                                <button class="btn btn-danger" id="rejectBtn">
-                                    <i class="fas fa-times-circle me-2"></i>Reject
-                                </button>
-                            {% endif %}
-                            
-                            {% if can_authorize %}
-                                <button class="btn btn-success" id="authorizeBtn">
-                                    <i class="fas fa-check-circle me-2"></i>Authorize
-                                </button>
-                            {% endif %}
-                            
-                            {% if not can_authorize and not can_reject %}
-                                <span class="badge bg-light text-dark border">
-                                    <i class="fas fa-hourglass-half me-1"></i> Waiting for approval...
-                                </span>
-                            {% endif %}
-                        {% endif %}
-
-                        {% if is_locked %}
-                            <a href="{% url 'payroll:period_export' country_slug company_id payroll_id period.id %}" class="btn btn-outline-secondary">
-                                <i class="fas fa-download me-1"></i> Export
-                            </a>
-                        {% endif %}
-                    </div>
-                </div>
+<div class="container-fluid py-4 mt-7">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-0">{{ period.name }}</h2>
+            <div class="d-flex align-items-center gap-2 mt-1">
+                <span class="badge 
+                    {% if period.status == 'PENDING' %}bg-secondary
+                    {% elif period.status == 'PROCESSED' %}bg-info
+                    {% elif period.status == 'AWAITING_APPROVAL' %}bg-warning text-dark
+                    {% elif period.status == 'COMPLETED' %}bg-success
+                    {% else %}bg-secondary{% endif %}">
+                    {{ period.get_status_display }}
+                </span>
+                <span class="text-muted small">Period #{{ period.period_number }}</span>
             </div>
+        </div>
 
-            <div class="card-body p-0">
-                <div class="gtn-table-container">
-                    <table class="table table-bordered table-hover mb-0 align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th class="bg-light text-center" style="min-width: 80px;">ID</th>
-                                <th class="ps-3 bg-light" style="min-width: 200px;">Employee</th>
-                                {% for header in headers %}
-                                    <th class="text-end" style="min-width: 120px;">
-                                        <div class="fw-bold text-dark">{{ header.label }}</div>
-                                        <div class="small text-muted font-monospace">{{ header.code }}</div>
-                                    </th>
-                                {% endfor %}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for row in rows %}
-                            <tr>
-                                <td class="text-center bg-white fw-bold text-muted">{{ row.employee_id }}</td>
-                                <td class="ps-3 bg-white fw-bold text-dark">{{ row.employee_name }}</td>
-                                
-                                {% for val in row.cells %}
-                                    <td class="text-end font-monospace">
-                                        {% if val != 0 %}
-                                            {{ val|floatformat:2|intcomma }}
-                                        {% else %}
-                                            <span class="text-muted opacity-25">-</span>
-                                        {% endif %}
-                                    </td>
-                                {% endfor %}
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="100%" class="text-center py-5 text-muted">
-                                    <i class="fas fa-calculator fa-2x mb-3 opacity-25"></i>
-                                    <p>No data calculated yet. Click "Process Payroll" to begin.</p>
-                                </td>
-                            </tr>
+        <div class="d-flex gap-2">
+            {% if can_process %}
+                <button class="btn btn-primary" id="processBtn" data-period-id="{{ period.pk }}">
+                    <i class="bi bi-gear-fill me-1"></i> Process Payroll
+                </button>
+            {% endif %}
+
+            {% if period.status == 'PROCESSED' %}
+                <form method="post" action="{% url 'payroll:period_reset' country_slug company_id payroll_id period.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Are you sure? This will delete all calculations.');">
+                        <i class="bi bi-arrow-counterclockwise me-1"></i> Reset Payroll
+                    </button>
+                </form>
+
+                <button class="btn btn-success" id="sendApprovalBtn" data-period-id="{{ period.pk }}">
+                    <i class="bi bi-send-fill me-1"></i> Send for Approval
+                </button>
+            {% endif %}
+
+            {% if period.status == 'AWAITING_APPROVAL' %}
+                {% if can_reject %}
+                    <button class="btn btn-danger" id="rejectBtn" data-period-id="{{ period.pk }}">
+                        <i class="bi bi-x-circle-fill me-1"></i> Reject Payroll
+                    </button>
+                {% endif %}
+                
+                {% if can_authorize %}
+                    <button class="btn btn-success" id="authorizeBtn" data-period-id="{{ period.pk }}">
+                        <i class="bi bi-check-circle-fill me-1"></i> Authorize Payroll
+                    </button>
+                {% endif %}
+                
+                {% if not can_authorize and not can_reject %}
+                    <span class="text-muted fst-italic align-self-center">Waiting for authorized approver...</span>
+                {% endif %}
+            {% endif %}
+
+            {% if is_locked %}
+                <a href="{% url 'payroll:period_export' country_slug company_id payroll_id period.id %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-download me-1"></i> Export Report
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0 fw-bold">Gross to Net Report</h5>
+        </div>
+        
+        <div class="card-body p-0">
+            <div class="gtn-table-container">
+                <table class="table table-bordered table-hover mb-0 align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="bg-light" style="min-width: 80px;">ID</th>
+                            <th class="ps-3 bg-light" style="min-width: 200px;">Employee</th>
+                            {% for header in headers %}
+                                <th class="text-end" style="min-width: 120px;">
+                                    <div class="fw-bold">{{ header.label }}</div>
+                                    <div class="small text-muted font-monospace">{{ header.code }}</div>
+                                </th>
                             {% endfor %}
-                        </tbody>
-                        {% if totals %}
-                        <tfoot class="table-light border-top border-2">
-                            <tr>
-                                <td colspan="2" class="text-end fw-bold py-3 position-sticky start-0 bg-light text-uppercase">
-                                    Total:
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in rows %}
+                        <tr>
+                            <td class="text-end bg-white fw-bold">{{ row.employee_id }}</td>
+                            <td class="ps-3 bg-white fw-bold">{{ row.employee_name }}</td>
+                            
+                            {% for val in row.cells %}
+                                <td class="text-end font-monospace">
+                                    {% if val != 0 %}
+                                        {{ val|floatformat:2|intcomma }}
+                                    {% else %}
+                                        <span class="text-muted opacity-25">-</span>
+                                    {% endif %}
                                 </td>
-                                {% for total in totals %}
-                                    <td class="text-end fw-bold text-dark">{{ total|floatformat:2|intcomma }}</td>
-                                {% endfor %}
-                            </tr>
-                        </tfoot>
-                        {% endif %}
-                    </table>
-                </div>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    {% if totals %}
+                    <tfoot class="table-light border-top border-2">
+                        <tr>
+                            <td colspan="2" class="text-end fw-bold py-3 position-sticky start-0 bg-light">TOTALS:</td>
+                            {% for total in totals %}
+                                <td class="text-end fw-bold">{{ total|floatformat:2|intcomma }}</td>
+                            {% endfor %}
+                        </tr>
+                    </tfoot>
+                    {% endif %}
+                </table>
             </div>
         </div>
     </div>
@@ -238,80 +177,74 @@
 
 {% block extra_js %}
 <script>
-document.addEventListener("DOMContentLoaded", function() {
-    
-    // Helper for AJAX actions
-    function handleAction(btn, url, confirmMsg) {
-        if(confirmMsg && !confirm(confirmMsg)) return;
-
-        const originalText = btn.innerHTML;
-        btn.disabled = true;
-        btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Processing...';
-        
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': '{{ csrf_token }}',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({})
-        })
-        .then(async response => {
-            const contentType = response.headers.get("content-type");
-            const isJson = contentType && contentType.includes("application/json");
-            const data = isJson ? await response.json() : await response.text();
-
-            if (!response.ok) {
-                let errorMsg = "Unknown Error";
-                if (isJson && data.error) errorMsg = data.error;
-                else errorMsg = "Server error occurred.";
-                throw new Error(errorMsg);
-            }
-            return data;
-        })
-        .then(data => {
-            if(data.success) {
-                location.reload();
-            } else {
-                throw new Error(data.error || "Operation failed.");
-            }
-        })
-        .catch(err => {
-            console.error("Action Failed:", err);
-            alert("Action Failed: " + err.message);
-            btn.disabled = false;
-            btn.innerHTML = originalText;
-        });
-    }
-
-    // Bind Buttons
-    const processBtn = document.getElementById('processBtn');
-    if(processBtn) {
-        processBtn.addEventListener('click', function() {
-            handleAction(this, "{% url 'payroll:period_process' country_slug company_id payroll_id period.id %}", "Start Payroll Calculation?");
-        });
-    }
-
-    const sendApprovalBtn = document.getElementById('sendApprovalBtn');
-    if(sendApprovalBtn) {
-        sendApprovalBtn.addEventListener('click', function() {
-            handleAction(this, "{% url 'payroll:period_send_approval' country_slug company_id payroll_id period.id %}", "Send for Approval? This will lock the period.");
-        });
-    }
-
-    const authorizeBtn = document.getElementById('authorizeBtn');
-    if(authorizeBtn) {
-        authorizeBtn.addEventListener('click', function() {
-            handleAction(this, "{% url 'payroll:period_authorize' country_slug company_id payroll_id period.id %}", "Authorize Payroll? This action is final.");
-        });
-    }
-
-    const rejectBtn = document.getElementById('rejectBtn');
-    if(rejectBtn) {
-        rejectBtn.addEventListener('click', function() {
-            handleAction(this, "{% url 'payroll:period_reject' country_slug company_id payroll_id period.id %}", "Reject Payroll? This will DELETE all calculations.");
-        });
-    }
+// PROCESS (Stage 1)
+document.getElementById('processBtn')?.addEventListener('click', function() {
+    if(!confirm("Start Payroll Calculation?")) return;
+    const url = "{% url 'payroll:period_process' country_slug company_id payroll_id period.id %}";
+    handleAction(this, url);
 });
+
+// SEND FOR APPROVAL (Stage 2)
+document.getElementById('sendApprovalBtn')?.addEventListener('click', function() {
+    if(!confirm("Send for Approval? This will lock the period from further edits.")) return;
+    const url = "{% url 'payroll:period_send_approval' country_slug company_id payroll_id period.id %}";
+    handleAction(this, url);
+});
+
+// AUTHORIZE (Stage 3)
+document.getElementById('authorizeBtn')?.addEventListener('click', function() {
+    if(!confirm("Authorize Payroll? This action is final.")) return;
+    const url = "{% url 'payroll:period_authorize' country_slug company_id payroll_id period.id %}";
+    handleAction(this, url);
+});
+
+// REJECT (Stage 3)
+document.getElementById('rejectBtn')?.addEventListener('click', function() {
+    if(!confirm("Reject Payroll? This will DELETE all calculations and return to Open status.")) return;
+    const url = "{% url 'payroll:period_reject' country_slug company_id payroll_id period.id %}";
+    handleAction(this, url);
+});
+
+function handleAction(btn, url) {
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+    
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({})
+    })
+    .then(async response => {
+        const contentType = response.headers.get("content-type");
+        const isJson = contentType && contentType.includes("application/json");
+        const data = isJson ? await response.json() : await response.text();
+
+        if (!response.ok) {
+            let errorMsg = "Unknown Error";
+            if (isJson && data.error) errorMsg = data.error;
+            else if (!isJson) errorMsg = `Server returned HTML (Status ${response.status}). Check server console logs.`;
+            else errorMsg = response.statusText;
+            throw new Error(errorMsg);
+        }
+        return data;
+    })
+    .then(data => {
+        if(data.success) {
+            location.reload();
+        } else {
+            throw new Error(data.error || "Operation failed without error message");
+        }
+    })
+    .catch(err => {
+        console.error("Action Failed:", err);
+        alert("Action Failed: " + err.message);
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+    });
+}
 </script>
 {% endblock %}

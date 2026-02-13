@@ -1,18 +1,16 @@
+import logging
 import json
 import csv
 import io
 from decimal import Decimal, InvalidOperation, ROUND_HALF_UP
-import logging
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, View
 from django.http import JsonResponse, HttpResponse
-from django.urls import reverse_lazy, reverse
-from django.views import View
+from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.decorators.http import require_POST, require_http_methods
 from django.db.models import Sum, Count, Q
@@ -31,17 +29,18 @@ from Exactus.payroll.models import (
 from Exactus.compensation.models import CompensationComponent
 from Exactus.country.utils.decorators import role_required
 
-try:
-    from Exactus.calculationbase.models import CalculationBase
-except ImportError:
-    CalculationBase = None
-
+# --- OPTIONAL MODELS (Safety Checks) ---
 try:
     from Exactus.elements.models import Element
 except ImportError:
     Element = None
 
-# Ensure HistoricalUploadForm is imported from your forms.py
+try:
+    from Exactus.calculationbase.models import CalculationBase
+except ImportError:
+    CalculationBase = None
+
+# --- FORMS ---
 from .forms import (
     PayrollForm, 
     PayrollPeriodForm, 
@@ -49,6 +48,7 @@ from .forms import (
     HistoricalUploadForm
 )
 
+# --- CALCULATOR ---
 try:
     from Exactus.payroll.calculator.universal import UniversalPayrollCalculator
 except ImportError:
@@ -161,7 +161,7 @@ class PayrollDetailView(LoginRequiredMixin, DetailView):
 
 
 # ============================================================
-# PAYROLL CREATE
+# PAYROLL CREATE / UPDATE / DELETE
 # ============================================================
 
 @method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE"), name='dispatch')
@@ -198,11 +198,6 @@ class PayrollCreateView(LoginRequiredMixin, CreateView):
             },
         )
 
-
-# ============================================================
-# PAYROLL UPDATE
-# ============================================================
-
 @method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST",), name='dispatch')
 class PayrollUpdateView(LoginRequiredMixin, UpdateView):
     model = Payroll
@@ -230,11 +225,6 @@ class PayrollUpdateView(LoginRequiredMixin, UpdateView):
             },
         )
 
-
-# ============================================================
-# PAYROLL DELETE
-# ============================================================
-
 @method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST",), name='dispatch')
 class PayrollDeleteView(LoginRequiredMixin, DeleteView):
     model = Payroll
@@ -258,6 +248,7 @@ class PayrollDeleteView(LoginRequiredMixin, DeleteView):
             kwargs={
                 "country_slug": self.kwargs["country_slug"],
                 "company_id": self.kwargs["company_id"],
+                "pk": self.object.pk,
             },
         )
 
@@ -288,115 +279,180 @@ class PayrollPeriodListView(LoginRequiredMixin, ListView):
 
 
 # ============================================================
-# PERIOD DETAIL (GROSS TO NET REPORT)
+# PERIOD DETAIL VIEW (UPDATED VISIBILITY LOGIC)
 # ============================================================
 
-@method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE"), name='dispatch')
+@method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE"), name='dispatch')
 class PayrollPeriodDetailView(LoginRequiredMixin, DetailView):
     model = PayrollPeriod
     template_name = "payroll/period_detail.html"
     context_object_name = "period"
 
+    def _parse_details(self, details_data):
+        """Helper to safely parse JSON details from stored results."""
+        if isinstance(details_data, str):
+            try:
+                return json.loads(details_data)
+            except json.JSONDecodeError:
+                return {}
+        return details_data if isinstance(details_data, dict) else {}
+
+    def _safe_float(self, value):
+        """Helper to safely convert values to float."""
+        try:
+            return float(value)
+        except (ValueError, TypeError):
+            return 0.0
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         period = self.object
         eligible_employees = period.get_eligible_employees()
-        company_id = self.kwargs["company_id"]
+        company_id = self.kwargs.get("company_id")
         
-        # 1. BUILD HEADER MAP (Code -> Readable Name)
-        header_map = {}
-        
-        # A. Elements (Visible)
-        if Element:
-            visible_elems = Element.objects.filter(
-                country=period.payroll.country,
-                element_status__iexact='Visible'
-            )
-            for el in visible_elems:
-                header_map[el.element_code] = el.element_name
+        # Determine if we use stored results or live preview
+        use_stored_results = period.status in [
+            PeriodStatus.PROCESSED, 
+            PeriodStatus.AWAITING_APPROVAL, 
+            PeriodStatus.COMPLETED, 
+            PeriodStatus.LOCKED
+        ]
 
-        # B. PD Codes (Visible)
-        pd_codes = PDcode.objects.filter(company_id=company_id, pdcode_status='Visible')
-        for pd in pd_codes:
-            header_map[pd.pdcode_code] = pd.pdcode_name
+        # -------------------------------------------------------------
+        # 1. BUILD HEADER & STATUS MAPS
+        # -------------------------------------------------------------
+        # Elements Map: { 'code': {'name': 'Name', 'status': 'Visible/Hidden'} }
+        elem_config = {}
+        try:
+            if Element:
+                all_elems = Element.objects.filter(country=period.payroll.country)
+                for el in all_elems:
+                    elem_config[str(el.element_code)] = {
+                        'name': el.element_name,
+                        'status': el.element_status 
+                    }
+        except Exception:
+            pass
 
-        # C. FORCE STANDARD HEADERS (FIXED: Added all standard codes)
-        header_map.update({
-            '5000': 'Gross Pay',
-            '6000': 'Income Tax',
-            '7000': 'National Insurance',       
-            '8000': 'Net Salary',
-            '9000': 'Employer Contributions'
-        })
+        # PD Codes Map: { 'code': {'name': 'Name', 'status': 'Visible/Hidden'} }
+        pd_config = {}
+        try:
+            all_pds = PDcode.objects.filter(company_id=company_id)
+            for pd in all_pds:
+                pd_config[str(pd.pdcode_code)] = {
+                    'name': pd.pdcode_name,
+                    'status': pd.pdcode_status 
+                }
+        except Exception:
+            pass
 
-        # 2. GATHER DATA & FILTER COLUMNS
+        # -------------------------------------------------------------
+        # 2. GATHER DATA
+        # -------------------------------------------------------------
         report_rows = []
         active_codes = set() 
-        
-        # Only fetch stored results if we are NOT in Pending state.
-        use_stored_results = period.status != PeriodStatus.PENDING
-        
-        payroll_results = period.results.select_related('employee').all()
-        has_results = payroll_results.exists()
-        
-        if use_stored_results and has_results:
-            loop_target = payroll_results
+
+        if use_stored_results:
+            loop_target = period.results.select_related('employee').all()
+            if not loop_target.exists():
+                loop_target = eligible_employees
+                use_stored_results = False 
         else:
-            loop_target = eligible_employees[:10000] # Preview limit
+            loop_target = eligible_employees
 
         for obj in loop_target:
-            emp = obj.employee if hasattr(obj, 'employee') else obj
+            if hasattr(obj, 'employee'):
+                emp = obj.employee
+                stored_result = obj
+            else:
+                emp = obj
+                stored_result = None
+
             row_data = {}
             
-            if use_stored_results and hasattr(obj, 'details'):
-                # History Mode (Locked/Processed Data)
-                details = self._parse_details(obj.details)
-                for k, v in details.items():
-                    # Handle legacy key names just in case
-                    if k == 'Gross Pay': k = '5000'
-                    if k == 'Net Salary': k = '8000'
-                    row_data[k] = self._safe_float(v)
+            # --- PATH A: READ FROM DB ---
+            if use_stored_results and stored_result:
+                details = self._parse_details(stored_result.details)
+                
+                if 'elements' in details:
+                    # New Structured Format
+                    for k, v in details.get('elements', {}).items():
+                        row_data[str(k)] = self._safe_float(v)
+                    for item in details.get('pd_codes', []):
+                        code = str(item.get('code'))
+                        row_data[code] = self._safe_float(item.get('amount'))
+                else:
+                    # Old Flat Format
+                    for k, v in details.items():
+                        if k == 'Gross Pay': k = '5000'
+                        if k == 'Net Salary': k = '8000'
+                        row_data[str(k)] = self._safe_float(v)
+
+            # --- PATH B: LIVE PREVIEW ---
             else:
-                # Preview Mode (Live Calculation)
                 if UniversalPayrollCalculator:
                     try:
                         calc = UniversalPayrollCalculator(period=period, employee=emp)
-                        out = calc.calculate()
-                        
-                        # Extract Elements (Bases, Tax, Net)
-                        for k, v in out.get('elements', {}).items():
-                            row_data[k] = float(v)
-                            
-                        # Extract Earnings (PD Codes)
-                        for pd_item in out.get('pd_codes', []):
-                            code = pd_item['code']
-                            if code not in row_data:
-                                row_data[code] = float(pd_item['amount'])
+                        res = calc.calculate()
+                        for k, v in res.get('elements', {}).items():
+                            row_data[str(k)] = self._safe_float(v)
+                        for item in res.get('pd_codes', []):
+                            row_data[str(item['code'])] = self._safe_float(item['amount'])
                     except Exception as e:
-                        logger.error(f"Preview error for {emp}: {e}")
+                        logger.error(f"Preview Error for {emp}: {e}")
 
-            # FILTER: Show column if ANYONE has value > 0
+            # -------------------------------------------------------------
+            # 3. COLUMN VISIBILITY LOGIC (FINAL LOGIC)
+            # -------------------------------------------------------------
             for k, v in row_data.items():
-                # We check if it exists in our header_map OR is a standard key
-                if k in header_map and abs(v) > 0:
-                    active_codes.add(k)
+                if abs(v) > 0.001: # Check: Value exists
+                    is_visible = False
+                    
+                    # RULE 1: System Totals are ALWAYS visible (Override Config)
+                    if k in ['5000', '6000', '7000', '8000', '9000']:
+                        is_visible = True
+                    
+                    # RULE 2: Configured Items (Strict Status Check)
+                    elif k in pd_config:
+                        if pd_config[k]['status'] == 'Visible': is_visible = True
+                    elif k in elem_config:
+                        if elem_config[k]['status'] == 'Visible': is_visible = True
+                        
+                    # RULE 3: Calculated/Unconfigured Fallback (Range Check)
+                    # If it's a dynamic tax/NI/Pension code not yet in Elements table,
+                    # we show it if it falls in standard ranges.
+                    elif k.isdigit():
+                        c = int(k)
+                        if (1000 <= c <= 4999) or (6000 <= c <= 6999) or (7000 <= c <= 7999) or (9000 <= c <= 9999):
+                            is_visible = True
+                    
+                    if is_visible:
+                        active_codes.add(k)
 
             report_rows.append({'employee': emp, 'data': row_data})
 
-        # 3. SORT HEADERS
-        def strict_numerical_sort(val):
+        # 4. Sort & Label Headers
+        def sort_key(val):
             try: return int(val)
             except: return 999999
             
-        sorted_codes = sorted(list(active_codes), key=strict_numerical_sort)
+        sorted_codes = sorted(list(active_codes), key=sort_key)
+        
         final_headers = []
-        for code in sorted_codes:
-            final_headers.append({
-                'code': code,
-                'label': header_map.get(code, code)
-            })
+        system_labels = {
+            '5000': 'Gross Pay', '6000': 'Income Tax', '7000': 'National Insurance',
+            '8000': 'Net Salary', '9000': 'Employer Cost'
+        }
 
-        # 4. BUILD TABLE ROWS
+        for c in sorted_codes:
+            name = f"Code {c}"
+            if c in system_labels: name = system_labels[c]
+            elif c in elem_config: name = elem_config[c]['name']
+            elif c in pd_config: name = pd_config[c]['name']
+            
+            final_headers.append({'code': c, 'label': name})
+
+        # 5. Totals
         table_rows = []
         grand_totals = [Decimal('0.00')] * len(final_headers)
 
@@ -404,15 +460,6 @@ class PayrollPeriodDetailView(LoginRequiredMixin, DetailView):
             cells = []
             for idx, h in enumerate(final_headers):
                 val = item['data'].get(h['code'], 0.0)
-                
-                # Visual Logic:
-                # Deductions (6000-7999) -> Show absolute (Positive in UI)
-                try:
-                    code_int = int(h['code'])
-                    if 6000 <= code_int <= 7999: 
-                        val = abs(val)
-                except: pass
-                
                 cells.append(val)
                 grand_totals[idx] += Decimal(str(val))
             
@@ -422,21 +469,18 @@ class PayrollPeriodDetailView(LoginRequiredMixin, DetailView):
                 'cells': cells
             })
 
-        # 5. PERMISSION CHECKS FOR BUTTONS
+        # Context Setup
         user = self.request.user
+        can_approve = False
         allowed_approvers = ["EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION",
                              "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE"]
-        
-        # Safe permission check
-        user_role = getattr(user, 'role', '').upper() if hasattr(user, 'role') else ''
-        can_approve = False
-        
         if user.is_superuser:
             can_approve = True
-        elif hasattr(user, 'roles'): # Maybe ManyToMany
-             can_approve = user.roles.filter(name__in=allowed_approvers).exists()
-        elif user_role:
-             can_approve = user_role in allowed_approvers
+        elif hasattr(user, 'roles'):
+            can_approve = user.roles.filter(name__in=allowed_approvers).exists()
+        elif hasattr(user, 'role'):
+            role_str = str(user.role).upper()
+            can_approve = role_str in allowed_approvers
 
         context.update({
             'headers': final_headers,
@@ -445,26 +489,96 @@ class PayrollPeriodDetailView(LoginRequiredMixin, DetailView):
             'company_id': company_id,
             'country_slug': self.kwargs['country_slug'],
             'payroll_id': self.kwargs['payroll_id'],
-            'process_form': PayrollProcessForm(),
-            # Button Logic Flags
             'can_process': period.status == PeriodStatus.PENDING,
             'can_reset': period.status == PeriodStatus.PROCESSED,
             'can_send_approval': period.status == PeriodStatus.PROCESSED,
             'can_reject': period.status == PeriodStatus.AWAITING_APPROVAL and can_approve,
             'can_authorize': period.status == PeriodStatus.AWAITING_APPROVAL and can_approve,
-            'is_locked': period.status == PeriodStatus.COMPLETED,
+            'is_locked': period.status in [PeriodStatus.COMPLETED, PeriodStatus.LOCKED],
         })
         return context
 
-    def _parse_details(self, details_data):
-        if isinstance(details_data, str):
-            try: return json.loads(details_data)
-            except: return {}
-        return details_data or {}
 
-    def _safe_float(self, val):
-        try: return float(val)
-        except: return 0.0
+# ============================================================
+# PAYROLL PROCESS VIEW
+# ============================================================
+
+@method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION"), name='dispatch')
+class PayrollPeriodProcessView(LoginRequiredMixin, View):
+    """View to trigger the calculation (Process Button)."""
+    
+    def post(self, request, *args, **kwargs):
+        period_id = kwargs.get('period_id') or kwargs.get('pk')
+        period = get_object_or_404(PayrollPeriod, pk=period_id)
+        
+        if period.status != PeriodStatus.PENDING:
+             return JsonResponse({'success': False, 'error': "Period is not in Pending status."}, status=400)
+             
+        eligible_employees = period.get_eligible_employees()
+        
+        period_total_gross = Decimal('0.00')
+        period_total_net = Decimal('0.00')
+        period_total_tax = Decimal('0.00')
+        processed_count = 0
+        
+        try:
+            with transaction.atomic():
+                period.results.all().delete()
+                
+                if not UniversalPayrollCalculator:
+                     return JsonResponse({'success': False, 'error': "Calculator engine not found."}, status=500)
+
+                for emp in eligible_employees:
+                    try:
+                        calc = UniversalPayrollCalculator(period=period, employee=emp)
+                        res = calc.calculate()
+                        
+                        elements = res.get('elements', {})
+                        gross = Decimal(str(elements.get('5000', 0)))
+                        net = Decimal(str(elements.get('8000', 0)))
+                        tax_val = abs(Decimal(str(elements.get('6000', 0))))
+                        total_deductions = gross - net
+
+                        details_payload = {
+                            'elements': elements,
+                            'pd_codes': res.get('pd_codes', []),
+                            'breakdown': res.get('breakdown', [])
+                        }
+
+                        PayrollResult.objects.create(
+                            period=period,
+                            employee=emp,
+                            gross_pay=gross,
+                            net_pay=net,
+                            total_tax=tax_val, 
+                            total_deductions=total_deductions,
+                            details=json.dumps(details_payload, default=str)
+                        )
+                        
+                        period_total_gross += gross
+                        period_total_net += net
+                        period_total_tax += tax_val
+                        processed_count += 1
+                        
+                    except Exception as e:
+                        logger.error(f"Failed to process {emp}: {e}")
+                
+                if processed_count > 0:
+                    period.total_gross = period_total_gross
+                    period.total_net = period_total_net
+                    period.total_tax = period_total_tax
+                    period.total_amount = period_total_net
+                    period.employee_count = processed_count
+                    period.status = PeriodStatus.PROCESSED
+                    period.save()
+                    
+                    messages.success(request, f"Successfully processed {processed_count} employees.")
+                    return JsonResponse({'success': True})
+                else:
+                    return JsonResponse({'success': False, 'error': "No employees were processed."})
+        
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': f"Processing Error: {str(e)}"}, status=500)
 
 
 # ============================================================
@@ -526,7 +640,6 @@ class PayrollPeriodCreateView(LoginRequiredMixin, CreateView):
         return context
 
     def get_success_url(self):
-        # Redirect to Historical Upload if Payroll is flagged as historical
         if self.payroll.is_historical:
             return reverse_lazy(
                 "payroll:historical_upload",
@@ -537,8 +650,6 @@ class PayrollPeriodCreateView(LoginRequiredMixin, CreateView):
                     "period_id": self.object.pk,
                 }
             )
-        
-        # Default behavior for regular payrolls
         return reverse_lazy("payroll:period_detail", kwargs={
             "country_slug": self.kwargs["country_slug"],
             "company_id": self.kwargs["company_id"],
@@ -614,106 +725,17 @@ class PayrollPeriodDeleteView(LoginRequiredMixin, DeleteView):
 
 
 # ============================================================
-# PROCESS PERIOD (STAGE 1 -> STAGE 2)
-# ============================================================
-
-@method_decorator(login_required, name="dispatch")
-@method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST"), name='dispatch')
-class PayrollPeriodProcessView(View):
-    def post(self, request, country_slug, company_id, payroll_id, period_id):
-        period = get_object_or_404(PayrollPeriod, pk=period_id, payroll_id=payroll_id, payroll__company_id=company_id)
-        
-        # Start Log
-        PayrollExecutionLog.objects.create(
-            period=period, execution_type="calculation", status="started",
-            input_data={"period_id": period_id}, executed_by=request.user
-        )
-
-        try:
-            period.mark_as_processing(request.user)
-            employees = period.get_eligible_employees()
-            if not employees.exists(): raise ValueError("No eligible employees found.")
-
-            with transaction.atomic():
-                # 1. Clear old results
-                PayrollResult.objects.filter(period=period).delete()
-                
-                results_to_create = []
-                batch_total_gross = Decimal('0')
-                batch_total_net = Decimal('0')
-                batch_total_tax = Decimal('0')
-
-                for emp in employees:
-                    if UniversalPayrollCalculator:
-                        try:
-                            calc = UniversalPayrollCalculator(period=period, employee=emp)
-                            output = calc.calculate()
-                            totals = output.get('totals', {})
-                            
-                            final_gross = Decimal(str(totals.get('gross', 0)))
-                            final_net = Decimal(str(totals.get('net', 0)))
-
-                            # Skip zero-net employees for Additional Runs
-                            if getattr(period, 'is_additional', False) and final_net == 0:
-                                continue 
-                            
-                            final_deductions = final_gross - final_net
-                            
-                            elements_dict = output.get('elements', {})
-                            json_storage = {k: str(v) for k, v in elements_dict.items()}
-                            
-                            results_to_create.append(PayrollResult(
-                                period=period, 
-                                employee=emp,
-                                gross_pay=final_gross, 
-                                net_pay=final_net, 
-                                total_tax=final_deductions,
-                                total_deductions=final_deductions,
-                                details=json_storage
-                            ))
-                            batch_total_gross += final_gross
-                            batch_total_net += final_net
-                            batch_total_tax += final_deductions
-                        except Exception as e:
-                            logger.error(f"Calculator failed for {emp}: {e}")
-
-                    else:
-                        raise ImportError("UniversalPayrollCalculator not found")
-
-                PayrollResult.objects.bulk_create(results_to_create)
-                
-                # MARK AS PROCESSED (Stage 2)
-                period.mark_as_processed(results_payload={
-                    "total_net": str(batch_total_net), 
-                    "total_gross": str(batch_total_gross),
-                    "total_tax": str(batch_total_tax)
-                })
-
-            return JsonResponse({"success": True, "message": f"Processed {len(results_to_create)} employees. Review required."})
-
-        except Exception as e:
-            period.status = PeriodStatus.PENDING
-            period.save()
-            return JsonResponse({"success": False, "error": str(e)}, status=500)
-
-
-# ============================================================
-# NEW WORKFLOW ACTIONS (MANUAL PERMISSION CHECKS)
+# WORKFLOW ACTIONS (SEND, APPROVE, REJECT)
 # ============================================================
 
 @method_decorator(login_required, name="dispatch")
 @method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST"), name='dispatch')
 class PayrollPeriodSendApprovalView(View):
-    """
-    Stage 2 -> Stage 3: Lock and Send to Approver
-    """
     def post(self, request, country_slug, company_id, payroll_id, period_id):
         try:
             period = get_object_or_404(PayrollPeriod, pk=period_id, payroll_id=payroll_id)
-            
             if period.status != PeriodStatus.PROCESSED:
                  return JsonResponse({"success": False, "error": "Period must be processed before sending for approval."}, status=400)
-                 
             period.send_for_approval()
             messages.success(request, f"Period {period.name} sent for approval.")
             return JsonResponse({"success": True})
@@ -724,66 +746,11 @@ class PayrollPeriodSendApprovalView(View):
 @method_decorator(login_required, name="dispatch")
 @method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER"), name='dispatch')
 class PayrollPeriodAuthorizeView(View):
-    """
-    Stage 3 -> Stage 4: Authorize and Finalize
-    """
     def post(self, request, country_slug, company_id, payroll_id, period_id):
         try:
-            # 1. Manual Role Check
-            allowed_roles = ["EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION",
-                             "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE"]
-            
+            allowed_roles = ["EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION", "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE"]
             user = request.user
             has_permission = False
-            
-            if user.is_superuser:
-                has_permission = True
-            elif hasattr(user, 'roles'): # Check ManyToMany
-                has_permission = user.roles.filter(name__in=allowed_roles).exists()
-            elif hasattr(user, 'role'): # Check simple field
-                role_str = str(user.role).upper()
-                has_permission = role_str in allowed_roles
-            
-            if not has_permission:
-                 return JsonResponse({"success": False, "error": "Permission Denied: You are not authorized to approve payroll."}, status=403)
-
-            # 2. Logic
-            period = get_object_or_404(PayrollPeriod, pk=period_id, payroll_id=payroll_id)
-            
-            if period.status != PeriodStatus.AWAITING_APPROVAL:
-                 return JsonResponse({"success": False, "error": "Period is not awaiting approval."}, status=400)
-                 
-            period.authorize(request.user)
-            
-            # Log execution
-            PayrollExecutionLog.objects.create(
-                period=period, execution_type="approval", status="completed",
-                input_data={"action": "authorize"}, executed_by=request.user
-            )
-            
-            messages.success(request, f"Period {period.name} authorized and completed.")
-            return JsonResponse({"success": True})
-
-        except Exception as e:
-            # Catch all errors (DB, Logic) and return JSON
-            return JsonResponse({"success": False, "error": f"Authorization Failed: {str(e)}"}, status=500)
-
-
-@method_decorator(login_required, name="dispatch")
-@method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER"), name='dispatch')
-class PayrollPeriodRejectView(View):
-    """
-    Stage 3 -> Stage 1: Reject and Reset to Pending (Wipe Data)
-    """
-    def post(self, request, country_slug, company_id, payroll_id, period_id):
-        try:
-            # 1. Manual Role Check
-            allowed_roles = ["EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION",
-                             "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE"]
-            
-            user = request.user
-            has_permission = False
-            
             if user.is_superuser:
                 has_permission = True
             elif hasattr(user, 'roles'):
@@ -795,45 +762,57 @@ class PayrollPeriodRejectView(View):
             if not has_permission:
                  return JsonResponse({"success": False, "error": "Permission Denied."}, status=403)
 
-            # 2. Logic
             period = get_object_or_404(PayrollPeriod, pk=period_id, payroll_id=payroll_id)
+            if period.status != PeriodStatus.AWAITING_APPROVAL:
+                 return JsonResponse({"success": False, "error": "Period is not awaiting approval."}, status=400)
+                 
+            period.authorize(request.user)
+            PayrollExecutionLog.objects.create(period=period, execution_type="approval", status="completed", input_data={"action": "authorize"}, executed_by=request.user)
+            messages.success(request, f"Period {period.name} authorized and completed.")
+            return JsonResponse({"success": True})
+        except Exception as e:
+            return JsonResponse({"success": False, "error": f"Authorization Failed: {str(e)}"}, status=500)
+
+
+@method_decorator(login_required, name="dispatch")
+@method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER"), name='dispatch')
+class PayrollPeriodRejectView(View):
+    def post(self, request, country_slug, company_id, payroll_id, period_id):
+        try:
+            allowed_roles = ["EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION", "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE"]
+            user = request.user
+            has_permission = False
+            if user.is_superuser:
+                has_permission = True
+            elif hasattr(user, 'roles'):
+                has_permission = user.roles.filter(name__in=allowed_roles).exists()
+            elif hasattr(user, 'role'):
+                role_str = str(user.role).upper()
+                has_permission = role_str in allowed_roles
             
+            if not has_permission:
+                 return JsonResponse({"success": False, "error": "Permission Denied."}, status=403)
+
+            period = get_object_or_404(PayrollPeriod, pk=period_id, payroll_id=payroll_id)
             if period.status != PeriodStatus.AWAITING_APPROVAL:
                  return JsonResponse({"success": False, "error": "Period is not awaiting approval."}, status=400)
             
             with transaction.atomic():
-                # Clear Results
                 PayrollResult.objects.filter(period=period).delete()
-                
-                # Unmark Compensation Components
-                CompensationComponent.objects.filter(
-                    processed=True,
-                    processed_period=period.name
-                ).update(
-                    processed=False,
-                    processed_period=''
-                )
-
-                # Reject (Set status to PENDING)
+                CompensationComponent.objects.filter(processed=True, processed_period=period.name).update(processed=False, processed_period='')
                 period.reject()
-                
-                # Log execution
-                PayrollExecutionLog.objects.create(
-                    period=period, execution_type="approval", status="cancelled",
-                    input_data={"action": "reject"}, executed_by=request.user
-                )
+                PayrollExecutionLog.objects.create(period=period, execution_type="approval", status="cancelled", input_data={"action": "reject"}, executed_by=request.user)
 
-            messages.warning(request, f"Period {period.name} rejected. Data wiped and reset to open stage.")
+            messages.warning(request, f"Period {period.name} rejected.")
             return JsonResponse({"success": True})
-            
         except Exception as e:
-            # Catch all errors and return JSON
             return JsonResponse({"success": False, "error": f"Rejection Failed: {str(e)}"}, status=500)
 
 
 # ============================================================
 # EXPORT & RESET UTILS
 # ============================================================
+
 @method_decorator(login_required, name='dispatch')
 @method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST","FINANCE"), name='dispatch')
 class PayrollPeriodExportView(View):
@@ -841,30 +820,22 @@ class PayrollPeriodExportView(View):
         period = get_object_or_404(PayrollPeriod, pk=period_id)
         results = PayrollResult.objects.filter(period=period).select_related('employee')
         
-        # 1. BUILD HEADER MAP (FIXED: Added all standard codes)
-        header_map = {}
-        
-        if Element:
-            visible_elems = Element.objects.filter(
-                country=period.payroll.country,
-                element_status__iexact='Visible'
-            )
-            for el in visible_elems:
-                header_map[el.element_code] = el.element_name
+        # 1. CONFIGURATION
+        elem_config = {}
+        try:
+            if Element:
+                all_elems = Element.objects.filter(country=period.payroll.country)
+                for el in all_elems:
+                    elem_config[str(el.element_code)] = {'name': el.element_name, 'status': el.element_status}
+        except: pass
 
-        pd_codes = PDcode.objects.filter(company_id=company_id, pdcode_status='Visible')
-        for pd in pd_codes:
-            header_map[pd.pdcode_code] = pd.pdcode_name
+        pd_config = {}
+        try:
+            all_pds = PDcode.objects.filter(company_id=company_id)
+            for pd in all_pds:
+                pd_config[str(pd.pdcode_code)] = {'name': pd.pdcode_name, 'status': pd.pdcode_status}
+        except: pass
 
-        header_map.update({
-            '5000': 'Gross Pay',
-            '6000': 'Total Tax',
-            '7000': 'Total NI',       
-            '8000': 'Net Salary',
-            '9000': 'Employer Contributions'
-        })
-
-        # 2. GATHER DATA & IDENTIFY ACTIVE COLUMNS
         rows_data = []
         active_codes = set()
 
@@ -873,105 +844,112 @@ class PayrollPeriodExportView(View):
             if isinstance(details, str):
                 try: details = json.loads(details)
                 except: details = {}
-            elif not isinstance(details, dict):
-                details = {}
+            elif not isinstance(details, dict): details = {}
 
-            for k, v in details.items():
+            data_to_scan = details
+            if 'elements' in details:
+                data_to_scan = details.get('elements', {})
+                pd_list = details.get('pd_codes', [])
+                for p in pd_list:
+                    data_to_scan[str(p.get('code'))] = p.get('amount')
+
+            for k, v in data_to_scan.items():
                 try:
                     val = float(v)
-                    # Check against header map to allow dynamic codes + standard ones
-                    if abs(val) > 0 and (k in header_map or k in ['5000', '8000']):
-                        active_codes.add(k)
+                    if abs(val) > 0.001:
+                        is_visible = False
+                        
+                        # Rule 1: System Totals (Always Show)
+                        if k in ['5000', '6000', '7000', '8000', '9000']:
+                            is_visible = True
+                        
+                        # Rule 2: Configured Items (Check Status)
+                        elif k in pd_config:
+                            if pd_config[k]['status'] == 'Visible': is_visible = True
+                        elif k in elem_config:
+                            if elem_config[k]['status'] == 'Visible': is_visible = True
+                        
+                        # Rule 3: Unconfigured Fallback (Ranges)
+                        elif k.isdigit():
+                            c = int(k)
+                            if (1000 <= c <= 4999) or (6000 <= c <= 6999) or (7000 <= c <= 7999) or (9000 <= c <= 9999):
+                                is_visible = True
+                        
+                        if is_visible:
+                            active_codes.add(k)
                 except: pass
             
-            rows_data.append({
-                'employee': res.employee,
-                'details': details
-            })
+            rows_data.append({'employee': res.employee, 'data': data_to_scan})
 
-        # 3. SORT HEADERS
         def strict_numerical_sort(val):
             try: return int(val)
             except: return 999999
             
         sorted_codes = sorted(list(active_codes), key=strict_numerical_sort)
 
-        # 4. GENERATE CSV
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = f'attachment; filename="Report_{period.name}.csv"'
         writer = csv.writer(response)
         
-        # File Header
         writer.writerow([f"Gross to Net Report: {period.name}"])
         writer.writerow([]) 
+        
+        system_labels = {
+            '5000': 'Gross Pay', '6000': 'Income Tax', '7000': 'National Insurance',
+            '8000': 'Net Salary', '9000': 'Employer Cost'
+        }
+        
+        csv_headers = ['Employee ID', 'Employee Name']
+        csv_codes = ['', '']
+        
+        for c in sorted_codes:
+            name = f"Code {c}"
+            if c in system_labels: name = system_labels[c]
+            elif c in elem_config: name = elem_config[c]['name']
+            elif c in pd_config: name = pd_config[c]['name']
+            csv_headers.append(name)
+            csv_codes.append(str(c))
 
-        # Table Headers Row 1: Human Readable Names
-        csv_headers = ['Employee ID', 'Employee Name'] + [header_map.get(c, c) for c in sorted_codes]
         writer.writerow(csv_headers)
-
-        # Table Headers Row 2: Raw Codes (pdcodes)
-        csv_codes = ['', ''] + [str(c) for c in sorted_codes]
         writer.writerow(csv_codes)
         
-        # Initialize Totals Map
         col_totals = {code: Decimal('0.00') for code in sorted_codes}
 
-        # Data Rows
         for item in rows_data:
             emp = item['employee']
-            details = item['details']
-            
-            row = [
-                getattr(emp, 'employee_id', ''),
-                f"{emp.employee_name} {emp.employee_surname}"
-            ]
-            
+            details = item['data']
+            row = [getattr(emp, 'employee_id', ''), f"{emp.employee_name} {emp.employee_surname}"]
             for code in sorted_codes:
                 val = details.get(code, 0.0)
                 try:
                     val = float(val)
-                    # Visual Logic: Show Deductions (6000-7999) as positive
-                    if 6000 <= int(code) <= 7999:
-                        val = abs(val)
-                except: 
-                    val = 0.0
-                
-                # Add to total (using Decimal for precision)
+                    if 6000 <= int(code) <= 7999: val = abs(val)
+                except: val = 0.0
                 col_totals[code] += Decimal(str(val))
-
                 row.append(f"{val:.2f}")
-                
             writer.writerow(row)
 
-        # Totals Row
         totals_row = ['', 'TOTALS']
         for code in sorted_codes:
             totals_row.append(f"{col_totals[code]:.2f}")
-            
         writer.writerow(totals_row)
             
         return response
 
 
-@login_required
-@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST")
+@method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST") , name='dispatch')
 @require_http_methods(["GET", "POST"])
 def payroll_reset_confirm(request, country_slug, company_id, payroll_id):
     payroll = get_object_or_404(Payroll, pk=payroll_id, company_id=company_id)
-
     if request.method == "POST":
         try:
             with transaction.atomic():
-                PayrollPeriod.objects.filter(payroll=payroll).update(
-                    status=PeriodStatus.PENDING, total_gross=0, total_net=0, total_tax=0, total_amount=0
-                )
+                PayrollPeriod.objects.filter(payroll=payroll).update(status=PeriodStatus.PENDING, total_gross=0, total_net=0, total_tax=0, total_amount=0)
                 PayrollResult.objects.filter(period__payroll=payroll).delete()
-                
                 messages.success(request, f"Successfully reset Payroll FY{payroll.fiscal_year}.")
                 return redirect('payroll:payroll_detail', country_slug=country_slug, company_id=company_id, pk=payroll.pk)
         except Exception as e:
             messages.error(request, f"Error: {e}")
-
     context = {'payroll': payroll, 'company_id': company_id, 'country_slug': country_slug}
     return render(request, 'payroll/payroll_reset_confirm.html', context)
 
@@ -983,9 +961,7 @@ def reset_payroll(request, country_slug, company_id, payroll_id):
     payroll = get_object_or_404(Payroll, pk=payroll_id, company_id=company_id)
     try:
         with transaction.atomic():
-            PayrollPeriod.objects.filter(payroll=payroll).update(
-                status=PeriodStatus.PENDING, total_gross=0, total_net=0, total_tax=0
-            )
+            PayrollPeriod.objects.filter(payroll=payroll).update(status=PeriodStatus.PENDING, total_gross=0, total_net=0, total_tax=0)
             PayrollResult.objects.filter(period__payroll=payroll).delete()
         return JsonResponse({'success': True})
     except Exception as e:
@@ -996,69 +972,144 @@ def reset_payroll(request, country_slug, company_id, payroll_id):
 @role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST")
 @require_http_methods(["GET", "POST"])
 def payroll_period_reset_confirm(request, country_slug, company_id, payroll_id, period_id):
-    """
-    Handles manual reset (Stage 2 -> Stage 1) via separate page or POST
-    """
     period = get_object_or_404(PayrollPeriod, pk=period_id, payroll_id=payroll_id)
-
     if request.method == "POST":
         try:
             with transaction.atomic():
-                # 1. Clear Results
                 PayrollResult.objects.filter(period=period).delete()
-                
-                # 2. Unmark Compensation Components
-                CompensationComponent.objects.filter(
-                    processed=True,
-                    processed_period=period.name
-                ).update(
-                    processed=False,
-                    processed_period=''
-                )
-
-                # 3. Reset Period to PENDING
+                CompensationComponent.objects.filter(processed=True, processed_period=period.name).update(processed=False, processed_period='')
                 period.status = PeriodStatus.PENDING
                 period.total_gross = 0
                 period.total_net = 0
                 period.total_tax = 0
                 period.total_amount = 0
                 period.save()
-
                 messages.success(request, f"Period {period.name} reset.")
                 return redirect('payroll:period_detail', country_slug=country_slug, company_id=company_id, payroll_id=payroll_id, pk=period.pk)
         except Exception as e:
             messages.error(request, str(e))
-
     return render(request, 'payroll/period_reset_confirm.html', {'period': period, 'country_slug': country_slug, 'company_id': company_id})
 
 
-@login_required
-@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST")
-def payroll_base_audit(request, country_slug, company_id, payroll_id, period_id):
-    period = get_object_or_404(PayrollPeriod, pk=period_id)
-    employees = period.get_eligible_employees()
-    audit_data = []
-    # Only useful if BasePayrollCalculator exists
-    try:
-        from Exactus.payroll.calculator.base import BasePayrollCalculator
-        for emp in employees:
-            calc = BasePayrollCalculator(emp, period)
-            audit_data.append({
-                'employee': emp,
-                'totals': {'taxable_gross': calc.taxable_gross}
-            })
-    except ImportError:
-        pass
-        
-    context = {
-        'period': period,
-        'audit_data': audit_data,
-        'country_slug': country_slug, 
-        'company_id': company_id,
-        'payroll_id': payroll_id
-    }
-    return render(request, 'payroll/base_audit.html', context)
+# ============================================================
+# HISTORICAL UPLOAD
+# ============================================================
 
+@method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST",), name='dispatch')
+class PayrollHistoricalUploadView(LoginRequiredMixin, View):
+    def get(self, request, country_slug, company_id, payroll_id, period_id):
+        period = get_object_or_404(PayrollPeriod, pk=period_id, payroll__is_historical=True)
+        form = HistoricalUploadForm()
+        context = {'form': form, 'period': period, 'company_id': company_id, 'country_slug': country_slug, 'payroll_id': payroll_id}
+        return render(request, 'payroll/historical_upload.html', context)
+
+    def post(self, request, country_slug, company_id, payroll_id, period_id):
+        period = get_object_or_404(PayrollPeriod, pk=period_id, payroll__is_historical=True)
+        form = HistoricalUploadForm(request.POST, request.FILES)
+        context = {'form': form, 'period': period, 'company_id': company_id, 'country_slug': country_slug, 'payroll_id': payroll_id}
+
+        if not form.is_valid():
+            return render(request, 'payroll/historical_upload.html', context)
+
+        file = request.FILES['file']
+        try:
+            decoded_file = file.read().decode('utf-8-sig')
+            io_string = io.StringIO(decoded_file)
+            reader = csv.DictReader(io_string)
+            headers = reader.fieldnames or []
+        except Exception as e:
+            messages.error(request, f"Error reading CSV: {e}")
+            return render(request, 'payroll/historical_upload.html', context)
+        
+        company = get_object_or_404(Company, pk=company_id)
+        country = get_object_or_404(Country, slug=country_slug)
+        db_elements = set(Element.objects.filter(country=country).values_list('element_code', flat=True)) if Element else set()
+        db_pdcodes = set(PDcode.objects.filter(company=company).values_list('pdcode_code', flat=True))
+        ignored_cols = ['Employee ID', 'Employee Code', 'Employee Name', 'Name', 'Surname', 'Gross Pay', 'Net Salary', 'Total Tax', 'Total Deductions', 'Net Pay']
+        missing_codes = []
+        
+        for header in headers:
+            clean_header = header.strip()
+            if clean_header in ignored_cols: continue
+            if clean_header not in db_elements and clean_header not in db_pdcodes:
+                missing_codes.append(clean_header)
+
+        if missing_codes:
+            return render(request, 'payroll/historical_upload_result.html', {'success': False, 'missing_codes': missing_codes, 'period': period, 'company_id': company_id, 'country_slug': country_slug, 'payroll_id': payroll_id})
+
+        try:
+            with transaction.atomic():
+                period.status = PeriodStatus.PROCESSING
+                period.processed_by = request.user
+                period.processed_at = timezone.now()
+                period.save()
+                PayrollResult.objects.filter(period=period).delete()
+                
+                results_to_create = []
+                row_count = 0
+                total_gross_sum = Decimal(0)
+                total_net_sum = Decimal(0)
+                total_tax_sum = Decimal(0)
+
+                io_string.seek(0)
+                reader = csv.DictReader(io_string)
+
+                for row in reader:
+                    emp_id = row.get('Employee ID') or row.get('Employee Code')
+                    if not emp_id: continue
+                    emp = Employee.objects.filter(company_id=company_id, employee_id=emp_id).first()
+                    if not emp: emp = Employee.objects.filter(company_id=company_id, employee_code=emp_id).first()
+                    if not emp: continue
+
+                    details = {}
+                    gross = Decimal(0)
+                    net = Decimal(0)
+                    tax = Decimal(0)
+
+                    for key, value in row.items():
+                        clean_key = key.strip()
+                        if not value or value.strip() == '': continue
+                        try:
+                            clean_val = value.replace(',', '').replace('$', '').strip()
+                            amount = Decimal(clean_val)
+                            details[clean_key] = str(amount)
+                            if clean_key == '5000': gross = amount
+                            elif clean_key == '8000': net = amount
+                            elif clean_key.startswith('6'): tax += abs(amount)
+                        except InvalidOperation: continue
+
+                    if row.get('Gross Pay'): gross = Decimal(row['Gross Pay'].replace(',', ''))
+                    if row.get('Net Pay') or row.get('Net Salary'): 
+                        val = row.get('Net Pay') or row.get('Net Salary')
+                        net = Decimal(val.replace(',', ''))
+                    if row.get('Total Tax'): tax = Decimal(row['Total Tax'].replace(',', ''))
+
+                    results_to_create.append(PayrollResult(period=period, employee=emp, gross_pay=gross, net_pay=net, total_tax=tax, total_deductions=gross-net, details=details))
+                    total_gross_sum += gross
+                    total_net_sum += net
+                    total_tax_sum += tax
+                    row_count += 1
+
+                PayrollResult.objects.bulk_create(results_to_create)
+                period.total_gross = total_gross_sum
+                period.total_net = total_net_sum
+                period.total_tax = total_tax_sum
+                period.total_amount = total_net_sum
+                period.employee_count = row_count
+                period.status = PeriodStatus.COMPLETED
+                period.save()
+                
+                PayrollExecutionLog.objects.create(period=period, execution_type='historical_upload', status='completed', employee_count=row_count, executed_by=request.user)
+
+            return render(request, 'payroll/historical_upload_result.html', {'success': True, 'count': row_count, 'period': period, 'company_id': company_id, 'country_slug': country_slug, 'payroll_id': payroll_id})
+
+        except Exception as e:
+            logger.error(f"Historical upload error: {e}")
+            return render(request, 'payroll/historical_upload_result.html', {'success': False, 'error_message': str(e), 'period': period, 'company_id': company_id, 'country_slug': country_slug, 'payroll_id': payroll_id})
+
+# ============================================================
+# API UTILS
+# ============================================================
 
 @login_required
 @role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST")
@@ -1094,217 +1145,7 @@ def unlock_period(request, country_slug, company_id, payroll_id, period_id):
 def payroll_summary_api(request, payroll_id):
     return JsonResponse({'success': True})
 
-# ============================================================
-# HISTORICAL DATA UPLOAD
-# ============================================================
-
-@method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST",), name='dispatch')
-class PayrollHistoricalUploadView(LoginRequiredMixin, View):
-    """
-    Upload historical data via CSV. Validates columns against Elements/PD Codes.
-    """
-    def get(self, request, country_slug, company_id, payroll_id, period_id):
-        # Ensure we only upload to historical payrolls
-        period = get_object_or_404(PayrollPeriod, pk=period_id, payroll__is_historical=True)
-        form = HistoricalUploadForm()
-        context = {
-            'form': form,
-            'period': period,
-            'company_id': company_id,
-            'country_slug': country_slug,
-            'payroll_id': payroll_id
-        }
-        return render(request, 'payroll/historical_upload.html', context)
-
-    def post(self, request, country_slug, company_id, payroll_id, period_id):
-        period = get_object_or_404(PayrollPeriod, pk=period_id, payroll__is_historical=True)
-        form = HistoricalUploadForm(request.POST, request.FILES)
-        
-        context = {
-            'form': form, 'period': period, 'company_id': company_id, 
-            'country_slug': country_slug, 'payroll_id': payroll_id
-        }
-
-        if not form.is_valid():
-            return render(request, 'payroll/historical_upload.html', context)
-
-        file = request.FILES['file']
-        
-        try:
-            decoded_file = file.read().decode('utf-8-sig') # Handle BOM if present
-            io_string = io.StringIO(decoded_file)
-            reader = csv.DictReader(io_string)
-            headers = reader.fieldnames or []
-        except Exception as e:
-            messages.error(request, f"Error reading CSV: {e}")
-            return render(request, 'payroll/historical_upload.html', context)
-        
-        # 1. VALIDATION: Check Headers against Database
-        # ---------------------------------------------
-        company = get_object_or_404(Company, pk=company_id)
-        country = get_object_or_404(Country, slug=country_slug)
-        
-        # Fetch all valid codes from DB
-        db_elements = set(Element.objects.filter(country=country).values_list('element_code', flat=True))
-        db_pdcodes = set(PDcode.objects.filter(company=company).values_list('pdcode_code', flat=True))
-        
-        # Standard columns that don't need code validation
-        ignored_cols = [
-            'Employee ID', 'Employee Code', 'Employee Name', 'Name', 'Surname', 
-            'Gross Pay', 'Net Salary', 'Total Tax', 'Total Deductions', 'Net Pay'
-        ]
-        
-        missing_codes = []
-        
-        for header in headers:
-            # Clean header (strip spaces)
-            clean_header = header.strip()
-            
-            # Skip standard columns
-            if clean_header in ignored_cols:
-                continue
-            
-            # Check if it exists in DB
-            if clean_header not in db_elements and clean_header not in db_pdcodes:
-                missing_codes.append(clean_header)
-
-        # IF MISSING CODES FOUND -> STOP AND REPORT
-        if missing_codes:
-            return render(request, 'payroll/historical_upload_result.html', {
-                'success': False,
-                'missing_codes': missing_codes,
-                'period': period,
-                'company_id': company_id, 
-                'country_slug': country_slug, 
-                'payroll_id': payroll_id
-            })
-
-        # 2. PROCESSING: Import Data
-        # ---------------------------------------------
-        try:
-            with transaction.atomic():
-                # --- FIX: TRANSITION THROUGH 'PROCESSING' STATE ---
-                period.status = PeriodStatus.PROCESSING
-                period.processed_by = request.user
-                period.processed_at = timezone.now()
-                period.save()
-                
-                # Clear existing data for this period (it's a re-upload)
-                PayrollResult.objects.filter(period=period).delete()
-                
-                results_to_create = []
-                row_count = 0
-                
-                # Totals for Period update
-                total_gross_sum = Decimal(0)
-                total_net_sum = Decimal(0)
-                total_tax_sum = Decimal(0)
-
-                # Reset file pointer
-                io_string.seek(0)
-                reader = csv.DictReader(io_string)
-
-                for row in reader:
-                    # Identify Employee
-                    emp_id = row.get('Employee ID') or row.get('Employee Code')
-                    if not emp_id: continue
-                    
-                    emp = Employee.objects.filter(company_id=company_id, employee_id=emp_id).first()
-                    # Fallback to employee_code if needed
-                    if not emp:
-                        emp = Employee.objects.filter(company_id=company_id, employee_code=emp_id).first()
-                    
-                    if not emp:
-                        # You might want to collect missing employees to report as well
-                        continue
-
-                    details = {}
-                    gross = Decimal(0)
-                    net = Decimal(0)
-                    tax = Decimal(0)
-
-                    # Parse columns
-                    for key, value in row.items():
-                        clean_key = key.strip()
-                        if not value or value.strip() == '': continue
-                        
-                        try:
-                            clean_val = value.replace(',', '').replace('$', '').strip()
-                            amount = Decimal(clean_val)
-                            
-                            # Store in details JSON
-                            details[clean_key] = str(amount)
-                            
-                            # Heuristic for totals if specific columns aren't provided
-                            # (Usually Gross/Net are mapped to specific codes like 5000/8000 in your system)
-                            if clean_key == '5000': gross = amount
-                            elif clean_key == '8000': net = amount
-                            elif clean_key.startswith('6'): tax += abs(amount) # Assumption: 6xxx are taxes
-                            
-                        except InvalidOperation:
-                            continue # Skip non-numeric data
-
-                    # Prefer explicit columns if they exist in CSV
-                    if row.get('Gross Pay'): 
-                        gross = Decimal(row['Gross Pay'].replace(',', ''))
-                    if row.get('Net Pay') or row.get('Net Salary'): 
-                        val = row.get('Net Pay') or row.get('Net Salary')
-                        net = Decimal(val.replace(',', ''))
-                    if row.get('Total Tax'):
-                        tax = Decimal(row['Total Tax'].replace(',', ''))
-
-                    results_to_create.append(PayrollResult(
-                        period=period,
-                        employee=emp,
-                        gross_pay=gross,
-                        net_pay=net,
-                        total_tax=tax,
-                        total_deductions=gross-net,
-                        details=details
-                    ))
-                    
-                    total_gross_sum += gross
-                    total_net_sum += net
-                    total_tax_sum += tax
-                    row_count += 1
-
-                # Bulk Create Results
-                PayrollResult.objects.bulk_create(results_to_create)
-                
-                # Update Period
-                period.total_gross = total_gross_sum
-                period.total_net = total_net_sum
-                period.total_tax = total_tax_sum
-                period.total_amount = total_net_sum
-                period.employee_count = row_count
-                period.status = PeriodStatus.COMPLETED
-                period.save()
-                
-                # Log execution
-                PayrollExecutionLog.objects.create(
-                    period=period,
-                    execution_type='historical_upload',
-                    status='completed',
-                    employee_count=row_count,
-                    executed_by=request.user
-                )
-
-            return render(request, 'payroll/historical_upload_result.html', {
-                'success': True,
-                'count': row_count,
-                'period': period,
-                'company_id': company_id, 
-                'country_slug': country_slug, 
-                'payroll_id': payroll_id
-            })
-
-        except Exception as e:
-            logger.error(f"Historical upload error: {e}")
-            return render(request, 'payroll/historical_upload_result.html', {
-                'success': False,
-                'error_message': str(e),
-                'period': period,
-                'company_id': company_id, 
-                'country_slug': country_slug, 
-                'payroll_id': payroll_id
-            })
+@login_required
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATION","DIRECTOR","MANAGER","SPECIALIST")
+def payroll_base_audit(request, country_slug, company_id, payroll_id, period_id):
+    return render(request, 'payroll/base_audit.html', {})
