@@ -1,0 +1,956 @@
+{% load i18n static %}
+{% get_current_language as LANGUAGE_CODE %}
+{% get_available_languages as LANGUAGES %}
+{% get_language_info_list for LANGUAGES as languages %}
+
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% trans "ExactusPay | Platform Overview" %}</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --color-primary: #1f4b7ae6;
+      --color-secondary: rgba(71, 84, 128, 0.9);
+      --color-accent: rgba(103, 170, 199, 0.9);
+      --color-light: rgba(116, 181, 204, 0.9);
+      --color-teal: rgba(116, 181, 204, 0.9);
+      --color-mint: rgba(237, 245, 243, 0.9);
+
+      --color-primary-solid: rgb(31, 75, 122);
+      --color-secondary-solid: rgb(71, 84, 128);
+      --color-accent-solid: rgb(243, 246, 247);
+
+      --gradient-midnight: linear-gradient(90deg, #000814 0%, #1F4B7A 100%);
+
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F8FAFC;
+      --bg-tertiary: #F1F5F9;
+      --bg-card: #FFFFFF;
+
+      --text-primary: #0F172A;
+      --text-secondary: #475569;
+      --text-muted: #64748B;
+
+      --shadow-sm: 0 2px 8px rgba(31, 75, 122, 0.05);
+      --shadow-md: 0 4px 16px rgba(31, 75, 122, 0.08);
+      --shadow-lg: 0 10px 40px rgba(31, 75, 122, 0.1);
+      --shadow-xl: 0 20px 60px rgba(31, 75, 122, 0.12);
+      --border-radius: 16px;
+      --border-radius-lg: 24px;
+      --border-color: rgba(226, 232, 240, 0.8);
+
+      --grad-blue: linear-gradient(135deg,#2563eb,#1e40af);
+      --grad-teal: linear-gradient(135deg,#14b8a6,#0f766e);
+      --grad-purple: linear-gradient(135deg,#8b5cf6,#6d28d9);
+      --grad-amber: linear-gradient(135deg,#f59e0b,#b45309);
+      --grad-rose: linear-gradient(135deg,#f43f5e,#be123c);
+      --grad-cyan: linear-gradient(135deg,#22d3ee,#0ea5e9);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+
+    body{
+      font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;
+      font-weight:400;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height:1.6;
+      overflow-x:hidden;
+    }
+
+    .container{ max-width:1280px; margin:0 auto; padding:0 24px; }
+
+    h1,h2,h3,h4{
+      font-family:'Poppins',sans-serif;
+      font-weight:700;
+      line-height:1.2;
+    }
+
+    h1{
+      font-size:4rem;
+      margin-bottom:24px;
+      background: linear-gradient(135deg, #FFFFFF, #F0F9FF);
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
+    }
+
+    h2{ font-size:3.2rem; margin-bottom:20px; color: var(--text-primary); }
+    h3{ font-size:1.8rem; margin-bottom:16px; color: var(--color-primary-solid); }
+    p{ color: var(--text-secondary); font-size:1.125rem; margin-bottom:24px; }
+
+    .section-title{ text-align:center; margin-bottom:60px; }
+    .section-title .subtitle{
+      color: var(--color-secondary-solid);
+      font-weight:600;
+      text-transform:uppercase;
+      letter-spacing:3px;
+      margin-bottom:16px;
+      font-size:14px;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:16px 32px;
+      border-radius:40px;
+      font-weight:600;
+      font-size:16px;
+      text-decoration:none;
+      transition: all .3s ease;
+      border:none;
+      cursor:pointer;
+      gap:10px;
+    }
+
+    .btn-primary{
+      background: var(--color-primary-solid);
+      color:#fff;
+      box-shadow: 0 8px 20px rgba(31,75,122,0.2);
+    }
+    .btn-primary:hover{
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-xl);
+      background:#0f3a5e;
+    }
+
+    .btn-secondary{
+      background: rgba(255,255,255,0.1);
+      color:#fff;
+      border:1px solid rgba(255,255,255,0.2);
+      backdrop-filter: blur(10px);
+    }
+    .btn-secondary:hover{
+      background: rgba(255,255,255,0.2);
+      transform: translateY(-3px);
+    }
+
+    .btn-outline{
+      background: transparent;
+      border: 2px solid rgba(255,255,255,0.85);
+      color:#fff;
+    }
+    .btn-outline:hover{
+      background: rgba(255,255,255,0.10);
+      transform: translateY(-3px);
+    }
+
+    .btn-lg{ padding:18px 42px; font-size:18px; }
+
+    header{
+      position: fixed; top:0; left:0; width:100%; z-index:1000;
+      background: var(--gradient-midnight);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding: 20px 0;
+      transition: all .3s ease;
+    }
+    .nav-container{ display:flex; justify-content:space-between; align-items:center; gap:18px; }
+    .sidebar-brand{ color:#fff; display:block; font-size:1.8rem; font-weight:700; text-decoration:none; }
+    .nav-links{ display:flex; gap:40px; list-style:none; }
+    .nav-links a{
+      color: rgba(255,255,255,0.85);
+      text-decoration:none;
+      font-weight:500;
+      transition: all .3s;
+      position:relative;
+      padding:8px 0;
+      white-space: nowrap;
+    }
+    .nav-links a::after{
+      content:'';
+      position:absolute;
+      bottom:0; left:0;
+      width:0; height:2px;
+      background:#96E0D9;
+      transition: width .3s ease;
+    }
+    .nav-links a:hover{ color:#fff; }
+    .nav-links a:hover::after{ width:100%; }
+    .nav-actions{ display:flex; gap:16px; align-items:center; flex-wrap:wrap; }
+
+    /* Language switcher (flags) */
+    .lang-form { display:flex; align-items:center; }
+    .lang-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:999px;
+      background: rgba(255,255,255,0.08);
+      border:1px solid rgba(255,255,255,0.16);
+      backdrop-filter: blur(10px);
+      margin-left: 8px;
+    }
+    .lang-select{
+      appearance:none;
+      -webkit-appearance:none;
+      -moz-appearance:none;
+      background: transparent;
+      border:none;
+      outline:none;
+      cursor:pointer;
+      font-size: 18px;
+      line-height: 1;
+      padding: 2px 28px 2px 2px;
+    }
+    .lang-select option { color:#0f172a; }
+    .lang-caret{
+      margin-left:-22px;
+      pointer-events:none;
+      color: rgba(255,255,255,0.75);
+      font-size: 0.85rem;
+    }
+
+    .platform-hero{
+      padding: 180px 0 100px;
+      position:relative;
+      overflow:hidden;
+      background: var(--gradient-midnight);
+    }
+    .platform-hero::before{
+      content:"";
+      position:absolute;
+      inset:-20%;
+      pointer-events:none;
+    }
+    .platform-hero-content{
+      max-width: 980px;
+      margin: 0 auto;
+      text-align:center;
+      position:relative;
+      z-index:2;
+    }
+    .platform-hero p{
+      font-size:1.3rem;
+      margin-bottom:40px;
+      color: rgba(255,255,255,0.92);
+      max-width: 880px;
+      margin-left:auto;
+      margin-right:auto;
+    }
+    .hero-actions{
+      display:flex;
+      gap:16px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top: 10px;
+    }
+
+    .trust-strip{
+      display:flex;
+      gap:14px;
+      justify-content:center;
+      flex-wrap:wrap;
+      margin-top: 26px;
+    }
+    .trust-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:12px 14px;
+      border-radius:999px;
+      background: rgba(255,255,255,0.10);
+      border:1px solid rgba(255,255,255,0.18);
+      color: rgba(255,255,255,0.9);
+      font-weight:600;
+      font-size:0.92rem;
+      transition: transform .3s ease, box-shadow .3s ease;
+    }
+    .trust-pill i{
+      background: var(--grad-cyan);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+    .trust-pill:hover{
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.18);
+    }
+
+    .architecture{
+      padding: 100px 0;
+      background: var(--bg-primary);
+    }
+    .tri-grid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:24px;
+      margin-top: 40px;
+    }
+    .tri-card{
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-lg);
+      padding: 36px 28px;
+      box-shadow: var(--shadow-md);
+      transition: all .35s ease;
+      height:100%;
+    }
+    .tri-card:hover{
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-xl);
+      border-color: rgba(31,75,122,0.25);
+    }
+
+    .tri-icon{
+      width: 64px; height: 64px;
+      border-radius: 18px;
+      display:flex; align-items:center; justify-content:center;
+      margin-bottom: 22px;
+      font-size: 26px;
+      color:#fff;
+      background: var(--grad-blue);
+      box-shadow: 0 10px 22px rgba(37,99,235,.35);
+      transition: transform .3s ease, box-shadow .3s ease;
+    }
+    .tri-card:nth-child(2) .tri-icon{ background: var(--grad-teal); box-shadow: 0 10px 22px rgba(20,184,166,.32); }
+    .tri-card:nth-child(3) .tri-icon{ background: var(--grad-purple); box-shadow: 0 10px 22px rgba(139,92,246,.32); }
+    .tri-card:hover .tri-icon{
+      transform: scale(1.05);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.22);
+    }
+
+    .tri-card h3{
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+    .tri-card p{
+      font-size:1rem;
+      color: var(--text-secondary);
+      margin-bottom:0;
+    }
+
+    .capabilities{
+      padding: 100px 0;
+      background: var(--bg-secondary);
+    }
+    .cap-grid{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+      margin-top: 40px;
+    }
+    .cap-card{
+      background: var(--bg-card);
+      border-radius: var(--border-radius-lg);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-md);
+      padding: 40px;
+      transition: all .35s ease;
+    }
+    .cap-card:hover{
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-xl);
+      border-color: rgba(31,75,122,0.25);
+    }
+    .cap-top{
+      display:flex;
+      gap: 16px;
+      align-items:flex-start;
+      margin-bottom: 14px;
+    }
+
+    .cap-icon{
+      width: 56px; height: 56px;
+      border-radius: 16px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size: 22px;
+      color:#fff;
+      background: var(--grad-cyan);
+      box-shadow: 0 8px 18px rgba(34,211,238,.35);
+      flex-shrink:0;
+      transition: transform .3s ease, box-shadow .3s ease;
+    }
+    .cap-card:nth-child(2) .cap-icon{ background: var(--grad-rose); box-shadow: 0 8px 18px rgba(244,63,94,.30); }
+    .cap-card:nth-child(3) .cap-icon{ background: var(--grad-purple); box-shadow: 0 8px 18px rgba(139,92,246,.30); }
+    .cap-card:nth-child(4) .cap-icon{ background: var(--grad-amber); box-shadow: 0 8px 18px rgba(245,158,11,.30); }
+    .cap-card:hover .cap-icon{
+      transform: scale(1.06);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.22);
+    }
+
+    .cap-card h3{
+      margin-bottom: 8px;
+      color: var(--text-primary);
+      font-size: 1.55rem;
+    }
+    .cap-card p{
+      margin-bottom: 18px;
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+    .cap-list{
+      list-style:none;
+      display:grid;
+      gap: 12px;
+      margin-top: 8px;
+      padding-left:0;
+    }
+    .cap-list li{
+      display:flex;
+      gap: 10px;
+      align-items:flex-start;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(226,232,240,0.9);
+      background: rgba(248,250,252,0.9);
+      color: var(--text-secondary);
+      font-size: 0.98rem;
+    }
+    .cap-list i{
+      background: var(--grad-teal);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      font-size:18px;
+      margin-top: 2px;
+      min-width: 18px;
+    }
+    .cap-list strong{ color: var(--text-primary); }
+
+    .precision{
+      padding: 100px 0;
+      background: var(--bg-primary);
+    }
+    .precision-grid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:24px;
+      margin-top: 40px;
+    }
+    .precision-card{
+      background: var(--bg-card);
+      border-radius: var(--border-radius);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+      padding: 34px;
+      transition: all .3s ease;
+      height:100%;
+    }
+    .precision-card:hover{
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+      border-color: rgba(31,75,122,0.25);
+    }
+
+    .precision-tag{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid rgba(226,232,240,.9);
+      color: #0f172a;
+      font-weight:600;
+      font-size:0.92rem;
+      margin-bottom: 14px;
+      transition: transform .3s ease, box-shadow .3s ease;
+    }
+    .precision-tag i{
+      background: var(--grad-blue);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      font-size: 14px;
+    }
+    .precision-card:nth-child(2) .precision-tag i{ background: var(--grad-teal); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .precision-card:nth-child(3) .precision-tag i{ background: var(--grad-purple); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+
+    .precision-card h4{
+      font-size: 1.4rem;
+      margin-bottom: 10px;
+      color: var(--text-primary);
+    }
+    .precision-card p{
+      font-size: 1rem;
+      margin-bottom: 0;
+      color: var(--text-secondary);
+    }
+
+    .platform-cta{
+      padding: 100px 0;
+      background: var(--gradient-midnight);
+      color:#fff;
+    }
+    .cta-content{
+      max-width: 900px;
+      margin: 0 auto;
+      text-align:center;
+    }
+    .cta-content h2{ color:#fff; margin-bottom: 16px; }
+    .cta-content p{
+      color: rgba(255,255,255,0.92);
+      font-size: 1.2rem;
+      margin-bottom: 34px;
+    }
+    .cta-actions{
+      display:flex;
+      gap:20px;
+      justify-content:center;
+      flex-wrap:wrap;
+    }
+    .btn-cta-primary{ background:#fff; color: var(--color-primary-solid); }
+
+    footer{
+      background: var(--gradient-midnight);
+      padding: 80px 0 40px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .footer-grid{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap:40px;
+      margin-bottom:60px;
+    }
+    .footer-col h4{
+      color:#fff;
+      margin-bottom:24px;
+      font-size:18px;
+    }
+    .footer-links{ list-style:none; }
+    .footer-links li{ margin-bottom:14px; }
+    .footer-links a{
+      color: rgba(255,255,255,0.82);
+      text-decoration:none;
+      transition: all .3s;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-size:0.95rem;
+    }
+    .footer-links a:hover{ color:#96E0D9; transform: translateX(5px); }
+    .footer-links i{
+      background: var(--grad-cyan);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+
+    .footer-bottom{
+      padding-top:40px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:20px;
+    }
+    .social-links{ display:flex; gap:16px; }
+    .social-links a{
+      width:44px; height:44px;
+      background: transparent;
+      border-radius: 12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      font-size:18px;
+      transition: all .3s;
+      text-decoration:none;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+    .social-links a:hover{
+      background: rgba(255,255,255,0.14);
+      transform: translateY(-3px);
+      border-color: rgba(255,255,255,0.6);
+    }
+    .social-links a:hover i{
+      background: var(--grad-cyan);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+
+    .copyright{ color: rgba(255,255,255,0.65); font-size:14px; }
+
+    @media (max-width: 1024px){
+      h1{ font-size: 3.2rem; }
+      h2{ font-size: 2.6rem; }
+      .tri-grid{ grid-template-columns: repeat(2, 1fr); }
+      .cap-grid{ grid-template-columns: 1fr; }
+      .precision-grid{ grid-template-columns: repeat(2, 1fr); }
+      .footer-grid{ grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px){
+      h1{ font-size: 2.5rem; }
+      h2{ font-size: 2rem; }
+      .nav-links{ display:none; }
+      .tri-grid{ grid-template-columns: 1fr; }
+      .precision-grid{ grid-template-columns: 1fr; }
+      .footer-grid{ grid-template-columns: 1fr; }
+      .cta-actions{ flex-direction: column; align-items:center; }
+      .btn{ width:100%; justify-content:center; }
+    }
+  </style>
+</head>
+
+<body>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const observerOptions = { threshold: 0.1 };
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = "1";
+          entry.target.style.transform = "translateY(0)";
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('section').forEach(section => {
+      section.style.opacity = "0";
+      section.style.transform = "translateY(20px)";
+      section.style.transition = "all 0.8s ease-out";
+      observer.observe(section);
+    });
+  });
+</script>
+
+<header>
+  <div class="container nav-container">
+    <a href="{% url 'home:home' %}" class="logo" style="text-decoration:none;">
+      <div class="sidebar-brand">ExactusPay</div>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="{% url 'home:home' %}">{% trans "Home" %}</a></li>
+      <li><a href="{% url 'home:features' %}">{% trans "Features" %}</a></li>
+      <li><a href="{% url 'home:platform' %}" style="color:#fff;">{% trans "Platform" %}</a></li>
+      <li><a href="{% url 'home:security' %}">{% trans "Security" %}</a></li>
+      <li><a href="{% url 'home:pricing' %}">{% trans "Pricing" %}</a></li>
+    </ul>
+
+    <div class="nav-actions">
+      <a href="https://payroll.exactuspay.com/login" class="btn btn-secondary">{% trans "Log In" %}</a>
+      <a href="{% url 'home:demo' %}" class="btn btn-primary">{% trans "Request Demo" %}</a>
+
+      <!-- Language selector (flags) -->
+      <form class="lang-form" action="{% url 'set_language' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+
+        <div class="lang-pill" title="{% trans 'Language' %}">
+          <select class="lang-select"
+                  name="language"
+                  aria-label="{% trans 'Select language' %}"
+                  onchange="this.form.submit()">
+
+            {% for lang in languages %}
+              {% if lang.code == "pt" %}
+                <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷</option>
+              {% elif lang.code == "es" %}
+                <option value="es" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇪🇸</option>
+              {% elif lang.code == "en" %}
+                <option value="en" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇬🇧</option>
+              {% else %}
+                <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>
+                  {{ lang.code|upper }}
+                </option>
+              {% endif %}
+            {% endfor %}
+
+          </select>
+          <span class="lang-caret" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
+        </div>
+      </form>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="platform-hero">
+  <div class="container">
+    <div class="platform-hero-content">
+      <h1>{% trans "A global payroll platform built for scale" %}</h1>
+
+      <p>
+        {% blocktrans trimmed %}
+        ExactusPay is an end-to-end global payroll ecosystem that brings enterprise-grade consistency to high-growth markets.
+        Replace fragmented local tools with a single source of truth — and run multi-country payroll with clarity, control, and confidence.
+        {% endblocktrans %}
+      </p>
+
+      <div class="hero-actions">
+        <a href="{% url 'home:demo' %}" class="btn btn-primary btn-lg">
+          <i class="fas fa-layer-group"></i> {% trans "Explore Capabilities" %}
+        </a>
+      </div>
+
+      <div class="trust-strip" aria-label="{% trans 'Platform outcomes' %}">
+        <span class="trust-pill"><i class="fa-solid fa-layer-group"></i> {% trans "Single source of truth" %}</span>
+        <span class="trust-pill"><i class="fa-solid fa-table"></i> {% trans "Standardised reporting" %}</span>
+        <span class="trust-pill"><i class="fa-solid fa-chart-line"></i> {% trans "TCOE visibility" %}</span>
+        <span class="trust-pill"><i class="fa-solid fa-shield-halved"></i> {% trans "Audit-ready" %}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section class="architecture" id="architecture">
+  <div class="container">
+    <div class="section-title">
+      <div class="subtitle">{% trans "Architecture of Excellence" %}</div>
+      <h2>{% trans "One framework. Every country. One clear view." %}</h2>
+
+      <p>
+        {% blocktrans trimmed %}
+        Whether you pay teams in Brazil, Nigeria, or Vietnam, payroll data is processed and presented in the same structure.
+        That means fewer manual reconciliations and executive-grade visibility across jurisdictions.
+        {% endblocktrans %}
+      </p>
+    </div>
+
+    <div class="tri-grid">
+      <div class="tri-card">
+        <div class="tri-icon"><i class="fas fa-diagram-project"></i></div>
+        <h3>{% trans "Global-standardised model" %}</h3>
+        <p>{% trans "Common definitions for earnings, deductions, bases, and outputs — consistent across regions and providers." %}</p>
+      </div>
+
+      <div class="tri-card">
+        <div class="tri-icon"><i class="fas fa-magnifying-glass-chart"></i></div>
+        <h3>{% trans "Total Cost of Employment" %}</h3>
+        <p>{% trans "See employer cost, statutory burdens, and tax exposure in one comparable view — globally and locally." %}</p>
+      </div>
+
+      <div class="tri-card">
+        <div class="tri-icon"><i class="fas fa-table-cells-large"></i></div>
+        <h3>{% trans "No spreadsheet reconciliation" %}</h3>
+        <p>{% trans "Stable exports and registers that don’t change format every month — country to country, cycle to cycle." %}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CAPABILITIES -->
+<section class="capabilities" id="capabilities">
+  <div class="container">
+    <div class="section-title">
+      <div class="subtitle">{% trans "Strategic Capabilities" %}</div>
+      <h2>{% trans "Expand with confidence — operate with precision" %}</h2>
+
+      <p>
+        {% blocktrans trimmed %}
+        Plan ahead, stay compliant, connect your stack, and deliver a consistent employee experience — even across complex markets.
+        {% endblocktrans %}
+      </p>
+    </div>
+
+    <div class="cap-grid">
+      <div class="cap-card">
+        <div class="cap-top">
+          <div class="cap-icon"><i class="fas fa-chart-line"></i></div>
+          <div>
+            <h3>{% trans "Predictive Simulation Engine" %}</h3>
+            <p>
+              {% blocktrans trimmed %}
+              Forecast full employment costs — including local taxes and statutory contributions — before you hire or enter a new market.
+              Turn “what if?” questions into clear numbers.
+              {% endblocktrans %}
+            </p>
+          </div>
+        </div>
+        <ul class="cap-list">
+          <li><i class="fas fa-check-circle"></i><span>{% blocktrans trimmed %}<strong>Pre-hire modelling:</strong> price offers accurately with full employer cost breakdowns.{% endblocktrans %}</span></li>
+          <li><i class="fas fa-check-circle"></i><span>{% blocktrans trimmed %}<strong>Scenario comparisons:</strong> assess markets and hiring strategies side-by-side.{% endblocktrans %}</span></li>
+          <li><i class="fas fa-check-circle"></i><span>{% blocktrans trimmed %}<strong>Budget confidence:</strong> align Finance, HR, and leadership on one set of numbers.{% endblocktrans %}</span></li>
+        </ul>
+      </div>
+
+      <div class="cap-card">
+        <div class="cap-top">
+          <div class="cap-icon"><i class="fas fa-shield-halved"></i></div>
+          <div>
+            <h3>{% trans "Automated Compliance Guardianship" %}</h3>
+            <p>
+              {% blocktrans trimmed %}
+              Built-in legal logic adapts to shifting labour laws and tax regulations across LATAM, Africa, and Asia —
+              keeping you audit-ready and protected from avoidable penalties.
+              {% endblocktrans %}
+            </p>
+          </div>
+        </div>
+        <ul class="cap-list">
+          <li><i class="fas fa-check-circle"></i><span>{% blocktrans trimmed %}<strong>Regulation-aware rules:</strong> payroll logic tracks current statutory obligations.{% endblocktrans %}</span></li>
+          <li><i class="fas fa-check-circle"></i><span>{% blocktrans trimmed %}<strong>Reduced risk:</strong> validations and governance to prevent common errors.{% endblocktrans %}</span></li>
+          <li><i class="fas fa-check-circle"></i><span>{% blocktrans trimmed %}<strong>Evidence trails:</strong> traceable calculations and changes support audits.{% endblocktrans %}</span></li>
+        </ul>
+      </div>
+
+      <div class="cap-card">
+        <div class="cap-top">
+          <div class="cap-icon"><i class="fas fa-plug-circle-bolt"></i></div>
+          <div>
+            <h3>{% trans "Managed Service Connectivity" %}</h3>
+            <p>
+              {% blocktrans trimmed %}
+              ExactusPay connects to your HCM systems (e.g., Workday, BambooHR) so employee data flows cleanly from hire to pay —
+              without manual re-entry and operational drift.
+              {% endblocktrans %}
+            </p>
+          </div>
+        </div>
+        <ul class="cap-list">
+          <li><i class="fas fa-check-circle"></i><span>{% blocktrans trimmed %}<strong>Hire-to-pay pipeline:</strong> structured data exchange from onboarding to payment.{% endblocktrans %}</span></li>
+          <li><i class="fas fa-check-circle"></i><span>{% blocktrans trimmed %}<strong>Operational consistency:</strong> one workflow across multiple countries/providers.{% endblocktrans %}</span></li>
+          <li><i class="fas fa-check-circle"></i><span>{% blocktrans trimmed %}<strong>Lower admin load:</strong> fewer handoffs and less spreadsheet work.{% endblocktrans %}</span></li>
+        </ul>
+      </div>
+
+      <div class="cap-card">
+        <div class="cap-top">
+          <div class="cap-icon"><i class="fas fa-coins"></i></div>
+          <div>
+            <h3>{% trans "Multi-Currency & Language Support" %}</h3>
+            <p>
+              {% blocktrans trimmed %}
+              Handle FX rules and banking complexity behind the scenes. Employees get a refined, localised experience —
+              with multi-language access to payslips and documents.
+              {% endblocktrans %}
+            </p>
+          </div>
+        </div>
+        <ul class="cap-list">
+          <li><i class="fas fa-check-circle"></i><span>{% blocktrans trimmed %}<strong>FX handled centrally:</strong> exchange and payout workflows managed reliably.{% endblocktrans %}</span></li>
+          <li><i class="fas fa-check-circle"></i><span>{% blocktrans trimmed %}<strong>Local experience:</strong> multi-language portal for documents and payroll history.{% endblocktrans %}</span></li>
+          <li><i class="fas fa-check-circle"></i><span>{% blocktrans trimmed %}<strong>Consistent standard:</strong> the same quality UX across every location.{% endblocktrans %}</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OPERATIONAL PRECISION -->
+<section class="precision" id="precision">
+  <div class="container">
+    <div class="section-title">
+      <div class="subtitle">{% trans "Operational Precision" %}</div>
+      <h2>{% trans "Consolidate providers. Increase control." %}</h2>
+
+      <p>
+        {% blocktrans trimmed %}
+        Bring local payroll execution into one secure, standards-driven environment. Reduce manual work, strengthen governance,
+        and scale internationally without adding chaos.
+        {% endblocktrans %}
+      </p>
+    </div>
+
+    <div class="precision-grid">
+      <div class="precision-card">
+        <div class="precision-tag"><i class="fas fa-layer-group"></i> {% trans "Operating model" %}</div>
+        <h4>{% trans "One workflow" %}</h4>
+        <p>{% trans "Replace disconnected processes with a consistent payroll workflow and reporting standard." %}</p>
+      </div>
+
+      <div class="precision-card">
+        <div class="precision-tag"><i class="fas fa-gears"></i> {% trans "Efficiency" %}</div>
+        <h4>{% trans "Less manual effort" %}</h4>
+        <p>{% trans "Standard inputs and automated checks reduce rework, exceptions, and spreadsheet reconciliation." %}</p>
+      </div>
+
+      <div class="precision-card">
+        <div class="precision-tag"><i class="fas fa-arrow-trend-up"></i> {% trans "Scale" %}</div>
+        <h4>{% trans "Built for expansion" %}</h4>
+        <p>{% trans "Enter new countries with predictable governance, consistent data, and executive clarity from day one." %}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="platform-cta" id="cta">
+  <div class="container">
+    <div class="cta-content">
+      <h2>{% trans "Bring global payroll under one roof" %}</h2>
+
+      <p>
+        {% blocktrans trimmed %}
+        Get a single source of truth, standardised reporting, and compliance-ready processes — without the typical
+        global payroll complexity.
+        {% endblocktrans %}
+      </p>
+
+      <div class="cta-actions">
+        <a href="{% url 'home:demo' %}" class="btn btn-cta-primary btn-lg">
+          <i class="fas fa-calendar-check"></i> {% trans "Schedule a Demo" %}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>{% trans "Platform" %}</h4>
+        <ul class="footer-links">
+          <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Global Payroll" %}</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Compliance Automation" %}</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Workforce Analytics" %}</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Tax Management" %}</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>{% trans "Solutions" %}</h4>
+        <ul class="footer-links">
+          <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Enterprise Expansion" %}</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Mergers & Acquisitions" %}</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Compliance Management" %}</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Global Workforce" %}</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>{% trans "Resources" %}</h4>
+        <ul class="footer-links">
+          <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Documentation" %}</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "API Reference" %}</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Compliance Guides" %}</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Case Studies" %}</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>{% trans "Company" %}</h4>
+        <ul class="footer-links">
+          <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "About Us" %}</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Careers" %}</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Security" %}</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Contact" %}</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>
+        <a href="{% url 'home:home' %}" class="logo" style="text-decoration:none;">
+          <div class="sidebar-brand" style="color:#fff; font-size:24px;">ExactusPay</div>
+        </a>
+        <div class="copyright">
+          © {% now "Y" %} ExactusPay. {% trans "All rights reserved." %}<br>
+          <small style="color: rgba(255,255,255,0.6);">{% trans "GDPR Compliant | SOC 2 Type II Certified | ISO 27001" %}</small>
+        </div>
+      </div>
+
+      <div class="social-links">
+        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+        <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
