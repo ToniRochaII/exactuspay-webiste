@@ -1,46 +1,52 @@
-from django.shortcuts import render
+import logging
 
-def index(request):
-    return render(request, "home/index.html")
-
-def platform(request):
-    return render(request,'home/platform.html')
-
-def features(request):
-    return render(request,'home/features.html')
-
-def security(request):
-    return render(request,'home/security.html')
-
-def pricing(request):
-    return render(request,'home/pricing.html')
-
-def resources(request):
-    return render(request,'home/resources.html')
-
-
-
-# home/views.py
 from django.conf import settings
 from django.contrib import messages
 from django.core.mail import EmailMessage
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
 
+logger = logging.getLogger(__name__)
+
+
+def index(request):
+    return render(request, "home/index.html")
+
+
+def platform(request):
+    return render(request, "home/platform.html")
+
+
+def features(request):
+    return render(request, "home/features.html")
+
+
+def security(request):
+    return render(request, "home/security.html")
+
+
+def pricing(request):
+    return render(request, "home/pricing.html")
+
+
+def resources(request):
+    return render(request, "home/resources.html")
+
+
 def demo_page(request):
-    # renders your demo.html template
+    # If your template lives under home/templates/home/demo.html, change to "home/demo.html"
     return render(request, "demo.html", {"current_year": 2026})
+
 
 @require_POST
 def demo_request(request):
     first_name = (request.POST.get("first_name") or "").strip()
-    last_name  = (request.POST.get("last_name") or "").strip()
-    email      = (request.POST.get("email") or "").strip()
-    company    = (request.POST.get("company") or "").strip()
-    employees  = (request.POST.get("employees") or "").strip()
-    region     = (request.POST.get("region") or "").strip()
+    last_name = (request.POST.get("last_name") or "").strip()
+    email = (request.POST.get("email") or "").strip()
+    company = (request.POST.get("company") or "").strip()
+    employees = (request.POST.get("employees") or "").strip()
+    region = (request.POST.get("region") or "").strip()
 
-    # Minimal validation (HTML required helps, but never trust the browser)
     missing = [k for k, v in {
         "first_name": first_name,
         "last_name": last_name,
@@ -70,13 +76,14 @@ def demo_request(request):
         body=body,
         from_email=settings.DEFAULT_FROM_EMAIL,
         to=[getattr(settings, "DEMO_REQUEST_TO_EMAIL", "antoniorocha@exactuspay.com")],
-        reply_to=[email],  # So you can hit “Reply” and answer the requester
+        reply_to=[email],
     )
 
     try:
         msg.send(fail_silently=False)
         messages.success(request, "Thanks! Your request was received. We'll contact you shortly.")
     except Exception:
+        logger.exception("Demo request email failed to send")
         messages.error(request, "We couldn't send your request right now. Please try again shortly.")
 
     return redirect("home:demo")
