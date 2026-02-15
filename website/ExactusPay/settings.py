@@ -23,9 +23,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-53jok7!fxsc=kunf9v2lclk(+elk7y!zvl$*g7*w*22k%p(lls'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+DEBUG = os.environ.get("DEBUG", "0") == "1"
+ALLOWED_HOSTS = [
+    "www.exactuspay.com",
+    "exactuspay.com",
+]
 
 
 # Application definition
@@ -42,11 +44,10 @@ INSTALLED_APPS = [
 ]
 
 
-USE_I18N = True
-USE_L10N = True
-USE_TZ = True
-
 LANGUAGE_CODE = "en"
+TIME_ZONE = "UTC"
+USE_I18N = True
+USE_TZ = True
 
 LANGUAGES = [
     ("en", "English"),
@@ -131,7 +132,7 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 
-USE_I18N = True
+
 
 USE_TZ = True
 
@@ -154,7 +155,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 
-SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
 
 # Hostinger Settings (Port 587 + TLS)
 EMAIL_HOST = 'smtp.hostinger.com'
@@ -168,3 +168,4 @@ EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "TlBFI=[b2L")
 DEFAULT_FROM_EMAIL = 'Exactus Support <no-reply@exactuspay.com>'
 
 DEMO_REQUEST_TO_EMAIL = "antoniorocha@exactuspay.com"
+

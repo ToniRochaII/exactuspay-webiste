@@ -4,19 +4,19 @@ def index(request):
     return render(request, "home/index.html")
 
 def platform(request):
-    return render(request,'platform.html')
+    return render(request,'home/platform.html')
 
 def features(request):
-    return render(request,'features.html')
+    return render(request,'home/features.html')
 
 def security(request):
-    return render(request,'security.html')
+    return render(request,'home/security.html')
 
 def pricing(request):
-    return render(request,'pricing.html')
+    return render(request,'home/pricing.html')
 
 def resources(request):
-    return render(request,'resources.html')
+    return render(request,'home/resources.html')
 
 
 
