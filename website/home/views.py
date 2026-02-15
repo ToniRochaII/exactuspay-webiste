@@ -3,16 +3,14 @@ import logging
 from django.conf import settings
 from django.contrib import messages
 from django.core.mail import EmailMessage
-from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
 
 logger = logging.getLogger(__name__)
 
 
-
 def index(request):
-    return HttpResponse("DJANGO RENDER OK")
+    return render(request, "home/index.html", {"x": "RENDERED_OK"})
 
 
 def platform(request):
@@ -36,8 +34,7 @@ def resources(request):
 
 
 def demo_page(request):
-    # If your template lives under home/templates/home/demo.html, change to "home/demo.html"
-    return render(request, "demo.html", {"current_year": 2026})
+    return render(request, "home/demo.html", {"current_year": 2026})
 
 
 @require_POST
@@ -78,7 +75,7 @@ def demo_request(request):
         body=body,
         from_email=settings.DEFAULT_FROM_EMAIL,
         to=[getattr(settings, "DEMO_REQUEST_TO_EMAIL", "antoniorocha@exactuspay.com")],
-        reply_to=[email],
+        reply_to=[email] if email else None,
     )
 
     try:
