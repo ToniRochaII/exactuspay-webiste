@@ -3,14 +3,16 @@ import logging
 from django.conf import settings
 from django.contrib import messages
 from django.core.mail import EmailMessage
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_POST
 
 logger = logging.getLogger(__name__)
 
 
+
 def index(request):
-    return render(request, "home/index.html")
+    return HttpResponse("DJANGO RENDER OK")
 
 
 def platform(request):
