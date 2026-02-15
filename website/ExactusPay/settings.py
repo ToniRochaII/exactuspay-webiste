@@ -13,11 +13,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")  # ✅ set SECRET_KE
 DEBUG = os.environ.get("DEBUG", "0") == "1"
 
 # Render + custom domains
-ALLOWED_HOSTS = [
-    "www.exactuspay.com",
-    "exactuspay.com",
-    ".onrender.com",
-]
+ALLOWED_HOSTS = [*]
 
 CSRF_TRUSTED_ORIGINS = [
     "https://www.exactuspay.com",
