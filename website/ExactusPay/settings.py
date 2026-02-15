@@ -16,8 +16,16 @@ DEBUG = os.environ.get("DEBUG", "0") == "1"
 ALLOWED_HOSTS = [
     "www.exactuspay.com",
     "exactuspay.com",
-    ".onrender.com",   # ✅ allow your Render subdomain
+    ".onrender.com",
 ]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://www.exactuspay.com",
+    "https://exactuspay.com",
+]
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+USE_X_FORWARDED_HOST = True
 
 # If you ever sit behind a proxy/CDN (Render can), these help with correct scheme/host
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
