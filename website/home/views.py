@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 def index(request):
-    return render(request, "home/index.html", {"x": "RENDERED_OK"})
+    return render(request, "home/index.html")
 
 
 def platform(request):
