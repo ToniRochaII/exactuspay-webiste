@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Results{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <h4 class="page-title">Import Results</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0 text-white">Summary {% if results.dry_run %}(DRY RUN){% endif %}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center mb-3">
+                        <div class="col-6">
+                            <h3 class="text-success">{{ results.success_count }}</h3>
+                            <span class="text-muted">Successful Rows</span>
+                        </div>
+                        <div class="col-6">
+                            <h3 class="text-danger">{{ results.error_count }}</h3>
+                            <span class="text-muted">Errors</span>
+                        </div>
+                    </div>
+
+                    {% if results.errors %}
+                    <div class="alert alert-danger">
+                        <h6>Error Details:</h6>
+                        <ul class="mb-0 small">
+                            {% for err in results.errors %}
+                                <li>{{ err }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+
+                    <div class="d-grid gap-2 mt-4">
+                        <a href="{% url 'calculationbase:list' country.slug regulations.id %}" class="btn btn-secondary">
+                            Return to List
+                        </a>
+                        <a href="{% url 'calculationbase:upload' country.slug regulations.id %}" class="btn btn-outline-primary">
+                            Upload Another File
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

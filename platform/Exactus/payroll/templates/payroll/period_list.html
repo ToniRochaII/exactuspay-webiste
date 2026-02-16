@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+{% load payroll_filters %}
+{% load accounts_role_filters %}
+
+{% block title %}Payroll Periods — {{ company.trade_name }} | ExactusPay{% endblock %}
+
+{% block page_title %}Payroll Periods{% endblock %}
+
+
+
+{% block extra_head %}
+<link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.bootstrap5.min.css" rel="stylesheet">
+
+<style>
+    /* Match global grey background */
+    body { background-color: #F4F4F4 !important; }
+    .wrapper:before { background: #F4F4F4 !important; }
+    :root { --card-radius: 16px; --border-color: #f0f0f0; }
+
+    /* Specific styling for the 'Hover Function' and Roundness */
+    .card-hover-effect {
+        border-radius: 16px;
+        border: none;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        overflow: hidden;
+    }
+
+    .card-hover-effect:hover {
+        transform: translateY(0px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .card-header {
+        background-color: #fff;
+        border-bottom: 1px solid #f0f0f0;
+    }
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'companies:company' country_slug %}">Companies</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'payroll:payroll_list' country_slug company.company_id %}">Payrolls</a>
+    </li>
+    <li class="breadcrumb-item active">Payroll Year: {{ payroll.fiscal_year }}</li>
+  </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        
+        <div class="card card-hover-effect shadow-sm">
+            <div class="card-header pt-4 px-4">
+                <h5 class="card-title mb-0">Payroll Periods</h5>
+                <h6 class="card-subtitle text-muted mt-1">
+                    Manage processing periods for Fiscal Year {{ payroll.fiscal_year }}.
+                </h6>
+            </div>
+            
+            <div class="card-body p-0"> 
+                <div class="p-4"> 
+                    {% if periods %}
+                    <table id="datatables-reponsive" class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th class="text-center" style="width: 50px;">Run ID</th>
+                                <th>Name</th>
+                                <th class="text-center">Date Range</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-end">Total Net</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for p in periods %}
+                            <tr>
+                                <td class="text-center text-muted fw-bold">
+                                    {{ p.period_number }}
+                                </td>
+
+                                <td>
+                                    <a href="{% url 'payroll:period_detail' country_slug company.company_id payroll.id p.id %}" class="fw-bold text-dark text-decoration-none">
+                                        {{ p.name }}
+                                    </a>
+                                </td>
+
+                                <td class="text-center small">
+                                    <small>{{ p.start_date|date:"d/m/Y" }}</small><br>
+                                    <strong class="fw-bold text-dark">{{ p.end_date|date:"d/m/Y" }}</strong>
+                                </td>
+
+                                <td class="text-center">
+                                    <span class="badge rounded
+                                        {% if p.status == 'COMPLETED' %}bg-success
+                                        {% elif p.status == 'PROCESSED' %}bg-info
+                                        {% elif p.status == 'AWAITING_APPROVAL' %}bg-warning text-dark
+                                        {% else %}bg-secondary{% endif %}">
+                                        {{ p.get_status_display }}
+                                    </span>
+                                </td>
+
+                                <td class="text-end font-monospace fw-bold">
+                                    {{ p.total_net|floatformat:2|intcomma }}
+                                </td>
+
+                                <td class="text-center table-action" style="position: relative; z-index: 2;">
+                                    <a href="{% url 'payroll:period_detail' country_slug company.company_id payroll.id p.id %}" class="text-brand me-2" title="View Period">
+                                        <i class="align-middle fas fa-eye"></i>
+                                    </a>
+                                    </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <div class="mb-3">
+                                <i class="fas fa-calendar-alt fa-3x text-muted opacity-25"></i>
+                            </div>
+                            <h5 class="text-muted">No periods found</h5>
+                            <p class="text-muted small mb-3">Add a new period to begin payroll processing.</p>
+                            
+                            <a href="{% url 'payroll:period_create' country_slug company.company_id 0 %}?payroll={{ payroll.id }}" class="btn btn-primary">
+                                <i class="fas fa-plus-circle me-2"></i> Create First Period
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/responsive.bootstrap5.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        if (document.getElementById("datatables-reponsive")) {
+            $("#datatables-reponsive").DataTable({
+                responsive: true,
+                lengthChange: true,
+                pageLength: 12, // Default to 12 for monthly view
+                lengthMenu: [[12, 24, 50, -1], [12, 24, 50, "All"]],
+                order: [[0, "desc"]], // Sort by Period Number Descending
+                
+                language: {
+                    search: "",
+                    searchPlaceholder: "Search Periods...",
+                    lengthMenu: "Show _MENU_ entries"
+                },
+
+                dom: '<"row mb-3"<"col-md-6 d-flex align-items-center"l><"col-md-6"f>>' + 
+                     '<"row"<"col-sm-12"tr>>' + 
+                     '<"row mt-3"<"col-md-5"i><"col-md-7"p>>',
+
+                initComplete: function() {
+                    $('.dataTables_filter input').addClass('form-control');
+                    $('.dataTables_length select').addClass('form-select');
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

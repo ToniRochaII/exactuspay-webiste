@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+{% crispy form %}
+{% load crispy_forms_tags %}
+{% load company_role_filters %}
+{% load company_filters %}
+
+{% block title %}Upload Results — Companies | ExactusPay{% endblock %}
+
+{% block page_title %}
+<i class="fas fa-file-import me-2"></i>Upload Results — Companies
+{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
+
+    {% if country %}
+      <li class="breadcrumb-item"><a href="{% url 'companies:company' country.slug %}">
+          Companies — {{ country.name }}</a>
+      </li>
+    {% endif %}
+
+    <li class="breadcrumb-item active" aria-current="page">Upload Results</li>
+  </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm border-0">
+
+  <!-- HEADER -->
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <div>
+      <h5 class="card-title mb-0">Upload Results — Companies</h5>
+      <div class="card-subtitle text-muted small">Summary of processed records from your upload.</div>
+    </div>
+
+    <div class="d-flex gap-2">
+      {% if country %}
+        <a href="{% url 'companies:company_upload' country.slug %}"
+           class="btn btn-outline-primary btn-sm">
+           <i class="fas fa-upload me-1"></i>Upload Another
+        </a>
+        <a href="{% url 'companies:company' country.slug %}"
+           class="btn btn-outline-secondary btn-sm">
+           <i class="fas fa-list me-1"></i>View Companies
+        </a>
+      {% else %}
+        <a href="{% url 'companies:company_upload_global' %}"
+           class="btn btn-outline-primary btn-sm">
+           <i class="fas fa-upload me-1"></i>Upload Another
+        </a>
+        <a href="{% url 'country:country' %}"
+           class="btn btn-outline-secondary btn-sm">
+           <i class="fas fa-list me-1"></i>View Countries
+        </a>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="card-body">
+
+      <!-- SUMMARY CARDS -->
+      <div class="row g-3 mb-4">
+
+        <div class="col-md-4">
+          <div class="card text-white bg-success shadow-sm">
+            <div class="card-body text-center">
+              <h3 class="fw-bold">{{ result.created }}</h3>
+              <small>Companies Created</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card text-white bg-primary shadow-sm">
+            <div class="card-body text-center">
+              <h3 class="fw-bold">{{ result.updated }}</h3>
+              <small>Companies Updated</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="card text-white {% if result.errors %}bg-danger{% else %}bg-secondary{% endif %} shadow-sm">
+            <div class="card-body text-center">
+              <h3 class="fw-bold">{{ result.errors|length }}</h3>
+              <small>Errors Found</small>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- DRY RUN WARNING -->
+      {% if result.dry_run %}
+      <div class="alert alert-warning">
+        <h5 class="alert-heading">
+          <i class="fas fa-exclamation-triangle me-2"></i>Dry Run Completed
+        </h5>
+        <p class="mb-0">No data was saved. Fix errors and upload again.</p>
+      </div>
+      {% endif %}
+
+      <!-- ERRORS TABLE -->
+      {% if result.errors %}
+      <div class="alert alert-danger">
+        <h5 class="alert-heading">
+          <i class="fas fa-times-circle me-2"></i>Import Errors ({{ result.errors|length }})
+        </h5>
+        <hr>
+
+        <div class="table-responsive">
+          <table class="table table-sm table-bordered">
+            <thead class="table-light">
+              <tr>
+                <th style="width: 90px;">Line #</th>
+                <th>Error</th>
+                <th>Row Data</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for error in result.errors %}
+              <tr>
+                <td class="text-center"><strong>{{ error.line }}</strong></td>
+                <td class="text-danger">{{ error.error }}</td>
+                <td>
+                  <small class="text-muted">
+                    {% for key, value in error.row.items %}
+                      <strong>{{ key }}:</strong> {{ value }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                  </small>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+      {% else %}
+
+      <!-- SUCCESS -->
+      <div class="alert alert-success">
+        <h5 class="alert-heading">
+          <i class="fas fa-check-circle me-2"></i>Import Completed Successfully
+        </h5>
+        <p class="mb-0">All uploaded records were processed without errors.</p>
+      </div>
+
+      {% endif %}
+
+      <!-- FINAL SUMMARY -->
+      {% if result.created or result.updated %}
+      <div class="alert alert-info">
+        <h5 class="alert-heading">Import Summary</h5>
+        <ul class="mb-0">
+          {% if result.created %}
+            <li><strong>{{ result.created }}</strong> new companies created</li>
+          {% endif %}
+          {% if result.updated %}
+            <li><strong>{{ result.updated }}</strong> companies updated</li>
+          {% endif %}
+        </ul>
+      </div>
+      {% endif %}
+
+      <!-- ACTION FOOTER -->
+      <div class="mt-4 d-flex gap-2">
+
+        {% if country %}
+          <a href="{% url 'companies:company_upload' country.slug %}" 
+             class="btn btn-primary">
+            <i class="fas fa-upload me-2"></i>Upload Another File
+          </a>
+
+          <a href="{% url 'companies:company' country.slug %}" 
+             class="btn btn-outline-secondary">
+            <i class="fas fa-list me-2"></i>View Companies
+          </a>
+
+        {% else %}
+          <a href="{% url 'companies:company_upload_global' %}" 
+             class="btn btn-primary">
+            <i class="fas fa-upload me-2"></i>Upload Another File
+          </a>
+
+          <a href="{% url 'country:country' %}" 
+             class="btn btn-outline-secondary">
+            <i class="fas fa-list me-2"></i>View Countries
+          </a>
+        {% endif %}
+
+        {% if result.errors %}
+        <a href="{% if country %}
+                    {% url 'companies:download_companies_template' country.slug %}
+                 {% else %}
+                    {% url 'companies:download_companies_template_global' %}
+                 {% endif %}"
+           class="btn btn-outline-info">
+          <i class="fas fa-download me-2"></i>Download Template
+        </a>
+        {% endif %}
+
+      </div>
+
+  </div>
+</div>
+{% endblock %}

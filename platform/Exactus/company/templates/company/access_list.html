@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}Access Management - {{ company.trade_name }}{% endblock %}
+
+{% block breadcrumbs %}
+<li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Home</a></li>
+<li class="breadcrumb-item"><a href="{% url 'companies:company' country.slug %}">Companies</a></li>
+<li class="breadcrumb-item"><a href="{% url 'companies:company_dashboard' country.slug company.pk %}">{{ company.trade_name }}</a></li>
+<li class="breadcrumb-item active">Access List</li>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <div>
+            <h5 class="card-title mb-0">Authorized Users</h5>
+            <div class="card-subtitle text-muted">Users with access to {{ company.trade_name }}</div>
+        </div>
+        {% if user.role in "EXEC,ADMIN" %}
+        <a href="{% url 'companies:user_allocation' country.slug %}" class="btn btn-primary btn-sm">
+            <i class="fas fa-user-plus me-1"></i> Allocate User
+        </a>
+        {% endif %}
+    </div>
+    
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>User</th>
+                    <th>Email</th>
+                    <th>Role on Company</th>
+                    <th>Global Role</th>
+                    <th>Assigned Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for access in access_list %}
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="avatar avatar-sm me-2 bg-light rounded-circle d-flex justify-content-center align-items-center text-primary fw-bold">
+                                {{ access.user.email|slice:":1"|upper }}
+                            </div>
+                            <strong>{{ access.user.first_name }} {{ access.user.last_name }}</strong>
+                        </div>
+                    </td>
+                    <td>{{ access.user.email }}</td>
+                    <td>
+                        <span class="badge 
+                            {% if access.role == 'DIRECTOR' %}bg-primary
+                            {% elif access.role == 'MANAGER' %}bg-info
+                            {% elif access.role == 'FINANCE' %}bg-success
+                            {% else %}bg-secondary{% endif %}">
+                            {{ access.role }}
+                        </span>
+                    </td>
+                    <td class="text-muted small">{{ access.user.role }}</td>
+                    <td>{{ access.created_at|date:"M d, Y" }}</td>
+                    <td>
+                        {% if access.user.is_active %}
+                            <span class="text-success"><i class="fas fa-check-circle"></i> Active</span>
+                        {% else %}
+                            <span class="text-danger"><i class="fas fa-ban"></i> Inactive</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center py-4 text-muted">
+                        No specific users assigned. (Global Admins may still have access).
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

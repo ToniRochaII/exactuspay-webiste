@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+{% load static %}
+{% load element_role_filters %}
+
+{% block title %}Delete Element | ExactusPay{% endblock %}
+
+{% block page_title %}
+<i class="fas fa-exclamation-triangle text-danger me-2"></i>Delete Element
+{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* --- GOLD STANDARD CSS --- */
+    body { background-color: #F4F4F4 !important; }
+    .wrapper:before { background: #F4F4F4 !important; }
+    :root { --card-radius: 16px; --border-color: #f0f0f0; }
+
+    .card-hover-effect {
+        border-radius: var(--card-radius);
+        border: none;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        overflow: hidden;
+    }
+    .card-hover-effect:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+    }
+    .card-header {
+        background-color: #fff;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    /* Section Headers */
+    h6.section-header {
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 1px;
+        color: #6c757d;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        margin-top: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'elements:elements' country_slug %}">Elements — {{ country.name }}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Delete Element</li>
+  </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-12">
+
+    <div class="card card-hover-effect shadow-sm">
+
+      <div class="card-header pt-4 px-4 pb-3">
+        <h5 class="card-title mb-0 text-danger">
+          <i class="fas fa-trash-alt me-2"></i>Confirm Element Deletion
+        </h5>
+        <h6 class="card-subtitle text-muted mt-1">
+            Permanently remove {{ element.element_name }} ({{ element.element_code }})
+        </h6>
+      </div>
+
+      <div class="card-body p-4">
+
+        {% if has_dependencies %}
+          <div class="alert alert-danger border-danger shadow-sm rounded-3 mb-4">
+            <div class="d-flex align-items-start">
+                <i class="fas fa-ban fa-2x me-3 mt-1"></i>
+                <div>
+                    <h5 class="alert-heading fw-bold">Cannot Delete Element</h5>
+                    <p class="mb-2">
+                        This element is currently referenced in <strong>{{ total_dependencies }}</strong> calculation base(s). 
+                        To maintain data integrity, you must remove these references before deleting the element.
+                    </p>
+                    <hr class="border-danger opacity-25 my-2">
+                    <p class="mb-0 small">
+                        <strong>References:</strong> 
+                        Main Element: <span class="badge bg-danger">{{ calculation_bases_as_element }}</span> 
+                        {% if calculation_bases_as_base > 0 %}
+                        | Base Element: <span class="badge bg-danger">{{ calculation_bases_as_base }}</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+          </div>
+        {% else %}
+          <div class="alert alert-warning border-warning shadow-sm rounded-3 mb-4">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-exclamation-triangle fa-2x me-3 text-warning"></i>
+                <div>
+                    <h5 class="alert-heading fw-bold text-dark">Warning: Permanent Action</h5>
+                    <p class="mb-0 text-dark">
+                        You are about to permanently delete <strong>{{ element.element_name }}</strong>. 
+                        This action <strong>cannot be undone</strong>.
+                    </p>
+                </div>
+            </div>
+          </div>
+        {% endif %}
+
+        <div class="bg-light p-4 rounded-3 border mb-4">
+            <h6 class="section-header"><i class="fas fa-info-circle me-2"></i>Element Summary</h6>
+            
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <small class="text-muted d-block text-uppercase" style="font-size: 0.7rem;">Code</small>
+                    <span class="fw-bold">{{ element.element_code }}</span>
+                </div>
+                <div class="col-md-3">
+                    <small class="text-muted d-block text-uppercase" style="font-size: 0.7rem;">Name</small>
+                    <span class="fw-bold">{{ element.element_name }}</span>
+                </div>
+                <div class="col-md-3">
+                    <small class="text-muted d-block text-uppercase" style="font-size: 0.7rem;">Category</small>
+                    <span>{{ element.element_category }}</span>
+                </div>
+                <div class="col-md-3">
+                    <small class="text-muted d-block text-uppercase" style="font-size: 0.7rem;">Status</small>
+                    <span class="badge {% if element.element_status == 'Active' %}bg-success{% else %}bg-secondary{% endif %}">
+                        {{ element.element_status }}
+                    </span>
+                </div>
+            </div>
+
+            {% if element.element_taxable or element.element_pensionable or element.element_payable %}
+            <div class="mt-3 pt-3 border-top border-white">
+                <small class="text-muted d-block mb-2">Attributes:</small>
+                <div class="d-flex flex-wrap gap-2">
+                    {% if element.element_taxable %}<span class="badge bg-danger">Taxable</span>{% endif %}
+                    {% if element.element_social_securitable %}<span class="badge bg-primary">Social Security</span>{% endif %}
+                    {% if element.element_pensionable %}<span class="badge bg-success">Pensionable</span>{% endif %}
+                    {% if element.element_payable %}<span class="badge bg-dark">Payable</span>{% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        {% if has_dependencies and calculation_bases %}
+        <div class="mb-4">
+            <h6 class="section-header text-danger"><i class="fas fa-link me-2"></i>Blocking Dependencies</h6>
+            <div class="table-responsive border rounded-3">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Fiscal Year</th>
+                            <th>Regulation</th>
+                            <th>Role</th>
+                            <th class="text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cb in calculation_bases %}
+                        <tr>
+                            <td>{{ cb.regulations.fiscal_year|default:"N/A" }}</td>
+                            <td>{{ cb.regulations }}</td>
+                            <td>
+                                {% if cb.element == element %}
+                                    <span class="badge bg-warning text-dark">Target</span>
+                                {% elif cb.element_base == element %}
+                                    <span class="badge bg-info text-dark">Source</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end">
+                                <a href="{% url 'calculationbase:list' country_slug=country.slug regulations_id=cb.regulations.id %}" 
+                                   class="btn btn-sm btn-outline-primary">
+                                    Manage
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="d-flex justify-content-end align-items-center pt-3 border-top">
+            {% if not has_dependencies %}
+                <form method="post" id="delete-form" class="d-flex align-items-center">
+                    {% csrf_token %}
+                    
+                    <div class="form-check me-3">
+                        <input class="form-check-input" type="checkbox" id="confirmDelete" required>
+                        <label class="form-check-label text-danger fw-semibold small" for="confirmDelete">
+                            I understand this is permanent
+                        </label>
+                    </div>
+
+                    <a href="{% url 'elements:elements' country_slug %}" class="btn btn-light border me-2">
+                        Cancel
+                    </a>
+                    
+                    <button type="submit" class="btn btn-secondary px-4" id="delete-btn" disabled>
+                        <i class="fas fa-trash-alt me-2"></i>Delete
+                    </button>
+                </form>
+            {% else %}
+                <a href="{% url 'elements:elements' country_slug %}" class="btn btn-primary px-4">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Elements
+                </a>
+            {% endif %}
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const confirmCheckbox = document.getElementById('confirmDelete');
+    const deleteBtn = document.getElementById('delete-btn');
+    
+    // Safety Toggle
+    if (confirmCheckbox && deleteBtn) {
+      confirmCheckbox.addEventListener('change', function() {
+        deleteBtn.disabled = !this.checked;
+        if (this.checked) {
+          deleteBtn.classList.remove('btn-secondary');
+          deleteBtn.classList.add('btn-danger');
+        } else {
+          deleteBtn.classList.remove('btn-danger');
+          deleteBtn.classList.add('btn-secondary');
+        }
+      });
+    }
+  });
+</script>
+{% endblock %}

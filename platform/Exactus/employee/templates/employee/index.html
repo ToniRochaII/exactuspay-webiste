@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% load static %}
+{% load employee_role_filters %}
+
+{% block title %}Employees — {{ company.trade_name }} | ExactusPay{% endblock %}
+
+{% block page_title %}Employees — {{ company.trade_name }}{% endblock %}
+
+{% block extra_head %}
+<link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.bootstrap5.min.css" rel="stylesheet">
+
+<style>
+    /* Match global grey background */
+    body { background-color: #F4F4F4 !important; }
+    .wrapper:before { background: #F4F4F4 !important; }
+    :root { --card-radius: 16px; --kpi-radius: 20px; --border-color: #f0f0f0; }
+
+    /* Specific styling for the 'Hover Function' and Roundness */
+    .card-hover-effect {
+        border-radius: 16px;
+        border: none;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        overflow: hidden; /* Crucial: Clips the table to fit the rounded corners */
+    }
+
+    .card-hover-effect:hover {
+        transform: translateY(0px); /* The "Lift" */
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .card-header {
+        background-color: #fff;
+        border-bottom: 1px solid #f0f0f0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        
+        <div class="card card-hover-effect shadow-sm">
+            <div class="card-header pt-4 px-4">
+                <h5 class="card-title mb-0">Employee Directory</h5>
+                <h6 class="card-subtitle text-muted mt-1">
+                    Manage personnel, job titles, and departmental allocations for {{ company.trade_name }}.
+                </h6>
+            </div>
+            
+            <div class="card-body p-0"> 
+                <div class="p-4"> 
+                    <table id="datatables-reponsive" class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th class="text-center">ID</th>
+                                <th>Full Name</th>
+                                <th class="text-center">Gender</th>
+                                <th>Job Title</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for employee in employees %}
+                            <tr class="position-relative" style="transform: rotate(0);">
+                                <td class="text-center align-middle">
+                                    <span class="text-muted">{{ employee.employee_id }}</span>
+                                </td>
+
+                                <td class="align-middle">
+                                    <div class="d-flex align-items-center">
+                                        <a href="{% url 'employee:employee_edit' country_slug company.company_id employee.id %}" class="fw-bold text-dark text-decoration-none stretched-link">
+                                            <strong>{{ employee.employee_surname }},</strong>
+                                            <small class="text-muted">{{ employee.employee_name }}</small>
+                                        </a>
+                                    </div>
+                                </td>
+                                
+                                <td class="text-center align-middle">
+                                    <span class="">
+                                        {{ employee.gender|default:"—" }}
+                                    </span>
+                                </td>
+                                
+                                <td class="align-middle">
+                                    <strong>{{ employee.job_title }}</strong><br>
+                                    <small class="text-muted">{{ employee.department }}</small>
+                                </td>
+                                
+                                <td class="text-center align-middle table-action" style="position: relative; z-index: 2;">
+                                    <a href="{% url 'employee:employee_edit' country_slug company.company_id employee.id %}" class="text-dark me-3" title="Enter Calculation Base">
+                                        <i class="align-middle fas fa-arrow-right"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/responsive.bootstrap5.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        $("#datatables-reponsive").DataTable({
+            responsive: true,
+            lengthChange: true,
+            pageLength: 10, 
+            lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
+            order: [[2, "asc"]], // Default sort by Surname (Column 2)
+            
+            language: {
+                search: "",
+                searchPlaceholder: "Search Employees...",
+                lengthMenu: "Show _MENU_ entries"
+            },
+
+            // Standard ExactusPay DOM Layout
+            dom: '<"row mb-3"<"col-md-6 d-flex align-items-center"l><"col-md-6"f>>' + 
+                 '<"row"<"col-sm-12"tr>>' + 
+                 '<"row mt-3"<"col-md-5"i><"col-md-7"p>>',
+
+            initComplete: function() {
+                // Enforce Robust Styles
+                $('.dataTables_filter input').addClass('form-control');
+                $('.dataTables_length select').addClass('form-select');
+            }
+        });
+    });
+</script>
+{% endblock %}

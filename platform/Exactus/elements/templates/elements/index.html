@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% load static %}
+{% load element_role_filters %}
+
+{% block title %}Elements — {{ country.name }} | ExactusPay{% endblock %}
+
+
+
+
+
+{% block extra_head %}
+<link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.bootstrap5.min.css" rel="stylesheet">
+
+<style>
+
+    body { background-color: #F4F4F4 !important; }
+    .wrapper:before { background: #F4F4F4 !important; }
+    :root { --card-radius: 16px; --kpi-radius: 20px; --border-color: #f0f0f0; }
+    
+    /* Specific styling for the 'Hover Function' and Roundness */
+    .card-hover-effect {
+        border-radius: 16px;
+        border: none;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        overflow: hidden;
+    }
+
+    .card-hover-effect:hover {
+        transform: translateY(0px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .card-header {
+        background-color: #fff;
+        border-bottom: 1px solid #f0f0f0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        
+        <div class="card card-hover-effect shadow-sm">
+            <div class="card-header pt-4 px-4">
+                <h5 class="card-title mb-0">Elements for {{ country.name }}</h5>
+                <h6 class="card-subtitle text-muted mt-1">
+                    Manage payroll elements, deductions, and earnings.
+                </h6>
+            </div>
+            
+            <div class="card-body p-0"> 
+                <div class="p-4"> 
+                    <table id="datatables-reponsive" class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Code</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for e in elements %}
+                            <tr>
+                                <td class="text-center">
+                                  <a href="{% url 'elements:element_edit' country_slug e.element_code %}" class="fw-bold text-dark text-decoration-none">
+                                    <strong class=" text-dark">{{ e.element_code }}</strong>
+                                  </a>
+                                </td>
+
+                                <td>
+                                    <div class="d-flex flex-column ">
+                                        <a href="{% url 'elements:element_edit' country_slug e.element_code %}" class="fw-bold text-dark text-decoration-none">
+                                            {{ e.element_name }}<br>
+                                        
+                                        {% if e.element_description %}
+                                            <small class="text-muted text-truncate" style="max-width: 250px;">
+                                                {{ e.element_type }}
+                                            </small>
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <strong>{{ e.element_category|default:"—" }}</strong><br>
+                                    <small class="text-muted">{{ e.element_categorytype|default:"—" }}</small>
+                                </td>
+
+                                <td class="text-center">
+                                  <strong ">{{ e.element_status }}</strong><br>
+                                  <small class="text-muted">{{ e.element_class }}</small>
+                                </td>
+
+                                <td class="text-center table-action" style="position: relative; z-index: 2;">
+                                    <a href="{% url 'elements:element_edit' country_slug e.element_code %}" class="text-brand me-2" title="Edit">
+                                        <i class="align-middle fas fa-pen"></i>
+                                    </a>
+                                    <a href="{% url 'elements:element_delete' country_slug e.element_code %}" class="text-danger" title="Delete" onclick="return confirm('Are you sure you want to delete this element?');">
+                                        <i class="align-middle fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/responsive.bootstrap5.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        $("#datatables-reponsive").DataTable({
+            responsive: true,
+            lengthChange: true,
+            pageLength: 10,
+            lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
+            
+            language: {
+                search: "",
+                searchPlaceholder: "Search Elements...",
+                lengthMenu: "Show _MENU_ entries"
+            },
+
+            // Standard ExactusPay DOM Layout
+            dom: '<"row mb-3"<"col-md-6 d-flex align-items-center"l><"col-md-6"f>>' + 
+                 '<"row"<"col-sm-12"tr>>' + 
+                 '<"row mt-3"<"col-md-5"i><"col-md-7"p>>',
+
+            initComplete: function() {
+                // Enforce Robust Styles
+                $('.dataTables_filter input').addClass('form-control');
+                $('.dataTables_length select').addClass('form-select');
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% load static %}
+<link href="{% static 'css/modern.css' %}" rel="stylesheet">
+{% block title %}Custom Roles | ExactusPay{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h4><i class="fas fa-users-cog me-2"></i>Custom Roles</h4>
+            <p class="text-muted mb-0">Manage custom roles and their permissions</p>
+        </div>
+        <div>
+            <a href="{% url 'role_create' %}" class="btn btn-primary">
+                <i class="fas fa-plus me-1"></i>Create New Role
+            </a>
+        </div>
+    </div>
+
+    <!-- Roles Grid -->
+    <div class="row">
+        {% for role in custom_role %}
+        <div class="col-xl-4 col-lg-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">{{ role.name }}</h5>
+                    <span class="badge {% if role.is_active %}bg-success{% else %}bg-secondary{% endif %}">
+                        {{ role.is_active|yesno:"Active,Inactive" }}
+                    </span>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">{{ role.description|default:"No description provided." }}</p>
+                    
+                    <div class="mb-3">
+                        <strong>Scope:</strong> 
+                        <span class="badge bg-info">{{ role.get_scope_display }}</span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <strong>Permissions:</strong> 
+                        <span class="badge bg-primary">{{ role.get_permission_count }}</span> total
+                    </div>
+                    
+                    <div class="mb-3">
+                        <strong>Created:</strong> 
+                        <small class="text-muted">{{ role.created_at|date:"M d, Y" }} by {{ role.created_by.username }}</small>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="btn-group w-100">
+                        <a href="{% url 'role_detail' role.id %}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="{% url 'role_edit' role.id %}" class="btn btn-outline-secondary btn-sm">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <button type="button" class="btn btn-outline-danger btn-sm" 
+                                onclick="confirmDelete({{ role.id }}, '{{ role.name }}')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-users-cog fa-3x text-muted mb-3"></i>
+                    <h5>No Custom Roles Created</h5>
+                    <p class="text-muted">Get started by creating your first custom role.</p>
+                    <a href="{% url 'role_create' %}" class="btn btn-primary">
+                        <i class="fas fa-plus me-1"></i>Create First Role
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function confirmDelete(roleId, roleName) {
+    if (confirm(`Are you sure you want to delete the role "${roleName}"? This action cannot be undone.`)) {
+        fetch(`/permissions/roles/${roleId}/delete/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showToast('success', data.message);
+                setTimeout(() => location.reload(), 1000);
+            } else {
+                showToast('error', data.error);
+            }
+        })
+        .catch(error => {
+            showToast('error', 'Network error occurred');
+        });
+    }
+}
+
+function showToast(type, message) {
+    // Implement toast notification
+    alert(`${type.toUpperCase()}: ${message}`);
+}
+</script>
+{% endblock %}

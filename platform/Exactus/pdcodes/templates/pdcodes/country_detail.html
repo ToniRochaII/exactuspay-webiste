@@ -1,0 +1,372 @@
+<!-- templates/country/country_detail.html -->
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ country.name }} - Management{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1>{{ country.name }} - Management</h1>
+            <p class="text-muted">Country Code: {{ country.code }} | Slug: {{ country.slug }}</p>
+        </div>
+        <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                <i class="fas fa-cog"></i> Management Actions
+            </button>
+            <ul class="dropdown-menu">
+                <li>
+                    <a class="dropdown-item" href="{% url 'pdcodes:pdcode_upload_country' country_slug=country.slug %}">
+                        <i class="fas fa-upload"></i> Upload PD Codes to All Companies
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item" href="{% url 'companies:company'_create' country_slug=country.slug %}">
+                        <i class="fas fa-plus-circle"></i> Add New Company
+                    </a>
+                </li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <a class="dropdown-item" href="{% url 'country:country_edit' country_slug=country.slug %}">
+                        <i class="fas fa-edit"></i> Edit Country Details
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>{{ companies.count }}</h4>
+                            <p class="mb-0">Companies</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-building fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>{{ total_pdcodes }}</h4>
+                            <p class="mb-0">Total PD Codes</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-code fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>{{ employees_count }}</h4>
+                            <p class="mb-0">Total Employees</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4>{{ recent_uploads }}</h4>
+                            <p class="mb-0">Recent Uploads</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="fas fa-upload fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PD Codes Management Section -->
+    <div class="card mb-4">
+        <div class="card-header bg-light">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-code"></i> PD Codes Management
+                </h5>
+                <div class="btn-group">
+                    <a href="{% url 'pdcodes:pdcode_upload_country' country_slug=country.slug %}" 
+                       class="btn btn-success btn-sm">
+                        <i class="fas fa-upload"></i> Upload to All Companies
+                    </a>
+                    <a href="{% url 'pdcodes:download_pdcodes_country_template' country_slug=country.slug %}" 
+                       class="btn btn-outline-secondary btn-sm">
+                        <i class="fas fa-download"></i> Download Template
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <p>Manage Payroll and Deduction codes across all companies in {{ country.name }}.</p>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6>Quick Actions</h6>
+                            <div class="d-grid gap-2">
+                                <a href="{% url 'pdcodes:pdcode_upload_country' country_slug=country.slug %}" 
+                                   class="btn btn-outline-primary text-start">
+                                    <i class="fas fa-upload"></i> Bulk Upload PD Codes
+                                </a>
+                                <a href="{% url 'pdcodes:download_pdcodes_country_template' country_slug=country.slug %}" 
+                                   class="btn btn-outline-secondary text-start">
+                                    <i class="fas fa-file-csv"></i> Get CSV Template
+                                </a>
+                                <a href="#" class="btn btn-outline-info text-start">
+                                    <i class="fas fa-sync"></i> Sync PD Codes
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6>Statistics</h6>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Total Companies
+                                    <span class="badge bg-primary">{{ companies.count }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Total PD Codes
+                                    <span class="badge bg-success">{{ total_pdcodes }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Average per Company
+                                    <span class="badge bg-info">{{ avg_pdcodes_per_company }}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Companies List Section -->
+    <div class="card">
+        <div class="card-header bg-light">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-building"></i> Companies in {{ country.name }}
+                </h5>
+                <a href="{% url 'companies:company'_create' country_slug=country.slug %}" 
+                   class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus"></i> Add Company
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Company Name</th>
+                            <th>Code</th>
+                            <th>Legal Name</th>
+                            <th>PD Codes</th>
+                            <th>Employees</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for company in companies %}
+                        <tr>
+                            <td>
+                                <strong>{{ company.trade_name }}</strong>
+                            </td>
+                            <td>
+                                <code>{{ company.company_code }}</code>
+                            </td>
+                            <td>
+                                {% if company.legal_name %}
+                                    <small class="text-muted">{{ company.legal_name }}</small>
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge bg-info">{{ company.pdcodes.count }}</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-secondary">{{ company.employees.count }}</span>
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{% url 'pdcodes:pdcodes' country_slug=country.slug company_id=company.company_id %}" 
+                                       class="btn btn-outline-primary" title="View PD Codes">
+                                        <i class="fas fa-code"></i>
+                                    </a>
+                                    <a href="{% url 'pdcodes:pdcode_upload' country_slug=country.slug company_id=company.company_id %}" 
+                                       class="btn btn-outline-success" title="Upload PD Codes">
+                                        <i class="fas fa-upload"></i>
+                                    </a>
+                                    <a href="{% url 'employee:employee' country_slug=country.slug company_id=company.company_id %}" 
+                                       class="btn btn-outline-info" title="View Employees">
+                                        <i class="fas fa-users"></i>
+                                    </a>
+                                    <a href="{% url 'companies:company'_edit' country_slug=country.slug company_id=company.company_id %}" 
+                                       class="btn btn-outline-secondary" title="Edit Company">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted">
+                                <div class="py-4">
+                                    <i class="fas fa-building fa-3x text-muted mb-3"></i>
+                                    <p class="mb-2">No companies found in {{ country.name }}.</p>
+                                    <a href="{% url 'companies:company'_create' country_slug=country.slug %}" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-plus"></i> Add the first company
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity Section -->
+    <div class="card mt-4">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">
+                <i class="fas fa-history"></i> Recent Activity
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h6>Recent PD Code Uploads</h6>
+                    <div class="list-group list-group-flush">
+                        {% for upload in recent_pdcode_uploads %}
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <small class="text-muted">{{ upload.date }}</small>
+                                <div>{{ upload.description }}</div>
+                            </div>
+                            <span class="badge bg-{{ upload.status_color }}">{{ upload.status }}</span>
+                        </div>
+                        {% empty %}
+                        <div class="list-group-item text-muted text-center">
+                            <i class="fas fa-info-circle"></i> No recent PD code uploads
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h6>System Information</h6>
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            Country Code
+                            <span class="badge bg-dark">{{ country.code }}</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            Total Companies
+                            <span class="badge bg-primary">{{ companies.count }}</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            Total PD Codes
+                            <span class="badge bg-success">{{ total_pdcodes }}</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            Last Updated
+                            <span class="badge bg-secondary">{{ last_updated }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Action Buttons Floating -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div class="btn-group-vertical">
+        <a href="{% url 'pdcodes:pdcode_upload_country' country_slug=country.slug %}" 
+           class="btn btn-success btn-lg rounded-pill shadow" 
+           title="Upload PD Codes to All Companies">
+            <i class="fas fa-upload"></i>
+        </a>
+        <a href="{% url 'companies:company'_create' country_slug=country.slug %}" 
+           class="btn btn-primary btn-lg rounded-pill shadow mt-2" 
+           title="Add New Company">
+            <i class="fas fa-plus"></i>
+        </a>
+    </div>
+</div>
+
+<style>
+.card {
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    margin-bottom: 1.5rem;
+}
+
+.card-header {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+    background-color: #f8f9fa;
+}
+
+.table th {
+    border-top: none;
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge {
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.btn-group-sm > .btn {
+    padding: 0.25rem 0.5rem;
+}
+
+.list-group-item {
+    border: none;
+    padding: 0.75rem 0;
+}
+
+.position-fixed .btn {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container-fluid p-0">
+    <div class="d-flex justify-content-between mb-3">
+        <h1 class="h3">Report Layouts</h1>
+        <div>
+            <a href="{% url 'reports:report_manage_hub' %}" class="btn btn-secondary me-2">Back to Hub</a>
+            <a href="{% url 'reports:manage_layouts_add' %}" class="btn btn-success"><i class="fas fa-upload"></i> Upload Layout</a>
+        </div>
+    </div>
+    <div class="card">
+        <table class="table table-striped mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Assigned Report Type</th>
+                    <th>Template File</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for layout in layouts %}
+                <tr>
+                    <td>{{ layout.name }}</td>
+                    <td>{{ layout.report_type.name }}</td>
+                    <td><a href="{{ layout.template_file.url }}" target="_blank">View File</a></td>
+                    <td>
+                        <a href="{% url 'reports:manage_layouts_edit' layout.pk %}" class="btn btn-sm btn-warning">Edit</a>
+                        <a href="{% url 'reports:manage_layouts_delete' layout.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4" class="text-center py-3">No layouts uploaded yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

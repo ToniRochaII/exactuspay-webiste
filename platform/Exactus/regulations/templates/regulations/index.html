@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% load static %}
+{% load regulations_role_filters %}
+{% load permission_tags %}
+
+{% block title %}Regulations | ExactusPay{% endblock %}
+
+{% block page_title %}Regulations{% endblock %}
+
+
+{% block extra_head %}
+<link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.bootstrap5.min.css" rel="stylesheet">
+
+<style>
+
+    body { background-color: #F4F4F4 !important; }
+    .wrapper:before { background: #F4F4F4 !important; }
+    :root { --card-radius: 16px; --kpi-radius: 20px; --border-color: #f0f0f0; }
+
+    /* ExactusPay Standard Card Styling */
+    .card-hover-effect {
+        border-radius: 16px;
+        border: none;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        overflow: hidden;
+    }
+
+    .card-hover-effect:hover {
+        transform: translateY(0px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .card-header {
+        background-color: #fff;
+        border-bottom: 1px solid #f0f0f0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        
+        <div class="card card-hover-effect shadow-sm">
+            <div class="card-header pt-4 px-4">
+                <h5 class="card-title mb-0">Regulations</h5>
+                <h6 class="card-subtitle text-muted mt-1">
+                    Manage payroll regulations, fiscal years, and effective dates for {{ country.name }}.
+                </h6>
+            </div>
+            
+            <div class="card-body p-0"> 
+                <div class="p-4"> 
+                    <table id="datatables-reponsive" class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Country</th>
+                                <th>Fiscal Year</th>
+                                <th>Effective Date</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for regulation in regulations %}
+                            <tr>
+                                <td>
+                                    <span class="fw-bold text-dark">{{ regulation.country.name }}</span>
+                                </td>
+
+                                <td>
+                                    <span class="text-dark">
+                                        {{ regulation.fiscal_year }}
+                                    </span>
+                                </td>
+
+                                <td>{{ regulation.effective_date }}</td>
+
+                                <td class="text-end table-action" style="position: relative; z-index: 2;">
+                                    
+                                    <a href="{% url 'calculationbase:list' country_slug regulation.id %}" class="text-dark me-3" title="Enter Calculation Base">
+                                        <i class="align-middle fas fa-arrow-right"></i>
+                                    </a>
+
+                                    {% if user|can:"RULE:CREATE" %}
+                                    <a href="{% url 'regulations:regulations_edit' country_slug regulation.id %}" class="text-brand me-3" title="Edit">
+                                        <i class="align-middle fas fa-pen"></i>
+                                    </a>
+
+                                    <a href="{% url 'regulations:regulations_delete' country_slug regulation.id %}" class="text-danger" title="Delete" onclick="return confirm('Are you sure you want to delete this regulation?');">
+                                        <i class="align-middle fas fa-trash"></i>
+                                    </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/responsive.bootstrap5.min.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        $("#datatables-reponsive").DataTable({
+            responsive: true,
+            lengthChange: true,
+            pageLength: 10,
+            lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]], 
+            
+            language: {
+                search: "",
+                searchPlaceholder: "Search Regulations...",
+                lengthMenu: "Show _MENU_ entries"
+            },
+
+            // Standard ExactusPay DOM Layout
+            dom: '<"row mb-3"<"col-md-6 d-flex align-items-center"l><"col-md-6"f>>' + 
+                 '<"row"<"col-sm-12"tr>>' + 
+                 '<"row mt-3"<"col-md-5"i><"col-md-7"p>>',
+
+            initComplete: function() {
+                // Enforce Robust Styles
+                $('.dataTables_filter input').addClass('form-control');
+                $('.dataTables_length select').addClass('form-select');
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Global Calculation Base Upload{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item active">Global Tools</li>
+                        <li class="breadcrumb-item active">Upload Calculation Bases</li>
+                    </ol>
+                </div>
+                <h4 class="page-title"><i class="fas fa-globe-americas me-2"></i>Global Calculation Base Upload</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card bg-info text-white border-0">
+                <div class="card-body">
+                    <h5 class="card-title text-white"><i class="fas fa-info-circle me-2"></i>How it works</h5>
+                    <p class="card-text">
+                        This tool allows you to upload Calculation Bases for <strong>multiple countries</strong> at once.
+                    </p>
+                    <hr class="border-light">
+                    <h6 class="text-white">Required CSV Columns:</h6>
+                    <ul class="small mb-3">
+                        <li><code>country_code</code> (e.g., AR, GB, ZA)</li>
+                        <li><code>fiscal_year</code> (e.g., 2025)</li>
+                        <li><code>element_code</code> (Must exist in the country)</li>
+                    </ul>
+                    <h6 class="text-white">Logic:</h6>
+                    <p class="small">
+                        The system will look up the specific Regulation for each row based on the <code>country_code</code> and <code>fiscal_year</code> provided.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="d-grid mt-3">
+                 <a href="{% url 'calculationbase:download_template_global' %}" class="btn btn-success shadow-sm">
+                    <i class="fas fa-download me-2"></i>Download Global Template
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0 text-dark">Select File</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+
+                        <div class="alert alert-warning mt-3">
+                            <i class="fas fa-exclamation-triangle me-1"></i> 
+                            <strong>Warning:</strong> Existing calculation bases matching the (Country + Regulation + Element) combination will be <strong>overwritten</strong>.
+                        </div>
+
+                        <div class="mt-4 border-top pt-3 text-end">
+                            <a href="{% url 'dashboard' %}" class="btn btn-light me-2">Cancel</a>
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="fas fa-cloud-upload-alt me-2"></i>Upload & Process
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
