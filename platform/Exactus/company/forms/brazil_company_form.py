@@ -1,7 +1,9 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 from Exactus.company.forms.base_company_form import BaseCompanyForm
 import re
+
 
 class BrazilCompanyForm(BaseCompanyForm):
     """
@@ -19,42 +21,54 @@ class BrazilCompanyForm(BaseCompanyForm):
     # ─────────────────────────────────────────────
 
     cnpj = forms.CharField(
-        label="CNPJ",
+        label=_("CNPJ"),
         required=True,
         widget=forms.TextInput(attrs={
             "class": "form-control",
-            "placeholder": "00.000.000/0001-00",
+            "placeholder": _("00.000.000/0001-00"),
             "data-mask": "00.000.000/0001-00",
-            "data-section": "tax"
-        })
+            "data-section": "tax",
+        }),
+        error_messages={
+            "required": _("CNPJ is required."),
+        },
     )
 
     registration_date = forms.DateField(
-        label="Registration Date",
+        label=_("Registration Date"),
         required=False,
         widget=forms.DateInput(attrs={
             "class": "form-control",
             "type": "date",
             "data-section": "tax",
-        })
+        }),
     )
 
     primary_cnae = forms.CharField(
-        label="Primary Economical Registration Code",
+        label=_("Primary CNAE"),
         required=False,
-        widget=forms.TextInput(attrs={"class": "form-control", "data-section": "tax"})
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "data-section": "tax",
+        }),
     )
 
     secondary_cnae = forms.CharField(
-        label="Secondary Economical Registration",
+        label=_("Secondary CNAE"),
         required=False,
-        widget=forms.TextInput(attrs={"class": "form-control", "data-section": "tax"})
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "data-section": "tax",
+        }),
     )
 
     business_type_code = forms.CharField(
-        label="Business Type Code",
+        label=_("Business Type Code"),
         required=False,
-        widget=forms.TextInput(attrs={"class": "form-control", "data-section": "tax"})
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "data-section": "tax",
+        }),
     )
 
     # ─────────────────────────────────────────────
@@ -62,51 +76,70 @@ class BrazilCompanyForm(BaseCompanyForm):
     # ─────────────────────────────────────────────
 
     agent_full_name = forms.CharField(
-        label="Contact Full Name",
+        label=_("Contact Full Name"),
         required=False,
-        widget=forms.TextInput(attrs={"class": "form-control", "data-section": "tax"})
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "data-section": "rti",
+        }),
     )
+
     agent_road_name_1 = forms.CharField(
-        label="Road Name",
+        label=_("Road Name"),
         required=False,
-        widget=forms.TextInput(attrs={"class": "form-control", "data-section": "tax"})
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "data-section": "rti",
+        }),
     )
+
     agent_road_name_2 = forms.CharField(
-        label="Road Name line 2",
+        label=_("Road Name (Line 2)"),
         required=False,
-        widget=forms.TextInput(attrs={"class": "form-control", "data-section": "tax"})
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "data-section": "rti",
+        }),
     )
+
     agent_town = forms.CharField(
-        label="Town",
+        label=_("Town"),
         required=False,
-        widget=forms.TextInput(attrs={"class": "form-control", "data-section": "tax"})
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "data-section": "rti",
+        }),
     )
+
     agent_post_code = forms.CharField(
-        label="Post Code",
+        label=_("Post Code"),
         required=False,
-        widget=forms.TextInput(attrs={"class": "form-control", "data-section": "tax"})
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+            "data-section": "rti",
+        }),
     )
 
     class Meta(BaseCompanyForm.Meta):
         labels = {
             **BaseCompanyForm.Meta.labels,
 
-            "company_code": "Company Code",
-            "company_number": "Company Number",
-            "trade_name": "Business Trade Name",
-            "legal_name": "Legal Trade Name",
+            "company_code": _("Company Code"),
+            "company_number": _("Company Number"),
+            "trade_name": _("Business Trade Name"),
+            "legal_name": _("Legal Trade Name"),
 
-            "contact": "Contact",
-            "phone": "Telephone",
-            "email": "eMail",
-            "website": "Website",
+            "contact": _("Contact Person"),
+            "phone": _("Telephone"),
+            "email": _("Email"),
+            "website": _("Website"),
 
-            "building_name": "Building Name",
-            "road_name_1": "Road Name",
-            "road_name_2": "Road Name line 2",
-            "town": "Town",
-            "post_code": "Post Code",
-            "county": "County",
+            "building_name": _("Building Name"),
+            "road_name_1": _("Road Name"),
+            "road_name_2": _("Road Name (Line 2)"),
+            "town": _("Town"),
+            "post_code": _("Post Code"),
+            "county": _("County"),
         }
 
         widgets = {
@@ -129,7 +162,6 @@ class BrazilCompanyForm(BaseCompanyForm):
             "post_code": forms.TextInput(attrs={"class": "form-control", "data-section": "communication"}),
             "county": forms.TextInput(attrs={"class": "form-control", "data-section": "communication"}),
 
-            # ensure these look right in your Account tab
             "account_status": forms.Select(attrs={"class": "form-select", "data-section": "account"}),
             "account_archive": forms.Select(attrs={"class": "form-select", "data-section": "account"}),
         }
@@ -137,7 +169,7 @@ class BrazilCompanyForm(BaseCompanyForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # ✅ 1) Hydrate Brazil proxy fields from stored tax_id slots
+        # 1) Hydrate Brazil proxy fields from stored tax_id slots
         if self.instance and getattr(self.instance, "pk", None):
             self.fields["cnpj"].initial = self.instance.tax_id_01 or ""
 
@@ -152,19 +184,18 @@ class BrazilCompanyForm(BaseCompanyForm):
             self.fields["secondary_cnae"].initial = self.instance.tax_id_04 or ""
             self.fields["business_type_code"].initial = self.instance.tax_id_05 or ""
 
-        # ✅ 2) Hide the generic tax_id_* fields to avoid duplicates in template
-        # BUT DO NOT hide bank_* because you want the banking tab visible.
+        # 2) Hide generic tax_id_* fields to avoid duplicates in template
         for name, field in self.fields.items():
             if name.startswith("tax_id_"):
                 field.widget = forms.HiddenInput()
 
-        # ✅ 3) Apply bootstrap classes to anything not already styled
+        # 3) Apply bootstrap classes
         for name, field in self.fields.items():
             widget = field.widget
             existing = widget.attrs.get("class", "")
             if isinstance(widget, forms.Select):
                 widget.attrs["class"] = (existing + " form-select").strip()
-            elif isinstance(widget, (forms.CheckboxInput,)):
+            elif isinstance(widget, forms.CheckboxInput):
                 widget.attrs["class"] = (existing + " form-check-input").strip()
             elif not isinstance(widget, (forms.FileInput, forms.ClearableFileInput)):
                 widget.attrs["class"] = (existing + " form-control").strip()
@@ -172,14 +203,15 @@ class BrazilCompanyForm(BaseCompanyForm):
     def clean_cnpj(self):
         raw = (self.cleaned_data.get("cnpj") or "").strip()
         digits = re.sub(r"\D", "", raw)
+
         if len(digits) != 14:
-            raise ValidationError("CNPJ must be exactly 14 digits.")
+            raise ValidationError(_("CNPJ must be exactly 14 digits."))
+
         return raw  # preserve formatting
 
     def clean(self):
         cleaned = super().clean()
 
-        # ✅ store date into model slot as ISO string
         reg_date = cleaned.get("registration_date")
         cleaned["tax_id_02"] = reg_date.isoformat() if reg_date else ""
 
@@ -188,9 +220,8 @@ class BrazilCompanyForm(BaseCompanyForm):
     def save(self, commit=True):
         company = super().save(commit=False)
 
-        # ✅ Map Brazil fields back into tax slots
         company.tax_id_01 = self.cleaned_data.get("cnpj", "") or ""
-        company.tax_id_02 = self.cleaned_data.get("tax_id_02", "") or ""  # set by clean()
+        company.tax_id_02 = self.cleaned_data.get("tax_id_02", "") or ""
         company.tax_id_03 = self.cleaned_data.get("primary_cnae", "") or ""
         company.tax_id_04 = self.cleaned_data.get("secondary_cnae", "") or ""
         company.tax_id_05 = self.cleaned_data.get("business_type_code", "") or ""

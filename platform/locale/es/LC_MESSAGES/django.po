@@ -1,0 +1,3433 @@
+msgid ""
+msgstr ""
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-17 12:59+0000\n"
+"Language: es\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: Exactus/accounts/models.py:38
+msgid ""
+"Assigning a group gives this user access to ALL companies in that group."
+msgstr ""
+"Asignar un grupo le da a este usuario acceso a TODAS las empresas en ese "
+"grupo."
+
+# ===============================
+# Login
+# ===============================
+#: Exactus/accounts/templates/accounts/login.html:7
+#: Exactus/accounts/templates/auth/login.html:7
+msgid "ExactusPay – Secure Login"
+msgstr "ExactusPay – Inicio de Sesión Seguro"
+
+#: Exactus/accounts/templates/accounts/login.html:319
+#: Exactus/accounts/templates/auth/login.html:204
+msgid "ExactusPay"
+msgstr "ExactusPay"
+
+#: Exactus/accounts/templates/accounts/login.html:323
+#: Exactus/accounts/templates/auth/login.html:209
+msgid "Welcome Back"
+msgstr "Bienvenido de Nuevo"
+
+#: Exactus/accounts/templates/accounts/login.html:324
+#: Exactus/accounts/templates/auth/login.html:210
+msgid ""
+"Sign in to your global payroll dashboard and manage your workforce "
+"efficiently."
+msgstr ""
+"Inicie sesión en su panel de nómina global y administre su fuerza laboral de "
+"manera eficiente."
+
+#: Exactus/accounts/templates/accounts/login.html:327
+#: Exactus/accounts/templates/auth/login.html:213
+msgid "Enterprise-grade security"
+msgstr "Seguridad de nivel empresarial"
+
+#: Exactus/accounts/templates/accounts/login.html:328
+#: Exactus/accounts/templates/auth/login.html:214
+msgid "Global compliance"
+msgstr "Cumplimiento global"
+
+#: Exactus/accounts/templates/accounts/login.html:329
+#: Exactus/accounts/templates/auth/login.html:215
+msgid "Real-time analytics"
+msgstr "Análisis en tiempo real"
+
+#: Exactus/accounts/templates/accounts/login.html:330
+#: Exactus/accounts/templates/auth/login.html:216
+msgid "24/7 dedicated support"
+msgstr "Soporte dedicado 24/7"
+
+#: Exactus/accounts/templates/accounts/login.html:338
+#: Exactus/accounts/templates/accounts/login.html:408
+#: Exactus/accounts/templates/auth/login.html:223
+#: Exactus/accounts/templates/auth/login.html:289
+msgid "Sign In"
+msgstr "Iniciar Sesión"
+
+#: Exactus/accounts/templates/accounts/login.html:339
+#: Exactus/accounts/templates/auth/login.html:224
+msgid "Use your credentials to continue"
+msgstr "Use sus credenciales para continuar"
+
+#: Exactus/accounts/templates/accounts/login.html:348
+#: Exactus/accounts/templates/auth/login.html:233
+msgid "Invalid username or password. Please try again."
+msgstr "Usuario o contraseña inválidos. Por favor, inténtelo de nuevo."
+
+#: Exactus/accounts/templates/accounts/login.html:365
+#: Exactus/accounts/templates/auth/login.html:249
+#: Exactus/accounts/templates/auth/register.html:153
+#: Exactus/accounts/templates/emails/account_welcome.html:66
+#: Exactus/accounts/templates/profile/unified_profile.html:129
+msgid "Username"
+msgstr "Nombre de usuario"
+
+#: Exactus/accounts/templates/accounts/login.html:372
+#: Exactus/accounts/templates/auth/login.html:256
+msgid "Enter your username"
+msgstr "Ingrese su nombre de usuario"
+
+#: Exactus/accounts/templates/accounts/login.html:380
+#: Exactus/accounts/templates/auth/login.html:263
+#: Exactus/accounts/templates/auth/register.html:192
+msgid "Password"
+msgstr "Contraseña"
+
+#: Exactus/accounts/templates/accounts/login.html:387
+#: Exactus/accounts/templates/auth/login.html:270
+msgid "Enter your password"
+msgstr "Ingrese su contraseña"
+
+#: Exactus/accounts/templates/accounts/login.html:392
+#: Exactus/accounts/templates/auth/login.html:275
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:93
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:131
+#: Exactus/accounts/templates/auth/register.html:199
+#: Exactus/accounts/templates/auth/register.html:228
+msgid "Toggle password visibility"
+msgstr "Mostrar/ocultar contraseña"
+
+#: Exactus/accounts/templates/accounts/login.html:402
+#: Exactus/accounts/templates/auth/login.html:284
+msgid "Remember me"
+msgstr "Recordarme"
+
+#: Exactus/accounts/templates/accounts/login.html:404
+#: Exactus/accounts/templates/auth/login.html:286
+msgid "Forgot password?"
+msgstr "¿Olvidó su contraseña?"
+
+#: Exactus/accounts/templates/auth/password_reset.html:6
+#: Exactus/accounts/templates/auth/password_reset.html:15
+#: Exactus/accounts/templates/auth/password_reset.html:21
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:162
+msgid "Reset Password"
+msgstr "Restablecer Contraseña"
+
+#: Exactus/accounts/templates/auth/password_reset.html:17
+#: Exactus/accounts/templates/auth/password_reset_complete.html:19
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:17
+#: Exactus/accounts/templates/auth/password_reset_done.html:17
+#: Exactus/accounts/templates/auth/register.html:14
+msgid "breadcrumb"
+msgstr "migaja de pan"
+
+#: Exactus/accounts/templates/auth/password_reset.html:19
+#: Exactus/accounts/templates/auth/password_reset_complete.html:22
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:19
+#: Exactus/accounts/templates/auth/password_reset_done.html:19
+#: Exactus/accounts/templates/auth/register.html:16
+#: Exactus/accounts/templates/dashboard/admin/index.html:8
+#: Exactus/accounts/templates/dashboard/exec/index.html:7
+#: Exactus/accounts/templates/dashboard/general/index.html:7
+#: Exactus/accounts/templates/profile/unified_profile.html:25
+msgid "Dashboard"
+msgstr "Panel"
+
+# ===============================
+# Dashboard
+# ===============================
+#: Exactus/accounts/templates/auth/password_reset.html:20
+#: Exactus/accounts/templates/auth/password_reset_complete.html:25
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:20
+#: Exactus/accounts/templates/auth/password_reset_done.html:20
+msgid "Authentication"
+msgstr "Autenticación"
+
+#: Exactus/accounts/templates/auth/password_reset.html:35
+#: Exactus/accounts/templates/auth/password_reset.html:43
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:39
+#: Exactus/accounts/templates/auth/register.html:38
+#: Exactus/accounts/templates/auth/register.html:51
+msgid "Close"
+msgstr "Cerrar"
+
+#: Exactus/accounts/templates/auth/password_reset.html:52
+msgid "Request Password Reset"
+msgstr "Solicitar restablecimiento de contraseña"
+
+#: Exactus/accounts/templates/auth/password_reset.html:61
+msgid ""
+"Enter your email address and we'll send you a link to reset your password."
+msgstr ""
+"Ingrese su dirección de correo electrónico y le enviaremos un enlace para "
+"restablecer su contraseña."
+
+#: Exactus/accounts/templates/auth/password_reset.html:71
+#: Exactus/accounts/templates/auth/register.html:111
+#: Exactus/accounts/templates/profile/unified_profile.html:133
+msgid "Email Address"
+msgstr "Dirección de correo electrónico"
+
+#: Exactus/accounts/templates/auth/password_reset.html:81
+msgid "Enter your registered email"
+msgstr "Ingrese su correo electrónico registrado"
+
+#: Exactus/accounts/templates/auth/password_reset.html:93
+msgid "You'll receive a password reset link at this email address."
+msgstr "Recibirá un enlace de restablecimiento de contraseña en este correo."
+
+#: Exactus/accounts/templates/auth/password_reset.html:100
+msgid "Send Reset Link"
+msgstr "Enviar enlace de restablecimiento"
+
+#: Exactus/accounts/templates/auth/password_reset.html:112
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:174
+msgid "Remember your password?"
+msgstr "¿Recuerda su contraseña?"
+
+#: Exactus/accounts/templates/auth/password_reset.html:113
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:175
+msgid "Sign in here"
+msgstr "Inicie sesión aquí"
+
+#: Exactus/accounts/templates/auth/password_reset.html:116
+msgid "Need help?"
+msgstr "¿Necesita ayuda?"
+
+#: Exactus/accounts/templates/auth/password_reset.html:117
+msgid "Contact support"
+msgstr "Contactar soporte"
+
+#: Exactus/accounts/templates/auth/password_reset.html:127
+msgid ""
+"For security reasons, the password reset link will expire in 24 hours and "
+"can only be used once."
+msgstr ""
+"Por razones de seguridad, el enlace de restablecimiento de contraseña "
+"expirará en 24 horas y solo podrá usarse una vez."
+
+#: Exactus/accounts/templates/auth/password_reset.html:148
+msgid "Sending Reset Link..."
+msgstr "Enviando enlace de restablecimiento..."
+
+# ===============================
+# Password Reset Flow
+# ===============================
+#: Exactus/accounts/templates/auth/password_reset_complete.html:6
+#: Exactus/accounts/templates/auth/password_reset_complete.html:16
+msgid "Password Reset Complete"
+msgstr "Restablecimiento de Contraseña Completado"
+
+#: Exactus/accounts/templates/auth/password_reset_complete.html:28
+msgid "Reset Complete"
+msgstr "Restablecimiento Completado"
+
+#: Exactus/accounts/templates/auth/password_reset_complete.html:42
+msgid "Password Reset Successful"
+msgstr "Contraseña Restablecida con Éxito"
+
+#: Exactus/accounts/templates/auth/password_reset_complete.html:45
+msgid ""
+"Your password has been successfully reset. You can now log in with your new "
+"password."
+msgstr ""
+"Su contraseña ha sido restablecida con éxito. Ahora puede iniciar sesión con "
+"su nueva contraseña."
+
+#: Exactus/accounts/templates/auth/password_reset_complete.html:52
+msgid "Security Tip"
+msgstr "Consejo de Seguridad"
+
+#: Exactus/accounts/templates/auth/password_reset_complete.html:54
+msgid ""
+"For security, please don't share your password and make sure to log out "
+"after each session."
+msgstr ""
+"Por seguridad, no comparta su contraseña y asegúrese de cerrar sesión "
+"después de cada sesión."
+
+#: Exactus/accounts/templates/auth/password_reset_complete.html:63
+msgid "Sign In Now"
+msgstr "Iniciar Sesión Ahora"
+
+#: Exactus/accounts/templates/auth/password_reset_complete.html:77
+msgid "Need Help?"
+msgstr "¿Necesita Ayuda?"
+
+#: Exactus/accounts/templates/auth/password_reset_complete.html:80
+msgid "Contact our support team if you're having trouble logging in."
+msgstr ""
+"Póngase en contacto con nuestro equipo de soporte si tiene problemas para "
+"iniciar sesión."
+
+#: Exactus/accounts/templates/auth/password_reset_complete.html:82
+msgid "Get Help"
+msgstr "Obtener Ayuda"
+
+#: Exactus/accounts/templates/auth/password_reset_complete.html:92
+msgid "Account Security"
+msgstr "Seguridad de la Cuenta"
+
+#: Exactus/accounts/templates/auth/password_reset_complete.html:95
+msgid "Review your account security settings."
+msgstr "Revise la configuración de seguridad de su cuenta."
+
+#: Exactus/accounts/templates/auth/password_reset_complete.html:97
+msgid "Security Settings"
+msgstr "Configuración de Seguridad"
+
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:6
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:15
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:21
+msgid "Set New Password"
+msgstr "Establecer Nueva Contraseña"
+
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:30
+#: Exactus/accounts/templates/auth/register.html:29
+msgid "Please correct the following errors:"
+msgstr "Por favor, corrija los siguientes errores:"
+
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:49
+msgid "Invalid Reset Link"
+msgstr "Enlace de Restablecimiento Inválido"
+
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:52
+msgid "The password reset link is invalid or has expired."
+msgstr "El enlace de restablecimiento de contraseña es inválido o ha expirado."
+
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:53
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:192
+msgid "Please request a new password reset link."
+msgstr "Por favor, solicite un nuevo enlace de restablecimiento de contraseña."
+
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:63
+msgid "Create New Password"
+msgstr "Crear Nueva Contraseña"
+
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:71
+msgid "Please enter your new password twice to confirm it."
+msgstr "Ingrese su nueva contraseña dos veces para confirmarla."
+
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:80
+msgid "New Password"
+msgstr "Nueva Contraseña"
+
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:88
+msgid "Enter new password"
+msgstr "Ingrese nueva contraseña"
+
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:98
+msgid "Must be at least 8 characters with uppercase, lowercase, and numbers."
+msgstr "Debe tener al menos 8 caracteres con mayúsculas, minúsculas y números."
+
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:111
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:248
+#: Exactus/accounts/templates/auth/register.html:215
+#: Exactus/accounts/templates/auth/register.html:425
+msgid "Password strength"
+msgstr "Fortaleza de la contraseña"
+
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:118
+msgid "Confirm New Password"
+msgstr "Confirmar Nueva Contraseña"
+
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:126
+msgid "Confirm new password"
+msgstr "Confirmar nueva contraseña"
+
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:149
+msgid "Password Requirements"
+msgstr "Requisitos de Contraseña"
+
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:152
+msgid "At least 8 characters long"
+msgstr "Al menos 8 caracteres"
+
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:153
+msgid "Include uppercase and lowercase letters"
+msgstr "Incluir letras mayúsculas y minúsculas"
+
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:154
+msgid "Include at least one number"
+msgstr "Incluir al menos un número"
+
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:155
+msgid "Include special characters (optional but recommended)"
+msgstr "Incluir caracteres especiales (opcional pero recomendado)"
+
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:189
+msgid "Link Expired"
+msgstr "Enlace Expirado"
+
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:191
+msgid "This password reset link has expired or is no longer valid."
+msgstr ""
+"Este enlace de restablecimiento de contraseña ha expirado o ya no es válido."
+
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:198
+msgid "Request New Reset Link"
+msgstr "Solicitar Nuevo Enlace de Restablecimiento"
+
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:202
+#: Exactus/accounts/templates/auth/password_reset_done.html:58
+msgid "Back to Login"
+msgstr "Volver al Inicio de Sesión"
+
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:255
+#: Exactus/accounts/templates/auth/register.html:432
+msgid "Weak"
+msgstr "Débil"
+
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:259
+#: Exactus/accounts/templates/auth/register.html:436
+msgid "Fair"
+msgstr "Aceptable"
+
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:263
+#: Exactus/accounts/templates/auth/register.html:440
+msgid "Good"
+msgstr "Buena"
+
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:267
+#: Exactus/accounts/templates/auth/register.html:444
+msgid "Strong"
+msgstr "Fuerte"
+
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:287
+#: Exactus/accounts/templates/auth/register.html:465
+msgid "Passwords do not match"
+msgstr "Las contraseñas no coinciden"
+
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:292
+#: Exactus/accounts/templates/auth/register.html:472
+msgid "Passwords match"
+msgstr "Las contraseñas coinciden"
+
+#: Exactus/accounts/templates/auth/password_reset_confirm.html:314
+msgid "Resetting Password..."
+msgstr "Restableciendo contraseña..."
+
+#: Exactus/accounts/templates/auth/password_reset_done.html:6
+#: Exactus/accounts/templates/auth/password_reset_done.html:21
+msgid "Reset Email Sent"
+msgstr "Correo de Restablecimiento Enviado"
+
+#: Exactus/accounts/templates/auth/password_reset_done.html:15
+msgid "Check Your Email"
+msgstr "Revise su Correo Electrónico"
+
+#: Exactus/accounts/templates/auth/password_reset_done.html:34
+msgid "Reset Link Sent"
+msgstr "Enlace de Restablecimiento Enviado"
+
+#: Exactus/accounts/templates/auth/password_reset_done.html:37
+msgid "We've sent password reset instructions to your email address."
+msgstr ""
+"Hemos enviado instrucciones de restablecimiento de contraseña a su correo "
+"electrónico."
+
+#: Exactus/accounts/templates/auth/password_reset_done.html:38
+msgid "Please check your inbox and follow the link to reset your password."
+msgstr ""
+"Por favor, revise su bandeja de entrada y siga el enlace para restablecer su "
+"contraseña."
+
+#: Exactus/accounts/templates/auth/password_reset_done.html:45
+msgid "Didn't receive the email?"
+msgstr "¿No recibió el correo?"
+
+#: Exactus/accounts/templates/auth/password_reset_done.html:47
+msgid "Check your spam or junk folder"
+msgstr "Revise su carpeta de spam o correo no deseado"
+
+#: Exactus/accounts/templates/auth/password_reset_done.html:48
+msgid "Verify you entered the correct email address"
+msgstr "Verifique que ingresó el correo correcto"
+
+#: Exactus/accounts/templates/auth/password_reset_done.html:49
+msgid "Wait a few minutes and try again"
+msgstr "Espere unos minutos e intente de nuevo"
+
+#: Exactus/accounts/templates/auth/password_reset_done.html:62
+msgid "Try Again"
+msgstr "Intentar de Nuevo"
+
+#: Exactus/accounts/templates/auth/password_reset_done.html:70
+msgid "Need immediate assistance?"
+msgstr "¿Necesita asistencia inmediata?"
+
+#: Exactus/accounts/templates/auth/password_reset_done.html:71
+msgid "Contact our support team"
+msgstr "Contacte a nuestro equipo de soporte"
+
+#: Exactus/accounts/templates/auth/register.html:5
+#: Exactus/accounts/templates/auth/register.html:18
+#: Exactus/accounts/templates/auth/register.html:352
+msgid "Create User"
+msgstr "Crear Usuario"
+
+#: Exactus/accounts/templates/auth/register.html:12
+msgid "Create New User"
+msgstr "Crear Nuevo Usuario"
+
+#: Exactus/accounts/templates/auth/register.html:17
+msgid "Users"
+msgstr "Usuarios"
+
+#: Exactus/accounts/templates/auth/register.html:60
+msgid "User Details"
+msgstr "Detalles del Usuario"
+
+#: Exactus/accounts/templates/auth/register.html:70
+msgid "Basic Information"
+msgstr "Información Básica"
+
+#: Exactus/accounts/templates/auth/register.html:76
+msgid "First Name"
+msgstr "Nombre"
+
+#: Exactus/accounts/templates/auth/register.html:81
+msgid "Enter first name"
+msgstr "Ingrese el nombre"
+
+#: Exactus/accounts/templates/auth/register.html:93
+msgid "Last Name"
+msgstr "Apellido"
+
+#: Exactus/accounts/templates/auth/register.html:98
+msgid "Enter last name"
+msgstr "Ingrese el apellido"
+
+#: Exactus/accounts/templates/auth/register.html:116
+msgid "Enter email address"
+msgstr "Ingrese la dirección de correo electrónico"
+
+#: Exactus/accounts/templates/auth/register.html:119
+msgid "This will be used for login and notifications"
+msgstr "Esto se usará para inicio de sesión y notificaciones"
+
+#: Exactus/accounts/templates/auth/register.html:129
+msgid "Phone Number"
+msgstr "Número de Teléfono"
+
+#: Exactus/accounts/templates/auth/register.html:134
+msgid "Enter phone number"
+msgstr "Ingrese el número de teléfono"
+
+#: Exactus/accounts/templates/auth/register.html:148
+msgid "Account Information"
+msgstr "Información de la Cuenta"
+
+#: Exactus/accounts/templates/auth/register.html:158
+msgid "Choose username"
+msgstr "Elija nombre de usuario"
+
+#: Exactus/accounts/templates/auth/register.html:161
+msgid "Used for system login"
+msgstr "Usado para inicio de sesión en el sistema"
+
+#: Exactus/accounts/templates/auth/register.html:171
+msgid "Password Setup"
+msgstr "Configuración de Contraseña"
+
+#: Exactus/accounts/templates/auth/register.html:175
+msgid "Generate password automatically"
+msgstr "Generar contraseña automáticamente"
+
+#: Exactus/accounts/templates/auth/register.html:176
+msgid "System will generate a secure password and email it to the user"
+msgstr ""
+"El sistema generará una contraseña segura y la enviará por correo al usuario"
+
+#: Exactus/accounts/templates/auth/register.html:182
+msgid "Set password manually"
+msgstr "Establecer contraseña manualmente"
+
+#: Exactus/accounts/templates/auth/register.html:198
+msgid "Set password"
+msgstr "Establecer contraseña"
+
+#: Exactus/accounts/templates/auth/register.html:204
+msgid "Minimum 8 characters with uppercase, lowercase, and numbers"
+msgstr "Mínimo 8 caracteres con mayúsculas, minúsculas y números"
+
+#: Exactus/accounts/templates/auth/register.html:221
+msgid "Confirm Password"
+msgstr "Confirmar Contraseña"
+
+#: Exactus/accounts/templates/auth/register.html:227
+msgid "Confirm password"
+msgstr "Confirmar contraseña"
+
+#: Exactus/accounts/templates/auth/register.html:247
+msgid "Role & Permissions"
+msgstr "Rol y Permisos"
+
+#: Exactus/accounts/templates/auth/register.html:252
+msgid "User Role"
+msgstr "Rol del Usuario"
+
+#: Exactus/accounts/templates/auth/register.html:255
+msgid "Select role"
+msgstr "Seleccionar rol"
+
+#: Exactus/accounts/templates/auth/register.html:256
+msgid "Executive"
+msgstr "Ejecutivo"
+
+#: Exactus/accounts/templates/auth/register.html:257
+msgid "Administrator"
+msgstr "Administrador"
+
+#: Exactus/accounts/templates/auth/register.html:261
+msgid "exec:"
+msgstr "ejec:"
+
+#: Exactus/accounts/templates/auth/register.html:261
+msgid "Full system access"
+msgstr "Acceso completo al sistema"
+
+#: Exactus/accounts/templates/auth/register.html:262
+msgid "admin:"
+msgstr "admin:"
+
+#: Exactus/accounts/templates/auth/register.html:262
+msgid "Manage teams and reports"
+msgstr "Gestionar equipos e informes"
+
+#: Exactus/accounts/templates/auth/register.html:273
+msgid "Additional Permissions"
+msgstr "Permisos Adicionales"
+
+#: Exactus/accounts/templates/auth/register.html:279
+msgid "Can approve payments"
+msgstr "Puede aprobar pagos"
+
+#: Exactus/accounts/templates/auth/register.html:285
+msgid "Can export data"
+msgstr "Puede exportar datos"
+
+#: Exactus/accounts/templates/auth/register.html:293
+msgid "Can manage users"
+msgstr "Puede gestionar usuarios"
+
+#: Exactus/accounts/templates/auth/register.html:299
+msgid "Can view reports"
+msgstr "Puede ver informes"
+
+#: Exactus/accounts/templates/auth/register.html:311
+msgid "Settings"
+msgstr "Configuración"
+
+#: Exactus/accounts/templates/auth/register.html:318
+msgid "Account is active"
+msgstr "La cuenta está activa"
+
+#: Exactus/accounts/templates/auth/register.html:319
+msgid "User can login immediately"
+msgstr "El usuario puede iniciar sesión inmediatamente"
+
+#: Exactus/accounts/templates/auth/register.html:328
+msgid "Send welcome email"
+msgstr "Enviar correo de bienvenida"
+
+#: Exactus/accounts/templates/auth/register.html:329
+msgid "User will receive login instructions"
+msgstr "El usuario recibirá instrucciones de inicio de sesión"
+
+#: Exactus/accounts/templates/auth/register.html:338
+msgid "Force password change on first login"
+msgstr "Forzar cambio de contraseña en el primer inicio de sesión"
+
+#: Exactus/accounts/templates/auth/register.html:348
+msgid "Back to Users"
+msgstr "Volver a Usuarios"
+
+#: Exactus/accounts/templates/auth/register.html:495
+msgid "Creating User..."
+msgstr "Creando Usuario..."
+
+#: Exactus/accounts/templates/dashboard/admin/index.html:51
+#: Exactus/accounts/templates/dashboard/exec/index.html:50
+#: Exactus/accounts/templates/dashboard/general/index.html:50
+msgid "Active Countries"
+msgstr "Países Activos"
+
+#: Exactus/accounts/templates/dashboard/admin/index.html:58
+#: Exactus/accounts/templates/dashboard/exec/index.html:56
+#: Exactus/accounts/templates/dashboard/general/index.html:57
+msgid "Active Companies"
+msgstr "Empresas Activas"
+
+#: Exactus/accounts/templates/dashboard/admin/index.html:65
+#: Exactus/accounts/templates/dashboard/general/index.html:64
+msgid "Total Headcount"
+msgstr "Total de Empleados"
+
+#: Exactus/accounts/templates/dashboard/admin/index.html:72
+#: Exactus/accounts/templates/dashboard/exec/index.html:68
+#: Exactus/accounts/templates/dashboard/general/index.html:71
+msgid "Payrolls Completed"
+msgstr "Nóminas Completadas"
+
+#: Exactus/accounts/templates/dashboard/admin/index.html:74
+#: Exactus/accounts/templates/dashboard/exec/index.html:70
+#: Exactus/accounts/templates/dashboard/general/index.html:73
+msgid "Last 365 days"
+msgstr "Últimos 365 días"
+
+#: Exactus/accounts/templates/dashboard/admin/index.html:83
+#: Exactus/accounts/templates/dashboard/exec/index.html:78
+#: Exactus/accounts/templates/dashboard/general/index.html:82
+msgid "Global Operations"
+msgstr "Operaciones Globales"
+
+#: Exactus/accounts/templates/dashboard/admin/index.html:92
+#: Exactus/accounts/templates/dashboard/exec/index.html:83
+#: Exactus/accounts/templates/dashboard/general/index.html:91
+msgid "Payroll Processing (Last 12 Months)"
+msgstr "Procesamiento de Nómina (Últimos 12 Meses)"
+
+#: Exactus/accounts/templates/dashboard/admin/index.html:103
+#: Exactus/accounts/templates/dashboard/exec/index.html:90
+#: Exactus/accounts/templates/dashboard/general/index.html:102
+msgid "Companies by Country"
+msgstr "Empresas por País"
+
+#: Exactus/accounts/templates/dashboard/admin/index.html:113
+#: Exactus/accounts/templates/dashboard/exec/index.html:96
+#: Exactus/accounts/templates/dashboard/general/index.html:112
+msgid "Recent Portfolio"
+msgstr "Portafolio Reciente"
+
+#: Exactus/accounts/templates/dashboard/admin/index.html:122
+#: Exactus/accounts/templates/dashboard/exec/index.html:104
+#: Exactus/accounts/templates/dashboard/general/index.html:121
+msgid "Global"
+msgstr "Global"
+
+#: Exactus/accounts/templates/dashboard/exec/index.html:62
+msgid "Total Cost"
+msgstr "Costo Total"
+
+#: Exactus/accounts/templates/emails/account_welcome.html:55
+#: Exactus/accounts/templates/emails/admin_reset_password.html:43
+#, python-format
+msgid ""
+"\n"
+"                        Hello %(name)s,\n"
+"                    "
+msgstr ""
+"\n"
+"                        Hola %(name)s,\n"
+"                    "
+
+#: Exactus/accounts/templates/emails/account_welcome.html:61
+msgid ""
+"A new account has been created for you on the Exactus platform. Below are "
+"your account details:"
+msgstr ""
+"Se ha creado una nueva cuenta para usted en la plataforma Exactus. A "
+"continuación se muestran los detalles de su cuenta:"
+
+#: Exactus/accounts/templates/emails/account_welcome.html:70
+#: Exactus/accounts/templates/profile/unified_profile.html:78
+msgid "Role"
+msgstr "Rol"
+
+#: Exactus/accounts/templates/emails/account_welcome.html:74
+msgid "Login"
+msgstr "Inicio de Sesión"
+
+#: Exactus/accounts/templates/emails/account_welcome.html:75
+msgid "User Portal"
+msgstr "Portal del Usuario"
+
+#: Exactus/accounts/templates/emails/account_welcome.html:80
+msgid ""
+"To access your dashboard and set up your secure password, please click the "
+"button below:"
+msgstr ""
+"Para acceder a su panel y configurar su contraseña segura, haga clic en el "
+"botón de abajo:"
+
+#: Exactus/accounts/templates/emails/account_welcome.html:84
+msgid "Set My Password"
+msgstr "Establecer Mi Contraseña"
+
+#: Exactus/accounts/templates/emails/account_welcome.html:89
+msgid "Button not working? Copy and paste this link:"
+msgstr "¿El botón no funciona? Copie y pegue este enlace:"
+
+#: Exactus/accounts/templates/emails/account_welcome.html:96
+#: Exactus/accounts/templates/emails/admin_reset_password.html:74
+msgid "Exactus. All rights reserved."
+msgstr "Exactus. Todos los derechos reservados."
+
+#: Exactus/accounts/templates/emails/account_welcome.html:97
+msgid "This is an automated security notification. Please do not reply."
+msgstr ""
+"Esta es una notificación de seguridad automática. Por favor, no responda."
+
+#: Exactus/accounts/templates/emails/admin_reset_password.html:37
+msgid "Password Reset Request"
+msgstr "Solicitud de Restablecimiento de Contraseña"
+
+#: Exactus/accounts/templates/emails/admin_reset_password.html:38
+msgid "Exactus Security"
+msgstr "Seguridad Exactus"
+
+#: Exactus/accounts/templates/emails/admin_reset_password.html:49
+msgid ""
+"\n"
+"                        An administrator has initiated a password reset "
+"request for your account on <strong>ExactusPay</strong>.\n"
+"                    "
+msgstr ""
+"\n"
+"                        Un administrador ha iniciado una solicitud de "
+"restablecimiento de contraseña para su cuenta en <strong>ExactusPay</"
+"strong>.\n"
+"                    "
+
+#: Exactus/accounts/templates/emails/admin_reset_password.html:54
+msgid "Click the button below to create a new secure password:"
+msgstr "Haga clic en el botón de abajo para crear una nueva contraseña segura:"
+
+#: Exactus/accounts/templates/emails/admin_reset_password.html:57
+msgid "Reset My Password"
+msgstr "Restablecer Mi Contraseña"
+
+#: Exactus/accounts/templates/emails/admin_reset_password.html:61
+msgid "Security Notice:"
+msgstr "Aviso de Seguridad:"
+
+#: Exactus/accounts/templates/emails/admin_reset_password.html:62
+msgid ""
+"If you did not request this change, please contact your system administrator "
+"immediately."
+msgstr ""
+"Si no solicitó este cambio, comuníquese con su administrador del sistema "
+"inmediatamente."
+
+#: Exactus/accounts/templates/emails/admin_reset_password.html:67
+msgid "Or copy this link:"
+msgstr "O copie este enlace:"
+
+#: Exactus/accounts/templates/emails/admin_reset_password.html:75
+msgid "This is an automated security notification."
+msgstr "Esta es una notificación de seguridad automática."
+
+# ===============================
+# Profile / Account
+# ===============================
+#: Exactus/accounts/templates/profile/unified_profile.html:8
+#: Exactus/accounts/templates/profile/unified_profile.html:17
+#: Exactus/accounts/templates/profile/unified_profile.html:27
+msgid "My Profile"
+msgstr "Mi Perfil"
+
+#: Exactus/accounts/templates/profile/unified_profile.html:10
+msgid "Profile"
+msgstr "Perfil"
+
+#: Exactus/accounts/templates/profile/unified_profile.html:19
+msgid "User Profile"
+msgstr "Perfil del Usuario"
+
+#: Exactus/accounts/templates/profile/unified_profile.html:29
+msgid "User Management"
+msgstr "Gestión de Usuarios"
+
+#: Exactus/accounts/templates/profile/unified_profile.html:56
+msgid "Account"
+msgstr "Cuenta"
+
+#: Exactus/accounts/templates/profile/unified_profile.html:59
+msgid "Personal Info"
+msgstr "Información Personal"
+
+#: Exactus/accounts/templates/profile/unified_profile.html:63
+#: Exactus/accounts/templates/profile/unified_profile.html:228
+msgid "Preferences"
+msgstr "Preferencias"
+
+#: Exactus/accounts/templates/profile/unified_profile.html:68
+msgid "Admin Settings"
+msgstr "Configuración de Administrador"
+
+#: Exactus/accounts/templates/profile/unified_profile.html:76
+msgid "System Info"
+msgstr "Información del Sistema"
+
+#: Exactus/accounts/templates/profile/unified_profile.html:82
+msgid "Joined"
+msgstr "Miembro desde"
+
+#: Exactus/accounts/templates/profile/unified_profile.html:86
+msgid "Last Activity"
+msgstr "Última Actividad"
+
+#: Exactus/accounts/templates/profile/unified_profile.html:100
+msgid "Account Settings"
+msgstr "Configuración de la Cuenta"
+
+#: Exactus/accounts/templates/profile/unified_profile.html:111
+msgid "Avatar"
+msgstr "Avatar"
+
+#: Exactus/accounts/templates/profile/unified_profile.html:121
+msgid "Change Photo"
+msgstr "Cambiar Foto"
+
+#: Exactus/accounts/templates/profile/unified_profile.html:122
+msgid "JPG, PNG up to 2MB"
+msgstr "JPG, PNG hasta 2MB"
+
+#: Exactus/accounts/templates/profile/unified_profile.html:160
+#: Exactus/accounts/templates/profile/unified_profile.html:215
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: Exactus/accounts/templates/profile/unified_profile.html:161
+msgid "Save Account Changes"
+msgstr "Guardar Cambios de la Cuenta"
+
+#: Exactus/accounts/templates/profile/unified_profile.html:173
+msgid "Personal Profile"
+msgstr "Perfil Personal"
+
+#: Exactus/accounts/templates/profile/unified_profile.html:195
+msgid "Notification Channels"
+msgstr "Canales de Notificación"
+
+#: Exactus/accounts/templates/profile/unified_profile.html:208
+msgid "This sets the language for the entire system."
+msgstr "Esto establece el idioma para todo el sistema."
+
+#: Exactus/accounts/templates/profile/unified_profile.html:216
+msgid "Update Profile"
+msgstr "Actualizar Perfil"
+
+#: Exactus/accounts/templates/profile/unified_profile.html:236
+msgid "Language"
+msgstr "Idioma"
+
+#: Exactus/accounts/templates/profile/unified_profile.html:241
+msgid ""
+"Changing this will apply to all modules (Payroll, Reports, Employees, etc.)."
+msgstr ""
+"Cambiar esto se aplicará a todos los módulos (Nómina, Informes, Empleados, "
+"etc.)."
+
+#: Exactus/accounts/templates/profile/unified_profile.html:250
+msgid "Email Alerts"
+msgstr "Alertas por Correo Electrónico"
+
+#: Exactus/accounts/templates/profile/unified_profile.html:251
+msgid "Receive updates about your account via email"
+msgstr "Reciba actualizaciones sobre su cuenta por correo electrónico"
+
+#: Exactus/accounts/templates/profile/unified_profile.html:260
+msgid "SMS Notifications"
+msgstr "Notificaciones por SMS"
+
+#: Exactus/accounts/templates/profile/unified_profile.html:261
+msgid "Get urgent text alerts to your mobile"
+msgstr "Reciba alertas urgentes por SMS en su móvil"
+
+#: Exactus/accounts/templates/profile/unified_profile.html:270
+msgid "Save Preferences"
+msgstr "Guardar Preferencias"
+
+#: Exactus/company/models.py:11
+msgid "Select all companies belonging to this client group."
+msgstr ""
+"Seleccionar todas las empresas pertenecientes a este grupo de clientes."
+
+#: Exactus/company/models.py:41
+msgid "Company Code"
+msgstr "Código de Empresa"
+
+#: Exactus/company/models.py:43
+msgid "Unique identifier for the company"
+msgstr "Identificador único para la empresa"
+
+#: Exactus/company/models.py:47
+msgid "Company Number"
+msgstr "Número de Empresa"
+
+#: Exactus/company/models.py:51
+msgid "Official registration number"
+msgstr "Número de registro oficial"
+
+#: Exactus/company/models.py:56
+msgid "Trade Name"
+msgstr "Nombre Comercial"
+
+#: Exactus/company/models.py:58
+msgid "Business/trading name"
+msgstr "Nombre comercial"
+
+#: Exactus/company/models.py:62
+msgid "Legal Name"
+msgstr "Razón Social"
+
+#: Exactus/company/models.py:64
+msgid "Registered legal name"
+msgstr "Nombre legal registrado"
+
+#: Exactus/company/models.py:69
+msgid "contact"
+msgstr "contacto"
+
+#: Exactus/company/models.py:70
+msgid "telephone"
+msgstr "teléfono"
+
+#: Exactus/company/models.py:71
+msgid "email"
+msgstr "correo electrónico"
+
+#: Exactus/company/models.py:72
+msgid "website"
+msgstr "sitio web"
+
+#: Exactus/company/models.py:75
+msgid "Building Name"
+msgstr "Nombre del Edificio"
+
+#: Exactus/company/models.py:76 Exactus/company/models.py:115
+msgid "Road Name 1"
+msgstr "Nombre de la Calle 1"
+
+#: Exactus/company/models.py:77
+msgid "Road Name 2"
+msgstr "Nombre de la Calle 2"
+
+#: Exactus/company/models.py:78
+msgid "Town/City"
+msgstr "Ciudad"
+
+#: Exactus/company/models.py:79 Exactus/company/models.py:118
+msgid "Post Code"
+msgstr "Código Postal"
+
+#: Exactus/company/models.py:80
+msgid "County/State/Province"
+msgstr "Condado/Estado/Provincia"
+
+#: Exactus/company/models.py:86
+msgid "Country"
+msgstr "País"
+
+#: Exactus/company/models.py:90
+msgid "Tax ID 1"
+msgstr "ID Fiscal 1"
+
+#: Exactus/company/models.py:91
+msgid "Tax ID 2"
+msgstr "ID Fiscal 2"
+
+#: Exactus/company/models.py:92
+msgid "Tax ID 3"
+msgstr "ID Fiscal 3"
+
+#: Exactus/company/models.py:93
+msgid "Tax ID 4"
+msgstr "ID Fiscal 4"
+
+#: Exactus/company/models.py:94
+msgid "Tax ID 5"
+msgstr "ID Fiscal 5"
+
+#: Exactus/company/models.py:95
+msgid "Tax ID 6"
+msgstr "ID Fiscal 6"
+
+#: Exactus/company/models.py:96
+msgid "Tax ID 7"
+msgstr "ID Fiscal 7"
+
+#: Exactus/company/models.py:97
+msgid "Tax ID 8"
+msgstr "ID Fiscal 8"
+
+#: Exactus/company/models.py:98
+msgid "Tax ID 9"
+msgstr "ID Fiscal 9"
+
+#: Exactus/company/models.py:99
+msgid "Tax ID 10"
+msgstr "ID Fiscal 10"
+
+#: Exactus/company/models.py:100
+msgid "Tax ID 11"
+msgstr "ID Fiscal 11"
+
+#: Exactus/company/models.py:101
+msgid "Tax ID 12"
+msgstr "ID Fiscal 12"
+
+#: Exactus/company/models.py:102
+msgid "Tax ID 13"
+msgstr "ID Fiscal 13"
+
+#: Exactus/company/models.py:103
+msgid "Tax ID 14"
+msgstr "ID Fiscal 14"
+
+#: Exactus/company/models.py:104
+msgid "Tax ID 15"
+msgstr "ID Fiscal 15"
+
+#: Exactus/company/models.py:105
+msgid "Tax ID 16"
+msgstr "ID Fiscal 16"
+
+#: Exactus/company/models.py:106
+msgid "Tax ID 17"
+msgstr "ID Fiscal 17"
+
+#: Exactus/company/models.py:107
+msgid "Tax ID 18"
+msgstr "ID Fiscal 18"
+
+#: Exactus/company/models.py:108
+msgid "Tax ID 19"
+msgstr "ID Fiscal 19"
+
+#: Exactus/company/models.py:109
+msgid "Tax ID 20"
+msgstr "ID Fiscal 20"
+
+#: Exactus/company/models.py:112
+msgid "RTI User ID"
+msgstr "ID de Usuario RTI"
+
+#: Exactus/company/models.py:113
+msgid "RTI Password"
+msgstr "Contraseña RTI"
+
+#: Exactus/company/models.py:114
+msgid "Full Name"
+msgstr "Nombre Completo"
+
+#: Exactus/company/models.py:116
+msgid "Road Name"
+msgstr "Nombre de la Calle"
+
+#: Exactus/company/models.py:117
+msgid "Town"
+msgstr "Ciudad"
+
+#: Exactus/company/models.py:122
+msgid "Account Status"
+msgstr "Estado de la Cuenta"
+
+#: Exactus/company/models.py:128
+msgid "Account Archive"
+msgstr "Archivo de la Cuenta"
+
+#: Exactus/company/models.py:164
+msgid "Company"
+msgstr "Empresa"
+
+#: Exactus/company/models.py:165
+msgid "Companies"
+msgstr "Empresas"
+
+#: Exactus/reports/models.py:89
+msgid "The HTML design to use"
+msgstr "El diseño HTML a utilizar"
+
+#: Exactus/reports/models.py:96
+msgid ""
+"Toggle data fields (e.g., {'show_logo': true, 'mask_bank_account': false})"
+msgstr ""
+"Alternar campos de datos (ej.: {'show_logo': true, 'mask_bank_account': "
+"false})"
+
+#: Exactus/reports/models.py:104
+msgid "System Default"
+msgstr "Predeterminado del Sistema"
+
+#: Exactus/reports/models.py:105
+msgid "Country Default"
+msgstr "Predeterminado del País"
+
+#: Exactus/reports/models.py:106
+msgid "Company Specific"
+msgstr "Específico de la Empresa"
+
+#: Exactus/reports/models.py:114
+msgid "Report Setting"
+msgstr "Configuración de Informe"
+
+#: Exactus/reports/models.py:115
+msgid "Report Settings"
+msgstr "Configuración de Informes"
+
+#: Exactus/reports/models.py:151
+msgid "Choose either company OR country (not both)."
+msgstr "Elija empresa O país (no ambos)."
+
+#: Exactus/reports/models.py:157
+msgid "Selected company does not belong to the selected country."
+msgstr "La empresa seleccionada no pertenece al país seleccionado."
+
+#: Exactus/reports/models.py:162
+msgid "Selected layout does not match this report type."
+msgstr "El diseño seleccionado no coincide con este tipo de informe."
+
+# ===============================
+# Countries
+# ===============================
+msgid "Countries"
+msgstr "Países"
+
+msgid "Country Configurations"
+msgstr "Configuraciones de Países"
+
+msgid "Manage supported countries, currencies, and global settings."
+msgstr "Gestione países compatibles, monedas y configuraciones globales."
+
+msgid "ISO Code"
+msgstr "Código ISO"
+
+msgid "Name"
+msgstr "Nombre"
+
+msgid "Currency"
+msgstr "Moneda"
+
+msgid "Search Countries"
+msgstr "Buscar Países"
+
+msgid "Show _MENU_ entries"
+msgstr "Mostrar _MENU_ registros"
+
+# ===============================
+# Country: Create page
+# ===============================
+msgid "Create Country"
+msgstr "Crear País"
+
+msgid "Add New Country"
+msgstr "Agregar Nuevo País"
+
+msgid "Configure the core settings for a new country entity."
+msgstr "Configure las configuraciones principales para un nuevo país."
+
+msgid "Global Identity"
+msgstr "Identidad Global"
+
+msgid "Country Name"
+msgstr "Nombre del País"
+
+msgid "Status"
+msgstr "Estado"
+
+msgid "ISO2 Code"
+msgstr "Código ISO2"
+
+msgid "ISO3 Code"
+msgstr "Código ISO3"
+
+msgid "Official Language"
+msgstr "Idioma Oficial"
+
+msgid "Must be exactly 2 letters."
+msgstr "Debe tener exactamente 2 letras."
+
+msgid "Must be exactly 3 letters."
+msgstr "Debe tener exactamente 3 letras."
+
+msgid "Currency & Formatting"
+msgstr "Moneda y Formato"
+
+msgid "Currency Name"
+msgstr "Nombre de la Moneda"
+
+msgid "Currency Code (e.g. USD)"
+msgstr "Código de Moneda (ej.: USD)"
+
+msgid "Must be 3 letters."
+msgstr "Debe tener 3 letras."
+
+msgid "Symbol Position"
+msgstr "Posición del Símbolo"
+
+msgid "Date Format"
+msgstr "Formato de Fecha"
+
+msgid "Decimal Places"
+msgstr "Lugares Decimales"
+
+msgid "Archive Folder (Optional)"
+msgstr "Carpeta de Archivo (Opcional)"
+
+msgid "Numbering Format (e.g. #,##0.00)"
+msgstr "Formato de Numeración (ej.: #,##0.00)"
+
+msgid "Save"
+msgstr "Guardar"
+
+# ===============================
+# Country: Restore page
+# ===============================
+msgid "Restore Countries"
+msgstr "Restaurar Países"
+
+msgid "Restore"
+msgstr "Restaurar"
+
+msgid "Recover archived or deleted global payroll countries."
+msgstr "Recupere países archivados o eliminados de nómina global."
+
+msgid "Add Country"
+msgstr "Agregar País"
+
+msgid "ISO 3"
+msgstr "ISO 3"
+
+msgid "Actions"
+msgstr "Acciones"
+
+msgid "Archived"
+msgstr "Archivado"
+
+msgid "Edit / Restore"
+msgstr "Editar / Restaurar"
+
+msgid "Enter"
+msgstr "Entrar"
+
+msgid "No countries to restore"
+msgstr "No hay países para restaurar"
+
+msgid "All countries are currently active."
+msgstr "Todos los países están activos actualmente."
+
+msgid "Search Archived..."
+msgstr "Buscar Archivados..."
+
+# ===============================
+# Country: Upload Countries
+# ===============================
+msgid "Upload Countries"
+msgstr "Cargar Países"
+
+msgid "Upload Countries (CSV)"
+msgstr "Cargar Países (CSV)"
+
+msgid "Upload multiple countries at once using our standardized CSV format."
+msgstr ""
+"Cargue varios países a la vez utilizando nuestro formato CSV estandarizado."
+
+msgid "Back"
+msgstr "Volver"
+
+msgid "CSV Format Requirements"
+msgstr "Requisitos del Formato CSV"
+
+msgid "The first row must contain column headers."
+msgstr "La primera fila debe contener los encabezados de las columnas."
+
+msgid "Download CSV Template"
+msgstr "Descargar Plantilla CSV"
+
+msgid "Select CSV File"
+msgstr "Seleccionar Archivo CSV"
+
+msgid "Validate the file without saving to the database."
+msgstr "Validar el archivo sin guardar en la base de datos."
+
+msgid "Expected CSV Structure"
+msgstr "Estructura Esperada del CSV"
+
+msgid "Field Reference"
+msgstr "Referencia de Campos"
+
+msgid "Field"
+msgstr "Campo"
+
+msgid "Required"
+msgstr "Obligatorio"
+
+msgid "Format"
+msgstr "Formato"
+
+msgid "Allowed Values"
+msgstr "Valores Permitidos"
+
+msgid "Yes"
+msgstr "Sí"
+
+msgid "No"
+msgstr "No"
+
+msgid "2 letters"
+msgstr "2 letras"
+
+msgid "3 letters"
+msgstr "3 letras"
+
+msgid "Text"
+msgstr "Texto"
+
+msgid "Country name"
+msgstr "Nombre del país"
+
+msgid "ACTIVE, IMPLEMENTING, INACTIVE"
+msgstr "ACTIVE, IMPLEMENTING, INACTIVE"
+
+msgid "Dollar, Euro, Pound…"
+msgstr "Dólar, Euro, Libra…"
+
+msgid "USD, EUR, GBP…"
+msgstr "USD, EUR, GBP…"
+
+msgid "1,000.00 / 1.000,00"
+msgstr "1.000,00 / 1.000,00"
+
+msgid "BEFORE, AFTER"
+msgstr "BEFORE, AFTER"
+
+msgid "DD/MM/YYYY etc."
+msgstr "DD/MM/YYYY etc."
+
+msgid "Y or N"
+msgstr "S o N"
+
+msgid "Default: N"
+msgstr "Predeterminado: N"
+
+msgid "Uploading..."
+msgstr "Cargando..."
+
+msgid "United States"
+msgstr "Estados Unidos"
+
+msgid "United Kingdom"
+msgstr "Reino Unido"
+
+# ===============================
+# Companies
+# ===============================
+#: Exactus/company/templates/companies/company_list.html:1
+#, python-format
+msgid "Companies — %(country_name)s | ExactusPay"
+msgstr "Empresas — %(country_name)s | ExactusPay"
+
+#: Exactus/company/templates/companies/company_list.html:1
+#, python-format
+msgid "Companies — %(country_name)s"
+msgstr "Empresas — %(country_name)s"
+
+#: Exactus/company/templates/companies/company_list.html:1
+msgid "Company Directory"
+msgstr "Directorio de Empresas"
+
+#: Exactus/company/templates/companies/company_list.html:1
+#, python-format
+msgid "Manage all companies associated with %(country_name)s."
+msgstr "Gestione todas las empresas asociadas con %(country_name)s."
+
+#: Exactus/company/templates/companies/company_list.html:1
+msgid "Add Company"
+msgstr "Agregar Empresa"
+
+#: Exactus/company/templates/companies/company_list.html:1
+msgid "Number"
+msgstr "Número"
+
+#: Exactus/company/templates/companies/company_list.html:1
+msgid "Company Name"
+msgstr "Nombre de la Empresa"
+
+#: Exactus/company/templates/companies/company_list.html:1
+msgid "Employees"
+msgstr "Empleados"
+
+#: Exactus/company/templates/companies/company_list.html:1
+msgid "No companies found"
+msgstr "No se encontraron empresas"
+
+#: Exactus/company/templates/companies/company_list.html:1
+msgid "Create your first company to start onboarding employees."
+msgstr "Cree su primera empresa para comenzar a incorporar empleados."
+
+#: Exactus/company/templates/companies/company_list.html:1
+msgid "Search Companies..."
+msgstr "Buscar empresas..."
+
+# ===============================
+# Company create/edit template
+# ===============================
+#: Exactus/company/templates/companies/company_form.html:1
+#, python-format
+msgid "Edit %(iso2)s Company | ExactusPay"
+msgstr "Editar Empresa %(iso2)s | ExactusPay"
+
+#: Exactus/company/templates/companies/company_form.html:1
+#, python-format
+msgid "Create %(iso2)s Company | ExactusPay"
+msgstr "Crear Empresa %(iso2)s | ExactusPay"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Edit Company"
+msgstr "Editar Empresa"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Create Company"
+msgstr "Crear Empresa"
+
+#: Exactus/company/templates/companies/company_form.html:1
+#, python-format
+msgid "%(name)s Companies"
+msgstr "Empresas de %(name)s"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Edit"
+msgstr "Editar"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Create"
+msgstr "Crear"
+
+#: Exactus/company/templates/companies/company_form.html:1
+#, python-format
+msgid "New Company - %(iso3)s"
+msgstr "Nueva Empresa - %(iso3)s"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Communication"
+msgstr "Comunicación"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Taxation"
+msgstr "Tributación"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Agent Settings"
+msgstr "Configuración del Agente"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "RTI Settings"
+msgstr "Configuración RTI"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Banking"
+msgstr "Datos Bancarios"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Core Details"
+msgstr "Detalles Principales"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Auto-generated"
+msgstr "Generado automáticamente"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Company ID"
+msgstr "ID de la Empresa"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Business Trade Name"
+msgstr "Nombre Comercial"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Legal Trade Name"
+msgstr "Razón Social"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Contact Information"
+msgstr "Información de Contacto"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Contact Person"
+msgstr "Persona de Contacto"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Telephone"
+msgstr "Teléfono"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Email"
+msgstr "Correo Electrónico"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Website"
+msgstr "Sitio Web"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Address"
+msgstr "Dirección"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Road Name (Line 2)"
+msgstr "Nombre de la Calle (Línea 2)"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "County"
+msgstr "Condado"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "HMRC Settings"
+msgstr "Configuración HMRC"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Employer PAYE Ref Office No."
+msgstr "Nº de Oficina de Referencia PAYE del Empleador"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Employer PAYE Ref Number"
+msgstr "Número de Referencia PAYE del Empleador"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Accounts Office Number"
+msgstr "Número de Oficina de Cuentas"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "UTR & ECON"
+msgstr "UTR y ECON"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Company CT UTR"
+msgstr "UTR de CT de la Empresa"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "SA UTR"
+msgstr "UTR de SA"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "ECON Reference"
+msgstr "Referencia ECON"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Statutory"
+msgstr "Estatutario"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Small Employer Relief?"
+msgstr "¿Small Employer Relief?"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Apprentice Levy Due?"
+msgstr "¿Apprentice Levy debido?"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "VAT Number"
+msgstr "Número de VAT"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Receita Federal"
+msgstr "Receita Federal"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "CNPJ"
+msgstr "CNPJ"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Registration Date"
+msgstr "Fecha de Registro"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "CNAE (Primary)"
+msgstr "CNAE (Principal)"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "CNAE (Secondary)"
+msgstr "CNAE (Secundario)"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Business Type Code"
+msgstr "Código de Tipo de Empresa"
+
+#: Exactus/company/templates/companies/company_form.html:1
+#, python-format
+msgid "Taxation fields are not configured for %(iso2)s yet."
+msgstr "Los campos de tributación aún no están configurados para %(iso2)s."
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "User ID"
+msgstr "ID de Usuario"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Agent Details"
+msgstr "Detalles del Agente"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Agent Name"
+msgstr "Nombre del Agente"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Bank Details"
+msgstr "Detalles Bancarios"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Account Name"
+msgstr "Nombre de la Cuenta"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Bank Name"
+msgstr "Nombre del Banco"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Account Number"
+msgstr "Número de Cuenta"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Branch Code"
+msgstr "Código de Sucursal"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "IBAN"
+msgstr "IBAN"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "BIC/Swift"
+msgstr "BIC/Swift"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Account Configuration"
+msgstr "Configuración de la Cuenta"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Archive Status"
+msgstr "Estado de Archivo"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Company Logo"
+msgstr "Logo de la Empresa"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Current company logo"
+msgstr "Logo actual de la empresa"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Current:"
+msgstr "Actual:"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Previous"
+msgstr "Anterior"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Next"
+msgstr "Siguiente"
+
+#: Exactus/company/templates/companies/company_form.html:1
+msgid "Saving..."
+msgstr "Guardando..."
+
+# ===============================
+# Upload Companies
+# ===============================
+#: Exactus/company/templates/companies/upload_companies.html:1
+msgid "Upload Companies | ExactusPay"
+msgstr "Cargar Empresas | ExactusPay"
+
+#: Exactus/company/templates/companies/upload_companies.html:1
+#, python-format
+msgid "Upload Companies — %(country)s"
+msgstr "Cargar Empresas — %(country)s"
+
+#: Exactus/company/templates/companies/upload_companies.html:1
+msgid "Upload Companies"
+msgstr "Cargar Empresas"
+
+#: Exactus/company/templates/companies/upload_companies.html:1
+msgid "Upload multiple companies via CSV file."
+msgstr "Cargar múltiples empresas mediante archivo CSV."
+
+#: Exactus/company/templates/companies/upload_companies.html:1
+msgid "CSV Requirements"
+msgstr "Requisitos del CSV"
+
+#: Exactus/company/templates/companies/upload_companies.html:1
+msgid "File must be a .csv (comma-separated values)"
+msgstr "El archivo debe ser .csv (valores separados por comas)"
+
+#: Exactus/company/templates/companies/upload_companies.html:1
+msgid "The first row must contain column headers"
+msgstr "La primera fila debe contener los encabezados de las columnas"
+
+#: Exactus/company/templates/companies/upload_companies.html:1
+msgid "Required columns:"
+msgstr "Columnas obligatorias:"
+
+#: Exactus/company/templates/companies/upload_companies.html:1
+msgid "country_code, company_code, trade_name, legal_name"
+msgstr "country_code, company_code, trade_name, legal_name"
+
+#: Exactus/company/templates/companies/upload_companies.html:1
+msgid "country_code must match ISO2 codes (e.g., US, GB, FR)"
+msgstr "country_code debe coincidir con códigos ISO2 (ej.: US, GB, FR)"
+
+#: Exactus/company/templates/companies/upload_companies.html:1
+msgid "Optional columns may be left empty"
+msgstr "Las columnas opcionales pueden dejarse vacías"
+
+#: Exactus/company/templates/companies/upload_companies.html:1
+msgid "Need a sample?"
+msgstr "¿Necesita una muestra?"
+
+#: Exactus/company/templates/companies/upload_companies.html:1
+msgid "Download a CSV template to ensure correct structure."
+msgstr "Descargue una plantilla CSV para asegurar la estructura correcta."
+
+#: Exactus/company/templates/companies/upload_companies.html:1
+msgid "Download Template"
+msgstr "Descargar Plantilla"
+
+#: Exactus/company/templates/companies/upload_companies.html:1
+msgid "Upload CSV File"
+msgstr "Cargar Archivo CSV"
+
+#: Exactus/company/templates/companies/upload_companies.html:1
+msgid "Validate without saving to the database."
+msgstr "Validar sin guardar en la base de datos."
+
+#: Exactus/company/templates/companies/upload_companies.html:1
+msgid "Expected CSV Format (Example):"
+msgstr "Formato CSV Esperado (Ejemplo):"
+
+#: Exactus/company/templates/companies/upload_companies.html:1
+msgid "Type"
+msgstr "Tipo"
+
+#: Exactus/company/templates/companies/upload_companies.html:1
+msgid "Description"
+msgstr "Descripción"
+
+#: Exactus/company/templates/companies/upload_companies.html:1
+msgid "ISO2 country code (must match an active country)"
+msgstr "Código ISO2 del país (debe coincidir con un país activo)"
+
+#: Exactus/company/templates/companies/upload_companies.html:1
+msgid "Unique per country"
+msgstr "Único por país"
+
+#: Exactus/company/templates/companies/upload_companies.html:1
+msgid "Commercial name of the company"
+msgstr "Nombre comercial de la empresa"
+
+#: Exactus/company/templates/companies/upload_companies.html:1
+msgid "Registered legal entity name"
+msgstr "Nombre legal registrado de la entidad"
+
+# ===============================
+# Upload Results — Companies
+# ===============================
+msgid "Upload Results — Companies"
+msgstr "Resultados de Carga — Empresas"
+
+msgid "Upload Results"
+msgstr "Resultados de Carga"
+
+msgid "Summary of processed records from your upload."
+msgstr "Resumen de los registros procesados de su carga."
+
+msgid "Upload Another"
+msgstr "Cargar Otro"
+
+msgid "View Companies"
+msgstr "Ver Empresas"
+
+msgid "View Countries"
+msgstr "Ver Países"
+
+msgid "Companies Created"
+msgstr "Empresas Creadas"
+
+msgid "Companies Updated"
+msgstr "Empresas Actualizadas"
+
+msgid "Errors Found"
+msgstr "Errores Encontrados"
+
+msgid "Dry Run Completed"
+msgstr "Simulación Completada"
+
+msgid "No data was saved. Fix errors and upload again."
+msgstr "No se guardaron datos. Corrija los errores y cargue de nuevo."
+
+msgid "Import Errors (%(count)s)"
+msgstr "Errores de Importación (%(count)s)"
+
+msgid "Line #"
+msgstr "Línea #"
+
+msgid "Error"
+msgstr "Error"
+
+msgid "Row Data"
+msgstr "Datos de la Fila"
+
+msgid "Import Completed Successfully"
+msgstr "Importación Completada con Éxito"
+
+msgid "All uploaded records were processed without errors."
+msgstr "Todos los registros cargados fueron procesados sin errores."
+
+msgid "Import Summary"
+msgstr "Resumen de Importación"
+
+msgid "<li><strong>%(created)s</strong> new companies created</li>"
+msgstr "<li><strong>%(created)s</strong> nuevas empresas creadas</li>"
+
+msgid "<li><strong>%(updated)s</strong> companies updated</li>"
+msgstr "<li><strong>%(updated)s</strong> empresas actualizadas</li>"
+
+msgid "Upload Another File"
+msgstr "Cargar Otro Archivo"
+
+# ===============================
+# Employees
+# ===============================
+#: templates/employee/employee_form.html:4
+#, python-format
+msgid "Add Employee — %(company_name)s | ExactusPay"
+msgstr "Agregar Empleado — %(company_name)s | ExactusPay"
+
+#: templates/employee/employee_form.html:7
+msgid "Add Employee"
+msgstr "Agregar Empleado"
+
+#: templates/employee/employee_form.html:16
+msgid "Add New Employee"
+msgstr "Agregar Nuevo Empleado"
+
+#: templates/employee/employee_form.html:16
+msgid "Edit Employee"
+msgstr "Editar Empleado"
+
+#: templates/employee/employee_form.html:17
+msgid "New"
+msgstr "Nuevo"
+
+#: templates/employee/employee_form.html:27
+msgid "Personal Data"
+msgstr "Datos Personales"
+
+#: templates/employee/employee_form.html:30
+msgid "Employment"
+msgstr "Datos de Empleo"
+
+#: templates/employee/employee_form.html:32
+msgid "Compensation"
+msgstr "Remuneración"
+
+#: templates/employee/employee_form.html:46
+msgid "Employee Identification"
+msgstr "Identificación del Empleado"
+
+#: templates/employee/employee_form.html:59
+msgid "Digital Contact"
+msgstr "Contacto Digital"
+
+#: templates/employee/employee_form.html:68
+msgid "Residential Address"
+msgstr "Dirección Residencial"
+
+#: templates/employee/employee_form.html:80
+msgid "Bank Account Details"
+msgstr "Detalles de la Cuenta Bancaria"
+
+#: templates/employee/employee_form.html:92
+msgid "Bank Address"
+msgstr "Dirección del Banco"
+
+#: templates/employee/employee_form.html:100
+msgid "Bacs Details"
+msgstr "Detalles Bacs"
+
+#: templates/employee/employee_form.html:106
+msgid "Employment Details"
+msgstr "Detalles del Empleo"
+
+#: templates/employee/employee_form.html:117
+msgid "Documentation"
+msgstr "Documentación"
+
+#: templates/employee/employee_form.html:129
+msgid "P45 Details"
+msgstr "Detalles del P45"
+
+#: templates/employee/employee_form.html:136
+msgid "Declarations"
+msgstr "Declaraciones"
+
+#: templates/employee/employee_form.html:143
+msgid "Student Loans"
+msgstr "Préstamos Estudiantiles"
+
+#: templates/employee/employee_form.html:145
+msgid "Has Student Loan?"
+msgstr "¿Tiene Préstamo Estudiantil?"
+
+#: templates/employee/employee_form.html:149
+msgid "Has Post-Grad Loan?"
+msgstr "¿Tiene Préstamo de Posgrado?"
+
+#: templates/employee/employee_form.html:173
+msgid "Compensation Overview"
+msgstr "Resumen de Remuneración"
+
+#: templates/employee/employee_form.html:177
+msgid "Add Component"
+msgstr "Agregar Componente"
+
+#: templates/employee/employee_form.html:180
+msgid "Save employee first"
+msgstr "Guarde el empleado primero"
+
+#: templates/employee/employee_form.html:191
+msgid "Code"
+msgstr "Código"
+
+#: templates/employee/employee_form.html:193
+msgid "Category"
+msgstr "Categoría"
+
+#: templates/employee/employee_form.html:194
+msgid "Amount"
+msgstr "Importe"
+
+#: templates/employee/employee_form.html:195
+msgid "Frequency"
+msgstr "Frecuencia"
+
+#: templates/employee/employee_form.html:196
+msgid "Dates"
+msgstr "Fechas"
+
+#: templates/employee/employee_form.html:217
+msgid "Unknown"
+msgstr "Desconocido"
+
+#: templates/employee/employee_form.html:253
+msgid "Ongoing"
+msgstr "En Curso"
+
+#: templates/employee/employee_form.html:263
+msgid "Delete"
+msgstr "Eliminar"
+
+#: templates/employee/employee_form.html:263
+msgid "Are you sure you want to delete this component?"
+msgstr "¿Está seguro de que desea eliminar este componente?"
+
+#: templates/employee/employee_form.html:269
+msgid "No active compensation components found."
+msgstr "No se encontraron componentes de remuneración activos."
+
+#: templates/employee/employee_form.html:277
+msgid ""
+"Please <strong>save the new employee</strong> first. You can add "
+"compensation details after the employee profile is created."
+msgstr ""
+"Por favor, <strong>guarde el nuevo empleado</strong> primero. Puede agregar "
+"detalles de remuneración después de crear el perfil del empleado."
+
+#: templates/employee/employee_form.html:282
+msgid "ExactusPay Access"
+msgstr "Acceso ExactusPay"
+
+#: templates/employee/employee_form.html:286
+msgid "User Account Active"
+msgstr "Cuenta de Usuario Activa"
+
+#: templates/employee/employee_form.html:287
+#, python-format
+msgid "Username: <strong>%(username)s</strong>"
+msgstr "Nombre de usuario: <strong>%(username)s</strong>"
+
+#: templates/employee/employee_form.html:288
+#, python-format
+msgid "Last Login: %(last_login)s"
+msgstr "Último Acceso: %(last_login)s"
+
+#: templates/employee/employee_form.html:288
+msgid "Never"
+msgstr "Nunca"
+
+#: templates/employee/employee_form.html:291
+msgid "Permissions & Status"
+msgstr "Permisos y Estado"
+
+#: templates/employee/employee_form.html:303
+msgid "No Access Enabled"
+msgstr "Acceso No Habilitado"
+
+#: templates/employee/employee_form.html:304
+msgid "This employee cannot log in to the employee portal."
+msgstr "Este empleado no puede acceder al portal del empleado."
+
+#: templates/employee/employee_form.html:310
+msgid "Enable Portal Access"
+msgstr "Habilitar Acceso al Portal"
+
+#: templates/employee/employee_form.html:312
+#, python-format
+msgid ""
+"This will create a user account linked to <strong>%(email)s</strong> and "
+"email them a secure password setup link."
+msgstr ""
+"Esto creará una cuenta de usuario vinculada a <strong>%(email)s</strong> y "
+"enviará por correo un enlace seguro de configuración de contraseña."
+
+#: templates/employee/employee_form.html:315
+msgid "Create Account & Send Welcome Email"
+msgstr "Crear Cuenta y Enviar Correo de Bienvenida"
+
+#: templates/employee/employee_form.html:319
+msgid "Email Required:"
+msgstr "Correo Electrónico Obligatorio:"
+
+#: templates/employee/employee_form.html:320
+msgid ""
+"Please enter an email address in the <a href=\"#\" "
+"onclick=\"document.querySelector('[data-bs-"
+"target=\\'#communication\\']').click()\">Communication Tab</a> and save "
+"changes before creating an account."
+msgstr ""
+"Por favor, ingrese una dirección de correo electrónico en la <a href=\"#\" "
+"onclick=\"document.querySelector('[data-bs-"
+"target=\\'#communication\\']').click()\">Pestaña de Comunicación</a> y "
+"guarde los cambios antes de crear una cuenta."
+
+msgid "CNPJ is required."
+msgstr "El CNPJ es obligatorio."
+
+msgid "Primary CNAE"
+msgstr "CNAE Principal"
+
+msgid "Secondary CNAE"
+msgstr "CNAE Secundario"
+
+msgid "Contact Full Name"
+msgstr "Nombre Completo del Contacto"
+
+msgid "CNPJ must be exactly 14 digits."
+msgstr "El CNPJ debe tener exactamente 14 dígitos."
+
+msgid "Branch / Agency"
+msgstr "Sucursal / Agencia"
+
+msgid "Account Digit"
+msgstr "Dígito de la Cuenta"
+
+msgid "Account Type"
+msgstr "Tipo de Cuenta"
+
+msgid "PIX Key"
+msgstr "Clave PIX"
+
+msgid "SWIFT / BIC"
+msgstr "SWIFT / BIC"
+
+msgid "Companies in %(country_name)s"
+msgstr "Empresas en %(country_name)s"
+
+msgid "Manage all companies associated with this country"
+msgstr "Gestionar todas las empresas asociadas con este país"
+
+msgid "Upload CSV"
+msgstr "Cargar CSV"
+
+msgid "ID"
+msgstr "ID"
+
+msgid "Location"
+msgstr "Ubicación"
+
+msgid "Tax IDs"
+msgstr "Identificadores Fiscales"
+
+msgid "+%(extra)s more"
+msgstr "+%(extra)s más"
+
+msgid "Active"
+msgstr "Activo"
+
+msgid "Suspended"
+msgstr "Suspendido"
+
+msgid "Inactive"
+msgstr "Inactivo"
+
+msgid "View Employees"
+msgstr "Ver Empleados"
+
+msgid "Delete Company"
+msgstr "Eliminar Empresa"
+
+msgid "Are you sure you want to delete %(name)s?"
+msgstr "¿Está seguro de que desea eliminar %(name)s?"
+
+msgid "No companies found for %(country_name)s"
+msgstr "No se encontraron empresas para %(country_name)s"
+
+msgid "Get started by adding your first company"
+msgstr "Comience agregando su primera empresa"
+
+msgid "Add First Company"
+msgstr "Agregar Primera Empresa"
+
+# DataTables strings
+msgid "Search companies:"
+msgstr "Buscar empresas:"
+
+msgid "Show _MENU_ companies"
+msgstr "Mostrar _MENU_ empresas"
+
+msgid "No companies found matching your search"
+msgstr "No se encontraron empresas que coincidan con su búsqueda"
+
+msgid "Showing _START_ to _END_ of _TOTAL_ companies"
+msgstr "Mostrando _START_ a _END_ de _TOTAL_ empresas"
+
+msgid "No companies available"
+msgstr "No hay empresas disponibles"
+
+msgid "(filtered from _MAX_ total companies)"
+msgstr "(filtrado de un total de _MAX_ empresas)"
+
+msgid "First"
+msgstr "Primero"
+
+msgid "Last"
+msgstr "Último"
+
+#: templates/upload/employee_upload.html
+msgid "Upload Employees — %(name)s | ExactusPay"
+msgstr "Cargar Empleados — %(name)s | ExactusPay"
+
+msgid "Upload Employees"
+msgstr "Cargar Empleados"
+
+msgid "Upload Employees — %(name)s"
+msgstr "Cargar Empleados — %(name)s"
+
+msgid "Upload File"
+msgstr "Cargar Archivo"
+
+msgid "Loading..."
+msgstr "Cargando..."
+
+msgid "Download Company Template"
+msgstr "Descargar Plantilla de Empresa"
+
+msgid "Download Global Template"
+msgstr "Descargar Plantilla Global"
+
+msgid "Upload progress"
+msgstr "Progreso de carga"
+
+msgid "Starting upload..."
+msgstr "Iniciando carga..."
+
+msgid "File Format Instructions"
+msgstr "Instrucciones de Formato de Archivo"
+
+msgid "Required Fields:"
+msgstr "Campos Obligatorios:"
+
+msgid "Must match the company code (%(code)s)"
+msgstr "Debe coincidir con el código de empresa (%(code)s)"
+
+msgid "Unique employee number (integer)"
+msgstr "Número único de empleado (entero)"
+
+msgid "Employee code (integer)"
+msgstr "Código de empleado (entero)"
+
+msgid "First name"
+msgstr "Nombre"
+
+msgid "Last name"
+msgstr "Apellido"
+
+msgid "Optional Fields:"
+msgstr "Campos Opcionales:"
+
+msgid ""
+"gender, date_of_birth, marital_status, employee_address_type, "
+"employee_address_01 to 07, bank_01 to 10, department, cost_centre, "
+"job_title, position_number, fte, tax_info_01 to 07"
+msgstr ""
+"gender, date_of_birth, marital_status, employee_address_type, "
+"employee_address_01 a 07, bank_01 a 10, department, cost_centre, job_title, "
+"position_number, fte, tax_info_01 a 07"
+
+msgid "Progress:"
+msgstr "Progreso:"
+
+msgid "Processing complete!"
+msgstr "¡Procesamiento completo!"
+
+msgid "Progress check failed:"
+msgstr "Error al verificar el progreso:"
+
+#: templates/upload/results.html
+msgid "Upload Results — %(name)s | ExactusPay"
+msgstr "Resultados de Carga — %(name)s | ExactusPay"
+
+msgid "Upload Results — %(name)s"
+msgstr "Resultados de Carga — %(name)s"
+
+msgid "Upload Summary"
+msgstr "Resumen de Carga"
+
+msgid "Dry Run Results:"
+msgstr "Resultados de Simulación:"
+
+msgid "No data was saved to the database."
+msgstr "No se guardaron datos en la base de datos."
+
+msgid "Upload Completed Successfully!"
+msgstr "¡Carga Completada con Éxito!"
+
+msgid "Created"
+msgstr "Creados"
+
+msgid "Updated"
+msgstr "Actualizados"
+
+msgid "Errors"
+msgstr "Errores"
+
+msgid "Errors:"
+msgstr "Errores:"
+
+msgid "Upload Another File for this Company"
+msgstr "Cargar Otro Archivo para esta Empresa"
+
+msgid "Back to Employee List"
+msgstr "Volver a la Lista de Empleados"
+
+msgid "Upload Another Global File"
+msgstr "Cargar Otro Archivo Global"
+
+msgid "Back to Dashboard"
+msgstr "Volver al Panel"
+
+# ===============================
+# Elements
+# ===============================
+#: templates/elements/element_list.html
+msgid "Elements — %(country_name)s | ExactusPay"
+msgstr "Elementos — %(country_name)s | ExactusPay"
+
+msgid "Elements — %(country_name)s"
+msgstr "Elementos — %(country_name)s"
+
+msgid "Elements for %(country_name)s"
+msgstr "Elementos para %(country_name)s"
+
+msgid "Manage payroll elements, deductions, and earnings."
+msgstr "Gestionar elementos de nómina, deducciones y ganancias."
+
+msgid "Are you sure you want to delete this element?"
+msgstr "¿Está seguro de que desea eliminar este elemento?"
+
+msgid "Search Elements..."
+msgstr "Buscar elementos..."
+
+#: templates/elements/element_form.html
+msgid "Add Element — %(country_name)s | ExactusPay"
+msgstr "Agregar Elemento — %(country_name)s | ExactusPay"
+
+msgid "Add Element"
+msgstr "Agregar Elemento"
+
+msgid "Add New Element"
+msgstr "Agregar Nuevo Elemento"
+
+msgid ""
+"Configure earning, deduction, or informational elements for %(country_name)s."
+msgstr ""
+"Configurar elementos de ganancia, deducción o informativos para %"
+"(country_name)s."
+
+msgid "Element Details"
+msgstr "Detalles del Elemento"
+
+msgid "Element Code"
+msgstr "Código del Elemento"
+
+msgid "Element Name"
+msgstr "Nombre del Elemento"
+
+msgid "Optional"
+msgstr "Opcional"
+
+msgid "Classification"
+msgstr "Clasificación"
+
+msgid "Class"
+msgstr "Clase"
+
+msgid "Category Type"
+msgstr "Tipo de Categoría"
+
+msgid "Accounting"
+msgstr "Contabilidad"
+
+msgid "Map Code"
+msgstr "Código de Mapeo"
+
+msgid "GL Account"
+msgstr "Cuenta GL"
+
+msgid "Taxation Settings"
+msgstr "Configuración de Tributación"
+
+# ===============================
+# PD Codes
+# ===============================
+#: templates/pdcodes/pdcode_list.html
+msgid "PDcodes — %(company_name)s | ExactusPay"
+msgstr "Códigos PD — %(company_name)s | ExactusPay"
+
+msgid "PDcodes — %(company_name)s"
+msgstr "Códigos PD — %(company_name)s"
+
+msgid "Pull country default codes (1000-4999)"
+msgstr "Importar códigos predeterminados del país (1000-4999)"
+
+msgid ""
+"This will pull all Country Default Codes (1000-4999) into this company. "
+"Existing default codes will be updated. Continue?"
+msgstr ""
+"Esto importará todos los Códigos Predeterminados del País (1000-4999) a esta "
+"empresa. Los códigos predeterminados existentes se actualizarán. ¿Continuar?"
+
+msgid "Sync Defaults"
+msgstr "Sincronizar Predeterminados"
+
+msgid "Payroll & Deduction Codes"
+msgstr "Códigos de Nómina y Deducciones"
+
+msgid "Manage earnings, deductions, and tax codes for %(company_name)s."
+msgstr ""
+"Gestionar ganancias, deducciones y códigos fiscales para %(company_name)s."
+
+msgid "Are you sure you want to delete this PDcode?"
+msgstr "¿Está seguro de que desea eliminar este código PD?"
+
+msgid "Search PDcodes..."
+msgstr "Buscar códigos PD..."
+
+#: templates/pdcodes/pdcode_form.html
+msgid "Add PDcode — %(company_name)s | ExactusPay"
+msgstr "Agregar Código PD — %(company_name)s | ExactusPay"
+
+msgid "Add PDcode"
+msgstr "Agregar Código PD"
+
+msgid "Add New PDcode"
+msgstr "Agregar Nuevo Código PD"
+
+msgid "Configure payroll, deduction, and tax codes for %(company_name)s."
+msgstr ""
+"Configurar códigos de nómina, deducción e impuestos para %(company_name)s."
+
+msgid "PDcode Details"
+msgstr "Detalles del Código PD"
+
+msgid "PDcode Code"
+msgstr "Código PD"
+
+msgid "PDcode Name"
+msgstr "Nombre del Código PD"
+
+msgid "Additional Bases"
+msgstr "Bases Adicionales"
+
+msgid "Select All"
+msgstr "Seleccionar Todo"
+
+msgid "Deselect All"
+msgstr "Deseleccionar Todo"
+
+#: templates/pdcodes/upload_form.html
+msgid "Upload PD Codes — %(company_name)s | ExactusPay"
+msgstr "Cargar Códigos PD — %(company_name)s | ExactusPay"
+
+msgid "Upload PD Codes - %(company_name)s"
+msgstr "Cargar Códigos PD - %(company_name)s"
+
+msgid "Back to PD Codes"
+msgstr "Volver a Códigos PD"
+
+msgid "Unique PD code (e.g., \"BASIC\", \"TAX\")"
+msgstr "Código PD único (ej.: \"BASIC\", \"TAX\")"
+
+msgid "Display name (e.g., \"Basic Salary\", \"Income Tax\")"
+msgstr ""
+"Nombre para mostrar (ej.: \"Salario Base\", \"Impuesto sobre la Renta\")"
+
+msgid "\"Visible\" or \"Hidden\""
+msgstr "\"Visible\" u \"Oculto\""
+
+msgid "Numeric codes"
+msgstr "Códigos numéricos"
+
+msgid "\"Recurring\" or \"Non-recurring\""
+msgstr "\"Recurrente\" o \"No recurrente\""
+
+msgid "\"Regular\" or \"Irregular\""
+msgstr "\"Regular\" o \"Irregular\""
+
+msgid "\"Standard\" or \"Statutory\""
+msgstr "\"Estándar\" o \"Estatutario\""
+
+msgid "\"Payment\", \"Deduction\", \"Notional\", etc."
+msgstr "\"Pago\", \"Deducción\", \"Nocional\", etc."
+
+msgid "Boolean flags:"
+msgstr "Indicadores booleanos:"
+
+msgid "etc."
+msgstr "etc."
+
+msgid "use True/False"
+msgstr "use True/False"
+
+msgid "\"Bracketable\", \"Prorational\", etc."
+msgstr "\"Bracketable\", \"Prorational\", etc."
+
+msgid "Boolean Values:"
+msgstr "Valores Booleanos:"
+
+msgid "Use"
+msgstr "Use"
+
+msgid "or"
+msgstr "o"
+
+msgid "for boolean fields."
+msgstr "para campos booleanos."
+
+# ===============================
+# Payroll
+# ===============================
+#: templates/payroll/payroll_detail.html
+msgid "Payroll Details"
+msgstr "Detalles de Nómina"
+
+msgid "Payrolls"
+msgstr "Nóminas"
+
+msgid "Edit Payroll"
+msgstr "Editar Nómina"
+
+msgid "Add Period"
+msgstr "Agregar Período"
+
+msgid "Current Status"
+msgstr "Estado Actual"
+
+msgid "Total Periods"
+msgstr "Total de Períodos"
+
+msgid "Completed Runs"
+msgstr "Ejecuciones Completadas"
+
+msgid "YTD Amount"
+msgstr "Importe Acumulado (YTD)"
+
+msgid "Configuration"
+msgstr "Configuración"
+
+msgid "Regulation Ver:"
+msgstr "Versión de Regulación:"
+
+msgid "Technical Issue"
+msgstr "Problema Técnico"
+
+msgid "Created By:"
+msgstr "Creado por:"
+
+msgid "System"
+msgstr "Sistema"
+
+msgid "Created Date:"
+msgstr "Fecha de Creación:"
+
+msgid "Payroll Periods"
+msgstr "Períodos de Nómina"
+
+msgid "%(total)s Records"
+msgstr "%(total)s Registros"
+
+msgid "Period Name"
+msgstr "Nombre del Período"
+
+msgid "Date Range"
+msgstr "Rango de Fechas"
+
+msgid "Processing Date"
+msgstr "Fecha de Procesamiento"
+
+msgid "Total Amount"
+msgstr "Importe Total"
+
+msgid "Row actions"
+msgstr "Acciones de fila"
+
+msgid "View Report"
+msgstr "Ver Informe"
+
+msgid "Edit Period"
+msgstr "Editar Período"
+
+msgid "Process Now"
+msgstr "Procesar Ahora"
+
+msgid "No Periods Found"
+msgstr "No se Encontraron Períodos"
+
+msgid "Get started by adding the first payroll period."
+msgstr "Comience agregando el primer período de nómina."
+
+msgid "Add First Period"
+msgstr "Agregar Primer Período"
+
+msgid "Delete Payroll"
+msgstr "Eliminar Nómina"
+
+msgid "This will permanently delete"
+msgstr "Esto eliminará permanentemente"
+
+msgid "all associated periods and calculations"
+msgstr "todos los períodos y cálculos asociados"
+
+msgid "This action cannot be undone."
+msgstr "Esta acción no se puede deshacer."
+
+msgid "Confirm Delete"
+msgstr "Confirmar Eliminación"
+
+msgid "Payroll %(year)s — %(company_name)s | ExactusPay"
+msgstr "Nómina %(year)s — %(company_name)s | ExactusPay"
+
+msgid "Payroll %(year)s"
+msgstr "Nómina %(year)s"
+
+msgid "Start processing for \"%(name)s\"?"
+msgstr "¿Iniciar procesamiento para \"%(name)s\"?"
+
+msgid "Processing failed."
+msgstr "El procesamiento falló."
+
+msgid "Error:"
+msgstr "Error:"
+
+msgid "Network Error:"
+msgstr "Error de red:"
+
+msgid "Are you sure you want to delete \"%(name)s\"? This cannot be undone."
+msgstr ""
+"¿Está seguro de que desea eliminar \"%(name)s\"? Esto no se puede deshacer."
+
+msgid "Are you sure you want to delete payroll for <strong>%(year)s</strong>?"
+msgstr ""
+"¿Está seguro de que desea eliminar la nómina de <strong>%(year)s</strong>?"
+
+#: templates/payroll/payroll_list.html
+msgid "Payrolls — %(company_name)s | ExactusPay"
+msgstr "Nóminas — %(company_name)s | ExactusPay"
+
+msgid "Payrolls — %(company_name)s"
+msgstr "Nóminas — %(company_name)s"
+
+msgid "Payroll History"
+msgstr "Historial de Nóminas"
+
+msgid "Fiscal years, regulation versions, and processing status."
+msgstr "Años fiscales, versiones de regulación y estado de procesamiento."
+
+msgid "Payroll ID"
+msgstr "ID de Nómina"
+
+msgid "Fiscal Year"
+msgstr "Año Fiscal"
+
+msgid "Regulation"
+msgstr "Regulación"
+
+msgid "View Periods"
+msgstr "Ver Períodos"
+
+msgid ""
+"Are you sure you want to delete this payroll? This action cannot be undone."
+msgstr ""
+"¿Está seguro de que desea eliminar esta nómina? Esta acción no se puede "
+"deshacer."
+
+msgid "No payrolls found"
+msgstr "No se encontraron nóminas"
+
+msgid "Create a new fiscal year to start processing payroll."
+msgstr "Cree un nuevo año fiscal para comenzar a procesar nómina."
+
+msgid "Create First Payroll"
+msgstr "Crear Primera Nómina"
+
+msgid "Search Payrolls..."
+msgstr "Buscar Nóminas..."
+
+#: templates/payroll/payroll_form.html
+msgid "Edit Payroll: %(year)s"
+msgstr "Editar Nómina: %(year)s"
+
+msgid "Create New Payroll"
+msgstr "Crear Nueva Nómina"
+
+msgid "Create Payroll"
+msgstr "Crear Nómina"
+
+msgid "Fiscal Year (YYYY)"
+msgstr "Año Fiscal (AAAA)"
+
+msgid "Historical Data Only"
+msgstr "Solo Datos Históricos"
+
+msgid "Description (Optional)"
+msgstr "Descripción (Opcional)"
+
+msgid "Important Notes"
+msgstr "Notas Importantes"
+
+msgid "You can only have one active payroll per company per fiscal year."
+msgstr "Solo puede tener una nómina activa por empresa y año fiscal."
+
+msgid "The selected"
+msgstr "El/La seleccionado/a"
+
+msgid "must match the"
+msgstr "debe coincidir con el/la"
+
+msgid "entered."
+msgstr "ingresado."
+
+msgid "Check"
+msgstr "Marque"
+
+msgid "if uploading data from a previous system."
+msgstr "si está cargando datos de un sistema anterior."
+
+msgid "Update Payroll"
+msgstr "Actualizar Nómina"
+
+#: templates/payroll/period_detail.html
+msgid "Payroll - %(period_name)s"
+msgstr "Nómina - %(period_name)s"
+
+msgid "Period #%(n)s"
+msgstr "Período #%(n)s"
+
+msgid "Process Payroll"
+msgstr "Procesar Nómina"
+
+msgid "Request Approval"
+msgstr "Solicitar Aprobación"
+
+msgid "Reset"
+msgstr "Restablecer"
+
+msgid "Reset all calculations? This will return the period to Pending."
+msgstr ""
+"¿Restablecer todos los cálculos? Esto devolverá el período a Pendiente."
+
+msgid "Reject"
+msgstr "Rechazar"
+
+msgid "Authorize"
+msgstr "Autorizar"
+
+msgid "Waiting for authorized approver..."
+msgstr "Esperando aprobador autorizado..."
+
+msgid "Export to Excel"
+msgstr "Exportar a Excel"
+
+msgid "Financial Summary"
+msgstr "Resumen Financiero"
+
+msgid "Aggregate period totals"
+msgstr "Totales agregados del período"
+
+msgid "Total Gross"
+msgstr "Total Bruto"
+
+msgid "Deductions"
+msgstr "Deducciones"
+
+msgid "Net Pay"
+msgstr "Pago Neto"
+
+msgid "Gross to Net Breakdown"
+msgstr "Desglose de Bruto a Neto"
+
+msgid "Search employee..."
+msgstr "Buscar empleado..."
+
+msgid "Employee"
+msgstr "Empleado"
+
+msgid "No payroll data available for this period."
+msgstr "No hay datos de nómina disponibles para este período."
+
+msgid "Click <strong>Process Payroll</strong> to calculate."
+msgstr "Haga clic en <strong>Procesar Nómina</strong> para calcular."
+
+# JS strings
+msgid "Processing..."
+msgstr "Procesando..."
+
+msgid "Action Failed:"
+msgstr "Acción Fallida:"
+
+msgid "Server Error"
+msgstr "Error del Servidor"
+
+msgid "Operation failed"
+msgstr "La operación falló"
+
+msgid "Start Payroll Calculation for this period?"
+msgstr "¿Iniciar Cálculo de Nómina para este período?"
+
+msgid "Send for Approval? This will lock the period from further calculations."
+msgstr ""
+"¿Enviar para Aprobación? Esto bloqueará el período para cálculos adicionales."
+
+msgid ""
+"Authorize Payroll? This action is final and marks the period as Completed."
+msgstr ""
+"¿Autorizar Nómina? Esta acción es final y marca el período como Completado."
+
+msgid ""
+"Reject Payroll? This will return the period to Pending and delete current "
+"calculations."
+msgstr ""
+"¿Rechazar Nómina? Esto devolverá el período a Pendiente y eliminará los "
+"cálculos actuales."
+
+msgid "Create Period"
+msgstr "Crear Período"
+
+msgid "Edit Period: %(period_name)s"
+msgstr "Editar Período: %(period_name)s"
+
+msgid "Create New Period"
+msgstr "Crear Nuevo Período"
+
+msgid "%(company_name)s — Fiscal Year %(fiscal_year)s"
+msgstr "%(company_name)s — Año Fiscal %(fiscal_year)s"
+
+msgid "Historical Data"
+msgstr "Datos Históricos"
+
+msgid "Historical Data Entry"
+msgstr "Registro de Datos Históricos"
+
+msgid ""
+"This payroll is flagged for <strong>Historical Data</strong>.\n"
+"After saving these dates, you will be automatically redirected to the "
+"<strong>Data Upload Wizard</strong>."
+msgstr ""
+"Esta nómina está marcada para <strong>Datos Históricos</strong>.\n"
+"Después de guardar estas fechas, será automáticamente redirigido al "
+"<strong>Asistente de Carga de Datos</strong>."
+
+msgid "Period Configuration"
+msgstr "Configuración del Período"
+
+msgid "No."
+msgstr "Nº"
+
+msgid "Period Name (e.g. January 2025)"
+msgstr "Nombre del Período (ej.: Enero 2025)"
+
+msgid "Start Date"
+msgstr "Fecha de Inicio"
+
+msgid "End Date"
+msgstr "Fecha de Fin"
+
+msgid "Additional Period?"
+msgstr "¿Período Adicional?"
+
+msgid "Processing Timeline"
+msgstr "Cronograma de Procesamiento"
+
+msgid "Processing Date (Cut-off)"
+msgstr "Fecha de Procesamiento (Corte)"
+
+msgid "Calculated as Start Date + 20 days."
+msgstr "Calculado como Fecha de Inicio + 20 días."
+
+msgid "Payment Date"
+msgstr "Fecha de Pago"
+
+msgid "Calculated as Processing + 3 working days."
+msgstr "Calculado como Procesamiento + 3 días hábiles."
+
+msgid "Regulation Overrides (Optional JSON)"
+msgstr "Anulaciones de Regulación (JSON opcional)"
+
+msgid "Update Period"
+msgstr "Actualizar Período"
+
+msgid "Create & Upload Data"
+msgstr "Crear y Cargar Datos"
+
+# JS months
+msgid "January"
+msgstr "Enero"
+
+msgid "February"
+msgstr "Febrero"
+
+msgid "March"
+msgstr "Marzo"
+
+msgid "April"
+msgstr "Abril"
+
+msgid "May"
+msgstr "Mayo"
+
+msgid "June"
+msgstr "Junio"
+
+msgid "July"
+msgstr "Julio"
+
+msgid "August"
+msgstr "Agosto"
+
+msgid "September"
+msgstr "Septiembre"
+
+msgid "October"
+msgstr "Octubre"
+
+msgid "November"
+msgstr "Noviembre"
+
+msgid "December"
+msgstr "Diciembre"
+
+msgid "Error fetching period number:"
+msgstr "Error al obtener el número de período:"
+
+#: templates/payroll/period_list.html
+msgid "Payroll Periods — %(company_name)s | ExactusPay"
+msgstr "Períodos de Nómina — %(company_name)s | ExactusPay"
+
+msgid "Payroll Year: %(fiscal_year)s"
+msgstr "Año de Nómina: %(fiscal_year)s"
+
+msgid "Manage processing periods for Fiscal Year %(fiscal_year)s."
+msgstr ""
+"Gestionar períodos de procesamiento para el Año Fiscal %(fiscal_year)s."
+
+msgid "Run ID"
+msgstr "ID de Ejecución"
+
+msgid "Total Net"
+msgstr "Total Neto"
+
+msgid "View Period"
+msgstr "Ver Período"
+
+msgid "No periods found"
+msgstr "No se encontraron períodos"
+
+msgid "Add a new period to begin payroll processing."
+msgstr "Agregue un nuevo período para comenzar el procesamiento de nómina."
+
+msgid "Create First Period"
+msgstr "Crear Primer Período"
+
+# DataTables (JS)
+msgid "Search Periods..."
+msgstr "Buscar Períodos..."
+
+msgid "All"
+msgstr "Todos"
+
+msgid "Reset Period - %(period_name)s"
+msgstr "Restablecer Período - %(period_name)s"
+
+msgid "Confirm Period Reset"
+msgstr "Confirmar Restablecimiento del Período"
+
+msgid "Reset %(period_name)s?"
+msgstr "¿Restablecer %(period_name)s?"
+
+msgid "Current Status:"
+msgstr "Estado Actual:"
+
+msgid "What will happen:"
+msgstr "Qué sucederá:"
+
+msgid "The status will revert to <strong>PENDING</strong>."
+msgstr "El estado volverá a <strong>PENDIENTE</strong>."
+
+msgid "<strong>%(count)s</strong> payslips/results will be deleted."
+msgstr "<strong>%(count)s</strong> recibos/resultados serán eliminados."
+
+msgid "Totals (Gross: %(gross)s, Net: %(net)s) will be cleared."
+msgstr "Los totales (Bruto: %(gross)s, Neto: %(net)s) serán eliminados."
+
+msgid "Yes, Reset Period"
+msgstr "Sí, Restablecer Período"
+
+msgid "Reset Payroll - FY%(fy)s"
+msgstr "Restablecer Nómina - AF%(fy)s"
+
+msgid "Confirm Payroll Reset"
+msgstr "Confirmar Restablecimiento de Nómina"
+
+msgid "You are about to reset Fiscal Year %(fy)s"
+msgstr "Está a punto de restablecer el Año Fiscal %(fy)s"
+
+msgid ""
+"This action affects <strong>%(period_count)s</strong> payroll period linked "
+"to this year."
+msgstr ""
+"Esta acción afecta <strong>%(period_count)s</strong> período de nómina "
+"vinculado a este año."
+
+msgid ""
+"This action affects <strong>%(period_count)s</strong> payroll periods linked "
+"to this year."
+msgstr ""
+"Esta acción afecta <strong>%(period_count)s</strong> períodos de nómina "
+"vinculados a este año."
+
+msgid "Warning:"
+msgstr "Advertencia:"
+
+msgid "All periods will be reverted to <strong>PENDING</strong> status."
+msgstr "Todos los períodos volverán al estado <strong>PENDIENTE</strong>."
+
+msgid ""
+"All calculated results (Gross, Net, Tax) will be <strong>DELETED</strong>."
+msgstr ""
+"Todos los resultados calculados (Bruto, Neto, Impuesto) serán "
+"<strong>ELIMINADOS</strong>."
+
+msgid "The payroll status will be set to <strong>RUNNING</strong>."
+msgstr ""
+"El estado de la nómina se establecerá como <strong>EN EJECUCIÓN</strong>."
+
+msgid "This action <strong>cannot be undone</strong>."
+msgstr "Esta acción <strong>no se puede deshacer</strong>."
+
+msgid "Yes, Reset Everything"
+msgstr "Sí, Restablecer Todo"
+
+msgid "ID: %(pid)s | Company ID: %(cid)s | Requested by: %(email)s"
+msgstr "ID: %(pid)s | ID de Empresa: %(cid)s | Solicitado por: %(email)s"
+
+# ===============================
+# Reports
+# ===============================
+#: templates/reports/reports_list.html
+msgid "Reports for %(company_name)s"
+msgstr "Informes para %(company_name)s"
+
+msgid "%(country_name)s Default Reports"
+msgstr "Informes Predeterminados de %(country_name)s"
+
+msgid "System Global Reports"
+msgstr "Informes Globales del Sistema"
+
+msgid ""
+"Choose a processed payroll period, then run reports in HTML, PDF, or CSV."
+msgstr ""
+"Elija un período de nómina procesado, luego ejecute informes en HTML, PDF o "
+"CSV."
+
+msgid "Management Hub"
+msgstr "Centro de Gestión"
+
+msgid "Processed Period Filter"
+msgstr "Filtro de Período Procesado"
+
+msgid "Payroll Period (Processed)"
+msgstr "Período de Nómina (Procesado)"
+
+msgid "-- Select processed period --"
+msgstr "-- Seleccionar período procesado --"
+
+msgid "Pay date:"
+msgstr "Fecha de pago:"
+
+msgid "Selected:"
+msgstr "Seleccionado:"
+
+msgid "Processed period"
+msgstr "Período procesado"
+
+msgid "Apply Filter"
+msgstr "Aplicar Filtro"
+
+msgid "Clear"
+msgstr "Limpiar"
+
+msgid "Inherited Reports"
+msgstr "Informes Heredados"
+
+msgid "Reports coming from System or Country level."
+msgstr "Informes provenientes del nivel Sistema o País."
+
+msgid "Rules"
+msgstr "Reglas"
+
+msgid "Report Type"
+msgstr "Tipo de Informe"
+
+msgid "Inherited From"
+msgstr "Heredado de"
+
+msgid "Layout"
+msgstr "Diseño"
+
+msgid "Select a processed period to run"
+msgstr "Seleccione un período procesado para ejecutar"
+
+msgid "No inherited reports available."
+msgstr "No hay informes heredados disponibles."
+
+msgid "Global Reports"
+msgstr "Informes Globales"
+
+msgid "Specific Reports"
+msgstr "Informes Específicos"
+
+msgid "Reports configured at system level."
+msgstr "Informes configurados a nivel de sistema."
+
+msgid "Reports configured at the selected scope level."
+msgstr "Informes configurados en el nivel de alcance seleccionado."
+
+msgid "No system reports configured."
+msgstr "No hay informes del sistema configurados."
+
+msgid "No specific reports configured at this level."
+msgstr "No hay informes específicos configurados en este nivel."
+
+#: templates/reports/report_center.html
+msgid "Report Center"
+msgstr "Centro de Informes"
+
+msgid "Select a report type and configure your run parameters below."
+msgstr ""
+"Seleccione un tipo de informe y configure sus parámetros de ejecución a "
+"continuación."
+
+msgid "Available Reports"
+msgstr "Informes Disponibles"
+
+msgid "Run Configuration"
+msgstr "Configuración de Ejecución"
+
+msgid "Please select a report from the list on the left."
+msgstr "Por favor, seleccione un informe de la lista de la izquierda."
+
+msgid "Select Company"
+msgstr "Seleccionar Empresa"
+
+msgid "-- Choose Company --"
+msgstr "-- Elegir Empresa --"
+
+msgid "Pay Period"
+msgstr "Período de Pago"
+
+msgid "Output Format"
+msgstr "Formato de Salida"
+
+msgid "Preview (HTML)"
+msgstr "Vista Previa (HTML)"
+
+msgid "PDF"
+msgstr "PDF"
+
+msgid "CSV / Excel"
+msgstr "CSV / Excel"
+
+msgid "Generate Report"
+msgstr "Generar Informe"
+
+msgid "Period %(period_number)s"
+msgstr "Período %(period_number)s"
+
+msgid " — Pay date: %(pay_date)s"
+msgstr " — Fecha de pago: %(pay_date)s"
+
+msgid "%(rule_count)s Rule"
+msgstr "%(rule_count)s Regla"
+
+msgid "%(rule_count)s Rules"
+msgstr "%(rule_count)s Reglas"
+
+msgid "HTML"
+msgstr "HTML"
+
+msgid "CSV"
+msgstr "CSV"
+
+msgid ""
+msgstr ""
+"Project-Id-Version: ExactusPay\n"
+"Language: es\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "ExactusPay – Global Payroll Platform"
+msgstr "ExactusPay – Plataforma Global de Nómina"
+
+msgid "ExactusPay"
+msgstr "ExactusPay"
+
+msgid "Dashboard"
+msgstr "Panel"
+
+msgid "Countries"
+msgstr "Países"
+
+msgid "All Countries"
+msgstr "Todos los Países"
+
+msgid "Add Country"
+msgstr "Agregar País"
+
+msgid "Restore Country"
+msgstr "Restaurar País"
+
+msgid "Upload Countries"
+msgstr "Cargar Países"
+
+msgid "Delete Country"
+msgstr "Eliminar País"
+
+msgid "Country Reports"
+msgstr "Reportes del País"
+
+msgid "Elements"
+msgstr "Elementos"
+
+msgid "All Elements"
+msgstr "Todos los Elementos"
+
+msgid "Add Element"
+msgstr "Agregar Elemento"
+
+msgid "Upload Elements"
+msgstr "Cargar Elementos"
+
+msgid "Regulations"
+msgstr "Regulaciones"
+
+msgid "All Regulations"
+msgstr "Todas las Regulaciones"
+
+msgid "Add Regulation"
+msgstr "Agregar Regulación"
+
+msgid "Upload Regulations"
+msgstr "Cargar Regulaciones"
+
+msgid "Calculation Base"
+msgstr "Base de Cálculo"
+
+msgid "Calculation Bases"
+msgstr "Bases de Cálculo"
+
+msgid "Add Calculation Base"
+msgstr "Agregar Base de Cálculo"
+
+msgid "Companies"
+msgstr "Empresas"
+
+msgid "All Companies"
+msgstr "Todas las Empresas"
+
+msgid "Add Company"
+msgstr "Agregar Empresa"
+
+msgid "Upload Companies"
+msgstr "Cargar Empresas"
+
+msgid "Pay Elements"
+msgstr "Elementos de Pago"
+
+msgid "All Pay Elements"
+msgstr "Todos los Elementos de Pago"
+
+msgid "Add Pay Element"
+msgstr "Agregar Elemento de Pago"
+
+msgid "Upload Pay Elements"
+msgstr "Cargar Elementos de Pago"
+
+msgid "Edit Pay Element"
+msgstr "Editar Elemento de Pago"
+
+msgid "Employees"
+msgstr "Empleados"
+
+msgid "All Employees"
+msgstr "Todos los Empleados"
+
+msgid "Add Employee"
+msgstr "Agregar Empleado"
+
+msgid "Upload Employees"
+msgstr "Cargar Empleados"
+
+msgid "Edit Employee"
+msgstr "Editar Empleado"
+
+msgid "Compensation"
+msgstr "Compensación"
+
+msgid "Pay Register"
+msgstr "Registro de Pago"
+
+msgid "Add Entry"
+msgstr "Agregar Registro"
+
+msgid "Upload"
+msgstr "Cargar"
+
+msgid "Payroll"
+msgstr "Nómina"
+
+msgid "Payroll Records"
+msgstr "Registros de Nómina"
+
+msgid "Create Payroll"
+msgstr "Crear Nómina"
+
+msgid "All Periods"
+msgstr "Todos los Períodos"
+
+msgid "Add Period"
+msgstr "Agregar Período"
+
+msgid "View Payroll"
+msgstr "Ver Nómina"
+
+msgid "Edit Payroll"
+msgstr "Editar Nómina"
+
+msgid "Reports"
+msgstr "Reportes"
+
+msgid "All Reports"
+msgstr "Todos los Reportes"
+
+msgid "Run Current Report"
+msgstr "Ejecutar Reporte Actual"
+
+msgid "System Settings"
+msgstr "Configuración del Sistema"
+
+msgid "User Management"
+msgstr "Gestión de Usuarios"
+
+msgid "Client Groups"
+msgstr "Grupos de Clientes"
+
+msgid "Create User"
+msgstr "Crear Usuario"
+
+msgid "Role Management"
+msgstr "Gestión de Roles"
+
+msgid "Global Reports"
+msgstr "Reportes Globales"
+
+msgid "Report Management"
+msgstr "Gestión de Reportes"
+
+msgid "Switch Context"
+msgstr "Cambiar Contexto"
+
+msgid "Global View"
+msgstr "Vista Global"
+
+msgid "No company assignments found"
+msgstr "No se encontraron asignaciones de empresa"
+
+msgid "User Avatar"
+msgstr "Avatar del Usuario"
+
+msgid "My Profile"
+msgstr "Mi Perfil"
+
+msgid "Logout"
+msgstr "Cerrar Sesión"
+
+msgid "Login"
+msgstr "Iniciar Sesión"
+
+msgid "Close"
+msgstr "Cerrar"
+
+msgid "Welcome to ExactusPay"
+msgstr "Bienvenido a ExactusPay"
+
+msgid "Global payroll platform for efficient payroll management."
+msgstr "Plataforma global de nómina para una gestión eficiente."
+
+msgid "Login to Continue"
+msgstr "Inicie sesión para continuar"
+
+msgid "Support"
+msgstr "Soporte"
+
+msgid "Privacy"
+msgstr "Privacidad"
+
+msgid "Terms"
+msgstr "Términos"
+
+msgid "Contact"
+msgstr "Contacto"
+
+msgid "breadcrumb"
+msgstr "ruta de navegación"
+
+# -------- blocktrans with variables --------
+
+msgid "Edit %(cname)s"
+msgstr "Editar %(cname)s"
+
+msgid "&copy; %(year)s ExactusPay v1.0"
+msgstr "&copy; %(year)s ExactusPay v1.0"

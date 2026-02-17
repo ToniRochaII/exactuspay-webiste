@@ -1,20 +1,21 @@
 {% extends "base.html" %}
 {% load static %}
+{% load i18n %}
 <link href="{% static 'css/modern.css' %}" rel="stylesheet">
-{% block title %}Create User | ExactusPay{% endblock %}
+{% block title %}{% trans "Create User" %} | ExactusPay{% endblock %}
 {% block content %}
 
 <div class="container-fluid">
     <!-- Header -->
     <div class="header">
         <h1 class="header-title">
-            Create New User
+            {% trans "Create New User" %}
         </h1>
-        <nav aria-label="breadcrumb">
+        <nav aria-label="{% trans 'breadcrumb' %}">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-                <li class="breadcrumb-item"><a href="{% url 'user_list' %}">Users</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Create User</li>
+                <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'user_list' %}">{% trans "Users" %}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{% trans "Create User" %}</li>
             </ol>
         </nav>
     </div>
@@ -25,7 +26,7 @@
             {% if form.errors %}
             <div class="alert alert-danger alert-dismissible" role="alert">
                 <div class="alert-message">
-                    <strong>Please correct the following errors:</strong>
+                    <strong>{% trans "Please correct the following errors:" %}</strong>
                     <ul class="mt-2 mb-0">
                         {% for field, errors in form.errors.items %}
                             {% for error in errors %}
@@ -34,7 +35,7 @@
                         {% endfor %}
                     </ul>
                 </div>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{% trans 'Close' %}"></button>
             </div>
             {% endif %}
 
@@ -47,7 +48,7 @@
                             <i class="fas fa-check-circle me-2"></i>
                             {{ message }}
                         </div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{% trans 'Close' %}"></button>
                     </div>
                     {% endif %}
                 {% endfor %}
@@ -56,7 +57,7 @@
             <!-- User Creation Form -->
             <div class="card">
                 <div class="card-header">
-                    <h5 class="card-title mb-0">User Details</h5>
+                    <h5 class="card-title mb-0">{% trans "User Details" %}</h5>
                 </div>
                 <div class="card-body">
                     <form method="POST" novalidate id="createUserForm">
@@ -66,18 +67,18 @@
                         <div class="mb-4">
                             <h6 class="mb-3 text-primary">
                                 <i class="fas fa-user me-2"></i>
-                                Basic Information
+                                {% trans "Basic Information" %}
                             </h6>
                             
                             <div class="row">
                                 <div class="mb-3 col-md-6">
                                     <label for="id_first_name" class="form-label">
-                                        First Name <span class="text-danger">*</span>
+                                        {% trans "First Name" %} <span class="text-danger">*</span>
                                     </label>
                                     <input type="text" class="form-control" 
                                            id="id_first_name" 
                                            name="first_name" 
-                                           placeholder="Enter first name" 
+                                           placeholder="{% trans 'Enter first name' %}" 
                                            required
                                            value="{{ form.first_name.value|default:'' }}">
                                     {% if form.first_name.errors %}
@@ -89,12 +90,12 @@
 
                                 <div class="mb-3 col-md-6">
                                     <label for="id_last_name" class="form-label">
-                                        Last Name <span class="text-danger">*</span>
+                                        {% trans "Last Name" %} <span class="text-danger">*</span>
                                     </label>
                                     <input type="text" class="form-control" 
                                            id="id_last_name" 
                                            name="last_name" 
-                                           placeholder="Enter last name" 
+                                           placeholder="{% trans 'Enter last name' %}" 
                                            required
                                            value="{{ form.last_name.value|default:'' }}">
                                     {% if form.last_name.errors %}
@@ -107,15 +108,15 @@
                             
                             <div class="mb-3">
                                 <label for="id_email" class="form-label">
-                                    Email Address <span class="text-danger">*</span>
+                                    {% trans "Email Address" %} <span class="text-danger">*</span>
                                 </label>
                                 <input type="email" class="form-control" 
                                        id="id_email" 
                                        name="email" 
-                                       placeholder="Enter email address" 
+                                       placeholder="{% trans 'Enter email address' %}" 
                                        required
                                        value="{{ form.email.value|default:'' }}">
-                                <div class="form-text">This will be used for login and notifications</div>
+                                <div class="form-text">{% trans "This will be used for login and notifications" %}</div>
                                 {% if form.email.errors %}
                                 <div class="invalid-feedback d-block">
                                     {{ form.email.errors.0 }}
@@ -125,12 +126,12 @@
 
                             <div class="mb-3">
                                 <label for="id_phone" class="form-label">
-                                    Phone Number
+                                    {% trans "Phone Number" %}
                                 </label>
                                 <input type="tel" class="form-control" 
                                        id="id_phone" 
                                        name="phone" 
-                                       placeholder="Enter phone number"
+                                       placeholder="{% trans 'Enter phone number' %}"
                                        value="{{ form.phone.value|default:'' }}">
                                 {% if form.phone.errors %}
                                 <div class="invalid-feedback d-block">
@@ -144,20 +145,20 @@
                         <div class="mb-4">
                             <h6 class="mb-3 text-primary">
                                 <i class="fas fa-key me-2"></i>
-                                Account Information
+                                {% trans "Account Information" %}
                             </h6>
                             
                             <div class="mb-3">
                                 <label for="id_username" class="form-label">
-                                    Username <span class="text-danger">*</span>
+                                    {% trans "Username" %} <span class="text-danger">*</span>
                                 </label>
                                 <input type="text" class="form-control" 
                                        id="id_username" 
                                        name="username" 
-                                       placeholder="Choose username" 
+                                       placeholder="{% trans 'Choose username' %}" 
                                        required
                                        value="{{ form.username.value|default:'' }}">
-                                <div class="form-text">Used for system login</div>
+                                <div class="form-text">{% trans "Used for system login" %}</div>
                                 {% if form.username.errors %}
                                 <div class="invalid-feedback d-block">
                                     {{ form.username.errors.0 }}
@@ -167,18 +168,18 @@
                             
                             <!-- Password Generation Options -->
                             <div class="mb-4">
-                                <label class="form-label">Password Setup</label>
+                                <label class="form-label">{% trans "Password Setup" %}</label>
                                 <div class="form-check mb-2">
                                     <input class="form-check-input" type="radio" name="password_option" id="autoGenerate" value="auto" checked>
                                     <label class="form-check-label" for="autoGenerate">
-                                        Generate password automatically
-                                        <small class="text-muted d-block">System will generate a secure password and email it to the user</small>
+                                        {% trans "Generate password automatically" %}
+                                        <small class="text-muted d-block">{% trans "System will generate a secure password and email it to the user" %}</small>
                                     </label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="password_option" id="manualSet" value="manual">
                                     <label class="form-check-label" for="manualSet">
-                                        Set password manually
+                                        {% trans "Set password manually" %}
                                     </label>
                                 </div>
                             </div>
@@ -188,19 +189,19 @@
                                 <div class="row">
                                     <div class="mb-3 col-md-6">
                                         <label for="id_password1" class="form-label">
-                                            Password
+                                            {% trans "Password" %}
                                         </label>
                                         <div class="input-group">
                                             <input type="password" class="form-control" 
                                                    id="id_password1" 
                                                    name="password1" 
-                                                   placeholder="Set password">
-                                            <button class="btn btn-outline-secondary" type="button" id="togglePassword1">
+                                                   placeholder="{% trans 'Set password' %}">
+                                            <button class="btn btn-outline-secondary" type="button" id="togglePassword1" aria-label="{% trans 'Toggle password visibility' %}">
                                                 <i class="fas fa-eye"></i>
                                             </button>
                                         </div>
                                         <small class="form-text text-muted">
-                                            Minimum 8 characters with uppercase, lowercase, and numbers
+                                            {% trans "Minimum 8 characters with uppercase, lowercase, and numbers" %}
                                         </small>
                                         {% if form.password1.errors %}
                                         <div class="invalid-feedback d-block">
@@ -211,20 +212,20 @@
                                             <div class="progress" style="height: 4px;">
                                                 <div class="progress-bar bg-danger" id="passwordStrengthBar" style="width: 0%"></div>
                                             </div>
-                                            <small id="passwordStrengthText" class="text-muted">Password strength</small>
+                                            <small id="passwordStrengthText" class="text-muted">{% trans "Password strength" %}</small>
                                         </div>
                                     </div>
 
                                     <div class="mb-3 col-md-6">
                                         <label for="id_password2" class="form-label">
-                                            Confirm Password
+                                            {% trans "Confirm Password" %}
                                         </label>
                                         <div class="input-group">
                                             <input type="password" class="form-control" 
                                                    id="id_password2" 
                                                    name="password2" 
-                                                   placeholder="Confirm password">
-                                            <button class="btn btn-outline-secondary" type="button" id="togglePassword2">
+                                                   placeholder="{% trans 'Confirm password' %}">
+                                            <button class="btn btn-outline-secondary" type="button" id="togglePassword2" aria-label="{% trans 'Toggle password visibility' %}">
                                                 <i class="fas fa-eye"></i>
                                             </button>
                                         </div>
@@ -243,22 +244,22 @@
                         <div class="mb-4">
                             <h6 class="mb-3 text-primary">
                                 <i class="fas fa-user-shield me-2"></i>
-                                Role & Permissions
+                                {% trans "Role & Permissions" %}
                             </h6>
                             
                             <div class="mb-3">
                                 <label for="id_role" class="form-label">
-                                    User Role <span class="text-danger">*</span>
+                                    {% trans "User Role" %} <span class="text-danger">*</span>
                                 </label>
                                 <select class="form-control" id="id_role" name="role" required>
-                                    <option value="">Select role</option>
-                                    <option value="EXEC" {% if form.role.value == "EXEC" %}selected{% endif %}>Executive</option>
-                                    <option value="ADMIN" {% if form.role.value == "ADMIN" %}selected{% endif %}>Administratorr</option>
+                                    <option value="">{% trans "Select role" %}</option>
+                                    <option value="EXEC" {% if form.role.value == "EXEC" %}selected{% endif %}>{% trans "Executive" %}</option>
+                                    <option value="ADMIN" {% if form.role.value == "ADMIN" %}selected{% endif %}>{% trans "Administrator" %}</option>
                                 </select>
                                 <div class="form-text">
                                     <small>
-                                        <strong>exec:</strong> Full system access<br>
-                                        <strong>admin:</strong> Manage teams and reports<br>
+                                        <strong>{% trans "exec:" %}</strong> {% trans "Full system access" %}<br>
+                                        <strong>{% trans "admin:" %}</strong> {% trans "Manage teams and reports" %}<br>
                                     </small>
                                 </div>
                                 {% if form.role.errors %}
@@ -269,19 +270,19 @@
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Additional Permissions</label>
+                                <label class="form-label">{% trans "Additional Permissions" %}</label>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-check mb-2">
                                             <input class="form-check-input" type="checkbox" id="id_can_approve" name="can_approve">
                                             <label class="form-check-label" for="id_can_approve">
-                                                Can approve payments
+                                                {% trans "Can approve payments" %}
                                             </label>
                                         </div>
                                         <div class="form-check mb-2">
                                             <input class="form-check-input" type="checkbox" id="id_can_export" name="can_export">
                                             <label class="form-check-label" for="id_can_export">
-                                                Can export data
+                                                {% trans "Can export data" %}
                                             </label>
                                         </div>
                                     </div>
@@ -289,13 +290,13 @@
                                         <div class="form-check mb-2">
                                             <input class="form-check-input" type="checkbox" id="id_can_manage_users" name="can_manage_users">
                                             <label class="form-check-label" for="id_can_manage_users">
-                                                Can manage users
+                                                {% trans "Can manage users" %}
                                             </label>
                                         </div>
                                         <div class="form-check mb-2">
                                             <input class="form-check-input" type="checkbox" id="id_can_view_reports" name="can_view_reports">
                                             <label class="form-check-label" for="id_can_view_reports">
-                                                Can view reports
+                                                {% trans "Can view reports" %}
                                             </label>
                                         </div>
                                     </div>
@@ -307,15 +308,15 @@
                         <div class="mb-4">
                             <h6 class="mb-3 text-primary">
                                 <i class="fas fa-cog me-2"></i>
-                                Settings
+                                {% trans "Settings" %}
                             </h6>
                             
                             <div class="mb-3">
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" id="id_is_active" name="is_active" checked>
                                     <label class="form-check-label" for="id_is_active">
-                                        Account is active
-                                        <small class="text-muted d-block">User can login immediately</small>
+                                        {% trans "Account is active" %}
+                                        <small class="text-muted d-block">{% trans "User can login immediately" %}</small>
                                     </label>
                                 </div>
                             </div>
@@ -324,8 +325,8 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" id="id_send_welcome_email" name="send_welcome_email" checked>
                                     <label class="form-check-label" for="id_send_welcome_email">
-                                        Send welcome email
-                                        <small class="text-muted d-block">User will receive login instructions</small>
+                                        {% trans "Send welcome email" %}
+                                        <small class="text-muted d-block">{% trans "User will receive login instructions" %}</small>
                                     </label>
                                 </div>
                             </div>
@@ -334,7 +335,7 @@
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" id="id_force_password_change" name="force_password_change">
                                     <label class="form-check-label" for="id_force_password_change">
-                                        Force password change on first login
+                                        {% trans "Force password change on first login" %}
                                     </label>
                                 </div>
                             </div>
@@ -344,11 +345,11 @@
                         <div class="d-flex justify-content-between">
                             <a href="{% url 'user_list' %}" class="btn btn-outline-secondary">
                                 <i class="fas fa-arrow-left me-2"></i>
-                                Back to Users
+                                {% trans "Back to Users" %}
                             </a>
                             <div>
                                 <button type="submit" class="btn btn-primary">
-                                    <span id="submitText">Create User</span>
+                                    <span id="submitText">{% trans "Create User" %}</span>
                                     <span id="loadingSpinner" class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true"></span>
                                 </button>
                             </div>
@@ -421,26 +422,26 @@
             
             // Update strength bar and text
             let width = 0;
-            let text = 'Password strength';
+            let text = '{% trans "Password strength" %}';
             let colorClass = 'bg-danger';
             
             if (password.length === 0) {
                 width = 0;
             } else if (strength <= 1) {
                 width = 25;
-                text = 'Weak';
+                text = '{% trans "Weak" %}';
                 colorClass = 'bg-danger';
             } else if (strength === 2) {
                 width = 50;
-                text = 'Fair';
+                text = '{% trans "Fair" %}';
                 colorClass = 'bg-warning';
             } else if (strength === 3) {
                 width = 75;
-                text = 'Good';
+                text = '{% trans "Good" %}';
                 colorClass = 'bg-info';
             } else {
                 width = 100;
-                text = 'Strong';
+                text = '{% trans "Strong" %}';
                 colorClass = 'bg-success';
             }
             
@@ -460,13 +461,15 @@
             if (password1.value !== password2.value) {
                 password2.classList.add('is-invalid');
                 if (passwordMatchMessage) {
-                    passwordMatchMessage.innerHTML = '<small class="text-danger"><i class="fas fa-times-circle me-1"></i>Passwords do not match</small>';
+                    passwordMatchMessage.innerHTML =
+                      '<small class="text-danger"><i class="fas fa-times-circle me-1"></i>{% trans "Passwords do not match" %}</small>';
                 }
             } else {
                 password2.classList.remove('is-invalid');
                 password2.classList.add('is-valid');
                 if (passwordMatchMessage) {
-                    passwordMatchMessage.innerHTML = '<small class="text-success"><i class="fas fa-check-circle me-1"></i>Passwords match</small>';
+                    passwordMatchMessage.innerHTML =
+                      '<small class="text-success"><i class="fas fa-check-circle me-1"></i>{% trans "Passwords match" %}</small>';
                 }
             }
         } else if (password2) {
@@ -489,7 +492,7 @@
         const loadingSpinner = document.getElementById('loadingSpinner');
         
         submitBtn.disabled = true;
-        submitText.textContent = 'Creating User...';
+        submitText.textContent = '{% trans "Creating User..." %}';
         loadingSpinner.classList.remove('d-none');
     });
 

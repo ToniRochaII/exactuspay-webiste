@@ -1,9 +1,10 @@
+{% load i18n %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ request.LANGUAGE_CODE|default:LANGUAGE_CODE|default:'en' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ExactusPay – Secure Login</title>
+    <title>{% trans "ExactusPay – Secure Login" %}</title>
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -32,11 +33,7 @@
         }
 
         /* ---------- RESET ---------- */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: "Inter", sans-serif;
@@ -94,19 +91,6 @@
             display: flex;
             align-items: center;
             margin-bottom: 2rem;
-        }
-
-        .brand-logo {
-            width: 55px;
-            height: 55px;
-            border-radius: 10px;
-            background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(8px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1.3rem;
         }
 
         .brand-text {
@@ -176,9 +160,7 @@
             margin-bottom: 2rem;
         }
 
-        .form-group {
-            margin-bottom: 1.4rem;
-        }
+        .form-group { margin-bottom: 1.4rem; }
 
         .form-label {
             display: block;
@@ -188,9 +170,7 @@
             font-size: 0.95rem;
         }
 
-        .input-wrapper {
-            position: relative;
-        }
+        .input-wrapper { position: relative; }
 
         .form-input {
             width: 100%;
@@ -228,9 +208,7 @@
             transition: var(--transition);
         }
 
-        .password-toggle:hover {
-            color: var(--primary);
-        }
+        .password-toggle:hover { color: var(--primary); }
 
         .form-options {
             display: flex;
@@ -245,9 +223,7 @@
             gap: 0.5rem;
         }
 
-        .remember-me input {
-            accent-color: var(--primary);
-        }
+        .remember-me input { accent-color: var(--primary); }
 
         .remember-me label {
             color: var(--gray-700);
@@ -261,9 +237,7 @@
             transition: var(--transition);
         }
 
-        .forgot-password:hover {
-            text-decoration: underline;
-        }
+        .forgot-password:hover { text-decoration: underline; }
 
         .btn-primary {
             width: 100%;
@@ -285,9 +259,7 @@
             box-shadow: 0 5px 15px rgba(0, 102, 204, 0.3);
         }
 
-        .btn-primary:active {
-            transform: translateY(0);
-        }
+        .btn-primary:active { transform: translateY(0); }
 
         .error-box {
             background: #ffe5e5;
@@ -309,29 +281,8 @@
             font-size: 0.9rem;
         }
 
-        .security-notice {
-            background: var(--primary-light);
-            padding: 12px 16px;
-            border-radius: var(--radius);
-            color: var(--primary-dark);
-            margin-top: 1.5rem;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: flex-start;
-            gap: 0.75rem;
-            border-left: 4px solid var(--primary);
-        }
-
-        .security-notice i {
-            margin-top: 0.1rem;
-        }
-
         /* Loading state */
-        .btn-loading {
-            position: relative;
-            color: transparent;
-        }
-
+        .btn-loading { position: relative; color: transparent; }
         .btn-loading::after {
             content: '';
             position: absolute;
@@ -347,59 +298,36 @@
             animation: spin 1s linear infinite;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         @media (max-width: 850px) {
-            .login-container {
-                flex-direction: column;
-                max-width: 480px;
-            }
-
-            .login-hero {
-                text-align: center;
-                padding: 2rem;
-            }
-
-            .login-form-section {
-                padding: 2rem;
-            }
-
-            .hero-content p,
-            .features li {
-                justify-content: center;
-            }
-
-            .form-options {
-                flex-direction: column;
-                gap: 1rem;
-                align-items: flex-start;
-            }
+            .login-container { flex-direction: column; max-width: 480px; }
+            .login-hero { text-align: center; padding: 2rem; }
+            .login-form-section { padding: 2rem; }
+            .hero-content p, .features li { justify-content: center; }
+            .form-options { flex-direction: column; gap: 1rem; align-items: flex-start; }
         }
     </style>
 </head>
 
 <body>
-
     <div class="login-container">
 
         <!-- HERO -->
         <div class="login-hero">
             <div class="brand">
-                <div class="brand-logo">EP</div>
-                <div class="brand-text">ExactusPay</div>
+                <div class="brand-text">{% trans "ExactusPay" %}</div>
             </div>
 
             <div class="hero-content">
-                <h1>Welcome Back</h1>
-                <p>Sign in to your global payroll dashboard and manage your workforce efficiently.</p>
+                <h1>{% trans "Welcome Back" %}</h1>
+                <p>{% trans "Sign in to your global payroll dashboard and manage your workforce efficiently." %}</p>
 
                 <ul class="features">
-                    <li><i class="fas fa-shield-alt"></i>Enterprise-grade security</li>
-                    <li><i class="fas fa-globe"></i>Global compliance</li>
-                    <li><i class="fas fa-chart-line"></i>Real-time analytics</li>
-                    <li><i class="fas fa-headset"></i>24/7 dedicated support</li>
+                    <li><i class="fas fa-shield-alt"></i>{% trans "Enterprise-grade security" %}</li>
+                    <li><i class="fas fa-globe"></i>{% trans "Global compliance" %}</li>
+                    <li><i class="fas fa-chart-line"></i>{% trans "Real-time analytics" %}</li>
+                    <li><i class="fas fa-headset"></i>{% trans "24/7 dedicated support" %}</li>
                 </ul>
             </div>
         </div>
@@ -407,51 +335,62 @@
         <!-- LOGIN FORM -->
         <div class="login-form-section">
             <div class="form-header">
-                <h2>Sign In</h2>
-                <p>Use your credentials to continue</p>
+                <h2>{% trans "Sign In" %}</h2>
+                <p>{% trans "Use your credentials to continue" %}</p>
             </div>
 
             <form method="POST" novalidate id="loginForm">
                 {% csrf_token %}
 
                 {% if form.errors %}
-                <div class="error-box">
-                    <i class="fas fa-exclamation-circle"></i>
-                    Invalid username or password. Please try again.
-                </div>
+                    <div class="error-box">
+                        <i class="fas fa-exclamation-circle"></i>
+                        {% trans "Invalid username or password. Please try again." %}
+                    </div>
                 {% endif %}
 
                 {% if messages %}
                     {% for message in messages %}
                         {% if message.tags == 'success' %}
-                        <div class="success-message">
-                            <i class="fas fa-check-circle"></i>
-                            {{ message }}
-                        </div>
+                            <div class="success-message">
+                                <i class="fas fa-check-circle"></i>
+                                {{ message }}
+                            </div>
                         {% endif %}
                     {% endfor %}
                 {% endif %}
 
                 <!-- USERNAME -->
                 <div class="form-group">
-                    <label for="id_username" class="form-label">Username</label>
+                    <label for="id_username" class="form-label">{% trans "Username" %}</label>
                     <div class="input-wrapper">
-                        <i class="fas fa-user input-icon"></i>
-                        <input type="text" name="username" id="id_username" class="form-input" 
-                               placeholder="Enter your username" required autofocus
+                        <i class="fas fa-user input-icon" aria-hidden="true"></i>
+                        <input type="text"
+                               name="username"
+                               id="id_username"
+                               class="form-input"
+                               placeholder="{% trans 'Enter your username' %}"
+                               required autofocus
                                value="{{ form.username.value|default:'' }}">
                     </div>
                 </div>
 
                 <!-- PASSWORD -->
                 <div class="form-group">
-                    <label for="id_password" class="form-label">Password</label>
+                    <label for="id_password" class="form-label">{% trans "Password" %}</label>
                     <div class="input-wrapper">
-                        <i class="fas fa-lock input-icon"></i>
-                        <input type="password" name="password" id="id_password" class="form-input" 
-                               placeholder="Enter your password" required>
-                        <button type="button" class="password-toggle" id="passwordToggle">
-                            <i class="fas fa-eye"></i>
+                        <i class="fas fa-lock input-icon" aria-hidden="true"></i>
+                        <input type="password"
+                               name="password"
+                               id="id_password"
+                               class="form-input"
+                               placeholder="{% trans 'Enter your password' %}"
+                               required>
+                        <button type="button"
+                                class="password-toggle"
+                                id="passwordToggle"
+                                aria-label="{% trans 'Toggle password visibility' %}">
+                            <i class="fas fa-eye" aria-hidden="true"></i>
                         </button>
                     </div>
                 </div>
@@ -460,34 +399,33 @@
                 <div class="form-options">
                     <div class="remember-me">
                         <input type="checkbox" name="remember_me" id="remember_me">
-                        <label for="remember_me">Remember me</label>
+                        <label for="remember_me">{% trans "Remember me" %}</label>
                     </div>
-                    <a href="{% url 'password_reset' %}" class="forgot-password">Forgot password?</a>
+                    <a href="{% url 'password_reset' %}" class="forgot-password">{% trans "Forgot password?" %}</a>
                 </div>
 
                 <!-- SUBMIT -->
-                <button type="submit" class="btn-primary" id="loginBtn">Sign In</button>
+                <button type="submit" class="btn-primary" id="loginBtn">{% trans "Sign In" %}</button>
             </form>
         </div>
     </div>
 
     <script>
-        // Password visibility toggle
         document.getElementById('passwordToggle').addEventListener('click', function() {
             const passwordInput = document.getElementById('id_password');
             const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordInput.setAttribute('type', type);
-            this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+            this.innerHTML = type === 'password'
+                ? '<i class="fas fa-eye"></i>'
+                : '<i class="fas fa-eye-slash"></i>';
         });
 
-        // Form submission loading state
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        document.getElementById('loginForm').addEventListener('submit', function() {
             const loginBtn = document.getElementById('loginBtn');
             loginBtn.classList.add('btn-loading');
             loginBtn.disabled = true;
         });
 
-        // Auto-remove messages after 5 seconds
         setTimeout(() => {
             const messages = document.querySelectorAll('.error-box, .success-message');
             messages.forEach(message => {
@@ -497,10 +435,5 @@
             });
         }, 5000);
     </script>
-
 </body>
 </html>
-
-
-
-

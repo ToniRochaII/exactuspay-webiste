@@ -66,12 +66,14 @@ class Element(models.Model):
         )
     
     CALCBASETYPE_CHOICES = [
-        ('Bracketable', 'Bracketable'),
-        ('Prorational', 'Prorational'),
-        ('Pension', 'Pension'),
-        ('Formulae', 'Formulae'),
-        ('Base', 'Base'),
+        ("Bracketable", "Bracketable"),
+        ("Prorational", "Prorational"),
+        ("Formulae", "Formulae"),
+        ("Base", "Base"),
+        ("Accrual", "Accrual"),
+        ("Flat", "Flat"),
     ]
+    
     element_categorytype = models.CharField(max_length=50, choices=CALCBASETYPE_CHOICES, blank=True, null=True)
 
     slug = models.SlugField(max_length=100, unique=True, blank=True)

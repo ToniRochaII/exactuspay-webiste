@@ -1,11 +1,14 @@
 {% extends "base.html" %}
 {% load static %}
+{% load i18n %}
 {% load pdcodes_role_filters %}
 
-{% block title %}Add PDcode — {{ company.trade_name }} | ExactusPay{% endblock %}
+{% block title %}
+  {% blocktrans with company_name=company.trade_name %}Add PDcode — {{ company_name }} | ExactusPay{% endblocktrans %}
+{% endblock %}
 
 {% block page_title %}
-<i class="fas fa-plus-circle me-2"></i>Add PDcode
+  <i class="fas fa-plus-circle me-2"></i>{% trans "Add PDcode" %}
 {% endblock %}
 
 {% block extra_head %}
@@ -13,317 +16,309 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
 
 <style>
-    /* --- GOLD STANDARD FORM CSS --- */
-    
-    /* Global Background */
-    body { background-color: #F4F4F4 !important; }
-    .wrapper:before { background: #F4F4F4 !important; }
-    :root { --card-radius: 16px; --input-radius: 10px; --border-color: #f0f0f0; }
+  body { background-color: #F4F4F4 !important; }
+  .wrapper:before { background: #F4F4F4 !important; }
+  :root { --card-radius: 16px; --input-radius: 10px; --border-color: #f0f0f0; }
 
-    /* ExactusPay Standard Card Styling */
-    .card-hover-effect {
-        border-radius: var(--card-radius);
-        border: none;
-        transition: transform 0.25s ease, box-shadow 0.25s ease;
-        overflow: hidden;
-    }
-    .card-hover-effect:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
-    }
-    .card-header {
-        background-color: #fff;
-        border-bottom: 1px solid #f0f0f0;
-    }
+  .card-hover-effect{
+    border-radius: var(--card-radius);
+    border: none;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    overflow: hidden;
+  }
+  .card-hover-effect:hover{
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
+  }
+  .card-header{
+    background-color: #fff;
+    border-bottom: 1px solid #f0f0f0;
+  }
 
-    /* --- UNIFIED INPUT STYLING (Standard Inputs + Selects) --- */
-    .form-control, 
-    .form-select {
-        border-radius: var(--input-radius) !important;
-        font-size: 1rem !important;
-        border: 1px solid #ced4da;
-        padding-top: 1.625rem; /* Space for floating label */
-        padding-bottom: 0.625rem;
-        height: 58px;
-    }
+  .form-control, .form-select{
+    border-radius: var(--input-radius) !important;
+    font-size: 1rem !important;
+    border: 1px solid #ced4da;
+    padding-top: 1.625rem;
+    padding-bottom: 0.625rem;
+    height: 58px;
+  }
 
-    /* --- SELECT2 STYLING TO MATCH --- */
-    .select2-container .select2-selection--single {
-        height: 58px !important; 
-        border-radius: var(--input-radius) !important;
-        border: 1px solid #ced4da;
-        display: flex;
-        align-items: center; 
-    }
+  .select2-container .select2-selection--single{
+    height: 58px !important;
+    border-radius: var(--input-radius) !important;
+    border: 1px solid #ced4da;
+    display: flex;
+    align-items: center;
+  }
+  .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered{
+    margin-top: 16px !important;
+    margin-left: 2px;
+    color: #212529;
+    font-size: 1rem !important;
+    font-weight: 400;
+  }
+  .select2-container--bootstrap-5 .select2-selection__arrow{
+    top: 50% !important;
+    transform: translateY(-50%);
+    right: 15px !important;
+  }
 
-    .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
-        margin-top: 16px !important; 
-        margin-left: 2px;
-        color: #212529;
-        font-size: 1rem !important; 
-        font-weight: 400;
-    }
+  .form-floating > .select2-container{ padding-top: 0; }
+  .form-floating > label{ padding-left: 14px; }
 
-    .select2-container--bootstrap-5 .select2-selection__arrow {
-        top: 50% !important;
-        transform: translateY(-50%);
-        right: 15px !important;
-    }
-    
-    /* Fix Label Position */
-    .form-floating > .select2-container {
-        padding-top: 0;
-    }
-    .form-floating > label {
-        padding-left: 14px;
-    }
-
-    /* --- CUSTOM SWITCH CARDS (Taxation) --- */
-    .switch-card {
-        border: 1px solid #ced4da;
-        border-radius: var(--input-radius);
-        padding: 12px 16px;
-        background-color: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        min-height: 58px;
-    }
-    .form-switch .form-check-input {
-        width: 3em;
-        height: 1.5em;
-        cursor: pointer;
-    }
+  .switch-card{
+    border: 1px solid #ced4da;
+    border-radius: var(--input-radius);
+    padding: 12px 16px;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 58px;
+  }
+  .form-switch .form-check-input{
+    width: 3em;
+    height: 1.5em;
+    cursor: pointer;
+  }
 </style>
 {% endblock %}
 
 {% block breadcrumbs %}
-<nav aria-label="breadcrumb">
+<nav aria-label="{% trans 'breadcrumb' %}">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'companies:company' country_slug %}">Companies</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'pdcodes:pdcodes' country_slug company.company_id %}">PDcodes — {{ company.trade_name }}</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Add PDcode</li>
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'companies:company' country_slug %}">{% trans "Companies" %}</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'pdcodes:pdcodes' country_slug company.company_id %}">
+        {% blocktrans with company_name=company.trade_name %}PDcodes — {{ company_name }}{% endblocktrans %}
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">{% trans "Add PDcode" %}</li>
   </ol>
 </nav>
 {% endblock %}
 
 {% block content %}
 <div class="row">
-    <div class="col-12">
-        
-        <div class="card card-hover-effect shadow-sm">
-            <div class="card-header pt-4 px-4 pb-3">
-                <h5 class="card-title mb-0">
-                    <i class="fas fa-plus-circle me-2 text-primary"></i>Add New PDcode
-                </h5>
-                <h6 class="card-subtitle text-muted mt-1">
-                    Configure payroll, deduction, and tax codes for {{ company.trade_name }}.
-                </h6>
+  <div class="col-12">
+
+    <div class="card card-hover-effect shadow-sm">
+      <div class="card-header pt-4 px-4 pb-3">
+        <h5 class="card-title mb-0">
+          <i class="fas fa-plus-circle me-2 text-primary"></i>{% trans "Add New PDcode" %}
+        </h5>
+        <h6 class="card-subtitle text-muted mt-1">
+          {% blocktrans with company_name=company.trade_name %}Configure payroll, deduction, and tax codes for {{ company_name }}.{% endblocktrans %}
+        </h6>
+      </div>
+
+      <div class="card-body p-4">
+
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-3 mb-4" role="alert">
+              <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %} me-2"></i>
+              {{ message }}
+              <button class="btn-close" data-bs-dismiss="alert" aria-label="{% trans 'Close' %}"></button>
+            </div>
+          {% endfor %}
+        {% endif %}
+
+        <form method="post" novalidate id="pdcode-form">
+          {% csrf_token %}
+
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger rounded-3">
+              {{ form.non_field_errors }}
+            </div>
+          {% endif %}
+
+          <h6 class="text-uppercase text-muted mb-3 fw-bold small ls-1">
+            <i class="fas fa-info-circle me-2"></i>{% trans "PDcode Details" %}
+          </h6>
+
+          <div class="row g-3 mb-4">
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.pdcode_code }}
+                <label for="{{ form.pdcode_code.id_for_label }}">{% trans "PDcode Code" %} *</label>
+              </div>
+              {% if form.pdcode_code.errors %}
+                <div class="text-danger small mt-1">{{ form.pdcode_code.errors.0 }}</div>
+              {% endif %}
             </div>
 
-            <div class="card-body p-4">
-
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-3 mb-4">
-                            <i class="fas {% if message.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %} me-2"></i>
-                            {{ message }}
-                            <button class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-
-                <form method="post" novalidate id="pdcode-form">
-                    {% csrf_token %}
-                    
-                    {% if form.non_field_errors %}
-                        <div class="alert alert-danger rounded-3">
-                            {{ form.non_field_errors }}
-                        </div>
-                    {% endif %}
-
-                    <h6 class="text-uppercase text-muted mb-3 fw-bold small ls-1">
-                        <i class="fas fa-info-circle me-2"></i>PDcode Details
-                    </h6>
-
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-4">
-                            <div class="form-floating">
-                                {{ form.pdcode_code }}
-                                <label for="{{ form.pdcode_code.id_for_label }}">PDcode Code *</label>
-                            </div>
-                            {% if form.pdcode_code.errors %}
-                                <div class="text-danger small mt-1">{{ form.pdcode_code.errors.0 }}</div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-floating">
-                                {{ form.pdcode_name }}
-                                <label for="{{ form.pdcode_name.id_for_label }}">PDcode Name *</label>
-                            </div>
-                            {% if form.pdcode_name.errors %}
-                                <div class="text-danger small mt-1">{{ form.pdcode_name.errors.0 }}</div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-floating">
-                                {{ form.pdcode_description }}
-                                <label for="{{ form.pdcode_description.id_for_label }}">Description</label>
-                            </div>
-                            <div class="d-flex justify-content-between mt-1 px-1">
-                                <small class="text-muted">Optional</small>
-                                <small id="description-counter" class="text-muted">0/150</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr class="text-muted opacity-25">
-
-                    <h6 class="text-uppercase text-muted my-3 fw-bold small ls-1">
-                        <i class="fas fa-tags me-2"></i>Classification
-                    </h6>
-
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-4">
-                            <div class="form-floating">
-                                {{ form.pdcode_status }}
-                                <label for="{{ form.pdcode_status.id_for_label }}">Status *</label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-floating">
-                                {{ form.pdcode_frequency }}
-                                <label for="{{ form.pdcode_frequency.id_for_label }}">Frequency *</label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-floating">
-                                {{ form.pdcode_type }}
-                                <label for="{{ form.pdcode_type.id_for_label }}">Type *</label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-floating">
-                                {{ form.pdcode_class }}
-                                <label for="{{ form.pdcode_class.id_for_label }}">Class *</label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-floating">
-                                {{ form.pdcode_category }}
-                                <label for="{{ form.pdcode_category.id_for_label }}">Category</label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-floating">
-                                {{ form.pdcode_categorytype }}
-                                <label for="{{ form.pdcode_categorytype.id_for_label }}">Category Type</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr class="text-muted opacity-25">
-
-                    <h6 class="text-uppercase text-muted my-3 fw-bold small ls-1">
-                        <i class="fas fa-book me-2"></i>Accounting
-                    </h6>
-
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-4">
-                            <div class="form-floating">
-                                {{ form.pdcode_account }}
-                                <label for="{{ form.pdcode_account.id_for_label }}">Account</label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-floating">
-                                {{ form.pdcode_map_code }}
-                                <label for="{{ form.pdcode_map_code.id_for_label }}">Map Code</label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-floating">
-                                {{ form.pdcode_gl_account }}
-                                <label for="{{ form.pdcode_gl_account.id_for_label }}">GL Account</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr class="text-muted opacity-25">
-
-                    <h6 class="text-uppercase text-muted my-3 fw-bold small ls-1">
-                        <i class="fas fa-shield-alt me-2"></i>Taxation Settings
-                    </h6>
-
-                    <div class="row g-3 mb-4">
-                        {% for field in form %}
-                            {% if field.name|slice:":11" == 'pdcode_tax' or field.name == 'pdcode_social_securitable' or field.name == 'pdcode_pensionable' or field.name == 'pdcode_payable' or field.name == 'pdcode_calculate' %}
-                            <div class="col-md-3 col-6">
-                                <div class="switch-card">
-                                    <div>
-                                        <h6 class="fw-semibold mb-0 text-dark" style="font-size: 0.9rem;">{{ field.label }}</h6>
-                                    </div>
-                                    <div class="form-check form-switch ms-2 mb-0">
-                                        {{ field }}
-                                        <label class="form-check-label" for="{{ field.id_for_label }}"></label>
-                                    </div>
-                                </div>
-                            </div>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-
-                    {% if form.applicable_bases.field.queryset.exists %}
-                    <div class="mt-4">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h6 class="text-uppercase text-primary fw-bold small ls-1 mb-0">
-                                <i class="fas fa-layer-group me-2"></i>Additional Bases
-                            </h6>
-                            <button type="button" class="btn btn-sm btn-outline-primary" id="select-all-bases">
-                                Select All
-                            </button>
-                        </div>
-                        
-                        <div class="row g-3">
-                          {% for checkbox in form.applicable_bases %}
-                          <div class="col-md-3 col-6">
-                            <div class="switch-card">
-                                <div>
-                                    <h6 class="fw-semibold mb-0 text-dark" style="font-size: 0.9rem;">{{ checkbox.choice_label }}</h6>
-                                </div>
-                                <div class="form-check form-switch ms-2 mb-0">
-                                    {{ checkbox.tag }}
-                                </div>
-                            </div>
-                          </div>
-                          {% endfor %}
-                        </div>
-                    </div>
-                    {% endif %}
-
-                    <div class="d-flex justify-content-end align-items-center mt-5 pt-3 border-top">
-                        <a href="{% url 'pdcodes:pdcodes' country_slug company.company_id %}" class="btn btn-danger me-2">
-                            Cancel
-                        </a>
-                        <button class="btn btn-primary px-4" id="submit-btn" type="submit">
-                            Save
-                        </button>
-                    </div>
-
-                </form>
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.pdcode_name }}
+                <label for="{{ form.pdcode_name.id_for_label }}">{% trans "PDcode Name" %} *</label>
+              </div>
+              {% if form.pdcode_name.errors %}
+                <div class="text-danger small mt-1">{{ form.pdcode_name.errors.0 }}</div>
+              {% endif %}
             </div>
-        </div>
+
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.pdcode_description }}
+                <label for="{{ form.pdcode_description.id_for_label }}">{% trans "Description" %}</label>
+              </div>
+              <div class="d-flex justify-content-between mt-1 px-1">
+                <small class="text-muted">{% trans "Optional" %}</small>
+                <small id="description-counter" class="text-muted">0/150</small>
+              </div>
+            </div>
+          </div>
+
+          <hr class="text-muted opacity-25">
+
+          <h6 class="text-uppercase text-muted my-3 fw-bold small ls-1">
+            <i class="fas fa-tags me-2"></i>{% trans "Classification" %}
+          </h6>
+
+          <div class="row g-3 mb-4">
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.pdcode_status }}
+                <label for="{{ form.pdcode_status.id_for_label }}">{% trans "Status" %} *</label>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.pdcode_frequency }}
+                <label for="{{ form.pdcode_frequency.id_for_label }}">{% trans "Frequency" %} *</label>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.pdcode_type }}
+                <label for="{{ form.pdcode_type.id_for_label }}">{% trans "Type" %} *</label>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.pdcode_class }}
+                <label for="{{ form.pdcode_class.id_for_label }}">{% trans "Class" %} *</label>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.pdcode_category }}
+                <label for="{{ form.pdcode_category.id_for_label }}">{% trans "Category" %}</label>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.pdcode_categorytype }}
+                <label for="{{ form.pdcode_categorytype.id_for_label }}">{% trans "Category Type" %}</label>
+              </div>
+            </div>
+          </div>
+
+          <hr class="text-muted opacity-25">
+
+          <h6 class="text-uppercase text-muted my-3 fw-bold small ls-1">
+            <i class="fas fa-book me-2"></i>{% trans "Accounting" %}
+          </h6>
+
+          <div class="row g-3 mb-4">
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.pdcode_account }}
+                <label for="{{ form.pdcode_account.id_for_label }}">{% trans "Account" %}</label>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.pdcode_map_code }}
+                <label for="{{ form.pdcode_map_code.id_for_label }}">{% trans "Map Code" %}</label>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.pdcode_gl_account }}
+                <label for="{{ form.pdcode_gl_account.id_for_label }}">{% trans "GL Account" %}</label>
+              </div>
+            </div>
+          </div>
+
+          <hr class="text-muted opacity-25">
+
+          <h6 class="text-uppercase text-muted my-3 fw-bold small ls-1">
+            <i class="fas fa-shield-alt me-2"></i>{% trans "Taxation Settings" %}
+          </h6>
+
+          <div class="row g-3 mb-4">
+            {% for field in form %}
+              {% if field.name|slice:":11" == 'pdcode_tax' or field.name == 'pdcode_social_securitable' or field.name == 'pdcode_pensionable' or field.name == 'pdcode_payable' or field.name == 'pdcode_calculate' %}
+                <div class="col-md-3 col-6">
+                  <div class="switch-card">
+                    <div>
+                      <h6 class="fw-semibold mb-0 text-dark" style="font-size: 0.9rem;">{{ field.label }}</h6>
+                    </div>
+                    <div class="form-check form-switch ms-2 mb-0">
+                      {{ field }}
+                      <label class="form-check-label" for="{{ field.id_for_label }}"></label>
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+
+          {% if form.applicable_bases.field.queryset.exists %}
+          <div class="mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h6 class="text-uppercase text-primary fw-bold small ls-1 mb-0">
+                <i class="fas fa-layer-group me-2"></i>{% trans "Additional Bases" %}
+              </h6>
+              <button type="button" class="btn btn-sm btn-outline-primary" id="select-all-bases">
+                {% trans "Select All" %}
+              </button>
+            </div>
+
+            <div class="row g-3">
+              {% for checkbox in form.applicable_bases %}
+              <div class="col-md-3 col-6">
+                <div class="switch-card">
+                  <div>
+                    <h6 class="fw-semibold mb-0 text-dark" style="font-size: 0.9rem;">{{ checkbox.choice_label }}</h6>
+                  </div>
+                  <div class="form-check form-switch ms-2 mb-0">
+                    {{ checkbox.tag }}
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+
+          <div class="d-flex justify-content-end align-items-center mt-5 pt-3 border-top">
+            <a href="{% url 'pdcodes:pdcodes' country_slug company.company_id %}" class="btn btn-danger me-2">
+              {% trans "Cancel" %}
+            </a>
+            <button class="btn btn-primary px-4" id="submit-btn" type="submit">
+              {% trans "Save" %}
+            </button>
+          </div>
+
+        </form>
+      </div>
     </div>
+
+  </div>
 </div>
 {% endblock %}
 
@@ -331,48 +326,59 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
+  // i18n strings used inside JS
+  const I18N_SAVING = "{% trans 'Saving...' %}";
+  const I18N_SELECT_ALL = "{% trans 'Select All' %}";
+  const I18N_DESELECT_ALL = "{% trans 'Deselect All' %}";
+</script>
+
+<script>
 document.addEventListener("DOMContentLoaded", function () {
-    
-    // 1. Initialize Select2
+
+  // 1) Select2 (safe)
+  if (window.jQuery) {
     $("select").select2({
-        theme: "bootstrap-5",
-        width: '100%',
-        dropdownParent: $('body')
+      theme: "bootstrap-5",
+      width: '100%',
+      dropdownParent: $('body')
     });
+  }
 
-    // 2. Character Counter
-    const descriptionField = document.getElementById('{{ form.pdcode_description.id_for_label }}');
-    const counter = document.getElementById('description-counter');
-    
-    if (descriptionField && counter) {
-        descriptionField.addEventListener('input', function() {
-            const length = this.value.length;
-            counter.textContent = `${length}/150`;
-            counter.classList.toggle('text-danger', length > 150);
-        });
-    }
+  // 2) Character Counter
+  const descriptionField = document.getElementById('{{ form.pdcode_description.id_for_label }}');
+  const counter = document.getElementById('description-counter');
 
-    // 3. Select All Logic for Bases
-    const selectAllBtn = document.getElementById('select-all-bases');
-    if (selectAllBtn) {
-        selectAllBtn.addEventListener('click', function() {
-            const checkboxes = document.querySelectorAll('input[name="applicable_bases"]');
-            const allChecked = Array.from(checkboxes).every(cb => cb.checked);
-            
-            checkboxes.forEach(cb => { cb.checked = !allChecked; });
-            this.textContent = allChecked ? 'Select All' : 'Deselect All';
-        });
-    }
+  if (descriptionField && counter) {
+    const updateCount = () => {
+      const length = (descriptionField.value || '').length;
+      counter.textContent = `${length}/150`;
+      counter.classList.toggle('text-danger', length > 150);
+    };
+    descriptionField.addEventListener('input', updateCount);
+    updateCount();
+  }
 
-    // 4. Submit Loading State
-    const form = document.getElementById('pdcode-form');
-    form.addEventListener('submit', function(e) {
-        const btn = document.getElementById('submit-btn');
-        if(form.checkValidity()) {
-            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
-            btn.disabled = true;
-        }
+  // 3) Select All Logic for Bases (with i18n)
+  const selectAllBtn = document.getElementById('select-all-bases');
+  if (selectAllBtn) {
+    selectAllBtn.addEventListener('click', function() {
+      const checkboxes = document.querySelectorAll('input[name="applicable_bases"]');
+      const allChecked = Array.from(checkboxes).length > 0 && Array.from(checkboxes).every(cb => cb.checked);
+
+      checkboxes.forEach(cb => { cb.checked = !allChecked; });
+      this.textContent = allChecked ? I18N_SELECT_ALL : I18N_DESELECT_ALL;
     });
+  }
+
+  // 4) Submit Loading State
+  const form = document.getElementById('pdcode-form');
+  form.addEventListener('submit', function() {
+    const btn = document.getElementById('submit-btn');
+    if (form.checkValidity()) {
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>' + I18N_SAVING;
+      btn.disabled = true;
+    }
+  });
 
 });
 </script>

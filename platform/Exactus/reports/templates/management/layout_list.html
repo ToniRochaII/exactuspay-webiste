@@ -1,39 +1,213 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Report Layouts" %} | ExactusPay{% endblock %}
+
+{% block page_title %}
+<i class="bi bi-file-earmark-code me-2"></i>{% trans "Report Layouts" %}
+{% endblock %}
+
+{% block extra_head %}
+<style>
+  body { background-color: #F4F4F4 !important; }
+  .wrapper:before { background: #F4F4F4 !important; }
+
+  :root{
+    --card-radius: 16px;
+    --border-color: #f0f0f0;
+  }
+
+  .card-hover-effect{
+    border-radius: var(--card-radius);
+    border: none;
+    overflow: hidden;
+    transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .card-hover-effect:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0,0,0,.08) !important;
+  }
+
+  .card-header{
+    background: #fff;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  /* Table polish */
+  .table thead th{
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+  .table td{
+    vertical-align: middle;
+  }
+  .truncate{
+    max-width: 380px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .btn-pill{
+    border-radius: 999px;
+    font-weight: 700;
+    padding: .55rem 1rem;
+  }
+
+  .badge-soft{
+    background: rgba(13,110,253,.08);
+    color: #0d6efd;
+    border: 1px solid rgba(13,110,253,.15);
+  }
+
+  .empty-state{
+    padding: 3rem 1rem;
+    text-align: center;
+    background: #fff;
+  }
+  .empty-state i{
+    font-size: 3rem;
+    opacity: .25;
+  }
+
+  .action-icons a{
+    text-decoration: none;
+  }
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'reports:report_manage_hub' %}">{% trans "Reports Hub" %}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      {% trans "Layouts" %}
+    </li>
+  </ol>
+</nav>
+{% endblock %}
+
 {% block content %}
-<div class="container-fluid p-0">
-    <div class="d-flex justify-content-between mb-3">
-        <h1 class="h3">Report Layouts</h1>
-        <div>
-            <a href="{% url 'reports:report_manage_hub' %}" class="btn btn-secondary me-2">Back to Hub</a>
-            <a href="{% url 'reports:manage_layouts_add' %}" class="btn btn-success"><i class="fas fa-upload"></i> Upload Layout</a>
+<div class="row">
+  <div class="col-12">
+
+    <div class="card card-hover-effect shadow-sm">
+      <div class="card-header pt-4 px-4 pb-3">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+          <div>
+            <h5 class="card-title mb-0">
+              <i class="bi bi-file-earmark-code me-2 text-success"></i>{% trans "Report Layouts" %}
+            </h5>
+            <h6 class="card-subtitle text-muted mt-1">
+              {% trans "Upload, manage, and assign HTML templates used to render reports." %}
+            </h6>
+          </div>
+
+          <div class="d-flex gap-2">
+            <a href="{% url 'reports:report_manage_hub' %}" class="btn btn-outline-secondary btn-pill">
+              <i class="bi bi-arrow-left me-2"></i>{% trans "Back to Hub" %}
+            </a>
+            <a href="{% url 'reports:manage_layouts_add' %}" class="btn btn-success btn-pill">
+              <i class="bi bi-upload me-2"></i>{% trans "Upload Layout" %}
+            </a>
+          </div>
         </div>
-    </div>
-    <div class="card">
-        <table class="table table-striped mb-0">
-            <thead class="table-dark">
+      </div>
+
+      <div class="card-body p-0">
+        <div class="p-4">
+
+          <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+            <div class="text-muted small">
+              <i class="bi bi-info-circle me-1"></i>
+              {% trans "Each layout must be linked to a Report Type. Use rules to decide which layout applies." %}
+            </div>
+            <span class="badge badge-soft rounded-pill px-3 py-2">
+              {{ layouts|length|default:0 }} {% trans "Layouts" %}
+            </span>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-striped align-middle mb-0">
+              <thead class="table-light">
                 <tr>
-                    <th>Name</th>
-                    <th>Assigned Report Type</th>
-                    <th>Template File</th>
-                    <th>Actions</th>
+                  <th>{% trans "Name" %}</th>
+                  <th>{% trans "Assigned Report Type" %}</th>
+                  <th>{% trans "Template File" %}</th>
+                  <th class="text-end">{% trans "Actions" %}</th>
                 </tr>
-            </thead>
-            <tbody>
+              </thead>
+
+              <tbody>
                 {% for layout in layouts %}
                 <tr>
-                    <td>{{ layout.name }}</td>
-                    <td>{{ layout.report_type.name }}</td>
-                    <td><a href="{{ layout.template_file.url }}" target="_blank">View File</a></td>
-                    <td>
-                        <a href="{% url 'reports:manage_layouts_edit' layout.pk %}" class="btn btn-sm btn-warning">Edit</a>
-                        <a href="{% url 'reports:manage_layouts_delete' layout.pk %}" class="btn btn-sm btn-danger">Delete</a>
-                    </td>
+                  <td class="fw-bold text-dark">
+                    {{ layout.name }}
+                  </td>
+
+                  <td>
+                    <span class="badge rounded-pill bg-light text-dark border">
+                      {{ layout.report_type.name }}
+                    </span>
+                  </td>
+
+                  <td class="truncate">
+                    {% if layout.template_file %}
+                      <a href="{{ layout.template_file.url }}" target="_blank" rel="noopener"
+                         class="text-decoration-none">
+                        <i class="bi bi-box-arrow-up-right me-1"></i>{% trans "View File" %}
+                      </a>
+                      <div class="text-muted small truncate mt-1">
+                        {{ layout.template_file.name }}
+                      </div>
+                    {% else %}
+                      <span class="text-muted">—</span>
+                    {% endif %}
+                  </td>
+
+                  <td class="text-end">
+                    <div class="d-inline-flex gap-2 action-icons">
+                      <a href="{% url 'reports:manage_layouts_edit' layout.pk %}"
+                         class="btn btn-sm btn-outline-warning">
+                        <i class="bi bi-pencil-square me-1"></i>{% trans "Edit" %}
+                      </a>
+                      <a href="{% url 'reports:manage_layouts_delete' layout.pk %}"
+                         class="btn btn-sm btn-outline-danger"
+                         onclick="return confirm('{% trans "Delete this layout? This cannot be undone." %}');">
+                        <i class="bi bi-trash me-1"></i>{% trans "Delete" %}
+                      </a>
+                    </div>
+                  </td>
                 </tr>
                 {% empty %}
-                <tr><td colspan="4" class="text-center py-3">No layouts uploaded yet.</td></tr>
+                <tr>
+                  <td colspan="4" class="p-0">
+                    <div class="empty-state">
+                      <i class="bi bi-file-earmark-x d-block mb-2"></i>
+                      <h5 class="text-muted mb-1">{% trans "No layouts uploaded yet." %}</h5>
+                      <p class="text-muted small mb-3">
+                        {% trans "Upload an HTML layout to start rendering reports with your own template." %}
+                      </p>
+                      <a href="{% url 'reports:manage_layouts_add' %}" class="btn btn-success btn-pill">
+                        <i class="bi bi-upload me-2"></i>{% trans "Upload Layout" %}
+                      </a>
+                    </div>
+                  </td>
+                </tr>
                 {% endfor %}
-            </tbody>
-        </table>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
     </div>
+
+  </div>
 </div>
 {% endblock %}

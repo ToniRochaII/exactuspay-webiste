@@ -1,22 +1,25 @@
 {% extends "base.html" %}
 {% load static %}
+{% load i18n %}
 {% load crispy_forms_tags %}
 {% load company_filters %}
 {% load company_role_filters %}
 
+<link href="{% static 'css/modern.css' %}" rel="stylesheet">
+
 {% block title %}
   {% if company %}
-    Edit {{ country.iso2_code }} Company | ExactusPay
+    {% blocktrans with iso2=country.iso2_code %}Edit {{ iso2 }} Company | ExactusPay{% endblocktrans %}
   {% else %}
-    Create {{ country.iso2_code }} Company | ExactusPay
+    {% blocktrans with iso2=country.iso2_code %}Create {{ iso2 }} Company | ExactusPay{% endblocktrans %}
   {% endif %}
 {% endblock %}
 
 {% block page_title %}
   {% if company %}
-    <i class="fas fa-building me-2"></i>Edit Company
+    <i class="fas fa-building me-2"></i>{% trans "Edit Company" %}
   {% else %}
-    <i class="fas fa-plus-circle me-2"></i>Create Company
+    <i class="fas fa-plus-circle me-2"></i>{% trans "Create Company" %}
   {% endif %}
 {% endblock %}
 
@@ -106,13 +109,17 @@
 {% endblock %}
 
 {% block breadcrumbs %}
-<nav aria-label="breadcrumb">
+<nav aria-label="{% trans 'breadcrumb' %}">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'companies:company' country.slug %}">{{ country.name }} Companies</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'country:country' %}">{% trans "Countries" %}</a></li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'companies:company' country.slug %}">
+        {% blocktrans with name=country.name %}{{ name }} Companies{% endblocktrans %}
+      </a>
+    </li>
     <li class="breadcrumb-item active" aria-current="page">
-      {% if company %}Edit{% else %}Create{% endif %} Company
+      {% if company %}{% trans "Edit" %}{% else %}{% trans "Create" %}{% endif %} {% trans "Company" %}
     </li>
   </ol>
 </nav>
@@ -129,15 +136,21 @@
           <div>
             <h5 class="card-title mb-0">
               {% if company %}
-                <i class="fas fa-edit me-2 text-primary"></i>Edit Company
+                <i class="fas fa-edit me-2 text-primary"></i>{% trans "Edit Company" %}
               {% else %}
-                <i class="fas fa-plus-circle me-2 text-primary"></i>Create Company
+                <i class="fas fa-plus-circle me-2 text-primary"></i>{% trans "Create Company" %}
               {% endif %}
             </h5>
+
             <h6 class="card-subtitle text-muted mt-1">
-              {% if company %}{{ company.trade_name }}{% else %}New Company{% endif %} - {{ country.iso3_code }}
+              {% if company %}
+                {{ company.trade_name }} - {{ country.iso3_code }}
+              {% else %}
+                {% blocktrans with iso3=country.iso3_code %}New Company - {{ iso3 }}{% endblocktrans %}
+              {% endif %}
             </h6>
           </div>
+
           <span>
             {% if company and company.logo %}
               <img src="{{ company.logo.url }}"
@@ -151,43 +164,48 @@
         <ul class="nav nav-tabs" id="companyTabs" role="tablist">
           <li class="nav-item" role="presentation">
             <button class="nav-link active" id="company-tab" data-bs-toggle="tab" data-bs-target="#tab-company" type="button" role="tab">
-              Company
+              {% trans "Company" %}
             </button>
           </li>
 
           <li class="nav-item" role="presentation">
             <button class="nav-link" id="communication-tab" data-bs-toggle="tab" data-bs-target="#tab-communication" type="button" role="tab">
-              Communication
+              {% trans "Communication" %}
             </button>
           </li>
 
           <li class="nav-item" role="presentation">
             <button class="nav-link" id="taxation-tab" data-bs-toggle="tab" data-bs-target="#tab-taxation" type="button" role="tab">
-              Taxation
+              {% trans "Taxation" %}
             </button>
           </li>
 
           <li class="nav-item" role="presentation">
             <button class="nav-link" id="rti-tab" data-bs-toggle="tab" data-bs-target="#tab-rti" type="button" role="tab">
-              {% if country.iso2_code == "BR" %}Agent Settings{% else %}RTI Settings{% endif %}
+              {% if country.iso2_code == "BR" %}
+                {% trans "Agent Settings" %}
+              {% else %}
+                {% trans "RTI Settings" %}
+              {% endif %}
             </button>
           </li>
 
           <li class="nav-item" role="presentation">
             <button class="nav-link" id="banking-tab" data-bs-toggle="tab" data-bs-target="#tab-banking" type="button" role="tab">
-              Banking
+              {% trans "Banking" %}
             </button>
           </li>
 
           <li class="nav-item" role="presentation">
             <button class="nav-link" id="account-tab" data-bs-toggle="tab" data-bs-target="#tab-account" type="button" role="tab">
-              Account Settings
+              {% trans "Account Settings" %}
             </button>
           </li>
         </ul>
       </div>
 
       <div class="card-body p-4">
+
         {% if form.non_field_errors %}
           <div class="alert alert-danger rounded-3 mb-4">{{ form.non_field_errors }}</div>
         {% endif %}
@@ -202,52 +220,51 @@
             <!-- TAB: COMPANY -->
             <!-- ===================================================== -->
             <div class="tab-pane fade show active" id="tab-company" role="tabpanel">
-              <h6 class="section-header"><i class="fas fa-info-circle me-2"></i>Core Details</h6>
-              <div class="row g-3">
+              <h6 class="section-header"><i class="fas fa-info-circle me-2"></i>{% trans "Core Details" %}</h6>
 
+              <div class="row g-3">
                 <div class="col-md-6">
                   <div class="form-floating">
                     <input type="text" class="form-control"
-                           value="{% if company %}{{ company.company_id }}{% else %}Auto-generated{% endif %}"
+                           value="{% if company %}{{ company.company_id }}{% else %}{% trans 'Auto-generated' %}{% endif %}"
                            readonly>
-                    <label>Company ID</label>
+                    <label>{% trans "Company ID" %}</label>
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-floating">
                     {{ form.company_code }}
-                    <label for="{{ form.company_code.id_for_label }}">Company Code</label>
+                    <label for="{{ form.company_code.id_for_label }}">{% trans "Company Code" %}</label>
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-floating">
                     {{ form.company_number }}
-                    <label for="{{ form.company_number.id_for_label }}">Company Number</label>
+                    <label for="{{ form.company_number.id_for_label }}">{% trans "Company Number" %}</label>
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-floating">
                     {{ form.trade_name }}
-                    <label for="{{ form.trade_name.id_for_label }}">Business Trade Name</label>
+                    <label for="{{ form.trade_name.id_for_label }}">{% trans "Business Trade Name" %}</label>
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-floating">
                     {{ form.legal_name }}
-                    <label for="{{ form.legal_name.id_for_label }}">Legal Trade Name</label>
+                    <label for="{{ form.legal_name.id_for_label }}">{% trans "Legal Trade Name" %}</label>
                   </div>
                 </div>
 
-                {# Optional: show country if your form provides it #}
                 {% if form.country %}
                 <div class="col-md-6">
                   <div class="form-floating">
                     {{ form.country }}
-                    <label for="{{ form.country.id_for_label }}">Country</label>
+                    <label for="{{ form.country.id_for_label }}">{% trans "Country" %}</label>
                   </div>
                 </div>
                 {% endif %}
@@ -258,204 +275,205 @@
             <!-- TAB: COMMUNICATION -->
             <!-- ===================================================== -->
             <div class="tab-pane fade" id="tab-communication" role="tabpanel">
-              <h6 class="section-header"><i class="fas fa-address-card me-2"></i>Contact Information</h6>
-              <div class="row g-3 mb-4">
+              <h6 class="section-header"><i class="fas fa-address-card me-2"></i>{% trans "Contact Information" %}</h6>
 
+              <div class="row g-3 mb-4">
                 <div class="col-md-6">
                   <div class="form-floating">
                     {{ form.contact }}
-                    <label for="{{ form.contact.id_for_label }}">Contact Person</label>
+                    <label for="{{ form.contact.id_for_label }}">{% trans "Contact Person" %}</label>
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-floating">
                     {{ form.phone }}
-                    <label for="{{ form.phone.id_for_label }}">Telephone</label>
+                    <label for="{{ form.phone.id_for_label }}">{% trans "Telephone" %}</label>
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-floating">
                     {{ form.email }}
-                    <label for="{{ form.email.id_for_label }}">Email</label>
+                    <label for="{{ form.email.id_for_label }}">{% trans "Email" %}</label>
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-floating">
                     {{ form.website }}
-                    <label for="{{ form.website.id_for_label }}">Website</label>
+                    <label for="{{ form.website.id_for_label }}">{% trans "Website" %}</label>
                   </div>
                 </div>
               </div>
 
               <hr class="text-muted opacity-25">
 
-              <h6 class="section-header mt-3"><i class="fas fa-map-marker-alt me-2"></i>Address</h6>
-              <div class="row g-3">
+              <h6 class="section-header mt-3"><i class="fas fa-map-marker-alt me-2"></i>{% trans "Address" %}</h6>
 
+              <div class="row g-3">
                 <div class="col-md-6">
                   <div class="form-floating">
                     {{ form.building_name }}
-                    <label for="{{ form.building_name.id_for_label }}">Building Name</label>
+                    <label for="{{ form.building_name.id_for_label }}">{% trans "Building Name" %}</label>
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-floating">
                     {{ form.road_name_1 }}
-                    <label for="{{ form.road_name_1.id_for_label }}">Road Name</label>
+                    <label for="{{ form.road_name_1.id_for_label }}">{% trans "Road Name" %}</label>
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-floating">
                     {{ form.road_name_2 }}
-                    <label for="{{ form.road_name_2.id_for_label }}">Road Name (Line 2)</label>
+                    <label for="{{ form.road_name_2.id_for_label }}">{% trans "Road Name (Line 2)" %}</label>
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-floating">
                     {{ form.town }}
-                    <label for="{{ form.town.id_for_label }}">Town/City</label>
+                    <label for="{{ form.town.id_for_label }}">{% trans "Town/City" %}</label>
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-floating">
                     {{ form.post_code }}
-                    <label for="{{ form.post_code.id_for_label }}">Post Code</label>
+                    <label for="{{ form.post_code.id_for_label }}">{% trans "Post Code" %}</label>
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-floating">
                     {{ form.county }}
-                    <label for="{{ form.county.id_for_label }}">County</label>
+                    <label for="{{ form.county.id_for_label }}">{% trans "County" %}</label>
                   </div>
                 </div>
               </div>
             </div>
 
             <!-- ===================================================== -->
-            <!-- TAB: TAXATION (country-aware, form-aware) -->
+            <!-- TAB: TAXATION -->
             <!-- ===================================================== -->
             <div class="tab-pane fade" id="tab-taxation" role="tabpanel">
 
               {% if country.iso2_code == "GB" %}
-                <h6 class="section-header"><i class="fas fa-landmark me-2"></i>HMRC Settings</h6>
+                <h6 class="section-header"><i class="fas fa-landmark me-2"></i>{% trans "HMRC Settings" %}</h6>
+
                 <div class="row g-3 mb-4">
                   <div class="col-md-6">
                     <div class="form-floating">
                       {{ form.tax_id_01 }}
-                      <label for="{{ form.tax_id_01.id_for_label }}">Employer PAYE Ref Office No.</label>
+                      <label for="{{ form.tax_id_01.id_for_label }}">{% trans "Employer PAYE Ref Office No." %}</label>
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-floating">
                       {{ form.tax_id_02 }}
-                      <label for="{{ form.tax_id_02.id_for_label }}">Employer PAYE Ref Number</label>
+                      <label for="{{ form.tax_id_02.id_for_label }}">{% trans "Employer PAYE Ref Number" %}</label>
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-floating">
                       {{ form.tax_id_03 }}
-                      <label for="{{ form.tax_id_03.id_for_label }}">Accounts Office Number</label>
+                      <label for="{{ form.tax_id_03.id_for_label }}">{% trans "Accounts Office Number" %}</label>
                     </div>
                   </div>
                 </div>
 
-                <h6 class="section-header"><i class="fas fa-list-ol me-2"></i>UTR & ECON</h6>
+                <h6 class="section-header"><i class="fas fa-list-ol me-2"></i>{% trans "UTR & ECON" %}</h6>
+
                 <div class="row g-3 mb-4">
                   <div class="col-md-6">
                     <div class="form-floating">
                       {{ form.tax_id_04 }}
-                      <label for="{{ form.tax_id_04.id_for_label }}">Company CT UTR</label>
+                      <label for="{{ form.tax_id_04.id_for_label }}">{% trans "Company CT UTR" %}</label>
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-floating">
                       {{ form.tax_id_05 }}
-                      <label for="{{ form.tax_id_05.id_for_label }}">SA UTR</label>
+                      <label for="{{ form.tax_id_05.id_for_label }}">{% trans "SA UTR" %}</label>
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-floating">
                       {{ form.tax_id_07 }}
-                      <label for="{{ form.tax_id_07.id_for_label }}">ECON Reference</label>
+                      <label for="{{ form.tax_id_07.id_for_label }}">{% trans "ECON Reference" %}</label>
                     </div>
                   </div>
                 </div>
 
-                <h6 class="section-header"><i class="fas fa-check-square me-2"></i>Statutory</h6>
+                <h6 class="section-header"><i class="fas fa-check-square me-2"></i>{% trans "Statutory" %}</h6>
+
                 <div class="row g-3">
                   <div class="col-md-6">
                     <div class="form-floating">
                       {{ form.tax_id_08 }}
-                      <label for="{{ form.tax_id_08.id_for_label }}">Small Employer Relief?</label>
+                      <label for="{{ form.tax_id_08.id_for_label }}">{% trans "Small Employer Relief?" %}</label>
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-floating">
                       {{ form.tax_id_09 }}
-                      <label for="{{ form.tax_id_09.id_for_label }}">Apprentice Levy Due?</label>
+                      <label for="{{ form.tax_id_09.id_for_label }}">{% trans "Apprentice Levy Due?" %}</label>
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-floating">
                       {{ form.tax_id_10 }}
-                      <label for="{{ form.tax_id_10.id_for_label }}">VAT Number</label>
+                      <label for="{{ form.tax_id_10.id_for_label }}">{% trans "VAT Number" %}</label>
                     </div>
                   </div>
                 </div>
 
               {% elif country.iso2_code == "BR" %}
-                <h6 class="section-header"><i class="fas fa-landmark me-2"></i>Receita Federal</h6>
+                <h6 class="section-header"><i class="fas fa-landmark me-2"></i>{% trans "Receita Federal" %}</h6>
 
-                {# BrazilCompanyForm uses proxy fields. Fallback to tax_id_* if proxies not present. #}
                 <div class="row g-3">
-
                   <div class="col-md-6">
                     <div class="form-floating">
                       {% if form.cnpj %}{{ form.cnpj }}{% else %}{{ form.tax_id_01 }}{% endif %}
-                      <label for="{% if form.cnpj %}{{ form.cnpj.id_for_label }}{% else %}{{ form.tax_id_01.id_for_label }}{% endif %}">CNPJ</label>
+                      <label for="{% if form.cnpj %}{{ form.cnpj.id_for_label }}{% else %}{{ form.tax_id_01.id_for_label }}{% endif %}">{% trans "CNPJ" %}</label>
                     </div>
                   </div>
 
                   <div class="col-md-6">
                     <div class="form-floating">
                       {% if form.registration_date %}{{ form.registration_date }}{% else %}{{ form.tax_id_02 }}{% endif %}
-                      <label for="{% if form.registration_date %}{{ form.registration_date.id_for_label }}{% else %}{{ form.tax_id_02.id_for_label }}{% endif %}">Registration Date</label>
+                      <label for="{% if form.registration_date %}{{ form.registration_date.id_for_label }}{% else %}{{ form.tax_id_02.id_for_label }}{% endif %}">{% trans "Registration Date" %}</label>
                     </div>
                   </div>
 
                   <div class="col-md-6">
                     <div class="form-floating">
                       {% if form.primary_cnae %}{{ form.primary_cnae }}{% else %}{{ form.tax_id_03 }}{% endif %}
-                      <label for="{% if form.primary_cnae %}{{ form.primary_cnae.id_for_label }}{% else %}{{ form.tax_id_03.id_for_label }}{% endif %}">CNAE (Primary)</label>
+                      <label for="{% if form.primary_cnae %}{{ form.primary_cnae.id_for_label }}{% else %}{{ form.tax_id_03.id_for_label }}{% endif %}">{% trans "CNAE (Primary)" %}</label>
                     </div>
                   </div>
 
                   <div class="col-md-6">
                     <div class="form-floating">
                       {% if form.secondary_cnae %}{{ form.secondary_cnae }}{% else %}{{ form.tax_id_04 }}{% endif %}
-                      <label for="{% if form.secondary_cnae %}{{ form.secondary_cnae.id_for_label }}{% else %}{{ form.tax_id_04.id_for_label }}{% endif %}">CNAE (Secondary)</label>
+                      <label for="{% if form.secondary_cnae %}{{ form.secondary_cnae.id_for_label }}{% else %}{{ form.tax_id_04.id_for_label }}{% endif %}">{% trans "CNAE (Secondary)" %}</label>
                     </div>
                   </div>
 
                   <div class="col-md-6">
                     <div class="form-floating">
                       {% if form.business_type_code %}{{ form.business_type_code }}{% else %}{{ form.tax_id_05 }}{% endif %}
-                      <label for="{% if form.business_type_code %}{{ form.business_type_code.id_for_label }}{% else %}{{ form.tax_id_05.id_for_label }}{% endif %}">Business Type Code</label>
+                      <label for="{% if form.business_type_code %}{{ form.business_type_code.id_for_label }}{% else %}{{ form.tax_id_05.id_for_label }}{% endif %}">{% trans "Business Type Code" %}</label>
                     </div>
                   </div>
-
                 </div>
+
               {% else %}
                 <div class="alert alert-info rounded-3">
-                  Taxation fields are not configured for {{ country.iso2_code }} yet.
+                  {% blocktrans with iso2=country.iso2_code %}Taxation fields are not configured for {{ iso2 }} yet.{% endblocktrans %}
                 </div>
               {% endif %}
             </div>
@@ -466,50 +484,50 @@
             <div class="tab-pane fade" id="tab-rti" role="tabpanel">
 
               {% if country.iso2_code == "GB" %}
-                <h6 class="section-header"><i class="fas fa-user-lock me-2"></i>Authentication</h6>
+                <h6 class="section-header"><i class="fas fa-user-lock me-2"></i>{% trans "Authentication" %}</h6>
                 <div class="row g-3 mb-4">
                   <div class="col-md-6">
                     <div class="form-floating">
                       {{ form.rti_user_id }}
-                      <label for="{{ form.rti_user_id.id_for_label }}">User ID</label>
+                      <label for="{{ form.rti_user_id.id_for_label }}">{% trans "User ID" %}</label>
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="form-floating">
                       {{ form.rti_password }}
-                      <label for="{{ form.rti_password.id_for_label }}">Password</label>
+                      <label for="{{ form.rti_password.id_for_label }}">{% trans "Password" %}</label>
                     </div>
                   </div>
                 </div>
               {% endif %}
 
-              <h6 class="section-header"><i class="fas fa-briefcase me-2"></i>Agent Details</h6>
+              <h6 class="section-header"><i class="fas fa-briefcase me-2"></i>{% trans "Agent Details" %}</h6>
               <div class="row g-3">
                 <div class="col-md-6">
                   <div class="form-floating">
                     {{ form.agent_full_name }}
-                    <label for="{{ form.agent_full_name.id_for_label }}">Agent Name</label>
+                    <label for="{{ form.agent_full_name.id_for_label }}">{% trans "Agent Name" %}</label>
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-floating">
                     {{ form.agent_road_name_1 }}
-                    <label for="{{ form.agent_road_name_1.id_for_label }}">Road Name</label>
+                    <label for="{{ form.agent_road_name_1.id_for_label }}">{% trans "Road Name" %}</label>
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-floating">
                     {{ form.agent_town }}
-                    <label for="{{ form.agent_town.id_for_label }}">Town</label>
+                    <label for="{{ form.agent_town.id_for_label }}">{% trans "Town" %}</label>
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-floating">
                     {{ form.agent_post_code }}
-                    <label for="{{ form.agent_post_code.id_for_label }}">Post Code</label>
+                    <label for="{{ form.agent_post_code.id_for_label }}">{% trans "Post Code" %}</label>
                   </div>
                 </div>
 
@@ -517,7 +535,7 @@
                 <div class="col-md-6">
                   <div class="form-floating">
                     {{ form.agent_road_name_2 }}
-                    <label for="{{ form.agent_road_name_2.id_for_label }}">Road Name (Line 2)</label>
+                    <label for="{{ form.agent_road_name_2.id_for_label }}">{% trans "Road Name (Line 2)" %}</label>
                   </div>
                 </div>
                 {% endif %}
@@ -528,51 +546,50 @@
             <!-- TAB: BANKING -->
             <!-- ===================================================== -->
             <div class="tab-pane fade" id="tab-banking" role="tabpanel">
-              <h6 class="section-header"><i class="fas fa-university me-2"></i>Bank Details</h6>
-              <div class="row g-3 mb-4">
+              <h6 class="section-header"><i class="fas fa-university me-2"></i>{% trans "Bank Details" %}</h6>
 
+              <div class="row g-3 mb-4">
                 <div class="col-md-6">
                   <div class="form-floating">
                     {{ form.bank_01 }}
-                    <label for="{{ form.bank_01.id_for_label }}">Account Name</label>
+                    <label for="{{ form.bank_01.id_for_label }}">{% trans "Account Name" %}</label>
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-floating">
                     {{ form.bank_02 }}
-                    <label for="{{ form.bank_02.id_for_label }}">Bank Name</label>
+                    <label for="{{ form.bank_02.id_for_label }}">{% trans "Bank Name" %}</label>
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-floating">
                     {{ form.bank_04 }}
-                    <label for="{{ form.bank_04.id_for_label }}">Account Number</label>
+                    <label for="{{ form.bank_04.id_for_label }}">{% trans "Account Number" %}</label>
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-floating">
                     {{ form.bank_03 }}
-                    <label for="{{ form.bank_03.id_for_label }}">Branch Code</label>
+                    <label for="{{ form.bank_03.id_for_label }}">{% trans "Branch Code" %}</label>
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-floating">
                     {{ form.bank_06 }}
-                    <label for="{{ form.bank_06.id_for_label }}">IBAN</label>
+                    <label for="{{ form.bank_06.id_for_label }}">{% trans "IBAN" %}</label>
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-floating">
                     {{ form.bank_05 }}
-                    <label for="{{ form.bank_05.id_for_label }}">BIC/Swift</label>
+                    <label for="{{ form.bank_05.id_for_label }}">{% trans "BIC/Swift" %}</label>
                   </div>
                 </div>
-
               </div>
             </div>
 
@@ -580,26 +597,26 @@
             <!-- TAB: ACCOUNT -->
             <!-- ===================================================== -->
             <div class="tab-pane fade" id="tab-account" role="tabpanel">
-              <h6 class="section-header"><i class="fas fa-cog me-2"></i>Account Configuration</h6>
-              <div class="row g-3">
+              <h6 class="section-header"><i class="fas fa-cog me-2"></i>{% trans "Account Configuration" %}</h6>
 
+              <div class="row g-3">
                 <div class="col-md-6">
                   <div class="form-floating">
                     {{ form.account_status }}
-                    <label for="{{ form.account_status.id_for_label }}">Account Status</label>
+                    <label for="{{ form.account_status.id_for_label }}">{% trans "Account Status" %}</label>
                   </div>
                 </div>
 
                 <div class="col-md-6">
                   <div class="form-floating">
                     {{ form.account_archive }}
-                    <label for="{{ form.account_archive.id_for_label }}">Archive Status</label>
+                    <label for="{{ form.account_archive.id_for_label }}">{% trans "Archive Status" %}</label>
                   </div>
                 </div>
 
                 <div class="col-12 mt-4">
                   <div class="mb-2">
-                    <label class="form-label" for="{{ form.logo.id_for_label }}">Company Logo</label>
+                    <label class="form-label" for="{{ form.logo.id_for_label }}">{% trans "Company Logo" %}</label>
                     {{ form.logo }}
                     {% if form.logo.errors %}
                       <div class="invalid-feedback d-block">
@@ -613,12 +630,13 @@
                       <img src="{{ company.logo.url }}"
                            class="img-thumbnail rounded-3 border-0 shadow-sm"
                            style="max-height:100px;"
-                           alt="Current company logo">
-                      <small class="text-muted">Current: {{ company.logo.name }}</small>
+                           alt="{% trans 'Current company logo' %}">
+                      <small class="text-muted">
+                        {% trans "Current:" %} {{ company.logo.name }}
+                      </small>
                     </div>
                   {% endif %}
                 </div>
-
               </div>
             </div>
 
@@ -627,15 +645,17 @@
           <div class="d-flex justify-content-between align-items-center mt-5 pt-3 border-top">
             <div>
               <button type="button" class="btn btn-outline-secondary me-2" id="prevTab" disabled>
-                <i class="fas fa-chevron-left me-1"></i> Previous
+                <i class="fas fa-chevron-left me-1"></i> {% trans "Previous" %}
               </button>
+
               <button type="button" class="btn btn-outline-secondary" id="nextTab">
-                Next <i class="fas fa-chevron-right ms-1"></i>
+                {% trans "Next" %} <i class="fas fa-chevron-right ms-1"></i>
               </button>
             </div>
+
             <div>
-              <a href="{% url 'companies:company' country.slug %}" class="btn btn-danger px-4 me-2">Cancel</a>
-              <button type="submit" class="btn btn-primary px-4" id="submit-btn">Save</button>
+              <a href="{% url 'companies:company' country.slug %}" class="btn btn-danger px-4 me-2">{% trans "Cancel" %}</a>
+              <button type="submit" class="btn btn-primary px-4" id="submit-btn">{% trans "Save" %}</button>
             </div>
           </div>
 
@@ -652,6 +672,9 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+
+  // i18n strings used inside JS (avoid hardcoding English)
+  const I18N_SAVING = "{% trans 'Saving...' %}";
 
   // 1) Select2
   if (window.jQuery) {
@@ -673,8 +696,9 @@ document.addEventListener('DOMContentLoaded', function() {
       currentTabIndex = Array.from(tabs).indexOf(event.target);
       updateNavButtons();
 
+      // re-init select2 safely (only if jQuery exists)
       if (window.jQuery) {
-        $('select').select2({ theme: "bootstrap-5", width: '100%' });
+        $('select').select2({ theme: "bootstrap-5", width: '100%', dropdownParent: $('body') });
       }
     });
   });
@@ -717,7 +741,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const btn = document.getElementById('submit-btn');
-    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>' + I18N_SAVING;
     btn.disabled = true;
   });
 

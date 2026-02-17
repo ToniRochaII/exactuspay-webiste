@@ -1,0 +1,24 @@
+<table>
+  <thead>
+    <tr>
+      <th>Employee</th>
+      <th>Code</th>
+      <th>Description</th>
+      <th style="text-align:right;">Current</th>
+      <th style="text-align:right;">Previous</th>
+      <th style="text-align:right;">Difference</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in comparison_rows %}
+      <tr>
+        <td>{{ r.employee_name }}</td>
+        <td>{{ r.code }}</td>
+        <td>{{ r.label }}</td>
+        <td style="text-align:right;">{{ r.current }}</td>
+        <td style="text-align:right;">{{ r.previous }}</td>
+        <td style="text-align:right;"><strong>{{ r.difference }}</strong></td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

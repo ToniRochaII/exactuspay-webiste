@@ -1,78 +1,75 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load payroll_filters %}
 {% load humanize %}
 {% load static %}
 {% load accounts_role_filters %}
 
-{% block title %}Payroll {{ payroll.fiscal_year }} — {{ payroll.company.trade_name}} | ExactusPay{% endblock %}
+{% block title %}
+  {% blocktrans with year=payroll.fiscal_year company_name=payroll.company.trade_name %}Payroll {{ year }} — {{ company_name }} | ExactusPay{% endblocktrans %}
+{% endblock %}
 
-{% block page_title %}Payroll Details{% endblock %}
+{% block page_title %}{% trans "Payroll Details" %}{% endblock %}
 
 {% block extra_head %}
 <style>
-    /* --- GOLD STANDARD CSS --- */
-    body { background-color: #F4F4F4 !important; }
-    .wrapper:before { background: #F4F4F4 !important; }
-    :root { --card-radius: 16px; --border-color: #f0f0f0; }
+  body { background-color: #F4F4F4 !important; }
+  .wrapper:before { background: #F4F4F4 !important; }
+  :root { --card-radius: 16px; --border-color: #f0f0f0; }
 
-    .card-hover-effect {
-        border-radius: var(--card-radius);
-        border: none;
-        transition: transform 0.25s ease, box-shadow 0.25s ease;
-        overflow: hidden;
-    }
-    .card-hover-effect:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
-    }
-    .card-header {
-        background-color: #fff;
-        border-bottom: 1px solid #f0f0f0;
-    }
+  .card-hover-effect {
+    border-radius: var(--card-radius);
+    border: none;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    overflow: hidden;
+  }
+  .card-hover-effect:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
+  }
+  .card-header { background-color:#fff; border-bottom:1px solid #f0f0f0; }
 
-    /* KPI Cards Styling */
-    .kpi-box {
-        background-color: #f8f9fa;
-        border-radius: 12px;
-        padding: 1.5rem;
-        text-align: center;
-        border: 1px solid #e9ecef;
-        height: 100%;
-    }
-    .kpi-label {
-        font-size: 0.85rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        color: #6c757d;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-    }
-    .kpi-value {
-        font-size: 1.75rem;
-        font-weight: 700;
-        color: #212529;
-        margin-bottom: 0;
-    }
+  .kpi-box{
+    background-color:#f8f9fa;
+    border-radius:12px;
+    padding:1.5rem;
+    text-align:center;
+    border:1px solid #e9ecef;
+    height:100%;
+  }
+  .kpi-label{
+    font-size:0.85rem;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:#6c757d;
+    font-weight:600;
+    margin-bottom:0.5rem;
+  }
+  .kpi-value{
+    font-size:1.75rem;
+    font-weight:700;
+    color:#212529;
+    margin-bottom:0;
+  }
 
-    /* Section Headers */
-    h6.section-header {
-        text-transform: uppercase;
-        font-size: 0.75rem;
-        letter-spacing: 1px;
-        color: #6c757d;
-        font-weight: 700;
-        margin-bottom: 1rem;
-        margin-top: 0.5rem;
-    }
+  h6.section-header{
+    text-transform:uppercase;
+    font-size:0.75rem;
+    letter-spacing:1px;
+    color:#6c757d;
+    font-weight:700;
+    margin-bottom:1rem;
+    margin-top:0.5rem;
+  }
 </style>
 {% endblock %}
 
 {% block breadcrumbs %}
-<nav aria-label="breadcrumb">
+<nav aria-label="{% trans 'breadcrumb' %}">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'companies:company' country_slug %}">Companies</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'payroll:payroll_list' country_slug company_id %}">Payrolls</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'companies:company' country_slug %}">{% trans "Companies" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'payroll:payroll_list' country_slug company_id %}">{% trans "Payrolls" %}</a></li>
     <li class="breadcrumb-item active">{{ payroll.fiscal_year }}</li>
   </ol>
 </nav>
@@ -80,289 +77,333 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-12">
-        
-        <div class="card card-hover-effect shadow-sm">
-            
-            <div class="card-header pt-4 px-4 pb-3">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h5 class="card-title mb-0 text-primary fw-bold">
-                            <i class="fas fa-money-check-alt me-2"></i>Payroll {{ payroll.fiscal_year }}
-                        </h5>
-                        <h6 class="card-subtitle text-muted mt-1">
-                            {{ payroll.company.trade_name }} — {{ country.name }}
-                        </h6>
-                    </div>
-                    
-                    <div class="btn-group">
-                        {% if payroll.is_editable %}
-                        <a href="{% url 'payroll:payroll_edit' country_slug company_id payroll.pk %}">
-                            <i class="fas fa-pen me-3"></i>
-                        </a>
-                        {% endif %}
-                        
-                        <a href="{% url 'payroll:period_create' country_slug company_id payroll.pk %}">
-                            <i class="fas fa-plus-circle me-3"></i>
-                        </a>
-                        
-                    </div>
-                </div>
-            </div>
+  <div class="col-12">
 
-            <div class="card-body p-4">
-                
-                <div class="row g-3 mb-4">
-                    <div class="col-md-3">
-                        <div class="kpi-box">
-                            <div class="kpi-label">Current Status</div>
-                            <div class="kpi-value">
-                                <span class="badge rounded fs-6 fw-normal
-                                    {% if payroll.status == 'draft' %}bg-secondary
-                                    {% elif payroll.status == 'running' %}bg-primary
-                                    {% elif payroll.status == 'completed' %}bg-success
-                                    {% else %}bg-warning text-dark{% endif %}">
-                                    {{ payroll.get_status_display }}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="kpi-box">
-                            <div class="kpi-label">Total Periods</div>
-                            <div class="kpi-value">{{ summary.total_periods|default:0 }}</div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="kpi-box">
-                            <div class="kpi-label">Completed Runs</div>
-                            <div class="kpi-value text-success">{{ summary.completed_periods|default:0 }}</div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="kpi-box">
-                            <div class="kpi-label">YTD Amount</div>
-                            <div class="kpi-value text-primary">
-                                {{ summary.total_amount|floatformat:2|intcomma|default:"0.00" }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <div class="card card-hover-effect shadow-sm">
 
-                <hr class="text-muted opacity-25 my-4">
+      <div class="card-header pt-4 px-4 pb-3">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h5 class="card-title mb-0 text-primary fw-bold">
+              <i class="fas fa-money-check-alt me-2"></i>
+              {% blocktrans with year=payroll.fiscal_year %}Payroll {{ year }}{% endblocktrans %}
+            </h5>
+            <h6 class="card-subtitle text-muted mt-1">
+              {{ payroll.company.trade_name }} — {{ country.name }}
+            </h6>
+          </div>
 
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <h6 class="section-header"><i class="fas fa-info-circle me-2"></i>Configuration</h6>
-                        <table class="table table-borderless table-sm">
-                            <tr>
-                                <td class="text-muted" width="140">Regulation Ver:</td>
-                                <td class="fw-bold">{{ regulations.fiscal_year|default:"Technical Issue" }}</td>
-                            </tr>
-                            <tr>
-                                <td class="text-muted">Created By:</td>
-                                <td class="fw-bold">
-                                    {% if payroll.created_by %}
-                                        {{ payroll.created_by.get_full_name|default:payroll.created_by.username }}
-                                    {% else %}
-                                        System
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-muted">Created Date:</td>
-                                <td>{{ payroll.created_at|date:"d/m/Y H:i" }}</td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
+          <div class="btn-group" aria-label="{% trans 'Actions' %}">
+            {% if payroll.is_editable %}
+              <a href="{% url 'payroll:payroll_edit' country_slug company_id payroll.pk %}"
+                 class="text-decoration-none"
+                 title="{% trans 'Edit Payroll' %}">
+                <i class="fas fa-pen me-3"></i>
+              </a>
+            {% endif %}
 
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h6 class="section-header mb-0"><i class="fas fa-calendar-alt me-2"></i>Payroll Periods</h6>
-                    <span class="badge bg-light text-dark border">{{ summary.total_periods|default:0 }} Records</span>
-                </div>
-
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th class="text-center" width="60">#</th>
-                                <th>Period Name</th>
-                                <th>Date Range</th>
-                                <th>Processing Date</th>
-                                <th class="text-center">Status</th>
-                                <th class="text-center">Employees</th>
-                                <th class="text-end">Total Amount</th>
-                                <th class="text-end">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for period in periods %}
-                            <tr>
-                                <td class="text-center text-muted fw-bold">{{ period.period_number }}</td>
-                                <td>
-                                    <a href="{% url 'payroll:period_detail' country_slug company_id payroll.pk period.pk %}" 
-                                       class="text-dark fw-bold text-decoration-none">
-                                        {{ period.name }}
-                                    </a>
-                                </td>
-                                <td>
-                                    <small class="text-muted">{{ period.start_date|date:"d/m/Y" }}</small><br>
-                                    <strong>{{ period.end_date|date:"d/m/Y" }}</strong>
-                                </td>
-                                <td>
-                                    {% if period.processing_date %}
-                                        {{ period.processing_date|date:"d/m/Y" }}
-                                    {% else %}
-                                        <span class="text-muted">-</span>
-                                    {% endif %}
-                                </td>
-                                <td class="text-center">
-                                    <span class="badge rounded
-                                        {% if period.status == 'pending' %}bg-warning text-dark
-                                        {% elif period.status == 'scheduled' %}bg-info
-                                        {% elif period.status == 'processing' %}bg-primary
-                                        {% elif period.status == 'completed' %}bg-success
-                                        {% else %}bg-secondary{% endif %}">
-                                        {{ period.get_status_display }}
-                                    </span>
-                                </td>
-                                <td class="text-center">{{ period.employee_count|default:"0" }}</td>
-                                <td class="text-end font-monospace">
-                                    {% if period.total_amount %}
-                                        {{ period.total_amount|intcomma }}
-                                    {% else %}
-                                        <span class="text-muted">-</span>
-                                    {% endif %}
-                                </td>
-                                <td class="text-end">
-                                    <div class="btn-group btn-group-sm">
-                                        <a href="{% url 'payroll:period_detail' country_slug company_id payroll.pk period.pk %}" 
-                                           class="btn btn-light" title="View Report">
-                                            <i class="fas fa-eye text-primary"></i>
-                                        </a>
-                                        
-                                        {% if period.is_editable %}
-                                        <a href="{% url 'payroll:period_edit' country_slug company_id payroll.pk period.pk %}" 
-                                           class="btn btn-light" title="Edit Period">
-                                            <i class="fas fa-pen text-secondary"></i>
-                                        </a>
-                                        {% endif %}
-                                        
-                                        {% if period.can_process %}
-                                        <button class="btn btn-light process-period" 
-                                                data-period_id="{{ period.pk }}"
-                                                data-period_name="{{ period.name }}"
-                                                title="Process Now">
-                                            <i class="fas fa-play text-success"></i>
-                                        </button>
-                                        {% endif %}
-                                        
-                                        {% if period.is_deletable %}
-                                        <button class="btn btn-light delete-period" 
-                                                data-period_id="{{ period.pk }}"
-                                                data-period_name="{{ period.name }}"
-                                                title="Delete">
-                                            <i class="fas fa-trash text-danger"></i>
-                                        </button>
-                                        {% endif %}
-                                    </div>
-                                </td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="8" class="text-center py-5">
-                                    <i class="fas fa-calendar-plus fa-3x text-muted opacity-25 mb-3"></i>
-                                    <h5 class="text-muted">No Periods Found</h5>
-                                    <p class="text-muted small">Get started by adding the first payroll period.</p>
-                                    <a href="{% url 'payroll:period_create' country_slug company_id payroll.pk %}" 
-                                       class="btn btn-sm btn-primary">
-                                        Add First Period
-                                    </a>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-
-            </div>
+            <a href="{% url 'payroll:period_create' country_slug company_id payroll.pk %}"
+               class="text-decoration-none"
+               title="{% trans 'Add Period' %}">
+              <i class="fas fa-plus-circle me-3"></i>
+            </a>
+          </div>
         </div>
+      </div>
+
+      <div class="card-body p-4">
+
+        <div class="row g-3 mb-4">
+          <div class="col-md-3">
+            <div class="kpi-box">
+              <div class="kpi-label">{% trans "Current Status" %}</div>
+              <div class="kpi-value">
+                <span class="badge rounded fs-6 fw-normal
+                  {% if payroll.status == 'draft' %}bg-secondary
+                  {% elif payroll.status == 'running' %}bg-primary
+                  {% elif payroll.status == 'completed' %}bg-success
+                  {% else %}bg-warning text-dark{% endif %}">
+                  {{ payroll.get_status_display }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="kpi-box">
+              <div class="kpi-label">{% trans "Total Periods" %}</div>
+              <div class="kpi-value">{{ summary.total_periods|default:0 }}</div>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="kpi-box">
+              <div class="kpi-label">{% trans "Completed Runs" %}</div>
+              <div class="kpi-value text-success">{{ summary.completed_periods|default:0 }}</div>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="kpi-box">
+              <div class="kpi-label">{% trans "YTD Amount" %}</div>
+              <div class="kpi-value text-primary">
+                {{ summary.total_amount|floatformat:2|intcomma|default:"0.00" }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <hr class="text-muted opacity-25 my-4">
+
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <h6 class="section-header"><i class="fas fa-info-circle me-2"></i>{% trans "Configuration" %}</h6>
+            <table class="table table-borderless table-sm">
+              <tr>
+                <td class="text-muted" width="140">{% trans "Regulation Ver:" %}</td>
+                <td class="fw-bold">{{ regulations.fiscal_year|default:_("Technical Issue") }}</td>
+              </tr>
+              <tr>
+                <td class="text-muted">{% trans "Created By:" %}</td>
+                <td class="fw-bold">
+                  {% if payroll.created_by %}
+                    {{ payroll.created_by.get_full_name|default:payroll.created_by.username }}
+                  {% else %}
+                    {% trans "System" %}
+                  {% endif %}
+                </td>
+              </tr>
+              <tr>
+                <td class="text-muted">{% trans "Created Date:" %}</td>
+                <td>{{ payroll.created_at|date:"d/m/Y H:i" }}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h6 class="section-header mb-0"><i class="fas fa-calendar-alt me-2"></i>{% trans "Payroll Periods" %}</h6>
+          <span class="badge bg-light text-dark border">
+            {% blocktrans with total=summary.total_periods|default:0 %}{{ total }} Records{% endblocktrans %}
+          </span>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th class="text-center" width="60">#</th>
+                <th>{% trans "Period Name" %}</th>
+                <th>{% trans "Date Range" %}</th>
+                <th>{% trans "Processing Date" %}</th>
+                <th class="text-center">{% trans "Status" %}</th>
+                <th class="text-center">{% trans "Employees" %}</th>
+                <th class="text-end">{% trans "Total Amount" %}</th>
+                <th class="text-end">{% trans "Actions" %}</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for period in periods %}
+              <tr>
+                <td class="text-center text-muted fw-bold">{{ period.period_number }}</td>
+
+                <td>
+                  <a href="{% url 'payroll:period_detail' country_slug company_id payroll.pk period.pk %}"
+                     class="text-dark fw-bold text-decoration-none">
+                    {{ period.name }}
+                  </a>
+                </td>
+
+                <td>
+                  <small class="text-muted">{{ period.start_date|date:"d/m/Y" }}</small><br>
+                  <strong>{{ period.end_date|date:"d/m/Y" }}</strong>
+                </td>
+
+                <td>
+                  {% if period.processing_date %}
+                    {{ period.processing_date|date:"d/m/Y" }}
+                  {% else %}
+                    <span class="text-muted">-</span>
+                  {% endif %}
+                </td>
+
+                <td class="text-center">
+                  <span class="badge rounded
+                    {% if period.status == 'pending' %}bg-warning text-dark
+                    {% elif period.status == 'scheduled' %}bg-info
+                    {% elif period.status == 'processing' %}bg-primary
+                    {% elif period.status == 'completed' %}bg-success
+                    {% else %}bg-secondary{% endif %}">
+                    {{ period.get_status_display }}
+                  </span>
+                </td>
+
+                <td class="text-center">{{ period.employee_count|default:"0" }}</td>
+
+                <td class="text-end font-monospace">
+                  {% if period.total_amount %}
+                    {{ period.total_amount|intcomma }}
+                  {% else %}
+                    <span class="text-muted">-</span>
+                  {% endif %}
+                </td>
+
+                <td class="text-end">
+                  <div class="btn-group btn-group-sm" role="group" aria-label="{% trans 'Row actions' %}">
+                    <a href="{% url 'payroll:period_detail' country_slug company_id payroll.pk period.pk %}"
+                       class="btn btn-light"
+                       title="{% trans 'View Report' %}">
+                      <i class="fas fa-eye text-primary"></i>
+                    </a>
+
+                    {% if period.is_editable %}
+                      <a href="{% url 'payroll:period_edit' country_slug company_id payroll.pk period.pk %}"
+                         class="btn btn-light"
+                         title="{% trans 'Edit Period' %}">
+                        <i class="fas fa-pen text-secondary"></i>
+                      </a>
+                    {% endif %}
+
+                    {% if period.can_process %}
+                      <button type="button"
+                              class="btn btn-light process-period"
+                              data-period_id="{{ period.pk }}"
+                              data-period_name="{{ period.name }}"
+                              title="{% trans 'Process Now' %}">
+                        <i class="fas fa-play text-success"></i>
+                      </button>
+                    {% endif %}
+
+                    {% if period.is_deletable %}
+                      <button type="button"
+                              class="btn btn-light delete-period"
+                              data-period_id="{{ period.pk }}"
+                              data-period_name="{{ period.name }}"
+                              title="{% trans 'Delete' %}">
+                        <i class="fas fa-trash text-danger"></i>
+                      </button>
+                    {% endif %}
+                  </div>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="8" class="text-center py-5">
+                  <i class="fas fa-calendar-plus fa-3x text-muted opacity-25 mb-3"></i>
+                  <h5 class="text-muted">{% trans "No Periods Found" %}</h5>
+                  <p class="text-muted small">{% trans "Get started by adding the first payroll period." %}</p>
+                  <a href="{% url 'payroll:period_create' country_slug company_id payroll.pk %}"
+                     class="btn btn-sm btn-primary">
+                    {% trans "Add First Period" %}
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+
+          </table>
+        </div>
+
+      </div>
     </div>
+  </div>
 </div>
 
 {% if payroll.is_deletable %}
-<div class="modal fade" id="deleteModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Delete Payroll</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <p>Are you sure you want to delete payroll for <strong>{{ payroll.fiscal_year }}</strong>?</p>
-                <div class="alert alert-danger mb-0">
-                    <i class="fas fa-exclamation-triangle me-2"></i>
-                    This will permanently delete <strong>all associated periods and calculations</strong>. This action cannot be undone.
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <a href="{% url 'payroll:payroll_delete' country_slug company_id payroll.pk %}" 
-                   class="btn btn-danger">Confirm Delete</a>
-            </div>
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{% trans "Delete Payroll" %}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% trans 'Close' %}"></button>
+      </div>
+
+      <div class="modal-body">
+        <p>
+          {% blocktrans with year=payroll.fiscal_year %}
+            Are you sure you want to delete payroll for <strong>{{ year }}</strong>?
+          {% endblocktrans %}
+        </p>
+
+        <div class="alert alert-danger mb-0">
+          <i class="fas fa-exclamation-triangle me-2"></i>
+          {% trans "This will permanently delete" %} <strong>{% trans "all associated periods and calculations" %}</strong>.
+          {% trans "This action cannot be undone." %}
         </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+        <a href="{% url 'payroll:payroll_delete' country_slug company_id payroll.pk %}" class="btn btn-danger">
+          {% trans "Confirm Delete" %}
+        </a>
+      </div>
     </div>
+  </div>
 </div>
 {% endif %}
-
 {% endblock %}
 
 {% block extra_js %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // 1. Process Period
-    document.querySelectorAll('.process-period').forEach(button => {
-        button.addEventListener('click', function() {
-            const periodId = this.dataset.period_id;
-            const periodName = this.dataset.period_name;
-            
-            if (confirm(`Start processing for "${periodName}"?`)) {
-                // Construct URL dynamically
-                let url = "{% url 'payroll:period_process' country_slug company_id payroll.pk 999999 %}".replace('999999', periodId);
-                
-                fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': '{{ csrf_token }}',
-                        'Content-Type': 'application/json'
-                    },
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        location.reload();
-                    } else {
-                        alert('Error: ' + (data.error || 'Processing failed.'));
-                    }
-                })
-                .catch(err => alert('Network Error: ' + err.message));
-            }
-        });
+document.addEventListener('DOMContentLoaded', function () {
+
+  // i18n strings for JS
+  const I18N = {
+    startProcessing: "{% trans 'Start processing for \"%(name)s\"?' %}",
+    processingFailed: "{% trans 'Processing failed.' %}",
+    errorPrefix: "{% trans 'Error:' %}",
+    networkErrorPrefix: "{% trans 'Network Error:' %}",
+    deleteConfirm: "{% trans 'Are you sure you want to delete \"%(name)s\"? This cannot be undone.' %}"
+  };
+
+  function fmt(template, vars) {
+    return template.replace(/%\((\w+)\)s/g, (_, k) => (vars[k] ?? ""));
+  }
+
+  // 1) Process Period
+  document.querySelectorAll('.process-period').forEach(btn => {
+    btn.addEventListener('click', function () {
+      const periodId = this.dataset.period_id;
+      const periodName = this.dataset.period_name;
+
+      if (confirm(fmt(I18N.startProcessing, {name: periodName}))) {
+        const url = "{% url 'payroll:period_process' country_slug company_id payroll.pk 999999 %}".replace('999999', periodId);
+
+        fetch(url, {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json'
+          },
+        })
+        .then(r => r.json())
+        .then(data => {
+          if (data.success) {
+            location.reload();
+          } else {
+            alert(I18N.errorPrefix + " " + (data.error || I18N.processingFailed));
+          }
+        })
+        .catch(err => alert(I18N.networkErrorPrefix + " " + err.message));
+      }
     });
-    
-    // 2. Delete Period
-    document.querySelectorAll('.delete-period').forEach(button => {
-        button.addEventListener('click', function() {
-            const periodId = this.dataset.period_id;
-            const periodName = this.dataset.period_name;
-            
-            if (confirm(`Are you sure you want to delete "${periodName}"? This cannot be undone.`)) {
-                let url = "{% url 'payroll:period_delete' country_slug company_id payroll.pk 999999 %}".replace('999999', periodId);
-                window.location.href = url;
-            }
-        });
+  });
+
+  // 2) Delete Period
+  document.querySelectorAll('.delete-period').forEach(btn => {
+    btn.addEventListener('click', function () {
+      const periodId = this.dataset.period_id;
+      const periodName = this.dataset.period_name;
+
+      if (confirm(fmt(I18N.deleteConfirm, {name: periodName}))) {
+        const url = "{% url 'payroll:period_delete' country_slug company_id payroll.pk 999999 %}".replace('999999', periodId);
+        window.location.href = url;
+      }
     });
+  });
+
 });
 </script>
 {% endblock %}

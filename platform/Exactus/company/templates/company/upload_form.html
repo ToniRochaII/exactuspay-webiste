@@ -1,24 +1,34 @@
 {% extends "base.html" %}
+{% load i18n %}
 {% load company_role_filters %}
 {% load company_filters %}
 
-{% block title %}Upload Companies | ExactusPay{% endblock %}
+{% block title %}{% trans "Upload Companies" %} | ExactusPay{% endblock %}
 
 {% block page_title %}
-<i class="fas fa-upload me-2"></i>Upload Companies{% if country %} — {{ country.name }}{% endif %}
+  <i class="fas fa-upload me-2"></i>
+  {% if country %}
+    {% blocktrans with country_name=country.name %}Upload Companies — {{ country_name }}{% endblocktrans %}
+  {% else %}
+    {% trans "Upload Companies" %}
+  {% endif %}
 {% endblock %}
 
 {% block breadcrumbs %}
-<nav aria-label="breadcrumb">
+<nav aria-label="{% trans 'breadcrumb' %}">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'country:country' %}">{% trans "Countries" %}</a></li>
 
     {% if country %}
-      <li class="breadcrumb-item"><a href="{% url 'companies:company' country.slug %}">Companies — {{ country.name }}</a></li>
+      <li class="breadcrumb-item">
+        <a href="{% url 'companies:company' country.slug %}">
+          {% blocktrans with country_name=country.name %}Companies — {{ country_name }}{% endblocktrans %}
+        </a>
+      </li>
     {% endif %}
 
-    <li class="breadcrumb-item active" aria-current="page">Upload Companies</li>
+    <li class="breadcrumb-item active" aria-current="page">{% trans "Upload Companies" %}</li>
   </ol>
 </nav>
 {% endblock %}
@@ -26,208 +36,212 @@
 {% block content %}
 <div class="card shadow-sm border-0">
 
-    <div class="card-header d-flex justify-content-between align-items-center">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <div>
+      <h5 class="card-title mb-0">
+        {% if country %}
+          {% blocktrans with country_name=country.name %}Upload Companies — {{ country_name }}{% endblocktrans %}
+        {% else %}
+          {% trans "Upload Companies" %}
+        {% endif %}
+      </h5>
+      <div class="card-subtitle text-muted small">
+        {% trans "Upload multiple companies via CSV file." %}
+      </div>
+    </div>
+
+    <a href="{% if country %}{% url 'companies:company' country.slug %}{% else %}{% url 'country:country' %}{% endif %}"
+       class="btn btn-outline-secondary btn-sm">
+      <i class="fas fa-arrow-left me-2"></i>{% trans "Back" %}
+    </a>
+  </div>
+
+  <div class="card-body">
+
+    <div class="alert alert-info">
+      <h6 class="alert-heading">
+        <i class="fas fa-info-circle me-2"></i>{% trans "CSV Requirements" %}
+      </h6>
+      <hr>
+      <ul class="mb-1">
+        <li>{% blocktrans %}File must be a <strong>.csv</strong> (comma-separated values){% endblocktrans %}</li>
+        <li>{% trans "The first row must contain column headers" %}</li>
+        <li>
+          {% trans "Required columns:" %}
+          <strong>country_code, company_code, trade_name, legal_name</strong>
+        </li>
+        <li>{% trans "country_code must match ISO2 codes (e.g., US, GB, FR)" %}</li>
+        <li>{% trans "Optional columns may be left empty" %}</li>
+      </ul>
+    </div>
+
+    <div class="alert alert-warning">
+      <div class="d-flex justify-content-between align-items-center">
         <div>
-            <h5 class="card-title mb-0">
-                Upload Companies{% if country %} — {{ country.name }}{% endif %}
-            </h5>
-            <div class="card-subtitle text-muted small">
-                Upload multiple companies via CSV file.
-            </div>
+          <strong>{% trans "Need a sample?" %}</strong>
+          {% trans "Download a CSV template to ensure correct structure." %}
         </div>
 
-        <a href="{% if country %}{% url 'companies:company' country.slug %}{% else %}{% url 'country:country' %}{% endif %}"
-           class="btn btn-outline-secondary btn-sm">
-            <i class="fas fa-arrow-left me-2"></i>Back
+        <a href="{% if country %}
+                  {% url 'companies:download_companies_template' country.slug %}
+                {% else %}
+                  {% url 'companies:download_companies_template_global' %}
+                {% endif %}"
+           class="btn btn-outline-primary btn-sm">
+          <i class="fas fa-download me-2"></i>{% trans "Download Template" %}
         </a>
+      </div>
     </div>
 
-    <div class="card-body">
+    <div class="card mt-4 border-0 shadow-sm">
+      <div class="card-header bg-light">
+        <h6 class="mb-0 fw-bold">{% trans "Upload CSV File" %}</h6>
+      </div>
 
-        <div class="alert alert-info">
-            <h6 class="alert-heading">
-                <i class="fas fa-info-circle me-2"></i>CSV Requirements
-            </h6>
-            <hr>
-            <ul class="mb-1">
-                <li>File must be a <strong>.csv</strong> (comma-separated values)</li>
-                <li>The first row must contain column headers</li>
-                <li>Required columns:
-                    <strong>country_code, company_code, trade_name, legal_name</strong>
-                </li>
-                <li><strong>country_code</strong> must match ISO2 codes (e.g., US, GB, FR)</li>
-                <li>Optional columns may be left empty</li>
-            </ul>
-        </div>
+      <div class="card-body">
+        <form id="uploadForm" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
 
-        <div class="alert alert-warning">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <strong>Need a sample?</strong> Download a CSV template to ensure correct structure.
+          <div class="row">
+            <div class="col-md-8">
+              <div class="mb-3">
+                <label for="{{ form.csv_file.id_for_label }}" class="form-label fw-bold">
+                  {{ form.csv_file.label }}
+                </label>
+
+                {{ form.csv_file }}
+
+                {% if form.csv_file.help_text %}
+                  <div class="form-text">{{ form.csv_file.help_text }}</div>
+                {% endif %}
+
+                {% if form.csv_file.errors %}
+                  <div class="text-danger small mt-1">
+                    {{ form.csv_file.errors|join:", " }}
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="mb-3 pt-4">
+                <div class="form-check">
+                  {{ form.dry_run }}
+                  <label class="form-check-label fw-bold" for="{{ form.dry_run.id_for_label }}">
+                    {{ form.dry_run.label }}
+                  </label>
                 </div>
-
-                <a href="{% if country %}
-                          {% url 'companies:download_companies_template' country.slug %}
-                       {% else %}
-                          {% url 'companies:download_companies_template_global' %}
-                       {% endif %}"
-                   class="btn btn-outline-primary btn-sm">
-                    <i class="fas fa-download me-2"></i>Download Template
-                </a>
-            </div>
-        </div>
-
-        <div class="card mt-4 border-0 shadow-sm">
-            <div class="card-header bg-light">
-                <h6 class="mb-0 fw-bold">Upload CSV File</h6>
-            </div>
-
-            <div class="card-body">
-                <form id="uploadForm" method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="mb-3">
-                                <label for="{{ form.csv_file.id_for_label }}" class="form-label fw-bold">
-                                    {{ form.csv_file.label }}
-                                </label>
-                                
-                                {{ form.csv_file }}
-                                
-                                {% if form.csv_file.help_text %}
-                                    <div class="form-text">{{ form.csv_file.help_text }}</div>
-                                {% endif %}
-                                
-                                {% if form.csv_file.errors %}
-                                    <div class="text-danger small mt-1">
-                                        {{ form.csv_file.errors|join:", " }}
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="mb-3 pt-4">
-                                <div class="form-check">
-                                    {{ form.dry_run }}
-                                    <label class="form-check-label fw-bold" for="{{ form.dry_run.id_for_label }}">
-                                        {{ form.dry_run.label }}
-                                    </label>
-                                </div>
-                                <div class="form-text ms-4 mt-0">
-                                    Validate without saving to the database.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mt-4">
-                        <h6 class="fw-semibold">Expected CSV Format (Example):</h6>
-                        <div class="table-responsive">
-                            <table class="table table-sm table-bordered">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>country_code</th>
-                                        <th>company_code</th>
-                                        <th>trade_name</th>
-                                        <th>legal_name</th>
-                                        <th>account_status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>US</td>
-                                        <td>COMP001</td>
-                                        <td>Tech Solutions Inc</td>
-                                        <td>Tech Solutions Incorporated</td>
-                                        <td>ACTIVE</td>
-                                    </tr>
-                                    <tr>
-                                        <td>GB</td>
-                                        <td>COMP002</td>
-                                        <td>London Trading Co</td>
-                                        <td>London Trading Company Ltd</td>
-                                        <td>ACTIVE</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="mt-4 d-flex gap-2">
-                        <button id="uploadBtn" type="submit" class="btn btn-primary">
-                            <i class="fas fa-upload me-2"></i>Upload Companies
-                        </button>
-
-                        <a href="{% if country %}{% url 'companies:company' country.slug %}
-                                      {% else %}{% url 'country:country' %}
-                                      {% endif %}"
-                           class="btn btn-outline-secondary">
-                            Cancel
-                        </a>
-                    </div>
-
-                </form>
-            </div>
-        </div>
-
-        <div class="card mt-4 border-0 shadow-sm">
-            <div class="card-header bg-light">
-                <h6 class="fw-bold mb-0">Field Reference</h6>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-sm table-striped">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Field</th>
-                                <th>Required</th>
-                                <th>Type</th>
-                                <th>Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>country_code</strong></td>
-                                <td>Yes</td>
-                                <td>Text</td>
-                                <td>ISO2 country code (must match an active country)</td>
-                            </tr>
-                            <tr>
-                                <td><strong>company_code</strong></td>
-                                <td>Yes</td>
-                                <td>Text</td>
-                                <td>Unique per country</td>
-                            </tr>
-                            <tr>
-                                <td><strong>trade_name</strong></td>
-                                <td>Yes</td>
-                                <td>Text</td>
-                                <td>Commercial name of the company</td>
-                            </tr>
-                            <tr>
-                                <td><strong>legal_name</strong></td>
-                                <td>Yes</td>
-                                <td>Text</td>
-                                <td>Registered legal entity name</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="form-text ms-4 mt-0">
+                  {% trans "Validate without saving to the database." %}
                 </div>
+              </div>
             </div>
-        </div>
+          </div>
 
+          <div class="mt-4">
+            <h6 class="fw-semibold">{% trans "Expected CSV Format (Example):" %}</h6>
+            <div class="table-responsive">
+              <table class="table table-sm table-bordered">
+                <thead class="table-light">
+                  <tr>
+                    <th>country_code</th>
+                    <th>company_code</th>
+                    <th>trade_name</th>
+                    <th>legal_name</th>
+                    <th>account_status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>US</td>
+                    <td>COMP001</td>
+                    <td>Tech Solutions Inc</td>
+                    <td>Tech Solutions Incorporated</td>
+                    <td>ACTIVE</td>
+                  </tr>
+                  <tr>
+                    <td>GB</td>
+                    <td>COMP002</td>
+                    <td>London Trading Co</td>
+                    <td>London Trading Company Ltd</td>
+                    <td>ACTIVE</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="mt-4 d-flex gap-2">
+            <button id="uploadBtn" type="submit" class="btn btn-primary">
+              <i class="fas fa-upload me-2"></i>{% trans "Upload Companies" %}
+            </button>
+
+            <a href="{% if country %}{% url 'companies:company' country.slug %}{% else %}{% url 'country:country' %}{% endif %}"
+               class="btn btn-outline-secondary">
+              {% trans "Cancel" %}
+            </a>
+          </div>
+
+        </form>
+      </div>
     </div>
+
+    <div class="card mt-4 border-0 shadow-sm">
+      <div class="card-header bg-light">
+        <h6 class="fw-bold mb-0">{% trans "Field Reference" %}</h6>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-sm table-striped">
+            <thead class="table-light">
+              <tr>
+                <th>{% trans "Field" %}</th>
+                <th>{% trans "Required" %}</th>
+                <th>{% trans "Type" %}</th>
+                <th>{% trans "Description" %}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>country_code</strong></td>
+                <td>{% trans "Yes" %}</td>
+                <td>{% trans "Text" %}</td>
+                <td>{% trans "ISO2 country code (must match an active country)" %}</td>
+              </tr>
+              <tr>
+                <td><strong>company_code</strong></td>
+                <td>{% trans "Yes" %}</td>
+                <td>{% trans "Text" %}</td>
+                <td>{% trans "Unique per country" %}</td>
+              </tr>
+              <tr>
+                <td><strong>trade_name</strong></td>
+                <td>{% trans "Yes" %}</td>
+                <td>{% trans "Text" %}</td>
+                <td>{% trans "Commercial name of the company" %}</td>
+              </tr>
+              <tr>
+                <td><strong>legal_name</strong></td>
+                <td>{% trans "Yes" %}</td>
+                <td>{% trans "Text" %}</td>
+                <td>{% trans "Registered legal entity name" %}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
 <script>
 document.getElementById('uploadForm').addEventListener('submit', function() {
-    const btn = document.getElementById('uploadBtn');
-    if(btn) {
-        btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Uploading...';
-    }
+  const btn = document.getElementById('uploadBtn');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>{% trans "Uploading..." %}';
+  }
 });
 </script>
 {% endblock %}

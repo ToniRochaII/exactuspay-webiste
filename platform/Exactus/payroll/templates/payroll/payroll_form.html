@@ -1,19 +1,25 @@
 {% extends "base.html" %}
 {% load static %}
+{% load i18n %}
 {% load humanize %}
 {% load payroll_filters %}
 {% load accounts_role_filters %}
 
 {% block title %}
-    {% if form.instance.pk %}Edit Payroll: {{ form.instance.fiscal_year }}{% else %}Create New Payroll{% endif %} | ExactusPay
+  {% if form.instance.pk %}
+    {% blocktrans with year=form.instance.fiscal_year %}Edit Payroll: {{ year }}{% endblocktrans %}
+  {% else %}
+    {% trans "Create New Payroll" %}
+  {% endif %}
+  | ExactusPay
 {% endblock %}
 
 {% block page_title %}
-    {% if form.instance.pk %}
-        <i class="fas fa-edit me-2"></i>Edit Payroll
-    {% else %}
-        <i class="fas fa-plus-circle me-2"></i>Create Payroll
-    {% endif %}
+  {% if form.instance.pk %}
+    <i class="fas fa-edit me-2"></i>{% trans "Edit Payroll" %}
+  {% else %}
+    <i class="fas fa-plus-circle me-2"></i>{% trans "Create Payroll" %}
+  {% endif %}
 {% endblock %}
 
 {% block extra_head %}
@@ -21,90 +27,86 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
 
 <style>
-    /* --- GOLD STANDARD FORM CSS --- */
-    body { background-color: #F4F4F4 !important; }
-    .wrapper:before { background: #F4F4F4 !important; }
-    :root { --card-radius: 16px; --input-radius: 10px; --border-color: #f0f0f0; }
+  body { background-color: #F4F4F4 !important; }
+  .wrapper:before { background: #F4F4F4 !important; }
+  :root { --card-radius: 16px; --input-radius: 10px; --border-color: #f0f0f0; }
 
-    /* Card Styling */
-    .card-hover-effect {
-        border-radius: var(--card-radius);
-        border: none;
-        transition: transform 0.25s ease, box-shadow 0.25s ease;
-        overflow: hidden;
-    }
-    .card-hover-effect:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
-    }
-    .card-header {
-        background-color: #fff;
-        border-bottom: 1px solid #f0f0f0;
-    }
+  .card-hover-effect {
+    border-radius: var(--card-radius);
+    border: none;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    overflow: hidden;
+  }
+  .card-hover-effect:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
+  }
+  .card-header {
+    background-color: #fff;
+    border-bottom: 1px solid #f0f0f0;
+  }
 
-    /* Unified Input Styling */
-    .form-control, 
-    .form-select {
-        border-radius: var(--input-radius) !important;
-        font-size: 1rem !important;
-        border: 1px solid #ced4da;
-        padding-top: 1.625rem;
-        padding-bottom: 0.625rem;
-        height: 58px;
-    }
+  .form-control,
+  .form-select {
+    border-radius: var(--input-radius) !important;
+    font-size: 1rem !important;
+    border: 1px solid #ced4da;
+    padding-top: 1.625rem;
+    padding-bottom: 0.625rem;
+    height: 58px;
+  }
 
-    /* Select2 Styling */
-    .select2-container .select2-selection--single {
-        height: 58px !important; 
-        border-radius: var(--input-radius) !important;
-        border: 1px solid #ced4da;
-        display: flex;
-        align-items: center; 
-    }
-    .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
-        margin-top: 16px !important; 
-        margin-left: 2px;
-        color: #212529;
-        font-size: 1rem !important; 
-        font-weight: 400;
-    }
-    .select2-container--bootstrap-5 .select2-selection__arrow {
-        top: 50% !important;
-        transform: translateY(-50%);
-        right: 15px !important;
-    }
-    
-    /* Floating Label Fixes */
-    .form-floating > .select2-container { padding-top: 0; }
-    .form-floating > label { padding-left: 14px; }
+  .select2-container .select2-selection--single {
+    height: 58px !important;
+    border-radius: var(--input-radius) !important;
+    border: 1px solid #ced4da;
+    display: flex;
+    align-items: center;
+  }
+  .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+    margin-top: 16px !important;
+    margin-left: 2px;
+    color: #212529;
+    font-size: 1rem !important;
+    font-weight: 400;
+  }
+  .select2-container--bootstrap-5 .select2-selection__arrow {
+    top: 50% !important;
+    transform: translateY(-50%);
+    right: 15px !important;
+  }
 
-    /* Switch Card */
-    .switch-card {
-        border: 1px solid #ced4da;
-        border-radius: var(--input-radius);
-        padding: 12px 16px;
-        background-color: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        min-height: 58px;
-    }
-    .form-switch .form-check-input {
-        width: 3em;
-        height: 1.5em;
-        cursor: pointer;
-    }
+  .form-floating > .select2-container { padding-top: 0; }
+  .form-floating > label { padding-left: 14px; }
+
+  .switch-card {
+    border: 1px solid #ced4da;
+    border-radius: var(--input-radius);
+    padding: 12px 16px;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 58px;
+  }
+  .form-switch .form-check-input {
+    width: 3em;
+    height: 1.5em;
+    cursor: pointer;
+  }
 </style>
 {% endblock %}
 
 {% block breadcrumbs %}
-<nav aria-label="breadcrumb">
+<nav aria-label="{% trans 'breadcrumb' %}">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'companies:company' country_slug %}">Companies</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'payroll:payroll_list' country_slug company_id %}">Payrolls</a></li>
-    <li class="breadcrumb-item active">
-        {% if form.instance.pk %}Edit{% else %}Create{% endif %}
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'companies:company' country_slug %}">{% trans "Companies" %}</a></li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'payroll:payroll_list' country_slug company_id %}">{% trans "Payrolls" %}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      {% if form.instance.pk %}{% trans "Edit" %}{% else %}{% trans "Create" %}{% endif %}
     </li>
   </ol>
 </nav>
@@ -112,119 +114,133 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-12">
-        
-        <div class="card card-hover-effect shadow-sm">
-            <div class="card-header pt-4 px-4 pb-3">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h5 class="card-title mb-0">
-                            {% if form.instance.pk %}
-                                <i class="fas fa-edit me-2 text-primary"></i>Edit Payroll: {{ form.instance.fiscal_year }}
-                            {% else %}
-                                <i class="fas fa-plus-circle me-2 text-primary"></i>Create New Payroll
-                            {% endif %}
-                        </h5>
-                        <h6 class="card-subtitle text-muted mt-1">
-                            {{ company.trade_name|default:company.trade_name }} — {{ country.name }}
-                        </h6>
-                    </div>
-                </div>
-            </div>
+  <div class="col-12">
 
-            <div class="card-body p-4">
-
-                <form method="post" novalidate id="payroll-form">
-                    {% csrf_token %}
-                    
-                    {% if form.non_field_errors %}
-                        <div class="alert alert-danger rounded-3 mb-4">
-                            {{ form.non_field_errors }}
-                        </div>
-                    {% endif %}
-
-                    <input type="hidden" name="company" value="{{ company_id }}">
-                    <input type="hidden" name="country" value="{{ country.id }}">
-
-                    <h6 class="text-uppercase text-muted mb-3 fw-bold small ls-1">
-                        <i class="fas fa-cogs me-2"></i>Configuration
-                    </h6>
-
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-4">
-                            <div class="form-floating">
-                                {{ form.fiscal_year }}
-                                <label for="{{ form.fiscal_year.id_for_label }}">Fiscal Year (YYYY)</label>
-                            </div>
-                            {% if form.fiscal_year.errors %}
-                                <div class="text-danger small mt-1">{{ form.fiscal_year.errors.0 }}</div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-floating">
-                                {{ form.regulation }}
-                                <label for="{{ form.regulation.id_for_label }}">Regulation</label>
-                            </div>
-                            {% if form.regulation.errors %}
-                                <div class="text-danger small mt-1">{{ form.regulation.errors.0 }}</div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="switch-card">
-                                <div>
-                                    <h6 class="fw-semibold mb-0 text-dark" style="font-size: 0.9rem;">Historical Data Only</h6>
-                                </div>
-                                <div class="form-check form-switch ms-2 mb-0">
-                                    {{ form.is_historical }}
-                                    <label class="form-check-label" for="{{ form.is_historical.id_for_label }}"></label>
-                                </div>
-                            </div>
-                            {% if form.is_historical.help_text %}
-                                <div class="form-text small mt-1">{{ form.is_historical.help_text }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <div class="row g-3 mb-4">
-                        <div class="col-12">
-                            <div class="form-floating">
-                                {{ form.description }}
-                                <label for="{{ form.description.id_for_label }}">Description (Optional)</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="alert alert-light border border-dashed rounded-3 mb-4">
-                        <h6 class="fw-bold small text-muted text-uppercase mb-2">
-                            <i class="fas fa-info-circle me-2"></i>Important Notes
-                        </h6>
-                        <ul class="mb-0 small text-muted ps-3">
-                            <li>You can only have one active payroll per company per fiscal year.</li>
-                            <li>The selected <strong>Regulation</strong> must match the <strong>Fiscal Year</strong> entered.</li>
-                            <li>Check <strong>Historical Data Only</strong> if uploading data from a previous system.</li>
-                        </ul>
-                    </div>
-
-                    <div class="d-flex justify-content-end align-items-center mt-4 pt-3 border-top">
-                        <a href="{% url 'payroll:payroll_list' country_slug company_id %}" class="btn btn-danger me-2">
-                            Cancel
-                        </a>
-                        
-                        <button type="submit" class="btn btn-primary px-4" id="submit-btn">
-                            {% if form.instance.pk %}
-                                <i class="fas fa-save me-2"></i>Update Payroll
-                            {% else %}
-                                <i class="fas fa-plus-circle me-2"></i>Create Payroll
-                            {% endif %}
-                        </button>
-                    </div>
-
-                </form>
-            </div>
+    <div class="card card-hover-effect shadow-sm">
+      <div class="card-header pt-4 px-4 pb-3">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h5 class="card-title mb-0">
+              {% if form.instance.pk %}
+                <i class="fas fa-edit me-2 text-primary"></i>
+                {% blocktrans with year=form.instance.fiscal_year %}Edit Payroll: {{ year }}{% endblocktrans %}
+              {% else %}
+                <i class="fas fa-plus-circle me-2 text-primary"></i>
+                {% trans "Create New Payroll" %}
+              {% endif %}
+            </h5>
+            <h6 class="card-subtitle text-muted mt-1">
+              {% blocktrans with company_name=company.trade_name country_name=country.name %}
+                {{ company_name }} — {{ country_name }}
+              {% endblocktrans %}
+            </h6>
+          </div>
         </div>
+      </div>
+
+      <div class="card-body p-4">
+
+        <form method="post" novalidate id="payroll-form">
+          {% csrf_token %}
+
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger rounded-3 mb-4">
+              {{ form.non_field_errors }}
+            </div>
+          {% endif %}
+
+          <input type="hidden" name="company" value="{{ company_id }}">
+          <input type="hidden" name="country" value="{{ country.id }}">
+
+          <h6 class="text-uppercase text-muted mb-3 fw-bold small ls-1">
+            <i class="fas fa-cogs me-2"></i>{% trans "Configuration" %}
+          </h6>
+
+          <div class="row g-3 mb-4">
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.fiscal_year }}
+                <label for="{{ form.fiscal_year.id_for_label }}">{% trans "Fiscal Year (YYYY)" %}</label>
+              </div>
+              {% if form.fiscal_year.errors %}
+                <div class="text-danger small mt-1">{{ form.fiscal_year.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.regulation }}
+                <label for="{{ form.regulation.id_for_label }}">{% trans "Regulation" %}</label>
+              </div>
+              {% if form.regulation.errors %}
+                <div class="text-danger small mt-1">{{ form.regulation.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <div class="col-md-4">
+              <div class="switch-card">
+                <div>
+                  <h6 class="fw-semibold mb-0 text-dark" style="font-size: 0.9rem;">
+                    {% trans "Historical Data Only" %}
+                  </h6>
+                </div>
+                <div class="form-check form-switch ms-2 mb-0">
+                  {{ form.is_historical }}
+                  <label class="form-check-label" for="{{ form.is_historical.id_for_label }}"></label>
+                </div>
+              </div>
+              {% if form.is_historical.help_text %}
+                <div class="form-text small mt-1">{{ form.is_historical.help_text }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="row g-3 mb-4">
+            <div class="col-12">
+              <div class="form-floating">
+                {{ form.description }}
+                <label for="{{ form.description.id_for_label }}">{% trans "Description (Optional)" %}</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="alert alert-light border border-dashed rounded-3 mb-4">
+            <h6 class="fw-bold small text-muted text-uppercase mb-2">
+              <i class="fas fa-info-circle me-2"></i>{% trans "Important Notes" %}
+            </h6>
+            <ul class="mb-0 small text-muted ps-3">
+              <li>{% trans "You can only have one active payroll per company per fiscal year." %}</li>
+              <li>
+                {% trans "The selected" %} <strong>{% trans "Regulation" %}</strong>
+                {% trans "must match the" %} <strong>{% trans "Fiscal Year" %}</strong>
+                {% trans "entered." %}
+              </li>
+              <li>
+                {% trans "Check" %} <strong>{% trans "Historical Data Only" %}</strong>
+                {% trans "if uploading data from a previous system." %}
+              </li>
+            </ul>
+          </div>
+
+          <div class="d-flex justify-content-end align-items-center mt-4 pt-3 border-top">
+            <a href="{% url 'payroll:payroll_list' country_slug company_id %}" class="btn btn-danger me-2">
+              {% trans "Cancel" %}
+            </a>
+
+            <button type="submit" class="btn btn-primary px-4" id="submit-btn">
+              {% if form.instance.pk %}
+                <i class="fas fa-save me-2"></i>{% trans "Update Payroll" %}
+              {% else %}
+                <i class="fas fa-plus-circle me-2"></i>{% trans "Create Payroll" %}
+              {% endif %}
+            </button>
+          </div>
+
+        </form>
+      </div>
+
     </div>
+  </div>
 </div>
 {% endblock %}
 
@@ -233,61 +249,64 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    
-    // 1. Initialize Select2
+
+  // i18n strings used inside JS
+  const I18N_SAVING = "{% trans 'Saving...' %}";
+
+  // 1) Select2
+  if (window.jQuery) {
     $("select").select2({
-        theme: "bootstrap-5",
-        width: '100%',
-        dropdownParent: $('body')
+      theme: "bootstrap-5",
+      width: '100%',
+      dropdownParent: $('body')
     });
+  }
 
-    // 2. Fiscal Year Logic
-    const fiscalYearField = document.getElementById('id_fiscal_year');
-    const regulationSelect = document.getElementById('id_regulation'); // Select2 changes require jQuery trigger
-    const currentYear = new Date().getFullYear();
+  // 2) Fiscal Year Logic
+  const fiscalYearField = document.getElementById('id_fiscal_year');
+  const regulationSelect = document.getElementById('id_regulation');
+  const currentYear = new Date().getFullYear();
 
-    // Auto-fill current year if empty
-    if (fiscalYearField && !fiscalYearField.value) {
-        fiscalYearField.value = currentYear;
+  if (fiscalYearField && !fiscalYearField.value) {
+    fiscalYearField.value = currentYear;
+  }
+
+  function syncRegulationWithYear(year) {
+    if (!regulationSelect || !window.jQuery) return;
+
+    const $regSelect = $(regulationSelect);
+    const options = regulationSelect.options;
+
+    for (let i = 0; i < options.length; i++) {
+      // Assumes option text contains the year (e.g., "UK 2026" / "BR 2026")
+      if ((options[i].text || "").includes(String(year))) {
+        $regSelect.val(options[i].value).trigger('change');
+        break;
+      }
     }
-    
-    // Function to auto-select regulation based on fiscal year
-    function syncRegulationWithYear(year) {
-        if (!regulationSelect) return;
-        
-        const $regSelect = $(regulationSelect); // Wrap in jQuery for Select2
-        const options = regulationSelect.options;
-        
-        for (let i = 0; i < options.length; i++) {
-            if (options[i].text.includes(year.toString())) {
-                $regSelect.val(options[i].value).trigger('change'); // Trigger Select2 update
-                break;
-            }
-        }
-    }
+  }
 
-    // Trigger sync on load (if creating new)
-    if (regulationSelect && !regulationSelect.value && fiscalYearField.value) {
-        syncRegulationWithYear(fiscalYearField.value);
-    }
+  if (regulationSelect && !regulationSelect.value && fiscalYearField && fiscalYearField.value) {
+    syncRegulationWithYear(fiscalYearField.value);
+  }
 
-    // Validate fiscal year and sync on change
-    if (fiscalYearField) {
-        fiscalYearField.addEventListener('change', function() {
-            const year = parseInt(this.value);
-            syncRegulationWithYear(year);
-        });
-    }
-
-    // 3. Submit Loading State
-    const form = document.getElementById('payroll-form');
-    form.addEventListener('submit', function(e) {
-        const btn = document.getElementById('submit-btn');
-        if(form.checkValidity()) {
-            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Saving...';
-            btn.disabled = true;
-        }
+  if (fiscalYearField) {
+    fiscalYearField.addEventListener('change', function() {
+      const year = parseInt(this.value, 10);
+      if (!Number.isNaN(year)) syncRegulationWithYear(year);
     });
+  }
+
+  // 3) Submit loading state
+  const form = document.getElementById('payroll-form');
+  form.addEventListener('submit', function() {
+    const btn = document.getElementById('submit-btn');
+    if (form.checkValidity()) {
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>' + I18N_SAVING;
+      btn.disabled = true;
+    }
+  });
+
 });
 </script>
 {% endblock %}

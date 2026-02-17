@@ -102,6 +102,12 @@ class UserProfile(models.Model):
     address = models.CharField(max_length=255, blank=True, null=True)
     city = models.CharField(max_length=100, blank=True, null=True)
     country = models.CharField(max_length=100, blank=True, null=True)
+
+    preferred_language = models.CharField(
+        max_length=30,
+        choices=settings.LANGUAGES,
+        default=settings.LANGUAGE_CODE,
+    )
     
     notify_by_email = models.BooleanField(default=True)
     notify_by_sms = models.BooleanField(default=False)
@@ -320,6 +326,8 @@ class UserContext(models.Model):
         on_delete=models.CASCADE,
         related_name="user_contexts"
     )
+
+
     role = models.CharField(
         max_length=50,
         choices=[

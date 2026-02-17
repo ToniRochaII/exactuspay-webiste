@@ -69,13 +69,31 @@ INSTALLED_APPS = [
     'Exactus.ess.apps.EssConfig',
 ]
 
+USE_I18N = True
+USE_L10N = True  # optional (Django handles formatting well without it too)
+
+LANGUAGE_CODE = "en"
+
+LANGUAGES = [
+    ("en", "English"),
+    ("es", "Español"),
+    ("pt", "Português"),
+]
+
+
+# Where your compiled translations will live (global)
+LOCALE_PATHS = [BASE_DIR / "locale"]
+
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "Exactus.accounts.middleware.UserPreferredLanguageMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]

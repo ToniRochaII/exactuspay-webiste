@@ -77,9 +77,10 @@ class PDcode(models.Model):
     CALCBASETYPE_CHOICES = [
         ("Bracketable", "Bracketable"),
         ("Prorational", "Prorational"),
-        ("Pension", "Pension"),
         ("Formulae", "Formulae"),
         ("Base", "Base"),
+        ("Accrual", "Accrual"),
+        ("Flat", "Flat"),
     ]
 
 

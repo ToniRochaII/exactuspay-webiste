@@ -1,17 +1,22 @@
 {% extends "base.html" %}
 {% load static %}
 {% load humanize %}
+{% load i18n %}
 
 {% block title %}
-    {% if form.instance.pk %}Edit Period{% else %}Create Period{% endif %} | ExactusPay
+  {% if form.instance.pk %}
+    {% trans "Edit Period" %}
+  {% else %}
+    {% trans "Create Period" %}
+  {% endif %} | ExactusPay
 {% endblock %}
 
 {% block page_title %}
-    {% if form.instance.pk %}
-        <i class="fas fa-edit me-2"></i>Edit Period
-    {% else %}
-        <i class="fas fa-calendar-plus me-2"></i>Create Period
-    {% endif %}
+  {% if form.instance.pk %}
+    <i class="fas fa-edit me-2"></i>{% trans "Edit Period" %}
+  {% else %}
+    <i class="fas fa-calendar-plus me-2"></i>{% trans "Create Period" %}
+  {% endif %}
 {% endblock %}
 
 {% block extra_head %}
@@ -19,91 +24,87 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
 
 <style>
-    /* --- GOLD STANDARD FORM CSS --- */
-    body { background-color: #F4F4F4 !important; }
-    .wrapper:before { background: #F4F4F4 !important; }
-    :root { --card-radius: 16px; --input-radius: 10px; --border-color: #f0f0f0; }
+  body { background-color: #F4F4F4 !important; }
+  .wrapper:before { background: #F4F4F4 !important; }
+  :root { --card-radius: 16px; --input-radius: 10px; --border-color: #f0f0f0; }
 
-    /* Card Styling */
-    .card-hover-effect {
-        border-radius: var(--card-radius);
-        border: none;
-        transition: transform 0.25s ease, box-shadow 0.25s ease;
-        overflow: hidden;
-    }
-    .card-hover-effect:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
-    }
-    .card-header {
-        background-color: #fff;
-        border-bottom: 1px solid #f0f0f0;
-    }
+  .card-hover-effect {
+    border-radius: var(--card-radius);
+    border: none;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    overflow: hidden;
+  }
+  .card-hover-effect:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+  }
+  .card-header {
+    background-color: #fff;
+    border-bottom: 1px solid #f0f0f0;
+  }
 
-    /* Unified Input Styling */
-    .form-control, 
-    .form-select {
-        border-radius: var(--input-radius) !important;
-        font-size: 1rem !important;
-        border: 1px solid #ced4da;
-        padding-top: 1.625rem;
-        padding-bottom: 0.625rem;
-        height: 58px;
-    }
+  .form-control,
+  .form-select {
+    border-radius: var(--input-radius) !important;
+    font-size: 1rem !important;
+    border: 1px solid #ced4da;
+    padding-top: 1.625rem;
+    padding-bottom: 0.625rem;
+    height: 58px;
+  }
 
-    /* Select2 Styling */
-    .select2-container .select2-selection--single {
-        height: 58px !important; 
-        border-radius: var(--input-radius) !important;
-        border: 1px solid #ced4da;
-        display: flex;
-        align-items: center; 
-    }
-    .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
-        margin-top: 16px !important; 
-        margin-left: 2px;
-        color: #212529;
-        font-size: 1rem !important; 
-        font-weight: 400;
-    }
-    .select2-container--bootstrap-5 .select2-selection__arrow {
-        top: 50% !important;
-        transform: translateY(-50%);
-        right: 15px !important;
-    }
-    
-    /* Floating Label Fixes */
-    .form-floating > .select2-container { padding-top: 0; }
-    .form-floating > label { padding-left: 14px; }
+  .select2-container .select2-selection--single {
+    height: 58px !important;
+    border-radius: var(--input-radius) !important;
+    border: 1px solid #ced4da;
+    display: flex;
+    align-items: center;
+  }
+  .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+    margin-top: 16px !important;
+    margin-left: 2px;
+    color: #212529;
+    font-size: 1rem !important;
+    font-weight: 400;
+  }
+  .select2-container--bootstrap-5 .select2-selection__arrow {
+    top: 50% !important;
+    transform: translateY(-50%);
+    right: 15px !important;
+  }
 
-    /* Switch Card */
-    .switch-card {
-        border: 1px solid #ced4da;
-        border-radius: var(--input-radius);
-        padding: 12px 16px;
-        background-color: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        min-height: 58px;
-    }
-    .form-switch .form-check-input {
-        width: 3em;
-        height: 1.5em;
-        cursor: pointer;
-    }
+  .form-floating > .select2-container { padding-top: 0; }
+  .form-floating > label { padding-left: 14px; }
+
+  .switch-card {
+    border: 1px solid #ced4da;
+    border-radius: var(--input-radius);
+    padding: 12px 16px;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 58px;
+  }
+  .form-switch .form-check-input {
+    width: 3em;
+    height: 1.5em;
+    cursor: pointer;
+  }
 </style>
 {% endblock %}
 
 {% block breadcrumbs %}
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'companies:company' country_slug %}">Companies</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'payroll:payroll_list' country_slug company_id %}">Payrolls</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'payroll:payroll_detail' country_slug company_id payroll.id %}">{{ payroll.fiscal_year }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'companies:company' country_slug %}">{% trans "Companies" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'payroll:payroll_list' country_slug company_id %}">{% trans "Payrolls" %}</a></li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'payroll:payroll_detail' country_slug company_id payroll.id %}">{{ payroll.fiscal_year }}</a>
+    </li>
     <li class="breadcrumb-item active">
-        {% if form.instance.pk %}Edit Period{% else %}Create Period{% endif %}
+      {% if form.instance.pk %}{% trans "Edit Period" %}{% else %}{% trans "Create Period" %}{% endif %}
     </li>
   </ol>
 </nav>
@@ -111,181 +112,198 @@
 
 {% block content %}
 <div class="row">
-    <div class="col-12">
-        
-        <div class="card card-hover-effect shadow-sm">
-            <div class="card-header pt-4 px-4 pb-3">
-                <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <h5 class="card-title mb-0">
-                            {% if form.instance.pk %}
-                                <i class="fas fa-edit me-2 text-primary"></i>Edit Period: {{ form.instance.name }}
-                            {% else %}
-                                <i class="fas fa-calendar-plus me-2 text-primary"></i>Create New Period
-                            {% endif %}
-                        </h5>
-                        <h6 class="card-subtitle text-muted mt-1">
-                            {{ payroll.company.trade_name }} — Fiscal Year {{ payroll.fiscal_year }}
-                        </h6>
-                    </div>
-                    {% if payroll.is_historical %}
-                        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill">
-                            <i class="fas fa-history me-1"></i> Historical Data
-                        </span>
-                    {% endif %}
-                </div>
-            </div>
+  <div class="col-12">
 
-            <div class="card-body p-4">
+    <div class="card card-hover-effect shadow-sm">
+      <div class="card-header pt-4 px-4 pb-3">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h5 class="card-title mb-0">
+              {% if form.instance.pk %}
+                <i class="fas fa-edit me-2 text-primary"></i>
+                {% blocktrans with period_name=form.instance.name %}Edit Period: {{ period_name }}{% endblocktrans %}
+              {% else %}
+                <i class="fas fa-calendar-plus me-2 text-primary"></i>
+                {% trans "Create New Period" %}
+              {% endif %}
+            </h5>
 
-                {% if payroll.is_historical and not form.instance.pk %}
-                <div class="alert alert-info border-info shadow-sm rounded-3 mb-4">
-                    <div class="d-flex align-items-center">
-                        <div class="fs-4 me-3 text-info"><i class="fas fa-info-circle"></i></div>
-                        <div>
-                            <h6 class="fw-bold mb-1">Historical Data Entry</h6>
-                            <p class="mb-0 small">
-                                This payroll is flagged for <strong>Historical Data</strong>. 
-                                After saving these dates, you will be automatically redirected to the <strong>Data Upload Wizard</strong>.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
+            <h6 class="card-subtitle text-muted mt-1">
+              {% blocktrans with company_name=payroll.company.trade_name fiscal_year=payroll.fiscal_year %}
+                {{ company_name }} — Fiscal Year {{ fiscal_year }}
+              {% endblocktrans %}
+            </h6>
+          </div>
 
-                <form method="post" novalidate id="period-form">
-                    {% csrf_token %}
-                    
-                    {% if form.non_field_errors %}
-                        <div class="alert alert-danger rounded-3 mb-4">
-                            {{ form.non_field_errors }}
-                        </div>
-                    {% endif %}
-
-                    <input type="hidden" name="payroll" value="{{ payroll.pk }}">
-
-                    <h6 class="text-uppercase text-muted mb-3 fw-bold small ls-1">
-                        <i class="fas fa-calendar-alt me-2"></i>Period Configuration
-                    </h6>
-
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-2">
-                            <div class="form-floating">
-                                {{ form.period_number }}
-                                <label for="{{ form.period_number.id_for_label }}">No.</label>
-                            </div>
-                            {% if form.period_number.errors %}
-                                <div class="text-danger small mt-1">{{ form.period_number.errors.0 }}</div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.name }}
-                                <label for="{{ form.name.id_for_label }}">Period Name (e.g. January 2025)</label>
-                            </div>
-                            {% if form.name.errors %}
-                                <div class="text-danger small mt-1">{{ form.name.errors.0 }}</div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-floating">
-                                {{ form.frequency }}
-                                <label for="{{ form.frequency.id_for_label }}">Frequency</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-4">
-                            <div class="form-floating">
-                                {{ form.start_date }}
-                                <label for="{{ form.start_date.id_for_label }}">Start Date</label>
-                            </div>
-                            {% if form.start_date.errors %}
-                                <div class="text-danger small mt-1">{{ form.start_date.errors.0 }}</div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="form-floating">
-                                {{ form.end_date }}
-                                <label for="{{ form.end_date.id_for_label }}">End Date</label>
-                            </div>
-                            {% if form.end_date.errors %}
-                                <div class="text-danger small mt-1">{{ form.end_date.errors.0 }}</div>
-                            {% endif %}
-                        </div>
-
-                        <div class="col-md-4">
-                            <div class="switch-card">
-                                <div>
-                                    <h6 class="fw-semibold mb-0 text-dark" style="font-size: 0.9rem;">Additional Period?</h6>
-                                </div>
-                                <div class="form-check form-switch ms-2 mb-0">
-                                    {{ form.is_additional }}
-                                    <label class="form-check-label" for="{{ form.is_additional.id_for_label }}"></label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr class="text-muted opacity-25">
-
-                    <h6 class="text-uppercase text-muted my-3 fw-bold small ls-1">
-                        <i class="fas fa-clock me-2"></i>Processing Timeline
-                    </h6>
-
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.processing_date }}
-                                <label for="{{ form.processing_date.id_for_label }}">Processing Date (Cut-off)</label>
-                            </div>
-                            <div class="form-text small"><i class="fas fa-info-circle me-1"></i>Calculated as Start Date + 20 days.</div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                {{ form.payment_date }}
-                                <label for="{{ form.payment_date.id_for_label }}">Payment Date</label>
-                            </div>
-                            <div class="form-text small"><i class="fas fa-money-bill-wave me-1"></i>Calculated as Processing + 3 working days.</div>
-                        </div>
-                    </div>
-
-                    <div class="row g-3 mb-4">
-                        <div class="col-12">
-                            <div class="form-floating">
-                                {{ form.regulation_overrides }}
-                                <label for="{{ form.regulation_overrides.id_for_label }}">Regulation Overrides (Optional JSON)</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="d-flex justify-content-between align-items-center mt-5 pt-3 border-top">
-                        <a href="{% url 'payroll:payroll_detail' country_slug company_id payroll.pk %}" class="btn btn-danger me-2">
-                            Cancel
-                        </a>
-                        
-                        <button type="submit" class="btn btn-primary px-4">
-                            {% if form.instance.pk %}
-                                <i class="fas fa-save me-2"></i>Update Period
-                            {% else %}
-                                {% if payroll.is_historical %}
-                                    <i class="fas fa-upload me-2"></i>Create & Upload Data
-                                {% else %}
-                                    <i class="fas fa-save me-2"></i>Create Period
-                                {% endif %}
-                            {% endif %}
-                        </button>
-                    </div>
-
-                </form>
-            </div>
+          {% if payroll.is_historical %}
+            <span class="badge bg-warning text-dark px-3 py-2 rounded-pill">
+              <i class="fas fa-history me-1"></i>{% trans "Historical Data" %}
+            </span>
+          {% endif %}
         </div>
+      </div>
+
+      <div class="card-body p-4">
+
+        {% if payroll.is_historical and not form.instance.pk %}
+          <div class="alert alert-info border-info shadow-sm rounded-3 mb-4">
+            <div class="d-flex align-items-center">
+              <div class="fs-4 me-3 text-info"><i class="fas fa-info-circle"></i></div>
+              <div>
+                <h6 class="fw-bold mb-1">{% trans "Historical Data Entry" %}</h6>
+                <p class="mb-0 small">
+                  {% blocktrans %}
+                    This payroll is flagged for <strong>Historical Data</strong>.
+                    After saving these dates, you will be automatically redirected to the <strong>Data Upload Wizard</strong>.
+                  {% endblocktrans %}
+                </p>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+
+        <form method="post" novalidate id="period-form">
+          {% csrf_token %}
+
+          {% if form.non_field_errors %}
+            <div class="alert alert-danger rounded-3 mb-4">
+              {{ form.non_field_errors }}
+            </div>
+          {% endif %}
+
+          <input type="hidden" name="payroll" value="{{ payroll.pk }}">
+
+          <h6 class="text-uppercase text-muted mb-3 fw-bold small ls-1">
+            <i class="fas fa-calendar-alt me-2"></i>{% trans "Period Configuration" %}
+          </h6>
+
+          <div class="row g-3 mb-4">
+            <div class="col-md-2">
+              <div class="form-floating">
+                {{ form.period_number }}
+                <label for="{{ form.period_number.id_for_label }}">{% trans "No." %}</label>
+              </div>
+              {% if form.period_number.errors %}
+                <div class="text-danger small mt-1">{{ form.period_number.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-floating">
+                {{ form.name }}
+                <label for="{{ form.name.id_for_label }}">{% trans "Period Name (e.g. January 2025)" %}</label>
+              </div>
+              {% if form.name.errors %}
+                <div class="text-danger small mt-1">{{ form.name.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.frequency }}
+                <label for="{{ form.frequency.id_for_label }}">{% trans "Frequency" %}</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="row g-3 mb-4">
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.start_date }}
+                <label for="{{ form.start_date.id_for_label }}">{% trans "Start Date" %}</label>
+              </div>
+              {% if form.start_date.errors %}
+                <div class="text-danger small mt-1">{{ form.start_date.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-floating">
+                {{ form.end_date }}
+                <label for="{{ form.end_date.id_for_label }}">{% trans "End Date" %}</label>
+              </div>
+              {% if form.end_date.errors %}
+                <div class="text-danger small mt-1">{{ form.end_date.errors.0 }}</div>
+              {% endif %}
+            </div>
+
+            <div class="col-md-4">
+              <div class="switch-card">
+                <div>
+                  <h6 class="fw-semibold mb-0 text-dark" style="font-size: 0.9rem;">
+                    {% trans "Additional Period?" %}
+                  </h6>
+                </div>
+                <div class="form-check form-switch ms-2 mb-0">
+                  {{ form.is_additional }}
+                  <label class="form-check-label" for="{{ form.is_additional.id_for_label }}"></label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr class="text-muted opacity-25">
+
+          <h6 class="text-uppercase text-muted my-3 fw-bold small ls-1">
+            <i class="fas fa-clock me-2"></i>{% trans "Processing Timeline" %}
+          </h6>
+
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <div class="form-floating">
+                {{ form.processing_date }}
+                <label for="{{ form.processing_date.id_for_label }}">{% trans "Processing Date (Cut-off)" %}</label>
+              </div>
+              <div class="form-text small">
+                <i class="fas fa-info-circle me-1"></i>{% trans "Calculated as Start Date + 20 days." %}
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-floating">
+                {{ form.payment_date }}
+                <label for="{{ form.payment_date.id_for_label }}">{% trans "Payment Date" %}</label>
+              </div>
+              <div class="form-text small">
+                <i class="fas fa-money-bill-wave me-1"></i>{% trans "Calculated as Processing + 3 working days." %}
+              </div>
+            </div>
+          </div>
+
+          <div class="row g-3 mb-4">
+            <div class="col-12">
+              <div class="form-floating">
+                {{ form.regulation_overrides }}
+                <label for="{{ form.regulation_overrides.id_for_label }}">
+                  {% trans "Regulation Overrides (Optional JSON)" %}
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center mt-5 pt-3 border-top">
+            <a href="{% url 'payroll:payroll_detail' country_slug company_id payroll.pk %}" class="btn btn-danger me-2">
+              {% trans "Cancel" %}
+            </a>
+
+            <button type="submit" class="btn btn-primary px-4">
+              {% if form.instance.pk %}
+                <i class="fas fa-save me-2"></i>{% trans "Update Period" %}
+              {% else %}
+                {% if payroll.is_historical %}
+                  <i class="fas fa-upload me-2"></i>{% trans "Create & Upload Data" %}
+                {% else %}
+                  <i class="fas fa-save me-2"></i>{% trans "Create Period" %}
+                {% endif %}
+              {% endif %}
+            </button>
+          </div>
+
+        </form>
+      </div>
     </div>
+
+  </div>
 </div>
 {% endblock %}
 
@@ -294,106 +312,122 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    
-    // 1. Initialize Select2
-    $("select").select2({
-        theme: "bootstrap-5",
-        width: '100%',
-        dropdownParent: $('body')
+
+  // JS i18n strings
+  const I18N = {
+    january: "{% trans 'January' %}",
+    february: "{% trans 'February' %}",
+    march: "{% trans 'March' %}",
+    april: "{% trans 'April' %}",
+    may: "{% trans 'May' %}",
+    june: "{% trans 'June' %}",
+    july: "{% trans 'July' %}",
+    august: "{% trans 'August' %}",
+    september: "{% trans 'September' %}",
+    october: "{% trans 'October' %}",
+    november: "{% trans 'November' %}",
+    december: "{% trans 'December' %}",
+    fetch_period_number_error: "{% trans 'Error fetching period number:' %}",
+  };
+
+  // 1. Initialize Select2
+  $("select").select2({
+    theme: "bootstrap-5",
+    width: '100%',
+    dropdownParent: $('body')
+  });
+
+  // 2. Date Logic Variables
+  const startDateField = document.getElementById('id_start_date');
+  const endDateField = document.getElementById('id_end_date');
+  const nameField = document.getElementById('id_name');
+  const processingDateField = document.getElementById('id_processing_date');
+  const paymentDateField = document.getElementById('id_payment_date');
+
+  function formatDate(date) {
+    const d = new Date(date);
+    let month = '' + (d.getMonth() + 1);
+    let day = '' + d.getDate();
+    const year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+  }
+
+  function addWorkingDays(startDate, days) {
+    let date = new Date(startDate);
+    let addedDays = 0;
+    while (addedDays < days) {
+      date.setDate(date.getDate() + 1);
+      if (date.getDay() !== 0 && date.getDay() !== 6) {
+        addedDays++;
+      }
+    }
+    return date;
+  }
+
+  function updatePeriodName() {
+    if (startDateField.value && endDateField.value && (!nameField.value || nameField.value.trim() === '')) {
+      const startDate = new Date(startDateField.value + 'T00:00:00');
+
+      const monthNames = [
+        I18N.january, I18N.february, I18N.march, I18N.april, I18N.may, I18N.june,
+        I18N.july, I18N.august, I18N.september, I18N.october, I18N.november, I18N.december
+      ];
+
+      const monthName = monthNames[startDate.getMonth()];
+      const year = startDate.getFullYear();
+      nameField.value = `${monthName} ${year}`;
+    }
+  }
+
+  function updateProcessingAndPaymentDates() {
+    if (startDateField.value) {
+      const startDate = new Date(startDateField.value + 'T00:00:00');
+
+      const processingDate = new Date(startDate);
+      processingDate.setDate(startDate.getDate() + 20);
+
+      if (processingDateField) {
+        processingDateField.value = formatDate(processingDate);
+      }
+
+      if (paymentDateField) {
+        const paymentDate = addWorkingDays(processingDate, 3);
+        paymentDateField.value = formatDate(paymentDate);
+      }
+    }
+  }
+
+  if (startDateField) {
+    startDateField.addEventListener('change', function() {
+      updatePeriodName();
+      updateProcessingAndPaymentDates();
     });
+  }
 
-    // 2. Date Logic Variables
-    const startDateField = document.getElementById('id_start_date');
-    const endDateField = document.getElementById('id_end_date');
-    const nameField = document.getElementById('id_name');
-    const processingDateField = document.getElementById('id_processing_date');
-    const paymentDateField = document.getElementById('id_payment_date');
-    
-    // Helper: Format YYYY-MM-DD
-    function formatDate(date) {
-        const d = new Date(date);
-        let month = '' + (d.getMonth() + 1);
-        let day = '' + d.getDate();
-        const year = d.getFullYear();
+  if (endDateField) {
+    endDateField.addEventListener('change', updatePeriodName);
+  }
 
-        if (month.length < 2) month = '0' + month;
-        if (day.length < 2) day = '0' + day;
-
-        return [year, month, day].join('-');
-    }
-
-    // Helper: Add Working Days
-    function addWorkingDays(startDate, days) {
-        let date = new Date(startDate);
-        let addedDays = 0;
-        while (addedDays < days) {
-            date.setDate(date.getDate() + 1);
-            if (date.getDay() !== 0 && date.getDay() !== 6) { // Skip Sun(0) and Sat(6)
-                addedDays++;
-            }
+  // 3. Fetch Next Period Number (Create Mode Only)
+  {% if not form.instance.pk %}
+  const periodNumberField = document.getElementById('id_period_number');
+  if (periodNumberField && (!periodNumberField.value || periodNumberField.value === '')) {
+    const url = "{% url 'payroll:next_period_number' payroll.pk %}";
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        if (data.next_period_number) {
+          periodNumberField.value = data.next_period_number;
         }
-        return date;
-    }
+      })
+      .catch(error => console.error(I18N.fetch_period_number_error, error));
+  }
+  {% endif %}
 
-    // Auto-Name Generation
-    function updatePeriodName() {
-        if (startDateField.value && endDateField.value && (!nameField.value || nameField.value.trim() === '')) {
-            const startDate = new Date(startDateField.value + 'T00:00:00'); // Force Local Time
-            const monthNames = ["January", "February", "March", "April", "May", "June",
-                              "July", "August", "September", "October", "November", "December"];
-            const monthName = monthNames[startDate.getMonth()];
-            const year = startDate.getFullYear();
-            nameField.value = `${monthName} ${year}`;
-        }
-    }
-
-    // Auto-Date Calculation
-    function updateProcessingAndPaymentDates() {
-        if (startDateField.value) {
-            // Processing = Start + 20 days
-            const startDate = new Date(startDateField.value + 'T00:00:00');
-            const processingDate = new Date(startDate);
-            processingDate.setDate(startDate.getDate() + 20);
-            
-            if (processingDateField) {
-                processingDateField.value = formatDate(processingDate);
-            }
-
-            // Payment = Processing + 3 working days
-            if (paymentDateField) {
-                const paymentDate = addWorkingDays(processingDate, 3);
-                paymentDateField.value = formatDate(paymentDate);
-            }
-        }
-    }
-    
-    // Event Listeners
-    if (startDateField) {
-        startDateField.addEventListener('change', function() {
-            updatePeriodName();
-            updateProcessingAndPaymentDates();
-        });
-    }
-    
-    if (endDateField) {
-        endDateField.addEventListener('change', updatePeriodName);
-    }
-    
-    // 3. Fetch Next Period Number (Create Mode Only)
-    {% if not form.instance.pk %}
-    const periodNumberField = document.getElementById('id_period_number');
-    if (periodNumberField && (!periodNumberField.value || periodNumberField.value === '')) {
-        const url = "{% url 'payroll:next_period_number' payroll.pk %}";
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                if (data.next_period_number) {
-                    periodNumberField.value = data.next_period_number;
-                }
-            })
-            .catch(error => console.error('Error fetching period number:', error));
-    }
-    {% endif %}
 });
 </script>
 {% endblock %}

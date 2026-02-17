@@ -4,6 +4,7 @@ import time
 import datetime
 from datetime import timedelta
 from collections import defaultdict
+from urllib import request
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -24,7 +25,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.tokens import default_token_generator
 from django.views.decorators.http import require_GET, require_POST, require_http_methods
 from django.views.decorators.csrf import csrf_exempt
-
+from django.utils import translation
 from django.db import transaction
 from django.db.models import Q, Count, Sum, F
 from django.db.models.functions import TruncMonth
@@ -144,6 +145,16 @@ def export_users_csv(request):
 
     for u in users:
         writer.writerow([u.username, u.email, u.role, u.is_active, u.date_joined])
+
+    return response
+
+
+def form_valid(self, form):
+    response = super().form_valid(form)
+
+    lang = form.instance.preferred_language
+    translation.activate(lang)
+    self.request.session[translation.LANGUAGE_SESSION_KEY] = lang
 
     return response
 
@@ -504,15 +515,35 @@ def unified_profile(request, user_id=None):
     """Unified profile view."""
     target_user = get_object_or_404(User, id=user_id) if user_id else request.user
     profile, _ = UserProfile.objects.get_or_create(user=target_user)
-    
+
     if request.method == "POST":
         form = UserProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
-            form.save()
-            messages.success(request, "Profile updated.")
-        return redirect(request.path)
+            profile = form.save()
 
-    return render(request, "profile/unified_profile.html", {"target_user": target_user, "profile": profile, "profile_form": UserProfileForm(instance=profile), "is_own_profile": (request.user == target_user)})
+            # ✅ apply immediately for this session (only makes sense for own profile)
+            if request.user == target_user:
+                lang = getattr(profile, "preferred_language", None)
+                if lang:
+                    translation.activate(lang)
+                    request.session["django_language"] = lang  # ✅ simplest + reliable
+
+            messages.success(request, "Profile updated.")
+            return redirect(request.path)
+    else:
+        form = UserProfileForm(instance=profile)
+
+    return render(
+        request,
+        "profile/unified_profile.html",
+        {
+            "target_user": target_user,
+            "profile": profile,
+            "profile_form": form,
+            "is_own_profile": (request.user == target_user),
+        },
+    )
+
 
 @login_required
 def heartbeat(request):
@@ -570,3 +601,28 @@ def dashboard_country_map(request):
     )
     
     return JsonResponse({'countries': active_country_codes})
+
+from django.conf import settings
+from django.utils import translation
+
+class UserPreferredLanguageMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        user = getattr(request, "user", None)
+
+        if user and user.is_authenticated:
+            profile = getattr(user, "userprofile", None)  # or user.profile if you set related_name
+            lang = getattr(profile, "preferred_language", None)
+
+            if lang and lang in dict(settings.LANGUAGES):
+                translation.activate(lang)
+                request.LANGUAGE_CODE = lang
+                request.session["django_language"] = lang
+
+        response = self.get_response(request)
+        translation.deactivate()
+        return response
+
+

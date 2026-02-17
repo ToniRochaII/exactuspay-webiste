@@ -1,35 +1,213 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Report Management Hub" %} | ExactusPay{% endblock %}
+
+{% block page_title %}
+<i class="bi bi-layout-text-window-reverse me-2"></i>{% trans "Report Management Hub" %}
+{% endblock %}
+
+{% block extra_head %}
+<style>
+  body { background-color: #F4F4F4 !important; }
+  .wrapper:before { background: #F4F4F4 !important; }
+
+  :root{
+    --card-radius: 16px;
+    --border-color: #f0f0f0;
+  }
+
+  .card-hover-effect{
+    border-radius: var(--card-radius);
+    border: none;
+    overflow: hidden;
+    transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .card-hover-effect:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0,0,0,.08) !important;
+  }
+
+  .card-header{
+    background: #fff;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .kpi-card{
+    background: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--card-radius);
+    height: 100%;
+  }
+
+  .kpi-icon{
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(13,110,253,.08);
+    color: #0d6efd;
+    font-size: 1.25rem;
+  }
+
+  .kpi-label{
+    font-size: .78rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #6c757d;
+    font-weight: 700;
+    margin-bottom: .35rem;
+  }
+
+  .kpi-value{
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0;
+    line-height: 1.05;
+  }
+
+  .btn-pill{
+    border-radius: 999px;
+    padding: .6rem 1.1rem;
+    font-weight: 700;
+  }
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      {% trans "Reports Hub" %}
+    </li>
+  </ol>
+</nav>
+{% endblock %}
+
 {% block content %}
-<div class="container-fluid p-0">
-    <h1 class="h3 mb-3">Report Management Hub</h1>
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card text-center">
-                <div class="card-body">
-                    <h5 class="card-title">Report Types</h5>
-                    <p class="display-4">{{ total_types }}</p>
-                    <a href="{% url 'reports:manage_types_list' %}" class="btn btn-primary w-100">Manage Types</a>
-                </div>
-            </div>
+<div class="row">
+  <div class="col-12">
+
+    <div class="card card-hover-effect shadow-sm">
+      <div class="card-header pt-4 px-4 pb-3">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+          <div>
+            <h5 class="card-title mb-0">
+              <i class="bi bi-diagram-3 me-2 text-primary"></i>{% trans "Report Management Hub" %}
+            </h5>
+            <h6 class="card-subtitle text-muted mt-1">
+              {% trans "Central control for report types, HTML layouts, and configuration rules." %}
+            </h6>
+          </div>
+
+          <div class="d-flex gap-2">
+            <a href="{% url 'reports:manage_types_list' %}" class="btn btn-outline-primary btn-pill">
+              <i class="bi bi-list-check me-2"></i>{% trans "Types" %}
+            </a>
+            <a href="{% url 'reports:manage_layouts_list' %}" class="btn btn-outline-success btn-pill">
+              <i class="bi bi-code-slash me-2"></i>{% trans "Layouts" %}
+            </a>
+            <a href="{% url 'reports:manage_configs_list' %}" class="btn btn-outline-info btn-pill">
+              <i class="bi bi-sliders me-2"></i>{% trans "Rules" %}
+            </a>
+          </div>
         </div>
-        <div class="col-md-4">
-            <div class="card text-center">
-                <div class="card-body">
-                    <h5 class="card-title">HTML Layouts</h5>
-                    <p class="display-4">{{ total_layouts }}</p>
-                    <a href="{% url 'reports:manage_layouts_list' %}" class="btn btn-success w-100">Manage Layouts</a>
+      </div>
+
+      <div class="card-body p-4">
+        <div class="row g-3">
+
+          <!-- Report Types -->
+          <div class="col-md-4">
+            <div class="kpi-card p-4 card-hover-effect shadow-sm">
+              <div class="d-flex align-items-center justify-content-between mb-3">
+                <div>
+                  <div class="kpi-label">{% trans "Report Types" %}</div>
+                  <p class="kpi-value">{{ total_types|default:0 }}</p>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card text-center">
-                <div class="card-body">
-                    <h5 class="card-title">Configurations</h5>
-                    <p class="display-4">{{ total_configs }}</p>
-                    <a href="{% url 'reports:manage_configs_list' %}" class="btn btn-info text-white w-100">Manage Rules</a>
+                <div class="kpi-icon" style="background: rgba(13,110,253,.08); color:#0d6efd;">
+                  <i class="bi bi-collection"></i>
                 </div>
+              </div>
+
+              <p class="text-muted small mb-3">
+                {% trans "Define the available report types and their metadata." %}
+              </p>
+
+              <a href="{% url 'reports:manage_types_list' %}" class="btn btn-primary w-100 btn-pill">
+                <i class="bi bi-gear me-2"></i>{% trans "Manage Types" %}
+              </a>
             </div>
+          </div>
+
+          <!-- Layouts -->
+          <div class="col-md-4">
+            <div class="kpi-card p-4 card-hover-effect shadow-sm">
+              <div class="d-flex align-items-center justify-content-between mb-3">
+                <div>
+                  <div class="kpi-label">{% trans "HTML Layouts" %}</div>
+                  <p class="kpi-value">{{ total_layouts|default:0 }}</p>
+                </div>
+                <div class="kpi-icon" style="background: rgba(25,135,84,.10); color:#198754;">
+                  <i class="bi bi-filetype-html"></i>
+                </div>
+              </div>
+
+              <p class="text-muted small mb-3">
+                {% trans "Create and maintain HTML templates used for rendering reports." %}
+              </p>
+
+              <a href="{% url 'reports:manage_layouts_list' %}" class="btn btn-success w-100 btn-pill">
+                <i class="bi bi-code-slash me-2"></i>{% trans "Manage Layouts" %}
+              </a>
+            </div>
+          </div>
+
+          <!-- Configurations -->
+          <div class="col-md-4">
+            <div class="kpi-card p-4 card-hover-effect shadow-sm">
+              <div class="d-flex align-items-center justify-content-between mb-3">
+                <div>
+                  <div class="kpi-label">{% trans "Configurations" %}</div>
+                  <p class="kpi-value">{{ total_configs|default:0 }}</p>
+                </div>
+                <div class="kpi-icon" style="background: rgba(13,202,240,.12); color:#0dcaf0;">
+                  <i class="bi bi-sliders"></i>
+                </div>
+              </div>
+
+              <p class="text-muted small mb-3">
+                {% trans "Control which layout is applied at Global, Country, or Company level." %}
+              </p>
+
+              <a href="{% url 'reports:manage_configs_list' %}" class="btn btn-info text-white w-100 btn-pill">
+                <i class="bi bi-diagram-3 me-2"></i>{% trans "Manage Rules" %}
+              </a>
+            </div>
+          </div>
+
         </div>
+
+        <hr class="text-muted opacity-25 my-4">
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+          <div class="text-muted small">
+            <i class="bi bi-info-circle me-1"></i>
+            {% trans "Tip: Configure rules at the Company level to override Country or Global defaults." %}
+          </div>
+          <a href="{% url 'reports:manage_configs_add' %}" class="btn btn-dark btn-pill">
+            <i class="bi bi-plus-circle me-2"></i>{% trans "New Rule" %}
+          </a>
+        </div>
+
+      </div>
     </div>
+
+  </div>
 </div>
 {% endblock %}

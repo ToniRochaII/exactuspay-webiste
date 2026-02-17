@@ -1,93 +1,120 @@
-<!-- templates/pdcodes/upload_form.html -->
+{# templates/pdcodes/upload_form.html #}
 {% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}
+  {% blocktrans with company_name=company.trade_name %}Upload PD Codes — {{ company_name }} | ExactusPay{% endblocktrans %}
+{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
-    <h1>Upload PD Codes - {{ company.trade_name }}</h1>
-    
-    <div class="card">
-        <div class="card-header">
-            <h5 class="mb-0">Upload CSV File</h5>
-        </div>
-        <div class="card-body">
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                {% endfor %}
-            {% endif %}
-            
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                
-                <div class="mb-3">
-                    {{ form.file.label_tag }}
-                    {{ form.file }}
-                    {% if form.file.errors %}
-                        <div class="text-danger">
-                            {{ form.file.errors }}
-                        </div>
-                    {% endif %}
-                    <div class="form-text">{{ form.file.help_text }}</div>
-                </div>
-                
-                <div class="mb-3 form-check">
-                    {{ form.dry_run }}
-                    {{ form.dry_run.label_tag }}
-                    <div class="form-text">{{ form.dry_run.help_text }}</div>
-                </div>
-                
-                <div class="mb-3 form-check">
-                    {{ form.update_existing }}
-                    {{ form.update_existing.label_tag }}
-                    <div class="form-text">{{ form.update_existing.help_text }}</div>
-                </div>
-                
-                <button type="submit" class="btn btn-primary">Upload File</button>
-                
-                <a href="{% url 'pdcodes:download_pdcodes_template' country_slug=country_slug company_id=company.company_id %}" 
-                   class="btn btn-outline-secondary">
-                    Download Template
-                </a>
-                
-                <a href="{% url 'pdcodes:pdcodes' country_slug=country_slug company_id=company.company_id %}" 
-                   class="btn btn-outline-secondary">
-                    Back to PD Codes
-                </a>
-            </form>
-        </div>
+
+  <h1>
+    {% blocktrans with company_name=company.trade_name %}Upload PD Codes - {{ company_name }}{% endblocktrans %}
+  </h1>
+
+  <div class="card">
+    <div class="card-header">
+      <h5 class="mb-0">{% trans "Upload CSV File" %}</h5>
     </div>
-    
-    <!-- Upload Instructions -->
-    <div class="card mt-4">
-        <div class="card-header">
-            <h5 class="mb-0">File Format Instructions</h5>
+
+    <div class="card-body">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="{% trans 'Close' %}"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="mb-3">
+          {{ form.file.label_tag }}
+          {{ form.file }}
+          {% if form.file.errors %}
+            <div class="text-danger">
+              {{ form.file.errors }}
+            </div>
+          {% endif %}
+          <div class="form-text">{{ form.file.help_text }}</div>
         </div>
-        <div class="card-body">
-            <h6>Required Fields:</h6>
-            <ul>
-                <li><code>pdcode_code</code> - Unique PD code (e.g., "BASIC", "TAX")</li>
-                <li><code>pdcode_name</code> - Display name (e.g., "Basic Salary", "Income Tax")</li>
-            </ul>
-            
-            <h6>Optional Fields:</h6>
-            <ul>
-                <li><code>pdcode_description</code> - Description</li>
-                <li><code>pdcode_status</code> - "Visible" or "Hidden"</li>
-                <li><code>pdcode_account</code>, <code>pdcode_map_code</code>, <code>pdcode_gl_account</code> - Numeric codes</li>
-                <li><code>pdcode_frequency</code> - "Recurring" or "Non-recurring"</li>
-                <li><code>pdcode_type</code> - "Regular" or "Irregular"</li>
-                <li><code>pdcode_class</code> - "Standard" or "Statutory"</li>
-                <li><code>pdcode_category</code> - "Payment", "Deduction", "Notional", etc.</li>
-                <li>Boolean flags: <code>pdcode_taxable</code>, <code>pdcode_pensionable</code>, etc. (use True/False)</li>
-                <li><code>pdcode_categorytype</code> - "Bracketable", "Prorational", etc.</li>
-            </ul>
-            
-            <h6>Boolean Values:</h6>
-            <p>Use <code>True</code>, <code>False</code>, <code>1</code>, <code>0</code>, <code>Yes</code>, or <code>No</code> for boolean fields.</p>
+
+        <div class="mb-3 form-check">
+          {{ form.dry_run }}
+          {{ form.dry_run.label_tag }}
+          <div class="form-text">{{ form.dry_run.help_text }}</div>
         </div>
+
+        <div class="mb-3 form-check">
+          {{ form.update_existing }}
+          {{ form.update_existing.label_tag }}
+          <div class="form-text">{{ form.update_existing.help_text }}</div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">{% trans "Upload File" %}</button>
+
+        <a href="{% url 'pdcodes:download_pdcodes_template' country_slug=country_slug company_id=company.company_id %}"
+           class="btn btn-outline-secondary">
+          {% trans "Download Template" %}
+        </a>
+
+        <a href="{% url 'pdcodes:pdcodes' country_slug=country_slug company_id=company.company_id %}"
+           class="btn btn-outline-secondary">
+          {% trans "Back to PD Codes" %}
+        </a>
+      </form>
     </div>
+  </div>
+
+  <div class="card mt-4">
+    <div class="card-header">
+      <h5 class="mb-0">{% trans "File Format Instructions" %}</h5>
+    </div>
+
+    <div class="card-body">
+      <h6>{% trans "Required Fields:" %}</h6>
+      <ul>
+        <li>
+          <code>pdcode_code</code> -
+          {% trans 'Unique PD code (e.g., "BASIC", "TAX")' %}
+        </li>
+        <li>
+          <code>pdcode_name</code> -
+          {% trans 'Display name (e.g., "Basic Salary", "Income Tax")' %}
+        </li>
+      </ul>
+
+      <h6>{% trans "Optional Fields:" %}</h6>
+      <ul>
+        <li><code>pdcode_description</code> - {% trans "Description" %}</li>
+        <li><code>pdcode_status</code> - {% trans '"Visible" or "Hidden"' %}</li>
+        <li>
+          <code>pdcode_account</code>, <code>pdcode_map_code</code>, <code>pdcode_gl_account</code> -
+          {% trans "Numeric codes" %}
+        </li>
+        <li><code>pdcode_frequency</code> - {% trans '"Recurring" or "Non-recurring"' %}</li>
+        <li><code>pdcode_type</code> - {% trans '"Regular" or "Irregular"' %}</li>
+        <li><code>pdcode_class</code> - {% trans '"Standard" or "Statutory"' %}</li>
+        <li><code>pdcode_category</code> - {% trans '"Payment", "Deduction", "Notional", etc.' %}</li>
+        <li>
+          {% trans "Boolean flags:" %}
+          <code>pdcode_taxable</code>, <code>pdcode_pensionable</code>, {% trans "etc." %}
+          ({% trans "use True/False" %})
+        </li>
+        <li><code>pdcode_categorytype</code> - {% trans '"Bracketable", "Prorational", etc.' %}</li>
+      </ul>
+
+      <h6>{% trans "Boolean Values:" %}</h6>
+      <p>
+        {% trans "Use" %}
+        <code>True</code>, <code>False</code>, <code>1</code>, <code>0</code>, <code>Yes</code>, {% trans "or" %} <code>No</code>
+        {% trans "for boolean fields." %}
+      </p>
+    </div>
+  </div>
+
 </div>
 {% endblock %}

@@ -1,351 +1,325 @@
 {% extends "base.html" %}
 {% load static %}
-<link href="{% static 'css/modern.css' %}" rel="stylesheet">
-
+{% load i18n %}
 {% load crispy_forms_tags %}
 
 {% block title %}
-    {% if is_own_profile %}My Profile{% else %}{{ target_user.username }} - Profile{% endif %} | ExactusPay
+  {% if is_own_profile %}
+    {% trans "My Profile" %}
+  {% else %}
+    {{ target_user.username }} - {% trans "Profile" %}
+  {% endif %}
+  | ExactusPay
 {% endblock %}
 
 {% block page_title %}
-    {% if is_own_profile %}
-        <i class="fas fa-user me-2"></i>My Profile
-    {% else %}
-        <i class="fas fa-user-cog me-2"></i>User Profile: {{ target_user.username }}
-        <small class="text-muted">({{ target_user.get_role_display }})</small>
-    {% endif %}
+  {% if is_own_profile %}
+    <i class="fas fa-user me-2"></i>{% trans "My Profile" %}
+  {% else %}
+    <i class="fas fa-user-cog me-2"></i>{% trans "User Profile" %}: {{ target_user.username }}
+    <small class="text-muted">({{ target_user.get_role_display }})</small>
+  {% endif %}
 {% endblock %}
 
 {% block breadcrumbs %}
-    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-    {% if is_own_profile %}
-        <li class="breadcrumb-item active">My Profile</li>
-    {% else %}
-        <li class="breadcrumb-item"><a href="{% url 'user_list' %}">User Management</a></li>
-        <li class="breadcrumb-item active">{{ target_user.username }}</li>
-    {% endif %}
+  <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
+  {% if is_own_profile %}
+    <li class="breadcrumb-item active">{% trans "My Profile" %}</li>
+  {% else %}
+    <li class="breadcrumb-item"><a href="{% url 'user_list' %}">{% trans "User Management" %}</a></li>
+    <li class="breadcrumb-item active">{{ target_user.username }}</li>
+  {% endif %}
 {% endblock %}
 
 {% block content %}
 <style>
-    /* Profile Aesthetic Enhancements */
-    :root {
-        --profile-accent: #4f46e5;
-        --profile-bg: #f9fafb;
-    }
-
-    .avatar-container {
-        position: relative;
-        width: 140px;
-        height: 140px;
-        margin: 0 auto;
-    }
-
-    .avatar-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 50%;
-        border: 4px solid #fff;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    }
-
-    .avatar-placeholder {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 4px solid #fff;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    }
-
-    .avatar-placeholder i { color: white; font-size: 3.5rem; }
-
-    .custom-file-input { display: none; }
-    .custom-file-label {
-        display: inline-block;
-        padding: 0.6rem 1.2rem;
-        background: var(--profile-accent);
-        color: white;
-        border-radius: 50px;
-        cursor: pointer;
-        font-weight: 600;
-        transition: all 0.2s;
-    }
-    .custom-file-label:hover { background: #4338ca; transform: translateY(-1px); }
-
-    .tab-content { border: none; }
-    .card { border: none; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-
+  :root {
+    --profile-accent: #4f46e5;
+    --profile-bg: #f9fafb;
+  }
+  .avatar-container { position: relative; width: 140px; height: 140px; margin: 0 auto; }
+  .avatar-image { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; border: 4px solid #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+  .avatar-placeholder { width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); display:flex; align-items:center; justify-content:center; border:4px solid #fff; box-shadow:0 4px 12px rgba(0,0,0,0.08); }
+  .avatar-placeholder i { color: white; font-size: 3.5rem; }
+  .custom-file-input { display: none; }
+  .custom-file-label { display:inline-block; padding:0.6rem 1.2rem; background:var(--profile-accent); color:white; border-radius:50px; cursor:pointer; font-weight:600; transition:all 0.2s; }
+  .custom-file-label:hover { background:#4338ca; transform:translateY(-1px); }
+  .tab-content { border:none; }
+  .card { border:none; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,0.1); }
 </style>
 
-
 <div class="row g-4">
-    <div class="col-lg-3 col-xl-2">
-        <div class="card mb-3">
-            <div class="list-group list-group-flush rounded-3" role="tablist">
-                <a class="list-group-item list-group-item-action active py-3" data-bs-toggle="list" href="#account" role="tab">
-                    <i class="fas fa-id-badge me-2"></i>Account
-                </a>
-                <a class="list-group-item list-group-item-action py-3" data-bs-toggle="list" href="#personal" role="tab">
-                    <i class="fas fa-address-card me-2"></i>Personal Info
-                </a>
-                {% if is_own_profile %}
-                <a class="list-group-item list-group-item-action py-3" data-bs-toggle="list" href="#notifications" role="tab">
-                    <i class="fas fa-bell me-2"></i>Notifications
-                </a>
-                {% endif %}
-                {% if not is_own_profile %}
-                <a class="list-group-item list-group-item-action py-3" data-bs-toggle="list" href="#admin" role="tab">
-                    <i class="fas fa-shield-alt me-2"></i>Admin Settings
-                </a>
-                {% endif %}
-            </div>
-        </div>
-
-        <div class="card bg-light border-0">
-            <div class="card-body">
-                <h6 class="text-uppercase text-muted small fw-bold mb-3">System Info</h6>
-                <div class="mb-3">
-                    <small class="d-block text-muted">Role</small>
-                    <span class="fw-bold">{{ target_user.get_role_display }}</span>
-                </div>
-                <div class="mb-3">
-                    <small class="d-block text-muted">Joined</small>
-                    <span class="fw-bold">{{ target_user.date_joined|date:"M j, Y" }}</span>
-                </div>
-                <div class="mb-0">
-                    <small class="d-block text-muted">Last Activity</small>
-                    <span class="fw-bold">{{ target_user.last_login|date:"M j, Y"|default:"N/A" }}</span>
-                </div>
-            </div>
-        </div>
+  <div class="col-lg-3 col-xl-2">
+    <div class="card mb-3">
+      <div class="list-group list-group-flush rounded-3" role="tablist">
+        <a class="list-group-item list-group-item-action active py-3" data-bs-toggle="list" href="#account" role="tab">
+          <i class="fas fa-id-badge me-2"></i>{% trans "Account" %}
+        </a>
+        <a class="list-group-item list-group-item-action py-3" data-bs-toggle="list" href="#personal" role="tab">
+          <i class="fas fa-address-card me-2"></i>{% trans "Personal Info" %}
+        </a>
+        {% if is_own_profile %}
+          <a class="list-group-item list-group-item-action py-3" data-bs-toggle="list" href="#notifications" role="tab">
+            <i class="fas fa-bell me-2"></i>{% trans "Preferences" %}
+          </a>
+        {% endif %}
+        {% if not is_own_profile %}
+          <a class="list-group-item list-group-item-action py-3" data-bs-toggle="list" href="#admin" role="tab">
+            <i class="fas fa-shield-alt me-2"></i>{% trans "Admin Settings" %}
+          </a>
+        {% endif %}
+      </div>
     </div>
 
-    <div class="col-lg-9 col-xl-10">
-        <div class="tab-content">
-            <div class="tab-pane fade show active" id="account" role="tabpanel">
-                <div class="card">
-                    <div class="card-header bg-white pt-4 px-4 border-0">
-                        <h5 class="fw-bold mb-0">Account Settings</h5>
-                    </div>
-                    <div class="card-body p-4">
-                        <form method="post" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            <input type="hidden" name="form_type" value="account">
-                            
-                            <div class="row align-items-center">
-                                <div class="col-md-4 text-center border-end">
-                                    <div class="avatar-container mb-3">
-                                        {% if profile.avatar %}
-                                            <img src="{{ profile.avatar.url }}" class="avatar-image" id="previewImg" alt="Avatar">
-                                        {% else %}
-                                            <div class="avatar-placeholder" id="placeholderIcon">
-                                                <i class="fas fa-user"></i>
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                    {% if is_own_profile %}
-                                    <input type="file" name="avatar" id="avatarInput" class="custom-file-input" accept="image/*">
-                                    <label for="avatarInput" class="custom-file-label">Change Photo</label>
-                                    <p class="text-muted extra-small mt-2">JPG, PNG up to 2MB</p>
-                                    {% endif %}
-                                </div>
-                                
-                                <div class="col-md-8 px-lg-5">
-                                    {% if is_own_profile %}
-                                        <div class="mb-3">
-                                            <label class="form-label fw-semibold text-muted">Username</label>
-                                            <input type="text" class="form-control bg-light" value="{{ target_user.username }}" readonly>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label class="form-label fw-semibold text-muted">Email Address</label>
-                                            <input type="email" class="form-control bg-light" value="{{ target_user.email }}" readonly>
-                                        </div>
-                                    {% else %}
-                                        <div class="row">
-                                            <div class="col-md-12">{{ form.username|as_crispy_field }}</div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">{{ form.first_name|as_crispy_field }}</div>
-                                            <div class="col-md-6">{{ form.last_name|as_crispy_field }}</div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">{{ form.email|as_crispy_field }}</div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">{{ form.role|as_crispy_field }}</div>
-                                            <div class="col-md-6">{{ form.client_group|as_crispy_field }}</div>
-                                        </div>
-                                        <div class="row mt-2">
-                                            <div class="col-md-12">{{ form.is_active|as_crispy_field }}</div>
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-
-                            {% if not is_own_profile %}
-                            <div class="d-flex justify-content-end mt-4 pt-3 border-top">
-                                <a href="{% url 'user_list' %}" class="btn btn-link text-muted me-3">Cancel</a>
-                                <button type="submit" class="btn btn-primary px-4 fw-bold">Save Account Changes</button>
-                            </div>
-                            {% endif %}
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tab-pane fade" id="personal" role="tabpanel">
-                <div class="card">
-                    <div class="card-header bg-white pt-4 px-4 border-0">
-                        <h5 class="fw-bold mb-0">Personal Profile</h5>
-                    </div>
-                    <div class="card-body p-4">
-                        <form method="post">
-                            {% csrf_token %}
-                            <input type="hidden" name="form_type" value="personal">
-                            
-                            <div class="row">
-                                <div class="col-md-6">{{ profile_form.name|as_crispy_field }}</div>
-                                <div class="col-md-6">{{ profile_form.surname|as_crispy_field }}</div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">{{ profile_form.phone_number|as_crispy_field }}</div>
-                                <div class="col-md-6">{{ profile_form.country|as_crispy_field }}</div>
-                            </div>
-                            <div class="mb-3">{{ profile_form.address|as_crispy_field }}</div>
-                            <div class="row">
-                                <div class="col-md-6">{{ profile_form.city|as_crispy_field }}</div>
-                                <div class="col-md-6">
-                                    <label class="form-label">Notification Channels</label>
-                                    <div class="d-flex gap-4 mt-2">
-                                        {{ profile_form.notify_by_email|as_crispy_field }}
-                                        {{ profile_form.notify_by_sms|as_crispy_field }}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="d-flex justify-content-end mt-4 pt-3 border-top">
-                                <a href="{% url 'dashboard' %}" class="btn btn-link text-muted me-3">Cancel</a>
-                                <button type="submit" class="btn btn-primary px-4 fw-bold">Update Profile</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            {% if is_own_profile %}
-            <div class="tab-pane fade" id="notifications" role="tabpanel">
-                <div class="card">
-                    <div class="card-header bg-white pt-4 px-4 border-0">
-                        <h5 class="fw-bold mb-0">Preferences</h5>
-                    </div>
-                    <div class="card-body p-4">
-                        <form method="post">
-                            {% csrf_token %}
-                            <input type="hidden" name="form_type" value="notifications">
-                            
-                            <div class="list-group list-group-flush mb-4">
-                                <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
-                                    <div>
-                                        <h6 class="mb-0 fw-bold">Email Alerts</h6>
-                                        <small class="text-muted">Receive updates about your account via email</small>
-                                    </div>
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" name="notify_by_email" {% if profile.notify_by_email %}checked{% endif %}>
-                                    </div>
-                                </div>
-                                <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
-                                    <div>
-                                        <h6 class="mb-0 fw-bold">SMS Notifications</h6>
-                                        <small class="text-muted">Get urgent text alerts to your mobile</small>
-                                    </div>
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" name="notify_by_sms" {% if profile.notify_by_sms %}checked{% endif %}>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="d-flex justify-content-end">
-                                <button type="submit" class="btn btn-primary px-4 fw-bold">Save Preferences</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
-
-            {% if not is_own_profile %}
-            <div class="tab-pane fade" id="admin" role="tabpanel">
-                <div class="card">
-                    <div class="card-header bg-white pt-4 px-4 border-0">
-                        <h5 class="fw-bold text-danger mb-0">Management Console</h5>
-                    </div>
-                    <div class="card-body p-4">
-                        <div class="row g-4">
-                            <div class="col-md-6">
-                                <div class="p-4 bg-light rounded-3 h-100">
-                                    <h6 class="fw-bold"><i class="fas fa-paper-plane me-2"></i>Welcome Email</h6>
-                                    <p class="small text-muted mb-4">Resend the welcome email with setup instructions.</p>
-                                    <a href="{% url 'resend_welcome_email' target_user.id %}" class="btn btn-outline-info w-100" onclick="return confirm('Resend welcome email?');">Resend Email</a>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="p-4 bg-light rounded-3 h-100">
-                                    <h6 class="fw-bold"><i class="fas fa-key me-2"></i>Security Overrides</h6>
-                                    <p class="small text-muted mb-4">Manually trigger a password reset for this user.</p>
-                                    <a href="{% url 'admin_reset_password' target_user.id %}" class="btn btn-warning w-100" onclick="return confirm('Send password reset?');">Issue Password Reset</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            {% endif %}
+    <div class="card bg-light border-0">
+      <div class="card-body">
+        <h6 class="text-uppercase text-muted small fw-bold mb-3">{% trans "System Info" %}</h6>
+        <div class="mb-3">
+          <small class="d-block text-muted">{% trans "Role" %}</small>
+          <span class="fw-bold">{{ target_user.get_role_display }}</span>
         </div>
+        <div class="mb-3">
+          <small class="d-block text-muted">{% trans "Joined" %}</small>
+          <span class="fw-bold">{{ target_user.date_joined|date:"M j, Y" }}</span>
+        </div>
+        <div class="mb-0">
+          <small class="d-block text-muted">{% trans "Last Activity" %}</small>
+          <span class="fw-bold">{{ target_user.last_login|date:"M j, Y"|default:"N/A" }}</span>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <div class="col-lg-9 col-xl-10">
+    <div class="tab-content">
+
+      <!-- ACCOUNT TAB -->
+      <div class="tab-pane fade show active" id="account" role="tabpanel">
+        <div class="card">
+          <div class="card-header bg-white pt-4 px-4 border-0">
+            <h5 class="fw-bold mb-0">{% trans "Account Settings" %}</h5>
+          </div>
+          <div class="card-body p-4">
+            <form method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <input type="hidden" name="form_type" value="account">
+
+              <div class="row align-items-center">
+                <div class="col-md-4 text-center border-end">
+                  <div class="avatar-container mb-3">
+                    {% if profile.avatar %}
+                      <img src="{{ profile.avatar.url }}" class="avatar-image" id="previewImg" alt="{% trans 'Avatar' %}">
+                    {% else %}
+                      <div class="avatar-placeholder" id="placeholderIcon">
+                        <i class="fas fa-user"></i>
+                      </div>
+                    {% endif %}
+                  </div>
+
+                  {% if is_own_profile %}
+                    <input type="file" name="avatar" id="avatarInput" class="custom-file-input" accept="image/*">
+                    <label for="avatarInput" class="custom-file-label">{% trans "Change Photo" %}</label>
+                    <p class="text-muted extra-small mt-2">{% trans "JPG, PNG up to 2MB" %}</p>
+                  {% endif %}
+                </div>
+
+                <div class="col-md-8 px-lg-5">
+                  {% if is_own_profile %}
+                    <div class="mb-3">
+                      <label class="form-label fw-semibold text-muted">{% trans "Username" %}</label>
+                      <input type="text" class="form-control bg-light" value="{{ target_user.username }}" readonly>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label fw-semibold text-muted">{% trans "Email Address" %}</label>
+                      <input type="email" class="form-control bg-light" value="{{ target_user.email }}" readonly>
+                    </div>
+                  {% else %}
+                    <div class="row">
+                      <div class="col-md-12">{{ form.username|as_crispy_field }}</div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">{{ form.first_name|as_crispy_field }}</div>
+                      <div class="col-md-6">{{ form.last_name|as_crispy_field }}</div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-12">{{ form.email|as_crispy_field }}</div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">{{ form.role|as_crispy_field }}</div>
+                      <div class="col-md-6">{{ form.client_group|as_crispy_field }}</div>
+                    </div>
+                    <div class="row mt-2">
+                      <div class="col-md-12">{{ form.is_active|as_crispy_field }}</div>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+
+              {% if not is_own_profile %}
+                <div class="d-flex justify-content-end mt-4 pt-3 border-top">
+                  <a href="{% url 'user_list' %}" class="btn btn-link text-muted me-3">{% trans "Cancel" %}</a>
+                  <button type="submit" class="btn btn-primary px-4 fw-bold">{% trans "Save Account Changes" %}</button>
+                </div>
+              {% endif %}
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- PERSONAL TAB -->
+      <div class="tab-pane fade" id="personal" role="tabpanel">
+        <div class="card">
+          <div class="card-header bg-white pt-4 px-4 border-0">
+            <h5 class="fw-bold mb-0">{% trans "Personal Profile" %}</h5>
+          </div>
+          <div class="card-body p-4">
+            <form method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <input type="hidden" name="form_type" value="personal">
+
+              <div class="row">
+                <div class="col-md-6">{{ profile_form.name|as_crispy_field }}</div>
+                <div class="col-md-6">{{ profile_form.surname|as_crispy_field }}</div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">{{ profile_form.phone_number|as_crispy_field }}</div>
+                <div class="col-md-6">{{ profile_form.country|as_crispy_field }}</div>
+              </div>
+
+              <div class="mb-3">{{ profile_form.address|as_crispy_field }}</div>
+
+              <div class="row">
+                <div class="col-md-6">{{ profile_form.city|as_crispy_field }}</div>
+
+                <div class="col-md-6">
+                  <label class="form-label">{% trans "Notification Channels" %}</label>
+                  <div class="d-flex gap-4 mt-2">
+                    {{ profile_form.notify_by_email|as_crispy_field }}
+                    {{ profile_form.notify_by_sms|as_crispy_field }}
+                  </div>
+                </div>
+              </div>
+
+              {% if is_own_profile %}
+                <div class="row mt-2">
+                  <div class="col-md-6">
+                    {{ profile_form.preferred_language|as_crispy_field }}
+                    <small class="text-muted d-block mt-1">
+                      {% trans "This sets the language for the entire system." %}
+                    </small>
+                  </div>
+                </div>
+              {% endif %}
+
+              <div class="d-flex justify-content-end mt-4 pt-3 border-top">
+                <a href="{% url 'dashboard' %}" class="btn btn-link text-muted me-3">{% trans "Cancel" %}</a>
+                <button type="submit" class="btn btn-primary px-4 fw-bold">{% trans "Update Profile" %}</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- PREFERENCES TAB -->
+      {% if is_own_profile %}
+        <div class="tab-pane fade" id="notifications" role="tabpanel">
+          <div class="card">
+            <div class="card-header bg-white pt-4 px-4 border-0">
+              <h5 class="fw-bold mb-0">{% trans "Preferences" %}</h5>
+            </div>
+            <div class="card-body p-4">
+              <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="form_type" value="notifications">
+
+                <div class="mb-4">
+                  <h6 class="fw-bold mb-2">{% trans "Language" %}</h6>
+                  <div class="row">
+                    <div class="col-md-6">
+                      {{ profile_form.preferred_language|as_crispy_field }}
+                      <small class="text-muted d-block mt-1">
+                        {% trans "Changing this will apply to all modules (Payroll, Reports, Employees, etc.)." %}
+                      </small>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="list-group list-group-flush mb-4">
+                  <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
+                    <div>
+                      <h6 class="mb-0 fw-bold">{% trans "Email Alerts" %}</h6>
+                      <small class="text-muted">{% trans "Receive updates about your account via email" %}</small>
+                    </div>
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" name="notify_by_email" {% if profile.notify_by_email %}checked{% endif %}>
+                    </div>
+                  </div>
+
+                  <div class="list-group-item d-flex justify-content-between align-items-center px-0 py-3">
+                    <div>
+                      <h6 class="mb-0 fw-bold">{% trans "SMS Notifications" %}</h6>
+                      <small class="text-muted">{% trans "Get urgent text alerts to your mobile" %}</small>
+                    </div>
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" name="notify_by_sms" {% if profile.notify_by_sms %}checked{% endif %}>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                  <button type="submit" class="btn btn-primary px-4 fw-bold">{% trans "Save Preferences" %}</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+      {% if not is_own_profile %}
+        <div class="tab-pane fade" id="admin" role="tabpanel">
+          {{ block.super }}
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const avatarInput = document.getElementById('avatarInput');
-    const previewImg = document.getElementById('previewImg');
-    const placeholder = document.getElementById('placeholderIcon');
+  const avatarInput = document.getElementById('avatarInput');
+  const previewImg = document.getElementById('previewImg');
+  const placeholder = document.getElementById('placeholderIcon');
 
-    if (avatarInput) {
-        avatarInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    if (previewImg) {
-                        previewImg.src = e.target.result;
-                    } else if (placeholder) {
-                        const container = placeholder.parentElement;
-                        container.innerHTML = `<img src="${e.target.result}" class="avatar-image" id="previewImg" alt="Avatar">`;
-                    }
-                }
-                reader.readAsDataURL(file);
-            }
-        });
-    }
-
-    // Persist active tab across reloads
-    const hash = window.location.hash || sessionStorage.getItem('activeProfileTab');
-    if (hash) {
-        const triggerEl = document.querySelector(`a[href="${hash}"]`);
-        if (triggerEl) bootstrap.Tab.getOrCreateInstance(triggerEl).show();
-    }
-
-    document.querySelectorAll('a[data-bs-toggle="list"]').forEach(el => {
-        el.addEventListener('shown.bs.tab', () => sessionStorage.setItem('activeProfileTab', el.getAttribute('href')));
+  if (avatarInput) {
+    avatarInput.addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          if (previewImg) {
+            previewImg.src = e.target.result;
+          } else if (placeholder) {
+            const container = placeholder.parentElement;
+            container.innerHTML = `<img src="${e.target.result}" class="avatar-image" id="previewImg" alt="Avatar">`;
+          }
+        }
+        reader.readAsDataURL(file);
+      }
     });
+  }
+
+  const hash = window.location.hash || sessionStorage.getItem('activeProfileTab');
+  if (hash) {
+    const triggerEl = document.querySelector(`a[href="${hash}"]`);
+    if (triggerEl) bootstrap.Tab.getOrCreateInstance(triggerEl).show();
+  }
+
+  document.querySelectorAll('a[data-bs-toggle="list"]').forEach(el => {
+    el.addEventListener('shown.bs.tab', () => sessionStorage.setItem('activeProfileTab', el.getAttribute('href')));
+  });
 });
 </script>
 {% endblock %}

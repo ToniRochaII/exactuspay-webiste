@@ -1,139 +1,162 @@
 {% extends "base.html" %}
 {% load static %}
+{% load i18n %}
 {% load humanize %}
 {% load payroll_filters %}
 {% load accounts_role_filters %}
 
+{% block title %}
+  {% blocktrans with company_name=company.trade_name %}Payrolls — {{ company_name }} | ExactusPay{% endblocktrans %}
+{% endblock %}
 
+{% block page_title %}
+  {% blocktrans with company_name=company.trade_name %}Payrolls — {{ company_name }}{% endblocktrans %}
+{% endblock %}
 
 {% block extra_head %}
 <link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
 <link href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.bootstrap5.min.css" rel="stylesheet">
 
 <style>
-    /* Match global grey background */
-    body { background-color: #F4F4F4 !important; }
-    .wrapper:before { background: #F4F4F4 !important; }
-    :root { --card-radius: 16px; --border-color: #f0f0f0; }
+  body { background-color: #F4F4F4 !important; }
+  .wrapper:before { background: #F4F4F4 !important; }
+  :root { --card-radius: 16px; --border-color: #f0f0f0; }
 
-    /* Specific styling for the 'Hover Function' and Roundness */
-    .card-hover-effect {
-        border-radius: 16px;
-        border: none;
-        transition: transform 0.25s ease, box-shadow 0.25s ease;
-        overflow: hidden;
-    }
-
-    .card-hover-effect:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
-    }
-
-    .card-header {
-        background-color: #fff;
-        border-bottom: 1px solid #f0f0f0;
-    }
+  .card-hover-effect {
+    border-radius: 16px;
+    border: none;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    overflow: hidden;
+  }
+  .card-hover-effect:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
+  }
+  .card-header {
+    background-color: #fff;
+    border-bottom: 1px solid #f0f0f0;
+  }
 </style>
 {% endblock %}
 
 {% block breadcrumbs %}
-<nav aria-label="breadcrumb">
+<nav aria-label="{% trans 'breadcrumb' %}">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="{% url 'companies:company' country_slug %}">Companies</a></li>
-    <li class="breadcrumb-item active">Payrolls — {{ company.trade_name }}</li>
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'companies:company' country_slug %}">{% trans "Companies" %}</a></li>
+    <li class="breadcrumb-item active">
+      {% blocktrans with company_name=company.trade_name %}Payrolls — {{ company_name }}{% endblocktrans %}
+    </li>
   </ol>
 </nav>
 {% endblock %}
 
 {% block content %}
 <div class="row">
-    <div class="col-12">
-        
-        <div class="card card-hover-effect shadow-sm">
-            <div class="card-header pt-4 px-4">
-                <h5 class="card-title mb-0">Payroll History</h5>
-                <h6 class="card-subtitle text-muted mt-1">
-                    Fiscal years, regulation versions, and processing status.
-                </h6>
-            </div>
-            
-            <div class="card-body p-0"> 
-                <div class="p-4"> 
-                    {% if payrolls %}
-                    <table id="datatables-reponsive" class="table table-striped" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th class="text-center">Payroll ID</th>
-                                <th class="text-center">Fiscal Year</th>
-                                <th class="text-center">Regulation</th>
-                                <th class="text-center">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for payroll in payrolls %}
-                            <tr>
-                                <td class="text-center text-muted">
-                                    {{ forloop.counter }}
-                                </td>
+  <div class="col-12">
 
-                                <td class="text-center text-muted">
-                                    <a href="{% url 'payroll:period_list' country_slug company.company_id payroll.id %}" class="text-dark text-muted">
-                                        {{ payroll.fiscal_year }}
-                                    </a>
-                                </td>
-                                <td class="text-center">
-                                    <span class="text-dark">
-                                        {{ payroll.regulation }}
-                                    </span>
-                                </td>
-                                <td class="text-center table-action" style="position: relative; z-index: 2;">
-                                    
-                                    <a href="{% url 'payroll:period_list' country_slug company.company_id payroll.id %}" class="text-dark me-2" title="View Periods">
-                                        <i class="align-middle fas fa-list"></i>
-                                    </a>
+    <div class="card card-hover-effect shadow-sm">
+      <div class="card-header pt-4 px-4">
+        <h5 class="card-title mb-0">{% trans "Payroll History" %}</h5>
+        <h6 class="card-subtitle text-muted mt-1">
+          {% trans "Fiscal years, regulation versions, and processing status." %}
+        </h6>
+      </div>
 
-                                    <a href="{% url 'payroll:payroll_detail' country_slug company.company_id payroll.pk %}" class="text-secondary me-2" title="Settings">
-                                        <i class="align-middle fas fa-cog"></i>
-                                    </a>
+      <div class="card-body p-0">
+        <div class="p-4">
 
-                                    {% if request.user|can_manage_company:company %}
-                                        {% if payroll.is_editable %}
-                                        <a href="{% url 'payroll:payroll_edit' country_slug company.company_id payroll.pk %}" class="text-brand me-2" title="Edit">
-                                            <i class="align-middle fas fa-pen"></i>
-                                        </a>
-                                        {% endif %}
+          {% if payrolls %}
+            <table id="datatables-reponsive" class="table table-striped" style="width:100%">
+              <thead>
+                <tr>
+                  <th class="text-center">{% trans "Payroll ID" %}</th>
+                  <th class="text-center">{% trans "Fiscal Year" %}</th>
+                  <th class="text-center">{% trans "Regulation" %}</th>
+                  <th class="text-center">{% trans "Actions" %}</th>
+                </tr>
+              </thead>
 
-                                        {% if payroll.is_deletable %}
-                                        <a href="{% url 'payroll:payroll_delete' country_slug company.company_id payroll.pk %}" class="text-danger" title="Delete" onclick="return confirm('Are you sure you want to delete this payroll? This action cannot be undone.');">
-                                            <i class="align-middle fas fa-trash"></i>
-                                        </a>
-                                        {% endif %}
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                    {% else %}
-                        <div class="text-center py-5">
-                            <div class="mb-3">
-                                <i class="fas fa-calendar-times fa-3x text-muted opacity-25"></i>
-                            </div>
-                            <h5 class="text-muted">No payrolls found</h5>
-                            <p class="text-muted small mb-3">Create a new fiscal year to start processing payroll.</p>
-                            
-                            {% if request.user|can_manage_company:company %}
-                            <a href="{% url 'payroll:payroll_create' country_slug company.company_id %}" class="btn btn-primary">
-                                <i class="fas fa-plus-circle me-2"></i>Create First Payroll
-                            </a>
-                            {% endif %}
-                        </div>
+              <tbody>
+                {% for payroll in payrolls %}
+                <tr>
+                  <td class="text-center text-muted">{{ forloop.counter }}</td>
+
+                  <td class="text-center text-muted">
+                    <a href="{% url 'payroll:period_list' country_slug company.company_id payroll.id %}"
+                       class="text-dark text-muted text-decoration-none"
+                       title="{% trans 'View Periods' %}">
+                      {{ payroll.fiscal_year }}
+                    </a>
+                  </td>
+
+                  <td class="text-center">
+                    <span class="text-dark">{{ payroll.regulation }}</span>
+                  </td>
+
+                  <td class="text-center table-action" style="position: relative; z-index: 2;">
+
+                    <a href="{% url 'payroll:period_list' country_slug company.company_id payroll.id %}"
+                       class="text-dark me-2"
+                       title="{% trans 'View Periods' %}">
+                      <i class="align-middle fas fa-list"></i>
+                    </a>
+
+                    <a href="{% url 'payroll:payroll_detail' country_slug company.company_id payroll.pk %}"
+                       class="text-secondary me-2"
+                       title="{% trans 'Settings' %}">
+                      <i class="align-middle fas fa-cog"></i>
+                    </a>
+
+                    {% if request.user|can_manage_company:company %}
+                      {% if payroll.is_editable %}
+                        <a href="{% url 'payroll:payroll_edit' country_slug company.company_id payroll.pk %}"
+                           class="text-brand me-2"
+                           title="{% trans 'Edit' %}">
+                          <i class="align-middle fas fa-pen"></i>
+                        </a>
+                      {% endif %}
+
+                      {% if payroll.is_deletable %}
+                        <a href="{% url 'payroll:payroll_delete' country_slug company.company_id payroll.pk %}"
+                           class="text-danger"
+                           title="{% trans 'Delete' %}"
+                           onclick="return confirm('{% trans "Are you sure you want to delete this payroll? This action cannot be undone." %}');">
+                          <i class="align-middle fas fa-trash"></i>
+                        </a>
+                      {% endif %}
                     {% endif %}
-                </div>
+
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+
+          {% else %}
+            <div class="text-center py-5">
+              <div class="mb-3">
+                <i class="fas fa-calendar-times fa-3x text-muted opacity-25"></i>
+              </div>
+              <h5 class="text-muted">{% trans "No payrolls found" %}</h5>
+              <p class="text-muted small mb-3">
+                {% trans "Create a new fiscal year to start processing payroll." %}
+              </p>
+
+              {% if request.user|can_manage_company:company %}
+                <a href="{% url 'payroll:payroll_create' country_slug company.company_id %}"
+                   class="btn btn-primary">
+                  <i class="fas fa-plus-circle me-2"></i>{% trans "Create First Payroll" %}
+                </a>
+              {% endif %}
             </div>
+          {% endif %}
+
         </div>
+      </div>
     </div>
+
+  </div>
 </div>
 {% endblock %}
 
@@ -145,33 +168,33 @@
 <script src="https://cdn.datatables.net/responsive/2.4.1/js/responsive.bootstrap5.min.js"></script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Only init if table exists
-        if (document.getElementById("datatables-reponsive")) {
-            $("#datatables-reponsive").DataTable({
-                responsive: true,
-                lengthChange: true,
-                pageLength: 10,
-                lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
-                order: [[1, "desc"]], // Default sort by Fiscal Year (descending)
-                
-                language: {
-                    search: "",
-                    searchPlaceholder: "Search Payrolls...",
-                    lengthMenu: "Show _MENU_ entries"
-                },
+  // DataTables i18n strings from Django
+  const DT_I18N = {
+    search: "",
+    searchPlaceholder: "{% trans 'Search Payrolls...' %}",
+    lengthMenu: "{% trans 'Show _MENU_ entries' %}"
+  };
 
-                // Standard ExactusPay DOM Layout
-                dom: '<"row mb-3"<"col-md-6 d-flex align-items-center"l><"col-md-6"f>>' + 
-                     '<"row"<"col-sm-12"tr>>' + 
-                     '<"row mt-3"<"col-md-5"i><"col-md-7"p>>',
+  document.addEventListener("DOMContentLoaded", function() {
+    if (document.getElementById("datatables-reponsive")) {
+      $("#datatables-reponsive").DataTable({
+        responsive: true,
+        lengthChange: true,
+        pageLength: 10,
+        lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
+        order: [[1, "desc"]],
+        language: DT_I18N,
 
-                initComplete: function() {
-                    $('.dataTables_filter input').addClass('form-control');
-                    $('.dataTables_length select').addClass('form-select');
-                }
-            });
+        dom: '<"row mb-3"<"col-md-6 d-flex align-items-center"l><"col-md-6"f>>' +
+             '<"row"<"col-sm-12"tr>>' +
+             '<"row mt-3"<"col-md-5"i><"col-md-7"p>>',
+
+        initComplete: function() {
+          $('.dataTables_filter input').addClass('form-control');
+          $('.dataTables_length select').addClass('form-select');
         }
-    });
+      });
+    }
+  });
 </script>
 {% endblock %}

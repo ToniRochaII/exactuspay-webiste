@@ -26,3 +26,32 @@ class ForcePasswordChangeMiddleware:
                     return redirect('password_change')
 
         return self.get_response(request)
+    
+# Exactus/accounts/middleware.py
+from django.conf import settings
+from django.utils import translation
+
+class UserPreferredLanguageMiddleware:
+    """
+    If a logged-in user has a preferred_language set in their Profile,
+    force that language for the request and persist it in the session.
+    """
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        user = getattr(request, "user", None)
+
+        if user and user.is_authenticated:
+            profile = getattr(user, "userprofile", None)
+            lang = getattr(profile, "preferred_language", None)
+
+            if lang and lang in dict(settings.LANGUAGES):
+                translation.activate(lang)
+                request.LANGUAGE_CODE = lang
+                request.session["django_language"] = lang
+
+        response = self.get_response(request)
+
+        translation.deactivate()
+        return response

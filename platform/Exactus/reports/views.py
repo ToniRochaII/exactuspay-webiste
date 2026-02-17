@@ -1,6 +1,8 @@
 # Exactus/reports/views.py
-
 from __future__ import annotations
+
+from .engine import ReportEngine
+from .services import build_gross_to_net_comparison_rows
 
 from datetime import datetime
 import json
@@ -18,7 +20,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from .models import ReportConfiguration, ReportCategory, ReportType, ReportLayout
 from .forms import ReportTypeForm, ReportLayoutForm, ReportConfigForm
-from .services import ReportEngine
+
 from .utils import render_to_pdf, render_to_csv
 
 from Exactus.payroll.models import PayrollPeriod, PeriodStatus
@@ -568,6 +570,13 @@ class ReportConfigDeleteView(LoginRequiredMixin, AdminRequiredMixin, DeleteView)
 # 8) GENERATION ENGINE
 # =========================================================
 
+from django.apps import apps
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+
 class GenerateReportView(LoginRequiredMixin, View):
     """
     Run a report for a specific processed period.
@@ -575,51 +584,117 @@ class GenerateReportView(LoginRequiredMixin, View):
     """
 
     def get(self, request, report_code, company_id=None, country_slug=None):
+        from .engine import ReportEngine
+        from .services import build_gross_to_net_comparison_rows
+
         PayrollResult = apps.get_model("payroll", "PayrollResult")
         Company = apps.get_model("company", "Company")
         Country = apps.get_model("country", "Country")
 
+        # -----------------------------
+        # Resolve scope (country/company)
+        # -----------------------------
+        country = get_object_or_404(Country, slug=country_slug) if country_slug else None
+
         company = None
-        country = None
+        if company_id:
+            try:
+                if int(company_id) != 0:
+                    company = get_object_or_404(Company, pk=company_id)
+            except (TypeError, ValueError):
+                company = None
 
-        if country_slug:
-            country = get_object_or_404(Country, slug=country_slug)
-
-        if company_id and int(company_id) != 0:
-            company = get_object_or_404(Company, pk=company_id)
-
+        # -----------------------------
+        # Load report configuration
+        # -----------------------------
         config = ReportEngine.get_configuration(report_code, company=company, country=country)
         if not config:
             return HttpResponse("No report layout found.", status=404)
 
-        export_format = (request.GET.get("format", "html") or "html").lower()
+        settings = getattr(config, "data_settings", {}) or {}
+        if isinstance(settings, str):
+            try:
+                settings = json.loads(settings)
+            except Exception:
+                settings = {}
+
+        report_mode = settings.get("report_mode") if isinstance(settings, dict) else None
+
+        # ✅ Default comparison mode for this report if not configured
+        if not report_mode and report_code == "COMPARISONREPORTSYSTEM001":
+            report_mode = "comparison_gross_to_net"
+
+
+
+        # -----------------------------
+        # Read query params
+        # -----------------------------
+        export_format = (request.GET.get("format") or "html").lower().strip()
         period_id = request.GET.get("period_id")
 
         if not period_id:
             return HttpResponse("Please select a processed payroll period.", status=400)
 
+        # -----------------------------
+        # Resolve selected period
+        # -----------------------------
         processed_periods = get_processed_periods(country=country, company=company)
         selected_period = processed_periods.filter(id=period_id).first()
         if not selected_period:
             return HttpResponse("Invalid period. Please select a processed payroll period.", status=400)
 
+        # -----------------------------
+        # Fetch current results (scoped)
+        # -----------------------------
         results = PayrollResult.objects.select_related("employee", "period", "period__payroll")
 
         if company:
             results = results.filter(period__payroll__company=company)
-
         if country:
             results = results.filter(period__payroll__country=country)
 
         results = results.filter(period_id=selected_period.id)
 
-        settings = getattr(config, "data_settings", {}) or {}
-        prefer_label = "description" 
-        if isinstance(settings, dict) and settings.get("payslip_label_preference"):
-            prefer_label = settings.get("payslip_label_preference").lower()
-            if prefer_label not in {"name", "description"}:
-                prefer_label = "description"
+        # -----------------------------
+        # Label preference
+        # -----------------------------
+        prefer_label = "description"
+        if isinstance(settings, dict):
+            pref = (settings.get("payslip_label_preference") or "").strip().lower()
+            if pref in {"name", "description"}:
+                prefer_label = pref
 
+        # -----------------------------
+        # Resolve previous period (scoped) + previous results
+        # -----------------------------
+        prev_period = None
+
+        if getattr(selected_period, "payment_date", None):
+            prev_period = (
+                processed_periods.filter(payment_date__lt=selected_period.payment_date)
+                .order_by("-payment_date", "-id")
+                .first()
+            )
+
+        if prev_period is None:
+            prev_period = (
+                processed_periods.filter(id__lt=selected_period.id)
+                .order_by("-id")
+                .first()
+            )
+
+        prev_results = PayrollResult.objects.select_related("employee", "period", "period__payroll")
+
+        if company:
+            prev_results = prev_results.filter(period__payroll__company=company)
+        if country:
+            prev_results = prev_results.filter(period__payroll__country=country)
+
+        prev_results = prev_results.filter(period_id=prev_period.id) if prev_period else prev_results.none()
+
+        # -----------------------------
+        # Build context + render HTML
+        # -----------------------------
         payslips = build_payslips(
             results,
             country=country,
@@ -636,13 +711,16 @@ class GenerateReportView(LoginRequiredMixin, View):
             "processed_periods": processed_periods,
             "selected_period_id": str(selected_period.id),
             "base_url": request.build_absolute_uri("/").rstrip("/"),
-            "company_logo_url": None, 
+            "company_logo_url": None,
             "settings": settings,
             "user": request.user,
         }
 
         rendered_html = ReportEngine.render_report(config, context)
 
+        # -----------------------------
+        # Exports
+        # -----------------------------
         if export_format == "pdf":
             try:
                 pdf_file = render_to_pdf(rendered_html, base_url=context["base_url"])
@@ -650,15 +728,42 @@ class GenerateReportView(LoginRequiredMixin, View):
                 response["Content-Disposition"] = f'inline; filename="{report_code}.pdf"'
                 return response
             except Exception as e:
-                # Return readable error to browser instead of a broken PDF
                 return HttpResponse(f"PDF export failed: {e}", status=500, content_type="text/plain")
 
-
         if export_format == "csv":
-            csv_fields = settings.get("csv_fields") if isinstance(settings, dict) else None
-            csv_data = render_to_csv(results, field_list=csv_fields)
+            if report_mode == "comparison_gross_to_net":
+                comparison_rows = build_gross_to_net_comparison_rows(
+                    current_results=results,
+                    previous_results=prev_results,
+                    current_period=selected_period,
+                    previous_period=prev_period,
+                    country=country,
+                    company=company,
+                )
+                comparison_fields = [
+                    "Company_id",
+                    "Id",
+                    "Period",
+                    "Employee",
+                    "Code",
+                    "Description",
+                    "Current Period",
+                    "Previous Period",
+                    "Balance",
+                ]
+                csv_data = render_to_csv(comparison_rows, field_list=comparison_fields)
+                response = HttpResponse(csv_data, content_type="text/csv")
+                response["Content-Disposition"] = f'attachment; filename="{report_code}.csv"'
+                return response
+
+            fallback_fields = ["employee", "gross_pay", "total_deductions", "total_tax", "net_pay", "details"]
+            csv_data = render_to_csv(results, field_list=fallback_fields)
             response = HttpResponse(csv_data, content_type="text/csv")
             response["Content-Disposition"] = f'attachment; filename="{report_code}.csv"'
             return response
 
+        # Default HTML
         return HttpResponse(rendered_html)
+    
+
+

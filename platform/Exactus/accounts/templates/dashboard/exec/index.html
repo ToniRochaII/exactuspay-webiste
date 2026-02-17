@@ -2,8 +2,9 @@
 {% load static %}
 <link href="{% static 'css/modern.css' %}" rel="stylesheet">
 {% load humanize %}
+{% load i18n %}
 
-{% block title %}Dashboard | ExactusPay{% endblock %}
+{% block title %}{% trans "Dashboard" %} | ExactusPay{% endblock %}
 
 {% block extra_head %}
 <style>
@@ -46,27 +47,27 @@
     <div class="row g-4 mb-4">
         <div class="col-sm-6 col-xl-3">
             <div class="card kpi-card h-100 p-4">
-                <h6 class="kpi-title mb-1">Active Countries</h6>
+                <h6 class="kpi-title mb-1">{% trans "Active Countries" %}</h6>
                 <h2 class="kpi-value mb-0">{{ active_countries_count }}</h2>
             </div>
         </div>
         <div class="col-sm-6 col-xl-3">
             <div class="card kpi-card h-100 p-4">
-                <h6 class="kpi-title mb-1">Active Companies</h6>
+                <h6 class="kpi-title mb-1">{% trans "Active Companies" %}</h6>
                 <h2 class="kpi-value mb-0">{{ active_companies_count }}</h2>
             </div>
         </div>
         <div class="col-sm-6 col-xl-3">
             <div class="card kpi-card h-100 p-4">
-                <h6 class="kpi-title mb-1">Total Cost</h6>
+                <h6 class="kpi-title mb-1">{% trans "Total Cost" %}</h6>
                 <h2 class="kpi-value mb-0">£{{ total_gross_amount|floatformat:2|intcomma }}</h2>
             </div>
         </div>
         <div class="col-sm-6 col-xl-3">
             <div class="card kpi-card h-100 p-4">
-                <h6 class="kpi-title mb-1">Payrolls Completed</h6>
+                <h6 class="kpi-title mb-1">{% trans "Payrolls Completed" %}</h6>
                 <h2 class="kpi-value mb-0">{{ payrolls_completed_count }}</h2>
-                <small class="text-muted mt-2 d-block">Last 365 days</small>
+                <small class="text-muted mt-2 d-block">{% trans "Last 365 days" %}</small>
             </div>
         </div>
     </div>
@@ -74,25 +75,25 @@
     <div class="row">
         <div class="col-lg-8">
             <div class="card dashboard-panel-card">
-                <div class="panel-header"><h5 class="kpi-title mb-0">Global Operations</h5></div>
+                <div class="panel-header"><h5 class="kpi-title mb-0">{% trans "Global Operations" %}</h5></div>
                 <div class="card-body p-4"><div id="world_map" style="height:350px;"></div></div>
             </div>
 
             <div class="card dashboard-panel-card">
-                <div class="panel-header"><h5 class="kpi-title mb-0">Payroll Processing (Last 12 Months)</h5></div>
+                <div class="panel-header"><h5 class="kpi-title mb-0">{% trans "Payroll Processing (Last 12 Months)" %}</h5></div>
                 <div class="card-body p-4"><div style="height:350px;"><canvas id="payrollGroupedBar"></canvas></div></div>
             </div>
         </div>
 
         <div class="col-lg-4">
             <div class="card dashboard-panel-card">
-                <div class="panel-header"><h5 class="kpi-title mb-0">Companies by Country</h5></div>
+                <div class="panel-header"><h5 class="kpi-title mb-0">{% trans "Companies by Country" %}</h5></div>
                 <div class="card-body p-4"><div style="height:350px;"><canvas id="companiesPolarChart"></canvas></div></div>
             </div>
 
             {% if user_companies %}
             <div class="card dashboard-panel-card">
-                <div class="panel-header"><h5 class="kpi-title mb-0">Recent Portfolio</h5></div>
+                <div class="panel-header"><h5 class="kpi-title mb-0">{% trans "Recent Portfolio" %}</h5></div>
                 <div class="list-group list-group-flush">
                     {% for company in user_companies %}
                     <a href="{% url 'employee:employee' country_slug=company.country.slug company_id=company.company_id %}"
@@ -100,7 +101,7 @@
                         <div class="d-flex align-items-center justify-content-between">
                             <div>
                                 <span class="company-name">{{ company.trade_name }}</span>
-                                <span class="company-meta">{{ company.country.name|default:"Global" }}</span>
+                                <span class="company-meta">{{ company.country.name|default:_("Global") }}</span>
                             </div>
                             <span class="status-badge {% if company.account_status == 'ACTIVE' %}status-active{% else %}status-warning{% endif %}">
                                 {{ company.account_status }}
@@ -193,4 +194,3 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 </script>
 {% endblock %}
-
