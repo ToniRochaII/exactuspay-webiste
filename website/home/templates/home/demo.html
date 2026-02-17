@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
-  
+
   <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-XTL69YL5WC"></script>
 <script>
@@ -18,7 +18,51 @@
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{% trans "ExactusPay | Request a Demo" %}</title>
+
+  <!-- Primary SEO -->
+<title>{% trans "Global Payroll Software | Multi-Country Payroll & Compliance Platform | ExactusPay" %}</title>
+
+
+<meta name="description" content="ExactusPay is a powerful global payroll software delivering multi-country payroll, automated compliance, real-time workforce analytics, standardized reporting, and payroll simulations. Manage international payroll accurately, securely, and at scale from one intelligent platform." />
+
+<meta name="keywords" content="global payroll software, multi-country payroll, international payroll system, payroll compliance software, global payroll platform, payroll automation, payroll simulations, workforce analytics, multinational payroll management, cloud payroll solution, global HR payroll, payroll reporting software, international payroll compliance, scalable payroll platform" />
+
+<meta name="author" content="ExactusPay" />
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+<meta name="googlebot" content="index, follow" />
+<meta name="bingbot" content="index, follow" />
+<link rel="canonical" href="https://www.exactuspay.com/" />
+
+<!-- Language & International -->
+<meta http-equiv="content-language" content="{{ LANGUAGE_CODE }}" />
+<link rel="alternate" hreflang="en" href="https://www.exactuspay.com/" />
+<link rel="alternate" hreflang="pt" href="https://www.exactuspay.com/pt/" />
+<link rel="alternate" hreflang="es" href="https://www.exactuspay.com/es/" />
+<link rel="alternate" hreflang="x-default" href="https://www.exactuspay.com/" />
+
+<!-- Open Graph (Facebook / LinkedIn) -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="ExactusPay | Global Payroll Software for Multi-Country Payroll & Compliance" />
+<meta property="og:description" content="Run global payroll with confidence. Automated compliance, payroll simulations, standardized reporting, and real-time analytics in one powerful multi-country payroll platform." />
+<meta property="og:url" content="https://www.exactuspay.com/" />
+<meta property="og:image" content="https://www.exactuspay.com/static/img/og-exactuspay.png" />
+<meta property="og:site_name" content="ExactusPay" />
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="ExactusPay | Global Payroll Software" />
+<meta name="twitter:description" content="Multi-country payroll, automated compliance, real-time workforce analytics, and payroll simulations—powered by ExactusPay." />
+<meta name="twitter:image" content="https://www.exactuspay.com/static/img/og-exactuspay.png" />
+
+<!-- App / Platform Identity -->
+<meta name="application-name" content="ExactusPay" />
+<meta name="apple-mobile-web-app-title" content="ExactusPay" />
+<meta name="theme-color" content="#1f4b7a" />
+
+<!-- Performance -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="referrer" content="strict-origin-when-cross-origin" />
+
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -1133,18 +1177,47 @@
       </div>
     </div>
   </footer>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "ExactusPay",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "description": "ExactusPay is a global payroll software delivering multi-country payroll, automated compliance, payroll simulations, standardized reporting, and real-time workforce analytics.",
+  "url": "https://www.exactuspay.com",
+  "brand": {
+    "@type": "Brand",
+    "name": "ExactusPay"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "ExactusPay",
+    "url": "https://www.exactuspay.com"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD",
+    "availability": "https://schema.org/InStock",
+    "url": "https://www.exactuspay.com/contact"
+  }
+}
+</script>
+
 
   <script>
     // Reveal Calendly after submit (demo)
     const form = document.getElementById('demoForm');
     const calendarWrap = document.getElementById('calendarWrap');
 
-    form.addEventListener('submit', function(e){
-      calendarWrap.style.display = 'block';
-      calendarWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+    if (form && calendarWrap) {
+      form.addEventListener('submit', function(){
+        calendarWrap.style.display = 'block';
+        calendarWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
 
-    // ✅ Fix dashboard preview: if your static image is missing, show a built-in mock instead of a broken icon
     const img = document.getElementById('dashboardPreviewImg');
     const fallback = document.getElementById('dashboardFallback');
 
@@ -1156,7 +1229,6 @@
 
     if (img) {
       img.addEventListener('error', showFallback);
-      // If cached failure or empty src edge-case:
       if (!img.getAttribute('src')) showFallback();
     }
   </script>
