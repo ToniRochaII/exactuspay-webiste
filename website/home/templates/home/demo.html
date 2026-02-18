@@ -1204,6 +1204,11 @@ as languages %}
                     🇷🇺
                   </option>
 
+                {% elif lang.code == "sa" %}
+                  <option value="sa" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>
+                    🇸🇦
+                  </option>
+
                 {% else %}
                   <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>
                     {{ lang.code|upper }}
@@ -1221,6 +1226,7 @@ as languages %}
           </div>
 
         </form>
+        
       </div>
     </header>
 

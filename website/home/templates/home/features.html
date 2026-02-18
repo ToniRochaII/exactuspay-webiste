@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
-  
+
   <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-XTL69YL5WC"></script>
 <script>
@@ -596,29 +596,63 @@
       <a href="{% url 'home:demo' %}" class="btn btn-primary">{% trans "Request Demo" %}</a>
 
       <!-- ✅ Flag language select -->
-      <form class="lang-form" action="{% url 'set_language' %}" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="next" value="{{ request.get_full_path }}">
-        <div class="lang-pill" title="{% trans 'Language' %}">
-          <select class="lang-select"
-                  name="language"
-                  aria-label="{% trans 'Select language' %}"
-                  onchange="this.form.submit()">
-            {% for lang in languages %}
-              {% if lang.code == "pt" %}
-                <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷</option>
-              {% elif lang.code == "es" %}
-                <option value="es" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇪🇸</option>
-              {% elif lang.code == "en" %}
-                <option value="en" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇬🇧</option>
-              {% else %}
-                <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>{{ lang.code|upper }}</option>
-              {% endif %}
-            {% endfor %}
-          </select>
-          <span class="lang-caret" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
-        </div>
-      </form>
+
+        <form class="lang-form" action="{% url 'set_language' %}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
+          <div class="lang-pill" title="{% trans 'Language' %}">
+            <select
+              class="lang-select"
+              name="language"
+              aria-label="{% trans 'Select language' %}"
+              onchange="this.form.submit()"
+            >
+
+              {% for lang in languages %}
+
+                {% if lang.code == "pt" %}
+                  <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>
+                    🇧🇷
+                  </option>
+
+                {% elif lang.code == "en" %}
+                  <option value="en" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>
+                    🇬🇧
+                  </option>
+
+                {% elif lang.code == "es" %}
+                  <option value="es" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>
+                    🇪🇸
+                  </option>
+
+                {% elif lang.code == "ru" %}
+                  <option value="ru" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>
+                    🇷🇺
+                  </option>
+
+                {% elif lang.code == "sa" %}
+                  <option value="sa" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>
+                    🇸🇦
+                  </option>
+
+                {% else %}
+                  <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>
+                    {{ lang.code|upper }}
+                  </option>
+
+                {% endif %}
+
+              {% endfor %}
+
+            </select>
+
+            <span class="lang-caret" aria-hidden="true">
+              <i class="fas fa-chevron-down"></i>
+            </span>
+          </div>
+
+        </form>
+        
     </div>
   </div>
 </header>
