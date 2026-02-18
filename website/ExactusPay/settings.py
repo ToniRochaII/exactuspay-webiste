@@ -10,9 +10,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # -----------------------------------------------------------------------------
 DEBUG = os.environ.get("DEBUG", "0") == "1"
 
-SECRET_KEY = os.environ.get("iOgET_ku19-hYMYzXSyt_PHoMWSEovZQ5ri3dHprpWQNsMe_nquTV77ef7PJlrNlQt4NKKgVRdskyaZ7tMltOw")
-if not SECRET_KEY and not DEBUG:
-    raise RuntimeError("SECRET_KEY environment variable is required when DEBUG=False")
+SECRET_KEY = os.environ.get("SECRET_KEY") or ("dev-secret-key" if DEBUG else None)
+if not SECRET_KEY:
+    raise RuntimeError("SECRET_KEY missing in production (DEBUG=False). Set it in Render env vars.")
+
 SECRET_KEY = SECRET_KEY or "dev-secret-key"
 
 ALLOWED_HOSTS = [
