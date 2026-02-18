@@ -21,10 +21,14 @@ CSRF_TRUSTED_ORIGINS = [
     "https://www.exactuspay.com",
     "http://127.0.0.1",
     "http://localhost",
+    "https://127.0.0.1",
+    "https://localhost",
 ]
 
 # Render / proxy headers (safe to keep)
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+if os.environ.get("RENDER") == "true":
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
 USE_X_FORWARDED_HOST = True
 
 INSTALLED_APPS = [
@@ -41,7 +45,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.locale.LocaleMiddleware",  # must be after sessions
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",

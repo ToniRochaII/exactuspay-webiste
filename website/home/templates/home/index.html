@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
-  
+
   <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-XTL69YL5WC"></script>
 <script>
@@ -992,11 +992,11 @@
     cards.forEach((card, index) => {
         card.style.animationDelay = `${index * 0.5}s`;
     });
-    
+
     // Animated counter for stats
     const stats = document.querySelectorAll('.stat-number');
     const statObserverOptions = { threshold: 0.5, rootMargin: '0px' };
-    
+
     const statObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
@@ -1006,7 +1006,7 @@
                 const hasPlus = stat.textContent.includes('+');
                 let current = 0;
                 const increment = target / 50;
-                
+
                 const updateStat = () => {
                     if (current < target) {
                         current += increment;
@@ -1023,22 +1023,22 @@
             }
         });
     }, statObserverOptions);
-    
+
     stats.forEach(stat => statObserver.observe(stat));
-    
+
     // Header scroll effect
     let lastScroll = 0;
     const header = document.querySelector('header');
-    
+
     window.addEventListener('scroll', () => {
         const currentScroll = window.pageYOffset;
-        
+
         if (currentScroll > lastScroll && currentScroll > 100) {
             header.style.transform = 'translateY(-100%)';
         } else {
             header.style.transform = 'translateY(0)';
         }
-        
+
         if (currentScroll > 50) {
             header.style.boxShadow = '0 10px 30px rgba(0,0,0,0.3)';
             header.style.backdropFilter = 'blur(20px)';
@@ -1046,7 +1046,7 @@
             header.style.boxShadow = 'var(--shadow-sm)';
             header.style.backdropFilter = 'blur(10px)';
         }
-        
+
         lastScroll = currentScroll;
     });
 });
