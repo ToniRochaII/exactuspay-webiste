@@ -2160,37 +2160,4 @@ msgstr "Запросить демонстрацию"
 #~ msgid "©  ExactusPay. All rights reserved."
 #~ msgstr "© ExactusPay. Все права защищены."
 
-#: home/templates/home/pricing.html:648
-msgid ""
-"ExactusPay believes in pricing that is as clear and transparent as our "
-"payroll reporting. We understand that every business has a unique "
-"footprint, which is why our pricing model is tailored to the specific "
-"countries and regions where you operate."
-msgstr ""
-"ExactusPay верит в ценообразование, столь же ясное и прозрачное, как наша "
-"отчетность по зарплате. Мы понимаем, что у каждого бизнеса уникальный след, "
-"поэтому наша модель ценообразования адаптирована под конкретные страны и "
-"регионы, где вы работаете."
 
-
-#: home/templates/home/pricing.html:816
-msgid ""
-"Because global expansion looks different for every company, we don't use a "
-"\"one size fits all\" price tag. To give you the most accurate and "
-"competitive rate, we need to understand your specific needs."
-msgstr ""
-"Поскольку глобальное расширение выглядит по-разному для каждой компании, "
-"мы не используем ценник «один размер подходит всем». Чтобы предложить вам "
-"наиболее точную и конкурентоспособную ставку, нам нужно понять ваши "
-"конкретные потребности."
-
-#: home/templates/home/demo.html:901
-msgid ""
-"Stop guessing your global labour costs. Get a personalised walkthrough of "
-"the platform that simplifies payroll for the Global South — with predictable "
-"compliance and one executive standard for reporting."
-msgstr ""
-"Перестаньте гадать о своих глобальных расходах на персонал. Получите "
-"персонализированное знакомство с платформой, которая упрощает расчет "
-"зарплаты для Глобального Юга — с предсказуемым соблюдением требований и "
-"единым стандартом отчетности для руководителей."

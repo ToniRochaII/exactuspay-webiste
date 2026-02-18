@@ -2198,36 +2198,3 @@ msgstr "Solicitar uma demonstração"
 #~ msgstr "Padrão consistente:"
 
 
-#: home/templates/home/pricing.html:648
-msgid ""
-"ExactusPay believes in pricing that is as clear and transparent as our "
-"payroll reporting. We understand that every business has a unique "
-"footprint, which is why our pricing model is tailored to the specific "
-"countries and regions where you operate."
-msgstr ""
-"A ExactusPay acredita em preços tão claros e transparentes quanto nossos "
-"relatórios de folha de pagamento. Entendemos que cada empresa tem uma "
-"pegada única, e é por isso que nosso modelo de preços é adaptado aos "
-"países e regiões específicos onde você opera."
-
-
-#: home/templates/home/pricing.html:816
-msgid ""
-"Because global expansion looks different for every company, we don't use a "
-"\"one size fits all\" price tag. To give you the most accurate and "
-"competitive rate, we need to understand your specific needs."
-msgstr ""
-"Porque a expansão global é diferente para cada empresa, não usamos um preço "
-"\"tamanho único\". Para lhe oferecer a taxa mais precisa e competitiva, "
-"precisamos entender suas necessidades específicas."
-
-#: home/templates/home/demo.html:901
-msgid ""
-"Stop guessing your global labour costs. Get a personalised walkthrough of "
-"the platform that simplifies payroll for the Global South — with predictable "
-"compliance and one executive standard for reporting."
-msgstr ""
-"Pare de adivinhar seus custos trabalhistas globais. Obtenha uma visita "
-"personalizada da plataforma que simplifica a folha de pagamento para o "
-"Sul Global — com conformidade previsível e um padrão executivo para "
-"relatórios."

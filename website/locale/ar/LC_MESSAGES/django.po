@@ -111,18 +111,7 @@ msgstr "اختر اللغة"
 msgid "See ExactusPay in Action"
 msgstr "شاهد ExactusPay أثناء العمل"
 
-#: home/templates/home/demo.html:511
-#, fuzzy
-#| msgid ""
-#| "Stop guessing your global labour costs. Get a personalised walkthrough of "
-#| "the platform that simplifies payroll for the Global South — with "
-#| "predictable compliance and one executive standard for reporting."
-msgid ""
-"\n"
-"              Stop guessing your global labour costs. Get a personalised "
-"walkthrough of the platform that simplifies payroll for the Global South — "
-"with predictable compliance and one executive standard for reporting.\n"
-"            "
+
 msgstr ""
 "توقف عن التخمين بشأن تكاليف العمالة العالمية لديك. احصل على جولة شخصية في "
 "المنصة التي تبسط كشوف الرواتب في بلدان الجنوب العالمي — مع امتثال يمكن "
@@ -2088,36 +2077,3 @@ msgstr "طلب عرض توضيحي"
 #~ msgid "©  ExactusPay. All rights reserved."
 #~ msgstr "© ExactusPay. جميع الحقوق محفوظة."
 
-
-#: home/templates/home/pricing.html:648
-msgid ""
-"ExactusPay believes in pricing that is as clear and transparent as our "
-"payroll reporting. We understand that every business has a unique "
-"footprint, which is why our pricing model is tailored to the specific "
-"countries and regions where you operate."
-msgstr ""
-"تؤمن ExactusPay بالتسعير الواضح والشفاف مثل تقارير الرواتب الخاصة بنا. "
-"نحن نتفهم أن لكل شركة بصمة فريدة، ولهذا السبب تم تصميم نموذج التسعير "
-"الخاص بنا ليناسب البلدان والمناطق المحددة التي تعمل فيها."
-
-
-#: home/templates/home/pricing.html:816
-msgid ""
-"Because global expansion looks different for every company, we don't use a "
-"\"one size fits all\" price tag. To give you the most accurate and "
-"competitive rate, we need to understand your specific needs."
-msgstr ""
-"نظرًا لأن التوسع العالمي يبدو مختلفًا لكل شركة، فإننا لا نستخدم سعرًا "
-"«موحدًا للجميع». لتزويدك بالسعر الأكثر دقة وتنافسية، نحتاج إلى فهم "
-"احتياجاتك الخاصة."
-
-
-#: home/templates/home/demo.html:901
-msgid ""
-"Stop guessing your global labour costs. Get a personalised walkthrough of "
-"the platform that simplifies payroll for the Global South — with predictable "
-"compliance and one executive standard for reporting."
-msgstr ""
-"توقف عن التخمين بشأن تكاليف العمالة العالمية لديك. احصل على جولة شخصية "
-"في المنصة التي تبسط كشوف الرواتب في بلدان الجنوب العالمي — مع امتثال "
-"يمكن التنبؤ به ومعيار تنفيذي واحد لإعداد التقارير."
