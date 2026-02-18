@@ -101,7 +101,7 @@ def profile(request):
 class CustomPasswordResetView(auth_views.PasswordResetView):
     template_name = 'auth/password_reset.html'
     email_template_name = 'auth/password_reset_email.html'
-    success_url = reverse_lazy('password_reset_done') 
+    success_url = reverse_lazy('password_reset_done')
 
     def form_valid(self, form):
         messages.info(self.request, "If your email exists, you'll receive reset instructions shortly.")
@@ -195,7 +195,7 @@ def role_management(request):
         "users": User.objects.all().order_by("username"),
         "hierarchy": dict(RoleHierarchy.objects.values_list('parent', 'child')),
     }
-    
+
     return render(request, "roles/role_management.html", context)
 
 
@@ -241,18 +241,18 @@ def resend_welcome_email(request, user_id):
     token = default_token_generator.make_token(user)
     uid = urlsafe_base64_encode(force_bytes(user.pk))
     setup_url = request.build_absolute_uri(reverse('password_reset_confirm', args=[uid, token]))
-    
+
     subject = "Welcome to Exactus - Account Details"
     context = {'user': user, 'username': user.username, 'role': user.get_role_display(), 'setup_url': setup_url, 'login_url': request.build_absolute_uri(reverse('login'))}
     html_message = render_to_string("emails/account_welcome.html", context)
     plain_message = strip_tags(html_message)
-    
+
     try:
         send_mail(subject, plain_message, settings.DEFAULT_FROM_EMAIL, [user.email], fail_silently=False, html_message=html_message)
         messages.success(request, f"Welcome email sent to {user.email}.")
     except Exception as e:
         messages.error(request, f"Error sending welcome email: {str(e)}")
-        
+
     return redirect("user_edit", user_id=user_id)
 
 
@@ -298,7 +298,7 @@ def register(request):
         username = request.POST.get('username')
         email = request.POST.get('email')
         role = request.POST.get('role')
-        
+
         if User.objects.filter(username=username).exists():
             messages.error(request, "Username already exists.")
         elif User.objects.filter(email=email).exists():
@@ -307,7 +307,7 @@ def register(request):
             try:
                 OnboardingService.onboard_employee(username=username, email=email, role=role, created_by_user=request.user)
                 messages.success(request, f"User '{username}' created.")
-                return redirect("user_list") 
+                return redirect("user_list")
             except Exception as e:
                 messages.error(request, f"Error creating user: {str(e)}")
 
@@ -316,12 +316,12 @@ def register(request):
 def custom_login(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
-    
+
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
         remember_me = request.POST.get('remember_me')
-        
+
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
@@ -380,7 +380,7 @@ def get_dashboard_context(request):
 
     # 2. COMPANIES LIST: Strictly ACTIVE only.
     active_companies_qs = Company.objects.filter(account_status='ACTIVE')
-    
+
     # 3. HEADCOUNT: Strictly employees of ACTIVE companies only.
     active_headcount = Employee.objects.filter(
         company__account_status='ACTIVE'
@@ -423,20 +423,20 @@ def get_dashboard_context(request):
         'active_countries_count': Country.objects.annotate(
             active_count=Count('companies', filter=Q(companies__account_status='ACTIVE'))
         ).filter(active_count__gt=0).count(),
-        
+
         'active_companies_count': active_companies_qs.count(),
         'user_employees_count': active_headcount,
         'payrolls_completed_count': results_qs.values('period').distinct().count(),
         'total_payslips_processed': total_payslips,
         'total_gross_amount': total_gross_amount,
         'total_net_amount': total_net_amount,
-        
+
         # LIST: "Recent Portfolio" - shows ONLY active companies.
         'user_companies': active_companies_qs.order_by('-company_id')[:5],
-        
+
         # CHART: "Companies by Country" - shows ONLY active counts.
         'country_stats': top_countries,
-        
+
         'bar_labels': json.dumps(bar_labels),
         'bar_datasets_raw': json.dumps(bar_datasets_raw),
         'payslip_trend_data': json.dumps(payslip_trend_data),
@@ -459,7 +459,7 @@ def dashboard_admin(request):
 
 
 @login_required
-@role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION", "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE")  
+@role_required("EXEC", "ADMIN", "COMPLIANCE", "BILLING", "IMPLEMENTATION", "OPERATION", "DIRECTOR", "MANAGER", "SPECIALIST", "FINANCE")
 def dashboard(request):
     return render(request, 'dashboard.html', get_dashboard_context(request))
 
@@ -510,26 +510,58 @@ def user_edit(request, user_id):
 
     return render(request, 'profile/unified_profile.html', {'form': UserEditForm(instance=user_to_edit), 'profile_form': UserProfileForm(instance=profile), 'target_user': user_to_edit})
 
-@login_required
+
+
+from django.contrib import messages
+from django.shortcuts import redirect, render, get_object_or_404
+from django.utils import translation
+from Exactus.accounts.models import UserProfile, User
+from Exactus.accounts.forms import UserProfileForm
+
 def unified_profile(request, user_id=None):
-    """Unified profile view."""
     target_user = get_object_or_404(User, id=user_id) if user_id else request.user
     profile, _ = UserProfile.objects.get_or_create(user=target_user)
 
     if request.method == "POST":
-        form = UserProfileForm(request.POST, request.FILES, instance=profile)
-        if form.is_valid():
-            profile = form.save()
+        form_type = request.POST.get("form_type")
 
-            # ✅ apply immediately for this session (only makes sense for own profile)
-            if request.user == target_user:
-                lang = getattr(profile, "preferred_language", None)
-                if lang:
-                    translation.activate(lang)
-                    request.session["django_language"] = lang  # ✅ simplest + reliable
+        # ✅ 1) ACCOUNT TAB: avatar upload (own profile)
+        if form_type == "account" and request.user == target_user:
+            avatar_file = request.FILES.get("avatar")
+            if avatar_file:
+                profile.avatar = avatar_file
+                profile.save(update_fields=["avatar", "last_updated"])
+                messages.success(request, "Photo updated.")
+            else:
+                messages.warning(request, "No photo selected.")
+            return redirect(request.path + "#account")
 
-            messages.success(request, "Profile updated.")
-            return redirect(request.path)
+        # ✅ 2) PERSONAL TAB (and also can be used for preferences if you want)
+        if form_type in ("personal", "notifications"):
+            form = UserProfileForm(request.POST, request.FILES, instance=profile)
+            if form.is_valid():
+                profile = form.save()
+
+                # apply language immediately for own profile
+                if request.user == target_user:
+                    lang = getattr(profile, "preferred_language", None)
+                    if lang:
+                        translation.activate(lang)
+                        request.session["django_language"] = lang
+
+                messages.success(request, "Profile updated.")
+                return redirect(request.path + (f"#{'personal' if form_type=='personal' else 'notifications'}"))
+
+            # If invalid, fall through to render with errors
+
+        else:
+            # fallback: treat as profile form
+            form = UserProfileForm(request.POST, request.FILES, instance=profile)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Profile updated.")
+                return redirect(request.path)
+
     else:
         form = UserProfileForm(instance=profile)
 
@@ -545,6 +577,9 @@ def unified_profile(request, user_id=None):
     )
 
 
+
+
+
 @login_required
 def heartbeat(request):
     """Session keep-alive."""
@@ -553,7 +588,7 @@ def heartbeat(request):
 
 @login_required
 def role_based_redirect(request):
-    role = getattr(request.user, 'role', 'EMPLOYEE') 
+    role = getattr(request.user, 'role', 'EMPLOYEE')
     if role == 'EXEC': return redirect('/dashboard/exec/')
     if role == 'ADMIN': return redirect('/dashboard/admin/')
     if role in ['IMPLEMENTATION', 'BILLING', 'COMPLIANCE', 'OPERATION']: return redirect('/dashboard/')
@@ -572,8 +607,8 @@ def switch_context(request, company_id):
          return redirect("dashboard")
 
     return redirect(
-        'companies:company_dashboard', 
-        country_slug=company.country.slug, 
+        'companies:company_dashboard',
+        country_slug=company.country.slug,
         company_id=company.pk
     )
 
@@ -588,7 +623,7 @@ def dashboard_country_map(request):
     Applies strict annotation filtering to match the KPI logic.
     """
     Country = apps.get_model('country', 'Country')
-    
+
     # Using the same logic as the KPI to ensure consistency:
     # 1. Annotate active count
     # 2. Filter > 0
@@ -599,7 +634,7 @@ def dashboard_country_map(request):
         .filter(active_count__gt=0)
         .values_list('iso_code', flat=True)
     )
-    
+
     return JsonResponse({'countries': active_country_codes})
 
 from django.conf import settings
