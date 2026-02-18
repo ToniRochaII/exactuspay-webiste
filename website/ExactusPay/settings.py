@@ -1,6 +1,10 @@
 from __future__ import annotations
 
 import os
+import os
+print("DEBUG=", os.getenv("DEBUG"))
+print("SECRET_KEY exists? ", bool(os.getenv("SECRET_KEY")))
+
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -8,9 +12,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # -----------------------------------------------------------------------------
 # Core
 # -----------------------------------------------------------------------------
-DEBUG = os.environ.get("DEBUG", "0") == "1"
+DEBUG = os.environ.get("DEBUG", "").lower() in ("1", "true", "yes", "on")
 
-SECRET_KEY = os.environ.get("zSseE_ltn4SHo6WxJYowKKjUQvbwNz1HA4cCqhcL5X2LHBrYZWoXrIC4kE0guqtOW6DIlXksLSeajzNM8Li88Q") or ("dev-secret-key" if DEBUG else None)
+SECRET_KEY = os.environ.get("SECRET_KEY") or ("dev-secret-key" if DEBUG else None)
 if not SECRET_KEY:
     raise RuntimeError("SECRET_KEY missing in production (DEBUG=False). Set it in Render env vars.")
 
@@ -155,7 +159,7 @@ EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 
 EMAIL_HOST_USER = "no-reply@exactuspay.com"
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "Mtfbwy130!")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
 
 DEFAULT_FROM_EMAIL = "Exactus Support <no-reply@exactuspay.com>"
 DEMO_REQUEST_TO_EMAIL = os.environ.get("DEMO_REQUEST_TO_EMAIL", "antoniorocha@exactuspay.com")
