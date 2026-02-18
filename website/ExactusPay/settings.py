@@ -133,6 +133,7 @@ LANGUAGES = [
     ("pt", "Português"),
     ("es", "Español"),
     ("ru", "Русский"),
+    ("ar", "العربية"),
 ]
 
 LOCALE_PATHS = [BASE_DIR / "locale"]
@@ -157,13 +158,13 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # -----------------------------------------------------------------------------
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.hostinger.com"
-EMAIL_PORT = 465
-EMAIL_USE_TLS = False
-EMAIL_USE_SSL = True
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
 
 EMAIL_HOST_USER = "no-reply@exactuspay.com"
 
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD","")
 if not DEBUG and not EMAIL_HOST_PASSWORD:
     raise RuntimeError("EMAIL_HOST_PASSWORD missing in production. Set it in Render env vars.")
 
