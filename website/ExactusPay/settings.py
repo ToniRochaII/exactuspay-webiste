@@ -10,7 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # -----------------------------------------------------------------------------
 DEBUG = os.environ.get("DEBUG", "0") == "1"
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.environ.get("iOgET_ku19-hYMYzXSyt_PHoMWSEovZQ5ri3dHprpWQNsMe_nquTV77ef7PJlrNlQt4NKKgVRdskyaZ7tMltOw")
 if not SECRET_KEY and not DEBUG:
     raise RuntimeError("SECRET_KEY environment variable is required when DEBUG=False")
 SECRET_KEY = SECRET_KEY or "dev-secret-key"
@@ -154,7 +154,7 @@ EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 
 EMAIL_HOST_USER = "no-reply@exactuspay.com"
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "Mtfbwy130!")
 
 DEFAULT_FROM_EMAIL = "Exactus Support <no-reply@exactuspay.com>"
 DEMO_REQUEST_TO_EMAIL = os.environ.get("DEMO_REQUEST_TO_EMAIL", "antoniorocha@exactuspay.com")
