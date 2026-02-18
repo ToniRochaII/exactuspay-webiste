@@ -162,7 +162,10 @@ EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 
 EMAIL_HOST_USER = "no-reply@exactuspay.com"
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "Mtfbwy130!")
+
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+if not DEBUG and not EMAIL_HOST_PASSWORD:
+    raise RuntimeError("EMAIL_HOST_PASSWORD missing in production. Set it in Render env vars.")
 
 DEFAULT_FROM_EMAIL = "Exactus Support <no-reply@exactuspay.com>"
 DEMO_REQUEST_TO_EMAIL = os.environ.get("DEMO_REQUEST_TO_EMAIL", "antoniorocha@exactuspay.com")
