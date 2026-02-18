@@ -1,0 +1,2017 @@
+<!-- الترجمة العربية لـ ExactusPay -->
+<!-- حقوق النشر (C) 2026 ExactusPay -->
+<!-- هذا الملف يتم توزيعه تحت نفس رخصة مشروع ExactusPay. -->
+<!-- المترجم: <translations@exactuspay.com> -->
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ExactusPay 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-16 07:53+0000\n"
+"PO-Revision-Date: 2026-02-15 18:00-0300\n"
+"Last-Translator: ExactusPay Translation Team <translations@exactuspay.com>\n"
+"Language-Team: Arabic <ar@exactuspay.com>\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#: home/templates/home/demo.html:23 home/templates/home/features.html:21
+#: home/templates/home/index.html:21 home/templates/home/platform.html:22
+#: home/templates/home/pricing.html:21 home/templates/home/security.html:21
+msgid ""
+"Global Payroll Software | Multi-Country Payroll & Compliance Platform | "
+"ExactusPay"
+msgstr ""
+"برنامج الرواتب العالمي | منصة رواتب متعددة الدول والامتثال | "
+"ExactusPay"
+
+#: home/templates/home/demo.html:857 home/templates/home/features.html:587
+#: home/templates/home/index.html:606 home/templates/home/platform.html:675
+#: home/templates/home/pricing.html:605 home/templates/home/security.html:734
+#: home/templates/partials/navbar.html:9
+msgid "Home"
+msgstr "الرئيسية"
+
+#: home/templates/home/demo.html:858 home/templates/home/features.html:588
+#: home/templates/home/index.html:607 home/templates/home/platform.html:676
+#: home/templates/home/pricing.html:606 home/templates/home/security.html:735
+#: home/templates/partials/navbar.html:10
+msgid "Features"
+msgstr "الميزات"
+
+#: home/templates/home/demo.html:859 home/templates/home/demo.html:1123
+#: home/templates/home/features.html:589 home/templates/home/features.html:793
+#: home/templates/home/index.html:608 home/templates/home/index.html:910
+#: home/templates/home/platform.html:677 home/templates/home/platform.html:946
+#: home/templates/home/pricing.html:607 home/templates/home/pricing.html:834
+#: home/templates/home/security.html:736 home/templates/home/security.html:955
+#: home/templates/partials/navbar.html:11
+msgid "Platform"
+msgstr "المنصة"
+
+#: home/templates/home/demo.html:860 home/templates/home/demo.html:1154
+#: home/templates/home/features.html:590 home/templates/home/features.html:827
+#: home/templates/home/index.html:609 home/templates/home/index.html:944
+#: home/templates/home/platform.html:678 home/templates/home/platform.html:980
+#: home/templates/home/pricing.html:608 home/templates/home/pricing.html:865
+#: home/templates/home/security.html:737 home/templates/home/security.html:989
+#: home/templates/partials/navbar.html:12
+msgid "Security"
+msgstr "الأمان"
+
+#: home/templates/home/demo.html:861 home/templates/home/features.html:591
+#: home/templates/home/index.html:610 home/templates/home/platform.html:679
+#: home/templates/home/pricing.html:609 home/templates/home/security.html:738
+#: home/templates/partials/navbar.html:13
+msgid "Pricing"
+msgstr "الأسعار"
+
+#: home/templates/home/demo.html:865 home/templates/home/features.html:595
+#: home/templates/home/index.html:614 home/templates/home/platform.html:683
+#: home/templates/home/pricing.html:613 home/templates/home/security.html:744
+#: home/templates/partials/navbar.html:17
+msgid "Log In"
+msgstr "تسجيل الدخول"
+
+#: home/templates/home/demo.html:866 home/templates/home/features.html:596
+#: home/templates/home/index.html:615 home/templates/home/platform.html:684
+#: home/templates/home/pricing.html:614 home/templates/home/security.html:745
+#: home/templates/partials/navbar.html:18
+msgid "Request Demo"
+msgstr "طلب عرض توضيحي"
+
+#: home/templates/home/demo.html:872 home/templates/home/features.html:602
+#: home/templates/home/index.html:622 home/templates/home/platform.html:691
+#: home/templates/home/pricing.html:620 home/templates/home/security.html:749
+#: home/templates/partials/navbar.html:24
+msgid "Language"
+msgstr "اللغة"
+
+#: home/templates/home/demo.html:875 home/templates/home/features.html:605
+#: home/templates/home/index.html:625 home/templates/home/platform.html:694
+#: home/templates/home/pricing.html:623 home/templates/home/security.html:752
+#: home/templates/partials/navbar.html:25
+msgid "Select language"
+msgstr "اختر اللغة"
+
+#: home/templates/home/demo.html:899
+msgid "See ExactusPay in Action"
+msgstr "شاهد ExactusPay أثناء العمل"
+
+#: home/templates/home/demo.html:901
+msgid ""
+"Stop guessing your global labour costs. Get a personalised walkthrough of "
+"the platform that simplifies payroll for the Global South — with predictable "
+"compliance and one executive standard for reporting."
+msgstr ""
+"توقف عن التخمين بشأن تكاليف العمالة العالمية لديك. احصل على جولة شخصية "
+"في المنصة التي تبسط كشوف الرواتب في بلدان الجنوب العالمي — مع امتثال "
+"يمكن التنبؤ به ومعيار تنفيذي واحد لإعداد التقارير."
+
+#: home/templates/home/demo.html:905
+msgid "What you’ll see"
+msgstr "ما الذي ستراه"
+
+#: home/templates/home/demo.html:906
+msgid "Book a session"
+msgstr "احجز جلسة"
+
+#: home/templates/home/demo.html:909
+msgid "Key outcomes"
+msgstr "النتائج الرئيسية"
+
+#: home/templates/home/demo.html:910 home/templates/home/platform.html:739
+msgid "Single source of truth"
+msgstr "مصدر واحد للحقيقة"
+
+#: home/templates/home/demo.html:911 home/templates/home/features.html:692
+msgid "Multi-country standard"
+msgstr "معيار متعدد الدول"
+
+#: home/templates/home/demo.html:912 home/templates/home/security.html:785
+msgid "Audit-ready controls"
+msgstr "ضوابط جاهزة للمراجعة"
+
+#: home/templates/home/demo.html:913
+msgid "Cost visibility"
+msgstr "شفافية التكلفة"
+
+#: home/templates/home/demo.html:922
+msgid "What you get"
+msgstr "ما الذي ستحصل عليه"
+
+#: home/templates/home/demo.html:923
+msgid "A practical demo — not a sales pitch"
+msgstr "عرض توضيحي عملي — وليس عرضًا ترويجيًا للمبيعات"
+
+#: home/templates/home/demo.html:924
+msgid ""
+"We focus on the exact workflows leaders need to expand safely across LATAM, "
+"Africa, and Asia."
+msgstr ""
+"نحن نركز على سير العمل المحدد الذي يحتاجه القادة للتوسع بأمان عبر "
+"أمريكا اللاتينية وأفريقيا وآسيا."
+
+#: home/templates/home/demo.html:930
+msgid "Run a live simulation"
+msgstr "قم بتشغيل محاكاة حية"
+
+#: home/templates/home/demo.html:931
+msgid ""
+"Forecast the full employer cost of a new hire in Brazil, Nigeria, or "
+"Indonesia — including statutory contributions."
+msgstr ""
+"توقع التكلفة الكاملة لصاحب العمل لتوظيف جديد في البرازيل أو نيجيريا أو "
+"إندونيسيا — بما في ذلك المساهمات القانونية."
+
+#: home/templates/home/demo.html:936
+msgid "Audit your compliance"
+msgstr "دقق امتثالك"
+
+#: home/templates/home/demo.html:937
+msgid ""
+"See how the platform flags risks and gaps across tax logic, filings, and "
+"governance — keeping you audit-ready."
+msgstr ""
+"شاهد كيف تحدد المنصة المخاطر والثغرات عبر المنطق الضريبي والإيداعات والحوكمة "
+"— مما يبقيك جاهزًا للمراجعة."
+
+#: home/templates/home/demo.html:942
+msgid "Unified reporting"
+msgstr "إعداد تقارير موحد"
+
+#: home/templates/home/demo.html:943
+msgid ""
+"Watch 20+ countries roll up into one executive dashboard, with consistent "
+"definitions and clear visibility."
+msgstr ""
+"شاهد كيف يتم تجميع بيانات أكثر من 20 دولة في لوحة تحكم تنفيذية واحدة، "
+"بتعاريف متسقة ورؤية واضحة."
+
+#: home/templates/home/demo.html:953
+msgid "What happens next?"
+msgstr "ماذا يحدث بعد ذلك؟"
+
+#: home/templates/home/demo.html:955
+msgid "Clear steps. Zero pressure."
+msgstr "خطوات واضحة. بدون أي ضغط."
+
+#: home/templates/home/demo.html:958
+msgid ""
+"We keep it efficient and relevant — you leave with a plan, not a pile of "
+"slides."
+msgstr ""
+"نحن نحرص على أن تكون العملية فعالة وذات صلة — تغادر ومعك خطة، وليس كومة "
+"من الشرائح."
+
+#: home/templates/home/demo.html:966
+msgid "The Discovery (15 mins)"
+msgstr "الاكتشاف (15 دقيقة)"
+
+#: home/templates/home/demo.html:967
+msgid ""
+"We map your footprint (entities, contractors, EORs) and identify friction "
+"points across your target regions."
+msgstr ""
+"نقوم برسم خريطة لوجودك (كيانات، مقاولون، EORs) وتحديد نقاط الاحتكاك "
+"عبر مناطقك المستهدفة."
+
+#: home/templates/home/demo.html:971
+msgid "The Tailored Walkthrough (30 mins)"
+msgstr "الجولة المخصصة (30 دقيقة)"
+
+#: home/templates/home/demo.html:972
+msgid ""
+"No generic deck. We show country-specific examples, local tax logic, and the "
+"reporting you’ll rely on."
+msgstr ""
+"لا توجد عروض تقديمية عامة. نعرض أمثلة خاصة بكل دولة، والمنطق الضريبي المحلي، "
+"والتقارير التي ستعتمد عليها."
+
+#: home/templates/home/demo.html:976
+msgid "The Strategic Blueprint"
+msgstr "المخطط الاستراتيجي"
+
+#: home/templates/home/demo.html:977
+msgid ""
+"You leave with a pricing estimate, transition timeline, and a simulation "
+"output for your next hire."
+msgstr ""
+"تغادر مع تقدير للسعر، وجدول زمني للانتقال، ونتيجة محاكاة لتوظيفك التالي."
+
+#: home/templates/home/demo.html:986
+msgid "Why a demo?"
+msgstr "لماذا العرض التوضيحي؟"
+
+#: home/templates/home/demo.html:987
+msgid "Because expansion needs certainty"
+msgstr "لأن التوسع يحتاج إلى اليقين"
+
+#: home/templates/home/demo.html:988
+msgid ""
+"See predictive cost, verify compliance, and meet the experts who support you "
+"day-to-day."
+msgstr ""
+"شاهد التكلفة التنبؤية، وتحقق من الامتثال، وتعرف على الخبراء الذين يدعمونك "
+"يوميًا."
+
+#: home/templates/home/demo.html:994
+msgid "See the future"
+msgstr "شاهد المستقبل"
+
+#: home/templates/home/demo.html:995
+msgid ""
+"Most tools show historical spend. ExactusPay demonstrates how to predict "
+"employment cost before you hire."
+msgstr ""
+"معظم الأدوات تظهر الإنفاق التاريخي. يوضح ExactusPay كيفية توقع تكلفة "
+"التوظيف قبل أن تقوم بالتوظيف."
+
+#: home/templates/home/demo.html:1000
+msgid "Verify compliance"
+msgstr "تحقق من الامتثال"
+
+#: home/templates/home/demo.html:1001
+msgid ""
+"Ask tough questions on POPIA, LGPD, or statutory contributions. We show the "
+"logic and evidence trails."
+msgstr ""
+"اطرح أسئلة صعبة حول POPIA أو LGPD أو المساهمات القانونية. نظهر لك "
+"المنطق ومسارات الإثبات."
+
+#: home/templates/home/demo.html:1006
+msgid "Meet your team"
+msgstr "تعرف على فريقك"
+
+#: home/templates/home/demo.html:1007
+msgid ""
+"This isn’t just software. You’ll meet the support experts that operate as an "
+"extension of your team."
+msgstr ""
+"هذا ليس مجرد برنامج. ستقابل خبراء الدعم الذين يعملون كامتداد لفريقك."
+
+#: home/templates/home/demo.html:1016 home/templates/home/pricing.html:823
+msgid "Request a demo"
+msgstr "طلب عرض توضيحي"
+
+#: home/templates/home/demo.html:1017
+msgid "Schedule your personal walkthrough"
+msgstr "جدول جلستك الشخصية"
+
+#: home/templates/home/demo.html:1018
+msgid ""
+"Submit the form and instantly choose a time — no waiting for back-and-forth "
+"emails."
+msgstr ""
+"أرسل النموذج واختر وقتًا على الفور — بدون انتظار لتبادل رسائل البريد "
+"الإلكتروني."
+
+#: home/templates/home/demo.html:1023
+msgid "Schedule Your Personal Demo"
+msgstr "جدول عرضك التوضيحي الشخصي"
+
+#: home/templates/home/demo.html:1024
+msgid ""
+"No commitment required. We keep this focused, practical, and relevant to "
+"your target countries."
+msgstr ""
+"لا يوجد التزام مطلوب. نحرص على أن يكون هذا العرض مركزًا وعمليًا وذا صلة "
+"بالدول التي تستهدفها."
+
+#: home/templates/home/demo.html:1031
+msgid "First Name"
+msgstr "الاسم الأول"
+
+#: home/templates/home/demo.html:1036
+msgid "Last Name"
+msgstr "اسم العائلة"
+
+#: home/templates/home/demo.html:1041
+msgid "Work Email"
+msgstr "البريد الإلكتروني للعمل"
+
+#: home/templates/home/demo.html:1046
+msgid "Company Name"
+msgstr "اسم الشركة"
+
+#: home/templates/home/demo.html:1051
+msgid "Number of Employees"
+msgstr "عدد الموظفين"
+
+#: home/templates/home/demo.html:1053
+msgid "Select…"
+msgstr "اختر…"
+
+#: home/templates/home/demo.html:1062
+msgid "Expansion Region (Optional)"
+msgstr "منطقة التوسع (اختياري)"
+
+#: home/templates/home/demo.html:1064
+msgid "Not sure yet"
+msgstr "لم أحدد بعد"
+
+#: home/templates/home/demo.html:1075
+msgid "Book My Session"
+msgstr "احجز جلستي"
+
+#: home/templates/home/demo.html:1080
+#, python-format
+msgid "No commitment required. 100%% data privacy."
+msgstr "لا يوجد التزام مطلوب. خصوصية البيانات 100%%."
+
+#: home/templates/home/demo.html:1109
+msgid "Ready to bring global payroll under one roof?"
+msgstr "هل أنت مستعد لجمع كشوف الرواتب العالمية تحت سقف واحد؟"
+
+#: home/templates/home/demo.html:1110
+msgid ""
+"ExactusPay gives you a single source of truth, consistent reporting, and "
+"compliance-ready processes — without the typical complexity."
+msgstr ""
+"يمنحك ExactusPay مصدرًا واحدًا للحقيقة، وتقارير متسقة، وعمليات جاهزة للامتثال "
+"— بدون التعقيد المعتاد."
+
+#: home/templates/home/demo.html:1112 home/templates/home/index.html:898
+msgid "Schedule Demo"
+msgstr "جدولة عرض توضيحي"
+
+#: home/templates/home/demo.html:1113
+msgid "View Pricing"
+msgstr "عرض الأسعار"
+
+#: home/templates/home/demo.html:1125 home/templates/home/features.html:795
+#: home/templates/home/index.html:912 home/templates/home/platform.html:948
+#: home/templates/home/pricing.html:836 home/templates/home/security.html:957
+msgid "Global Payroll"
+msgstr "الرواتب العالمية"
+
+#: home/templates/home/demo.html:1126 home/templates/home/features.html:796
+#: home/templates/home/index.html:913 home/templates/home/platform.html:949
+#: home/templates/home/pricing.html:837 home/templates/home/security.html:958
+msgid "Compliance Automation"
+msgstr "أتمتة الامتثال"
+
+#: home/templates/home/demo.html:1127 home/templates/home/features.html:797
+#: home/templates/home/index.html:914 home/templates/home/platform.html:950
+#: home/templates/home/pricing.html:838 home/templates/home/security.html:959
+msgid "Workforce Analytics"
+msgstr "تحليلات القوى العاملة"
+
+#: home/templates/home/demo.html:1128 home/templates/home/features.html:798
+#: home/templates/home/index.html:915 home/templates/home/platform.html:951
+#: home/templates/home/pricing.html:839 home/templates/home/security.html:960
+msgid "Tax Management"
+msgstr "إدارة الضرائب"
+
+#: home/templates/home/demo.html:1132 home/templates/home/features.html:803
+#: home/templates/home/index.html:920 home/templates/home/platform.html:956
+#: home/templates/home/pricing.html:843 home/templates/home/security.html:965
+msgid "Solutions"
+msgstr "الحلول"
+
+#: home/templates/home/demo.html:1134 home/templates/home/features.html:805
+#: home/templates/home/index.html:922 home/templates/home/platform.html:958
+#: home/templates/home/pricing.html:845 home/templates/home/security.html:967
+msgid "Enterprise Expansion"
+msgstr "توسع المؤسسات"
+
+#: home/templates/home/demo.html:1135 home/templates/home/features.html:806
+#: home/templates/home/index.html:923 home/templates/home/platform.html:959
+#: home/templates/home/pricing.html:846 home/templates/home/security.html:968
+msgid "Mergers & Acquisitions"
+msgstr "الاندماجات والاستحواذات"
+
+#: home/templates/home/demo.html:1136 home/templates/home/features.html:807
+#: home/templates/home/index.html:924 home/templates/home/platform.html:960
+#: home/templates/home/pricing.html:847 home/templates/home/security.html:969
+msgid "Compliance Management"
+msgstr "إدارة الامتثال"
+
+#: home/templates/home/demo.html:1137 home/templates/home/features.html:808
+#: home/templates/home/index.html:925 home/templates/home/platform.html:961
+#: home/templates/home/pricing.html:848 home/templates/home/security.html:970
+msgid "Global Workforce"
+msgstr "القوى العاملة العالمية"
+
+#: home/templates/home/demo.html:1141 home/templates/home/features.html:813
+#: home/templates/home/index.html:930 home/templates/home/platform.html:966
+#: home/templates/home/pricing.html:852 home/templates/home/security.html:975
+msgid "Resources"
+msgstr "الموارد"
+
+#: home/templates/home/demo.html:1143 home/templates/home/features.html:815
+#: home/templates/home/index.html:932 home/templates/home/platform.html:968
+#: home/templates/home/pricing.html:854 home/templates/home/security.html:977
+msgid "Documentation"
+msgstr "الوثائق"
+
+#: home/templates/home/demo.html:1144 home/templates/home/features.html:816
+#: home/templates/home/index.html:933 home/templates/home/platform.html:969
+#: home/templates/home/pricing.html:855 home/templates/home/security.html:978
+msgid "API Reference"
+msgstr "مرجع API"
+
+#: home/templates/home/demo.html:1145 home/templates/home/features.html:817
+#: home/templates/home/index.html:934 home/templates/home/platform.html:970
+#: home/templates/home/pricing.html:856 home/templates/home/security.html:979
+msgid "Compliance Guides"
+msgstr "أدلة الامتثال"
+
+#: home/templates/home/demo.html:1146 home/templates/home/features.html:818
+#: home/templates/home/index.html:935 home/templates/home/platform.html:971
+#: home/templates/home/pricing.html:857 home/templates/home/security.html:980
+msgid "Case Studies"
+msgstr "دراسات حالة"
+
+#: home/templates/home/demo.html:1150 home/templates/home/features.html:823
+#: home/templates/home/index.html:940 home/templates/home/platform.html:976
+#: home/templates/home/pricing.html:861 home/templates/home/security.html:985
+msgid "Company"
+msgstr "الشركة"
+
+#: home/templates/home/demo.html:1152 home/templates/home/features.html:825
+#: home/templates/home/index.html:942 home/templates/home/platform.html:978
+#: home/templates/home/pricing.html:863 home/templates/home/security.html:987
+msgid "About Us"
+msgstr "من نحن"
+
+#: home/templates/home/demo.html:1153 home/templates/home/features.html:826
+#: home/templates/home/index.html:943 home/templates/home/platform.html:979
+#: home/templates/home/pricing.html:864 home/templates/home/security.html:988
+msgid "Careers"
+msgstr "الوظائف"
+
+#: home/templates/home/demo.html:1155 home/templates/home/features.html:828
+#: home/templates/home/index.html:945 home/templates/home/platform.html:981
+#: home/templates/home/pricing.html:866 home/templates/home/security.html:990
+msgid "Contact"
+msgstr "اتصل بنا"
+
+#: home/templates/home/demo.html:1166 home/templates/home/pricing.html:878
+#, python-format
+msgid "© %(current_year)s ExactusPay. All rights reserved."
+msgstr "© %(current_year)s ExactusPay. جميع الحقوق محفوظة."
+
+#: home/templates/home/demo.html:1167 home/templates/home/features.html:840
+#: home/templates/home/index.html:957 home/templates/home/platform.html:993
+#: home/templates/home/pricing.html:880 home/templates/home/security.html:1002
+msgid "GDPR Compliant | SOC 2 Type II Certified | ISO 27001"
+msgstr "متوافق مع اللائحة العامة لحماية البيانات | حاصل على شهادة SOC 2 النوع II | ISO 27001"
+
+#: home/templates/home/features.html:629
+msgid "Features built for real global payroll"
+msgstr "ميزات صُممت لرواتب عالمية حقيقية"
+
+#: home/templates/home/features.html:631
+msgid ""
+"ExactusPay gives growing companies the capabilities of a global enterprise — "
+"without fragmented tools. Standardised data, automated compliance, and "
+"operational clarity across LATAM, Africa, and Asia."
+msgstr ""
+"يمنح ExactusPay الشركات النامية إمكانات مؤسسة عالمية — بدون أدوات مجزأة. "
+"بيانات موحدة، وامتثال آلي، ووضوح تشغيلي عبر أمريكا اللاتينية وأفريقيا وآسيا."
+
+#: home/templates/home/features.html:638
+msgid "Explore the Pillars"
+msgstr "استكشف الركائز"
+
+#: home/templates/home/features.html:639
+msgid "View Capabilities"
+msgstr "عرض الإمكانيات"
+
+#: home/templates/home/features.html:642
+msgid "Feature outcomes"
+msgstr "نتائج الميزات"
+
+#: home/templates/home/features.html:643
+msgid "Standardised reports"
+msgstr "تقارير موحدة"
+
+#: home/templates/home/features.html:644
+msgid "Compliance built-in"
+msgstr "امتثال مدمج"
+
+#: home/templates/home/features.html:645
+msgid "Multi-currency ready"
+msgstr "جاهز للعملات المتعددة"
+
+#: home/templates/home/features.html:646
+msgid "Managed support"
+msgstr "دعم مُدار"
+
+#: home/templates/home/features.html:655
+msgid "Capabilities"
+msgstr "الإمكانيات"
+
+#: home/templates/home/features.html:656
+msgid "Everything teams need to run payroll with confidence"
+msgstr "كل ما تحتاجه الفرق لإدارة الرواتب بثقة"
+
+#: home/templates/home/features.html:658
+msgid ""
+"From automation and analytics to audit trails and self-service, ExactusPay "
+"replaces local fragmentation with a single, reliable operating model."
+msgstr ""
+"من الأتمتة والتحليلات إلى مسارات المراجعة والخدمة الذاتية، يستبدل ExactusPay "
+"التجزئة المحلية بنموذج تشغيلي واحد موثوق."
+
+#: home/templates/home/features.html:668
+msgid "Compliance automation"
+msgstr "أتمتة الامتثال"
+
+#: home/templates/home/features.html:669
+msgid ""
+"Built-in legal logic and validations that help you stay audit-ready as "
+"regulations evolve."
+msgstr ""
+"منطق قانوني مدمج وعمليات تحقق تساعدك على البقاء جاهزًا للمراجعة مع تطور "
+"اللوائح."
+
+#: home/templates/home/features.html:674
+msgid "Cost & payroll analytics"
+msgstr "تحليلات التكلفة والرواتب"
+
+#: home/templates/home/features.html:675
+msgid ""
+"Dashboards that make Total Cost of Employment and key metrics visible across "
+"countries."
+msgstr ""
+"لوحات تحكم تجعل التكلفة الإجمالية للتوظيف والمقاييس الرئيسية مرئية عبر "
+"البلدان."
+
+#: home/templates/home/features.html:680
+msgid "Fast, reliable processing"
+msgstr "معالجة سريعة وموثوقة"
+
+#: home/templates/home/features.html:681
+msgid ""
+"Run payroll at scale with structured inputs, automated checks, and stable "
+"exports."
+msgstr ""
+"قم بتشغيل الرواتب على نطاق واسع بمدخلات منظمة، وفحوصات آلية، وتصدير مستقر."
+
+#: home/templates/home/features.html:686
+msgid "Enterprise security"
+msgstr "أمان المؤسسات"
+
+#: home/templates/home/features.html:687
+msgid ""
+"Strong encryption, role-based access, and governance designed for payroll-"
+"grade sensitivity."
+msgstr ""
+"تشفير قوي، وصول قائم على الأدوار، وحوكمة مصممة لحساسية بيانات الرواتب."
+
+#: home/templates/home/features.html:693
+msgid ""
+"One reporting structure across jurisdictions — no spreadsheet reconciliation "
+"between providers."
+msgstr ""
+"هيكل تقارير واحد عبر الولايات القضائية — لا حاجة لتسوية جداول البيانات بين "
+"مقدمي الخدمات."
+
+#: home/templates/home/features.html:698
+msgid "Audit trails & governance"
+msgstr "مسارات المراجعة والحوكمة"
+
+#: home/templates/home/features.html:699
+msgid ""
+"Traceable calculations and change history to support internal review and "
+"external audits."
+msgstr ""
+"حسابات قابلة للتتبع وتاريخ تغييرات لدعم المراجعة الداخلية والتدقيقات الخارجية."
+
+#: home/templates/home/features.html:708
+msgid "Core Pillars"
+msgstr "الركائز الأساسية"
+
+#: home/templates/home/features.html:709
+msgid "Four pillars that replace payroll fragmentation"
+msgstr "أربع ركائز تحل محل تجزئة الرواتب"
+
+#: home/templates/home/features.html:710
+msgid ""
+"These pillars work together to deliver accuracy, compliance, and clarity "
+"across every country you operate in."
+msgstr ""
+"تعمل هذه الركائز معًا لتقديم الدقة والامتثال والوضوح في كل بلد تعمل فيه."
+
+#: home/templates/home/features.html:718
+msgid "Strategic payroll simulations"
+msgstr "محاكاة الرواتب الاستراتيجية"
+
+#: home/templates/home/features.html:719
+msgid ""
+"Forecast full employment cost before you hire — including employer taxes, "
+"statutory contributions, and local burden."
+msgstr ""
+"توقع التكلفة الإجمالية للتوظيف قبل أن تقوم بالتوظيف — بما في ذلك ضرائب "
+"صاحب العمل والمساهمات القانونية والأعباء المحلية."
+
+#: home/templates/home/features.html:723
+msgid "Pre-hire forecasting:"
+msgstr "التوقع قبل التوظيف:"
+
+#: home/templates/home/features.html:723
+msgid "model offers with accurate employer-cost breakdowns."
+msgstr "نمذجة العروض مع تفصيل دقيق لتكلفة صاحب العمل."
+
+#: home/templates/home/features.html:724
+msgid "Scenario planning:"
+msgstr "تخطيط السيناريوهات:"
+
+#: home/templates/home/features.html:724
+msgid "compare markets and hiring strategies side-by-side."
+msgstr "مقارنة الأسواق واستراتيجيات التوظيف جنبًا إلى جنب."
+
+#: home/templates/home/features.html:725
+msgid "Budget certainty:"
+msgstr "اليقين في الميزانية:"
+
+#: home/templates/home/features.html:725
+msgid "align HR and Finance with one set of numbers."
+msgstr "مواءمة الموارد البشرية والمالية مع مجموعة واحدة من الأرقام."
+
+#: home/templates/home/features.html:733
+msgid "Global-standardised reporting"
+msgstr "إعداد تقارير عالمي موحد"
+
+#: home/templates/home/features.html:734
+msgid ""
+"Replace inconsistent local formats with one reporting model that stays "
+"stable across countries and payroll cycles."
+msgstr ""
+"استبدل التنسيقات المحلية غير المتسقة بنموذج تقارير واحد يظل مستقرًا عبر "
+"البلدان ودورات الرواتب."
+
+#: home/templates/home/features.html:738
+msgid "Single dashboard:"
+msgstr "لوحة تحكم واحدة:"
+
+#: home/templates/home/features.html:738
+msgid "central visibility across payroll and workforce data."
+msgstr "رؤية مركزية عبر بيانات الرواتب والقوى العاملة."
+
+#: home/templates/home/features.html:739
+msgid "Comparable outputs:"
+msgstr "مخرجات قابلة للمقارنة:"
+
+#: home/templates/home/features.html:739
+msgid "consistent data definitions enable clean cross-country analysis."
+msgstr "تعريفات بيانات متسقة تتيح تحليلاً نظيفًا عبر البلدان."
+
+#: home/templates/home/features.html:740
+msgid "Decision clarity:"
+msgstr "وضوح القرار:"
+
+#: home/templates/home/features.html:740
+msgid "executive-grade insights into costs, trends, and exposure."
+msgstr "رؤى على المستوى التنفيذي حول التكاليف والاتجاهات والمخاطر."
+
+#: home/templates/home/features.html:748
+msgid "Automated compliance & security"
+msgstr "الامتثال والأمن الآلي"
+
+#: home/templates/home/features.html:749
+msgid ""
+"Stay ahead of regulatory change with built-in rules, validations, and "
+"governance designed for sensitive payroll data."
+msgstr ""
+"ابقَ في صدارة التغييرات التنظيمية من خلال قواعد مدمجة وعمليات تحقق وحوكمة "
+"مصممة لبيانات الرواتب الحساسة."
+
+#: home/templates/home/features.html:753
+msgid "Legal logic:"
+msgstr "منطق قانوني:"
+
+#: home/templates/home/features.html:753
+msgid "controls aligned to labour law and statutory requirements."
+msgstr "ضوابط متوافقة مع قانون العمل والمتطلبات القانونية."
+
+#: home/templates/home/features.html:754
+msgid "Error reduction:"
+msgstr "تقليل الأخطاء:"
+
+#: home/templates/home/features.html:754
+msgid "automation and guardrails minimise manual mistakes."
+msgstr "الأتمتة والضوابط تقلل من الأخطاء اليدوية."
+
+#: home/templates/home/features.html:755
+msgid "Audit-ready:"
+msgstr "جاهز للمراجعة:"
+
+#: home/templates/home/features.html:755
+msgid "traceable calculations and data controls support reviews."
+msgstr "حسابات قابلة للتتبع وضوابط بيانات تدعم المراجعات."
+
+#: home/templates/home/features.html:763
+msgid "Integrations & connectivity"
+msgstr "التكاملات والاتصال"
+
+#: home/templates/home/features.html:764
+msgid ""
+"Connect your HR stack so data flows from hire to pay — with fewer handoffs, "
+"less re-entry, and consistent governance."
+msgstr ""
+"قم بتوصيل مجموعة أدوات الموارد البشرية الخاصة بك بحيث تتدفق البيانات من "
+"التوظيف إلى الدفع — مع عدد أقل من عمليات التسليم، وإدخال أقل، وحوكمة متسقة."
+
+#: home/templates/home/features.html:768
+msgid "HCM connectivity:"
+msgstr "اتصال HCM:"
+
+#: home/templates/home/features.html:768
+msgid "integrate with tools like Workday and BambooHR."
+msgstr "التكامل مع أدوات مثل Workday و BambooHR."
+
+#: home/templates/home/features.html:769
+msgid "Scalable architecture:"
+msgstr "بنية قابلة للتطوير:"
+
+#: home/templates/home/features.html:769
+msgid "grow from mid-sized to global without rewiring operations."
+msgstr "تنمو من شركة متوسطة إلى عالمية دون إعادة هيكلة العمليات."
+
+#: home/templates/home/features.html:770
+msgid "Multi-language & FX:"
+msgstr "متعدد اللغات والعملات:"
+
+#: home/templates/home/features.html:770
+msgid "localised employee experience across currencies and regions."
+msgstr "تجربة موظفين مترجمة عبر العملات والمناطق."
+
+#: home/templates/home/features.html:780
+msgid "Ready to simplify global payroll?"
+msgstr "هل أنت مستعد لتبسيط الرواتب العالمية؟"
+
+#: home/templates/home/features.html:781
+msgid ""
+"Standardise your reporting, reduce manual work, and stay compliant across "
+"markets — with one platform that scales."
+msgstr ""
+"وحّد تقاريرك، وقلل العمل اليدوي، وحافظ على الامتثال عبر الأسواق — مع منصة "
+"واحدة قابلة للتطوير."
+
+#: home/templates/home/features.html:783 home/templates/home/platform.html:935
+msgid "Schedule a Demo"
+msgstr "جدولة عرض توضيحي"
+
+#: home/templates/home/features.html:839 home/templates/home/index.html:956
+#: home/templates/home/platform.html:992
+msgid "All rights reserved."
+msgstr "جميع الحقوق محفوظة."
+
+#: home/templates/home/index.html:664
+msgid "Intelligent Global Payroll Platform"
+msgstr "منصة رواتب عالمية ذكية"
+
+#: home/templates/home/index.html:667
+msgid ""
+"Streamline global workforce management with AI-driven compliance, real-time "
+"insights, and seamless payroll processing across 40+ countries."
+msgstr ""
+"بسّط إدارة القوى العاملة العالمية من خلال الامتثال المدعوم بالذكاء الاصطناعي، "
+"والرؤى في الوقت الفعلي، ومعالجة الرواتب السلسة في أكثر من 40 دولة."
+
+#: home/templates/home/index.html:674
+msgid "Watch Demo"
+msgstr "شاهد العرض التوضيحي"
+
+#: home/templates/home/index.html:681
+msgid "Accuracy Rate"
+msgstr "معدل الدقة"
+
+#: home/templates/home/index.html:685
+msgid "Countries"
+msgstr "الدول"
+
+#: home/templates/home/index.html:689
+msgid "Hours Support"
+msgstr "ساعات الدعم"
+
+#: home/templates/home/index.html:693
+msgid "Compliance"
+msgstr "الامتثال"
+
+#: home/templates/home/index.html:705
+msgid "Powerful Features"
+msgstr "ميزات قوية"
+
+#: home/templates/home/index.html:706
+msgid "Designed for Global Scale"
+msgstr "مصممة للنطاق العالمي"
+
+#: home/templates/home/index.html:707
+msgid ""
+"Everything you need to manage complex global payroll operations with "
+"confidence"
+msgstr ""
+"كل ما تحتاجه لإدارة عمليات الرواتب العالمية المعقدة بثقة"
+
+#: home/templates/home/index.html:713
+msgid "AI-Powered Compliance"
+msgstr "الامتثال المدعوم بالذكاء الاصطناعي"
+
+#: home/templates/home/index.html:714
+msgid ""
+"Automated regulatory updates and risk assessment across all jurisdictions "
+"with machine learning algorithms."
+msgstr ""
+"تحديثات تنظيمية آلية وتقييم المخاطر عبر جميع الولايات القضائية باستخدام "
+"خوارزميات التعلم الآلي."
+
+#: home/templates/home/index.html:719 home/templates/home/index.html:765
+msgid "Real-time Analytics"
+msgstr "تحليلات في الوقت الفعلي"
+
+#: home/templates/home/index.html:720
+msgid ""
+"Comprehensive dashboards with live insights into payroll costs, compliance "
+"status, and operational metrics."
+msgstr ""
+"لوحات تحكم شاملة مع رؤى حية حول تكاليف الرواتب وحالة الامتثال والمقاييس "
+"التشغيلية."
+
+#: home/templates/home/index.html:725
+msgid "Instant Processing"
+msgstr "معالجة فورية"
+
+#: home/templates/home/index.html:726
+msgid ""
+"Batch process thousands of payments across different currencies and banking "
+"systems simultaneously."
+msgstr ""
+"معالجة دفعية لآلاف المدفوعات عبر عملات وأنظمة مصرفية مختلفة في وقت واحد."
+
+#: home/templates/home/index.html:731 home/templates/home/index.html:829
+msgid "Enterprise Security"
+msgstr "أمان المؤسسات"
+
+#: home/templates/home/index.html:732
+msgid ""
+"Bank-grade encryption, multi-factor authentication, and SOC 2 Type II "
+"certified infrastructure."
+msgstr ""
+"تشفير على مستوى البنوك، ومصادقة متعددة العوامل، وبنية تحتية حاصلة على شهادة "
+"SOC 2 النوع II."
+
+#: home/templates/home/index.html:737
+msgid "Global Coverage"
+msgstr "تغطية عالمية"
+
+#: home/templates/home/index.html:738
+msgid ""
+"Seamless payroll processing across 40+ countries with local compliance and "
+"tax expertise built-in."
+msgstr ""
+"معالجة سلسة للرواتب في أكثر من 40 دولة مع خبرة امتثال وضرائب محلية مدمجة."
+
+#: home/templates/home/index.html:743
+msgid "Audit Trail"
+msgstr "مسار المراجعة"
+
+#: home/templates/home/index.html:744
+msgid ""
+"Complete transparency with immutable records for every transaction and "
+"compliance verification."
+msgstr ""
+"شفافية كاملة مع سجلات غير قابلة للتغيير لكل معاملة والتحقق من الامتثال."
+
+#: home/templates/home/index.html:757
+msgid "Unified Platform"
+msgstr "منصة موحدة"
+
+#: home/templates/home/index.html:758
+msgid "Everything in One Dashboard"
+msgstr "كل شيء في لوحة تحكم واحدة"
+
+#: home/templates/home/index.html:760
+msgid ""
+"Manage your entire global payroll operation from a single, intuitive "
+"interface with real-time data and actionable insights."
+msgstr ""
+"أدر عملية الرواتب العالمية بأكملها من واجهة واحدة بديهية مع بيانات في الوقت "
+"الفعلي ورؤى قابلة للتنفيذ."
+
+#: home/templates/home/index.html:766
+msgid ""
+"Monitor payroll costs, compliance status, and operational metrics across all "
+"regions with live dashboards."
+msgstr ""
+"راقب تكاليف الرواتب وحالة الامتثال والمقاييس التشغيلية عبر جميع المناطق باستخدام "
+"لوحات التحكم الحية."
+
+#: home/templates/home/index.html:770
+msgid "Multi-currency Support"
+msgstr "دعم العملات المتعددة"
+
+#: home/templates/home/index.html:771
+msgid ""
+"Process payments in 40+ currencies with automated forex management and "
+"optimal exchange rates."
+msgstr ""
+"عالج المدفوعات بأكثر من 40 عملة مع إدارة آلية لصرف العملات وأسعار صرف مثالية."
+
+#: home/templates/home/index.html:775
+msgid "Automated Reporting"
+msgstr "إعداد تقارير آلي"
+
+#: home/templates/home/index.html:776
+msgid ""
+"Generate compliance reports, tax filings, and financial statements "
+"automatically across all jurisdictions."
+msgstr ""
+"أنشئ تقارير الامتثال والإقرارات الضريبية والبيانات المالية تلقائيًا عبر جميع "
+"الولايات القضائية."
+
+#: home/templates/home/index.html:785
+msgid "Payroll Analytics"
+msgstr "تحليلات الرواتب"
+
+#: home/templates/home/index.html:786
+msgid "Live Dashboard"
+msgstr "لوحة تحكم حية"
+
+#: home/templates/home/index.html:790
+msgid ""
+"Real-time insights into global payroll operations with predictive analytics."
+msgstr ""
+"رؤى في الوقت الفعلي لعمليات الرواتب العالمية مع تحليلات تنبؤية."
+
+#: home/templates/home/index.html:798
+msgid "Compliance Status"
+msgstr "حالة الامتثال"
+
+#: home/templates/home/index.html:799
+msgid "All Systems Go"
+msgstr "جميع الأنظمة جاهزة"
+
+#: home/templates/home/index.html:803
+#, python-format
+msgid ""
+"100%% compliance across all active jurisdictions with automated updates."
+msgstr ""
+"امتثال 100%% عبر جميع الولايات القضائية النشطة مع تحديثات آلية."
+
+#: home/templates/home/index.html:811
+msgid "Payment Processing"
+msgstr "معالجة المدفوعات"
+
+#: home/templates/home/index.html:812
+msgid "Batch Ready"
+msgstr "جاهز للمعالجة الدفعية"
+
+#: home/templates/home/index.html:816
+msgid "Process payments in multiple currencies with automated reconciliation."
+msgstr "عالج المدفوعات بعملات متعددة مع تسوية آلية."
+
+#: home/templates/home/index.html:830
+msgid "Bank-Grade Protection"
+msgstr "حماية على مستوى البنوك"
+
+#: home/templates/home/index.html:831
+msgid ""
+"Your global payroll data is protected by multiple layers of enterprise "
+"security"
+msgstr ""
+"بيانات الرواتب العالمية الخاصة بك محمية بعدة طبقات من الأمان على مستوى المؤسسات"
+
+#: home/templates/home/index.html:837
+msgid "AES-256 Encryption"
+msgstr "تشفير AES-256"
+
+#: home/templates/home/index.html:838
+msgid ""
+"All data encrypted in transit and at rest with military-grade encryption "
+"standards."
+msgstr ""
+"يتم تشفير جميع البيانات أثناء النقل وفي حالة السكون باستخدام معايير تشفير "
+"عسكرية."
+
+#: home/templates/home/index.html:842
+msgid "Multi-Factor Auth"
+msgstr "مصادقة متعددة العوامل"
+
+#: home/templates/home/index.html:843
+msgid "Enterprise-grade MFA with biometric options for all user access levels."
+msgstr ""
+"مصادقة متعددة العوامل على مستوى المؤسسات مع خيارات بيومترية لجميع مستويات وصول "
+"المستخدمين."
+
+#: home/templates/home/index.html:847
+msgid "SOC 2 Certified"
+msgstr "حاصل على شهادة SOC 2"
+
+#: home/templates/home/index.html:848
+msgid ""
+"Regular third-party audits ensure continuous compliance with security "
+"standards."
+msgstr ""
+"تضمن عمليات التدقيق المنتظمة من قبل طرف ثالث الامتثال المستمر لمعايير الأمان."
+
+#: home/templates/home/index.html:852
+msgid "Data Sovereignty"
+msgstr "سيادة البيانات"
+
+#: home/templates/home/index.html:853
+msgid ""
+"Regional data centers ensure compliance with local data protection "
+"regulations."
+msgstr ""
+"تضمن مراكز البيانات الإقليمية الامتثال للوائح حماية البيانات المحلية."
+
+#: home/templates/home/index.html:863
+msgid "Trusted by Leaders"
+msgstr "موثوق به من قبل القادة"
+
+#: home/templates/home/index.html:864
+msgid "Global Success Stories"
+msgstr "قصص نجاح عالمية"
+
+#: home/templates/home/index.html:865
+msgid ""
+"See how companies are transforming their global payroll operations with "
+"ExactusPay"
+msgstr ""
+"شاهد كيف تقوم الشركات بتحويل عمليات الرواتب العالمية لديها باستخدام ExactusPay"
+
+#: home/templates/home/index.html:870
+#, python-format
+msgid ""
+"\"ExactusPay revolutionized our global payroll operations. We reduced "
+"processing time by 80%% while eliminating compliance errors across 15 "
+"countries. Their platform paid for itself within the first quarter, and the "
+"ROI has been phenomenal.\""
+msgstr ""
+"\"أحدثت ExactusPay ثورة في عمليات الرواتب العالمية لدينا. لقد قللنا وقت "
+"المعالجة بنسبة 80%% مع القضاء على أخطاء الامتثال في 15 دولة. لقد استعادت "
+"منصتهم تكلفتها خلال الربع الأول، وكان العائد على الاستثمار هائلاً.\""
+
+#: home/templates/home/index.html:878
+msgid "Sarah Rodriguez"
+msgstr "سارة رودريغيز"
+
+#: home/templates/home/index.html:879
+msgid "Global Operations Director, TechScale Inc."
+msgstr "مديرة العمليات العالمية، شركة TechScale Inc."
+
+#: home/templates/home/index.html:890
+msgid "Ready to Simplify Global Payroll?"
+msgstr "هل أنت مستعد لتبسيط الرواتب العالمية؟"
+
+#: home/templates/home/index.html:892
+msgid ""
+"Join 500+ enterprises that trust ExactusPay with their global workforce "
+"management. Schedule a personalized demo to see our platform in action."
+msgstr ""
+"انضم إلى أكثر من 500 مؤسسة تثق في ExactusPay لإدارة القوى العاملة العالمية "
+"لديها. جدول عرضًا توضيحيًا مخصصًا لرؤية منصتنا أثناء العمل."
+
+#: home/templates/home/platform.html:723
+msgid "A global payroll platform built for scale"
+msgstr "منصة رواتب عالمية صُممت للتوسع"
+
+#: home/templates/home/platform.html:726
+msgid ""
+"ExactusPay is an end-to-end global payroll ecosystem that brings enterprise-"
+"grade consistency to high-growth markets. Replace fragmented local tools "
+"with a single source of truth — and run multi-country payroll with clarity, "
+"control, and confidence."
+msgstr ""
+"ExactusPay هو نظام بيئي شامل للرواتب العالمية يجلب الاتساق على مستوى المؤسسات "
+"للأسواق عالية النمو. استبدل الأدوات المحلية المجزأة بمصدر واحد للحقيقة — وقم "
+"بتشغيل الرواتب متعددة الدول بوضوح وتحكم وثقة."
+
+#: home/templates/home/platform.html:734
+msgid "Explore Capabilities"
+msgstr "استكشف الإمكانيات"
+
+#: home/templates/home/platform.html:738
+msgid "Platform outcomes"
+msgstr "نتائج المنصة"
+
+#: home/templates/home/platform.html:740
+msgid "Standardised reporting"
+msgstr "إعداد تقارير موحد"
+
+#: home/templates/home/platform.html:741
+msgid "TCOE visibility"
+msgstr "رؤية التكلفة الإجمالية للتوظيف"
+
+#: home/templates/home/platform.html:742
+msgid "Audit-ready"
+msgstr "جاهز للمراجعة"
+
+#: home/templates/home/platform.html:752
+msgid "Architecture of Excellence"
+msgstr "هندسة التميز"
+
+#: home/templates/home/platform.html:753
+msgid "One framework. Every country. One clear view."
+msgstr "إطار عمل واحد. كل دولة. نظرة واحدة واضحة."
+
+#: home/templates/home/platform.html:756
+msgid ""
+"Whether you pay teams in Brazil, Nigeria, or Vietnam, payroll data is "
+"processed and presented in the same structure. That means fewer manual "
+"reconciliations and executive-grade visibility across jurisdictions."
+msgstr ""
+"سواء كنت تدفع للفرق في البرازيل أو نيجيريا أو فيتنام، تتم معالجة بيانات "
+"الرواتب وتقديمها في نفس الهيكل. وهذا يعني تقليل التسويات اليدوية وتوفير رؤية "
+"على المستوى التنفيذي عبر الولايات القضائية."
+
+#: home/templates/home/platform.html:766
+msgid "Global-standardised model"
+msgstr "نموذج عالمي موحد"
+
+#: home/templates/home/platform.html:767
+msgid ""
+"Common definitions for earnings, deductions, bases, and outputs — consistent "
+"across regions and providers."
+msgstr ""
+"تعريفات مشتركة للاستحقاقات والخصومات والأسس والمخرجات — متسقة عبر المناطق "
+"ومقدمي الخدمات."
+
+#: home/templates/home/platform.html:772
+msgid "Total Cost of Employment"
+msgstr "التكلفة الإجمالية للتوظيف"
+
+#: home/templates/home/platform.html:773
+msgid ""
+"See employer cost, statutory burdens, and tax exposure in one comparable "
+"view — globally and locally."
+msgstr ""
+"شاهد تكلفة صاحب العمل والأعباء القانونية والتعرض الضريبي في نظرة واحدة قابلة "
+"للمقارنة — عالميًا ومحليًا."
+
+#: home/templates/home/platform.html:778
+msgid "No spreadsheet reconciliation"
+msgstr "لا حاجة لتسوية جداول البيانات"
+
+#: home/templates/home/platform.html:779
+msgid ""
+"Stable exports and registers that don’t change format every month — country "
+"to country, cycle to cycle."
+msgstr ""
+"عمليات تصدير وسجلات ثابتة لا تغير شكلها كل شهر — من دولة إلى أخرى، ومن دورة "
+"إلى أخرى."
+
+#: home/templates/home/platform.html:789
+msgid "Strategic Capabilities"
+msgstr "قدرات استراتيجية"
+
+#: home/templates/home/platform.html:790
+msgid "Expand with confidence — operate with precision"
+msgstr "توسع بثقة — اعمل بدقة"
+
+#: home/templates/home/platform.html:793
+msgid ""
+"Plan ahead, stay compliant, connect your stack, and deliver a consistent "
+"employee experience — even across complex markets."
+msgstr ""
+"خطط مسبقًا، وحافظ على الامتثال، واربط مجموعة أدواتك، وقدم تجربة موظفين "
+"متسقة — حتى عبر الأسواق المعقدة."
+
+#: home/templates/home/platform.html:804
+msgid "Predictive Simulation Engine"
+msgstr "محرك المحاكاة التنبؤية"
+
+#: home/templates/home/platform.html:806
+msgid ""
+"Forecast full employment costs — including local taxes and statutory "
+"contributions — before you hire or enter a new market. Turn “what if?” "
+"questions into clear numbers."
+msgstr ""
+"توقع التكاليف الكاملة للتوظيف — بما في ذلك الضرائب المحلية والمساهمات "
+"القانونية — قبل التوظيف أو دخول سوق جديدة. حوّل أسئلة \"ماذا لو؟\" إلى أرقام "
+"واضحة."
+
+#: home/templates/home/platform.html:814
+msgid ""
+"<strong>Pre-hire modelling:</strong> price offers accurately with full "
+"employer cost breakdowns."
+msgstr ""
+"<strong>النمذجة قبل التوظيف:</strong> تسعير العروض بدقة مع تفصيل كامل لتكلفة "
+"صاحب العمل."
+
+#: home/templates/home/platform.html:815
+msgid ""
+"<strong>Scenario comparisons:</strong> assess markets and hiring strategies "
+"side-by-side."
+msgstr ""
+"<strong>مقارنات السيناريوهات:</strong> تقييم الأسواق واستراتيجيات التوظيف جنبًا "
+"إلى جنب."
+
+#: home/templates/home/platform.html:816
+msgid ""
+"<strong>Budget confidence:</strong> align Finance, HR, and leadership on one "
+"set of numbers."
+msgstr ""
+"<strong>الثقة في الميزانية:</strong> مواءمة المالية والموارد البشرية والقيادة "
+"على مجموعة واحدة من الأرقام."
+
+#: home/templates/home/platform.html:824
+msgid "Automated Compliance Guardianship"
+msgstr "حراسة الامتثال الآلي"
+
+#: home/templates/home/platform.html:826
+msgid ""
+"Built-in legal logic adapts to shifting labour laws and tax regulations "
+"across LATAM, Africa, and Asia — keeping you audit-ready and protected from "
+"avoidable penalties."
+msgstr ""
+"يتكيف المنطق القانوني المدمج مع قوانين العمل واللوائح الضريبية المتغيرة عبر "
+"أمريكا اللاتينية وأفريقيا وآسيا — مما يبقيك جاهزًا للمراجعة ومحميًا من "
+"الغرامات التي يمكن تجنبها."
+
+#: home/templates/home/platform.html:834
+msgid ""
+"<strong>Regulation-aware rules:</strong> payroll logic tracks current "
+"statutory obligations."
+msgstr ""
+"<strong>قواعد واعية باللوائح:</strong> منطق الرواتب يتتبع الالتزامات القانونية "
+"الحالية."
+
+#: home/templates/home/platform.html:835
+msgid ""
+"<strong>Reduced risk:</strong> validations and governance to prevent common "
+"errors."
+msgstr ""
+"<strong>تقليل المخاطر:</strong> عمليات التحقق والحوكمة لمنع الأخطاء الشائعة."
+
+#: home/templates/home/platform.html:836
+msgid ""
+"<strong>Evidence trails:</strong> traceable calculations and changes support "
+"audits."
+msgstr ""
+"<strong>مسارات الإثبات:</strong> حسابات وتغييرات قابلة للتتبع تدعم عمليات "
+"التدقيق."
+
+#: home/templates/home/platform.html:844
+msgid "Managed Service Connectivity"
+msgstr "اتصال الخدمة المُدارة"
+
+#: home/templates/home/platform.html:846
+msgid ""
+"ExactusPay connects to your HCM systems (e.g., Workday, BambooHR) so "
+"employee data flows cleanly from hire to pay — without manual re-entry and "
+"operational drift."
+msgstr ""
+"يتصل ExactusPay بأنظمة إدارة رأس المال البشري لديك (مثل Workday و BambooHR) "
+"بحيث تتدفق بيانات الموظفين بسلاسة من التوظيف إلى الدفع — دون إعادة إدخال يدوي "
+"وانحراف تشغيلي."
+
+#: home/templates/home/platform.html:854
+msgid ""
+"<strong>Hire-to-pay pipeline:</strong> structured data exchange from "
+"onboarding to payment."
+msgstr ""
+"<strong>خط أنابيب من التوظيف إلى الدفع:</strong> تبادل منظم للبيانات من "
+"الانضمام إلى الدفع."
+
+#: home/templates/home/platform.html:855
+msgid ""
+"<strong>Operational consistency:</strong> one workflow across multiple "
+"countries/providers."
+msgstr ""
+"<strong>اتساق تشغيلي:</strong> سير عمل واحد عبر دول / مقدمي خدمات متعددين."
+
+#: home/templates/home/platform.html:856
+msgid ""
+"<strong>Lower admin load:</strong> fewer handoffs and less spreadsheet work."
+msgstr ""
+"<strong>تقليل العبء الإداري:</strong> عدد أقل من عمليات التسليم وعمل أقل على "
+"جداول البيانات."
+
+#: home/templates/home/platform.html:864
+msgid "Multi-Currency & Language Support"
+msgstr "دعم العملات واللغات المتعددة"
+
+#: home/templates/home/platform.html:866
+msgid ""
+"Handle FX rules and banking complexity behind the scenes. Employees get a "
+"refined, localised experience — with multi-language access to payslips and "
+"documents."
+msgstr ""
+"تعامل مع قواعد صرف العملات والتعقيدات المصرفية خلف الكواليس. يحصل الموظفون على "
+"تجربة محسنة ومترجمة — مع وصول متعدد اللغات إلى قسائم الرواتب والمستندات."
+
+#: home/templates/home/platform.html:874
+msgid ""
+"<strong>FX handled centrally:</strong> exchange and payout workflows managed "
+"reliably."
+msgstr ""
+"<strong>صرف العملات يُدار مركزيًا:</strong> إدارة موثوقة لسير عمل الصرف "
+"والدفع."
+
+#: home/templates/home/platform.html:875
+msgid ""
+"<strong>Local experience:</strong> multi-language portal for documents and "
+"payroll history."
+msgstr ""
+"<strong>تجربة محلية:</strong> بوابة متعددة اللغات للمستندات وتاريخ الرواتب."
+
+#: home/templates/home/platform.html:876
+msgid ""
+"<strong>Consistent standard:</strong> the same quality UX across every "
+"location."
+msgstr ""
+"<strong>معيار متسق:</strong> نفس الجودة لتجربة المستخدم في كل موقع."
+
+#: home/templates/home/platform.html:887
+msgid "Operational Precision"
+msgstr "دقة تشغيلية"
+
+#: home/templates/home/platform.html:888
+msgid "Consolidate providers. Increase control."
+msgstr "وحّد مقدمي الخدمات. زد من التحكم."
+
+#: home/templates/home/platform.html:891
+msgid ""
+"Bring local payroll execution into one secure, standards-driven environment. "
+"Reduce manual work, strengthen governance, and scale internationally without "
+"adding chaos."
+msgstr ""
+"اجمع تنفيذ الرواتب المحلية في بيئة آمنة واحدة تعتمد على المعايير. قلل العمل "
+"اليدوي، وعزز الحوكمة، وتوسع دوليًا دون إضافة فوضى."
+
+#: home/templates/home/platform.html:900
+msgid "Operating model"
+msgstr "النموذج التشغيلي"
+
+#: home/templates/home/platform.html:901
+msgid "One workflow"
+msgstr "سير عمل واحد"
+
+#: home/templates/home/platform.html:902
+msgid ""
+"Replace disconnected processes with a consistent payroll workflow and "
+"reporting standard."
+msgstr ""
+"استبدل العمليات المنفصلة بسير عمل موحد للرواتب ومعيار تقارير متسق."
+
+#: home/templates/home/platform.html:906
+msgid "Efficiency"
+msgstr "الكفاءة"
+
+#: home/templates/home/platform.html:907
+msgid "Less manual effort"
+msgstr "جهد يدوي أقل"
+
+#: home/templates/home/platform.html:908
+msgid ""
+"Standard inputs and automated checks reduce rework, exceptions, and "
+"spreadsheet reconciliation."
+msgstr ""
+"المدخلات الموحدة والفحوصات الآلية تقلل من إعادة العمل والاستثناءات وتسوية "
+"جداول البيانات."
+
+#: home/templates/home/platform.html:912
+msgid "Scale"
+msgstr "التوسع"
+
+#: home/templates/home/platform.html:913
+msgid "Built for expansion"
+msgstr "مصمم للتوسع"
+
+#: home/templates/home/platform.html:914
+msgid ""
+"Enter new countries with predictable governance, consistent data, and "
+"executive clarity from day one."
+msgstr ""
+"ادخل دولًا جديدة بحوكمة يمكن التنبؤ بها، وبيانات متسقة، ووضوح تنفيذي من اليوم "
+"الأول."
+
+#: home/templates/home/platform.html:924
+msgid "Bring global payroll under one roof"
+msgstr "اجمع الرواتب العالمية تحت سقف واحد"
+
+#: home/templates/home/platform.html:927
+msgid ""
+"Get a single source of truth, standardised reporting, and compliance-ready "
+"processes — without the typical global payroll complexity."
+msgstr ""
+"احصل على مصدر واحد للحقيقة، وتقارير موحدة، وعمليات جاهزة للامتثال — بدون "
+"التعقيد المعتاد للرواتب العالمية."
+
+#: home/templates/home/pricing.html:646
+msgid "Transparent pricing for global payroll"
+msgstr "أسعار شفافة للرواتب العالمية"
+
+#: home/templates/home/pricing.html:648
+msgid ""
+"\n"
+"                    ExactusPay believes in pricing that is as clear and "
+"transparent as our payroll reporting. We understand that every business has "
+"a unique footprint, which is why our pricing model is tailored to the "
+"specific countries and regions where you operate.\n"
+"                    "
+msgstr ""
+"\n"
+"                    تؤمن ExactusPay بالتسعير الواضح والشفاف مثل تقارير الرواتب "
+"الخاصة بنا. نحن نتفهم أن لكل شركة بصمة فريدة، ولهذا السبب تم تصميم نموذج "
+"التسعير الخاص بنا ليناسب البلدان والمناطق المحددة التي تعمل فيها.\n"
+"                    "
+
+#: home/templates/home/pricing.html:659
+msgid "Simple & Predictable"
+msgstr "بسيط ويمكن التنبؤ به"
+
+#: home/templates/home/pricing.html:660
+msgid "Transparent & Flexible Pricing"
+msgstr "تسعير شفاف ومرن"
+
+#: home/templates/home/pricing.html:661
+msgid ""
+"We do not believe in hidden fees or complex tiered structures that leave you "
+"guessing. Our pricing is straightforward."
+msgstr ""
+"نحن لا نؤمن بالرسوم الخفية أو الهياكل المعقدة متعددة المستويات التي تتركك "
+"تخمن. أسعارنا واضحة ومباشرة."
+
+#: home/templates/home/pricing.html:667
+msgid "Per-Employee, Per-Month"
+msgstr "لكل موظف، شهريًا"
+
+#: home/templates/home/pricing.html:668
+msgid ""
+"You pay a simple, predictable rate based on the number of active employees "
+"you have in each country. No surprises, no complex calculations."
+msgstr ""
+"أنت تدفع سعرًا بسيطًا يمكن التنبؤ به بناءً على عدد الموظفين النشطين لديك في "
+"كل دولة. لا مفاجآت، ولا حسابات معقدة."
+
+#: home/templates/home/pricing.html:672 home/templates/home/pricing.html:733
+msgid "Country-Specific Rates"
+msgstr "أسعار خاصة بكل دولة"
+
+#: home/templates/home/pricing.html:673
+msgid ""
+"Costs are adjusted based on the complexity of the local jurisdiction (e.g., "
+"LATAM vs. Asia), ensuring you only pay for the specific compliance needs of "
+"that region."
+msgstr ""
+"يتم تعديل التكاليف بناءً على تعقيد الولاية القضائية المحلية (مثل أمريكا "
+"اللاتينية مقابل آسيا)، مما يضمن أنك تدفع فقط مقابل احتياجات الامتثال المحددة "
+"لتلك المنطقة."
+
+#: home/templates/home/pricing.html:677
+msgid "No Hidden Setup Fees"
+msgstr "لا توجد رسوم إعداد خفية"
+
+#: home/templates/home/pricing.html:678
+msgid ""
+"We are transparent about implementation costs upfront, so your budget "
+"remains secure from day one. What we quote is what you pay."
+msgstr ""
+"نحن نتحلى بالشفافية بشأن تكاليف التنفيذ مقدمًا، لذلك تظل ميزانيتك آمنة من "
+"اليوم الأول. ما نقدمه لك في العرض هو ما تدفعه."
+
+#: home/templates/home/pricing.html:687
+msgid "Everything You Need"
+msgstr "كل ما تحتاجه"
+
+#: home/templates/home/pricing.html:688
+msgid "What's Included"
+msgstr "ما هو مشمول"
+
+#: home/templates/home/pricing.html:689
+msgid ""
+"Every ExactusPay plan comes with the core essentials needed to operate "
+"globally with confidence."
+msgstr ""
+"تأتي كل خطة من خطط ExactusPay مع الأساسيات الأساسية اللازمة للعمل عالميًا "
+"بثقة."
+
+#: home/templates/home/pricing.html:696
+msgid "Full Compliance Management"
+msgstr "إدارة امتثال كاملة"
+
+#: home/templates/home/pricing.html:697
+msgid ""
+"Automated updates for local tax and labor laws across all jurisdictions "
+"where you operate."
+msgstr ""
+"تحديثات آلية للقوانين الضريبية المحلية وقوانين العمل عبر جميع الولايات "
+"القضائية التي تعمل فيها."
+
+#: home/templates/home/pricing.html:703
+msgid "Global Reporting"
+msgstr "تقارير عالمية"
+
+#: home/templates/home/pricing.html:704
+msgid ""
+"Access to our standardized reporting dashboard with real-time insights into "
+"payroll costs and compliance."
+msgstr ""
+"الوصول إلى لوحة تحكم التقارير الموحدة لدينا مع رؤى في الوقت الفعلي حول تكاليف "
+"الرواتب والامتثال."
+
+#: home/templates/home/pricing.html:710
+msgid "Employee Self-Service"
+msgstr "الخدمة الذاتية للموظفين"
+
+#: home/templates/home/pricing.html:711
+msgid ""
+"A secure portal for payslips, tax documents, and personal information "
+"management in multiple languages."
+msgstr ""
+"بوابة آمنة لقسائم الرواتب والمستندات الضريبية وإدارة المعلومات الشخصية بعدة "
+"لغات."
+
+#: home/templates/home/pricing.html:717
+msgid "24/7 Native Support"
+msgstr "دعم باللغة الأصلية على مدار الساعة"
+
+#: home/templates/home/pricing.html:719
+msgid ""
+"\n"
+"                            Access our expert team around the clock. We "
+"provide 24-hour assistance with native fluency in Portuguese and Spanish, "
+"ensuring your LATAM operations never sleep.\n"
+"                            "
+msgstr ""
+"\n"
+"                            احصل على وصول إلى فريق الخبراء لدينا على مدار "
+"الساعة. نقدم مساعدة على مدار 24 ساعة بطلاقة باللغتين البرتغالية والإسبانية، "
+"مما يضمن أن عملياتك في أمريكا اللاتينية لا تتوقف أبدًا.\n"
+"                            "
+
+#: home/templates/home/pricing.html:732
+msgid "Regional Pricing"
+msgstr "أسعار إقليمية"
+
+#: home/templates/home/pricing.html:734
+msgid ""
+"Pricing tailored to the complexity of each jurisdiction. Below are "
+"indicative monthly rates per employee."
+msgstr ""
+"تسعير مصمم حسب تعقيد كل ولاية قضائية. فيما يلي أسعار شهرية إرشادية لكل موظف."
+
+#: home/templates/home/pricing.html:739
+msgid "North America"
+msgstr "أمريكا الشمالية"
+
+#: home/templates/home/pricing.html:741 home/templates/home/pricing.html:752
+#: home/templates/home/pricing.html:763 home/templates/home/pricing.html:774
+#: home/templates/home/pricing.html:785 home/templates/home/pricing.html:796
+msgid "per employee/month"
+msgstr "لكل موظف / شهريًا"
+
+#: home/templates/home/pricing.html:743
+msgid "Full compliance management"
+msgstr "إدارة امتثال كاملة"
+
+#: home/templates/home/pricing.html:744
+msgid "Automated tax filings"
+msgstr "إقرارات ضريبية آلية"
+
+#: home/templates/home/pricing.html:745
+msgid "Employee self-service"
+msgstr "خدمة ذاتية للموظفين"
+
+#: home/templates/home/pricing.html:750
+msgid "Latin America"
+msgstr "أمريكا اللاتينية"
+
+#: home/templates/home/pricing.html:754
+msgid "Complex jurisdiction handling"
+msgstr "معالجة الولايات القضائية المعقدة"
+
+#: home/templates/home/pricing.html:755
+msgid "Local tax expertise"
+msgstr "خبرة ضريبية محلية"
+
+#: home/templates/home/pricing.html:756
+msgid "24/7 Portuguese & Spanish support"
+msgstr "دعم على مدار الساعة بالبرتغالية والإسبانية"
+
+#: home/templates/home/pricing.html:761
+msgid "Europe"
+msgstr "أوروبا"
+
+#: home/templates/home/pricing.html:765
+msgid "GDPR compliance"
+msgstr "الامتثال للائحة العامة لحماية البيانات"
+
+#: home/templates/home/pricing.html:766
+msgid "Multi-currency processing"
+msgstr "معالجة متعددة العملات"
+
+#: home/templates/home/pricing.html:767
+msgid "Works council support"
+msgstr "دعم مجلس العمال"
+
+#: home/templates/home/pricing.html:772
+msgid "Asia Pacific"
+msgstr "آسيا والمحيط الهادئ"
+
+#: home/templates/home/pricing.html:776
+msgid "Regional expertise"
+msgstr "خبرة إقليمية"
+
+#: home/templates/home/pricing.html:777
+msgid "Local banking integrations"
+msgstr "تكاملات مصرفية محلية"
+
+#: home/templates/home/pricing.html:778
+msgid "Multi-language support"
+msgstr "دعم متعدد اللغات"
+
+#: home/templates/home/pricing.html:783
+msgid "Africa"
+msgstr "أفريقيا"
+
+#: home/templates/home/pricing.html:787
+msgid "POPIA compliance"
+msgstr "الامتثال لـ POPIA"
+
+#: home/templates/home/pricing.html:788
+msgid "Mobile money integration"
+msgstr "دمج النقود عبر الهاتف المحمول"
+
+#: home/templates/home/pricing.html:789
+msgid "Local payroll expertise"
+msgstr "خبرة محلية في الرواتب"
+
+#: home/templates/home/pricing.html:794
+msgid "Middle East"
+msgstr "الشرق الأوسط"
+
+#: home/templates/home/pricing.html:798
+msgid "WPS compliance"
+msgstr "الامتثال لنظام حماية الأجور"
+
+#: home/templates/home/pricing.html:799
+msgid "Multi-currency support"
+msgstr "دعم متعدد العملات"
+
+#: home/templates/home/pricing.html:800
+msgid "Local labor law expertise"
+msgstr "خبرة في قانون العمل المحلي"
+
+#: home/templates/home/pricing.html:806
+msgid ""
+"* Rates are indicative. Final pricing depends on employee count and specific "
+"requirements."
+msgstr ""
+"* الأسعار إرشادية. يعتمد التسعير النهائي على عدد الموظفين والمتطلبات المحددة."
+
+#: home/templates/home/pricing.html:814
+msgid "Get Your Custom Quote"
+msgstr "احصل على عرض سعر مخصص"
+
+#: home/templates/home/pricing.html:816
+msgid ""
+"\n"
+"                    Because global expansion looks different for every "
+"company, we don't use a \"one size fits all\" price tag. To give you the "
+"most accurate and competitive rate, we need to understand your specific "
+"needs.\n"
+"                    "
+msgstr ""
+"\n"
+"                    نظرًا لأن التوسع العالمي يبدو مختلفًا لكل شركة، فإننا لا "
+"نستخدم سعرًا \"موحدًا للجميع\". لتزويدك بالسعر الأكثر دقة وتنافسية، نحتاج إلى "
+"فهم احتياجاتك الخاصة.\n"
+"                    "
+
+#: home/templates/home/pricing.html:820
+msgid "Ready to see your numbers?"
+msgstr "هل أنت مستعد لرؤية أرقامك؟"
+
+#: home/templates/home/security.html:776
+msgid "Security designed for global trust"
+msgstr "أمان مصمم للثقة العالمية"
+
+#: home/templates/home/security.html:778
+msgid ""
+"Payroll contains your most sensitive data — banking details, government IDs, "
+"and personal records. ExactusPay protects it with enterprise-grade security "
+"engineered for cross-border operations across LATAM, Africa, and Asia."
+msgstr ""
+"تحتوي كشوف الرواتب على أكثر بياناتك حساسية — التفاصيل المصرفية، والهويات "
+"الحكومية، والسجلات الشخصية. تحميها ExactusPay بأمان على مستوى المؤسسات مصمم "
+"للعمليات عبر الحدود في أمريكا اللاتينية وأفريقيا وآسيا."
+
+#: home/templates/home/security.html:782
+msgid "AES-256 encryption"
+msgstr "تشفير AES-256"
+
+#: home/templates/home/security.html:783 home/templates/home/security.html:808
+msgid "Zero-trust access"
+msgstr "وصول يعتمد على مبدأ الثقة المعدومة"
+
+#: home/templates/home/security.html:784
+msgid "Resilient backups"
+msgstr "نسخ احتياطية مرنة"
+
+#: home/templates/home/security.html:794
+msgid "Defense in Depth"
+msgstr "الدفاع المتعمق"
+
+#: home/templates/home/security.html:795
+msgid "Multi-layered protection at every stage"
+msgstr "حماية متعددة الطبقات في كل مرحلة"
+
+#: home/templates/home/security.html:796
+msgid ""
+"We use overlapping controls so your payroll data stays protected in transit, "
+"at rest, and during access."
+msgstr ""
+"نستخدم ضوابط متداخلة بحيث تظل بيانات الرواتب الخاصة بك محمية أثناء النقل وأثناء "
+"التخزين وأثناء الوصول."
+
+#: home/templates/home/security.html:802
+msgid "Advanced encryption"
+msgstr "تشفير متقدم"
+
+#: home/templates/home/security.html:803
+msgid ""
+"AES-256 encryption protects sensitive data at rest and in transit, keeping "
+"it unreadable if intercepted."
+msgstr ""
+"يحمي تشفير AES-256 البيانات الحساسة أثناء التخزين وأثناء النقل، مما يبقيها "
+"غير قابلة للقراءة إذا تم اعتراضها."
+
+#: home/templates/home/security.html:809
+msgid ""
+"RBAC and MFA restrict access to only what each user needs — minimizing "
+"internal and accidental exposure risk."
+msgstr ""
+"يعمل RBAC و MFA على تقييد الوصول فقط إلى ما يحتاجه كل مستخدم — مما يقلل من "
+"مخاطر التعرض الداخلي والعرضي."
+
+#: home/templates/home/security.html:814
+msgid "Secure cloud infrastructure"
+msgstr "بنية تحتية سحابية آمنة"
+
+#: home/templates/home/security.html:815
+msgid ""
+"Hosted on mature cloud environments with real-time backups, mirrored "
+"regions, and resilient disaster recovery."
+msgstr ""
+"مستضافة في بيئات سحابية ناضجة مع نسخ احتياطية في الوقت الفعلي، ومناطق متطابقة، "
+"واستعادة مرنة للكوارث."
+
+#: home/templates/home/security.html:824
+msgid "Access & Governance"
+msgstr "الوصول والحوكمة"
+
+#: home/templates/home/security.html:825
+msgid "Built to reduce risk and prevent mistakes"
+msgstr "مصممة لتقليل المخاطر ومنع الأخطاء"
+
+#: home/templates/home/security.html:826
+msgid ""
+"Strong authentication, tight permissions, and full traceability help you "
+"maintain control at scale."
+msgstr ""
+"المصادقة القوية، والأذونات المشددة، وإمكانية التتبع الكاملة تساعدك في الحفاظ "
+"على التحكم على نطاق واسع."
+
+#: home/templates/home/security.html:833
+msgid "Role-based access control (RBAC)"
+msgstr "التحكم في الوصول القائم على الأدوار (RBAC)"
+
+#: home/templates/home/security.html:834
+msgid ""
+"Granular permissions ensure teams only see and change what they’re "
+"authorised to manage — by country, company, and function."
+msgstr ""
+"تضمن الأذونات المفصلة أن الفرق ترى وتغير فقط ما هو مصرح لها بإدارته — حسب "
+"البلد والشركة والوظيفة."
+
+#: home/templates/home/security.html:841
+msgid "Multi-factor authentication (MFA)"
+msgstr "المصادقة متعددة العوامل (MFA)"
+
+#: home/templates/home/security.html:842
+msgid ""
+"Reduce account takeover risk with MFA options across user roles and "
+"operational workflows."
+msgstr ""
+"قلل من مخاطر الاستيلاء على الحساب من خلال خيارات المصادقة متعددة العوامل عبر "
+"أدوار المستخدمين وسير العمل التشغيلي."
+
+#: home/templates/home/security.html:849
+msgid "Audit trails & traceability"
+msgstr "مسارات المراجعة وإمكانية التتبع"
+
+#: home/templates/home/security.html:850
+msgid ""
+"Track changes, approvals, and calculation evidence to support reviews, "
+"audits, and compliance obligations."
+msgstr ""
+"تتبع التغييرات والموافقات وأدلة الحساب لدعم المراجعات والتدقيقات والتزامات "
+"الامتثال."
+
+#: home/templates/home/security.html:857
+msgid "Proactive monitoring"
+msgstr "مراقبة استباقية"
+
+#: home/templates/home/security.html:858
+msgid ""
+"Operational monitoring and security checks help detect anomalies early and "
+"reduce time-to-response."
+msgstr ""
+"المراقبة التشغيلية والفحوصات الأمنية تساعد في اكتشاف الحالات الشاذة مبكرًا "
+"وتقليل وقت الاستجابة."
+
+#: home/templates/home/security.html:868
+msgid "Compliance & Sovereignty"
+msgstr "الامتثال والسيادة"
+
+#: home/templates/home/security.html:869
+msgid "Aligned to international standards"
+msgstr "متوافقة مع المعايير الدولية"
+
+#: home/templates/home/security.html:870
+msgid ""
+"Security isn’t static. We design for evolving regulations and enforce "
+"privacy-by-design across the platform."
+msgstr ""
+"الأمان ليس ثابتًا. نصمم مع مراعاة اللوائح المتطورة ونفرض مبدأ الخصوصية حسب "
+"التصميم عبر المنصة."
+
+#: home/templates/home/security.html:875
+msgid "Standards"
+msgstr "المعايير"
+
+#: home/templates/home/security.html:876
+msgid "GDPR & regional privacy alignment"
+msgstr "التوافق مع اللائحة العامة لحماية البيانات وقوانين الخصوصية الإقليمية"
+
+#: home/templates/home/security.html:877
+msgid ""
+"Security controls are designed to align with GDPR and regional laws such as "
+"LGPD (Brazil) and POPIA (South Africa)."
+msgstr ""
+"تم تصميم ضوابط الأمان لتتوافق مع اللائحة العامة لحماية البيانات والقوانين "
+"الإقليمية مثل LGPD (البرازيل) و POPIA (جنوب أفريقيا)."
+
+#: home/templates/home/security.html:881
+msgid "Assurance"
+msgstr "الضمان"
+
+#: home/templates/home/security.html:882
+msgid "Audits & penetration testing"
+msgstr "التدقيقات واختبار الاختراق"
+
+#: home/templates/home/security.html:883
+msgid ""
+"Regular internal and external reviews help identify weaknesses early and "
+"keep protections current."
+msgstr ""
+"تساعد المراجعات الداخلية والخارجية المنتظمة في تحديد نقاط الضعف مبكرًا والحفاظ "
+"على الحماية محدثة."
+
+#: home/templates/home/security.html:887
+msgid "Privacy by design"
+msgstr "الخصوصية حسب التصميم"
+
+#: home/templates/home/security.html:888
+msgid "Data minimisation"
+msgstr "تقليل البيانات"
+
+#: home/templates/home/security.html:889
+msgid ""
+"We collect only what’s required for payroll and statutory obligations, and "
+"we securely dispose of data when no longer needed."
+msgstr ""
+"نجمع فقط ما هو مطلوب للرواتب والالتزامات القانونية، ونتخلص من البيانات بأمان "
+"عند عدم الحاجة إليها."
+
+#: home/templates/home/security.html:898
+msgid "Human-Centered Security"
+msgstr "أمان يركز على الإنسان"
+
+#: home/templates/home/security.html:899
+msgid "Technology + people, working together"
+msgstr "التكنولوجيا + الأشخاص، يعملون معًا"
+
+#: home/templates/home/security.html:900
+msgid ""
+"Security is strongest when systems and teams reinforce each other — with "
+"training, support, and good hygiene."
+msgstr ""
+"يكون الأمان في أقوى حالاته عندما تعزز الأنظمة والفرق بعضها البعض — من خلال "
+"التدريب والدعم والنظافة الجيدة."
+
+#: home/templates/home/security.html:906
+msgid "A support team trained for vigilance"
+msgstr "فريق دعم مدرب على اليقظة"
+
+#: home/templates/home/security.html:908
+msgid ""
+"Our specialists follow current cybersecurity best practices and help you "
+"maintain safe operational habits across your payroll workflows."
+msgstr ""
+"يتبع متخصصونا أفضل ممارسات الأمن السيبراني الحالية ويساعدونك في الحفاظ على "
+"عادات تشغيلية آمنة عبر سير عمل الرواتب الخاصة بك."
+
+#: home/templates/home/security.html:912
+msgid "Guidance to recognise phishing and social engineering attempts."
+msgstr "إرشادات للتعرف على محاولات التصيد الاحتيالي والهندسة الاجتماعية."
+
+#: home/templates/home/security.html:913
+msgid "Credential hygiene best practices for admins and payroll operators."
+msgstr "أفضل ممارسات نظافة بيانات الاعتماد للمسؤولين ومشغلي الرواتب."
+
+#: home/templates/home/security.html:914
+msgid ""
+"Secure onboarding and access setup aligned to your organisational structure."
+msgstr "إعداد آمن للانضمام والوصول يتماشى مع هيكلك التنظيمي."
+
+#: home/templates/home/security.html:920
+msgid "Credential controls"
+msgstr "ضوابط بيانات الاعتماد"
+
+#: home/templates/home/security.html:921
+msgid ""
+"MFA, strong password policies, and least-privilege access baked into daily "
+"operations."
+msgstr ""
+"المصادقة متعددة العوامل، وسياسات كلمات المرور القوية، والوصول بأقل الامتيازات "
+"مدمجة في العمليات اليومية."
+
+#: home/templates/home/security.html:924
+msgid "Operational safeguards"
+msgstr "ضمانات تشغيلية"
+
+#: home/templates/home/security.html:925
+msgid ""
+"Approval workflows and traceability to reduce errors and prevent "
+"unauthorised changes."
+msgstr ""
+"سير عمل للموافقات وإمكانية التتبع لتقليل الأخطاء ومنع التغييرات غير المصرح بها."
+
+#: home/templates/home/security.html:928
+msgid "Security culture"
+msgstr "ثقافة الأمان"
+
+#: home/templates/home/security.html:929
+msgid "Shared responsibility—your team + our platform + our experts."
+msgstr "مسؤولية مشتركة — فريقك + منصتنا + خبراؤنا."
+
+#: home/templates/home/security.html:940
+msgid "Want a deeper security walkthrough?"
+msgstr "هل تريد جولة أعمق في الأمان؟"
+
+#: home/templates/home/security.html:942
+msgid ""
+"Talk to our team about your footprint, data residency needs, and access "
+"model — and we’ll map the right security posture for your cross-border "
+"payroll operations."
+msgstr ""
+"تحدث إلى فريقنا حول بصمتك، واحتياجات مكان إقامة البيانات، ونموذج الوصول — "
+"وسنقوم بتحديد وضع الأمان المناسب لعمليات الرواتب عبر الحدود الخاصة بك."
+
+#: home/templates/home/security.html:945
+msgid "Request a Demo"
+msgstr "طلب عرض توضيحي"
+
+#: home/templates/home/security.html:1001
+msgid "©  ExactusPay. All rights reserved."
+msgstr "© ExactusPay. جميع الحقوق محفوظة."
