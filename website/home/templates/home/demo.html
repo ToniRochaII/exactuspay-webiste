@@ -28,8 +28,7 @@ as languages %}
       Platform | ExactusPay" %}
     </title>
 
-    <meta
-      name="description"
+    <meta  name="description"
       content="ExactusPay is a powerful global payroll software delivering multi-country payroll, automated compliance, real-time workforce analytics, standardized reporting, and payroll simulations. Manage international payroll accurately, securely, and at scale from one intelligent platform."
     />
 
@@ -1173,7 +1172,11 @@ as languages %}
 
         <form class="lang-form" action="{% url 'set_language' %}" method="post">
           {% csrf_token %}
-          <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
+          <input
+            type="hidden"
+            name="next"
+            value="{{ request.get_full_path }}"
+          />
           <div class="lang-pill" title="{% trans 'Language' %}">
             <select
               class="lang-select"
@@ -1181,52 +1184,98 @@ as languages %}
               aria-label="{% trans 'Select language' %}"
               onchange="this.form.submit()"
             >
+              {% for lang in languages %} {% if lang.code == "pt" %}
+              <option
+                value="pt"
+                {%
+                if
+                lang.code=""
+                ="LANGUAGE_CODE"
+                %}selected{%
+                endif
+                %}
+              >
+                🇧🇷
+              </option>
 
-              {% for lang in languages %}
+              {% elif lang.code == "en" %}
+              <option
+                value="en"
+                {%
+                if
+                lang.code=""
+                ="LANGUAGE_CODE"
+                %}selected{%
+                endif
+                %}
+              >
+                🇬🇧
+              </option>
 
-                {% if lang.code == "pt" %}
-                  <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>
-                    🇧🇷
-                  </option>
+              {% elif lang.code == "es" %}
+              <option
+                value="es"
+                {%
+                if
+                lang.code=""
+                ="LANGUAGE_CODE"
+                %}selected{%
+                endif
+                %}
+              >
+                🇪🇸
+              </option>
 
-                {% elif lang.code == "en" %}
-                  <option value="en" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>
-                    🇬🇧
-                  </option>
+              {% elif lang.code == "ru" %}
+              <option
+                value="ru"
+                {%
+                if
+                lang.code=""
+                ="LANGUAGE_CODE"
+                %}selected{%
+                endif
+                %}
+              >
+                🇷🇺
+              </option>
 
-                {% elif lang.code == "es" %}
-                  <option value="es" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>
-                    🇪🇸
-                  </option>
+              {% elif lang.code == "sa" %}
+              <option
+                value="sa"
+                {%
+                if
+                lang.code=""
+                ="LANGUAGE_CODE"
+                %}selected{%
+                endif
+                %}
+              >
+                🇸🇦
+              </option>
 
-                {% elif lang.code == "ru" %}
-                  <option value="ru" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>
-                    🇷🇺
-                  </option>
+              {% else %}
+              <option
+                value="{{ lang.code }}"
+                {%
+                if
+                lang.code=""
+                ="LANGUAGE_CODE"
+                %}selected{%
+                endif
+                %}
+              >
+                {{ lang.code|upper }}
+              </option>
 
-                {% elif lang.code == "sa" %}
-                  <option value="sa" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>
-                    🇸🇦
-                  </option>
-
-                {% else %}
-                  <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>
-                    {{ lang.code|upper }}
-                  </option>
-
-                {% endif %}
-
-              {% endfor %}
-
+              {% endif %} {% endfor %}
             </select>
 
             <span class="lang-caret" aria-hidden="true">
               <i class="fas fa-chevron-down"></i>
             </span>
           </div>
-
         </form>
-        
       </div>
     </header>
 
