@@ -29,7 +29,6 @@ CSRF_TRUSTED_ORIGINS = [
 if os.environ.get("RENDER") == "true":
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
-USE_X_FORWARDED_HOST = True
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -113,12 +112,12 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # email
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.hostinger.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
+EMAIL_PORT = 465
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
 
 EMAIL_HOST_USER = "no-reply@exactuspay.com"
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "Mtfbwy130!")
 DEFAULT_FROM_EMAIL = "Exactus Support <no-reply@exactuspay.com>"
 DEMO_REQUEST_TO_EMAIL = os.environ.get("DEMO_REQUEST_TO_EMAIL", "antoniorocha@exactuspay.com")
 

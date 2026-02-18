@@ -11,15 +11,20 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-"POT-Creation-Date: 2024-01-01 00:00+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Language: sa\n"
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ExactusPay 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-16 07:53+0000\n"
+"PO-Revision-Date: 2026-02-15 18:00-0300\n"
+"Last-Translator: ExactusPay Translation Team <translations@exactuspay.com>\n"
+"Language-Team: Arabic <ar@exactuspay.com>\n"
+"Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 
 #: home/templates/home/demo.html:23 home/templates/home/features.html:21
 #: home/templates/home/index.html:21 home/templates/home/platform.html:22
@@ -1999,7 +2004,9 @@ msgstr "ثقافة الأمان"
 msgid "Shared responsibility—your team + our platform + our experts."
 msgstr "مسؤولية مشتركة — فريقك + منصتنا + خبراؤنا."
 
-
+#: home/templates/home/security.html:940
+msgid "Want a deeper security walkthrough?"
+msgstr "هل تريد جولة أعمق في الأمان؟"
 
 #: home/templates/home/security.html:942
 msgid ""
