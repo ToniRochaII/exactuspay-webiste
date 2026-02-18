@@ -12,7 +12,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # -----------------------------------------------------------------------------
 # Core
 # -----------------------------------------------------------------------------
-DEBUG = os.environ.get("DEBUG", "").lower() in ("1", "true", "yes", "on")
+DEBUG = True
 
 SECRET_KEY = os.environ.get("SECRET_KEY") or ("dev-secret-key" if DEBUG else None)
 if not SECRET_KEY:
@@ -133,7 +133,7 @@ LANGUAGES = [
     ("pt", "Português"),
     ("es", "Español"),
     ("ru", "Русский"),
-    ("sa", "Saudí"),
+    ("sa", "العربية"),
 ]
 
 LOCALE_PATHS = [BASE_DIR / "locale"]
@@ -149,6 +149,7 @@ _static_dir = BASE_DIR / "static"
 STATICFILES_DIRS = [_static_dir] if _static_dir.exists() else []
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+WHITENOISE_MANIFEST_STRICT = False
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
