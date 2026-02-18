@@ -2220,3 +2220,39 @@ msgstr "Solicitar una demostración"
 #~ msgstr ""
 #~ "Acceso a nuestro equipo de expertos para asistencia diaria, con tiempos "
 #~ "de respuesta que mantienen su negocio en movimiento."
+
+
+#: home/templates/home/pricing.html:648
+msgid ""
+"ExactusPay believes in pricing that is as clear and transparent as our "
+"payroll reporting. We understand that every business has a unique "
+"footprint, which is why our pricing model is tailored to the specific "
+"countries and regions where you operate."
+msgstr ""
+"ExactusPay cree en precios tan claros y transparentes como nuestros "
+"informes de nómina. Entendemos que cada negocio tiene una huella única, "
+"por eso nuestro modelo de precios está adaptado a los países y regiones "
+"específicos donde usted opera."
+
+
+#: home/templates/home/pricing.html:816
+msgid ""
+"Because global expansion looks different for every company, we don't use a "
+"\"one size fits all\" price tag. To give you the most accurate and "
+"competitive rate, we need to understand your specific needs."
+msgstr ""
+"Porque la expansión global es diferente para cada empresa, no usamos una "
+"etiqueta de precio \"talla única\". Para ofrecerle la tasa más precisa y "
+"competitiva, necesitamos entender sus necesidades específicas."
+
+#: home/templates/home/demo.html:901
+msgid ""
+"Stop guessing your global labour costs. Get a personalised walkthrough of "
+"the platform that simplifies payroll for the Global South — with predictable "
+"compliance and one executive standard for reporting."
+msgstr ""
+"Deje de adivinar sus costos laborales globales. Obtenga un recorrido "
+"personalizado de la plataforma que simplifica la nómina para el Sur Global "
+"— con cumplimiento predecible y un estándar ejecutivo para la presentación "
+"de informes."
+
