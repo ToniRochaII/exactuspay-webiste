@@ -5,7 +5,6 @@
 <!doctype html>
 <html lang="{{ LANGUAGE_CODE }}">
   <head>
-    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-XTL69YL5WC"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -17,7 +16,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- Primary SEO -->
     <title>{% trans "Global Payroll Software | Multi-Country Payroll & Compliance Platform | ExactusPay" %}</title>
     <meta name="description" content="ExactusPay is a powerful global payroll software delivering multi-country payroll, automated compliance, real-time workforce analytics, standardized reporting, and payroll simulations. Manage international payroll accurately, securely, and at scale from one intelligent platform." />
     <meta name="keywords" content="global payroll software, multi-country payroll, international payroll system, payroll compliance software, global payroll platform, payroll automation, payroll simulations, workforce analytics, multinational payroll management, cloud payroll solution, global HR payroll, payroll reporting software, international payroll compliance, scalable payroll platform" />
@@ -27,14 +25,12 @@
     <meta name="bingbot" content="index, follow" />
     <link rel="canonical" href="https://www.exactuspay.com/" />
 
-    <!-- Language & International -->
     <meta http-equiv="content-language" content="{{ LANGUAGE_CODE }}" />
     <link rel="alternate" hreflang="en" href="https://www.exactuspay.com/" />
     <link rel="alternate" hreflang="pt" href="https://www.exactuspay.com/pt/" />
     <link rel="alternate" hreflang="es" href="https://www.exactuspay.com/es/" />
     <link rel="alternate" hreflang="x-default" href="https://www.exactuspay.com/" />
 
-    <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content="ExactusPay | Global Payroll Software for Multi-Country Payroll & Compliance" />
     <meta property="og:description" content="Run global payroll with confidence. Automated compliance, payroll simulations, standardized reporting, and real-time analytics in one powerful multi-country payroll platform." />
@@ -42,18 +38,15 @@
     <meta property="og:image" content="https://www.exactuspay.com/static/img/og-exactuspay.png" />
     <meta property="og:site_name" content="ExactusPay" />
 
-    <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="ExactusPay | Global Payroll Software" />
     <meta name="twitter:description" content="Multi-country payroll, automated compliance, real-time workforce analytics, and payroll simulations—powered by ExactusPay." />
     <meta name="twitter:image" content="https://www.exactuspay.com/static/img/og-exactuspay.png" />
 
-    <!-- App Identity -->
     <meta name="application-name" content="ExactusPay" />
     <meta name="apple-mobile-web-app-title" content="ExactusPay" />
     <meta name="theme-color" content="#1f4b7a" />
 
-    <!-- Performance -->
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
 
@@ -229,6 +222,35 @@
       }
       .lang-select option{color:#0f172a;font-size:1rem;}
       .lang-caret{margin-left:-20px;pointer-events:none;color:rgba(255,255,255,.75);font-size:.85rem;}
+
+      /* Messages Alert */
+      .messages-container {
+        position: fixed;
+        top: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 1100;
+        width: 100%;
+        max-width: 600px;
+        padding: 0 20px;
+      }
+      .alert {
+        padding: 15px 20px;
+        border-radius: 12px;
+        margin-bottom: 10px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: var(--shadow-lg);
+        animation: slideDown 0.4s ease-out;
+      }
+      .alert-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+      .alert-error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+      @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
 
       /* Intersection animation */
       section{opacity:0;transform:translateY(20px);transition:all .8s ease-out;}
@@ -473,6 +495,17 @@
   </head>
 
   <body>
+    {% if messages %}
+    <div class="messages-container">
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+        <i class="fas fa-times" onclick="this.parentElement.style.display='none'" style="cursor:pointer"></i>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         const observer = new IntersectionObserver(
@@ -503,7 +536,6 @@
             <a href="{% url 'home:demo' %}" class="btn btn-primary">{% trans "Request Demo" %}</a>
           </div>
 
-          <!-- ✅ Language Switcher (fixed, clean) -->
           <form class="lang-form" action="{% url 'set_language' %}" method="post">
             {% csrf_token %}
             <input type="hidden" name="next" value="{{ request.get_full_path }}" />
