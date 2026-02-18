@@ -575,15 +575,15 @@
             <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="this.form.submit()">
               {% for lang in languages %}
                 {% if lang.code == "pt" %}
-                  <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷</option>
+                  <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷 Português</option>
                 {% elif lang.code == "en" %}
-                  <option value="en" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇬🇧</option>
+                  <option value="en" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇬🇧 English</option>
                 {% elif lang.code == "es" %}
-                  <option value="es" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇪🇸</option>
+                  <option value="es" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇪🇸 Español</option>
                 {% elif lang.code == "ru" %}
-                  <option value="ru" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇷🇺</option>
+                  <option value="ru" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇷🇺 Русский</option>
                 {% elif lang.code == "ar" %}
-                  <option value="ar" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇸🇦</option>
+                  <option value="ar" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇸🇦 العربية</option>
                 {% else %}
                   <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>{{ lang.code|upper }}</option>
                 {% endif %}
@@ -620,15 +620,15 @@
             <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="this.form.submit()">
               {% for lang in languages %}
                 {% if lang.code == "pt" %}
-                  <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷</option>
+                  <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷 Português</option>
                 {% elif lang.code == "en" %}
-                  <option value="en" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇬🇧</option>
+                  <option value="en" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇬🇧 English</option>
                 {% elif lang.code == "es" %}
-                  <option value="es" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇪🇸</option>
+                  <option value="es" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇪🇸 Español</option>
                 {% elif lang.code == "ru" %}
-                  <option value="ru" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇷🇺</option>
+                  <option value="ru" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇷🇺 Русский</option>
                 {% elif lang.code == "ar" %}
-                  <option value="ar" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇸🇦</option>
+                  <option value="ar" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇸🇦 العربية</option>
                 {% else %}
                   <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>{{ lang.code|upper }}</option>
                 {% endif %}
