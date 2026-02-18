@@ -1,23 +1,23 @@
-# Russian translations for ExactusPay.
-# Copyright (C) 2026 ExactusPay
-# This file is distributed under the same license as the ExactusPay project.
-# Translator: <translations@exactuspay.com>
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: ExactusPay 1.0\n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-18 19:37+0000\n"
-"PO-Revision-Date: 2026-02-15 18:00-0300\n"
-"Last-Translator: ExactusPay Translation Team <translations@exactuspay.com>\n"
-"Language-Team: Russian <ru@exactuspay.com>\n"
-"Language: ru\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 #: home/templates/home/demo.html:21 home/templates/home/features.html:21
 #: home/templates/home/index.html:13 home/templates/home/platform.html:20
 #: home/templates/home/pricing.html:21 home/templates/home/security.html:20
@@ -25,8 +25,6 @@ msgid ""
 "Global Payroll Software | Multi-Country Payroll & Compliance Platform | "
 "ExactusPay"
 msgstr ""
-"Программное обеспечение для глобального расчета зарплаты | Многострановой "
-"расчет зарплаты и соблюдение нормативных требований | ExactusPay"
 
 #: home/templates/home/demo.html:464 home/templates/home/features.html:575
 #: home/templates/home/features.html:625 home/templates/home/index.html:553
@@ -35,7 +33,7 @@ msgstr ""
 #: home/templates/home/pricing.html:697 home/templates/home/security.html:650
 #: home/templates/home/security.html:700 home/templates/partials/navbar.html:9
 msgid "Home"
-msgstr "Главная"
+msgstr ""
 
 #: home/templates/home/demo.html:465 home/templates/home/features.html:576
 #: home/templates/home/features.html:626 home/templates/home/index.html:554
@@ -44,7 +42,7 @@ msgstr "Главная"
 #: home/templates/home/pricing.html:698 home/templates/home/security.html:651
 #: home/templates/home/security.html:701 home/templates/partials/navbar.html:10
 msgid "Features"
-msgstr "Возможности"
+msgstr ""
 
 #: home/templates/home/demo.html:466 home/templates/home/demo.html:713
 #: home/templates/home/features.html:577 home/templates/home/features.html:627
@@ -56,7 +54,7 @@ msgstr "Возможности"
 #: home/templates/home/security.html:652 home/templates/home/security.html:702
 #: home/templates/home/security.html:931 home/templates/partials/navbar.html:11
 msgid "Platform"
-msgstr "Платформа"
+msgstr ""
 
 #: home/templates/home/demo.html:467 home/templates/home/demo.html:747
 #: home/templates/home/features.html:578 home/templates/home/features.html:628
@@ -68,7 +66,7 @@ msgstr "Платформа"
 #: home/templates/home/security.html:653 home/templates/home/security.html:703
 #: home/templates/home/security.html:965 home/templates/partials/navbar.html:12
 msgid "Security"
-msgstr "Безопасность"
+msgstr ""
 
 #: home/templates/home/demo.html:468 home/templates/home/features.html:579
 #: home/templates/home/features.html:629 home/templates/home/index.html:557
@@ -77,7 +75,7 @@ msgstr "Безопасность"
 #: home/templates/home/pricing.html:701 home/templates/home/security.html:654
 #: home/templates/home/security.html:704 home/templates/partials/navbar.html:13
 msgid "Pricing"
-msgstr "Цены"
+msgstr ""
 
 #: home/templates/home/demo.html:473 home/templates/home/features.html:589
 #: home/templates/home/features.html:633 home/templates/home/index.html:567
@@ -86,7 +84,7 @@ msgstr "Цены"
 #: home/templates/home/pricing.html:705 home/templates/home/security.html:664
 #: home/templates/home/security.html:708 home/templates/partials/navbar.html:17
 msgid "Log In"
-msgstr "Войти"
+msgstr ""
 
 #: home/templates/home/demo.html:474 home/templates/home/features.html:590
 #: home/templates/home/features.html:634 home/templates/home/index.html:568
@@ -95,7 +93,7 @@ msgstr "Войти"
 #: home/templates/home/pricing.html:706 home/templates/home/security.html:665
 #: home/templates/home/security.html:709 home/templates/partials/navbar.html:18
 msgid "Request Demo"
-msgstr "Запросить демо"
+msgstr ""
 
 #: home/templates/home/demo.html:481 home/templates/home/features.html:596
 #: home/templates/home/features.html:641 home/templates/home/index.html:574
@@ -104,7 +102,7 @@ msgstr "Запросить демо"
 #: home/templates/home/pricing.html:713 home/templates/home/security.html:671
 #: home/templates/home/security.html:716 home/templates/partials/navbar.html:24
 msgid "Language"
-msgstr "Язык"
+msgstr ""
 
 #: home/templates/home/demo.html:482 home/templates/home/features.html:597
 #: home/templates/home/features.html:642 home/templates/home/index.html:575
@@ -113,18 +111,13 @@ msgstr "Язык"
 #: home/templates/home/pricing.html:714 home/templates/home/security.html:672
 #: home/templates/home/security.html:717 home/templates/partials/navbar.html:25
 msgid "Select language"
-msgstr "Выберите язык"
+msgstr ""
 
 #: home/templates/home/demo.html:509
 msgid "See ExactusPay in Action"
-msgstr "Увидеть ExactusPay в действии"
+msgstr ""
 
 #: home/templates/home/demo.html:511
-#, fuzzy
-#| msgid ""
-#| "Stop guessing your global labour costs. Get a personalised walkthrough of "
-#| "the platform that simplifies payroll for the Global South — with "
-#| "predictable compliance and one executive standard for reporting."
 msgid ""
 "\n"
 "              Stop guessing your global labour costs. Get a personalised "
@@ -132,91 +125,78 @@ msgid ""
 "with predictable compliance and one executive standard for reporting.\n"
 "            "
 msgstr ""
-"Перестаньте гадать о своих глобальных расходах на персонал. Получите "
-"персонализированное знакомство с платформой, которая упрощает расчет "
-"зарплаты для Глобального Юга — с предсказуемым соблюдением требований и "
-"единым стандартом отчетности для руководителей."
 
 #: home/templates/home/demo.html:517
 msgid "What you’ll see"
-msgstr "Что вы увидите"
+msgstr ""
 
 #: home/templates/home/demo.html:518
 msgid "Book a session"
-msgstr "Забронировать сессию"
+msgstr ""
 
 #: home/templates/home/demo.html:521
 msgid "Key outcomes"
-msgstr "Ключевые результаты"
+msgstr ""
 
 #: home/templates/home/demo.html:522 home/templates/home/platform.html:686
 msgid "Single source of truth"
-msgstr "Единый источник достоверных данных"
+msgstr ""
 
 #: home/templates/home/demo.html:523 home/templates/home/features.html:733
 msgid "Multi-country standard"
-msgstr "Многострановой стандарт"
+msgstr ""
 
 #: home/templates/home/demo.html:524 home/templates/home/security.html:756
 msgid "Audit-ready controls"
-msgstr "Контроль, готовый к аудиту"
+msgstr ""
 
 #: home/templates/home/demo.html:525
 msgid "Cost visibility"
-msgstr "Прозрачность затрат"
+msgstr ""
 
 #: home/templates/home/demo.html:534
 msgid "What you get"
-msgstr "Что вы получите"
+msgstr ""
 
 #: home/templates/home/demo.html:535
 msgid "A practical demo — not a sales pitch"
-msgstr "Практическая демонстрация, а не презентация отдела продаж"
+msgstr ""
 
 #: home/templates/home/demo.html:536
 msgid ""
 "We focus on the exact workflows leaders need to expand safely across LATAM, "
 "Africa, and Asia."
 msgstr ""
-"Мы сосредоточены именно на тех рабочих процессах, которые нужны лидерам для "
-"безопасного расширения в Латинской Америке, Африке и Азии."
 
 #: home/templates/home/demo.html:542
 msgid "Run a live simulation"
-msgstr "Запустите живую симуляцию"
+msgstr ""
 
 #: home/templates/home/demo.html:543
 msgid ""
 "Forecast the full employer cost of a new hire in Brazil, Nigeria, or "
 "Indonesia — including statutory contributions."
 msgstr ""
-"Спрогнозируйте полную стоимость нового сотрудника для работодателя в "
-"Бразилии, Нигерии или Индонезии — включая обязательные отчисления."
 
 #: home/templates/home/demo.html:548
 msgid "Audit your compliance"
-msgstr "Проверьте свое соответствие требованиям"
+msgstr ""
 
 #: home/templates/home/demo.html:549
 msgid ""
 "See how the platform flags risks and gaps across tax logic, filings, and "
 "governance — keeping you audit-ready."
 msgstr ""
-"Увидьте, как платформа выявляет риски и пробелы в налоговой логике, "
-"отчетности и управлении — поддерживая вашу готовность к аудиту."
 
 #: home/templates/home/demo.html:554
 msgid "Unified reporting"
-msgstr "Унифицированная отчетность"
+msgstr ""
 
 #: home/templates/home/demo.html:555
 msgid ""
 "Watch 20+ countries roll up into one executive dashboard, with consistent "
 "definitions and clear visibility."
 msgstr ""
-"Увидьте, как данные из более чем 20 стран сводятся в единую панель "
-"управления для руководителей с согласованными определениями и четкой "
-"видимостью."
 
 #: home/templates/home/demo.html:564
 msgid "Next steps"
@@ -224,112 +204,95 @@ msgstr ""
 
 #: home/templates/home/demo.html:565
 msgid "Clear steps. Zero pressure."
-msgstr "Четкие шаги. Никакого давления."
+msgstr ""
 
 #: home/templates/home/demo.html:567
 msgid ""
 "We keep it efficient and relevant — you leave with a plan, not a pile of "
 "slides."
 msgstr ""
-"Мы делаем все эффективно и по существу — вы уходите с планом, а не со "
-"стопкой слайдов."
 
 #: home/templates/home/demo.html:574
 msgid "The Discovery (15 mins)"
-msgstr "Выявление потребностей (15 мин)"
+msgstr ""
 
 #: home/templates/home/demo.html:575
 msgid ""
 "We map your footprint (entities, contractors, EORs) and identify friction "
 "points across your target regions."
 msgstr ""
-"Мы составляем карту вашего присутствия (юрлица, подрядчики, EOR) и "
-"определяем болевые точки в ваших целевых регионах."
 
 #: home/templates/home/demo.html:579
 msgid "The Tailored Walkthrough (30 mins)"
-msgstr "Индивидуальное знакомство (30 мин)"
+msgstr ""
 
 #: home/templates/home/demo.html:580
 msgid ""
 "No generic deck. We show country-specific examples, local tax logic, and the "
 "reporting you’ll rely on."
 msgstr ""
-"Никаких общих презентаций. Мы показываем примеры для конкретных стран, "
-"местную налоговую логику и отчетность, на которую вы сможете положиться."
 
 #: home/templates/home/demo.html:584
 msgid "The Strategic Blueprint"
-msgstr "Стратегический план"
+msgstr ""
 
 #: home/templates/home/demo.html:585
 msgid ""
 "You leave with a pricing estimate, transition timeline, and a simulation "
 "output for your next hire."
 msgstr ""
-"Вы уходите с оценкой стоимости, графиком перехода и результатами симуляции "
-"для вашего следующего найма."
 
 #: home/templates/home/demo.html:594
 msgid "Why a demo?"
-msgstr "Зачем нужна демонстрация?"
+msgstr ""
 
 #: home/templates/home/demo.html:595
 msgid "Because expansion needs certainty"
-msgstr "Потому что расширение требует определенности"
+msgstr ""
 
 #: home/templates/home/demo.html:596
 msgid ""
 "See predictive cost, verify compliance, and meet the experts who support you "
 "day-to-day."
 msgstr ""
-"Увидьте прогнозируемую стоимость, проверьте соблюдение требований и "
-"познакомьтесь с экспертами, которые поддерживают вас ежедневно."
 
 #: home/templates/home/demo.html:602
 msgid "See the future"
-msgstr "Увидьте будущее"
+msgstr ""
 
 #: home/templates/home/demo.html:603
 msgid ""
 "Most tools show historical spend. ExactusPay demonstrates how to predict "
 "employment cost before you hire."
 msgstr ""
-"Большинство инструментов показывают исторические затраты. ExactusPay "
-"демонстрирует, как прогнозировать стоимость найма до того, как вы наймете "
-"сотрудника."
 
 #: home/templates/home/demo.html:608
 msgid "Verify compliance"
-msgstr "Проверьте соответствие требованиям"
+msgstr ""
 
 #: home/templates/home/demo.html:609
 msgid ""
 "Ask tough questions on POPIA, LGPD, or statutory contributions. We show the "
 "logic and evidence trails."
 msgstr ""
-"Задавайте сложные вопросы о POPIA, LGPD или обязательных отчислениях. Мы "
-"покажем логику и пути подтверждения."
 
 #: home/templates/home/demo.html:614
 msgid "Meet your team"
-msgstr "Познакомьтесь со своей командой"
+msgstr ""
 
 #: home/templates/home/demo.html:615
 msgid ""
 "This isn’t just software. You’ll meet the support experts that operate as an "
 "extension of your team."
 msgstr ""
-"Это не просто программное обеспечение. Вы встретите экспертов поддержки, "
-"которые работают как расширение вашей команды."
 
 #: home/templates/home/demo.html:624 home/templates/home/pricing.html:924
 msgid "Request a demo"
-msgstr "Запросить демонстрацию"
+msgstr ""
 
 #: home/templates/home/demo.html:625
 msgid "Schedule your personal walkthrough"
-msgstr "Назначьте время для личного знакомства"
+msgstr ""
 
 #: home/templates/home/demo.html:626
 msgid ""
@@ -339,196 +302,191 @@ msgstr ""
 
 #: home/templates/home/demo.html:631
 msgid "Schedule Your Personal Demo"
-msgstr "Назначьте свою персональную демонстрацию"
+msgstr ""
 
 #: home/templates/home/demo.html:632
 msgid ""
 "No commitment required. We keep this focused, practical, and relevant to "
 "your target countries."
 msgstr ""
-"Никаких обязательств. Мы делаем все целенаправленно, практично и "
-"соответствующим вашим целевым странам."
 
 #: home/templates/home/demo.html:639
 msgid "First Name"
-msgstr "Имя"
+msgstr ""
 
 #: home/templates/home/demo.html:644
 msgid "Last Name"
-msgstr "Фамилия"
+msgstr ""
 
 #: home/templates/home/demo.html:649
 msgid "Work Email"
-msgstr "Рабочий email"
+msgstr ""
 
 #: home/templates/home/demo.html:654
 msgid "Company Name"
-msgstr "Название компании"
+msgstr ""
 
 #: home/templates/home/demo.html:659
 msgid "Number of Employees"
-msgstr "Количество сотрудников"
+msgstr ""
 
 #: home/templates/home/demo.html:661
 msgid "Select…"
-msgstr "Выбрать…"
+msgstr ""
 
 #: home/templates/home/demo.html:670
 msgid "Expansion Region (Optional)"
-msgstr "Регион расширения (необязательно)"
+msgstr ""
 
 #: home/templates/home/demo.html:672
 msgid "Not sure yet"
-msgstr "Пока не уверены"
+msgstr ""
 
 #: home/templates/home/demo.html:683
 msgid "Book My Session"
-msgstr "Забронировать сессию"
+msgstr ""
 
 #: home/templates/home/demo.html:688
 #, python-format
 msgid "No commitment required. 100%% data privacy."
-msgstr "Никаких обязательств. 100%% конфиденциальность данных."
+msgstr ""
 
 #: home/templates/home/demo.html:699
 msgid "Ready to bring global payroll under one roof?"
-msgstr "Готовы объединить глобальный расчет зарплаты под одной крышей?"
+msgstr ""
 
 #: home/templates/home/demo.html:700
 msgid ""
 "ExactusPay gives you a single source of truth, consistent reporting, and "
 "compliance-ready processes — without the typical complexity."
 msgstr ""
-"ExactusPay предоставляет вам единый источник достоверных данных, "
-"согласованную отчетность и процессы, готовые к соблюдению требований — без "
-"обычной сложности."
 
 #: home/templates/home/demo.html:702 home/templates/home/index.html:881
 msgid "Schedule Demo"
-msgstr "Назначить демо"
+msgstr ""
 
 #: home/templates/home/demo.html:703
 msgid "View Pricing"
-msgstr "Посмотреть цены"
+msgstr ""
 
 #: home/templates/home/demo.html:715 home/templates/home/features.html:837
 #: home/templates/home/index.html:896 home/templates/home/platform.html:892
 #: home/templates/home/pricing.html:938 home/templates/home/security.html:933
 msgid "Global Payroll"
-msgstr "Глобальный расчет зарплаты"
+msgstr ""
 
 #: home/templates/home/demo.html:716 home/templates/home/features.html:838
 #: home/templates/home/index.html:897 home/templates/home/platform.html:893
 #: home/templates/home/pricing.html:939 home/templates/home/security.html:934
 msgid "Compliance Automation"
-msgstr "Автоматизация соблюдения требований"
+msgstr ""
 
 #: home/templates/home/demo.html:717 home/templates/home/features.html:839
 #: home/templates/home/index.html:898 home/templates/home/platform.html:894
 #: home/templates/home/pricing.html:940 home/templates/home/security.html:935
 msgid "Workforce Analytics"
-msgstr "Аналитика персонала"
+msgstr ""
 
 #: home/templates/home/demo.html:718 home/templates/home/features.html:840
 #: home/templates/home/index.html:899 home/templates/home/platform.html:895
 #: home/templates/home/pricing.html:941 home/templates/home/security.html:936
 msgid "Tax Management"
-msgstr "Управление налогами"
+msgstr ""
 
 #: home/templates/home/demo.html:723 home/templates/home/features.html:845
 #: home/templates/home/index.html:904 home/templates/home/platform.html:900
 #: home/templates/home/pricing.html:946 home/templates/home/security.html:941
 msgid "Solutions"
-msgstr "Решения"
+msgstr ""
 
 #: home/templates/home/demo.html:725 home/templates/home/features.html:847
 #: home/templates/home/index.html:906 home/templates/home/platform.html:902
 #: home/templates/home/pricing.html:948 home/templates/home/security.html:943
 msgid "Enterprise Expansion"
-msgstr "Расширение для предприятий"
+msgstr ""
 
 #: home/templates/home/demo.html:726 home/templates/home/features.html:848
 #: home/templates/home/index.html:907 home/templates/home/platform.html:903
 #: home/templates/home/pricing.html:949 home/templates/home/security.html:944
 msgid "Mergers & Acquisitions"
-msgstr "Слияния и поглощения"
+msgstr ""
 
 #: home/templates/home/demo.html:727 home/templates/home/features.html:849
 #: home/templates/home/index.html:908 home/templates/home/platform.html:904
 #: home/templates/home/pricing.html:950 home/templates/home/security.html:945
 msgid "Compliance Management"
-msgstr "Управление соблюдением требований"
+msgstr ""
 
 #: home/templates/home/demo.html:728 home/templates/home/features.html:850
 #: home/templates/home/index.html:909 home/templates/home/platform.html:905
 #: home/templates/home/pricing.html:951 home/templates/home/security.html:946
 msgid "Global Workforce"
-msgstr "Глобальный персонал"
+msgstr ""
 
 #: home/templates/home/demo.html:733 home/templates/home/features.html:855
 #: home/templates/home/index.html:914 home/templates/home/platform.html:910
 #: home/templates/home/pricing.html:956 home/templates/home/security.html:951
 msgid "Resources"
-msgstr "Ресурсы"
+msgstr ""
 
 #: home/templates/home/demo.html:735 home/templates/home/features.html:857
 #: home/templates/home/index.html:916 home/templates/home/platform.html:912
 #: home/templates/home/pricing.html:958 home/templates/home/security.html:953
 msgid "Documentation"
-msgstr "Документация"
+msgstr ""
 
 #: home/templates/home/demo.html:736 home/templates/home/features.html:858
 #: home/templates/home/index.html:917 home/templates/home/platform.html:913
 #: home/templates/home/pricing.html:959 home/templates/home/security.html:954
 msgid "API Reference"
-msgstr "Справочник API"
+msgstr ""
 
 #: home/templates/home/demo.html:737 home/templates/home/features.html:859
 #: home/templates/home/index.html:918 home/templates/home/platform.html:914
 #: home/templates/home/pricing.html:960 home/templates/home/security.html:955
 msgid "Compliance Guides"
-msgstr "Руководства по соблюдению требований"
+msgstr ""
 
 #: home/templates/home/demo.html:738 home/templates/home/features.html:860
 #: home/templates/home/index.html:919 home/templates/home/platform.html:915
 #: home/templates/home/pricing.html:961 home/templates/home/security.html:956
 msgid "Case Studies"
-msgstr "Примеры внедрения"
+msgstr ""
 
 #: home/templates/home/demo.html:743 home/templates/home/features.html:865
 #: home/templates/home/index.html:924 home/templates/home/platform.html:920
 #: home/templates/home/pricing.html:966 home/templates/home/security.html:961
 msgid "Company"
-msgstr "Компания"
+msgstr ""
 
 #: home/templates/home/demo.html:745 home/templates/home/features.html:867
 #: home/templates/home/index.html:926 home/templates/home/platform.html:922
 #: home/templates/home/pricing.html:968 home/templates/home/security.html:963
 msgid "About Us"
-msgstr "О нас"
+msgstr ""
 
 #: home/templates/home/demo.html:746 home/templates/home/features.html:868
 #: home/templates/home/index.html:927 home/templates/home/platform.html:923
 #: home/templates/home/pricing.html:969 home/templates/home/security.html:964
 msgid "Careers"
-msgstr "Карьера"
+msgstr ""
 
 #: home/templates/home/demo.html:748 home/templates/home/features.html:870
 #: home/templates/home/index.html:929 home/templates/home/platform.html:925
 #: home/templates/home/pricing.html:971 home/templates/home/security.html:966
 msgid "Contact"
-msgstr "Контакты"
+msgstr ""
 
 #: home/templates/home/demo.html:761
 #, python-format
 msgid "© %(current_year)s ExactusPay. All rights reserved."
-msgstr "© %(current_year)s ExactusPay. Все права защищены."
+msgstr ""
 
 #: home/templates/home/demo.html:762 home/templates/home/features.html:882
 #: home/templates/home/index.html:941 home/templates/home/platform.html:937
 #: home/templates/home/pricing.html:983 home/templates/home/security.html:978
 msgid "GDPR Compliant | SOC 2 Type II Certified | ISO 27001"
-msgstr "Соответствие GDPR | Сертификат SOC 2 типа II | ISO 27001"
+msgstr ""
 
 #: home/templates/home/features.html:566 home/templates/home/index.html:543
 #: home/templates/home/platform.html:563 home/templates/home/pricing.html:638
@@ -545,14 +503,12 @@ msgstr ""
 #: home/templates/home/features.html:622 home/templates/home/index.html:600
 #: home/templates/home/platform.html:619 home/templates/home/pricing.html:694
 #: home/templates/home/security.html:697
-#, fuzzy
-#| msgid "Mobile money integration"
 msgid "Mobile navigation"
-msgstr "Интеграция с мобильными деньгами"
+msgstr ""
 
 #: home/templates/home/features.html:670
 msgid "Features built for real global payroll"
-msgstr "Возможности, созданные для реального глобального расчета зарплаты"
+msgstr ""
 
 #: home/templates/home/features.html:672
 msgid ""
@@ -560,598 +516,519 @@ msgid ""
 "without fragmented tools. Standardised data, automated compliance, and "
 "operational clarity across LATAM, Africa, and Asia."
 msgstr ""
-"ExactusPay предоставляет растущим компаниям возможности глобального "
-"предприятия — без фрагментированных инструментов. Стандартизированные "
-"данные, автоматизированное соблюдение требований и операционная четкость в "
-"Латинской Америке, Африке и Азии."
 
 #: home/templates/home/features.html:679
 msgid "Explore the Pillars"
-msgstr "Изучите основные направления"
+msgstr ""
 
 #: home/templates/home/features.html:680
 msgid "View Capabilities"
-msgstr "Посмотреть возможности"
+msgstr ""
 
 #: home/templates/home/features.html:683
 msgid "Feature outcomes"
-msgstr "Результаты использования функций"
+msgstr ""
 
 #: home/templates/home/features.html:684
 msgid "Standardised reports"
-msgstr "Стандартизированные отчеты"
+msgstr ""
 
 #: home/templates/home/features.html:685
 msgid "Compliance built-in"
-msgstr "Встроенное соблюдение требований"
+msgstr ""
 
 #: home/templates/home/features.html:686
 msgid "Multi-currency ready"
-msgstr "Готовность к работе с несколькими валютами"
+msgstr ""
 
 #: home/templates/home/features.html:687
 msgid "Managed support"
-msgstr "Управляемая поддержка"
+msgstr ""
 
 #: home/templates/home/features.html:696
 msgid "Capabilities"
-msgstr "Возможности"
+msgstr ""
 
 #: home/templates/home/features.html:697
 msgid "Everything teams need to run payroll with confidence"
-msgstr "Все, что нужно командам для уверенного расчета зарплаты"
+msgstr ""
 
 #: home/templates/home/features.html:699
 msgid ""
 "From automation and analytics to audit trails and self-service, ExactusPay "
 "replaces local fragmentation with a single, reliable operating model."
 msgstr ""
-"От автоматизации и аналитики до аудиторских следов и самообслуживания, "
-"ExactusPay заменяет локальную фрагментацию единой надежной операционной "
-"моделью."
 
 #: home/templates/home/features.html:709
 msgid "Compliance automation"
-msgstr "Автоматизация соблюдения требований"
+msgstr ""
 
 #: home/templates/home/features.html:710
 msgid ""
 "Built-in legal logic and validations that help you stay audit-ready as "
 "regulations evolve."
 msgstr ""
-"Встроенная юридическая логика и проверки, которые помогают вам оставаться "
-"готовыми к аудиту по мере изменения нормативных требований."
 
 #: home/templates/home/features.html:715
 msgid "Cost & payroll analytics"
-msgstr "Аналитика затрат и зарплаты"
+msgstr ""
 
 #: home/templates/home/features.html:716
 msgid ""
 "Dashboards that make Total Cost of Employment and key metrics visible across "
 "countries."
 msgstr ""
-"Панели управления, которые делают общую стоимость занятости и ключевые "
-"показатели видимыми в разных странах."
 
 #: home/templates/home/features.html:721
 msgid "Fast, reliable processing"
-msgstr "Быстрая и надежная обработка"
+msgstr ""
 
 #: home/templates/home/features.html:722
 msgid ""
 "Run payroll at scale with structured inputs, automated checks, and stable "
 "exports."
 msgstr ""
-"Выполняйте расчет зарплаты в масштабе с структурированными входными данными, "
-"автоматическими проверками и стабильным экспортом."
 
 #: home/templates/home/features.html:727
 msgid "Enterprise security"
-msgstr "Корпоративная безопасность"
+msgstr ""
 
 #: home/templates/home/features.html:728
 msgid ""
 "Strong encryption, role-based access, and governance designed for payroll-"
 "grade sensitivity."
 msgstr ""
-"Надежное шифрование, контроль доступа на основе ролей и управление, "
-"разработанное для работы с данными высокой степени чувствительности, "
-"характерными для расчета зарплаты."
 
 #: home/templates/home/features.html:734
 msgid ""
 "One reporting structure across jurisdictions — no spreadsheet reconciliation "
 "between providers."
 msgstr ""
-"Единая структура отчетности во всех юрисдикциях — никакой сверки таблиц "
-"между разными провайдерами."
 
 #: home/templates/home/features.html:739
 msgid "Audit trails & governance"
-msgstr "Аудиторские следы и управление"
+msgstr ""
 
 #: home/templates/home/features.html:740
 msgid ""
 "Traceable calculations and change history to support internal review and "
 "external audits."
 msgstr ""
-"Отслеживаемые расчеты и история изменений для поддержки внутренних проверок "
-"и внешних аудитов."
 
 #: home/templates/home/features.html:749
 msgid "Core Pillars"
-msgstr "Основные направления"
+msgstr ""
 
 #: home/templates/home/features.html:750
 msgid "Four pillars that replace payroll fragmentation"
-msgstr "Четыре направления, которые заменяют фрагментацию расчета зарплаты"
+msgstr ""
 
 #: home/templates/home/features.html:751
 msgid ""
 "These pillars work together to deliver accuracy, compliance, and clarity "
 "across every country you operate in."
 msgstr ""
-"Эти направления работают вместе, обеспечивая точность, соблюдение требований "
-"и четкость в каждой стране, где вы работаете."
 
 #: home/templates/home/features.html:759
 msgid "Strategic payroll simulations"
-msgstr "Стратегическое моделирование зарплаты"
+msgstr ""
 
 #: home/templates/home/features.html:760
 msgid ""
 "Forecast full employment cost before you hire — including employer taxes, "
 "statutory contributions, and local burden."
 msgstr ""
-"Спрогнозируйте полную стоимость найма до того, как наймете сотрудника — "
-"включая налоги работодателя, обязательные отчисления и местные обременения."
 
 #: home/templates/home/features.html:764
 msgid "Pre-hire forecasting:"
-msgstr "Прогнозирование до найма:"
+msgstr ""
 
 #: home/templates/home/features.html:764
 msgid "model offers with accurate employer-cost breakdowns."
-msgstr "моделируйте предложения с точной разбивкой затрат работодателя."
+msgstr ""
 
 #: home/templates/home/features.html:765
 msgid "Scenario planning:"
-msgstr "Планирование сценариев:"
+msgstr ""
 
 #: home/templates/home/features.html:765
 msgid "compare markets and hiring strategies side-by-side."
-msgstr "сравнивайте рынки и стратегии найма бок о бок."
+msgstr ""
 
 #: home/templates/home/features.html:766
 msgid "Budget certainty:"
-msgstr "Определенность бюджета:"
+msgstr ""
 
 #: home/templates/home/features.html:766
 msgid "align HR and Finance with one set of numbers."
-msgstr "согласовывайте отделы кадров и финансов с единым набором цифр."
+msgstr ""
 
 #: home/templates/home/features.html:774
 msgid "Global-standardised reporting"
-msgstr "Глобальная стандартизированная отчетность"
+msgstr ""
 
 #: home/templates/home/features.html:775
 msgid ""
 "Replace inconsistent local formats with one reporting model that stays "
 "stable across countries and payroll cycles."
 msgstr ""
-"Замените несоответствующие локальные форматы единой моделью отчетности, "
-"которая остается стабильной во всех странах и расчетных циклах."
 
 #: home/templates/home/features.html:779
 msgid "Single dashboard:"
-msgstr "Единая панель управления:"
+msgstr ""
 
 #: home/templates/home/features.html:779
 msgid "central visibility across payroll and workforce data."
-msgstr "централизованная видимость данных о зарплате и персонале."
+msgstr ""
 
 #: home/templates/home/features.html:780
 msgid "Comparable outputs:"
-msgstr "Сопоставимые результаты:"
+msgstr ""
 
 #: home/templates/home/features.html:780
 msgid "consistent data definitions enable clean cross-country analysis."
 msgstr ""
-"согласованные определения данных обеспечивают чистый межстрановой анализ."
 
 #: home/templates/home/features.html:781
 msgid "Decision clarity:"
-msgstr "Ясность принятия решений:"
+msgstr ""
 
 #: home/templates/home/features.html:781
 msgid "executive-grade insights into costs, trends, and exposure."
-msgstr "инсайты уровня руководства по затратам, тенденциям и рискам."
+msgstr ""
 
 #: home/templates/home/features.html:789
 msgid "Automated compliance & security"
-msgstr "Автоматизированное соблюдение требований и безопасность"
+msgstr ""
 
 #: home/templates/home/features.html:790
 msgid ""
 "Stay ahead of regulatory change with built-in rules, validations, and "
 "governance designed for sensitive payroll data."
 msgstr ""
-"Опережайте изменения в нормативных требованиях с помощью встроенных правил, "
-"проверок и управления, разработанных для конфиденциальных данных о зарплате."
 
 #: home/templates/home/features.html:794
 msgid "Legal logic:"
-msgstr "Юридическая логика:"
+msgstr ""
 
 #: home/templates/home/features.html:794
 msgid "controls aligned to labour law and statutory requirements."
 msgstr ""
-"контроль, соответствующий трудовому законодательству и нормативным "
-"требованиям."
 
 #: home/templates/home/features.html:795
 msgid "Error reduction:"
-msgstr "Сокращение ошибок:"
+msgstr ""
 
 #: home/templates/home/features.html:795
 msgid "automation and guardrails minimise manual mistakes."
-msgstr "автоматизация и ограничители сводят к минимуму ручные ошибки."
+msgstr ""
 
 #: home/templates/home/features.html:796
 msgid "Audit-ready:"
-msgstr "Готовность к аудиту:"
+msgstr ""
 
 #: home/templates/home/features.html:796
 msgid "traceable calculations and data controls support reviews."
-msgstr "отслеживаемые расчеты и контроль данных поддерживают проверки."
+msgstr ""
 
 #: home/templates/home/features.html:804
 msgid "Integrations & connectivity"
-msgstr "Интеграции и связь"
+msgstr ""
 
 #: home/templates/home/features.html:805
 msgid ""
 "Connect your HR stack so data flows from hire to pay — with fewer handoffs, "
 "less re-entry, and consistent governance."
 msgstr ""
-"Подключите свой стек HR, чтобы данные передавались от найма до выплаты — с "
-"меньшим количеством передач, меньшим повторным вводом и согласованным "
-"управлением."
 
 #: home/templates/home/features.html:809
 msgid "HCM connectivity:"
-msgstr "Подключение к HCM:"
+msgstr ""
 
 #: home/templates/home/features.html:809
 msgid "integrate with tools like Workday and BambooHR."
-msgstr "интеграция с такими инструментами, как Workday и BambooHR."
+msgstr ""
 
 #: home/templates/home/features.html:810
 msgid "Scalable architecture:"
-msgstr "Масштабируемая архитектура:"
+msgstr ""
 
 #: home/templates/home/features.html:810
 msgid "grow from mid-sized to global without rewiring operations."
-msgstr "расти от среднего размера до глобального без перенастройки операций."
+msgstr ""
 
 #: home/templates/home/features.html:811
 msgid "Multi-language & FX:"
-msgstr "Несколько языков и валют:"
+msgstr ""
 
 #: home/templates/home/features.html:811
 msgid "localised employee experience across currencies and regions."
-msgstr "локализованный опыт сотрудников в разных валютах и регионах."
+msgstr ""
 
 #: home/templates/home/features.html:821
 msgid "Ready to simplify global payroll?"
-msgstr "Готовы упростить глобальный расчет зарплаты?"
+msgstr ""
 
 #: home/templates/home/features.html:822
 msgid ""
 "Standardise your reporting, reduce manual work, and stay compliant across "
 "markets — with one platform that scales."
 msgstr ""
-"Стандартизируйте отчетность, сократите ручную работу и соблюдайте требования "
-"на всех рынках — с помощью единой масштабируемой платформы."
 
 #: home/templates/home/features.html:824 home/templates/home/platform.html:878
 msgid "Schedule a Demo"
-msgstr "Назначить демонстрацию"
+msgstr ""
 
 #: home/templates/home/features.html:881 home/templates/home/index.html:940
 #: home/templates/home/platform.html:936 home/templates/home/pricing.html:982
 #: home/templates/home/security.html:977
 msgid "All rights reserved."
-msgstr "Все права защищены."
+msgstr ""
 
 #: home/templates/home/index.html:649
 msgid "Intelligent Global Payroll Platform"
-msgstr "Интеллектуальная платформа глобального расчета зарплаты"
+msgstr ""
 
 #: home/templates/home/index.html:652
 msgid ""
 "Streamline global workforce management with AI-driven compliance, real-time "
 "insights, and seamless payroll processing across 40+ countries."
 msgstr ""
-"Оптимизируйте управление глобальным персоналом с помощью соблюдения "
-"требований на основе ИИ, инсайтов в реальном времени и бесперебойной "
-"обработки зарплаты в более чем 40 странах."
 
 #: home/templates/home/index.html:659
 msgid "Watch Demo"
-msgstr "Смотреть демо"
+msgstr ""
 
 #: home/templates/home/index.html:666
 msgid "Accuracy Rate"
-msgstr "Уровень точности"
+msgstr ""
 
 #: home/templates/home/index.html:670
 msgid "Countries"
-msgstr "Страны"
+msgstr ""
 
 #: home/templates/home/index.html:674
 msgid "Hours Support"
-msgstr "Часов поддержки"
+msgstr ""
 
 #: home/templates/home/index.html:678
 msgid "Compliance"
-msgstr "Соответствие требованиям"
+msgstr ""
 
 #: home/templates/home/index.html:690
 msgid "Powerful Features"
-msgstr "Мощные возможности"
+msgstr ""
 
 #: home/templates/home/index.html:691
 msgid "Designed for Global Scale"
-msgstr "Разработано для глобального масштаба"
+msgstr ""
 
 #: home/templates/home/index.html:692
 msgid ""
 "Everything you need to manage complex global payroll operations with "
 "confidence"
 msgstr ""
-"Все необходимое для уверенного управления сложными глобальными операциями по "
-"расчету зарплаты"
 
 #: home/templates/home/index.html:698
 msgid "AI-Powered Compliance"
-msgstr "Соответствие требованиям на основе ИИ"
+msgstr ""
 
 #: home/templates/home/index.html:699
 msgid ""
 "Automated regulatory updates and risk assessment across all jurisdictions "
 "with machine learning algorithms."
 msgstr ""
-"Автоматизированные обновления нормативных требований и оценка рисков во всех "
-"юрисдикциях с помощью алгоритмов машинного обучения."
 
 #: home/templates/home/index.html:704 home/templates/home/index.html:749
 msgid "Real-time Analytics"
-msgstr "Аналитика в реальном времени"
+msgstr ""
 
 #: home/templates/home/index.html:705
 msgid ""
 "Comprehensive dashboards with live insights into payroll costs, compliance "
 "status, and operational metrics."
 msgstr ""
-"Комплексные панели управления с инсайтами в реальном времени о затратах на "
-"зарплату, статусе соблюдения требований и операционных показателях."
 
 #: home/templates/home/index.html:710
 msgid "Instant Processing"
-msgstr "Мгновенная обработка"
+msgstr ""
 
 #: home/templates/home/index.html:711
 msgid ""
 "Batch process thousands of payments across different currencies and banking "
 "systems simultaneously."
 msgstr ""
-"Пакетная обработка тысяч платежей в разных валютах и банковских системах "
-"одновременно."
 
 #: home/templates/home/index.html:716 home/templates/home/index.html:812
 msgid "Enterprise Security"
-msgstr "Корпоративная безопасность"
+msgstr ""
 
 #: home/templates/home/index.html:717
 msgid ""
 "Bank-grade encryption, multi-factor authentication, and SOC 2 Type II "
 "certified infrastructure."
 msgstr ""
-"Шифрование банковского уровня, многофакторная аутентификация и "
-"инфраструктура, сертифицированная по стандарту SOC 2 типа II."
 
 #: home/templates/home/index.html:722
 msgid "Global Coverage"
-msgstr "Глобальное покрытие"
+msgstr ""
 
 #: home/templates/home/index.html:723
 msgid ""
 "Seamless payroll processing across 40+ countries with local compliance and "
 "tax expertise built-in."
 msgstr ""
-"Бесперебойный расчет зарплаты в более чем 40 странах со встроенным учетом "
-"местных требований и налоговой экспертизой."
 
 #: home/templates/home/index.html:728
 msgid "Audit Trail"
-msgstr "Аудиторский след"
+msgstr ""
 
 #: home/templates/home/index.html:729
 msgid ""
 "Complete transparency with immutable records for every transaction and "
 "compliance verification."
 msgstr ""
-"Полная прозрачность с неизменяемыми записями для каждой транзакции и "
-"проверки соответствия требованиям."
 
 #: home/templates/home/index.html:741
 msgid "Unified Platform"
-msgstr "Единая платформа"
+msgstr ""
 
 #: home/templates/home/index.html:742
 msgid "Everything in One Dashboard"
-msgstr "Все на одной панели управления"
+msgstr ""
 
 #: home/templates/home/index.html:744
 msgid ""
 "Manage your entire global payroll operation from a single, intuitive "
 "interface with real-time data and actionable insights."
 msgstr ""
-"Управляйте всей своей глобальной операцией по расчету зарплаты из единого "
-"интуитивно понятного интерфейса с данными в реальном времени и инсайтами, "
-"пригодными для действий."
 
 #: home/templates/home/index.html:750
 msgid ""
 "Monitor payroll costs, compliance status, and operational metrics across all "
 "regions with live dashboards."
 msgstr ""
-"Отслеживайте затраты на зарплату, статус соблюдения требований и "
-"операционные показатели во всех регионах с помощью динамических панелей "
-"управления."
 
 #: home/templates/home/index.html:754
 msgid "Multi-currency Support"
-msgstr "Поддержка нескольких валют"
+msgstr ""
 
 #: home/templates/home/index.html:755
 msgid ""
 "Process payments in 40+ currencies with automated forex management and "
 "optimal exchange rates."
 msgstr ""
-"Обрабатывайте платежи в более чем 40 валютах с автоматизированным "
-"управлением валютными операциями и оптимальными обменными курсами."
 
 #: home/templates/home/index.html:759
 msgid "Automated Reporting"
-msgstr "Автоматизированная отчетность"
+msgstr ""
 
 #: home/templates/home/index.html:760
 msgid ""
 "Generate compliance reports, tax filings, and financial statements "
 "automatically across all jurisdictions."
 msgstr ""
-"Автоматически создавайте отчеты о соответствии, налоговые декларации и "
-"финансовую отчетность во всех юрисдикциях."
 
 #: home/templates/home/index.html:769
 msgid "Payroll Analytics"
-msgstr "Аналитика по зарплате"
+msgstr ""
 
 #: home/templates/home/index.html:770
 msgid "Live Dashboard"
-msgstr "Динамическая панель"
+msgstr ""
 
 #: home/templates/home/index.html:774
 msgid ""
 "Real-time insights into global payroll operations with predictive analytics."
 msgstr ""
-"Инсайты в реальном времени о глобальных операциях по расчету зарплаты с "
-"прогнозной аналитикой."
 
 #: home/templates/home/index.html:782
 msgid "Compliance Status"
-msgstr "Статус соответствия требованиям"
+msgstr ""
 
 #: home/templates/home/index.html:783
 msgid "All Systems Go"
-msgstr "Все системы работают"
+msgstr ""
 
 #: home/templates/home/index.html:787
 #, python-format
 msgid ""
 "100%% compliance across all active jurisdictions with automated updates."
 msgstr ""
-"100%% соответствие требованиям во всех активных юрисдикциях с "
-"автоматическими обновлениями."
 
 #: home/templates/home/index.html:795
 msgid "Payment Processing"
-msgstr "Обработка платежей"
+msgstr ""
 
 #: home/templates/home/index.html:796
 msgid "Batch Ready"
-msgstr "Готов к пакетной обработке"
+msgstr ""
 
 #: home/templates/home/index.html:800
 msgid "Process payments in multiple currencies with automated reconciliation."
-msgstr "Обрабатывайте платежи в нескольких валютах с автоматической сверкой."
+msgstr ""
 
 #: home/templates/home/index.html:813
 msgid "Bank-Grade Protection"
-msgstr "Защита банковского уровня"
+msgstr ""
 
 #: home/templates/home/index.html:814
 msgid ""
 "Your global payroll data is protected by multiple layers of enterprise "
 "security"
 msgstr ""
-"Ваши глобальные данные по зарплате защищены несколькими уровнями "
-"корпоративной безопасности"
 
 #: home/templates/home/index.html:820
 msgid "AES-256 Encryption"
-msgstr "Шифрование AES-256"
+msgstr ""
 
 #: home/templates/home/index.html:821
 msgid ""
 "All data encrypted in transit and at rest with military-grade encryption "
 "standards."
 msgstr ""
-"Все данные шифруются при передаче и хранении с использованием стандартов "
-"шифрования военного уровня."
 
 #: home/templates/home/index.html:825
 msgid "Multi-Factor Auth"
-msgstr "Многофакторная аутентификация"
+msgstr ""
 
 #: home/templates/home/index.html:826
 msgid "Enterprise-grade MFA with biometric options for all user access levels."
 msgstr ""
-"MFA корпоративного уровня с биометрическими опциями для всех уровней доступа "
-"пользователей."
 
 #: home/templates/home/index.html:830
 msgid "SOC 2 Certified"
-msgstr "Сертификат SOC 2"
+msgstr ""
 
 #: home/templates/home/index.html:831
 msgid ""
 "Regular third-party audits ensure continuous compliance with security "
 "standards."
 msgstr ""
-"Регулярные аудиты третьих сторон обеспечивают непрерывное соответствие "
-"стандартам безопасности."
 
 #: home/templates/home/index.html:835
 msgid "Data Sovereignty"
-msgstr "Суверенитет данных"
+msgstr ""
 
 #: home/templates/home/index.html:836
 msgid ""
 "Regional data centers ensure compliance with local data protection "
 "regulations."
 msgstr ""
-"Региональные центры обработки данных обеспечивают соответствие местным "
-"нормам защиты данных."
 
 #: home/templates/home/index.html:846
 msgid "Trusted by Leaders"
-msgstr "Доверие лидеров"
+msgstr ""
 
 #: home/templates/home/index.html:847
 msgid "Global Success Stories"
-msgstr "Истории глобального успеха"
+msgstr ""
 
 #: home/templates/home/index.html:848
 msgid ""
 "See how companies are transforming their global payroll operations with "
 "ExactusPay"
 msgstr ""
-"Узнайте, как компании трансформируют свои глобальные операции по расчету "
-"зарплаты с помощью ExactusPay"
 
 #: home/templates/home/index.html:853
 #, python-format
@@ -1161,36 +1038,28 @@ msgid ""
 "countries. Their platform paid for itself within the first quarter, and the "
 "ROI has been phenomenal.\""
 msgstr ""
-"\"ExactusPay произвел революцию в наших глобальных операциях по расчету "
-"зарплаты. Мы сократили время обработки на 80%%, устранив ошибки соответствия "
-"требованиям в 15 странах. Их платформа окупилась в течение первого квартала, "
-"а рентабельность инвестиций была феноменальной.\""
 
 #: home/templates/home/index.html:861
 msgid "Sarah Rodriguez"
-msgstr "Сара Родригес"
+msgstr ""
 
 #: home/templates/home/index.html:862
 msgid "Global Operations Director, TechScale Inc."
-msgstr "Директор по глобальным операциям, TechScale Inc."
+msgstr ""
 
 #: home/templates/home/index.html:873
 msgid "Ready to Simplify Global Payroll?"
-msgstr "Готовы упростить глобальный расчет зарплаты?"
+msgstr ""
 
 #: home/templates/home/index.html:875
 msgid ""
 "Join 500+ enterprises that trust ExactusPay with their global workforce "
 "management. Schedule a personalized demo to see our platform in action."
 msgstr ""
-"Присоединяйтесь к более чем 500 предприятиям, которые доверяют ExactusPay "
-"управление своим глобальным персоналом. Назначьте персонализированную "
-"демонстрацию, чтобы увидеть нашу платформу в действии."
 
 #: home/templates/home/platform.html:668
 msgid "A global payroll platform built for scale"
 msgstr ""
-"Глобальная платформа для расчета зарплаты, созданная для масштабирования"
 
 #: home/templates/home/platform.html:670
 msgid ""
@@ -1199,45 +1068,38 @@ msgid ""
 "with a single source of truth — and run multi-country payroll with clarity, "
 "control, and confidence."
 msgstr ""
-"ExactusPay — это комплексная глобальная экосистема для расчета зарплаты, "
-"которая обеспечивает согласованность корпоративного уровня на быстрорастущих "
-"рынках. Замените фрагментированные локальные инструменты единым источником "
-"достоверных данных и выполняйте многострановой расчет зарплаты с ясностью, "
-"контролем и уверенностью."
 
 #: home/templates/home/platform.html:678
 msgid "Explore Capabilities"
-msgstr "Изучить возможности"
+msgstr ""
 
 #: home/templates/home/platform.html:681
-#, fuzzy
-#| msgid "Scalable architecture:"
 msgid "View Architecture"
-msgstr "Масштабируемая архитектура:"
+msgstr ""
 
 #: home/templates/home/platform.html:685
 msgid "Platform outcomes"
-msgstr "Результаты платформы"
+msgstr ""
 
 #: home/templates/home/platform.html:687
 msgid "Standardised reporting"
-msgstr "Стандартизированная отчетность"
+msgstr ""
 
 #: home/templates/home/platform.html:688
 msgid "TCOE visibility"
-msgstr "Видимость TCOE (Общая стоимость занятости)"
+msgstr ""
 
 #: home/templates/home/platform.html:689
 msgid "Audit-ready"
-msgstr "Готовность к аудиту"
+msgstr ""
 
 #: home/templates/home/platform.html:699
 msgid "Architecture of Excellence"
-msgstr "Архитектура совершенства"
+msgstr ""
 
 #: home/templates/home/platform.html:700
 msgid "One framework. Every country. One clear view."
-msgstr "Один фреймворк. Каждая страна. Один четкий взгляд."
+msgstr ""
 
 #: home/templates/home/platform.html:702
 msgid ""
@@ -1245,66 +1107,54 @@ msgid ""
 "processed and presented in the same structure. That means fewer manual "
 "reconciliations and executive-grade visibility across jurisdictions."
 msgstr ""
-"Независимо от того, платите ли вы командам в Бразилии, Нигерии или Вьетнаме, "
-"данные о зарплате обрабатываются и представляются в одной и той же "
-"структуре. Это означает меньше ручных сверок и видимость данных на уровне "
-"руководства во всех юрисдикциях."
 
 #: home/templates/home/platform.html:712
 msgid "Global-standardised model"
-msgstr "Глобальная стандартизированная модель"
+msgstr ""
 
 #: home/templates/home/platform.html:713
 msgid ""
 "Common definitions for earnings, deductions, bases, and outputs — consistent "
 "across regions and providers."
 msgstr ""
-"Общие определения для начислений, удержаний, баз и результатов — "
-"согласованные во всех регионах и у разных провайдеров."
 
 #: home/templates/home/platform.html:718
 msgid "Total Cost of Employment"
-msgstr "Общая стоимость занятости"
+msgstr ""
 
 #: home/templates/home/platform.html:719
 msgid ""
 "See employer cost, statutory burdens, and tax exposure in one comparable "
 "view — globally and locally."
 msgstr ""
-"Увидьте затраты работодателя, обязательные отчисления и налоговые риски в "
-"одном сопоставимом виде — глобально и локально."
 
 #: home/templates/home/platform.html:724
 msgid "No spreadsheet reconciliation"
-msgstr "Без сверки таблиц"
+msgstr ""
 
 #: home/templates/home/platform.html:725
 msgid ""
 "Stable exports and registers that don’t change format every month — country "
 "to country, cycle to cycle."
 msgstr ""
-"Стабильные экспорты и регистры, которые не меняют формат каждый месяц — от "
-"страны к стране, от цикла к циклу."
 
 #: home/templates/home/platform.html:735
 msgid "Strategic Capabilities"
-msgstr "Стратегические возможности"
+msgstr ""
 
 #: home/templates/home/platform.html:736
 msgid "Expand with confidence — operate with precision"
-msgstr "Расширяйтесь с уверенностью — действуйте с точностью"
+msgstr ""
 
 #: home/templates/home/platform.html:738
 msgid ""
 "Plan ahead, stay compliant, connect your stack, and deliver a consistent "
 "employee experience — even across complex markets."
 msgstr ""
-"Планируйте заранее, соблюдайте требования, подключайте свой стек и "
-"обеспечивайте согласованный опыт сотрудников — даже на сложных рынках."
 
 #: home/templates/home/platform.html:749
 msgid "Predictive Simulation Engine"
-msgstr "Механизм прогнозного моделирования"
+msgstr ""
 
 #: home/templates/home/platform.html:751
 msgid ""
@@ -1312,37 +1162,28 @@ msgid ""
 "contributions — before you hire or enter a new market. Turn “what if?” "
 "questions into clear numbers."
 msgstr ""
-"Спрогнозируйте полную стоимость занятости — включая местные налоги и "
-"обязательные отчисления — до того, как наймете сотрудника или выйдете на "
-"новый рынок. Превратите вопросы «что, если?» в четкие цифры."
 
 #: home/templates/home/platform.html:759
 msgid ""
 "<strong>Pre-hire modelling:</strong> price offers accurately with full "
 "employer cost breakdowns."
 msgstr ""
-"<strong>Моделирование до найма:</strong> точно оценивайте предложения с "
-"полной разбивкой затрат работодателя."
 
 #: home/templates/home/platform.html:760
 msgid ""
 "<strong>Scenario comparisons:</strong> assess markets and hiring strategies "
 "side-by-side."
 msgstr ""
-"<strong>Сравнение сценариев:</strong> оценивайте рынки и стратегии найма бок "
-"о бок."
 
 #: home/templates/home/platform.html:761
 msgid ""
 "<strong>Budget confidence:</strong> align Finance, HR, and leadership on one "
 "set of numbers."
 msgstr ""
-"<strong>Уверенность в бюджете:</strong> согласовывайте финансовый отдел, "
-"отдел кадров и руководство на основе единого набора цифр."
 
 #: home/templates/home/platform.html:769
 msgid "Automated Compliance Guardianship"
-msgstr "Автоматизированная защита соответствия требованиям"
+msgstr ""
 
 #: home/templates/home/platform.html:771
 msgid ""
@@ -1350,37 +1191,28 @@ msgid ""
 "across LATAM, Africa, and Asia — keeping you audit-ready and protected from "
 "avoidable penalties."
 msgstr ""
-"Встроенная юридическая логика адаптируется к изменениям трудового "
-"законодательства и налоговых норм в Латинской Америке, Африке и Азии — "
-"поддерживая вашу готовность к аудиту и защищая от избегаемых штрафов."
 
 #: home/templates/home/platform.html:779
 msgid ""
 "<strong>Regulation-aware rules:</strong> payroll logic tracks current "
 "statutory obligations."
 msgstr ""
-"<strong>Правила, учитывающие нормативы:</strong> логика расчета зарплаты "
-"отслеживает текущие обязательные требования."
 
 #: home/templates/home/platform.html:780
 msgid ""
 "<strong>Reduced risk:</strong> validations and governance to prevent common "
 "errors."
 msgstr ""
-"<strong>Снижение риска:</strong> проверки и управление для предотвращения "
-"распространенных ошибок."
 
 #: home/templates/home/platform.html:781
 msgid ""
 "<strong>Evidence trails:</strong> traceable calculations and changes support "
 "audits."
 msgstr ""
-"<strong>Цепочки подтверждений:</strong> отслеживаемые расчеты и изменения "
-"поддерживают аудиты."
 
 #: home/templates/home/platform.html:789
 msgid "Managed Service Connectivity"
-msgstr "Связь управляемого сервиса"
+msgstr ""
 
 #: home/templates/home/platform.html:791
 msgid ""
@@ -1388,36 +1220,27 @@ msgid ""
 "employee data flows cleanly from hire to pay — without manual re-entry and "
 "operational drift."
 msgstr ""
-"ExactusPay подключается к вашим системам HCM (например, Workday, BambooHR), "
-"чтобы данные сотрудников беспрепятственно передавались от найма до выплаты — "
-"без ручного повторного ввода и операционного дрейфа."
 
 #: home/templates/home/platform.html:799
 msgid ""
 "<strong>Hire-to-pay pipeline:</strong> structured data exchange from "
 "onboarding to payment."
 msgstr ""
-"<strong>Конвейер от найма до выплаты:</strong> структурированный обмен "
-"данными от онбординга до платежа."
 
 #: home/templates/home/platform.html:800
 msgid ""
 "<strong>Operational consistency:</strong> one workflow across multiple "
 "countries/providers."
 msgstr ""
-"<strong>Операционная согласованность:</strong> единый рабочий процесс для "
-"нескольких стран/провайдеров."
 
 #: home/templates/home/platform.html:801
 msgid ""
 "<strong>Lower admin load:</strong> fewer handoffs and less spreadsheet work."
 msgstr ""
-"<strong>Снижение административной нагрузки:</strong> меньше передач и меньше "
-"работы с таблицами."
 
 #: home/templates/home/platform.html:809
 msgid "Multi-Currency & Language Support"
-msgstr "Поддержка нескольких валют и языков"
+msgstr ""
 
 #: home/templates/home/platform.html:811
 msgid ""
@@ -1425,41 +1248,32 @@ msgid ""
 "refined, localised experience — with multi-language access to payslips and "
 "documents."
 msgstr ""
-"Управляйте правилами валютных операций и банковской сложностью за кулисами. "
-"Сотрудники получают улучшенный локализованный опыт — с многоязычным доступом "
-"к расчетным листкам и документам."
 
 #: home/templates/home/platform.html:819
 msgid ""
 "<strong>FX handled centrally:</strong> exchange and payout workflows managed "
 "reliably."
 msgstr ""
-"<strong>Централизованное управление валютой:</strong> надежное управление "
-"рабочими процессами обмена и выплат."
 
 #: home/templates/home/platform.html:820
 msgid ""
 "<strong>Local experience:</strong> multi-language portal for documents and "
 "payroll history."
 msgstr ""
-"<strong>Локальный опыт:</strong> многоязычный портал для документов и "
-"истории зарплаты."
 
 #: home/templates/home/platform.html:821
 msgid ""
 "<strong>Consistent standard:</strong> the same quality UX across every "
 "location."
 msgstr ""
-"<strong>Согласованный стандарт:</strong> одинаковое качество "
-"пользовательского опыта в каждом месте."
 
 #: home/templates/home/platform.html:832
 msgid "Operational Precision"
-msgstr "Операционная точность"
+msgstr ""
 
 #: home/templates/home/platform.html:833
 msgid "Consolidate providers. Increase control."
-msgstr "Консолидируйте провайдеров. Увеличьте контроль."
+msgstr ""
 
 #: home/templates/home/platform.html:835
 msgid ""
@@ -1467,128 +1281,98 @@ msgid ""
 "Reduce manual work, strengthen governance, and scale internationally without "
 "adding chaos."
 msgstr ""
-"Объедините локальное выполнение расчета зарплаты в единой безопасной среде, "
-"управляемой стандартами. Сократите ручную работу, усильте управление и "
-"масштабируйтесь на международном уровне без добавления хаоса."
 
 #: home/templates/home/platform.html:844
 msgid "Operating model"
-msgstr "Операционная модель"
+msgstr ""
 
 #: home/templates/home/platform.html:845
 msgid "One workflow"
-msgstr "Единый рабочий процесс"
+msgstr ""
 
 #: home/templates/home/platform.html:846
 msgid ""
 "Replace disconnected processes with a consistent payroll workflow and "
 "reporting standard."
 msgstr ""
-"Замените разрозненные процессы согласованным рабочим процессом расчета "
-"зарплаты и стандартом отчетности."
 
 #: home/templates/home/platform.html:850
 msgid "Efficiency"
-msgstr "Эффективность"
+msgstr ""
 
 #: home/templates/home/platform.html:851
 msgid "Less manual effort"
-msgstr "Меньше ручного труда"
+msgstr ""
 
 #: home/templates/home/platform.html:852
 msgid ""
 "Standard inputs and automated checks reduce rework, exceptions, and "
 "spreadsheet reconciliation."
 msgstr ""
-"Стандартизированные входные данные и автоматические проверки сокращают "
-"переделки, исключения и сверку таблиц."
 
 #: home/templates/home/platform.html:856
 msgid "Scale"
-msgstr "Масштаб"
+msgstr ""
 
 #: home/templates/home/platform.html:857
 msgid "Built for expansion"
-msgstr "Создано для расширения"
+msgstr ""
 
 #: home/templates/home/platform.html:858
 msgid ""
 "Enter new countries with predictable governance, consistent data, and "
 "executive clarity from day one."
 msgstr ""
-"Выходите на новые рынки с предсказуемым управлением, согласованными данными "
-"и ясностью для руководства с первого дня."
 
 #: home/templates/home/platform.html:868
 msgid "Bring global payroll under one roof"
-msgstr "Объедините глобальный расчет зарплаты под одной крышей"
+msgstr ""
 
 #: home/templates/home/platform.html:870
 msgid ""
 "Get a single source of truth, standardised reporting, and compliance-ready "
 "processes — without the typical global payroll complexity."
 msgstr ""
-"Получите единый источник достоверных данных, стандартизированную отчетность "
-"и процессы, готовые к соблюдению требований — без типичной сложности "
-"глобального расчета зарплаты."
 
 #: home/templates/home/pricing.html:742
 msgid "Transparent pricing for global payroll"
-msgstr "Прозрачные цены для глобального расчета зарплаты"
+msgstr ""
 
 #: home/templates/home/pricing.html:744
-#, fuzzy
-#| msgid ""
-#| "\n"
-#| "                    ExactusPay believes in pricing that is as clear and "
-#| "transparent as our payroll reporting. We understand that every business "
-#| "has a unique footprint, which is why our pricing model is tailored to the "
-#| "specific countries and regions where you operate.\n"
-#| "                    "
 msgid ""
 "ExactusPay believes in pricing that is as clear and transparent as our "
 "payroll reporting. We understand that every business has a unique footprint, "
 "which is why our pricing model is tailored to the specific countries and "
 "regions where you operate."
 msgstr ""
-"\n"
-"                    ExactusPay верит в ценообразование, столь же ясное и "
-"прозрачное, как наша отчетность по зарплате. Мы понимаем, что у каждого "
-"бизнеса уникальный след, поэтому наша модель ценообразования адаптирована "
-"под конкретные страны и регионы, где вы работаете.\n"
-"                    "
 
 #: home/templates/home/pricing.html:755
 msgid "Simple & Predictable"
-msgstr "Просто и предсказуемо"
+msgstr ""
 
 #: home/templates/home/pricing.html:756
 msgid "Transparent & Flexible Pricing"
-msgstr "Прозрачные и гибкие цены"
+msgstr ""
 
 #: home/templates/home/pricing.html:757
 msgid ""
 "We do not believe in hidden fees or complex tiered structures that leave you "
 "guessing. Our pricing is straightforward."
 msgstr ""
-"Мы не верим в скрытые комиссии или сложные многоуровневые структуры, которые "
-"заставляют вас гадать. Наши цены понятны."
 
 #: home/templates/home/pricing.html:763
 msgid "Per-Employee, Per-Month"
-msgstr "За сотрудника в месяц"
+msgstr ""
 
 #: home/templates/home/pricing.html:764
 msgid ""
 "You pay a simple, predictable rate based on the number of active employees "
 "you have in each country. No surprises, no complex calculations."
 msgstr ""
-"Вы платите простую предсказуемую ставку, основанную на количестве активных "
-"сотрудников в каждой стране. Никаких сюрпризов, никаких сложных расчетов."
 
 #: home/templates/home/pricing.html:769 home/templates/home/pricing.html:834
 msgid "Country-Specific Rates"
-msgstr "Ставки для конкретных стран"
+msgstr ""
 
 #: home/templates/home/pricing.html:770
 msgid ""
@@ -1596,253 +1380,207 @@ msgid ""
 "LATAM vs. Asia), ensuring you only pay for the specific compliance needs of "
 "that region."
 msgstr ""
-"Затраты корректируются в зависимости от сложности местной юрисдикции "
-"(например, Латинская Америка против Азии), что гарантирует, что вы платите "
-"только за конкретные потребности этого региона в соблюдении требований."
 
 #: home/templates/home/pricing.html:775
 msgid "No Hidden Setup Fees"
-msgstr "Без скрытых комиссий за настройку"
+msgstr ""
 
 #: home/templates/home/pricing.html:776
 msgid ""
 "We are transparent about implementation costs upfront, so your budget "
 "remains secure from day one. What we quote is what you pay."
 msgstr ""
-"Мы заранее прозрачны в отношении затрат на внедрение, поэтому ваш бюджет "
-"остается защищенным с первого дня. Что мы предлагаем, то вы и платите."
 
 #: home/templates/home/pricing.html:785
 msgid "Everything You Need"
-msgstr "Все, что вам нужно"
+msgstr ""
 
 #: home/templates/home/pricing.html:786
 msgid "What's Included"
-msgstr "Что включено"
+msgstr ""
 
 #: home/templates/home/pricing.html:787
 msgid ""
 "Every ExactusPay plan comes with the core essentials needed to operate "
 "globally with confidence."
 msgstr ""
-"Каждый план ExactusPay включает основные необходимые компоненты для "
-"уверенной глобальной работы."
 
 #: home/templates/home/pricing.html:794
 msgid "Full Compliance Management"
-msgstr "Полное управление соблюдением требований"
+msgstr ""
 
 #: home/templates/home/pricing.html:795
 msgid ""
 "Automated updates for local tax and labor laws across all jurisdictions "
 "where you operate."
 msgstr ""
-"Автоматические обновления местных налоговых законов и трудового "
-"законодательства во всех юрисдикциях, где вы работаете."
 
 #: home/templates/home/pricing.html:802
 msgid "Global Reporting"
-msgstr "Глобальная отчетность"
+msgstr ""
 
 #: home/templates/home/pricing.html:803
 msgid ""
 "Access to our standardized reporting dashboard with real-time insights into "
 "payroll costs and compliance."
 msgstr ""
-"Доступ к нашей стандартизированной панели отчетности с инсайтами в реальном "
-"времени о затратах на зарплату и соблюдении требований."
 
 #: home/templates/home/pricing.html:810
 msgid "Employee Self-Service"
-msgstr "Самообслуживание сотрудников"
+msgstr ""
 
 #: home/templates/home/pricing.html:811
 msgid ""
 "A secure portal for payslips, tax documents, and personal information "
 "management in multiple languages."
 msgstr ""
-"Безопасный портал для расчетных листков, налоговых документов и управления "
-"личной информацией на нескольких языках."
 
 #: home/templates/home/pricing.html:818
 msgid "24/7 Native Support"
-msgstr "Круглосуточная поддержка на родном языке"
+msgstr ""
 
 #: home/templates/home/pricing.html:820
-#, fuzzy
-#| msgid ""
-#| "\n"
-#| "                            Access our expert team around the clock. We "
-#| "provide 24-hour assistance with native fluency in Portuguese and Spanish, "
-#| "ensuring your LATAM operations never sleep.\n"
-#| "                            "
 msgid ""
 "Access our expert team around the clock. We provide 24-hour assistance with "
 "native fluency in Portuguese, ensuring your LATAM operations never sleep."
 msgstr ""
-"\n"
-"                            Получите доступ к нашей команде экспертов "
-"круглосуточно. Мы предоставляем помощь 24 часа в сутки на португальском и "
-"испанском языках, гарантируя, что ваши операции в Латинской Америке никогда "
-"не спят.\n"
-"                            "
 
 #: home/templates/home/pricing.html:833
 msgid "Regional Pricing"
-msgstr "Региональные цены"
+msgstr ""
 
 #: home/templates/home/pricing.html:835
 msgid ""
 "Pricing tailored to the complexity of each jurisdiction. Below are "
 "indicative monthly rates per employee."
 msgstr ""
-"Цены, адаптированные под сложность каждой юрисдикции. Ниже приведены "
-"ориентировочные месячные ставки на одного сотрудника."
 
 #: home/templates/home/pricing.html:840
 msgid "North America"
-msgstr "Северная Америка"
+msgstr ""
 
 #: home/templates/home/pricing.html:842 home/templates/home/pricing.html:853
 #: home/templates/home/pricing.html:864 home/templates/home/pricing.html:875
 #: home/templates/home/pricing.html:886 home/templates/home/pricing.html:897
 msgid "per employee/month"
-msgstr "за сотрудника в месяц"
+msgstr ""
 
 #: home/templates/home/pricing.html:844
 msgid "Full compliance management"
-msgstr "Полное управление соблюдением требований"
+msgstr ""
 
 #: home/templates/home/pricing.html:845
 msgid "Automated tax filings"
-msgstr "Автоматизированная налоговая отчетность"
+msgstr ""
 
 #: home/templates/home/pricing.html:846
 msgid "Employee self-service"
-msgstr "Самообслуживание сотрудников"
+msgstr ""
 
 #: home/templates/home/pricing.html:851
 msgid "Latin America"
-msgstr "Латинская Америка"
+msgstr ""
 
 #: home/templates/home/pricing.html:855
 msgid "Complex jurisdiction handling"
-msgstr "Обработка сложных юрисдикций"
+msgstr ""
 
 #: home/templates/home/pricing.html:856
 msgid "Local tax expertise"
-msgstr "Местная налоговая экспертиза"
+msgstr ""
 
 #: home/templates/home/pricing.html:857
-#, fuzzy
-#| msgid "24/7 Portuguese & Spanish support"
 msgid "24/7 Portuguese support"
-msgstr "Круглосуточная поддержка на португальском и испанском"
+msgstr ""
 
 #: home/templates/home/pricing.html:862
 msgid "Europe"
-msgstr "Европа"
+msgstr ""
 
 #: home/templates/home/pricing.html:866
 msgid "GDPR compliance"
-msgstr "Соответствие GDPR"
+msgstr ""
 
 #: home/templates/home/pricing.html:867
 msgid "Multi-currency processing"
-msgstr "Обработка в нескольких валютах"
+msgstr ""
 
 #: home/templates/home/pricing.html:868
 msgid "Works council support"
-msgstr "Поддержка производственного совета"
+msgstr ""
 
 #: home/templates/home/pricing.html:873
 msgid "Asia Pacific"
-msgstr "Азиатско-Тихоокеанский регион"
+msgstr ""
 
 #: home/templates/home/pricing.html:877
 msgid "Regional expertise"
-msgstr "Региональная экспертиза"
+msgstr ""
 
 #: home/templates/home/pricing.html:878
 msgid "Local banking integrations"
-msgstr "Интеграция с местными банками"
+msgstr ""
 
 #: home/templates/home/pricing.html:879
 msgid "Multi-language support"
-msgstr "Многоязычная поддержка"
+msgstr ""
 
 #: home/templates/home/pricing.html:884
 msgid "Africa"
-msgstr "Африка"
+msgstr ""
 
 #: home/templates/home/pricing.html:888
 msgid "POPIA compliance"
-msgstr "Соответствие POPIA"
+msgstr ""
 
 #: home/templates/home/pricing.html:889
 msgid "Mobile money integration"
-msgstr "Интеграция с мобильными деньгами"
+msgstr ""
 
 #: home/templates/home/pricing.html:890
 msgid "Local payroll expertise"
-msgstr "Местная экспертиза в расчете зарплаты"
+msgstr ""
 
 #: home/templates/home/pricing.html:895
 msgid "Middle East"
-msgstr "Ближний Восток"
+msgstr ""
 
 #: home/templates/home/pricing.html:899
 msgid "WPS compliance"
-msgstr "Соответствие WPS"
+msgstr ""
 
 #: home/templates/home/pricing.html:900
 msgid "Multi-currency support"
-msgstr "Поддержка нескольких валют"
+msgstr ""
 
 #: home/templates/home/pricing.html:901
 msgid "Local labor law expertise"
-msgstr "Экспертиза в местном трудовом праве"
+msgstr ""
 
 #: home/templates/home/pricing.html:907
 msgid ""
 "* Rates are indicative. Final pricing depends on employee count and specific "
 "requirements."
 msgstr ""
-"* Ставки являются ориентировочными. Окончательная цена зависит от количества "
-"сотрудников и конкретных требований."
 
 #: home/templates/home/pricing.html:915
 msgid "Get Your Custom Quote"
-msgstr "Получите индивидуальное предложение"
+msgstr ""
 
 #: home/templates/home/pricing.html:917
-#, fuzzy
-#| msgid ""
-#| "\n"
-#| "                    Because global expansion looks different for every "
-#| "company, we don't use a \"one size fits all\" price tag. To give you the "
-#| "most accurate and competitive rate, we need to understand your specific "
-#| "needs.\n"
-#| "                    "
 msgid ""
 "Because global expansion looks different for every company, we don't use a "
 "\"one size fits all\" price tag. To give you the most accurate and "
 "competitive rate, we need to understand your specific needs."
 msgstr ""
-"\n"
-"                    Поскольку глобальное расширение выглядит по-разному для "
-"каждой компании, мы не используем ценник «один размер подходит всем». Чтобы "
-"предложить вам наиболее точную и конкурентоспособную ставку, нам нужно "
-"понять ваши конкретные потребности.\n"
-"                    "
 
 #: home/templates/home/pricing.html:921
 msgid "Ready to see your numbers?"
-msgstr "Готовы увидеть свои цифры?"
+msgstr ""
 
 #: home/templates/home/security.html:745
 msgid "Security designed for global trust"
-msgstr "Безопасность, разработанная для глобального доверия"
+msgstr ""
 
 #: home/templates/home/security.html:747
 msgid ""
@@ -1850,288 +1588,241 @@ msgid ""
 "and personal records. ExactusPay protects it with enterprise-grade security "
 "engineered for cross-border operations across LATAM, Africa, and Asia."
 msgstr ""
-"Расчет зарплаты содержит ваши самые конфиденциальные данные — банковские "
-"реквизиты, государственные идентификаторы и личные записи. ExactusPay "
-"защищает их с помощью корпоративной безопасности, разработанной для "
-"трансграничных операций в Латинской Америке, Африке и Азии."
 
 #: home/templates/home/security.html:752
-#, fuzzy
-#| msgid "Security culture"
 msgid "Security highlights"
-msgstr "Культура безопасности"
+msgstr ""
 
 #: home/templates/home/security.html:753
 msgid "AES-256 encryption"
-msgstr "Шифрование AES-256"
+msgstr ""
 
 #: home/templates/home/security.html:754 home/templates/home/security.html:779
 msgid "Zero-trust access"
-msgstr "Доступ с нулевым доверием"
+msgstr ""
 
 #: home/templates/home/security.html:755
 msgid "Resilient backups"
-msgstr "Отказоустойчивое резервное копирование"
+msgstr ""
 
 #: home/templates/home/security.html:765
 msgid "Defense in Depth"
-msgstr "Эшелонированная защита"
+msgstr ""
 
 #: home/templates/home/security.html:766
 msgid "Multi-layered protection at every stage"
-msgstr "Многоуровневая защита на каждом этапе"
+msgstr ""
 
 #: home/templates/home/security.html:767
 msgid ""
 "We use overlapping controls so your payroll data stays protected in transit, "
 "at rest, and during access."
 msgstr ""
-"Мы используем перекрывающиеся средства контроля, чтобы ваши данные о "
-"зарплате оставались защищенными при передаче, хранении и доступе."
 
 #: home/templates/home/security.html:773
 msgid "Advanced encryption"
-msgstr "Передовое шифрование"
+msgstr ""
 
 #: home/templates/home/security.html:774
 msgid ""
 "AES-256 encryption protects sensitive data at rest and in transit, keeping "
 "it unreadable if intercepted."
 msgstr ""
-"Шифрование AES-256 защищает конфиденциальные данные при хранении и передаче, "
-"делая их нечитаемыми в случае перехвата."
 
 #: home/templates/home/security.html:780
 msgid ""
 "RBAC and MFA restrict access to only what each user needs — minimizing "
 "internal and accidental exposure risk."
 msgstr ""
-"RBAC и MFA ограничивают доступ только тем, что нужно каждому пользователю — "
-"минимизируя риск внутреннего и случайного раскрытия."
 
 #: home/templates/home/security.html:785
 msgid "Secure cloud infrastructure"
-msgstr "Безопасная облачная инфраструктура"
+msgstr ""
 
 #: home/templates/home/security.html:786
 msgid ""
 "Hosted on mature cloud environments with real-time backups, mirrored "
 "regions, and resilient disaster recovery."
 msgstr ""
-"Размещено в зрелых облачных средах с резервным копированием в реальном "
-"времени, зеркалированием регионов и отказоустойчивым аварийным "
-"восстановлением."
 
 #: home/templates/home/security.html:795
 msgid "Access & Governance"
-msgstr "Доступ и управление"
+msgstr ""
 
 #: home/templates/home/security.html:796
 msgid "Built to reduce risk and prevent mistakes"
-msgstr "Создано для снижения рисков и предотвращения ошибок"
+msgstr ""
 
 #: home/templates/home/security.html:797
 msgid ""
 "Strong authentication, tight permissions, and full traceability help you "
 "maintain control at scale."
 msgstr ""
-"Надежная аутентификация, строгие разрешения и полная отслеживаемость "
-"помогают вам сохранять контроль в масштабе."
 
 #: home/templates/home/security.html:804
 msgid "Role-based access control (RBAC)"
-msgstr "Управление доступом на основе ролей (RBAC)"
+msgstr ""
 
 #: home/templates/home/security.html:805
 msgid ""
 "Granular permissions ensure teams only see and change what they’re "
 "authorised to manage — by country, company, and function."
 msgstr ""
-"Детальные разрешения гарантируют, что команды видят и изменяют только то, "
-"что им разрешено — по стране, компании и функции."
 
 #: home/templates/home/security.html:812
 msgid "Multi-factor authentication (MFA)"
-msgstr "Многофакторная аутентификация (MFA)"
+msgstr ""
 
 #: home/templates/home/security.html:813
 msgid ""
 "Reduce account takeover risk with MFA options across user roles and "
 "operational workflows."
 msgstr ""
-"Снизьте риск захвата учетных записей с помощью опций MFA для всех "
-"пользовательских ролей и операционных рабочих процессов."
 
 #: home/templates/home/security.html:820
 msgid "Audit trails & traceability"
-msgstr "Аудиторские следы и отслеживаемость"
+msgstr ""
 
 #: home/templates/home/security.html:821
 msgid ""
 "Track changes, approvals, and calculation evidence to support reviews, "
 "audits, and compliance obligations."
 msgstr ""
-"Отслеживайте изменения, утверждения и подтверждения расчетов для поддержки "
-"проверок, аудитов и обязательств по соблюдению требований."
 
 #: home/templates/home/security.html:828
 msgid "Proactive monitoring"
-msgstr "Проактивный мониторинг"
+msgstr ""
 
 #: home/templates/home/security.html:829
 msgid ""
 "Operational monitoring and security checks help detect anomalies early and "
 "reduce time-to-response."
 msgstr ""
-"Операционный мониторинг и проверки безопасности помогают обнаруживать "
-"аномалии на ранней стадии и сокращать время реакции."
 
 #: home/templates/home/security.html:839
 msgid "Compliance & Sovereignty"
-msgstr "Соответствие требованиям и суверенитет"
+msgstr ""
 
 #: home/templates/home/security.html:840
 msgid "Aligned to international standards"
-msgstr "Соответствие международным стандартам"
+msgstr ""
 
 #: home/templates/home/security.html:841
 msgid ""
 "Security isn’t static. We design for evolving regulations and enforce "
 "privacy-by-design across the platform."
 msgstr ""
-"Безопасность не статична. Мы проектируем с учетом меняющихся нормативных "
-"требований и обеспечиваем конфиденциальность по дизайну на всей платформе."
 
 #: home/templates/home/security.html:846
 msgid "Standards"
-msgstr "Стандарты"
+msgstr ""
 
 #: home/templates/home/security.html:847
 msgid "GDPR & regional privacy alignment"
-msgstr "Соответствие GDPR и региональным законам о конфиденциальности"
+msgstr ""
 
 #: home/templates/home/security.html:848
 msgid ""
 "Security controls are designed to align with GDPR and regional laws such as "
 "LGPD (Brazil) and POPIA (South Africa)."
 msgstr ""
-"Средства контроля безопасности разработаны для соответствия GDPR и "
-"региональным законам, таким как LGPD (Бразилия) и POPIA (Южная Африка)."
 
 #: home/templates/home/security.html:852
 msgid "Assurance"
-msgstr "Гарантия"
+msgstr ""
 
 #: home/templates/home/security.html:853
 msgid "Audits & penetration testing"
-msgstr "Аудиты и тестирование на проникновение"
+msgstr ""
 
 #: home/templates/home/security.html:854
 msgid ""
 "Regular internal and external reviews help identify weaknesses early and "
 "keep protections current."
 msgstr ""
-"Регулярные внутренние и внешние проверки помогают выявлять слабые места на "
-"ранней стадии и поддерживать актуальность защиты."
 
 #: home/templates/home/security.html:858
 msgid "Privacy by design"
-msgstr "Конфиденциальность по дизайну"
+msgstr ""
 
 #: home/templates/home/security.html:859
 msgid "Data minimisation"
-msgstr "Минимизация данных"
+msgstr ""
 
 #: home/templates/home/security.html:860
 msgid ""
 "We collect only what’s required for payroll and statutory obligations, and "
 "we securely dispose of data when no longer needed."
 msgstr ""
-"Мы собираем только то, что требуется для расчета зарплаты и выполнения "
-"обязательных требований, и безопасно удаляем данные, когда они больше не "
-"нужны."
 
 #: home/templates/home/security.html:869
 msgid "Human-Centered Security"
-msgstr "Безопасность, ориентированная на человека"
+msgstr ""
 
 #: home/templates/home/security.html:870
 msgid "Technology + people, working together"
-msgstr "Технологии + люди, работающие вместе"
+msgstr ""
 
 #: home/templates/home/security.html:871
 msgid ""
 "Security is strongest when systems and teams reinforce each other — with "
 "training, support, and good hygiene."
 msgstr ""
-"Безопасность наиболее сильна, когда системы и команды подкрепляют друг друга "
-"— с помощью обучения, поддержки и соблюдения гигиены."
 
 #: home/templates/home/security.html:877
 msgid "A support team trained for vigilance"
-msgstr "Команда поддержки, обученная бдительности"
+msgstr ""
 
 #: home/templates/home/security.html:879
 msgid ""
 "Our specialists follow current cybersecurity best practices and help you "
 "maintain safe operational habits across your payroll workflows."
 msgstr ""
-"Наши специалисты следуют современным лучшим практикам кибербезопасности и "
-"помогают вам поддерживать безопасные операционные привычки в ваших рабочих "
-"процессах расчета зарплаты."
 
 #: home/templates/home/security.html:883
 msgid "Guidance to recognise phishing and social engineering attempts."
-msgstr "Руководство по распознаванию попыток фишинга и социальной инженерии."
+msgstr ""
 
 #: home/templates/home/security.html:884
 msgid "Credential hygiene best practices for admins and payroll operators."
 msgstr ""
-"Лучшие практики гигиены учетных данных для администраторов и операторов "
-"расчета зарплаты."
 
 #: home/templates/home/security.html:885
 msgid ""
 "Secure onboarding and access setup aligned to your organisational structure."
 msgstr ""
-"Безопасный онбординг и настройка доступа, соответствующие вашей "
-"организационной структуре."
 
 #: home/templates/home/security.html:891
 msgid "Credential controls"
-msgstr "Контроль учетных данных"
+msgstr ""
 
 #: home/templates/home/security.html:892
 msgid ""
 "MFA, strong password policies, and least-privilege access baked into daily "
 "operations."
 msgstr ""
-"MFA, строгие политики паролей и доступ с минимальными привилегиями, "
-"встроенные в повседневные операции."
 
 #: home/templates/home/security.html:895
 msgid "Operational safeguards"
-msgstr "Операционные гарантии"
+msgstr ""
 
 #: home/templates/home/security.html:896
 msgid ""
 "Approval workflows and traceability to reduce errors and prevent "
 "unauthorised changes."
 msgstr ""
-"Рабочие процессы утверждения и отслеживаемость для сокращения ошибок и "
-"предотвращения несанкционированных изменений."
 
 #: home/templates/home/security.html:899
 msgid "Security culture"
-msgstr "Культура безопасности"
+msgstr ""
 
 #: home/templates/home/security.html:900
 msgid "Shared responsibility—your team + our platform + our experts."
-msgstr "Общая ответственность — ваша команда + наша платформа + наши эксперты."
+msgstr ""
 
 #: home/templates/home/security.html:911
 msgid "Want a deeper security walkthrough?"
-msgstr "Хотите более глубокого знакомства с безопасностью?"
+msgstr ""
 
 #: home/templates/home/security.html:913
 msgid ""
@@ -2139,23 +1830,7 @@ msgid ""
 "model — and we’ll map the right security posture for your cross-border "
 "payroll operations."
 msgstr ""
-"Поговорите с нашей командой о вашем присутствии, потребностях в месте "
-"хранения данных и модели доступа — и мы определим правильную позицию "
-"безопасности для ваших трансграничных операций по расчету зарплаты."
 
 #: home/templates/home/security.html:919
 msgid "Request a Demo"
-msgstr "Запросить демонстрацию"
-
-#~ msgid "What happens next?"
-#~ msgstr "Что будет дальше?"
-
-#~ msgid ""
-#~ "Submit the form and instantly choose a time — no waiting for back-and-"
-#~ "forth emails."
-#~ msgstr ""
-#~ "Отправьте форму и мгновенно выберите время — без ожидания переписки по "
-#~ "электронной почте."
-
-#~ msgid "©  ExactusPay. All rights reserved."
-#~ msgstr "© ExactusPay. Все права защищены."
+msgstr ""
