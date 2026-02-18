@@ -183,20 +183,43 @@
 
       /* Language switcher */
       .lang-form{display:flex;align-items:center;}
-      .lang-pill{
-        display:inline-flex;align-items:center;gap:10px;
-        padding:10px 12px;border-radius:999px;
-        background:rgba(255,255,255,.08);
-        border:1px solid rgba(255,255,255,.16);
-        backdrop-filter:blur(10px);
-        box-shadow:0 10px 24px rgba(0,0,0,.16);
+      /* Update these two classes in your <style> block */
+
+      .lang-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        /* Reduced padding (was 10px 12px) */
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, .08);
+        border: 1px solid rgba(255, 255, 255, .16);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, .16);
       }
-      .lang-select{
-        appearance:none;-webkit-appearance:none;-moz-appearance:none;
-        background:transparent;border:none;
-        color:rgba(255,255,255,.92);
-        font-weight:900;font-size:1.2rem;line-height:1;
-        padding:0 26px 0 2px;outline:none;cursor:pointer;
+
+      .lang-select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background: transparent;
+        border: none;
+        color: rgba(255, 255, 255, .92);
+        /* Reduced font size (was 1.2rem) and weight */
+        font-weight: 600;
+        font-size: 0.9rem;
+        line-height: 1;
+        padding: 0 24px 0 2px;
+        outline: none;
+        cursor: pointer;
+      }
+
+      /* Optional: Adjust the arrow size to match */
+      .lang-caret {
+        margin-left: -18px;
+        pointer-events: none;
+        color: rgba(255, 255, 255, .75);
+        font-size: 0.75rem; /* Slightly smaller */
       }
       .lang-select option{color:#0f172a;font-size:1rem;}
       .lang-caret{margin-left:-20px;pointer-events:none;color:rgba(255,255,255,.75);font-size:.85rem;}
@@ -499,6 +522,7 @@
               <span class="lang-caret" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
             </div>
           </form>
+
         </div>
       </div>
     </header>
