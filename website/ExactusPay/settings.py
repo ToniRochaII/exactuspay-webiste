@@ -138,7 +138,7 @@ LANGUAGES = [
     ("de", "Deutsch"),
     ("pl", "Polski"),
     ("it", "Italiano"),
-    ("in", "Indonesian"),
+    ("id", "Indonesian"),
     ("th", "ไทย"),
     ("sw", "Swahili"),
     ("ha", "Hausa"),
