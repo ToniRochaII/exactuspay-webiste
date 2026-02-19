@@ -20,12 +20,9 @@ msgstr ""
 #: home/templates/home/demo.html:19 home/templates/home/features.html:21
 #: home/templates/home/platform.html:20 home/templates/home/pricing.html:21
 #: home/templates/home/security.html:20
-msgid ""
-"Global Payroll Software | Multi-Country Payroll & Compliance Platform | "
+msgid "Global Payroll Software | Multi-Country Payroll & Compliance Platform | "
 "ExactusPay"
-msgstr ""
-"Software de Folha de Pagamento Global | Plataforma de Folha Multipaís e "
-"Conformidade | ExactusPay"
+msgstr "Software de Folha de Pagamento Global | Plataforma de Folha Multipaís e Conformidade | ExactusPay"
 
 #: home/templates/home/demo.html:526 home/templates/home/features.html:596
 #: home/templates/home/features.html:646 home/templates/home/index.html:1068
