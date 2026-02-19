@@ -8,22 +8,22 @@ import logging
 logger = logging.getLogger(__name__)
 
 def home_view(request):
-    return render(request, 'index.html')
+    return render(request, 'home/index.html')
 
 def features_view(request):
-    return render(request, 'features.html')
+    return render(request, 'home/features.html')
 
 def platform_view(request):
-    return render(request, 'platform.html')
+    return render(request, 'home/platform.html')
 
 def security_view(request):
-    return render(request, 'security.html')
+    return render(request, 'home/security.html')
 
 def pricing_view(request):
-    return render(request, 'pricing.html')
+    return render(request, 'home/pricing.html')
 
 def demo_view(request):
-    return render(request, 'demo.html')
+    return render(request, 'home/demo.html')
 
 def demo_request_view(request):
     """Handles the form submission from demo.html and sends the email."""
