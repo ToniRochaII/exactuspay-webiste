@@ -690,23 +690,39 @@
         {% csrf_token %}
         <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
         <div class="lang-pill" title="{% trans 'Language' %}">
-          <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="this.form.submit()">
-            {% for lang in languages %}
-              {% if lang.code == "pt" %}
-                <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷 Português</option>
-              {% elif lang.code == "en" %}
-                <option value="en" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇬🇧 English</option>
-              {% elif lang.code == "es" %}
-                <option value="es" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇪🇸 Español</option>
-              {% elif lang.code == "ru" %}
-                <option value="ru" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇷🇺 Русский</option>
-              {% elif lang.code == "ar" %}
-                <option value="ar" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇸🇦 العربية</option>
-              {% else %}
-                <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>{{ lang.code|upper }}</option>
-              {% endif %}
-            {% endfor %}
-          </select>
+                <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="this.form.submit()">
+                  {% for lang in languages %}
+                    {% if lang.code == "pt" %}
+                      <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷 Português</option>
+                    {% elif lang.code == "en" %}
+                      <option value="en" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇬🇧 English</option>
+                    {% elif lang.code == "es" %}
+                      <option value="es" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇪🇸 Español</option>
+                    {% elif lang.code == "ru" %}
+                      <option value="ru" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇷🇺 Русский</option>
+                    {% elif lang.code == "ar" %}
+                      <option value="ar" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇸🇦 العربية</option>
+                    {% elif lang.code == "fr" %}
+                      <option value="fr" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇫🇷 Français</option>
+                    {% elif lang.code == "de" %}
+                      <option value="de" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>�🇪 Deutsch</option>
+                    {% elif lang.code == "pl" %}
+                      <option value="pl" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇵🇱 Polski</option>
+                    {% elif lang.code == "it" %}
+                      <option value="it" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇹 Italiano</option>
+                    {% elif lang.code == "in" %}
+                      <option value="in" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇩 Indonesian</option>
+                    {% elif lang.code == "th" %}
+                      <option value="th" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇭 ไทย</option>
+                    {% elif lang.code == "sw" %}
+                      <option value="sw" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇿 Swahili</option>
+                    {% elif lang.code == "ha" %}
+                      <option value="ha" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇳🇬 Hausa</option>
+                    {% else %}
+                      <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>{{ lang.code|upper }}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
           <span class="lang-caret" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
         </div>
       </form>
@@ -735,23 +751,39 @@
         {% csrf_token %}
         <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
         <div class="lang-pill" title="{% trans 'Language' %}">
-          <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="this.form.submit()">
-            {% for lang in languages %}
-              {% if lang.code == "pt" %}
-                <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷 Português</option>
-              {% elif lang.code == "en" %}
-                <option value="en" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇬🇧 English</option>
-              {% elif lang.code == "es" %}
-                <option value="es" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇪🇸 Español</option>
-              {% elif lang.code == "ru" %}
-                <option value="ru" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇷🇺 Русский</option>
-              {% elif lang.code == "ar" %}
-                <option value="ar" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇸🇦 العربية</option>
-              {% else %}
-                <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>{{ lang.code|upper }}</option>
-              {% endif %}
-            {% endfor %}
-          </select>
+                <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="this.form.submit()">
+                  {% for lang in languages %}
+                    {% if lang.code == "pt" %}
+                      <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷 Português</option>
+                    {% elif lang.code == "en" %}
+                      <option value="en" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇬🇧 English</option>
+                    {% elif lang.code == "es" %}
+                      <option value="es" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇪🇸 Español</option>
+                    {% elif lang.code == "ru" %}
+                      <option value="ru" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇷🇺 Русский</option>
+                    {% elif lang.code == "ar" %}
+                      <option value="ar" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇸🇦 العربية</option>
+                    {% elif lang.code == "fr" %}
+                      <option value="fr" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇫🇷 Français</option>
+                    {% elif lang.code == "de" %}
+                      <option value="de" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>�🇪 Deutsch</option>
+                    {% elif lang.code == "pl" %}
+                      <option value="pl" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇵🇱 Polski</option>
+                    {% elif lang.code == "it" %}
+                      <option value="it" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇹 Italiano</option>
+                    {% elif lang.code == "in" %}
+                      <option value="in" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇩 Indonesian</option>
+                    {% elif lang.code == "th" %}
+                      <option value="th" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇭 ไทย</option>
+                    {% elif lang.code == "sw" %}
+                      <option value="sw" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇿 Swahili</option>
+                    {% elif lang.code == "ha" %}
+                      <option value="ha" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇳🇬 Hausa</option>
+                    {% else %}
+                      <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>{{ lang.code|upper }}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
           <span class="lang-caret" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
         </div>
       </form>
