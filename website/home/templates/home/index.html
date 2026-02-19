@@ -661,11 +661,11 @@
     <nav id="mobileNav" class="mobile-nav" aria-label="{% trans 'Mobile navigation' %}">
       <div class="container">
         <ul class="mobile-links">
-          <li><a href="#main">{% trans "Home" %}</a></li>
-          <li><a href="#features">{% trans "Features" %}</a></li>
-          <li><a href="#platform">{% trans "Platform" %}</a></li>
-          <li><a href="#security">{% trans "Security" %}</a></li>
-          <li><a href="#pricing">{% trans "Pricing" %}</a></li>
+          <li><a href="{% url 'home:home' %}">{% trans "Home" %}</a></li>
+          <li><a href="{% url 'home:features' %}">{% trans "Features" %}</a></li>
+          <li><a href="{% url 'home:platform' %}">{% trans "Platform" %}</a></li>
+          <li><a href="{% url 'home:security' %}">{% trans "Security" %}</a></li>
+          <li><a href="{% url 'home:pricing' %}">{% trans "Pricing" %}</a></li>
         </ul>
 
         <div class="mobile-actions">
