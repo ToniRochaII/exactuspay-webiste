@@ -566,8 +566,6 @@
                       <option value="th" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇭 ไทย</option>
                     {% elif lang.code == "sw" %}
                       <option value="sw" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇿 Swahili</option>
-                    {% elif lang.code == "ha" %}
-                      <option value="ha" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇳🇬 Hausa</option>
                     {% else %}
                       <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>{{ lang.code|upper }}</option>
                     {% endif %}
