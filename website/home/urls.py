@@ -11,5 +11,5 @@ urlpatterns = [
     path("pricing/", views.pricing, name="pricing"),
     path("resources/", views.resources, name="resources"),
     path("demo/", views.demo_page, name="demo"),
-    path("demo/request/", views.demo_request, name="demo_request"),
+    path("demo-request/", views.demo_request_view, name="demo_request"),
 ]
