@@ -134,6 +134,17 @@ LANGUAGES = [
     ("es", "Español"),
     ("ru", "Русский"),
     ("ar", "العربية"),
+    ("fr", "Français"),
+    ("de", "Deutsch"),
+    ("pl", "Polski"),
+    ("it", "Italiano"),
+    ("in", "Indonesian"),
+    ("th", "ไทย"),
+    ("sw", "Swahili"),
+    ("ha", "Hausa"),
+
+
+
 ]
 
 LOCALE_PATHS = [BASE_DIR / "locale"]
