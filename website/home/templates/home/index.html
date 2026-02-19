@@ -30,7 +30,6 @@ as languages %}
 
     <link rel="canonical" href="https://www.exactuspay.com/" />
 
-    <!-- hreflang -->
     <link rel="alternate" hreflang="en" href="https://www.exactuspay.com/" />
     <link rel="alternate" hreflang="pt" href="https://www.exactuspay.com/pt/" />
     <link rel="alternate" hreflang="es" href="https://www.exactuspay.com/es/" />
@@ -40,7 +39,6 @@ as languages %}
       href="https://www.exactuspay.com/"
     />
 
-    <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta
       property="og:title"
@@ -57,7 +55,6 @@ as languages %}
     />
     <meta property="og:site_name" content="ExactusPay" />
 
-    <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="ExactusPay | Global Payroll Software" />
     <meta
@@ -73,7 +70,6 @@ as languages %}
     <meta name="apple-mobile-web-app-title" content="ExactusPay" />
     <meta name="theme-color" content="#1f4b7a" />
 
-    <!-- Performance -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -86,7 +82,6 @@ as languages %}
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
 
-    <!-- Google tag -->
     <script
       async
       src="https://www.googletagmanager.com/gtag/js?id=G-XTL69YL5WC"
@@ -1040,7 +1035,6 @@ as languages %}
   <body>
     <a class="skip-link" href="#main">{% trans "Skip to content" %}</a>
 
-    <!-- HEADER -->
     <header>
       <div class="container nav-container">
         <a href="{% url 'home:home' %}" class="logo" style="text-decoration: none">
@@ -1056,7 +1050,6 @@ as languages %}
         </ul>
 
         <div class="nav-actions">
-          <!-- Mobile menu button -->
           <button
             class="menu-btn"
             type="button"
@@ -1067,33 +1060,44 @@ as languages %}
             <i class="fas fa-bars"></i>
           </button>
 
-          <!-- Desktop actions -->
           <a href="https://payroll.exactuspay.com/login" class="btn btn-secondary">{% trans "Log In" %}</a>
           <a href="{% url 'home:demo' %}" class="btn btn-primary">{% trans "Request Demo" %}</a>
 
-          <!-- Desktop language -->
           <form class="lang-form" action="{% url 'set_language' %}" method="post">
             {% csrf_token %}
             <input type="hidden" name="next" value="{{ request.get_full_path }}" />
             <div class="lang-pill" title="{% trans 'Language' %}">
               <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="this.form.submit()">
                 {% for lang in languages %}
-                  <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>
-                    {% if lang.code == "pt" %}🇧🇷 Português
-                    {% elif lang.code == "en" %}🇬🇧 English
-                    {% elif lang.code == "es" %}🇪🇸 Español
-                    {% elif lang.code == "ru" %}🇷🇺 Русский
-                    {% elif lang.code == "ar" %}🇸🇦 العربية
-                    {% elif lang.code == "fr" %}🇫🇷 Français
-                    {% elif lang.code == "de" %}🇩🇪 Deutsch
-                    {% elif lang.code == "pl" %}🇵🇱 Polski
-                    {% elif lang.code == "it" %}🇮🇹 Italiano
-                    {% elif lang.code == "id" %}🇮🇩 Indonesian
-                    {% elif lang.code == "th" %}🇹🇭 ไทย
-                    {% elif lang.code == "sw" %}🇹🇿 Swahili
-                    {% else %}{{ lang.name_local }}
-                    {% endif %}
-                  </option>
+                  {% if lang.code == "pt" %}
+                    <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷 Português</option>
+                  {% elif lang.code == "en" %}
+                    <option value="en" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇬🇧 English</option>
+                  {% elif lang.code == "es" %}
+                    <option value="es" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇪🇸 Español</option>
+                  {% elif lang.code == "ru" %}
+                    <option value="ru" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇷🇺 Русский</option>
+                  {% elif lang.code == "ar" %}
+                    <option value="ar" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇸🇦 العربية</option>
+                  {% elif lang.code == "fr" %}
+                    <option value="fr" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇫🇷 Français</option>
+                  {% elif lang.code == "de" %}
+                    <option value="de" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇩🇪 Deutsch</option>
+                  {% elif lang.code == "pl" %}
+                    <option value="pl" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇵🇱 Polski</option>
+                  {% elif lang.code == "it" %}
+                    <option value="it" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇹 Italiano</option>
+                  {% elif lang.code == "id" %}
+                    <option value="id" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇩 Indonesian</option>
+                  {% elif lang.code == "th" %}
+                    <option value="th" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇭 ไทย</option>
+                  {% elif lang.code == "sw" %}
+                    <option value="sw" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇿 Swahili</option>
+                  {% elif lang.code == "ha" %}
+                    <option value="ha" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇳🇬 Hausa</option>
+                  {% else %}
+                    <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>{{ lang.code|upper }}</option>
+                  {% endif %}
                 {% endfor %}
               </select>
               <span class="lang-caret" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
@@ -1103,7 +1107,6 @@ as languages %}
       </div>
     </header>
 
-    <!-- Mobile drawer -->
     <nav id="mobileNav" class="mobile-nav" aria-label="{% trans 'Mobile navigation' %}">
       <div class="container">
         <ul class="mobile-links">
@@ -1126,22 +1129,35 @@ as languages %}
             <div class="lang-pill" title="{% trans 'Language' %}">
               <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="this.form.submit()">
                 {% for lang in languages %}
-                  <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>
-                    {% if lang.code == "pt" %}🇧🇷 Português
-                    {% elif lang.code == "en" %}🇬🇧 English
-                    {% elif lang.code == "es" %}🇪🇸 Español
-                    {% elif lang.code == "ru" %}🇷🇺 Русский
-                    {% elif lang.code == "ar" %}🇸🇦 العربية
-                    {% elif lang.code == "fr" %}🇫🇷 Français
-                    {% elif lang.code == "de" %}🇩🇪 Deutsch
-                    {% elif lang.code == "pl" %}🇵🇱 Polski
-                    {% elif lang.code == "it" %}🇮🇹 Italiano
-                    {% elif lang.code == "id" %}🇮🇩 Indonesian
-                    {% elif lang.code == "th" %}🇹🇭 ไทย
-                    {% elif lang.code == "sw" %}🇹🇿 Swahili
-                    {% else %}{{ lang.name_local }}
-                    {% endif %}
-                  </option>
+                  {% if lang.code == "pt" %}
+                    <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷 Português</option>
+                  {% elif lang.code == "en" %}
+                    <option value="en" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇬🇧 English</option>
+                  {% elif lang.code == "es" %}
+                    <option value="es" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇪🇸 Español</option>
+                  {% elif lang.code == "ru" %}
+                    <option value="ru" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇷🇺 Русский</option>
+                  {% elif lang.code == "ar" %}
+                    <option value="ar" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇸🇦 العربية</option>
+                  {% elif lang.code == "fr" %}
+                    <option value="fr" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇫🇷 Français</option>
+                  {% elif lang.code == "de" %}
+                    <option value="de" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇩🇪 Deutsch</option>
+                  {% elif lang.code == "pl" %}
+                    <option value="pl" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇵🇱 Polski</option>
+                  {% elif lang.code == "it" %}
+                    <option value="it" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇹 Italiano</option>
+                  {% elif lang.code == "id" %}
+                    <option value="id" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇩 Indonesian</option>
+                  {% elif lang.code == "th" %}
+                    <option value="th" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇭 ไทย</option>
+                  {% elif lang.code == "sw" %}
+                    <option value="sw" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇿 Swahili</option>
+                  {% elif lang.code == "ha" %}
+                    <option value="ha" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇳🇬 Hausa</option>
+                  {% else %}
+                    <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>{{ lang.code|upper }}</option>
+                  {% endif %}
                 {% endfor %}
               </select>
               <span class="lang-caret" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
@@ -1152,7 +1168,6 @@ as languages %}
     </nav>
 
     <main id="main">
-      <!-- HERO -->
       <section class="hero">
         <div class="container">
           <div class="hero-content">
@@ -1194,7 +1209,6 @@ as languages %}
         </div>
       </section>
 
-      <!-- FEATURES -->
       <section id="features" class="features">
         <div class="container">
           <div class="section-title">
@@ -1257,7 +1271,6 @@ as languages %}
         </div>
       </section>
 
-      <!-- PLATFORM -->
       <section id="platform" class="platform">
         <div class="container">
           <div class="platform-grid">
@@ -1348,7 +1361,6 @@ as languages %}
         </div>
       </section>
 
-      <!-- SECURITY -->
       <section id="security" class="security">
         <div class="container">
           <div class="section-title">
@@ -1392,7 +1404,6 @@ as languages %}
         </div>
       </section>
 
-      <!-- TESTIMONIALS -->
       <section id="testimonials" class="testimonials">
         <div class="container">
           <div class="section-title">
@@ -1426,7 +1437,6 @@ as languages %}
         </div>
       </section>
 
-      <!-- CTA -->
       <section class="cta">
         <div class="container">
           <div class="cta-content">
@@ -1445,7 +1455,6 @@ as languages %}
       </section>
     </main>
 
-    <!-- FOOTER -->
     <footer>
       <div class="container">
         <div class="footer-grid">

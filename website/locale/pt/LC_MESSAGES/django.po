@@ -698,8 +698,11 @@ msgid "Forecast full employment cost before you hire — including employer taxe
 msgstr "Projete o custo total de emprego antes de contratar — incluindo impostos do empregador, contribuições legais e encargos locais."
 
 #: templates/features.html:115
-msgid "Pre-hire forecasting: model offers with accurate employer-cost breakdowns."
-msgstr "Previsão pré-contratação: modele ofertas com detalhamentos precisos de custos do empregador."
+msgid "Pre-hire forecasting:"
+msgstr "Previsão pré-contratação:"
+
+msgid "model offers with accurate employer-cost breakdowns."
+msgstr "modele ofertas com detalhamentos precisos de custos do empregador."
 
 #: templates/features.html:116
 msgid "Scenario planning: compare markets and hiring strategies side-by-side."
@@ -1493,3 +1496,195 @@ msgstr "Todos os direitos reservados."
 #: templates/footer.html:57
 msgid "GDPR Compliant | SOC 2 Type II Certified | ISO 27001"
 msgstr "Conformidade com GDPR | Certificado SOC 2 Tipo II | ISO 27001"
+
+# ================================
+# FEATURES.HTML
+# ================================
+
+#: templates/features.html:116
+msgid "Scenario planning:"
+msgstr "Planejamento de cenários:"
+
+#: templates/features.html:116
+msgid "compare markets and hiring strategies side-by-side."
+msgstr "compare mercados e estratégias de contratação lado a lado."
+
+#: templates/features.html:117
+msgid "Budget certainty:"
+msgstr "Certeza orçamentária:"
+
+#: templates/features.html:117
+msgid "align HR and Finance with one set of numbers."
+msgstr "alinhe RH e Finanças com um conjunto de números."
+
+#: templates/features.html:124
+msgid "Single dashboard:"
+msgstr "Dashboard único:"
+
+#: templates/features.html:124
+msgid "central visibility across payroll and workforce data."
+msgstr "visibilidade central dos dados de folha e força de trabalho."
+
+#: templates/features.html:125
+msgid "Comparable outputs:"
+msgstr "Resultados comparáveis:"
+
+#: templates/features.html:125
+msgid "consistent data definitions enable clean cross-country analysis."
+msgstr "definições de dados consistentes permitem análises claras entre países."
+
+#: templates/features.html:126
+msgid "Decision clarity:"
+msgstr "Clareza de decisão:"
+
+#: templates/features.html:126
+msgid "executive-grade insights into costs, trends, and exposure."
+msgstr "insights de nível executivo sobre custos, tendências e exposição."
+
+#: templates/features.html:133
+msgid "Legal logic:"
+msgstr "Lógica legal:"
+
+#: templates/features.html:133
+msgid "controls aligned to labour law and statutory requirements."
+msgstr "controles alinhados à legislação trabalhista e requisitos legais."
+
+#: templates/features.html:134
+msgid "Error reduction:"
+msgstr "Redução de erros:"
+
+#: templates/features.html:134
+msgid "automation and guardrails minimise manual mistakes."
+msgstr "automação e barreiras de proteção minimizam erros manuais."
+
+#: templates/features.html:135
+msgid "Audit-ready:"
+msgstr "Pronto para auditoria:"
+
+#: templates/features.html:135
+msgid "traceable calculations and data controls support reviews."
+msgstr "cálculos rastreáveis e controles de dados apoiam revisões."
+
+#: templates/features.html:142
+msgid "HCM connectivity:"
+msgstr "Conectividade HCM:"
+
+#: templates/features.html:142
+msgid "integrate with tools like Workday and BambooHR."
+msgstr "integre-se com ferramentas como Workday e BambooHR."
+
+#: templates/features.html:143
+msgid "Scalable architecture:"
+msgstr "Arquitetura escalável:"
+
+#: templates/features.html:143
+msgid "grow from mid-sized to global without rewiring operations."
+msgstr "cresça de médio porte para global sem reestruturar operações."
+
+#: templates/features.html:144
+msgid "Multi-language & FX:"
+msgstr "Multi-idioma e câmbio:"
+
+#: templates/features.html:144
+msgid "localised employee experience across currencies and regions."
+msgstr "experiência do funcionário localizada em todas as moedas e regiões."
+
+# ================================
+# PLATFORM.HTML
+# ================================
+
+#: templates/platform.html:97
+msgid "Pre-hire modelling:"
+msgstr "Modelagem pré-contratação:"
+
+#: templates/platform.html:97
+msgid "price offers accurately with full employer cost breakdowns."
+msgstr "precifique ofertas com precisão com detalhamentos completos de custos do empregador."
+
+#: templates/platform.html:98
+msgid "Scenario comparisons:"
+msgstr "Comparações de cenários:"
+
+#: templates/platform.html:98
+msgid "assess markets and hiring strategies side-by-side."
+msgstr "avalie mercados e estratégias de contratação lado a lado."
+
+#: templates/platform.html:99
+msgid "Budget confidence:"
+msgstr "Confiança orçamentária:"
+
+#: templates/platform.html:99
+msgid "align Finance, HR, and leadership on one set of numbers."
+msgstr "alinhe Finanças, RH e liderança em um conjunto de números."
+
+#: templates/platform.html:107
+msgid "Regulation-aware rules:"
+msgstr "Regras conscientes de regulamentação:"
+
+#: templates/platform.html:107
+msgid "payroll logic tracks current statutory obligations."
+msgstr "a lógica da folha acompanha as obrigações legais atuais."
+
+#: templates/platform.html:108
+msgid "Reduced risk:"
+msgstr "Risco reduzido:"
+
+#: templates/platform.html:108
+msgid "validations and governance to prevent common errors."
+msgstr "validações e governança para prevenir erros comuns."
+
+#: templates/platform.html:109
+msgid "Evidence trails:"
+msgstr "Rastros de evidências:"
+
+#: templates/platform.html:109
+msgid "traceable calculations and changes support audits."
+msgstr "cálculos e alterações rastreáveis apoiam auditorias."
+
+#: templates/platform.html:117
+msgid "Hire-to-pay pipeline:"
+msgstr "Pipeline da contratação ao pagamento:"
+
+#: templates/platform.html:117
+msgid "structured data exchange from onboarding to payment."
+msgstr "troca estruturada de dados do onboarding ao pagamento."
+
+#: templates/platform.html:118
+msgid "Operational consistency:"
+msgstr "Consistência operacional:"
+
+#: templates/platform.html:118
+msgid "one workflow across multiple countries/providers."
+msgstr "um fluxo de trabalho em vários países/provedores."
+
+#: templates/platform.html:119
+msgid "Lower admin load:"
+msgstr "Menor carga administrativa:"
+
+#: templates/platform.html:119
+msgid "fewer handoffs and less spreadsheet work."
+msgstr "menos transferências e menos trabalho com planilhas."
+
+#: templates/platform.html:127
+msgid "FX handled centrally:"
+msgstr "Câmbio tratado centralmente:"
+
+#: templates/platform.html:127
+msgid "exchange and payout workflows managed reliably."
+msgstr "fluxos de trabalho de câmbio e pagamento gerenciados de forma confiável."
+
+#: templates/platform.html:128
+msgid "Local experience:"
+msgstr "Experiência local:"
+
+#: templates/platform.html:128
+msgid "multi-language portal for documents and payroll history."
+msgstr "portal multi-idioma para documentos e histórico de folha."
+
+#: templates/platform.html:129
+msgid "Consistent standard:"
+msgstr "Padrão consistente:"
+
+#: templates/platform.html:129
+msgid "the same quality UX across every location."
+msgstr "a mesma experiência de usuário de qualidade em todas as localidades."
