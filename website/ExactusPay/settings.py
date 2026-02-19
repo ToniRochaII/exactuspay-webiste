@@ -141,7 +141,6 @@ LANGUAGES = [
     ("id", "Indonesian"),
     ("th", "ไทย"),
     ("sw", "Swahili"),
-    ("ha", "Hausa"),
 
 
 
