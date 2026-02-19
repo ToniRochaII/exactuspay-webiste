@@ -171,24 +171,40 @@
       }
       .nav-links a:hover{color:#fff;}
       .nav-links a:hover::after{width:100%;}
+
+      .nav-right{display:flex;gap:12px;align-items:center;}
       .nav-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
 
       .nav-actions .btn {
-        font-size: 0.9rem;   /* Reduced from 16px to ~14px */
-        padding: 10px 20px;  /* Reduced from 16px 32px */
-        font-weight: 700;    /* Optional: slightly lighter weight */
+        font-size: 0.9rem;
+        padding: 10px 20px;
+        font-weight: 700;
       }
-      .nav-right{display:flex;gap:12px;align-items:center;}
+
+      /* Mobile menu button */
+      .menu-btn {
+        display: none;
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+      .menu-btn:focus-visible {
+        outline: 3px solid rgba(150, 224, 217, 0.9);
+        outline-offset: 3px;
+      }
 
       /* Language switcher */
       .lang-form{display:flex;align-items:center;}
-      /* Update these two classes in your <style> block */
-
       .lang-pill {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        /* Reduced padding (was 10px 12px) */
         padding: 6px 10px;
         border-radius: 999px;
         background: rgba(255, 255, 255, .08);
@@ -196,7 +212,6 @@
         backdrop-filter: blur(10px);
         box-shadow: 0 10px 24px rgba(0, 0, 0, .16);
       }
-
       .lang-select {
         appearance: none;
         -webkit-appearance: none;
@@ -204,7 +219,6 @@
         background: transparent;
         border: none;
         color: rgba(255, 255, 255, .92);
-        /* Reduced font size (was 1.2rem) and weight */
         font-weight: 600;
         font-size: 0.9rem;
         line-height: 1;
@@ -212,16 +226,64 @@
         outline: none;
         cursor: pointer;
       }
-
-      /* Optional: Adjust the arrow size to match */
       .lang-caret {
         margin-left: -18px;
         pointer-events: none;
         color: rgba(255, 255, 255, .75);
-        font-size: 0.75rem; /* Slightly smaller */
+        font-size: 0.75rem;
       }
       .lang-select option{color:#0f172a;font-size:1rem;}
-      .lang-caret{margin-left:-20px;pointer-events:none;color:rgba(255,255,255,.75);font-size:.85rem;}
+
+      /* Mobile drawer */
+      .mobile-nav {
+        display: none;
+        position: fixed;
+        top: 76px;
+        left: 0;
+        width: 100%;
+        background: rgba(0, 8, 20, 0.96);
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        z-index: 999;
+        padding: 16px 0;
+      }
+      .mobile-nav.open {
+        display: block;
+      }
+      .mobile-nav .container {
+        display: grid;
+        gap: 14px;
+      }
+      .mobile-links {
+        list-style: none;
+        display: grid;
+        gap: 10px;
+      }
+      .mobile-links a {
+        display: block;
+        padding: 12px 14px;
+        border-radius: 14px;
+        text-decoration: none;
+        color: rgba(255, 255, 255, 0.92);
+        font-weight: 650;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.05);
+      }
+      .mobile-links a:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+      }
+      .mobile-actions {
+        display: grid;
+        gap: 10px;
+        margin-top: 6px;
+      }
+      .mobile-actions .btn {
+        width: 100%;
+      }
+      .mobile-lang {
+        margin-top: 6px;
+      }
 
       /* Messages Alert */
       .messages-container {
@@ -480,16 +542,21 @@
         .form-fields{grid-template-columns:1fr;}
         .footer-grid{grid-template-columns:repeat(2,1fr);}
       }
+      @media (max-width:860px){
+        .nav-links{display:none;}
+        .menu-btn{display:inline-flex;}
+        .nav-actions{display:none;} /* Hide desktop buttons */
+        form.lang-form{display:none;} /* Hide desktop language selector */
+        header{padding:12px 0;}
+      }
       @media (max-width:768px){
         h1{font-size:2.5rem;}
         h2{font-size:2rem;}
-        .nav-links{display:none;}
         .hero{padding:150px 0 90px;}
         .hero-actions{flex-direction:column;align-items:center;}
         .cards-3{grid-template-columns:1fr;}
         .footer-grid{grid-template-columns:1fr;}
         .btn{width:100%;justify-content:center;}
-        .nav-actions{width:100%;justify-content:flex-end;}
       }
     </style>
   </head>
@@ -505,16 +572,6 @@
       {% endfor %}
     </div>
     {% endif %}
-
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const observer = new IntersectionObserver(
-          (entries) => entries.forEach((e) => e.isIntersecting && e.target.classList.add("visible")),
-          { threshold: 0.1 }
-        );
-        document.querySelectorAll("section").forEach((s) => observer.observe(s));
-      });
-    </script>
 
     <header>
       <div class="container nav-container">
@@ -540,7 +597,7 @@
             {% csrf_token %}
             <input type="hidden" name="next" value="{{ request.get_full_path }}" />
             <div class="lang-pill" title="{% trans 'Language' %}">
-                <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="this.form.submit()">
+                <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="this.form ? this.form.submit() : this.closest('form').submit()">
                   {% for lang in languages %}
                     {% if lang.code == "pt" %}
                       <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷 Português</option>
@@ -566,6 +623,8 @@
                       <option value="th" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇭 ไทย</option>
                     {% elif lang.code == "sw" %}
                       <option value="sw" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇿 Swahili</option>
+                    {% elif lang.code == "ha" %}
+                      <option value="ha" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇳🇬 Hausa</option>
                     {% else %}
                       <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>{{ lang.code|upper }}</option>
                     {% endif %}
@@ -575,10 +634,14 @@
             </div>
           </form>
 
+          <button class="menu-btn" type="button" aria-label="{% trans 'Open menu' %}" aria-expanded="false" aria-controls="mobileNav">
+            <i class="fas fa-bars"></i>
+          </button>
         </div>
       </div>
     </header>
-        <nav id="mobileNav" class="mobile-nav" aria-label="{% trans 'Mobile navigation' %}">
+
+    <nav id="mobileNav" class="mobile-nav" aria-label="{% trans 'Mobile navigation' %}">
       <div class="container">
         <ul class="mobile-links">
           <li><a href="{% url 'home:home' %}">{% trans "Home" %}</a></li>
@@ -598,7 +661,7 @@
             {% csrf_token %}
             <input type="hidden" name="next" value="{{ request.get_full_path }}" />
             <div class="lang-pill" title="{% trans 'Language' %}">
-              <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="this.form.submit()">
+              <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="this.form ? this.form.submit() : this.closest('form').submit()">
                 {% for lang in languages %}
                   {% if lang.code == "pt" %}
                     <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷 Português</option>
@@ -927,6 +990,56 @@
           "url": "https://www.exactuspay.com/contact"
         }
       }
+    </script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Animation logic
+        const observer = new IntersectionObserver(
+          (entries) => entries.forEach((e) => e.isIntersecting && e.target.classList.add("visible")),
+          { threshold: 0.1 }
+        );
+        document.querySelectorAll("section").forEach((s) => observer.observe(s));
+
+        // Mobile menu toggle logic
+        const btn = document.querySelector(".menu-btn");
+        const mobileNav = document.getElementById("mobileNav");
+
+        const closeMobileNav = () => {
+          if (!mobileNav) return;
+          mobileNav.classList.remove("open");
+          if (btn) {
+            btn.setAttribute("aria-expanded", "false");
+            btn.innerHTML = '<i class="fas fa-bars"></i>';
+          }
+        };
+
+        if (btn && mobileNav) {
+          btn.addEventListener("click", () => {
+            const isOpen = mobileNav.classList.toggle("open");
+            btn.setAttribute("aria-expanded", String(isOpen));
+            btn.innerHTML = isOpen
+              ? '<i class="fas fa-times"></i>'
+              : '<i class="fas fa-bars"></i>';
+          });
+
+          document.addEventListener("click", (e) => {
+            if (!mobileNav.classList.contains("open")) return;
+            const target = e.target;
+            const insideNav = mobileNav.contains(target);
+            const insideBtn = btn.contains(target);
+            if (!insideNav && !insideBtn) closeMobileNav();
+          });
+
+          mobileNav
+            .querySelectorAll("a")
+            .forEach((a) => a.addEventListener("click", closeMobileNav));
+
+          document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") closeMobileNav();
+          });
+        }
+      });
     </script>
   </body>
 </html>
