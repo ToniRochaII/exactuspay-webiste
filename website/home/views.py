@@ -1,54 +1,29 @@
-import logging
-
+from django.shortcuts import render, redirect
+from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib import messages
-from django.core.mail import EmailMessage
-from django.shortcuts import redirect, render
-from django.views.decorators.http import require_POST
+from django.utils.translation import gettext as _
+import logging
 
 logger = logging.getLogger(__name__)
 
+def home_view(request):
+    return render(request, 'index.html')
 
-def index(request):
-    return render(request, "home/index.html")
+def features_view(request):
+    return render(request, 'features.html')
 
+def platform_view(request):
+    return render(request, 'platform.html')
 
-def platform(request):
-    return render(request, "home/platform.html")
+def security_view(request):
+    return render(request, 'security.html')
 
+def pricing_view(request):
+    return render(request, 'pricing.html')
 
-def features(request):
-    return render(request, "home/features.html")
-
-
-def security(request):
-    return render(request, "home/security.html")
-
-
-def pricing(request):
-    return render(request, "home/pricing.html")
-
-
-def resources(request):
-    return render(request, "home/resources.html")
-
-
-def demo_page(request):
-    return render(request, "home/demo.html", {"current_year": 2026})
-
-
-
-import logging
-from django.conf import settings
-from django.core.mail import EmailMessage
-from django.http import HttpResponseRedirect
-from django.urls import reverse
-from django.views.decorators.http import require_POST
-from django.contrib import messages
-from django.core.validators import validate_email
-from django.core.exceptions import ValidationError
-
-logger = logging.getLogger(__name__)
+def demo_view(request):
+    return render(request, 'demo.html')
 
 def demo_request_view(request):
     """Handles the form submission from demo.html and sends the email."""
