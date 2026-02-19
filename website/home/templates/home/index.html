@@ -1054,299 +1054,104 @@ as languages %}
     <a class="skip-link" href="#main">{% trans "Skip to content" %}</a>
 
     <!-- HEADER -->
-    <header>
-      <div class="container nav-container">
-        <a
-          href="{% url 'home:home' %}"
-          class="logo"
-          style="text-decoration: none"
-        >
-          <div class="sidebar-brand">ExactusPay</div>
-        </a>
+      <header>
+        <div class="container nav-container">
+          <a href="{% url 'home:home' %}" class="logo" style="text-decoration:none;">
+            <div class="sidebar-brand">ExactusPay</div>
+          </a>
 
-        <ul class="nav-links">
-          <li><a href="{% url 'home:home' %}">{% trans "Home" %}</a></li>
-          <li>
-            <a href="{% url 'home:features' %}">{% trans "Features" %}</a>
-          </li>
-          <li>
-            <a href="{% url 'home:platform' %}">{% trans "Platform" %}</a>
-          </li>
-          <li>
-            <a href="{% url 'home:security' %}">{% trans "Security" %}</a>
-          </li>
-          <li><a href="{% url 'home:pricing' %}">{% trans "Pricing" %}</a></li>
-        </ul>
+          <ul class="nav-links">
+            <li><a href="{% url 'home:home' %}">{% trans "Home" %}</a></li>
+            <li><a href="{% url 'home:features' %}">{% trans "Features" %}</a></li>
+            <li><a href="{% url 'home:platform' %}" style="color:#fff;">{% trans "Platform" %}</a></li>
+            <li><a href="{% url 'home:security' %}">{% trans "Security" %}</a></li>
+            <li><a href="{% url 'home:pricing' %}">{% trans "Pricing" %}</a></li>
+          </ul>
 
-        <div class="nav-actions">
-          <!-- Mobile menu button -->
-          <button
-            class="menu-btn"
-            type="button"
-            aria-label="{% trans 'Open menu' %}"
-            aria-expanded="false"
-            aria-controls="mobileNav"
-          >
-            <i class="fas fa-bars"></i>
-          </button>
+          <div class="nav-actions">
+            <!-- Mobile menu button -->
+            <button class="menu-btn" type="button" aria-label="{% trans 'Open menu' %}" aria-expanded="false" aria-controls="mobileNav">
+              <i class="fas fa-bars"></i>
+            </button>
 
-          <!-- Desktop actions -->
-          <a
-            class="btn btn-secondary"
-            href="https://payroll.exactuspay.com/login"
-            >{% trans "Log In" %}</a
-          >
-          <a class="btn btn-primary" href="{% url 'home:demo' %}"
-            >{% trans "Request Demo" %}</a
-          >
+            <!-- Desktop actions -->
+            <a href="https://payroll.exactuspay.com/login" class="btn btn-secondary">{% trans "Log In" %}</a>
+            <a href="{% url 'home:demo' %}" class="btn btn-primary">{% trans "Request Demo" %}</a>
 
-          <!-- Desktop language -->
-          <form
-            class="lang-form"
-            action="{% url 'set_language' %}"
-            method="post"
-          >
-            {% csrf_token %}
-            <input
-              type="hidden"
-              name="next"
-              value="{{ request.get_full_path }}"
-            />
-            <div class="lang-pill" title="{% trans 'Language' %}">
-              <select
-                class="lang-select"
-                name="language"
-                aria-label="{% trans 'Select language' %}"
-                onchange="this.form.submit()"
-              >
-                {% for lang in languages %} {% if lang.code == "pt" %}
-                <option
-                  value="pt"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇧🇷 Português
-                </option>
-                {% elif lang.code == "en" %}
-                <option
-                  value="en"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇬🇧 English
-                </option>
-                {% elif lang.code == "es" %}
-                <option
-                  value="es"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇪🇸 Español
-                </option>
-                {% elif lang.code == "ru" %}
-                <option
-                  value="ru"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇷🇺 Русский
-                </option>
-                {% elif lang.code == "ar" %}
-                <option
-                  value="ar"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇸🇦 العربية
-                </option>
-                {% else %}
-                <option
-                  value="{{ lang.code }}"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  {{ lang.code|upper }}
-                </option>
-                {% endif %} {% endfor %}
-              </select>
-              <span class="lang-caret" aria-hidden="true"
-                ><i class="fas fa-chevron-down"></i
-              ></span>
-            </div>
-          </form>
+            <!-- Desktop language -->
+            <form class="lang-form" action="{% url 'set_language' %}" method="post">
+              {% csrf_token %}
+              <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
+              <div class="lang-pill" title="{% trans 'Language' %}">
+                <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="this.form.submit()">
+                  {% for lang in languages %}
+                    {% if lang.code == "pt" %}
+                      <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷 Português</option>
+                    {% elif lang.code == "en" %}
+                      <option value="en" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇬🇧 English</option>
+                    {% elif lang.code == "es" %}
+                      <option value="es" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇪🇸 Español</option>
+                    {% elif lang.code == "ru" %}
+                      <option value="ru" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇷🇺 Русский</option>
+                    {% elif lang.code == "ar" %}
+                      <option value="ar" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇸🇦 العربية</option>
+                    {% else %}
+                      <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>{{ lang.code|upper }}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+                <span class="lang-caret" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
+              </div>
+            </form>
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
 
-    <!-- Mobile nav drawer -->
-    <nav
-      id="mobileNav"
-      class="mobile-nav"
-      aria-label="{% trans 'Mobile navigation' %}"
-    >
-      <div class="container">
-        <ul class="mobile-links">
-          <li><a href="{% url 'home:home' %}">{% trans "Home" %}</a></li>
-          <li>
-            <a href="{% url 'home:features' %}">{% trans "Features" %}</a>
-          </li>
-          <li>
-            <a href="{% url 'home:platform' %}">{% trans "Platform" %}</a>
-          </li>
-          <li>
-            <a href="{% url 'home:security' %}">{% trans "Security" %}</a>
-          </li>
-          <li><a href="{% url 'home:pricing' %}">{% trans "Pricing" %}</a></li>
-        </ul>
+      <!-- Mobile drawer -->
+      <nav id="mobileNav" class="mobile-nav" aria-label="{% trans 'Mobile navigation' %}">
+        <div class="container">
+          <ul class="mobile-links">
+            <li><a href="{% url 'home:home' %}">{% trans "Home" %}</a></li>
+            <li><a href="{% url 'home:features' %}">{% trans "Features" %}</a></li>
+            <li><a href="{% url 'home:platform' %}">{% trans "Platform" %}</a></li>
+            <li><a href="{% url 'home:security' %}">{% trans "Security" %}</a></li>
+            <li><a href="{% url 'home:pricing' %}">{% trans "Pricing" %}</a></li>
+          </ul>
 
-        <div class="mobile-actions">
-          <a
-            class="btn btn-secondary"
-            href="https://payroll.exactuspay.com/login"
-            >{% trans "Log In" %}</a
-          >
-          <a class="btn btn-primary" href="{% url 'home:demo' %}"
-            >{% trans "Request Demo" %}</a
-          >
+          <div class="mobile-actions">
+            <a href="https://payroll.exactuspay.com/login" class="btn btn-secondary">{% trans "Log In" %}</a>
+            <a href="{% url 'home:demo' %}" class="btn btn-primary">{% trans "Request Demo" %}</a>
+          </div>
+
+          <div class="mobile-lang">
+            <form class="lang-form" action="{% url 'set_language' %}" method="post">
+              {% csrf_token %}
+              <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
+              <div class="lang-pill" title="{% trans 'Language' %}">
+                <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="this.form.submit()">
+                  {% for lang in languages %}
+                    {% if lang.code == "pt" %}
+                      <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷 Português</option>
+                    {% elif lang.code == "en" %}
+                      <option value="en" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇬🇧 English</option>
+                    {% elif lang.code == "es" %}
+                      <option value="es" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇪🇸 Español</option>
+                    {% elif lang.code == "ru" %}
+                      <option value="ru" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇷🇺 Русский</option>
+                    {% elif lang.code == "ar" %}
+                      <option value="ar" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇸🇦 العربية</option>
+                    {% else %}
+                      <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>{{ lang.code|upper }}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+                <span class="lang-caret" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
+              </div>
+            </form>
+          </div>
         </div>
+      </nav>
 
-        <div class="mobile-lang">
-          <form
-            class="lang-form"
-            action="{% url 'set_language' %}"
-            method="post"
-          >
-            {% csrf_token %}
-            <input
-              type="hidden"
-              name="next"
-              value="{{ request.get_full_path }}"
-            />
-            <div class="lang-pill" title="{% trans 'Language' %}">
-              <select
-                class="lang-select"
-                name="language"
-                aria-label="{% trans 'Select language' %}"
-                onchange="this.form.submit()"
-              >
-                {% for lang in languages %} {% if lang.code == "pt" %}
-                <option
-                  value="pt"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇧🇷 Português
-                </option>
-                {% elif lang.code == "en" %}
-                <option
-                  value="en"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇬🇧 English
-                </option>
-                {% elif lang.code == "es" %}
-                <option
-                  value="es"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇪🇸 Español
-                </option>
-                {% elif lang.code == "ru" %}
-                <option
-                  value="ru"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇷🇺 Русский
-                </option>
-                {% elif lang.code == "ar" %}
-                <option
-                  value="ar"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇸🇦 العربية
-                </option>
-                {% else %}
-                <option
-                  value="{{ lang.code }}"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  {{ lang.code|upper }}
-                </option>
-                {% endif %} {% endfor %}
-              </select>
-              <span class="lang-caret" aria-hidden="true"
-                ><i class="fas fa-chevron-down"></i
-              ></span>
-            </div>
-          </form>
-        </div>
-      </div>
-    </nav>
 
     <main id="main">
       <!-- HERO -->
