@@ -433,8 +433,11 @@
                                 data-bs-parent="#sidebar">
 
                                 <li class="sidebar-item">
-                                    <a class="sidebar-link"
-                                       href="{% url 'compensation:compensation_list' country_slug company.company_id employee.id %}">
+                                        {% if country and company and employee %}
+                                            href="{% url 'compensation:compensation_list' country.slug company.pk employee.pk %}"
+                                        {% else %}
+                                            href="#"
+                                        {% endif %}
                                         <i class="fas fa-list me-2"></i>{% trans "Pay Register" %}
                                     </a>
                                 </li>
