@@ -268,11 +268,18 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 # Hostinger Settings (Port 587 + TLS)
 EMAIL_HOST = 'smtp.hostinger.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True   # StartTLS (Recommended for Cloud Hosting)
-EMAIL_USE_SSL = False
+EMAIL_PORT = 465
+EMAIL_USE_TLS = False   # StartTLS (Recommended for Cloud Hosting)
+EMAIL_USE_SSL = True
 
-EMAIL_HOST_USER = 'no-reply@exactuspay.com'
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "TlBFI=[b2L")
+EMAIL_HOST_USER = "no-reply@exactuspay.com"
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "").strip()
 
-DEFAULT_FROM_EMAIL = 'Exactus Support <no-reply@exactuspay.com>'
+# Falha SEMPRE se faltar password quando usas SMTP real
+if not EMAIL_HOST_PASSWORD:
+    raise RuntimeError("EMAIL_HOST_PASSWORD is missing. Set it in Render env vars.")
+
+DEFAULT_FROM_EMAIL = "no-reply@exactuspay.com"
+DEMO_REQUEST_TO_EMAIL = os.environ.get("DEMO_REQUEST_TO_EMAIL", "antoniorocha@exactuspay.com").strip()
+
+EMAIL_TIMEOUT = 20
