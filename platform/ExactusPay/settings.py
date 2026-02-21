@@ -127,15 +127,21 @@ WSGI_APPLICATION = 'ExactusPay.wsgi.application'
 # ================================
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
-if DATABASE_URL and DATABASE_URL.strip():
+DATABASE_URL = (os.environ.get("DATABASE_URL") or "").strip()
+
+if DATABASE_URL:
     DATABASES = {
-        "default": dj_database_url.config(
-            default=DATABASE_URL,
-            conn_max_age=600,
-            conn_health_checks=True,
-            ssl_require=True,
+        "default": dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=60,   # 60 is a safer baseline than 600 on hosted DBs
         )
     }
+    DATABASES["default"]["CONN_HEALTH_CHECKS"] = True
+
+    # Only force SSL if you explicitly decide to via env var
+    if os.environ.get("REQUIRE_DB_SSL", "0") == "1":
+        DATABASES["default"].setdefault("OPTIONS", {})
+        DATABASES["default"]["OPTIONS"]["sslmode"] = "require"
 else:
     DATABASES = {
         "default": {
@@ -267,6 +273,6 @@ EMAIL_USE_TLS = True   # StartTLS (Recommended for Cloud Hosting)
 EMAIL_USE_SSL = False
 
 EMAIL_HOST_USER = 'no-reply@exactuspay.com'
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "TlBFI=[b2L") 
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "TlBFI=[b2L")
 
 DEFAULT_FROM_EMAIL = 'Exactus Support <no-reply@exactuspay.com>'

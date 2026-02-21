@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 import os
-import os
-print("DEBUG=", os.getenv("DEBUG"))
-print("SECRET_KEY exists? ", bool(os.getenv("SECRET_KEY")))
+import dj_database_url
+
 
 from pathlib import Path
 
