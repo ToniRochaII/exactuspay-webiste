@@ -15,8 +15,11 @@ from django.http import HttpResponse
 from django.views import View
 from django.db import transaction
 from django.contrib.auth import get_user_model
-from django.utils.crypto import get_random_string 
+from django.utils.crypto import get_random_string
 from django.db.models import Q
+
+from Exactus.employee.forms import get_employee_form_for_country, EmployeeUploadForm
+
 
 # Models
 from Exactus.company.models import Company
@@ -25,10 +28,11 @@ from Exactus.country.models import Country
 
 # Forms
 from Exactus.employee.forms import (
-    get_employee_form_for_country, 
-    EmployeeUploadForm, 
+    get_employee_form_for_country,
+    EmployeeUploadForm,
     EmployeeAccessForm,
     CompensationForm,
+    EmployeeAccessForm,
 )
 
 # Utils & Permissions
@@ -58,7 +62,7 @@ def validate_company_access(user, company):
     """
     global_roles = ["EXEC", "ADMIN", "COMPLIANCE"]
     user_role = getattr(user, 'role', '').upper()
-    
+
     # 1. Superusers and Global Roles always pass
     if user.is_superuser or user_role in global_roles:
         return True
@@ -66,7 +70,7 @@ def validate_company_access(user, company):
     # 2. Check for direct assignment
     if user.contexts.filter(company=company).exists():
         return True
-        
+
     return False
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -80,7 +84,7 @@ def employee_list(request, country_slug, company_id):
     List employees for a specific company.
     """
     country = get_object_or_404(Country, slug=country_slug)
-    company = get_object_or_404(Company, pk=company_id) 
+    company = get_object_or_404(Company, pk=company_id)
 
     # Security Check
     if not validate_company_access(request.user, company):
@@ -88,9 +92,9 @@ def employee_list(request, country_slug, company_id):
         return redirect("dashboard")
 
     employees = Employee.objects.filter(company=company).order_by("employee_number")
-    
+
     return render(request, "employee/index.html", {
-        "company": company, 
+        "company": company,
         "employees": employees,
         "country": country,
         "country_slug": country_slug,
@@ -127,14 +131,113 @@ def employee_create(request, country_slug, company_id):
     })
 
 
-from Exactus.compensation.models import CompensationComponent
 
+import logging
+
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordResetForm
+from django.db import transaction
+from django.shortcuts import get_object_or_404, redirect, render
+
+from Exactus.accounts.utils.decorators import role_required
+from Exactus.company.models import Company
+from Exactus.compensation.models import CompensationComponent
+from Exactus.country.models import Country
+from Exactus.employee.models import Employee
+from Exactus.employee.forms import get_employee_form_for_country
+from Exactus.employee.forms.access_form import EmployeeAccessForm
+
+logger = logging.getLogger(__name__)
+
+
+# -------------------------------------------------------------------
+# Access helpers
+# -------------------------------------------------------------------
+def validate_company_access(user, company: Company) -> bool:
+    """
+    Verifica se o user tem acesso à company.
+    - Superuser e roles globais: permitido
+    - Caso contrário: precisa estar ligado via user.contexts (se existir)
+    """
+    global_roles = {"EXEC", "ADMIN", "COMPLIANCE"}
+    user_role = (getattr(user, "role", "") or "").upper()
+
+    if getattr(user, "is_superuser", False) or user_role in global_roles:
+        return True
+
+    # Se o teu projeto usa user.contexts para vínculos:
+    if hasattr(user, "contexts"):
+        try:
+            return user.contexts.filter(company=company).exists()
+        except Exception:
+            pass
+
+    return False
+
+
+# -------------------------------------------------------------------
+# Onboarding helpers
+# -------------------------------------------------------------------
+def _pick_default_employee_role(UserModel):
+    """
+    Escolhe um role default para um colaborador, se o teu User model tiver isso.
+    """
+    candidates = ("EMPLOYEE", "Employee", "CLIENT_EMPLOYEE", "SPECIALIST")
+
+    if hasattr(UserModel, "CLIENT_ROLES"):
+        allowed = set(getattr(UserModel, "CLIENT_ROLES") or [])
+        for c in candidates:
+            if c in allowed:
+                return c
+
+    if hasattr(UserModel, "ROLE_CHOICES"):
+        role_codes = [code for code, _ in getattr(UserModel, "ROLE_CHOICES") or []]
+        for c in candidates:
+            if c in role_codes:
+                return c
+        if role_codes:
+            return role_codes[0]
+
+    return None
+
+
+def _send_welcome_or_setup_email(user, request) -> bool:
+    """
+    Envia um link seguro de definição de password.
+    Fallback: PasswordResetForm (funciona como "set password").
+    """
+    try:
+        # Fallback robusto (sem depender do teu OnboardingService)
+        prf = PasswordResetForm({"email": user.email})
+        if prf.is_valid():
+            prf.save(
+                request=request,
+                use_https=request.is_secure(),
+                from_email=getattr(settings, "DEFAULT_FROM_EMAIL", None),
+            )
+            return True
+    except Exception:
+        logger.exception("Failed to send setup email via PasswordResetForm")
+
+    return False
+
+
+# -------------------------------------------------------------------
+# View
+# -------------------------------------------------------------------
 @login_required
 @role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATIONS", "DIRECTOR", "MANAGER", "SPECIALIST")
 def employee_edit(request, country_slug, company_id, employee_id):
     """
-    Edit an existing employee record and handle User Account creation.
+    Edita um Employee e (opcionalmente) cria a conta do portal para o colaborador.
+    - POST normal: salva employee e, se existir, salva access_form (role/client_group/is_active)
+    - POST com create_user_account=true: salva employee, cria user se não existir, envia email, volta para a página.
     """
+    User = get_user_model()
+
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
 
@@ -143,45 +246,152 @@ def employee_edit(request, country_slug, company_id, employee_id):
         return redirect("dashboard")
 
     employee = get_object_or_404(Employee, pk=employee_id, company=company)
-    linked_user = User.objects.filter(email=employee.email).first() if employee.email else None
-    
-    # FETCH COMPENSATION COMPONENTS
-    # We exclude hidden PD codes as done in your compensation_list view
-    active_components = CompensationComponent.objects.filter(
-        employee=employee,
-        processed=False,
-    ).exclude(
-        pd_code__pdcode_status="Hidden"
-    ).select_related("pd_code", "element")
-
     FormClass = get_employee_form_for_country(country)
 
+    active_components = (
+        CompensationComponent.objects.filter(employee=employee, processed=False)
+        .exclude(pd_code__pdcode_status="Hidden")
+        .select_related("pd_code", "element")
+    )
+
+    linked_user = User.objects.filter(email__iexact=employee.email).first() if employee.email else None
+
     if request.method == "POST":
-        # ... (keep existing 'create_user_account' logic) ...
+        create_account_clicked = request.POST.get("create_user_account") == "true"
 
         form = FormClass(request.POST, instance=employee)
         access_form = EmployeeAccessForm(request.POST, instance=linked_user) if linked_user else None
 
-        if form.is_valid():
-            form.save()
-            if access_form and access_form.is_valid():
-                access_form.save()
-            messages.success(request, "Employee updated successfully.")
-            return redirect("employee:employee", country_slug=country_slug, company_id=company.company_id)
-    else:
-        form = FormClass(instance=employee)
-        access_form = EmployeeAccessForm(instance=linked_user) if linked_user else None
+        if not form.is_valid():
+            messages.error(request, "Please fix the highlighted errors and try again.")
+            return render(
+                request,
+                "employee/form.html",
+                {
+                    "form": form,
+                    "access_form": access_form,
+                    "linked_user": linked_user,
+                    "employee": employee,
+                    "company": company,
+                    "country": country,
+                    "country_slug": country_slug,
+                    "active_components": active_components,
+                },
+            )
 
-    return render(request, "employee/form.html", {
-        "form": form, 
-        "access_form": access_form, 
-        "linked_user": linked_user,
-        "employee": employee, 
-        "company": company, 
-        "country": country, 
-        "country_slug": country_slug,
-        "active_components": active_components, # Pass this to the template
-    })
+        with transaction.atomic():
+            employee = form.save()
+
+            # recalc depois do save (email pode ter sido editado)
+            email = (employee.email or "").strip()
+            linked_user = User.objects.filter(email__iexact=email).first() if email else None
+
+            # 1) criar conta
+            if create_account_clicked:
+                if not email:
+                    messages.error(request, "Employee email is required to create an account.")
+                    return redirect(
+                        "employee:employee_edit",
+                        country_slug=country_slug,
+                        company_id=company.pk,
+                        employee_id=employee.pk,
+                    )
+
+                if linked_user:
+                    messages.info(request, "A user account already exists for this email.")
+                    return redirect(
+                        "employee:employee_edit",
+                        country_slug=country_slug,
+                        company_id=company.pk,
+                        employee_id=employee.pk,
+                    )
+
+                # username seguro + único
+                base = email.split("@")[0][:30]
+                username = base
+                i = 1
+                while User.objects.filter(username=username).exists():
+                    i += 1
+                    username = f"{base[:25]}{i}"
+
+                # criar user (compatível com custom user model)
+                if hasattr(User.objects, "create_user"):
+                    user = User.objects.create_user(username=username, email=email)
+                else:
+                    user = User.objects.create(username=username, email=email)
+
+                if hasattr(user, "is_active"):
+                    user.is_active = True
+                if hasattr(user, "set_unusable_password"):
+                    user.set_unusable_password()
+
+                if hasattr(user, "role") and not getattr(user, "role", None):
+                    default_role = _pick_default_employee_role(User)
+                    if default_role:
+                        user.role = default_role
+
+                user.save()
+
+                sent = _send_welcome_or_setup_email(user, request)
+                if sent:
+                    messages.success(request, f"Account created and email sent to {email}.")
+                else:
+                    messages.warning(request, f"Account created for {email}, but email could not be sent.")
+
+                return redirect(
+                    "employee:employee_edit",
+                    country_slug=country_slug,
+                    company_id=company.pk,
+                    employee_id=employee.pk,
+                )
+
+            # 2) salvar access_form (se existir)
+            if access_form:
+                if access_form.is_valid():
+                    access_form.save()
+                else:
+                    messages.error(request, "Employee saved, but access settings contain errors.")
+                    return render(
+                        request,
+                        "employee/form.html",
+                        {
+                            "form": form,
+                            "access_form": access_form,
+                            "linked_user": linked_user,
+                            "employee": employee,
+                            "company": company,
+                            "country": country,
+                            "country_slug": country_slug,
+                            "active_components": active_components,
+                        },
+                    )
+
+        messages.success(request, "Employee updated successfully.")
+        return redirect("employee:employee", country_slug=country_slug, company_id=company.company_id)
+
+    # GET
+    form = FormClass(instance=employee)
+    linked_user = User.objects.filter(email__iexact=employee.email).first() if employee.email else None
+    access_form = EmployeeAccessForm(instance=linked_user) if linked_user else None
+
+    return render(
+        request,
+        "employee/form.html",
+        {
+            "form": form,
+            "access_form": access_form,
+            "linked_user": linked_user,
+            "employee": employee,
+            "company": company,
+            "country": country,
+            "country_slug": country_slug,
+            "active_components": active_components,
+        },
+    )
+
+
+
+
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -190,7 +400,7 @@ def employee_edit(request, country_slug, company_id, employee_id):
 
 class EmployeeUploadView(View):
     """Handle bulk employee uploads via CSV or Excel."""
-    
+
     @method_decorator(login_required)
     @method_decorator(role_required("EXEC", "ADMIN", "COMPLIANCE", "IMPLEMENTATION", "OPERATIONS", "DIRECTOR", "MANAGER", "SPECIALIST"))
     def dispatch(self, request, *args, **kwargs):
@@ -199,7 +409,7 @@ class EmployeeUploadView(View):
     def get(self, request, country_slug=None, company_id=None):
         country = get_object_or_404(Country, slug=country_slug) if country_slug else None
         company = get_object_or_404(Company, pk=company_id) if company_id else None
-        
+
         # Security Check for GET
         if company and not validate_company_access(request.user, company):
             messages.error(request, "Access Denied.")
@@ -229,10 +439,10 @@ class EmployeeUploadView(View):
         file = request.FILES["file"]
         filename = file.name.lower()
         dry_run = form.cleaned_data.get("dry_run", False)
-        
+
         try:
             data_rows = []
-            
+
             # --- CSV Processing ---
             if filename.endswith('.csv'):
                 file.seek(0)
@@ -266,7 +476,7 @@ class EmployeeUploadView(View):
 
             success_count = 0
             error_log = []
-            
+
             # Cache companies to avoid repeated DB hits if global upload
             company_cache = {c.company_code: c for c in Company.objects.all()}
 
@@ -322,7 +532,7 @@ class EmployeeUploadView(View):
                 "total": len(data_rows),
                 "dry_run": dry_run
             }
-            
+
             if company_id:
                 return redirect("employee:employee_upload_result", country_slug=country_slug, company_id=company_id)
             return redirect("employee:global_upload_result", country_slug=country_slug)
@@ -343,7 +553,7 @@ def employee_upload_result_view(request, country_slug=None, company_id=None):
     if not result:
         messages.warning(request, "No upload results found.")
         return redirect("dashboard")
-        
+
     country = get_object_or_404(Country, slug=country_slug) if country_slug else None
     company = get_object_or_404(Company, pk=company_id) if company_id else None
 
@@ -352,9 +562,9 @@ def employee_upload_result_view(request, country_slug=None, company_id=None):
         return redirect("dashboard")
 
     return render(request, "employee/upload_result.html", {
-        "result": result, 
-        "company": company, 
-        "country": country, 
+        "result": result,
+        "company": company,
+        "country": country,
         "country_slug": country_slug
     })
 
@@ -377,7 +587,7 @@ def download_employees_template(request, country_slug, company_id=None):
     ws.title = "Employee Import"
 
     headers = [
-        'company_code', 'employee_number', 'employee_code', 'employee_name', 
+        'company_code', 'employee_number', 'employee_code', 'employee_name',
         'employee_surname', 'gender', 'date_of_birth', 'email', 'employment_start_date'
     ]
 
@@ -389,7 +599,7 @@ def download_employees_template(request, country_slug, company_id=None):
 
     header_fill = PatternFill(start_color="1F4E78", end_color="1F4E78", fill_type="solid")
     header_font = Font(color="FFFFFF", bold=True)
-    
+
     for col_num, header in enumerate(headers, 1):
         cell = ws.cell(row=1, column=col_num, value=header)
         cell.fill = header_fill
@@ -423,7 +633,7 @@ def employee_compensation(request, country_slug, company_id, employee_id):
     """
     country = get_object_or_404(Country, slug=country_slug)
     company = get_object_or_404(Company, pk=company_id)
-    
+
     if not validate_company_access(request.user, company):
         messages.error(request, "Access Denied.")
         return redirect("dashboard")
@@ -450,3 +660,22 @@ def employee_compensation(request, country_slug, company_id, employee_id):
         "compensations": compensations,
         "form": form
     })
+
+
+def validate_company_access(user, company):
+    """
+    Verifies if the current user is allowed to access the specific company.
+    Logic:
+    1. Global Roles (EXEC, ADMIN, COMPLIANCE) -> ALLOWED.
+    2. Restricted Roles -> Must be linked via 'user.contexts'.
+    """
+    global_roles = ["EXEC", "ADMIN", "COMPLIANCE"]
+    user_role = getattr(user, "role", "").upper()
+
+    if user.is_superuser or user_role in global_roles:
+        return True
+
+    if user.contexts.filter(company=company).exists():
+        return True
+
+    return False

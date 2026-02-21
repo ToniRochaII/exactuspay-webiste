@@ -1,40 +1,33 @@
 from django import forms
-from Exactus.accounts.models import User
+from django.contrib.auth import get_user_model
 from Exactus.company.models import ClientGroup
+
+User = get_user_model()
 
 class EmployeeAccessForm(forms.ModelForm):
     """
-    Form to manage User access (Role & Client Group) directly from the Employee Account tab.
-    Restricts role selection to Client roles only.
+    Edita permissões e estado do utilizador do portal para um Employee.
+    Ajusta os fields se o teu User model tiver nomes diferentes.
     """
-    
-    # Filter roles to show only CLIENT_ROLES (Director, Manager, Specialist, Finance, Employee)
-    CLIENT_ROLE_CHOICES = [
-        (role_code, role_label) 
-        for role_code, role_label in User.ROLE_CHOICES 
-        if role_code in User.CLIENT_ROLES
-    ]
-
-    role = forms.ChoiceField(
-        choices=CLIENT_ROLE_CHOICES,  # <--- Updated to use filtered list
-        widget=forms.Select(attrs={'class': 'form-select', 'id': 'id_role_access'}),
-        label="System Role"
-    )
-    
-    client_group = forms.ModelChoiceField(
-        queryset=ClientGroup.objects.all(),
-        required=False,
-        widget=forms.Select(attrs={'class': 'form-select'}),
-        label="Client Group (Bulk Access)",
-        help_text="Required if promoting to Manager or Director (Client Access)."
-    )
-    
-    is_active = forms.BooleanField(
-        required=False, 
-        label="Login Enabled",
-        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
-    )
-
     class Meta:
         model = User
-        fields = ['role', 'client_group', 'is_active']
+        fields = ["role", "client_group", "is_active"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # role choices (se existir)
+        if "role" in self.fields and hasattr(User, "ROLE_CHOICES") and hasattr(User, "CLIENT_ROLES"):
+            allowed = set(User.CLIENT_ROLES)
+            self.fields["role"].choices = [
+                (code, label) for code, label in User.ROLE_CHOICES if code in allowed
+            ]
+
+        # client_group queryset (se existir)
+        if "client_group" in self.fields:
+            self.fields["client_group"].queryset = ClientGroup.objects.all()
+
+        # widgets bootstrap
+        for name, field in self.fields.items():
+            if hasattr(field.widget, "attrs"):
+                field.widget.attrs.setdefault("class", "form-select" if field.widget.__class__.__name__.lower().endswith("select") else "form-control")
