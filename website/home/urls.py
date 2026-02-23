@@ -19,5 +19,5 @@ urlpatterns = [
 
 
     path('articles/br/overview/', views.brazil_article_0001, name='brazil_article_0001'),
-    path('articles/cl/overview/', views.brazil_article_0001, name='chile_article_0001'),
+    path('articles/cl/overview/', views.chile_article_0001, name='chile_article_0001'),
 ]
