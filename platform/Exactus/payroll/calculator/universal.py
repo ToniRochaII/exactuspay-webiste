@@ -99,6 +99,8 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
         if self.period and self.period.payroll and CALCULATION_BASE_AVAILABLE:
             self._apply_calculation_rules()
 
+        self._calculate_gross_pay()
+
         # 7) Consolidation totals
         self._consolidate_reporting_codes()
 
