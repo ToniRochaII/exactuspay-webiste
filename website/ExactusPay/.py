@@ -11,7 +11,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # -----------------------------------------------------------------------------
 # Core
 # -----------------------------------------------------------------------------
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "0") == "1"
+
+# --- DO NOT FORCE HTTPS IN DEV ---
+SECURE_SSL_REDIRECT = (not DEBUG)
+
+# If you had this set, keep it only for production behind Render/Proxy
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https") if not DEBUG else None
 
 SECRET_KEY = os.environ.get("SECRET_KEY") or ("dev-secret-key" if DEBUG else None)
 if not SECRET_KEY:
@@ -78,21 +84,26 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "ExactusPay.urls"
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],
-        "APP_DIRS": True,
+        "DIRS": [BASE_DIR / "templates"],   # <-- add/keep this
+        "APP_DIRS": True,                  # <-- must be True
         "OPTIONS": {
             "context_processors": [
-                "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "django.template.context_processors.debug",
                 "django.template.context_processors.i18n",
+                "django.template.context_processors.media",
+                "django.template.context_processors.static",
+                "django.template.context_processors.tz",
             ],
         },
-    }
+    },
 ]
 
 WSGI_APPLICATION = "ExactusPay.wsgi.application"
@@ -175,8 +186,9 @@ EMAIL_HOST_USER = "no-reply@exactuspay.com"
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "").strip()
 
 # Falha SEMPRE se faltar password quando usas SMTP real
-if not EMAIL_HOST_PASSWORD:
-    raise RuntimeError("EMAIL_HOST_PASSWORD is missing. Set it in Render env vars.")
+if not DEBUG:
+    if not EMAIL_HOST_PASSWORD:
+        raise RuntimeError("EMAIL_HOST_PASSWORD is missing. Set it in Render env vars.")
 
 DEFAULT_FROM_EMAIL = "no-reply@exactuspay.com"
 DEMO_REQUEST_TO_EMAIL = os.environ.get("DEMO_REQUEST_TO_EMAIL", "antoniorocha@exactuspay.com").strip()
@@ -190,6 +202,8 @@ EMAIL_TIMEOUT = 20
 if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+    
+if not DEBUG:
     SECURE_SSL_REDIRECT = True
 
     # Recommended security headers
