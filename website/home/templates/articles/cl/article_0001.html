@@ -96,33 +96,45 @@
 
     <style>
       :root {
-        --color-primary: #1f4b7ae6;
-        --color-secondary: rgba(71, 84, 128, 0.9);
-        --color-accent: rgba(103, 170, 199, 0.9);
+        /* Brand */
         --color-primary-solid: rgb(31, 75, 122);
+        --color-secondary-solid: rgb(71, 84, 128);
+        --gradient-midnight: linear-gradient(90deg, #000814 0%, #1F4B7A 100%);
 
-        --gradient-midnight: linear-gradient(90deg, #000814 0%, #1f4b7a 100%);
-        --gradient-testimonials: linear-gradient(
-          135deg,
-          rgba(71, 84, 128, 0.9),
-          rgba(103, 170, 199, 0.9)
-        );
+        /* Surfaces */
+        --bg-primary: #FFFFFF;
+        --bg-secondary: #F8FAFC;
+        --bg-tertiary: #F1F5F9;
+        --bg-card: #FFFFFF;
 
-        --bg-primary: #ffffff;
-        --bg-tertiary: #f1f5f9;
-
-        --text-primary: #0f172a;
+        /* Text */
+        --text-primary: #0F172A;
         --text-secondary: #475569;
-        --text-muted: #64748b;
+        --text-muted: #64748B;
 
+        /* Elevation */
         --shadow-sm: 0 2px 8px rgba(31, 75, 122, 0.05);
         --shadow-md: 0 4px 16px rgba(31, 75, 122, 0.08);
-        --shadow-lg: 0 10px 40px rgba(31, 75, 122, 0.1);
+        --shadow-lg: 0 10px 40px rgba(31, 75, 122, 0.10);
         --shadow-xl: 0 20px 60px rgba(31, 75, 122, 0.12);
 
         --border-radius: 16px;
         --border-radius-lg: 24px;
-        --border-color: rgba(226, 232, 240, 0.8);
+        --border-color: rgba(226, 232, 240, 0.85);
+
+        /* Accent */
+        --mint: #96E0D9;
+
+        /* Gradients for icons */
+        --grad-blue: linear-gradient(135deg,#2563eb,#1e40af);
+        --grad-teal: linear-gradient(135deg,#14b8a6,#0f766e);
+        --grad-purple: linear-gradient(135deg,#8b5cf6,#6d28d9);
+        --grad-amber: linear-gradient(135deg,#f59e0b,#b45309);
+        --grad-rose: linear-gradient(135deg,#f43f5e,#be123c);
+        --grad-cyan: linear-gradient(135deg,#22d3ee,#0ea5e9);
+
+        /* Layout */
+        --header-h: 76px;
       }
 
       * {
@@ -171,6 +183,10 @@
       .skip-link:focus {
         top: 16px;
       }
+      :focus-visible {
+        outline: 3px solid rgba(150, 224, 217, 0.9);
+        outline-offset: 3px;
+      }
 
       /* Typography */
       h1,
@@ -178,7 +194,7 @@
       h3,
       h4 {
         font-family: "Poppins", sans-serif;
-        font-weight: 700;
+        font-weight: 800;
         line-height: 1.15;
       }
       h1 {
@@ -190,12 +206,14 @@
         color: transparent;
       }
       h2 {
-        font-size: clamp(1.6rem, 3.8vw, 2.6rem);
-        margin-bottom: 14px;
+        font-size: clamp(1.8rem, 3.8vw, 2.8rem);
+        margin-bottom: 16px;
+        color: var(--text-primary);
       }
       h3 {
-        font-size: 1.35rem;
+        font-size: 1.45rem;
         margin-bottom: 12px;
+        color: var(--text-primary);
       }
       p {
         color: var(--text-secondary);
@@ -208,8 +226,8 @@
         margin-bottom: 44px;
       }
       .section-title .subtitle {
-        color: rgba(71, 84, 128, 1);
-        font-weight: 700;
+        color: var(--color-secondary-solid);
+        font-weight: 800;
         text-transform: uppercase;
         letter-spacing: 2.5px;
         margin-bottom: 12px;
@@ -223,7 +241,7 @@
         justify-content: center;
         padding: 14px 24px;
         border-radius: 999px;
-        font-weight: 700;
+        font-weight: 800;
         font-size: 16px;
         text-decoration: none;
         transition:
@@ -234,10 +252,6 @@
         cursor: pointer;
         gap: 10px;
         white-space: nowrap;
-      }
-      .btn:focus-visible {
-        outline: 3px solid rgba(150, 224, 217, 0.9);
-        outline-offset: 3px;
       }
 
       .btn-primary {
@@ -262,6 +276,16 @@
         transform: translateY(-2px);
       }
 
+      .btn-outline {
+        background: transparent;
+        border: 2px solid rgba(255,255,255,0.85);
+        color: #fff;
+      }
+      .btn-outline:hover {
+        background: rgba(255,255,255,0.10);
+        transform: translateY(-2px);
+      }
+
       .btn-lg {
         padding: 16px 28px;
         font-size: 17px;
@@ -276,7 +300,7 @@
         z-index: 1000;
         background: var(--gradient-midnight);
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        padding: 14px 0;
+        padding: 12px 0;
         transition:
           transform 0.25s ease,
           box-shadow 0.25s ease;
@@ -292,23 +316,38 @@
       .sidebar-brand {
         color: #fff;
         font-size: 1.6rem;
-        font-weight: 800;
+        font-weight: 900;
+        text-decoration: none;
       }
 
       .nav-links {
         display: flex;
-        gap: 28px;
+        gap: 24px;
         list-style: none;
       }
       .nav-links a {
         color: rgba(255, 255, 255, 0.86);
         text-decoration: none;
-        font-weight: 600;
+        font-weight: 700;
         transition: color 0.2s ease;
         padding: 8px 0;
+        position: relative;
+      }
+      .nav-links a::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--mint);
+        transition: width 0.25s ease;
       }
       .nav-links a:hover {
         color: #fff;
+      }
+      .nav-links a:hover::after {
+        width: 100%;
       }
 
       .nav-actions {
@@ -379,30 +418,26 @@
         justify-content: center;
         cursor: pointer;
       }
-      .menu-btn:focus-visible {
-        outline: 3px solid rgba(150, 224, 217, 0.9);
-        outline-offset: 3px;
-      }
 
       /* Mobile drawer */
       .mobile-nav {
         display: none;
         position: fixed;
-        top: 72px;
+        top: var(--header-h);
         left: 0;
         width: 100%;
         background: rgba(0, 8, 20, 0.96);
         backdrop-filter: blur(14px);
         border-bottom: 1px solid rgba(255, 255, 255, 0.12);
         z-index: 999;
-        padding: 16px 0;
+        padding: 14px 0;
       }
       .mobile-nav.open {
         display: block;
       }
       .mobile-nav .container {
         display: grid;
-        gap: 14px;
+        gap: 12px;
       }
       .mobile-links {
         list-style: none;
@@ -415,7 +450,7 @@
         border-radius: 14px;
         text-decoration: none;
         color: rgba(255, 255, 255, 0.92);
-        font-weight: 650;
+        font-weight: 800;
         border: 1px solid rgba(255, 255, 255, 0.1);
         background: rgba(255, 255, 255, 0.05);
       }
@@ -437,19 +472,23 @@
       }
 
       /* Hero */
-      .hero {
-        padding: 160px 0 78px;
+      .guide-hero {
+        padding: calc(var(--header-h) + 88px) 0 78px;
         background: var(--gradient-midnight);
+        position: relative;
+        overflow: hidden;
       }
-      .hero-content {
+      .guide-hero-content {
         max-width: 980px;
         margin: 0 auto;
         text-align: center;
+        position: relative;
+        z-index: 2;
       }
-      .hero p {
-        font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+      .guide-hero p {
+        font-size: clamp(1.05rem, 2.2vw, 1.3rem);
         margin-bottom: 26px;
-        color: rgba(255, 255, 255, 0.9);
+        color: rgba(255, 255, 255, 0.92);
         max-width: 860px;
         margin-left: auto;
         margin-right: auto;
@@ -463,10 +502,43 @@
         margin-bottom: 28px;
       }
 
+      .trust-strip {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 18px;
+      }
+      .trust-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 12px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.10);
+        border: 1px solid rgba(255,255,255,0.18);
+        color: rgba(255,255,255,0.9);
+        font-weight: 700;
+        font-size: 0.92rem;
+        white-space: nowrap;
+        transition: transform .2s ease, box-shadow .2s ease;
+      }
+      .trust-pill:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 14px 30px rgba(0,0,0,0.18);
+      }
+      .trust-pill i {
+        font-size: 16px;
+      }
+      .trust-pill:nth-child(1) i { color: #60A5FA; }
+      .trust-pill:nth-child(2) i { color: #A78BFA; }
+      .trust-pill:nth-child(3) i { color: #FBBF24; }
+      .trust-pill:nth-child(4) i { color: #34D399; }
+
       /* Content */
       .content {
         padding: 92px 0;
-        background: #fff;
+        background: var(--bg-secondary);
       }
       .content-grid {
         display: grid;
@@ -485,11 +557,11 @@
       }
 
       .article-head {
-        padding: 26px 22px;
+        padding: 32px 28px;
         background: linear-gradient(
           135deg,
-          rgba(31, 75, 122, 0.06),
-          rgba(103, 170, 199, 0.08)
+          rgba(31, 75, 122, 0.04),
+          rgba(103, 170, 199, 0.06)
         );
         border-bottom: 1px solid var(--border-color);
       }
@@ -500,7 +572,7 @@
         gap: 10px;
         align-items: center;
         justify-content: space-between;
-        margin-top: 10px;
+        margin-top: 16px;
       }
       .meta-left {
         display: flex;
@@ -512,67 +584,140 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        padding: 8px 12px;
+        padding: 8px 14px;
         border-radius: 999px;
-        background: rgba(255, 255, 255, 0.9);
+        background: rgba(255, 255, 255, 0.95);
         border: 1px solid var(--border-color);
         color: var(--text-secondary);
-        font-weight: 650;
+        font-weight: 700;
         font-size: 0.92rem;
+        box-shadow: var(--shadow-sm);
       }
       .pill i {
         color: var(--color-primary-solid);
       }
 
       .article-body {
-        padding: 28px 22px 10px;
+        padding: 32px 28px 20px;
       }
 
       .article-body h2 {
-        margin-top: 26px;
+        margin-top: 32px;
+        font-size: 2rem;
       }
       .article-body h3 {
-        margin-top: 18px;
+        margin-top: 24px;
+        font-size: 1.35rem;
       }
 
       .callout {
-        margin: 22px 0;
-        padding: 18px 16px;
+        margin: 24px 0;
+        padding: 24px;
         border-radius: 18px;
         border: 1px solid rgba(31, 75, 122, 0.18);
-        background: rgba(31, 75, 122, 0.06);
+        background: rgba(31, 75, 122, 0.04);
+        box-shadow: var(--shadow-sm);
       }
       .callout strong {
         color: var(--text-primary);
+        font-size: 1.1rem;
+      }
+      .callout p {
+        margin-bottom: 0;
+      }
+
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+        margin: 24px 0;
+      }
+
+      .feature-card {
+        background: var(--bg-card);
+        border-radius: var(--border-radius);
+        padding: 24px;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-sm);
+        transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+        height: 100%;
+      }
+      .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-lg);
+        border-color: rgba(31,75,122,0.25);
+      }
+      .feature-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+        font-size: 20px;
+        color: #fff;
+        background: var(--grad-blue);
+        box-shadow: 0 10px 22px rgba(37,99,235,.35);
+      }
+      .feature-card:nth-child(2) .feature-icon { background: var(--grad-teal); }
+      .feature-card:nth-child(3) .feature-icon { background: var(--grad-purple); }
+      .feature-card:nth-child(4) .feature-icon { background: var(--grad-amber); }
+      .feature-card h4 {
+        font-size: 1.2rem;
+        margin-bottom: 8px;
+        font-weight: 800;
+      }
+      .feature-card p {
+        font-size: 0.98rem;
+        margin-bottom: 0;
       }
 
       .list {
         display: grid;
         gap: 12px;
-        margin: 14px 0 18px;
+        margin: 20px 0 24px;
         padding-left: 0;
         list-style: none;
       }
       .list li {
         display: grid;
-        grid-template-columns: 26px 1fr;
-        gap: 10px;
+        grid-template-columns: 32px 1fr;
+        gap: 12px;
         align-items: start;
-        padding: 12px 12px;
+        padding: 16px 16px;
         border-radius: 16px;
         border: 1px solid var(--border-color);
         box-shadow: var(--shadow-sm);
         background: #fff;
+        transition: transform .2s ease, box-shadow .2s ease;
+      }
+      .list li:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-md);
+        border-color: rgba(31,75,122,0.2);
       }
       .list li i {
-        margin-top: 2px;
-        color: var(--color-primary-solid);
+        margin-top: 3px;
+        font-size: 18px;
+        background: var(--grad-teal);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .list li strong {
+        color: var(--text-primary);
+        font-size: 1.05rem;
+      }
+      .list li p {
+        margin: 6px 0 0;
+        font-size: 0.98rem;
       }
 
       .note {
         margin: 18px 0 6px;
         color: var(--text-muted);
         font-size: 0.98rem;
+        font-style: italic;
       }
 
       /* CTA */
@@ -590,13 +735,13 @@
         margin-bottom: 14px;
       }
       .cta p {
-        color: rgba(255, 255, 255, 0.9);
+        color: rgba(255, 255, 255, 0.92);
         font-size: 1.1rem;
         margin-bottom: 22px;
       }
       .cta-actions {
         display: flex;
-        gap: 12px;
+        gap: 14px;
         justify-content: center;
         flex-wrap: wrap;
       }
@@ -614,7 +759,7 @@
       .footer-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 28px;
+        gap: 26px;
         margin-bottom: 44px;
       }
       .footer-col h4 {
@@ -640,8 +785,14 @@
         font-size: 0.95rem;
       }
       .footer-links a:hover {
-        color: #96e0d9;
+        color: var(--mint);
         transform: translateX(4px);
+      }
+      .footer-links i {
+        background: var(--grad-cyan);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-size: 14px;
       }
 
       .footer-bottom {
@@ -692,8 +843,8 @@
         .footer-grid {
           grid-template-columns: repeat(2, 1fr);
         }
-        .nav-links {
-          gap: 18px;
+        .feature-grid {
+          grid-template-columns: 1fr;
         }
       }
 
@@ -704,8 +855,8 @@
         .menu-btn {
           display: inline-flex;
         }
-        header {
-          padding: 12px 0;
+        :root {
+          --header-h: 68px;
         }
       }
 
@@ -713,8 +864,11 @@
         .container {
           padding: 0 16px;
         }
-        .hero {
-          padding: 132px 0 64px;
+        .nav-actions .btn {
+          display: none;
+        }
+        .guide-hero {
+          padding: calc(var(--header-h) + 68px) 0 64px;
         }
         .hero-actions {
           flex-direction: column;
@@ -737,11 +891,13 @@
           flex-direction: column;
           align-items: flex-start;
         }
-        .nav-actions .btn {
-          display: none;
+        .cta-actions {
+          flex-direction: column;
+          align-items: center;
         }
-        .nav-actions {
-          gap: 8px;
+        .cta-actions .btn {
+          width: 100%;
+          max-width: 420px;
         }
       }
 
@@ -903,9 +1059,9 @@
     </nav>
 
     <main id="main">
-      <section class="hero">
+      <section class="guide-hero">
         <div class="container">
-          <div class="hero-content">
+          <div class="guide-hero-content">
             <h1>{% trans "How to Set Up a Business and Run Payroll in Chile" %}</h1>
             <p>
               {% blocktrans trimmed %}
@@ -918,9 +1074,16 @@
               <a href="{% url 'home:demo' %}" class="btn btn-primary btn-lg">
                 <i class="fas fa-calendar-check"></i> {% trans "Request a Personalized Demo" %}
               </a>
-              <a href="#article" class="btn btn-secondary btn-lg">
+              <a href="#article" class="btn btn-outline btn-lg">
                 <i class="fas fa-book-open"></i> {% trans "Read the Guide" %}
               </a>
+            </div>
+
+            <div class="trust-strip" aria-label="{% trans 'Guide highlights' %}">
+              <span class="trust-pill"><i class="fa-solid fa-building"></i> {% trans "Entity Setup" %}</span>
+              <span class="trust-pill"><i class="fa-solid fa-scale-balanced"></i> {% trans "Legal Gratification" %}</span>
+              <span class="trust-pill"><i class="fa-solid fa-calculator"></i> {% trans "UF Calculations" %}</span>
+              <span class="trust-pill"><i class="fa-solid fa-shield"></i> {% trans "SII Compliance" %}</span>
             </div>
           </div>
         </div>
@@ -938,7 +1101,7 @@
                   </h2>
                   <p style="margin-bottom: 0">
                     {% blocktrans trimmed %}
-                      Chile is one of Latin America’s most stable and transparent economies — but compliant hiring and payroll
+                      Chile is one of Latin America's most stable and transparent economies — but compliant hiring and payroll
                       require navigating strict labour laws, complex taxes, and local indices like UF.
                     {% endblocktrans %}
                   </p>
@@ -948,7 +1111,6 @@
                   <div class="meta-left">
                     <span class="pill"><i class="fas fa-globe-americas"></i> {% trans "Country: Chile (CL)" %}</span>
                     <span class="pill"><i class="fas fa-scale-balanced"></i> {% trans "Focus: Compliance + Payroll" %}</span>
-                    <span class="pill"><i class="fas fa-language"></i> {% trans "Also available in Portuguese, Spanish, German, French, and Italian" %}</span>
                   </div>
                   <span class="pill"><i class="fas fa-shield"></i> {% trans "Built for audit-ready operations" %}</span>
                 </div>
@@ -984,7 +1146,7 @@
                 <p>
                   {% blocktrans trimmed %}
                     For most international businesses, the SpA (Sociedad por Acciones) is a popular option: limited liability,
-                    100% foreign ownership possible, and only one shareholder required. It’s generally flexible and easier to manage
+                    100% foreign ownership possible, and only one shareholder required. It's generally flexible and easier to manage
                     than a traditional S.A.
                   {% endblocktrans %}
                 </p>
@@ -992,7 +1154,7 @@
                 <h3>{% trans "2) Register the Company" %}</h3>
                 <p>
                   {% blocktrans trimmed %}
-                    You can register through the traditional notary route or via the government portal “Tu Empresa en un Día”.
+                    You can register through the traditional notary route or via the government portal "Tu Empresa en un Día".
                     Incorporation typically requires Articles of Incorporation and notarization. If registering from abroad, companies
                     often grant a legalized Power of Attorney (POA) to a local legal representative in Chile.
                   {% endblocktrans %}
@@ -1010,7 +1172,7 @@
                 <p>
                   {% blocktrans trimmed %}
                     To pay employees locally and remit taxes, you generally need an in-country corporate bank account. This step may require
-                    the physical presence of your local legal representative depending on the bank’s requirements.
+                    the physical presence of your local legal representative depending on the bank's requirements.
                   {% endblocktrans %}
                 </p>
 
@@ -1076,7 +1238,7 @@
                 <h3>{% trans "2) Employee Deductions (Withholdings)" %}</h3>
                 <p>
                   {% blocktrans trimmed %}
-                    Employers must withhold and remit the employee’s share of social security (often ~17.6% of gross pay) and monthly income tax.
+                    Employers must withhold and remit the employee's share of social security (often ~17.6% of gross pay) and monthly income tax.
                   {% endblocktrans %}
                 </p>
 
@@ -1152,67 +1314,41 @@
                   {% endblocktrans %}
                 </p>
 
-                <ul class="list" role="list">
-                  <li>
-                    <i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i>
-                    <div>
-                      <strong>{% trans "Predictive Payroll Simulations" %}</strong>
-                      <p style="margin: 6px 0 0">
-                        {% blocktrans trimmed %}
-                          Model Total Cost of Employment before you hire. Input base salary and simulate TCOE using the latest UF, caps,
-                          and Legal Gratification rules.
-                        {% endblocktrans %}
-                      </p>
-                    </div>
-                  </li>
-                  <li>
-                    <i class="fas fa-shield-check" aria-hidden="true"></i>
-                    <div>
-                      <strong>{% trans "Zero-Error Compliance" %}</strong>
-                      <p style="margin: 6px 0 0">
-                        {% blocktrans trimmed %}
-                          Automated legal logic keeps calculations current when statutory caps or tax rules change — ensuring filings remain
-                          compliant and audit-ready.
-                        {% endblocktrans %}
-                      </p>
-                    </div>
-                  </li>
-                  <li>
-                    <i class="fas fa-chart-line" aria-hidden="true"></i>
-                    <div>
-                      <strong>{% trans "Global-Standardized Reporting" %}</strong>
-                      <p style="margin: 6px 0 0">
-                        {% blocktrans trimmed %}
-                          Normalize Chile payroll data into the same reporting format as the UK, Brazil, or Nigeria so CFOs get one unified dashboard.
-                        {% endblocktrans %}
-                      </p>
-                    </div>
-                  </li>
-                  <li>
-                    <i class="fas fa-headset" aria-hidden="true"></i>
-                    <div>
-                      <strong>{% trans "24/7 Native Support" %}</strong>
-                      <p style="margin: 6px 0 0">
-                        {% blocktrans trimmed %}
-                          Round-the-clock support from experts with native fluency in Spanish and Portuguese — acting as an extension of your HR team.
-                        {% endblocktrans %}
-                      </p>
-                    </div>
-                  </li>
-                </ul>
+                <div class="feature-grid">
+                  <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-wand-magic-sparkles"></i></div>
+                    <h4>{% trans "Predictive Payroll Simulations" %}</h4>
+                    <p>{% blocktrans trimmed %}Model Total Cost of Employment before you hire. Input base salary and simulate TCOE using the latest UF, caps, and Legal Gratification rules.{% endblocktrans %}</p>
+                  </div>
+                  <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-shield-check"></i></div>
+                    <h4>{% trans "Zero-Error Compliance" %}</h4>
+                    <p>{% blocktrans trimmed %}Automated legal logic keeps calculations current when statutory caps or tax rules change — ensuring filings remain compliant and audit-ready.{% endblocktrans %}</p>
+                  </div>
+                  <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                    <h4>{% trans "Global-Standardized Reporting" %}</h4>
+                    <p>{% blocktrans trimmed %}Normalize Chile payroll data into the same reporting format as the UK, Brazil, or Nigeria so CFOs get one unified dashboard.{% endblocktrans %}</p>
+                  </div>
+                  <div class="feature-card">
+                    <div class="feature-icon"><i class="fas fa-headset"></i></div>
+                    <h4>{% trans "24/7 Native Support" %}</h4>
+                    <p>{% blocktrans trimmed %}Round-the-clock support from experts with native fluency in Spanish and Portuguese — acting as an extension of your HR team.{% endblocktrans %}</p>
+                  </div>
+                </div>
 
                 <div class="callout" role="note" aria-label="{% trans 'Next step' %}">
                   <p style="margin-bottom: 0">
                     <strong>{% trans "Ready to scale without the complexity?" %}</strong>
                     {% blocktrans trimmed %}
-                      Geographic borders shouldn’t block access to top talent, and local compliance shouldn’t slow growth.
-                      If you’re planning an expansion into Chile or consolidating LATAM operations, ExactusPay provides the certainty,
+                      Geographic borders shouldn't block access to top talent, and local compliance shouldn't slow growth.
+                      If you're planning an expansion into Chile or consolidating LATAM operations, ExactusPay provides the certainty,
                       clarity, and control you need.
                     {% endblocktrans %}
                   </p>
                 </div>
 
-                <p style="margin-top: 12px">
+                <p style="margin-top: 24px">
                   <a href="{% url 'home:demo' %}" class="btn btn-primary btn-lg">
                     <i class="fas fa-calendar-check"></i> {% trans "Request a Personalized Demo Today" %}
                   </a>
@@ -1342,6 +1478,11 @@
               : '<i class="fas fa-bars"></i>';
           });
 
+          // Close on link click
+          mobileNav
+            .querySelectorAll("a")
+            .forEach((a) => a.addEventListener("click", closeMobileNav));
+
           // Close on outside click
           document.addEventListener("click", (e) => {
             if (!mobileNav.classList.contains("open")) return;
@@ -1350,11 +1491,6 @@
             const insideBtn = btn.contains(target);
             if (!insideNav && !insideBtn) closeMobileNav();
           });
-
-          // Close on link click
-          mobileNav
-            .querySelectorAll("a")
-            .forEach((a) => a.addEventListener("click", closeMobileNav));
 
           // Close on ESC
           document.addEventListener("keydown", (e) => {
@@ -1404,10 +1540,8 @@
 
               if (current > 50) {
                 header.style.boxShadow = "0 10px 30px rgba(0,0,0,0.3)";
-                header.style.backdropFilter = "blur(20px)";
               } else {
                 header.style.boxShadow = "var(--shadow-sm)";
-                header.style.backdropFilter = "blur(10px)";
               }
 
               lastScroll = current;
