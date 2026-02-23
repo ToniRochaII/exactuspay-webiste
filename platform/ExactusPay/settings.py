@@ -131,7 +131,7 @@ if DATABASE_URL:
     DATABASES = {
         "default": dj_database_url.parse(
             DATABASE_URL,
-            conn_max_age=int(os.environ.get("DB_CONN_MAX_AGE", "60")),
+            conn_max_age=int(os.environ.get("DB_CONN_MAX_AGE", "0")),
         )
     }
 
@@ -175,7 +175,7 @@ else:
     CACHES = {
         'default': {
             'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-            'LOCATION': os.environ.get("REDIS_URL", "redis://127.0.0.1:6379/1"),
+            'LOCATION': os.environ.get("REDIS_URL"),
         }
     }
 
@@ -266,7 +266,7 @@ else:
 SESSION_COOKIE_AGE = 2000
 SESSION_SAVE_EVERY_REQUEST = False
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 SESSION_CACHE_ALIAS = "default"
 
 
