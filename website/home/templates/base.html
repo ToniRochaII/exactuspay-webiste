@@ -367,7 +367,7 @@
 
     <header>
       <div class="container nav-container">
-        <a class="sidebar-brand" href="{% url 'home:index' %}">ExactusPay</a>
+        <a class="sidebar-brand" href="{% url 'home:home' %}">ExactusPay</a>
 
         <ul class="nav-links" aria-label="{% trans 'Primary navigation' %}">
           <li><a href="{% url 'home:features' %}">{% trans "Features" %}</a></li>
@@ -407,7 +407,7 @@
     <nav class="mobile-nav" id="mobileNav" aria-label="{% trans 'Mobile navigation' %}">
       <div class="container">
         <ul class="mobile-links">
-          <li><a href="{% url 'home:index' %}">{% trans "Home" %}</a></li>
+          <li><a href="{% url 'home:home' %}">{% trans "Home" %}</a></li>
           <li><a href="{% url 'home:features' %}">{% trans "Features" %}</a></li>
           <li><a href="{% url 'home:platform' %}">{% trans "Platform" %}</a></li>
           <li><a href="{% url 'home:pricing' %}">{% trans "Pricing" %}</a></li>
@@ -463,7 +463,7 @@
           <div class="footer-col">
             <h4>{% trans "Company" %}</h4>
             <ul class="footer-links">
-              <li><a href="{% url 'home:index' %}"><i class="fas fa-house"></i> {% trans "Home" %}</a></li>
+              <li><a href="{% url 'home:home' %}"><i class="fas fa-house"></i> {% trans "Home" %}</a></li>
               <li><a href="{% url 'home:features' %}"><i class="fas fa-star"></i> {% trans "Features" %}</a></li>
             </ul>
           </div>
