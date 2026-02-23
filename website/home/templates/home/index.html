@@ -1,134 +1,22 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block title %}
-  {% trans "Global Payroll Software | Multi-Country Payroll & Compliance Platform | ExactusPay" %}
-{% endblock %}
-
-{% block canonical %}https://www.exactuspay.com/{% endblock %}
-
 {% block extra_css %}
 <style>
   :root {
-    --color-primary: #1f4b7ae6;
-    --color-secondary: rgba(71, 84, 128, 0.9);
-    --color-accent: rgba(103, 170, 199, 0.9);
-    --color-primary-solid: rgb(31, 75, 122);
-
-    --gradient-midnight: linear-gradient(90deg, #000814 0%, #1f4b7a 100%);
-    --gradient-testimonials: linear-gradient(
-      135deg,
-      rgba(71, 84, 128, 0.9),
-      rgba(103, 170, 199, 0.9)
-    );
-
-    --bg-primary: #ffffff;
-    --bg-tertiary: #f1f5f9;
-
-    --text-primary: #0f172a;
-    --text-secondary: #475569;
-    --text-muted: #64748b;
-
-    --shadow-sm: 0 2px 8px rgba(31, 75, 122, 0.05);
-    --shadow-md: 0 4px 16px rgba(31, 75, 122, 0.08);
-    --shadow-lg: 0 10px 40px rgba(31, 75, 122, 0.1);
-    --shadow-xl: 0 20px 60px rgba(31, 75, 122, 0.12);
-
-    --border-radius: 16px;
-    --border-radius-lg: 24px;
-    --border-color: rgba(226, 232, 240, 0.8);
+    --gradient-testimonials: linear-gradient(135deg, rgba(71, 84, 128, 0.9), rgba(103, 170, 199, 0.9));
   }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body {
-    font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    line-height: 1.6;
-    overflow-x: hidden;
-  }
-
-  .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
-
-  /* Skip link */
-  .skip-link {
-    position: absolute;
-    top: -44px;
-    left: 16px;
-    padding: 10px 14px;
-    border-radius: 12px;
-    background: #fff;
-    color: #0f172a;
-    text-decoration: none;
-    box-shadow: var(--shadow-md);
-    z-index: 2000;
-    transition: top 0.2s ease;
-  }
-  .skip-link:focus { top: 16px; }
-
-  /* Typography */
-  h1,h2,h3,h4 { font-family: "Poppins", sans-serif; font-weight: 700; line-height: 1.15; }
-  h1 {
-    font-size: clamp(2.1rem, 5vw, 4rem);
-    margin-bottom: 20px;
-    background: linear-gradient(135deg, #ffffff, #f0f9ff);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-  h2 { font-size: clamp(1.8rem, 4vw, 3.2rem); margin-bottom: 16px; }
-  h3 { font-size: 1.5rem; margin-bottom: 12px; }
-  p { color: var(--text-secondary); font-size: 1.05rem; margin-bottom: 20px; }
-
-  .section-title { text-align: center; margin-bottom: 48px; }
-  .section-title .subtitle {
-    color: rgba(71, 84, 128, 1);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 2.5px;
-    margin-bottom: 12px;
-    font-size: 12px;
-  }
-
-  /* Buttons */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 14px 24px;
-    border-radius: 999px;
-    font-weight: 700;
-    font-size: 16px;
-    text-decoration: none;
-    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-    border: none;
-    cursor: pointer;
-    gap: 10px;
-    white-space: nowrap;
-  }
-  .btn:focus-visible { outline: 3px solid rgba(150, 224, 217, 0.9); outline-offset: 3px; }
-
-  .btn-primary {
-    background: var(--color-primary-solid);
-    color: #fff;
-    box-shadow: 0 8px 20px rgba(31, 75, 122, 0.2);
-  }
-  .btn-primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-xl); background: #0f3a5e; }
-
-  .btn-secondary {
-    background: rgba(255, 255, 255, 0.12);
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.22);
-    backdrop-filter: blur(10px);
-  }
-  .btn-secondary:hover { background: rgba(255, 255, 255, 0.2); transform: translateY(-2px); }
-
-  .btn-lg { padding: 16px 28px; font-size: 17px; }
 
   /* Hero */
-  .hero { padding: 160px 0 96px; background: var(--gradient-midnight); }
-  .hero-content { max-width: 1000px; margin: 0 auto; text-align: center; }
+  .hero {
+    padding: 160px 0 96px;
+    background: var(--gradient-midnight);
+  }
+  .hero-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+  }
   .hero p {
     font-size: clamp(1.05rem, 2.2vw, 1.3rem);
     margin-bottom: 28px;
@@ -137,9 +25,19 @@
     margin-left: auto;
     margin-right: auto;
   }
-
-  .hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 42px; }
-  .hero-stats { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+  .hero-actions {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 42px;
+  }
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
   .stat-item {
     text-align: center;
     padding: 18px 18px;
@@ -149,7 +47,12 @@
     border: 1px solid rgba(255, 255, 255, 0.1);
     min-width: 150px;
   }
-  .stat-number { font-size: 2.2rem; font-weight: 900; margin-bottom: 6px; color: #fff; }
+  .stat-number {
+    font-size: 2.2rem;
+    font-weight: 900;
+    margin-bottom: 6px;
+    color: #fff;
+  }
   .stat-label {
     color: rgba(255, 255, 255, 0.75);
     font-size: 12px;
@@ -157,23 +60,43 @@
     letter-spacing: 1.2px;
   }
 
-  /* Sections */
-  .features { padding: 96px 0; background: #fff; }
-  .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 36px; }
+  /* Features */
+  .features {
+    padding: 96px 0;
+    background: #fff;
+  }
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    margin-top: 36px;
+  }
   .feature-card {
     background: #fff;
     border-radius: var(--border-radius-lg);
     padding: 32px 22px;
     border: 1px solid var(--border-color);
     box-shadow: var(--shadow-md);
-    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease,
+      border-color 0.25s ease;
   }
-  .feature-card:hover { transform: translateY(-6px); border-color: var(--color-primary-solid); box-shadow: var(--shadow-xl); }
+  .feature-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--color-primary-solid);
+    box-shadow: var(--shadow-xl);
+  }
   .feature-icon {
-    width: 56px; height: 56px; border-radius: 16px;
-    display: flex; align-items: center; justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin: 0 0 18px 0;
-    font-size: 22px; color: #fff;
+    font-size: 22px;
+    color: #fff;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
   }
   .features-grid .feature-card:nth-child(1) .feature-icon { background: linear-gradient(135deg, #3b82f6, #2563eb); }
@@ -184,16 +107,38 @@
   .features-grid .feature-card:nth-child(6) .feature-icon { background: linear-gradient(135deg, #06b6d4, #0891b2); }
 
   /* Platform */
-  .platform { padding: 96px 0; background: rgba(31, 75, 122, 0.95); color: #fff; }
-  .platform-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 44px; align-items: center; }
+  .platform {
+    padding: 96px 0;
+    background: rgba(31, 75, 122, 0.95);
+    color: #fff;
+  }
+  .platform-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 44px;
+    align-items: center;
+  }
   .platform-content h2 { color: #fff; }
   .platform-content .section-description { color: rgba(255, 255, 255, 0.9); }
   .platform-content .subtitle { color: #96e0d9; }
   .platform-feature { margin-bottom: 22px; }
-  .platform-feature h3 { color: #fff; margin-bottom: 6px; font-size: 1.35rem; }
-  .platform-feature h3 i { color: #96e0d9; margin-right: 10px; }
-  .platform-feature p { color: rgba(255, 255, 255, 0.82); margin-left: 38px; }
-  .platform-visual { position: relative; height: 520px; }
+  .platform-feature h3 {
+    color: #fff;
+    margin-bottom: 6px;
+    font-size: 1.35rem;
+  }
+  .platform-feature h3 i {
+    color: #96e0d9;
+    margin-right: 10px;
+  }
+  .platform-feature p {
+    color: rgba(255, 255, 255, 0.82);
+    margin-left: 38px;
+  }
+  .platform-visual {
+    position: relative;
+    height: 520px;
+  }
   .floating-card {
     position: absolute;
     background: #fff;
@@ -202,26 +147,59 @@
     box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
     width: 300px;
   }
-  .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-  .card-icon {
-    width: 44px; height: 44px; border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    color: #fff; font-size: 20px;
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
   }
-  .card-1 { top: 34px; left: 0; animation: float 6s ease-in-out infinite; }
+  .card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 20px;
+  }
+  .card-1 {
+    top: 34px;
+    left: 0;
+    animation: float 6s ease-in-out infinite;
+  }
   .card-1 .card-icon { background: #4cc9f0; }
   .card-1 h4 { color: #4cc9f0; }
-  .card-2 { left: 60px; animation: float 6s ease-in-out infinite 1s; }
+  .card-2 {
+    left: 60px;
+    animation: float 6s ease-in-out infinite 1s;
+  }
   .card-2 .card-icon { background: #f72585; }
   .card-2 h4 { color: #f72585; }
-  .card-3 { top: 360px; left: 120px; animation: float 6s ease-in-out infinite 2s; }
+  .card-3 {
+    top: 360px;
+    left: 120px;
+    animation: float 6s ease-in-out infinite 2s;
+  }
   .card-3 .card-icon { background: #ffb703; }
   .card-3 h4 { color: #ffb703; }
-  @keyframes float { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-15px);} }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
 
   /* Security */
-  .security { padding: 88px 0; background: var(--bg-tertiary); }
-  .security-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 34px; }
+  .security {
+    padding: 88px 0;
+    background: var(--bg-tertiary);
+  }
+  .security-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-top: 34px;
+  }
   .security-item {
     text-align: center;
     padding: 28px 18px;
@@ -229,14 +207,26 @@
     border-radius: var(--border-radius);
     border: 1px solid var(--border-color);
     box-shadow: var(--shadow-md);
-    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    transition:
+      transform 0.25s ease,
+      box-shadow 0.25s ease,
+      border-color 0.25s ease;
   }
-  .security-item:hover { border-color: var(--color-primary-solid); transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+  .security-item:hover {
+    border-color: var(--color-primary-solid);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
   .security-icon {
-    width: 64px; height: 64px; border-radius: 999px;
-    display: flex; align-items: center; justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin: 0 auto 16px;
-    font-size: 24px; color: #fff;
+    font-size: 24px;
+    color: #fff;
   }
   .security-grid .security-item:nth-child(1) .security-icon { background: linear-gradient(135deg, #3b82f6, #2563eb); }
   .security-grid .security-item:nth-child(2) .security-icon { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
@@ -244,7 +234,10 @@
   .security-grid .security-item:nth-child(4) .security-icon { background: linear-gradient(135deg, #f97316, #ea580c); }
 
   /* Testimonials */
-  .testimonials { padding: 96px 0; background: var(--gradient-testimonials); }
+  .testimonials {
+    padding: 96px 0;
+    background: var(--gradient-testimonials);
+  }
   .testimonials h2 { color: #fff; }
   .testimonials .subtitle { color: #cef2ea; }
   .testimonials p { color: rgba(255, 255, 255, 0.9); }
@@ -275,12 +268,19 @@
     color: var(--text-secondary);
     font-style: italic;
   }
-  .testimonial-author { display: flex; align-items: center; gap: 14px; }
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
   .author-avatar {
-    width: 54px; height: 54px;
+    width: 54px;
+    height: 54px;
     background: var(--color-primary-solid);
     border-radius: 999px;
-    display: flex; align-items: center; justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-weight: 800;
     font-size: 18px;
     color: #fff;
@@ -288,333 +288,403 @@
   }
 
   /* CTA */
-  .cta { padding: 96px 0; background: var(--gradient-midnight); }
-  .cta-content { max-width: 720px; margin: 0 auto; text-align: center; }
-  .cta h2 { color: #fff; margin-bottom: 14px; }
-  .cta p { color: rgba(255, 255, 255, 0.9); font-size: 1.1rem; margin-bottom: 22px; }
-  .cta-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-  .btn-cta-primary { background: #fff; color: var(--color-primary-solid); }
+  .cta {
+    padding: 96px 0;
+    background: var(--gradient-midnight);
+  }
+  .cta-content {
+    max-width: 720px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .cta h2 {
+    color: #fff;
+    margin-bottom: 14px;
+  }
+  .cta p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1.1rem;
+    margin-bottom: 22px;
+  }
+  .cta-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn-cta-primary {
+    background: #fff;
+    color: var(--color-primary-solid);
+  }
 
-  /* Responsive improvements */
+  /* Responsive section adjustments */
   @media (max-width: 1024px) {
     .features-grid { grid-template-columns: repeat(2, 1fr); }
     .platform-grid { grid-template-columns: 1fr; gap: 34px; }
     .platform-visual { height: 440px; order: -1; }
     .security-grid { grid-template-columns: repeat(2, 1fr); }
-    .nav-links { gap: 18px; }
   }
+
   @media (max-width: 768px) {
-    .container { padding: 0 16px; }
     .hero { padding: 132px 0 76px; }
     .hero-actions { flex-direction: column; align-items: center; }
     .hero-actions .btn { width: 100%; max-width: 420px; }
+    .hero-stats { gap: 12px; }
+    .stat-item { min-width: 148px; padding: 16px; }
+
     .features { padding: 76px 0; }
     .features-grid { grid-template-columns: 1fr; }
+
     .platform { padding: 76px 0; }
     .platform-visual { height: 380px; }
     .floating-card { width: min(280px, 90vw); padding: 18px; }
     .card-2 { left: 20px; top: 0px; }
     .card-3 { left: 20px; top: 240px; }
+
     .security { padding: 68px 0; }
     .security-grid { grid-template-columns: 1fr; }
+
     .testimonials { padding: 76px 0; }
     .testimonial-card { padding: 26px 18px; }
     .testimonial-card::before { font-size: 84px; }
+
     .cta { padding: 76px 0; }
     .cta-actions { flex-direction: column; align-items: center; }
     .cta-actions .btn { width: 100%; max-width: 420px; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-    * { animation: none !important; transition: none !important; }
   }
 </style>
 {% endblock %}
 
 {% block content %}
-  <section class="hero">
-    <div class="container">
-      <div class="hero-content">
-        <h1>{% trans "Smart Global Payroll Platform" %}</h1>
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <h1>{% trans "Smart Global Payroll Platform" %}</h1>
 
+      <p>
+        {% blocktrans trimmed %}
+          Streamline global workforce management with AI-driven compliance,
+          real-time insights, and seamless payroll processing across 40+
+          countries.
+        {% endblocktrans %}
+      </p>
+
+      <div class="hero-actions">
+        <a href="{% url 'home:demo' %}" class="btn btn-primary btn-lg">
+          <i class="fas fa-play-circle"></i> {% trans "Watch Demo" %}
+        </a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="stat-number">99.8%</div>
+          <div class="stat-label">{% trans "Accuracy Rate" %}</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">40+</div>
+          <div class="stat-label">{% trans "Countries" %}</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">24</div>
+          <div class="stat-label">{% trans "Hours Support" %}</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">100%</div>
+          <div class="stat-label">{% trans "Compliance" %}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features" class="features">
+  <div class="container">
+    <div class="section-title">
+      <div class="subtitle">{% trans "Powerful Features" %}</div>
+      <h2>{% trans "Designed for Global Scale" %}</h2>
+      <p>
+        {% trans "Everything you need to manage complex global payroll operations with confidence" %}
+      </p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-robot"></i></div>
+        <h3>{% trans "AI-Powered Compliance" %}</h3>
         <p>
-          {% blocktrans trimmed %}
-            Streamline global workforce management with AI-driven compliance,
-            real-time insights, and seamless payroll processing across 40+
-            countries.
-          {% endblocktrans %}
+          {% trans "Automated regulatory updates and risk assessment across all jurisdictions with machine learning algorithms." %}
         </p>
+      </div>
 
-        <div class="hero-actions">
-          <a href="{% url 'home:demo' %}" class="btn btn-primary btn-lg">
-            <i class="fas fa-play-circle"></i> {% trans "Watch Demo" %}
-          </a>
-        </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-clock"></i></div>
+        <h3>{% trans "Real-time Analytics" %}</h3>
+        <p>
+          {% trans "Comprehensive dashboards with live insights into payroll costs, compliance status, and operational metrics." %}
+        </p>
+      </div>
 
-        <div class="hero-stats">
-          <div class="stat-item">
-            <div class="stat-number">99.8%</div>
-            <div class="stat-label">{% trans "Accuracy Rate" %}</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-number">40+</div>
-            <div class="stat-label">{% trans "Countries" %}</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-number">24</div>
-            <div class="stat-label">{% trans "Hours Support" %}</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-number">100%</div>
-            <div class="stat-label">{% trans "Compliance" %}</div>
-          </div>
-        </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+        <h3>{% trans "Instant Processing" %}</h3>
+        <p>
+          {% trans "Batch process thousands of payments across different currencies and banking systems simultaneously." %}
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+        <h3>{% trans "Enterprise Security" %}</h3>
+        <p>
+          {% trans "Bank-grade encryption, multi-factor authentication, and SOC 2 Type II certified infrastructure." %}
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-globe-americas"></i></div>
+        <h3>{% trans "Global Coverage" %}</h3>
+        <p>
+          {% trans "Seamless payroll processing across 40+ countries with local compliance and tax expertise built-in." %}
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon"><i class="fas fa-file-contract"></i></div>
+        <h3>{% trans "Audit Trail" %}</h3>
+        <p>
+          {% trans "Complete transparency with immutable records for every transaction and compliance verification." %}
+        </p>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section id="features" class="features">
-    <div class="container">
-      <div class="section-title">
-        <div class="subtitle">{% trans "Powerful Features" %}</div>
-        <h2>{% trans "Designed for Global Scale" %}</h2>
-        <p>{% trans "Everything you need to manage complex global payroll operations with confidence" %}</p>
-      </div>
-
-      <div class="features-grid">
-        <div class="feature-card">
-          <div class="feature-icon"><i class="fas fa-robot"></i></div>
-          <h3>{% trans "AI-Powered Compliance" %}</h3>
-          <p>{% trans "Automated regulatory updates and risk assessment across all jurisdictions with machine learning algorithms." %}</p>
+<section id="platform" class="platform">
+  <div class="container">
+    <div class="platform-grid">
+      <div class="platform-content">
+        <div style="margin-bottom: 30px">
+          <div class="subtitle">{% trans "Unified Platform" %}</div>
+          <h2>{% trans "Everything in One Dashboard" %}</h2>
+          <p class="section-description">
+            {% trans "Manage your entire global payroll operation from a single, intuitive interface with real-time data and actionable insights." %}
+          </p>
         </div>
 
-        <div class="feature-card">
-          <div class="feature-icon"><i class="fas fa-clock"></i></div>
-          <h3>{% trans "Real-time Analytics" %}</h3>
-          <p>{% trans "Comprehensive dashboards with live insights into payroll costs, compliance status, and operational metrics." %}</p>
+        <div class="platform-feature">
+          <h3>
+            <i class="fas fa-check-circle"></i>{% trans "Real-time Analytics" %}
+          </h3>
+          <p>
+            {% trans "Monitor payroll costs, compliance status, and operational metrics across all regions with live dashboards." %}
+          </p>
         </div>
 
-        <div class="feature-card">
-          <div class="feature-icon"><i class="fas fa-bolt"></i></div>
-          <h3>{% trans "Instant Processing" %}</h3>
-          <p>{% trans "Batch process thousands of payments across different currencies and banking systems simultaneously." %}</p>
+        <div class="platform-feature">
+          <h3>
+            <i class="fas fa-check-circle"></i>{% trans "Multi-currency Support" %}
+          </h3>
+          <p>
+            {% trans "Process payments in 40+ currencies with automated forex management and optimal exchange rates." %}
+          </p>
         </div>
 
-        <div class="feature-card">
-          <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
-          <h3>{% trans "Enterprise Security" %}</h3>
-          <p>{% trans "Bank-grade encryption, multi-factor authentication, and SOC 2 Type II certified infrastructure." %}</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon"><i class="fas fa-globe-americas"></i></div>
-          <h3>{% trans "Global Coverage" %}</h3>
-          <p>{% trans "Seamless payroll processing across 40+ countries with local compliance and tax expertise built-in." %}</p>
-        </div>
-
-        <div class="feature-card">
-          <div class="feature-icon"><i class="fas fa-file-contract"></i></div>
-          <h3>{% trans "Audit Trail" %}</h3>
-          <p>{% trans "Complete transparency with immutable records for every transaction and compliance verification." %}</p>
+        <div class="platform-feature">
+          <h3>
+            <i class="fas fa-check-circle"></i>{% trans "Automated Reporting" %}
+          </h3>
+          <p>
+            {% trans "Generate compliance reports, tax filings, and financial statements automatically across all jurisdictions." %}
+          </p>
         </div>
       </div>
-    </div>
-  </section>
 
-  <section id="platform" class="platform">
-    <div class="container">
-      <div class="platform-grid">
-        <div class="platform-content">
-          <div style="margin-bottom: 30px">
-            <div class="subtitle">{% trans "Unified Platform" %}</div>
-            <h2>{% trans "Everything in One Dashboard" %}</h2>
-            <p class="section-description">
-              {% trans "Manage your entire global payroll operation from a single, intuitive interface with real-time data and actionable insights." %}
-            </p>
-          </div>
-
-          <div class="platform-feature">
-            <h3><i class="fas fa-check-circle"></i>{% trans "Real-time Analytics" %}</h3>
-            <p>{% trans "Monitor payroll costs, compliance status, and operational metrics across all regions with live dashboards." %}</p>
-          </div>
-
-          <div class="platform-feature">
-            <h3><i class="fas fa-check-circle"></i>{% trans "Multi-currency Support" %}</h3>
-            <p>{% trans "Process payments in 40+ currencies with automated forex management and optimal exchange rates." %}</p>
-          </div>
-
-          <div class="platform-feature">
-            <h3><i class="fas fa-check-circle"></i>{% trans "Automated Reporting" %}</h3>
-            <p>{% trans "Generate compliance reports, tax filings, and financial statements automatically across all jurisdictions." %}</p>
-          </div>
-        </div>
-
-        <div class="platform-visual" aria-hidden="true">
-          <div class="floating-card card-1">
-            <div class="card-header">
-              <div class="card-icon"><i class="fas fa-chart-bar"></i></div>
-              <div>
-                <h4>{% trans "Payroll Analytics" %}</h4>
-                <p style="color: var(--text-muted); font-size: 13px">{% trans "Live Dashboard" %}</p>
-              </div>
+      <div class="platform-visual" aria-hidden="true">
+        <div class="floating-card card-1">
+          <div class="card-header">
+            <div class="card-icon"><i class="fas fa-chart-bar"></i></div>
+            <div>
+              <h4>{% trans "Payroll Analytics" %}</h4>
+              <p style="color: var(--text-muted); font-size: 13px">
+                {% trans "Live Dashboard" %}
+              </p>
             </div>
-            <p style="color: var(--text-secondary); font-size: 14px">
-              {% trans "Real-time insights into global payroll operations with predictive analytics." %}
-            </p>
           </div>
+          <p style="color: var(--text-secondary); font-size: 14px">
+            {% trans "Real-time insights into global payroll operations with predictive analytics." %}
+          </p>
+        </div>
 
-          <div class="floating-card card-2">
-            <div class="card-header">
-              <div class="card-icon"><i class="fas fa-shield"></i></div>
-              <div>
-                <h4>{% trans "Compliance Status" %}</h4>
-                <p style="color: var(--text-muted); font-size: 13px">{% trans "All Systems Go" %}</p>
-              </div>
+        <div class="floating-card card-2">
+          <div class="card-header">
+            <div class="card-icon"><i class="fas fa-shield"></i></div>
+            <div>
+              <h4>{% trans "Compliance Status" %}</h4>
+              <p style="color: var(--text-muted); font-size: 13px">
+                {% trans "All Systems Go" %}
+              </p>
             </div>
-            <p style="color: var(--text-secondary); font-size: 14px">
-              {% trans "100% compliance across all active jurisdictions with automated updates." %}
-            </p>
           </div>
+          <p style="color: var(--text-secondary); font-size: 14px">
+            {% trans "100% compliance across all active jurisdictions with automated updates." %}
+          </p>
+        </div>
 
-          <div class="floating-card card-3">
-            <div class="card-header">
-              <div class="card-icon"><i class="fas fa-money-check-alt"></i></div>
-              <div>
-                <h4>{% trans "Payment Processing" %}</h4>
-                <p style="color: var(--text-muted); font-size: 13px">{% trans "Batch Ready" %}</p>
-              </div>
+        <div class="floating-card card-3">
+          <div class="card-header">
+            <div class="card-icon"><i class="fas fa-money-check-alt"></i></div>
+            <div>
+              <h4>{% trans "Payment Processing" %}</h4>
+              <p style="color: var(--text-muted); font-size: 13px">
+                {% trans "Batch Ready" %}
+              </p>
             </div>
-            <p style="color: var(--text-secondary); font-size: 14px">
-              {% trans "Process payments in multiple currencies with automated reconciliation." %}
-            </p>
           </div>
+          <p style="color: var(--text-secondary); font-size: 14px">
+            {% trans "Process payments in multiple currencies with automated reconciliation." %}
+          </p>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section id="security" class="security">
-    <div class="container">
-      <div class="section-title">
-        <div class="subtitle">{% trans "Enterprise Security" %}</div>
-        <h2>{% trans "Bank-Grade Protection" %}</h2>
-        <p>{% trans "Your global payroll data is protected by multiple layers of enterprise security" %}</p>
+<section id="security" class="security">
+  <div class="container">
+    <div class="section-title">
+      <div class="subtitle">{% trans "Enterprise Security" %}</div>
+      <h2>{% trans "Bank-Grade Protection" %}</h2>
+      <p>
+        {% trans "Your global payroll data is protected by multiple layers of enterprise security" %}
+      </p>
+    </div>
+
+    <div class="security-grid">
+      <div class="security-item">
+        <div class="security-icon"><i class="fas fa-lock"></i></div>
+        <h3>{% trans "AES-256 Encryption" %}</h3>
+        <p>
+          {% trans "All data encrypted in transit and at rest with military-grade encryption standards." %}
+        </p>
+      </div>
+      <div class="security-item">
+        <div class="security-icon"><i class="fas fa-user-shield"></i></div>
+        <h3>{% trans "Multi-Factor Auth" %}</h3>
+        <p>
+          {% trans "Enterprise-grade MFA with biometric options for all user access levels." %}
+        </p>
+      </div>
+      <div class="security-item">
+        <div class="security-icon"><i class="fas fa-shield-alt"></i></div>
+        <h3>{% trans "SOC 2 Certified" %}</h3>
+        <p>
+          {% trans "Regular third-party audits ensure continuous compliance with security standards." %}
+        </p>
+      </div>
+      <div class="security-item">
+        <div class="security-icon"><i class="fas fa-database"></i></div>
+        <h3>{% trans "Data Sovereignty" %}</h3>
+        <p>
+          {% trans "Regional data centers ensure compliance with local data protection regulations." %}
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="testimonials" class="testimonials">
+  <div class="container">
+    <div class="section-title">
+      <div class="subtitle">{% trans "Trusted by Leaders" %}</div>
+      <h2>{% trans "Global Success Stories" %}</h2>
+      <p>
+        {% trans "See how companies are transforming their global payroll operations with ExactusPay" %}
+      </p>
+    </div>
+
+    <div class="testimonial-card">
+      <div class="testimonial-content">
+        {% blocktrans trimmed %}
+          "ExactusPay revolutionized our global payroll operations. We reduced
+          processing time by 80% while eliminating compliance errors across 15
+          countries. Their platform paid for itself within the first quarter,
+          and the ROI has been phenomenal."
+        {% endblocktrans %}
       </div>
 
-      <div class="security-grid">
-        <div class="security-item">
-          <div class="security-icon"><i class="fas fa-lock"></i></div>
-          <h3>{% trans "AES-256 Encryption" %}</h3>
-          <p>{% trans "All data encrypted in transit and at rest with military-grade encryption standards." %}</p>
-        </div>
-        <div class="security-item">
-          <div class="security-icon"><i class="fas fa-user-shield"></i></div>
-          <h3>{% trans "Multi-Factor Auth" %}</h3>
-          <p>{% trans "Enterprise-grade MFA with biometric options for all user access levels." %}</p>
-        </div>
-        <div class="security-item">
-          <div class="security-icon"><i class="fas fa-shield-alt"></i></div>
-          <h3>{% trans "SOC 2 Certified" %}</h3>
-          <p>{% trans "Regular third-party audits ensure continuous compliance with security standards." %}</p>
-        </div>
-        <div class="security-item">
-          <div class="security-icon"><i class="fas fa-database"></i></div>
-          <h3>{% trans "Data Sovereignty" %}</h3>
-          <p>{% trans "Regional data centers ensure compliance with local data protection regulations." %}</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">SR</div>
+        <div>
+          <h4>{% trans "Sarah Rodriguez" %}</h4>
+          <p style="color: var(--text-muted); margin-bottom: 0">
+            {% trans "Global Operations Director, TechScale Inc." %}
+          </p>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section id="testimonials" class="testimonials">
-    <div class="container">
-      <div class="section-title">
-        <div class="subtitle">{% trans "Trusted by Leaders" %}</div>
-        <h2>{% trans "Global Success Stories" %}</h2>
-        <p>{% trans "See how companies are transforming their global payroll operations with ExactusPay" %}</p>
-      </div>
+<section class="cta">
+  <div class="container">
+    <div class="cta-content">
+      <h2>{% trans "Ready to Simplify Global Payroll?" %}</h2>
+      <p>
+        {% trans "Join 500+ enterprises that trust ExactusPay with their global workforce management. Schedule a personalized demo to see our platform in action." %}
+      </p>
 
-      <div class="testimonial-card">
-        <div class="testimonial-content">
-          {% blocktrans trimmed %}
-            "ExactusPay revolutionized our global payroll operations. We reduced
-            processing time by 80% while eliminating compliance errors across 15
-            countries. Their platform paid for itself within the first quarter,
-            and the ROI has been phenomenal."
-          {% endblocktrans %}
-        </div>
-
-        <div class="testimonial-author">
-          <div class="author-avatar">SR</div>
-          <div>
-            <h4>{% trans "Sarah Rodriguez" %}</h4>
-            <p style="color: var(--text-muted); margin-bottom: 0">
-              {% trans "Global Operations Director, TechScale Inc." %}
-            </p>
-          </div>
-        </div>
+      <div class="cta-actions">
+        <a href="{% url 'home:demo' %}" class="btn btn-cta-primary btn-lg btn">
+          <i class="fas fa-calendar-check"></i> {% trans "Schedule Demo" %}
+        </a>
       </div>
     </div>
-  </section>
-
-  <section class="cta">
-    <div class="container">
-      <div class="cta-content">
-        <h2>{% trans "Ready to Simplify Global Payroll?" %}</h2>
-        <p>{% trans "Join 500+ enterprises that trust ExactusPay with their global workforce management. Schedule a personalized demo to see our platform in action." %}</p>
-
-        <div class="cta-actions">
-          <a href="{% url 'home:demo' %}" class="btn btn-cta-primary btn-lg">
-            <i class="fas fa-calendar-check"></i> {% trans "Schedule Demo" %}
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
+  </div>
+</section>
 {% endblock %}
 
-{% block inline_js %}
-  // Animated counter for stats (específico desta página)
-  const stats = document.querySelectorAll(".stat-number");
-  if ("IntersectionObserver" in window && stats.length) {
-    const statObserver = new IntersectionObserver(
-      (entries, obs) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
+{% block extra_js_inline %}
+// Animated counter for stats
+const stats = document.querySelectorAll(".stat-number");
+if ("IntersectionObserver" in window && stats.length) {
+  const statObserver = new IntersectionObserver(
+    (entries, obs) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
 
-          const el = entry.target;
-          const raw = el.textContent.trim();
-          const target = parseFloat(raw.replace(/[^0-9.]/g, ""));
-          const hasPercent = raw.includes("%");
-          const hasPlus = raw.includes("+");
+        const el = entry.target;
+        const raw = el.textContent.trim();
+        const target = parseFloat(raw.replace(/[^0-9.]/g, ""));
+        const hasPercent = raw.includes("%");
+        const hasPlus = raw.includes("+");
 
-          let current = 0;
-          const steps = 45;
-          const increment = target / steps;
+        let current = 0;
+        const steps = 45;
+        const increment = target / steps;
 
-          const tick = () => {
-            current += increment;
-            if (current >= target) {
-              el.textContent =
-                (target % 1 === 0 ? target.toFixed(0) : target.toFixed(1)) +
-                (hasPercent ? "%" : "") +
-                (hasPlus ? "+" : "");
-              return;
-            }
+        const tick = () => {
+          current += increment;
+          if (current >= target) {
             el.textContent =
-              String(Math.floor(current)) +
+              (target % 1 === 0 ? target.toFixed(0) : target.toFixed(1)) +
               (hasPercent ? "%" : "") +
               (hasPlus ? "+" : "");
-            window.setTimeout(tick, 28);
-          };
+            return;
+          }
+          el.textContent =
+            String(Math.floor(current)) +
+            (hasPercent ? "%" : "") +
+            (hasPlus ? "+" : "");
+          window.setTimeout(tick, 28);
+        };
 
-          tick();
-          obs.unobserve(el);
-        });
-      },
-      { threshold: 0.5 }
-    );
+        tick();
+        obs.unobserve(el);
+      });
+    },
+    { threshold: 0.5 }
+  );
 
-    stats.forEach((s) => statObserver.observe(s));
-  }
+  stats.forEach((s) => statObserver.observe(s));
+}
 {% endblock %}

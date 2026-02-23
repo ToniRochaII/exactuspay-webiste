@@ -165,21 +165,29 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # -----------------------------------------------------------------------------
 # Email (Hostinger SMTP over SSL 465)
 # -----------------------------------------------------------------------------
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.hostinger.com"
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.gmail.com")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
 
-EMAIL_HOST_USER = "no-reply@exactuspay.com"
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "").strip()
+EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "1") == "1"
+EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL", "0") == "1"
 
-# Falha SEMPRE se faltar password quando usas SMTP real
-if not EMAIL_HOST_PASSWORD:
-    raise RuntimeError("EMAIL_HOST_PASSWORD is missing. Set it in Render env vars.")
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER or "no-reply@localhost")
 
-DEFAULT_FROM_EMAIL = "no-reply@exactuspay.com"
-DEMO_REQUEST_TO_EMAIL = os.environ.get("DEMO_REQUEST_TO_EMAIL", "antoniorocha@exactuspay.com").strip()
+if DEBUG:
+    # Dev-friendly: don't require SMTP creds
+    # Option 1: print emails to console
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+    # (Optional) If you prefer file backend:
+    # EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+    # EMAIL_FILE_PATH = BASE_DIR / "tmp_emails"
+else:
+    # Production: fail fast if missing
+    if not EMAIL_HOST_PASSWORD:
+        raise RuntimeError("EMAIL_HOST_PASSWORD is missing. Set it in Render env vars.")
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 EMAIL_TIMEOUT = 20
 
