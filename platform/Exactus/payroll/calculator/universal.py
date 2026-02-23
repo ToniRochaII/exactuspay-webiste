@@ -189,7 +189,7 @@ class UniversalPayrollCalculator(BasePayrollCalculator):
                     gross_sum += val
                 # deductions inside gross bands
                 elif 2000 <= code_int <= 2999:
-                    gross_sum -= abs(val)
+                    gross_sum += abs(val)
                 # other income bands
                 elif 3000 <= code_int <= 4999:
                     gross_sum += val
