@@ -13,4 +13,11 @@ urlpatterns = [
 
     # This URL catches the form submission
     path('demo-request/', views.demo_request_view, name='demo_request'),
+
+
+
+
+
+    path('articles/br/overview/', views.brazil_article_0001, name='brazil_article_0001'),
+    path('articles/cl/overview/', views.brazil_article_0001, name='chile_article_0001'),
 ]

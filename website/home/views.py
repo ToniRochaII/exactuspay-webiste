@@ -76,3 +76,11 @@ def demo_request_view(request):
 
     # If someone tries to visit the URL directly without submitting the form
     return redirect('home:demo')
+
+
+
+def brazil_article_0001(request):
+    return render(request, 'articles/br/article_0001.html')
+
+def chile_article_0001(request):
+    return render(request, 'articles/cl/article_0001.html')
