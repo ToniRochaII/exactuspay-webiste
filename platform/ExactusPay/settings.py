@@ -125,23 +125,33 @@ WSGI_APPLICATION = 'ExactusPay.wsgi.application'
 # ================================
 # DATABASE CONFIGURATION
 # ================================
-DATABASE_URL = os.environ.get("DATABASE_URL")
-
 DATABASE_URL = (os.environ.get("DATABASE_URL") or "").strip()
 
 if DATABASE_URL:
     DATABASES = {
         "default": dj_database_url.parse(
             DATABASE_URL,
-            conn_max_age=60,   # 60 is a safer baseline than 600 on hosted DBs
+            conn_max_age=int(os.environ.get("DB_CONN_MAX_AGE", "60")),
         )
     }
+
+    # Health checks (Django 4.2+)
     DATABASES["default"]["CONN_HEALTH_CHECKS"] = True
 
-    # Only force SSL if you explicitly decide to via env var
+    # Ensure OPTIONS exists, then add socket/keepalive tuning
+    DATABASES["default"].setdefault("OPTIONS", {})
+    DATABASES["default"]["OPTIONS"].update({
+        "connect_timeout": 5,
+        "keepalives": 1,
+        "keepalives_idle": 30,
+        "keepalives_interval": 10,
+        "keepalives_count": 5,
+    })
+
+    # Optional SSL enforcement
     if os.environ.get("REQUIRE_DB_SSL", "0") == "1":
-        DATABASES["default"].setdefault("OPTIONS", {})
         DATABASES["default"]["OPTIONS"]["sslmode"] = "require"
+
 else:
     DATABASES = {
         "default": {
@@ -254,9 +264,10 @@ else:
     SESSION_COOKIE_SECURE = False
 
 SESSION_COOKIE_AGE = 2000
-SESSION_SAVE_EVERY_REQUEST = True
+SESSION_SAVE_EVERY_REQUEST = False
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
 
 
 # ================================
