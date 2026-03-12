@@ -1,0 +1,1236 @@
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+{% get_available_languages as LANGUAGES %}
+{% get_language_info_list for LANGUAGES as languages %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XTL69YL5WC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-XTL69YL5WC');
+</script>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Primary SEO -->
+<title>{% trans "Global Payroll Software | Multi-Country Payroll & Compliance Platform | ExactusPay" %}</title>
+
+
+<meta name="description" content="ExactusPay is a powerful global payroll software delivering multi-country payroll, automated compliance, real-time workforce analytics, standardized reporting, and payroll simulations. Manage international payroll accurately, securely, and at scale from one intelligent platform." />
+
+<meta name="keywords" content="global payroll software, multi-country payroll, international payroll system, payroll compliance software, global payroll platform, payroll automation, payroll simulations, workforce analytics, multinational payroll management, cloud payroll solution, global HR payroll, payroll reporting software, international payroll compliance, scalable payroll platform" />
+
+<meta name="author" content="ExactusPay" />
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+<meta name="googlebot" content="index, follow" />
+<meta name="bingbot" content="index, follow" />
+<link rel="canonical" href="https://www.exactuspay.com/" />
+
+<!-- Language & International -->
+<meta http-equiv="content-language" content="{{ LANGUAGE_CODE }}" />
+<link rel="alternate" hreflang="en" href="https://www.exactuspay.com/" />
+<link rel="alternate" hreflang="pt" href="https://www.exactuspay.com/pt/" />
+<link rel="alternate" hreflang="es" href="https://www.exactuspay.com/es/" />
+<link rel="alternate" hreflang="x-default" href="https://www.exactuspay.com/" />
+
+<!-- Open Graph (Facebook / LinkedIn) -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="ExactusPay | Global Payroll Software for Multi-Country Payroll & Compliance" />
+<meta property="og:description" content="Run global payroll with confidence. Automated compliance, payroll simulations, standardized reporting, and real-time analytics in one powerful multi-country payroll platform." />
+<meta property="og:url" content="https://www.exactuspay.com/" />
+<meta property="og:image" content="https://www.exactuspay.com/static/img/og-exactuspay.png" />
+<meta property="og:site_name" content="ExactusPay" />
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="ExactusPay | Global Payroll Software" />
+<meta name="twitter:description" content="Multi-country payroll, automated compliance, real-time workforce analytics, and payroll simulations—powered by ExactusPay." />
+<meta name="twitter:image" content="https://www.exactuspay.com/static/img/og-exactuspay.png" />
+
+<!-- App / Platform Identity -->
+<meta name="application-name" content="ExactusPay" />
+<meta name="apple-mobile-web-app-title" content="ExactusPay" />
+<meta name="theme-color" content="#1f4b7a" />
+
+<!-- Performance -->
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="referrer" content="strict-origin-when-cross-origin" />
+
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --color-primary: #1f4b7ae6;
+      --color-secondary: rgba(71, 84, 128, 0.9);
+      --color-accent: rgba(103, 170, 199, 0.9);
+      --color-light: rgba(116, 181, 204, 0.9);
+      --color-mint: rgba(237, 245, 243, 0.9);
+
+      --color-primary-solid: rgb(31, 75, 122);
+      --color-secondary-solid: rgb(71, 84, 128);
+
+      --gradient-midnight: linear-gradient(90deg, #000814 0%, #1F4B7A 100%);
+      --gradient-testimonials: linear-gradient(135deg, rgba(71, 84, 128, 0.9), rgba(103, 170, 199, 0.9));
+
+      --bg-primary: #FFFFFF;
+      --bg-secondary: #F8FAFC;
+      --bg-tertiary: #F1F5F9;
+      --bg-card: #FFFFFF;
+
+      --text-primary: #0F172A;
+      --text-secondary: #475569;
+      --text-muted: #64748B;
+
+      --shadow-sm: 0 2px 8px rgba(31, 75, 122, 0.05);
+      --shadow-md: 0 4px 16px rgba(31, 75, 122, 0.08);
+      --shadow-lg: 0 10px 40px rgba(31, 75, 122, 0.1);
+      --shadow-xl: 0 20px 60px rgba(31, 75, 122, 0.12);
+
+      --border-radius: 16px;
+      --border-radius-lg: 24px;
+      --border-color: rgba(226, 232, 240, 0.8);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+
+    body {
+      font-family: 'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;
+      font-weight: 400;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+
+    h1,h2,h3,h4 { font-family:'Poppins',sans-serif; font-weight:700; line-height:1.2; }
+    h1 {
+      font-size: 4rem;
+      margin-bottom: 24px;
+      background: linear-gradient(135deg, #FFFFFF, #F0F9FF);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    h2 { font-size: 3.2rem; margin-bottom: 20px; color: var(--text-primary); }
+    h3 { font-size: 1.8rem; margin-bottom: 16px; color: var(--color-primary-solid); }
+    p { color: var(--text-secondary); font-size: 1.125rem; margin-bottom: 24px; }
+
+    .section-title { text-align:center; margin-bottom: 60px; }
+    .section-title .subtitle{
+      color: var(--color-secondary-solid);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+
+    /* Buttons */
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding: 16px 32px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 16px;
+      text-decoration:none;
+      transition: all 0.3s ease;
+      border:none;
+      cursor:pointer;
+      gap: 10px;
+    }
+    .btn-primary{
+      background: var(--color-primary-solid);
+      color:#fff;
+      box-shadow: 0 8px 20px rgba(31, 75, 122, 0.2);
+    }
+    .btn-primary:hover{
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-xl);
+      background: #0f3a5e;
+    }
+    .btn-secondary{
+      background: rgba(255,255,255,0.1);
+      color:#fff;
+      border: 1px solid rgba(255,255,255,0.2);
+      backdrop-filter: blur(10px);
+    }
+    .btn-secondary:hover{ background: rgba(255,255,255,0.2); transform: translateY(-3px); }
+    .btn-lg { padding: 18px 42px; font-size: 18px; }
+
+    .btn-outline{
+      background: transparent;
+      border: 2px solid rgba(255,255,255,0.85);
+      color:#fff;
+    }
+    .btn-outline:hover{
+      background: rgba(255,255,255,0.12);
+      transform: translateY(-3px);
+    }
+
+    /* Header (LOCKED STANDARD) */
+    header{
+      position: fixed; top:0; left:0; width:100%; z-index:1000;
+      background: var(--gradient-midnight);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding: 20px 0;
+      transition: all 0.3s ease;
+    }
+    .nav-container{ display:flex; justify-content:space-between; align-items:center; }
+    .sidebar-brand{ color:#fff; display:block; font-size:1.8rem; font-weight:700; text-decoration:none; }
+    .nav-links{ display:flex; gap:40px; list-style:none; }
+    .nav-links a{
+      color: rgba(255,255,255,0.85);
+      text-decoration:none;
+      font-weight:500;
+      transition: all .3s;
+      position:relative;
+      padding: 8px 0;
+    }
+    .nav-links a::after{
+      content:'';
+      position:absolute;
+      bottom:0; left:0;
+      width:0; height:2px;
+      background:#96E0D9;
+      transition: width .3s ease;
+    }
+    .nav-links a:hover{ color:#fff; }
+    .nav-links a:hover::after{ width:100%; }
+    .nav-actions{ display:flex; gap:16px; align-items:center; }
+
+    /* HERO (NO FORM HERE) */
+    .hero{
+      padding: 180px 0 120px;
+      position: relative;
+      overflow: hidden;
+      background: var(--gradient-midnight);
+    }
+    .hero-content{
+      max-width: 1050px;
+      margin: 0 auto;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+    .hero p{
+      font-size: 1.3rem;
+      margin-bottom: 28px;
+      color: rgba(255,255,255,0.9);
+      max-width: 860px;
+      margin-left:auto;
+      margin-right:auto;
+    }
+    .hero-actions{
+      display:flex;
+      gap: 20px;
+      justify-content:center;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+    .hero-pills{
+      display:flex;
+      justify-content:center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 34px;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.88);
+      font-weight: 700;
+      font-size: 0.92rem;
+      letter-spacing: 0.02em;
+    }
+
+    /* Colorful icon chips */
+    .pill i{ font-size: 1rem; }
+    .pill:nth-child(1) i{ color:#3B82F6; }
+    .pill:nth-child(2) i{ color:#10B981; }
+    .pill:nth-child(3) i{ color:#F59E0B; }
+    .pill:nth-child(4) i{ color:#8B5CF6; }
+
+    /* Section: What you get */
+    .what-you-get{ padding: 110px 0; background: var(--bg-primary); }
+    .cards-3{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 40px;
+    }
+    .info-card{
+      background: var(--bg-card);
+      border-radius: var(--border-radius-lg);
+      padding: 38px 28px;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-md);
+      transition: all .35s ease;
+    }
+    .info-card:hover{
+      transform: translateY(-8px);
+      border-color: var(--color-primary-solid);
+      box-shadow: var(--shadow-xl);
+    }
+    .info-icon{
+      width: 64px; height: 64px;
+      border-radius: 18px;
+      display:flex; align-items:center; justify-content:center;
+      color:#fff;
+      font-size: 26px;
+      margin-bottom: 18px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.10);
+    }
+    .cards-3 .info-card:nth-child(1) .info-icon{ background: linear-gradient(135deg, #3B82F6, #2563EB); }
+    .cards-3 .info-card:nth-child(2) .info-icon{ background: linear-gradient(135deg, #10B981, #059669); }
+    .cards-3 .info-card:nth-child(3) .info-icon{ background: linear-gradient(135deg, #F59E0B, #D97706); }
+
+    .info-card h3{ color: var(--text-primary); font-size: 1.55rem; }
+    .info-card p{ font-size: 1.02rem; margin-bottom: 0; color: var(--text-secondary); }
+
+    /* What happens next */
+    .next{
+      padding: 110px 0;
+      background: var(--gradient-midnight);
+    }
+    .timeline{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+      margin-top: 40px;
+    }
+    .step{
+      background:#fff;
+      border-radius: var(--border-radius-lg);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-md);
+      padding: 34px 26px;
+      transition: all .35s ease;
+      height: 100%;
+    }
+    .step:hover{
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-xl);
+      border-color: rgba(31,75,122,0.18);
+    }
+    .step-badge{
+      width: 54px; height: 54px;
+      border-radius: 18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      font-weight: 900;
+      font-family:'Poppins',sans-serif;
+      margin-bottom: 14px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.10);
+    }
+    .timeline .step:nth-child(1) .step-badge{ background: linear-gradient(135deg, #3B82F6, #2563EB); }
+    .timeline .step:nth-child(2) .step-badge{ background: linear-gradient(135deg, #8B5CF6, #7C3AED); }
+    .timeline .step:nth-child(3) .step-badge{ background: linear-gradient(135deg, #10B981, #059669); }
+
+    .step h3{ color: var(--text-primary); font-size: 1.5rem; }
+    .step p{ margin-bottom: 0; font-size: 1.02rem; color: var(--text-secondary); }
+
+    /* Why a demo */
+    .why{
+      padding: 110px 0;
+      background: var(--bg-tertiary);
+    }
+    .why-grid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+      margin-top: 40px;
+    }
+    .why-card{
+      background:#fff;
+      border-radius: var(--border-radius-lg);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-md);
+      padding: 34px 26px;
+      transition: all .35s ease;
+      height: 100%;
+    }
+    .why-card:hover{
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-xl);
+      border-color: rgba(31,75,122,0.18);
+    }
+    .why-icon{
+      width: 62px; height: 62px;
+      border-radius: 18px;
+      display:flex; align-items:center; justify-content:center;
+      color:#fff;
+      font-size: 24px;
+      margin-bottom: 14px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.10);
+    }
+    .why-grid .why-card:nth-child(1) .why-icon{ background: linear-gradient(135deg, #F59E0B, #D97706); }
+    .why-grid .why-card:nth-child(2) .why-icon{ background: linear-gradient(135deg, #EF4444, #DC2626); }
+    .why-grid .why-card:nth-child(3) .why-icon{ background: linear-gradient(135deg, #06B6D4, #0891B2); }
+
+    .why-card h3{ color: var(--text-primary); font-size: 1.5rem; }
+    .why-card p{ margin-bottom: 0; font-size: 1.02rem; color: var(--text-secondary); }
+
+    /* DEMO REQUEST */
+    .demo-form{
+      padding: 110px 0;
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+    }
+    .form-grid{
+      display:grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 28px;
+      align-items: start;
+      margin-top: 34px;
+    }
+    .form-left{
+      background: #fff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-lg);
+      padding: 34px 28px;
+      box-shadow: var(--shadow-md);
+    }
+    .form-left h3{ color: var(--text-primary); font-size: 1.65rem; }
+    .form-left p{ color: var(--text-muted); font-size: 1.02rem; }
+
+    .form-fields{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .field{ grid-column: span 1; }
+    .field.full{ grid-column: 1 / -1; }
+
+    label{
+      display:block;
+      font-weight: 700;
+      color: var(--text-primary);
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+    }
+    input, select{
+      width:100%;
+      padding: 14px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(226,232,240,0.95);
+      background:#fff;
+      font-size: 1rem;
+      outline:none;
+      transition: all .2s ease;
+    }
+    input:focus, select:focus{
+      border-color: rgba(31,75,122,0.55);
+      box-shadow: 0 0 0 6px rgba(31,75,122,0.10);
+    }
+
+    .form-actions{
+      display:flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    .form-actions .btn{ width: 100%; }
+
+    .micro{
+      margin-top: 10px;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      display:flex;
+      gap: 10px;
+      align-items:center;
+    }
+    .micro i{ color: #10B981; }
+
+    /* Right: preview */
+    .form-right{
+      position: sticky;
+      top: 110px;
+    }
+    .preview-card{
+      background: var(--gradient-midnight);
+      color:#fff;
+      border-radius: var(--border-radius-lg);
+      padding: 26px;
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow: 0 18px 50px rgba(0,0,0,0.22);
+      overflow:hidden;
+    }
+    .preview-card h4{
+      color:#fff;
+      margin-bottom: 8px;
+      font-size: 1.35rem;
+      font-family:'Poppins',sans-serif;
+    }
+    .preview-card p{
+      color: rgba(255,255,255,0.86);
+      font-size: 1rem;
+      margin-bottom: 16px;
+    }
+
+    /* ✅ FIXED PREVIEW: always looks good (image OR fallback mock) */
+    .preview-image{
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.14);
+      overflow:hidden;
+      background: rgba(255,255,255,0.06);
+      aspect-ratio: 16 / 10;
+      position: relative;
+    }
+    .preview-image img{
+      width:100%;
+      height:100%;
+      object-fit: cover;
+      display:block;
+    }
+    .preview-fallback{
+      position:absolute;
+      inset:0;
+      display:none; /* shown only if image fails */
+      padding: 18px;
+    }
+    .preview-fallback.visible{ display:block; }
+    .mock-topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .mock-chip{
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.16);
+      color: rgba(255,255,255,0.92);
+      font-weight: 800;
+      font-size: 0.9rem;
+    }
+    .mock-chip i{ color:#96E0D9; }
+    .mock-grid{
+      display:grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 12px;
+      height: calc(100% - 46px);
+    }
+    .mock-panel{
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(255,255,255,0.08);
+      overflow:hidden;
+      padding: 12px;
+    }
+    .mock-kpis{
+      display:grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .kpi{
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(0,0,0,0.15);
+      padding: 10px;
+    }
+    .kpi .label{
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.72);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .kpi .value{
+      font-size: 1.05rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color:#fff;
+    }
+    .mock-bars{
+      display:grid;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .bar-row{
+      display:flex;
+      align-items:center;
+      gap: 10px;
+    }
+    .bar-row span{
+      width: 66px;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.72);
+      font-weight: 800;
+    }
+    .bar{
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.10);
+      border: 1px solid rgba(255,255,255,0.14);
+      overflow:hidden;
+      flex:1;
+    }
+    .bar > i{
+      display:block;
+      height:100%;
+      width: 60%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #96E0D9, #3B82F6);
+    }
+    .bar.w2 > i{ width: 78%; background: linear-gradient(90deg, #F59E0B, #EF4444); }
+    .bar.w3 > i{ width: 46%; background: linear-gradient(90deg, #10B981, #06B6D4); }
+
+    .mock-side{
+      display:grid;
+      gap: 10px;
+      grid-auto-rows: minmax(0, 1fr);
+    }
+    .mock-card{
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(0,0,0,0.16);
+      padding: 12px;
+    }
+    .mock-card .title{
+      font-weight: 900;
+      font-size: 0.92rem;
+      margin-bottom: 6px;
+      color: rgba(255,255,255,0.92);
+      display:flex;
+      align-items:center;
+      gap: 8px;
+    }
+    .mock-card .title i{ color:#96E0D9; }
+    .mock-card .small{
+      color: rgba(255,255,255,0.72);
+      font-size: 0.82rem;
+      line-height: 1.35;
+      font-weight: 650;
+    }
+
+    .preview-note{
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      margin-top: 12px;
+      color: rgba(255,255,255,0.86);
+      font-weight: 650;
+      font-size: 0.95rem;
+    }
+    .preview-note i{ color:#96E0D9; }
+
+    /* calendly */
+    .calendar-wrap{
+      margin-top: 16px;
+      display:none;
+    }
+    .calendar-shell{
+      background: rgba(255,255,255,0.06);
+      border: 1px dashed rgba(150,224,217,0.40);
+      border-radius: 16px;
+      padding: 14px;
+      color: rgba(255,255,255,0.90);
+      font-size: 0.95rem;
+    }
+    .calendar-shell code{
+      display:block;
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 14px;
+      background: rgba(0,0,0,0.20);
+      border: 1px solid rgba(255,255,255,0.14);
+      overflow:auto;
+      color: rgba(255,255,255,0.92);
+      font-size: 0.9rem;
+    }
+
+    /* Trust strip */
+    .trust-strip{
+      margin-top: 18px;
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .trust-badge{
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.88);
+      font-weight: 750;
+      font-size: 0.92rem;
+    }
+    .trust-badge i{ color:#96E0D9; }
+
+    /* CTA */
+    .cta{
+      padding: 120px 0;
+      background: var(--gradient-midnight);
+      position: relative;
+      overflow:hidden;
+    }
+    .cta-content{
+      max-width: 850px;
+      margin: 0 auto;
+      text-align:center;
+      position: relative;
+      z-index: 2;
+    }
+    .cta h2{ color:#fff; margin-bottom: 20px; }
+    .cta p{ color: rgba(255,255,255,0.9); font-size: 1.2rem; margin-bottom: 40px; }
+    .cta-actions{ display:flex; gap: 20px; justify-content:center; flex-wrap: wrap; }
+    .btn-cta-primary{ background:#fff; color: var(--color-primary-solid); }
+    .btn-cta-secondary{ background: transparent; color:#fff; border: 2px solid #fff; }
+
+    /* Footer */
+    footer{
+      background: var(--gradient-midnight);
+      padding: 80px 0 40px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .footer-grid{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 40px;
+      margin-bottom: 60px;
+    }
+    .footer-col h4{ color:#fff; margin-bottom:24px; font-size:18px; }
+    .footer-links{ list-style:none; }
+    .footer-links li{ margin-bottom: 14px; }
+    .footer-links a{
+      color: rgba(255,255,255,0.8);
+      text-decoration:none;
+      transition: all .3s;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-size: 0.95rem;
+    }
+    .footer-links a:hover{ color:#96E0D9; transform: translateX(5px); }
+    .footer-bottom{
+      padding-top: 40px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .social-links{ display:flex; gap: 16px; }
+    .social-links a{
+      width: 44px; height: 44px;
+      background: transparent;
+      border-radius: 12px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      font-size: 18px;
+      transition: all .3s;
+      text-decoration:none;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+    .social-links a:hover{
+      background:#fff;
+      color: var(--color-primary-solid);
+      transform: translateY(-3px);
+      border-color:#fff;
+    }
+    .copyright{ color: rgba(255,255,255,0.6); font-size:14px; }
+
+    /* Intersection animation */
+    section{ opacity: 0; transform: translateY(20px); transition: all .8s ease-out; }
+    section.visible{ opacity: 1; transform: translateY(0); }
+
+        /* ✅ Language switcher (flags) */
+    .lang-form { display:flex; align-items:center; }
+    .lang-pill{
+      display:inline-flex;
+      align-items:center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius:999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.16);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.16);
+    }
+    .lang-select{
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background: transparent;
+      border: none;
+      color: rgba(255,255,255,0.92);
+      font-weight: 800;
+      font-size: 1.25rem; /* flag size */
+      line-height: 1;
+      padding: 0 26px 0 2px;
+      outline: none;
+      cursor: pointer;
+    }
+    .lang-select option{ color:#0f172a; font-size: 1rem; }
+    .lang-caret{
+      margin-left: -20px;
+      pointer-events:none;
+      color: rgba(255,255,255,0.75);
+      font-size: 0.85rem;
+    }
+    .lang-submit{ display:none; }
+
+    /* Responsive */
+    @media (max-width: 1024px){
+      h1{ font-size: 3.2rem; }
+      h2{ font-size: 2.6rem; }
+      .cards-3{ grid-template-columns: repeat(2, 1fr); }
+      .timeline{ grid-template-columns: 1fr; }
+      .why-grid{ grid-template-columns: 1fr; }
+      .form-grid{ grid-template-columns: 1fr; }
+      /* .form-right{ position: relative; top: 0; } */
+      .footer-grid{ grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px){
+      h1{ font-size: 2.5rem; }
+      h2{ font-size: 2rem; }
+      .nav-links{ display:none; }
+      .hero{ padding: 150px 0 90px; }
+      .hero-actions{ flex-direction: column; align-items:center; }
+      .cards-3{ grid-template-columns: 1fr; }
+      .footer-grid{ grid-template-columns: 1fr; }
+      .btn{ width: 100%; justify-content:center; }
+      .form-fields{ grid-template-columns: 1fr; }
+      .preview-image{ aspect-ratio: 16 / 11; }
+      .mock-grid{ grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+
+<body>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const observerOptions = { threshold: 0.1 };
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+      }, observerOptions);
+
+      document.querySelectorAll('section').forEach(section => observer.observe(section));
+    });
+  </script>
+
+  <header>
+    <div class="container nav-container">
+      <a href="{% url 'home:home' %}" class="logo" style="text-decoration:none;">
+        <div class="sidebar-brand">ExactusPay</div>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="{% url 'home:home' %}">{% trans "Home" %}</a></li>
+        <li><a href="{% url 'home:features' %}">{% trans "Features" %}</a></li>
+        <li><a href="{% url 'home:platform' %}">{% trans "Platform" %}</a></li>
+        <li><a href="{% url 'home:security' %}">{% trans "Security" %}</a></li>
+        <li><a href="{% url 'home:pricing' %}">{% trans "Pricing" %}</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <a href="https://payroll.exactuspay.com/login" class="btn btn-secondary">{% trans "Log In" %}</a>
+        <a href="{% url 'home:demo' %}" class="btn btn-primary">{% trans "Request Demo" %}</a>
+      </div>
+
+           <form class="lang-form" action="{% url 'set_language' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            <div class="lang-pill" title="{% trans 'Language' %}">
+            <select class="lang-select"
+                    name="language"
+                    aria-label="{% trans 'Select language' %}"
+                    onchange="this.form.submit()">
+                {% for lang in languages %}
+                {% if lang.code == "pt" %}
+                    <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷</option>
+                {% elif lang.code == "es" %}
+                    <option value="es" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇪🇸</option>
+                {% elif lang.code == "en" %}
+                    <option value="en" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇬🇧</option>
+                {% elif lang.code == "ru" %}
+                    <option value="ru" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇷🇺</option>
+                {% else %}
+                    <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>{{ lang.code|upper }}</option>
+                {% endif %}
+                {% endfor %}
+            </select>
+            <span class="lang-caret" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
+            </div>
+        </form>
+
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <div class="hero-content">
+        <h1>{% trans "See ExactusPay in Action" %}</h1>
+        <p>
+          {% blocktrans %}Stop guessing your global labour costs. Get a personalised walkthrough of the platform that simplifies payroll for the Global South — with predictable compliance and one executive standard for reporting.{% endblocktrans %}
+        </p>
+
+        <div class="hero-actions">
+          <a href="#what" class="btn btn-primary btn-lg"><i class="fas fa-sparkles"></i> {% trans "What you’ll see" %}</a>
+          <a href="#request" class="btn btn-outline btn-lg"><i class="fas fa-calendar-check"></i> {% trans "Book a session" %}</a>
+        </div>
+
+        <div class="hero-pills" aria-label="{% trans 'Key outcomes' %}">
+          <span class="pill"><i class="fas fa-layer-group"></i> {% trans "Single source of truth" %}</span>
+          <span class="pill"><i class="fas fa-globe"></i> {% trans "Multi-country standard" %}</span>
+          <span class="pill"><i class="fas fa-shield-halved"></i> {% trans "Audit-ready controls" %}</span>
+          <span class="pill"><i class="fas fa-chart-line"></i> {% trans "Cost visibility" %}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="what-you-get" id="what">
+    <div class="container">
+      <div class="section-title">
+        <div class="subtitle">{% trans "What you get" %}</div>
+        <h2>{% trans "A practical demo — not a sales pitch" %}</h2>
+        <p>{% trans "We focus on the exact workflows leaders need to expand safely across LATAM, Africa, and Asia." %}</p>
+      </div>
+
+      <div class="cards-3">
+        <div class="info-card">
+          <div class="info-icon"><i class="fas fa-chart-line"></i></div>
+          <h3>{% trans "Run a live simulation" %}</h3>
+          <p>{% trans "Forecast the full employer cost of a new hire in Brazil, Nigeria, or Indonesia — including statutory contributions." %}</p>
+        </div>
+
+        <div class="info-card">
+          <div class="info-icon"><i class="fas fa-shield-alt"></i></div>
+          <h3>{% trans "Audit your compliance" %}</h3>
+          <p>{% trans "See how the platform flags risks and gaps across tax logic, filings, and governance — keeping you audit-ready." %}</p>
+        </div>
+
+        <div class="info-card">
+          <div class="info-icon"><i class="fas fa-table-cells-large"></i></div>
+          <h3>{% trans "Unified reporting" %}</h3>
+          <p>{% trans "Watch 20+ countries roll up into one executive dashboard, with consistent definitions and clear visibility." %}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="next" id="next">
+    <div class="container">
+      <div class="section-title">
+        <div class="hero-content">
+          <h1>{% trans "What happens next?" %}</h1>
+          <h2 style="background: linear-gradient(135deg, #FFFFFF, #F0F9FF); -webkit-background-clip: text; background-clip: text; color: transparent;">
+            {% trans "Clear steps. Zero pressure." %}
+          </h2>
+          <p style="background: linear-gradient(135deg, #FFFFFF, #F0F9FF); -webkit-background-clip: text; background-clip: text; color: transparent;">
+            {% trans "We keep it efficient and relevant — you leave with a plan, not a pile of slides." %}
+          </p>
+        </div>
+      </div>
+
+      <div class="timeline">
+        <div class="step">
+          <div class="step-badge">1</div>
+          <h3>{% trans "The Discovery (15 mins)" %}</h3>
+          <p>{% trans "We map your footprint (entities, contractors, EORs) and identify friction points across your target regions." %}</p>
+        </div>
+        <div class="step">
+          <div class="step-badge">2</div>
+          <h3>{% trans "The Tailored Walkthrough (30 mins)" %}</h3>
+          <p>{% trans "No generic deck. We show country-specific examples, local tax logic, and the reporting you’ll rely on." %}</p>
+        </div>
+        <div class="step">
+          <div class="step-badge">3</div>
+          <h3>{% trans "The Strategic Blueprint" %}</h3>
+          <p>{% trans "You leave with a pricing estimate, transition timeline, and a simulation output for your next hire." %}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="why" id="why">
+    <div class="container">
+      <div class="section-title">
+        <div class="subtitle">{% trans "Why a demo?" %}</div>
+        <h2>{% trans "Because expansion needs certainty" %}</h2>
+        <p>{% trans "See predictive cost, verify compliance, and meet the experts who support you day-to-day." %}</p>
+      </div>
+
+      <div class="why-grid">
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-crystal-ball"></i></div>
+          <h3>{% trans "See the future" %}</h3>
+          <p>{% trans "Most tools show historical spend. ExactusPay demonstrates how to predict employment cost before you hire." %}</p>
+        </div>
+
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-scale-balanced"></i></div>
+          <h3>{% trans "Verify compliance" %}</h3>
+          <p>{% trans "Ask tough questions on POPIA, LGPD, or statutory contributions. We show the logic and evidence trails." %}</p>
+        </div>
+
+        <div class="why-card">
+          <div class="why-icon"><i class="fas fa-people-group"></i></div>
+          <h3>{% trans "Meet your team" %}</h3>
+          <p>{% trans "This isn’t just software. You’ll meet the support experts that operate as an extension of your team." %}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="demo-form" id="request">
+  <div class="container">
+    <div class="section-title">
+      <div class="subtitle">{% trans "Request a demo" %}</div>
+      <h2>{% trans "Schedule your personal walkthrough" %}</h2>
+      <p>{% trans "Submit the form and instantly choose a time — no waiting for back-and-forth emails." %}</p>
+    </div>
+
+    <div class="form-grid form-grid--center">
+      <div class="form-left">
+        <h3>{% trans "Schedule Your Personal Demo" %}</h3>
+        <p>{% trans "No commitment required. We keep this focused, practical, and relevant to your target countries." %}</p>
+
+        <form id="demoForm" method="post" action="{% url 'home:demo_request' %}">
+          {% csrf_token %}
+
+          <div class="form-fields">
+            <div class="field">
+              <label for="first_name">{% trans "First Name" %}</label>
+              <input id="first_name" name="first_name" type="text" autocomplete="given-name" required>
+            </div>
+
+            <div class="field">
+              <label for="last_name">{% trans "Last Name" %}</label>
+              <input id="last_name" name="last_name" type="text" autocomplete="family-name" required>
+            </div>
+
+            <div class="field full">
+              <label for="email">{% trans "Work Email" %}</label>
+              <input id="email" name="email" type="email" autocomplete="email" required>
+            </div>
+
+            <div class="field full">
+              <label for="company">{% trans "Company Name" %}</label>
+              <input id="company" name="company" type="text" autocomplete="organization" required>
+            </div>
+
+            <div class="field">
+              <label for="employees">{% trans "Number of Employees" %}</label>
+              <select id="employees" name="employees" required>
+                <option value="" disabled selected>{% trans "Select…" %}</option>
+                <option value="<50">&lt; 50</option>
+                <option value="50-250">50–250</option>
+                <option value="250-1000">250–1000</option>
+                <option value="1000+">1000+</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="region">{% trans "Expansion Region (Optional)" %}</label>
+              <select id="region" name="region">
+                <option value="" selected>{% trans "Not sure yet" %}</option>
+                <option value="LATAM">LATAM</option>
+                <option value="Africa">Africa</option>
+                <option value="Asia">Asia</option>
+                <option value="Global">Global</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn-primary btn-lg" type="submit">
+              <i class="fas fa-calendar-check"></i> {% trans "Book My Session" %}
+            </button>
+          </div>
+
+          <div class="micro">
+            <i class="fas fa-lock"></i> {% trans "No commitment required. 100% data privacy." %}
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  /* ✅ Centered form layout (single-column mode) */
+  .form-grid.form-grid--center{
+    display: grid;
+    grid-template-columns: minmax(0, 760px);
+    justify-content: center;
+    gap: 28px;
+    align-items: start;
+    margin-top: 34px;
+  }
+
+  .form-grid.form-grid--center .form-left{
+    width: 100%;
+  }
+</style>
+
+
+  <section class="cta" id="cta">
+    <div class="container">
+      <div class="cta-content">
+        <h2>{% trans "Ready to bring global payroll under one roof?" %}</h2>
+        <p>{% trans "ExactusPay gives you a single source of truth, consistent reporting, and compliance-ready processes — without the typical complexity." %}</p>
+        <div class="cta-actions">
+          <a href="#request" class="btn btn-cta-primary btn-lg"><i class="fas fa-calendar-check"></i> {% trans "Schedule Demo" %}</a>
+          <a href="{% url 'home:pricing' %}" class="btn btn-cta-secondary btn-lg"><i class="fas fa-tag"></i> {% trans "View Pricing" %}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h4>{% trans "Platform" %}</h4>
+          <ul class="footer-links">
+            <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Global Payroll" %}</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Compliance Automation" %}</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Workforce Analytics" %}</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Tax Management" %}</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>{% trans "Solutions" %}</h4>
+          <ul class="footer-links">
+            <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Enterprise Expansion" %}</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Mergers & Acquisitions" %}</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Compliance Management" %}</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Global Workforce" %}</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>{% trans "Resources" %}</h4>
+          <ul class="footer-links">
+            <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Documentation" %}</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "API Reference" %}</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Compliance Guides" %}</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Case Studies" %}</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>{% trans "Company" %}</h4>
+          <ul class="footer-links">
+            <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "About Us" %}</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Careers" %}</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Security" %}</a></li>
+            <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Contact" %}</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          <a href="{% url 'home:home' %}" class="logo" style="text-decoration:none;">
+            <div class="sidebar-brand" style="color:#fff; font-size:24px;">ExactusPay</div>
+          </a>
+          <div class="copyright">
+            {% blocktrans %}© {{ current_year }} ExactusPay. All rights reserved.{% endblocktrans %}<br>
+            <small style="color: rgba(255,255,255,0.6);">{% trans "GDPR Compliant | SOC 2 Type II Certified | ISO 27001" %}</small>
+          </div>
+        </div>
+
+        <div class="social-links">
+          <a href="https://www.linkedin.com/company/exactuspay" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "ExactusPay",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "description": "ExactusPay is a global payroll software delivering multi-country payroll, automated compliance, payroll simulations, standardized reporting, and real-time workforce analytics.",
+  "url": "https://www.exactuspay.com",
+  "brand": {
+    "@type": "Brand",
+    "name": "ExactusPay"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "ExactusPay",
+    "url": "https://www.exactuspay.com"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD",
+    "availability": "https://schema.org/InStock",
+    "url": "https://www.exactuspay.com/contact"
+  }
+}
+</script>
+
+
+  <script>
+    // Reveal Calendly after submit (demo)
+    const form = document.getElementById('demoForm');
+    const calendarWrap = document.getElementById('calendarWrap');
+
+    if (form && calendarWrap) {
+      form.addEventListener('submit', function(){
+        calendarWrap.style.display = 'block';
+        calendarWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+
+    const img = document.getElementById('dashboardPreviewImg');
+    const fallback = document.getElementById('dashboardFallback');
+
+    function showFallback(){
+      if (!fallback) return;
+      fallback.classList.add('visible');
+      if (img) img.style.display = 'none';
+    }
+
+    if (img) {
+      img.addEventListener('error', showFallback);
+      if (!img.getAttribute('src')) showFallback();
+    }
+  </script>
+
+</body>
+</html>
