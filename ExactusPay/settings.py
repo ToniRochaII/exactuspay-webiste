@@ -108,30 +108,24 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-# Email configuration (Hostinger SMTP)
+# Email configuration
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
-EMAIL_HOST = "mta.extendcp.co.uk"
-EMAIL_PORT = 587
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.hostinger.com")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
 
 EMAIL_USE_SSL = False
 EMAIL_USE_TLS = True
 
-EMAIL_HOST_USER = "no-reply@exactuspay.com"
-EMAIL_HOST_PASSWORD = os.environ["EMAIL_HOST_PASSWORD"]
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "no-reply@exactuspay.com")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
 
-DEFAULT_FROM_EMAIL = "ExactusPay <no-reply@exactuspay.com>"
+DEFAULT_FROM_EMAIL = f"ExactusPay <{EMAIL_HOST_USER}>"
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
 DEMO_REQUEST_TO_EMAIL = os.environ.get(
     "DEMO_REQUEST_TO_EMAIL",
-    "antoniorocha@exactuspay.com"
+    "antonio.rocha@exactuspay.com",
 )
 
-
-if not DEBUG:
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    SECURE_SSL_REDIRECT = True
-else:
-    SECURE_SSL_REDIRECT = False
+EMAIL_TIMEOUT = 20
