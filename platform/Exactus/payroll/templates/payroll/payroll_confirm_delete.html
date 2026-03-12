@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% load static %}
+{% load payroll_filters %}
+{% load accounts_role_filters %}
+
+{% block title %}Delete Payroll | ExactusPay{% endblock %}
+
+{% block page_title %}
+<i class="fas fa-exclamation-triangle text-danger me-2"></i>Delete Payroll
+{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* --- GOLD STANDARD CSS --- */
+    body { background-color: #F4F4F4 !important; }
+    .wrapper:before { background: #F4F4F4 !important; }
+    :root { --card-radius: 16px; --border-color: #f0f0f0; }
+
+    .card-hover-effect {
+        border-radius: var(--card-radius);
+        border: none;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        overflow: hidden;
+    }
+    .card-hover-effect:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+    }
+    .card-header {
+        background-color: #fff;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    h6.section-header {
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 1px;
+        color: #6c757d;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        margin-top: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'companies:company' country_slug %}">Companies</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'payroll:payroll_list' country_slug company.company_id %}">Payrolls</a></li>
+    <li class="breadcrumb-item">
+        <a href="{% url 'payroll:payroll_detail' country_slug company.company_id object.pk %}">
+            FY{{ object.fiscal_year }}
+        </a>
+    </li>
+    <li class="breadcrumb-item active">Delete Payroll</li>
+  </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+
+        <div class="card card-hover-effect shadow-sm">
+
+            <div class="card-header pt-4 px-4 pb-3">
+                <h5 class="card-title mb-0 text-danger">
+                    <i class="fas fa-trash-alt me-2"></i>Confirm Payroll Deletion
+                </h5>
+                <h6 class="card-subtitle text-muted mt-1">
+                    Permanently remove Payroll FY{{ object.fiscal_year }} and all associated data.
+                </h6>
+            </div>
+
+            <div class="card-body p-4">
+
+                <div class="alert alert-danger border-danger shadow-sm rounded-3 mb-4">
+                    <div class="d-flex align-items-start">
+                        <i class="fas fa-exclamation-triangle fa-2x me-3 mt-1"></i>
+                        <div>
+                            <h5 class="alert-heading fw-bold">Critical Warning: Irreversible Action</h5>
+                            <p class="mb-2">
+                                You are about to delete the entire payroll record for <strong>FY{{ object.fiscal_year }}</strong>. 
+                                This action <strong>cannot be undone</strong>.
+                            </p>
+                            <hr class="border-danger opacity-25 my-2">
+                            <p class="mb-0 small">
+                                <strong>This will permanently delete:</strong>
+                                <ul class="mb-0 mt-1 ps-3">
+                                    <li>All associated payroll periods ({{ object.periods.count }} total)</li>
+                                    <li>All payslip calculations and reports</li>
+                                    <li>All audit logs and history for this fiscal year</li>
+                                </ul>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-light p-4 rounded-3 border mb-4">
+                    <h6 class="section-header"><i class="fas fa-info-circle me-2"></i>Payroll Summary</h6>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <small class="text-muted d-block text-uppercase" style="font-size: 0.7rem;">Fiscal Year</small>
+                            <span class="fw-bold text-dark">FY{{ object.fiscal_year }}</span>
+                        </div>
+                        <div class="col-md-4">
+                            <small class="text-muted d-block text-uppercase" style="font-size: 0.7rem;">Regulation</small>
+                            <span class="text-dark">{{ object.regulation }}</span>
+                        </div>
+                        <div class="col-md-4">
+                            <small class="text-muted d-block text-uppercase" style="font-size: 0.7rem;">Total Periods</small>
+                            <span class="badge bg-secondary">{{ object.periods.count }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end align-items-center pt-3 border-top">
+                    {% if object.is_deletable %}
+                    <form method="post" id="delete-form" class="d-flex align-items-center">
+                        {% csrf_token %}
+                        
+                        <div class="form-check me-3">
+                            <input class="form-check-input" type="checkbox" id="confirmDelete" required>
+                            <label class="form-check-label text-danger fw-semibold small" for="confirmDelete">
+                                I understand this deletes all data permanently
+                            </label>
+                        </div>
+
+                        <a href="{% url 'payroll:payroll_detail' country_slug company.company_id object.pk %}" 
+                           class="btn btn-light border me-2">
+                            Cancel
+                        </a>
+                        
+                        <button type="submit" class="btn btn-secondary px-4" id="delete-btn" disabled>
+                            <i class="fas fa-trash-alt me-2"></i>Delete Payroll
+                        </button>
+                    </form>
+                    {% else %}
+                        <div class="alert alert-warning mb-0 me-3 py-2 px-3">
+                            <i class="fas fa-lock me-2"></i>This payroll cannot be deleted because it contains locked or approved periods.
+                        </div>
+                        <a href="{% url 'payroll:payroll_detail' country_slug company.company_id object.pk %}" 
+                           class="btn btn-primary">
+                            Return to Detail
+                        </a>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const confirmCheckbox = document.getElementById('confirmDelete');
+    const deleteBtn = document.getElementById('delete-btn');
+    
+    // Safety Toggle Logic
+    if (confirmCheckbox && deleteBtn) {
+      confirmCheckbox.addEventListener('change', function() {
+        deleteBtn.disabled = !this.checked;
+        if (this.checked) {
+          deleteBtn.classList.remove('btn-secondary');
+          deleteBtn.classList.add('btn-danger');
+        } else {
+          deleteBtn.classList.remove('btn-danger');
+          deleteBtn.classList.add('btn-secondary');
+        }
+      });
+    }
+  });
+</script>
+{% endblock %}

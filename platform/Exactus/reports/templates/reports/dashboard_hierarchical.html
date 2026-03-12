@@ -1,0 +1,344 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block extra_head %}
+<style>
+  body { background-color: #F4F4F4 !important; }
+  .wrapper:before { background: #F4F4F4 !important; }
+  :root { --card-radius: 16px; --border-color: #f0f0f0; }
+
+  .card-hover-effect{
+    border-radius: var(--card-radius);
+    border: none;
+    overflow: hidden;
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .card-hover-effect:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0,0,0,.08) !important;
+  }
+  .card-header-clean{
+    background:#fff;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .table thead th{
+    background:#fcfcfc !important;
+    border-bottom:2px solid #dee2e6 !important;
+    font-weight: 700;
+    color:#495057;
+    text-transform: uppercase;
+    font-size: .72rem;
+    letter-spacing: .06em;
+    padding: 12px 14px;
+  }
+  .table tbody td{
+    padding: 12px 14px;
+    vertical-align: middle;
+  }
+
+  .action-btns .btn{ border-radius: 999px; }
+  .period-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:.5rem;
+    border:1px dashed #d0d7de;
+    background:#fff;
+    border-radius: 999px;
+    padding: .45rem .75rem;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-0">
+
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+      <h1 class="h3 mb-1">
+        {% if scope == 'COMPANY' %}
+          {% blocktrans with company_name=target_company.name %}Reports for {{ company_name }}{% endblocktrans %}
+        {% elif scope == 'COUNTRY' %}
+          {% blocktrans with country_name=target_country.name %}{{ country_name }} Default Reports{% endblocktrans %}
+        {% else %}
+          {% trans "System Global Reports" %}
+        {% endif %}
+      </h1>
+
+      <div class="text-muted small">
+        {% trans "Choose a processed payroll period, then run reports in HTML, PDF, or CSV." %}
+      </div>
+    </div>
+
+    {% if can_edit %}
+      <a href="{% url 'reports:report_manage_hub' %}" class="btn btn-secondary">
+        <i class="fas fa-cog me-2"></i>{% trans "Management Hub" %}
+      </a>
+    {% endif %}
+  </div>
+
+  <!-- Period Selector -->
+  <div class="card card-hover-effect shadow-sm mb-4">
+    <div class="card-header card-header-clean py-3 px-4">
+      <h6 class="mb-0 text-uppercase text-muted fw-bold small" style="letter-spacing:.06em;">
+        <i class="fas fa-filter me-2"></i>{% trans "Processed Period Filter" %}
+      </h6>
+    </div>
+
+    <div class="card-body px-4 py-4">
+      <form method="GET" class="row g-3 align-items-end">
+        <div class="col-lg-6">
+          <label for="period_id" class="form-label fw-semibold mb-1">{% trans "Payroll Period (Processed)" %}</label>
+
+          <select name="period_id" id="period_id" class="form-select">
+            <option value="">{% trans "-- Select processed period --" %}</option>
+
+            {% for pp in processed_periods %}
+              <option value="{{ pp.id }}"
+                {% if pp.id|stringformat:"s" == selected_period_id|stringformat:"s" %}selected{% endif %}>
+                {% if pp.name %}
+                  {{ pp.name }}
+                {% else %}
+                  {% blocktrans with period_number=pp.period_number|default:pp.id %}Period {{ period_number }}{% endblocktrans %}
+                  {% if pp.payment_date %}
+                    {% blocktrans with pay_date=pp.payment_date|date:"d M Y" %} — Pay date: {{ pay_date }}{% endblocktrans %}
+                  {% endif %}
+                {% endif %}
+              </option>
+            {% endfor %}
+          </select>
+
+          {% if selected_period %}
+            <div class="mt-3">
+              <span class="period-pill text-muted small">
+                <i class="fas fa-check-circle text-success"></i>
+                {% trans "Selected:" %}
+                <strong class="text-dark">{{ selected_period.name|default:_("Processed period") }}</strong>
+                {% if selected_period.payment_date %}
+                  <span class="text-muted">
+                    {% blocktrans with pay_date=selected_period.payment_date|date:"d M Y" %}— Pay date: {{ pay_date }}{% endblocktrans %}
+                  </span>
+                {% endif %}
+              </span>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="col-lg-3">
+          <button type="submit" class="btn btn-primary w-100">
+            <i class="fas fa-search me-2"></i>{% trans "Apply Filter" %}
+          </button>
+        </div>
+
+        <div class="col-lg-3">
+          {% if selected_period_id %}
+            <a href="?" class="btn btn-outline-secondary w-100">
+              <i class="fas fa-eraser me-2"></i>{% trans "Clear" %}
+            </a>
+          {% else %}
+            <button type="button" class="btn btn-outline-secondary w-100" disabled>
+              <i class="fas fa-eraser me-2"></i>{% trans "Clear" %}
+            </button>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="row">
+
+    <!-- Inherited -->
+    {% if scope == 'COMPANY' or scope == 'COUNTRY' %}
+    <div class="col-12 mb-4">
+      <div class="card card-hover-effect shadow-sm">
+        <div class="card-header card-header-clean py-3 px-4 d-flex justify-content-between align-items-center">
+          <div>
+            <h5 class="card-title mb-0">{% trans "Inherited Reports" %}</h5>
+            <div class="text-muted small">{% trans "Reports coming from System or Country level." %}</div>
+          </div>
+          <span class="badge bg-light text-dark border">
+            {% blocktrans count rule_count=inherited_configs|length %}{{ rule_count }} Rule{% plural %}{{ rule_count }} Rules{% endblocktrans %}
+          </span>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead>
+              <tr>
+                <th>{% trans "Report Type" %}</th>
+                <th>{% trans "Inherited From" %}</th>
+                <th>{% trans "Layout" %}</th>
+                <th class="text-end">{% trans "Actions" %}</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for config in inherited_configs %}
+              <tr>
+                <td class="fw-bold">{{ config.report_type.name }}</td>
+
+                <td>
+                  {% if config.level == 'SYSTEM' %}
+                    <span class="badge bg-dark">{% trans "System" %}</span>
+                  {% elif config.level == 'COUNTRY' %}
+                    <span class="badge bg-info text-dark">{% trans "Country" %}</span>
+                  {% else %}
+                    <span class="badge bg-secondary">{{ config.level }}</span>
+                  {% endif %}
+                </td>
+
+                <td>{{ config.selected_layout.name }}</td>
+
+                <td class="text-end">
+                  {% if selected_period_id %}
+                    <div class="d-inline-flex gap-2 action-btns">
+                      <a href="{% url 'reports:generate_report' config.report_type.code target_company.id|default:0 %}?period_id={{ selected_period_id }}&format=html"
+                         target="_blank" class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-play me-1"></i>{% trans "HTML" %}
+                      </a>
+                      <a href="{% url 'reports:generate_report' config.report_type.code target_company.id|default:0 %}?period_id={{ selected_period_id }}&format=pdf"
+                         target="_blank" class="btn btn-sm btn-outline-danger">
+                        <i class="fas fa-file-pdf me-1"></i>{% trans "PDF" %}
+                      </a>
+                      <a href="{% url 'reports:generate_report' config.report_type.code target_company.id|default:0 %}?period_id={{ selected_period_id }}&format=csv"
+                         target="_blank" class="btn btn-sm btn-outline-success">
+                        <i class="fas fa-file-csv me-1"></i>{% trans "CSV" %}
+                      </a>
+                    </div>
+                  {% else %}
+                    <span class="text-muted small">{% trans "Select a processed period to run" %}</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="4" class="text-muted text-center py-4 bg-white">
+                  {% trans "No inherited reports available." %}
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Specific / Global -->
+    <div class="col-12">
+      <div class="card card-hover-effect shadow-sm">
+        <div class="card-header card-header-clean py-3 px-4 d-flex justify-content-between align-items-center">
+          <div>
+            <h5 class="card-title mb-0">
+              {% if scope == 'SYSTEM' %}{% trans "Global Reports" %}{% else %}{% trans "Specific Reports" %}{% endif %}
+            </h5>
+            <div class="text-muted small">
+              {% if scope == 'SYSTEM' %}
+                {% trans "Reports configured at system level." %}
+              {% else %}
+                {% trans "Reports configured at the selected scope level." %}
+              {% endif %}
+            </div>
+          </div>
+
+          <span class="badge bg-light text-dark border">
+            {% if scope == 'SYSTEM' %}
+              {% blocktrans count rule_count=configs|length %}{{ rule_count }} Rule{% plural %}{{ rule_count }} Rules{% endblocktrans %}
+            {% else %}
+              {% blocktrans count rule_count=scoped_configs|length %}{{ rule_count }} Rule{% plural %}{{ rule_count }} Rules{% endblocktrans %}
+            {% endif %}
+          </span>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead>
+              <tr>
+                <th>{% trans "Report Type" %}</th>
+                <th>{% trans "Layout" %}</th>
+                <th class="text-end">{% trans "Actions" %}</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% if scope == 'SYSTEM' %}
+                {% for config in configs %}
+                <tr>
+                  <td class="fw-bold">{{ config.report_type.name }}</td>
+                  <td>{{ config.selected_layout.name }}</td>
+                  <td class="text-end">
+                    {% if selected_period_id %}
+                      <div class="d-inline-flex gap-2 action-btns">
+                        <a href="{% url 'reports:generate_system_report' config.report_type.code %}?period_id={{ selected_period_id }}&format=html"
+                           target="_blank" class="btn btn-sm btn-outline-primary">
+                          <i class="fas fa-play me-1"></i>{% trans "HTML" %}
+                        </a>
+                        <a href="{% url 'reports:generate_system_report' config.report_type.code %}?period_id={{ selected_period_id }}&format=pdf"
+                           target="_blank" class="btn btn-sm btn-outline-danger">
+                          <i class="fas fa-file-pdf me-1"></i>{% trans "PDF" %}
+                        </a>
+                        <a href="{% url 'reports:generate_system_report' config.report_type.code %}?period_id={{ selected_period_id }}&format=csv"
+                           target="_blank" class="btn btn-sm btn-outline-success">
+                          <i class="fas fa-file-csv me-1"></i>{% trans "CSV" %}
+                        </a>
+                      </div>
+                    {% else %}
+                      <span class="text-muted small">{% trans "Select a processed period to run" %}</span>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="3" class="text-muted text-center py-4 bg-white">
+                    {% trans "No system reports configured." %}
+                  </td>
+                </tr>
+                {% endfor %}
+
+              {% else %}
+                {% for config in scoped_configs %}
+                <tr>
+                  <td class="fw-bold">{{ config.report_type.name }}</td>
+                  <td>{{ config.selected_layout.name }}</td>
+                  <td class="text-end">
+                    {% if selected_period_id %}
+                      <div class="d-inline-flex gap-2 action-btns">
+                        <a href="{% url 'reports:generate_report' config.report_type.code target_company.id|default:0 %}?period_id={{ selected_period_id }}&format=html"
+                           target="_blank" class="btn btn-sm btn-outline-primary">
+                          <i class="fas fa-play me-1"></i>{% trans "HTML" %}
+                        </a>
+                        <a href="{% url 'reports:generate_report' config.report_type.code target_company.id|default:0 %}?period_id={{ selected_period_id }}&format=pdf"
+                           target="_blank" class="btn btn-sm btn-outline-danger">
+                          <i class="fas fa-file-pdf me-1"></i>{% trans "PDF" %}
+                        </a>
+                        <a href="{% url 'reports:generate_report' config.report_type.code target_company.id|default:0 %}?period_id={{ selected_period_id }}&format=csv"
+                           target="_blank" class="btn btn-sm btn-outline-success">
+                          <i class="fas fa-file-csv me-1"></i>{% trans "CSV" %}
+                        </a>
+                      </div>
+                    {% else %}
+                      <span class="text-muted small">{% trans "Select a processed period to run" %}</span>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="3" class="text-muted text-center py-4 bg-white">
+                    {% trans "No specific reports configured at this level." %}
+                  </td>
+                </tr>
+                {% endfor %}
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

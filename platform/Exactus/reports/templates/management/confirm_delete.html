@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Confirm Deletion" %} | ExactusPay{% endblock %}
+
+{% block page_title %}
+<i class="bi bi-trash3 me-2"></i>{% trans "Confirm Deletion" %}
+{% endblock %}
+
+{% block extra_head %}
+<style>
+  body { background-color: #F4F4F4 !important; }
+  .wrapper:before { background: #F4F4F4 !important; }
+  :root { --card-radius: 16px; --border-color: #f0f0f0; }
+
+  .card-hover-effect{
+    border-radius: var(--card-radius);
+    border: none;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,.08);
+  }
+
+  .danger-hero{
+    background: linear-gradient(135deg, rgba(220,53,69,1) 0%, rgba(176,42,55,1) 100%);
+    color: #fff;
+  }
+
+  .icon-badge{
+    width: 72px;
+    height: 72px;
+    border-radius: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,.15);
+    border: 1px solid rgba(255,255,255,.25);
+  }
+
+  .btn-pill{ border-radius: 999px; }
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{% trans "Confirm Deletion" %}</li>
+  </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-0">
+  <div class="row justify-content-center mt-5">
+    <div class="col-xl-6 col-lg-7 col-md-9">
+
+      <div class="card card-hover-effect">
+        <div class="card-header danger-hero py-4 px-4 border-0">
+          <div class="d-flex align-items-center gap-3">
+            <div class="icon-badge">
+              <i class="bi bi-exclamation-triangle-fill fs-2"></i>
+            </div>
+            <div>
+              <h4 class="mb-1 fw-bold">{% trans "Confirm Deletion" %}</h4>
+              <div class="opacity-75 small">{% trans "This action cannot be undone." %}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body bg-white p-4 text-center">
+          <p class="lead mt-2 mb-1">
+            {% blocktrans with obj=object %}Are you sure you want to delete <strong>{{ obj }}</strong>?{% endblocktrans %}
+          </p>
+          <p class="text-muted mb-4">{% trans "Once deleted, it cannot be recovered." %}</p>
+
+          <form method="post" class="d-flex justify-content-center gap-2 flex-wrap">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-pill px-4">
+              <i class="bi bi-trash3 me-2"></i>{% trans "Yes, Delete" %}
+            </button>
+            <a href="javascript:history.back()" class="btn btn-outline-secondary btn-pill px-4">
+              <i class="bi bi-x-circle me-2"></i>{% trans "Cancel" %}
+            </a>
+          </form>
+
+          <div class="alert alert-light border mt-4 text-start mb-0">
+            <div class="d-flex align-items-start">
+              <i class="bi bi-info-circle me-2 text-danger"></i>
+              <div class="small text-muted">
+                <div class="fw-semibold text-dark">{% trans "Tip" %}</div>
+                {% trans "If you are unsure, cancel and review the record details before deleting." %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

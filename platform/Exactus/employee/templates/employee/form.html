@@ -1,0 +1,607 @@
+{% extends "base.html" %}
+{% load static %}
+{% load employee_role_filters %}
+{% load form_helpers %}
+{% load humanize %}
+{% load i18n %}
+
+{% block title %}{% blocktrans with company_name=company.trade_name %}Add Employee — {{ company_name }} | ExactusPay{% endblocktrans %}{% endblock %}
+
+{% block page_title %}
+<i class="fas fa-user-plus me-2"></i>{% trans "Add Employee" %}
+{% endblock %}
+
+{% block extra_head %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+
+<style>
+    /* --- GOLD STANDARD FORM CSS --- */
+    body { background-color: #F4F4F4 !important; }
+    .wrapper:before { background: #F4F4F4 !important; }
+    :root { --card-radius: 16px; --input-radius: 10px; --border-color: #f0f0f0; }
+
+    .card-hover-effect {
+        border-radius: var(--card-radius);
+        border: none;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        overflow: hidden;
+    }
+    .card-hover-effect:hover {
+        transform: translateY(0px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+    }
+    .card-header {
+        background-color: #fff;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .form-control, .form-select {
+        border-radius: var(--input-radius) !important;
+        font-size: 1rem !important;
+        border: 1px solid #ced4da;
+        padding-top: 1.625rem;
+        padding-bottom: 0.625rem;
+        height: 58px;
+    }
+
+    .select2-container .select2-selection--single {
+        height: 58px !important; 
+        border-radius: var(--input-radius) !important;
+        border: 1px solid #ced4da;
+        display: flex;
+        align-items: center; 
+    }
+
+    .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
+        margin-top: 16px !important; 
+        margin-left: 2px;
+        color: #212529;
+        font-size: 1rem !important; 
+        font-weight: 400;
+    }
+
+    .select2-container--bootstrap-5 .select2-selection__arrow {
+        top: 50% !important;
+        transform: translateY(-50%);
+        right: 15px !important;
+    }
+    
+    .form-floating > .select2-container { padding-top: 0; }
+    .form-floating > label { padding-left: 14px; }
+
+    .switch-card {
+        border: 1px solid #ced4da;
+        border-radius: var(--input-radius);
+        padding: 12px 16px;
+        background-color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 58px;
+    }
+    .form-switch .form-check-input { width: 3em; height: 1.5em; cursor: pointer; }
+
+    .nav-tabs { border-bottom: 2px solid #e9ecef; }
+    .nav-tabs .nav-link {
+        border: none;
+        border-bottom: 3px solid transparent;
+        color: #6c757d;
+        font-weight: 500;
+        padding: 1rem 1.5rem;
+        transition: all 0.2s;
+        margin-bottom: -2px;
+    }
+    .nav-tabs .nav-link:hover { color: #0d6efd; }
+    .nav-tabs .nav-link.active {
+        color: #0d6efd;
+        border-bottom: 3px solid #0d6efd;
+        background: transparent;
+    }
+    
+    h6.section-header {
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 1px;
+        color: #6c757d;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        margin-top: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card card-hover-effect shadow-sm">
+            <div class="card-header pt-4 px-4 pb-0 border-0">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h5 class="card-title mb-0">
+                            {% if employee %}
+                                <i class="fas fa-user-edit me-2 text-primary"></i>{% trans "Edit Employee" %}
+                            {% else %}
+                                <i class="fas fa-user-plus me-2 text-primary"></i>{% trans "Add New Employee" %}
+                            {% endif %}
+                        </h5>
+                        <h6 class="card-subtitle text-muted mt-1">
+                            {{ employee.employee_id|default:_("New") }} | {{ employee.employee_name|default:"" }} {{ employee.employee_surname|default:"" }}
+                        </h6>
+                    </div>
+                </div>
+
+                <ul class="nav nav-tabs" id="createEmployeeTabs" role="tablist">
+                    <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#personal" type="button">{% trans "Personal Data" %}</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#communication" type="button">{% trans "Communication" %}</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#bank" type="button">{% trans "Banking" %}</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#job" type="button">{% trans "Employment" %}</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#tax" type="button">{% trans "Taxation" %}</button></li>
+                    <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#pay" type="button">{% trans "Compensation" %}</button></li>
+                    <li class="nav-item"><button class="nav-link fw-bold text-primary" data-bs-toggle="tab" data-bs-target="#account" type="button">{% trans "Account" %}</button></li>
+                </ul>
+            </div>
+
+            <div class="card-body p-4">
+                <form method="post" class="needs-validation" novalidate id="employee-form">
+                    {% csrf_token %}
+                    {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger rounded-3 mb-4">
+                            <i class="fas fa-exclamation-circle me-2"></i>{{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    <div class="tab-content">
+                        
+                        <div class="tab-pane fade show active" id="personal">
+                            <h6 class="section-header"><i class="fas fa-id-card me-2"></i>{% trans "Employee Identification" %}</h6>
+                            <div class="row g-3">
+                                {% for field in form %}
+                                    {% if field|in_section:"personal" and not field.is_hidden %}
+                                    <div class="col-md-4">
+                                        <div class="form-floating">
+                                            {{ field }}
+                                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                            <div class="invalid-feedback">{{ field.errors|striptags }}</div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="communication">
+                            <h6 class="section-header"><i class="fas fa-at me-2"></i>{% trans "Digital Contact" %}</h6>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.email }}
+                                        <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-floating">
+                                        {{ form.telephone }}
+                                        <label for="{{ form.telephone.id_for_label }}">{{ form.telephone.label }}</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h6 class="section-header"><i class="fas fa-home me-2"></i>{% trans "Residential Address" %}</h6>
+                            <div class="row g-3">
+                                {% for field in form %}
+                                    {% if field|in_section:"communication" and field.name != 'email' and field.name != 'telephone' and not field.is_hidden %}
+                                    <div class="col-md-4">
+                                        <div class="form-floating">
+                                            {{ field }}
+                                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <div class="tab-pane fade" id="bank">
+                            <h6 class="section-header"><i class="fas fa-university me-2"></i>{% trans "Bank Account Details" %}</h6>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6"><div class="form-floating">{{ form.bank_02 }}<label for="{{ form.bank_02.id_for_label }}">{{ form.bank_02.label }}</label></div></div>
+                                <div class="col-md-6"><div class="form-floating">{{ form.bank_01 }}<label for="{{ form.bank_01.id_for_label }}">{{ form.bank_01.label }}</label></div></div>
+                                <div class="col-md-6"><div class="form-floating">{{ form.bank_03 }}<label for="{{ form.bank_03.id_for_label }}">{{ form.bank_03.label }}</label></div></div>
+                                <div class="col-md-6"><div class="form-floating">{{ form.bank_04 }}<label for="{{ form.bank_04.id_for_label }}">{{ form.bank_04.label }}</label></div></div>
+                                <div class="col-md-6"><div class="form-floating">{{ form.bank_08 }}<label for="{{ form.bank_08.id_for_label }}">{{ form.bank_08.label }}</label></div></div>
+                                <div class="col-md-6"><div class="form-floating">{{ form.bank_07 }}<label for="{{ form.bank_07.id_for_label }}">{{ form.bank_07.label }}</label></div></div>
+                            </div>
+
+                            <h6 class="section-header"><i class="fas fa-map-marker-alt me-2"></i>{% trans "Bank Address" %}</h6>
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6"><div class="form-floating">{{ form.bank_11 }}<label for="{{ form.bank_11.id_for_label }}">{{ form.bank_11.label }}</label></div></div>
+                                <div class="col-md-6"><div class="form-floating">{{ form.bank_12 }}<label for="{{ form.bank_12.id_for_label }}">{{ form.bank_12.label }}</label></div></div>
+                                <div class="col-md-6"><div class="form-floating">{{ form.bank_13 }}<label for="{{ form.bank_13.id_for_label }}">{{ form.bank_13.label }}</label></div></div>
+                                <div class="col-md-6"><div class="form-floating">{{ form.bank_14 }}<label for="{{ form.bank_14.id_for_label }}">{{ form.bank_14.label }}</label></div></div>
+                                <div class="col-md-12"><div class="form-floating">{{ form.bank_16 }}<label for="{{ form.bank_16.id_for_label }}">{{ form.bank_16.label }}</label></div></div>
+                            </div>
+
+                            {% if form.bank_17 %}
+                            <h6 class="section-header"><i class="fas fa-network-wired me-2"></i>{% trans "Bacs Details" %}</h6>
+                            <div class="row g-3">
+                                <div class="col-md-4"><div class="form-floating">{{ form.bank_17 }}<label for="{{ form.bank_17.id_for_label }}">{{ form.bank_17.label }}</label></div></div>
+                                <div class="col-md-4"><div class="form-floating">{{ form.bank_18 }}<label for="{{ form.bank_18.id_for_label }}">{{ form.bank_18.label }}</label></div></div>
+                                <div class="col-md-4"><div class="form-floating">{{ form.bank_19 }}<label for="{{ form.bank_19.id_for_label }}">{{ form.bank_19.label }}</label></div></div>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="tab-pane fade" id="job">
+                            <h6 class="section-header"><i class="fas fa-briefcase me-2"></i>{% trans "Employment Details" %}</h6>
+                            <div class="row g-3">
+                                {% for field in form %}
+                                    {% if field|in_section:"job" and not field.is_hidden %}
+                                    <div class="col-md-4">
+                                        <div class="form-floating">
+                                            {{ field }}
+                                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="tax">
+                            {% if form.ni_number %}
+                                <h6 class="section-header"><i class="fas fa-passport me-2"></i>{% trans "Documentation" %}</h6>
+                                <div class="row g-3 mb-4">
+                                    <div class="col-md-6"><div class="form-floating">{{ form.ni_number }}<label for="{{ form.ni_number.id_for_label }}">{{ form.ni_number.label }}</label></div></div>
+                                    <div class="col-md-6"><div class="form-floating">{{ form.passport_number }}<label for="{{ form.passport_number.id_for_label }}">{{ form.passport_number.label }}</label></div></div>
+                                </div>
+
+                                <h6 class="section-header"><i class="fas fa-file-invoice me-2"></i>{% trans "Taxation" %}</h6>
+                                <div class="row g-3 mb-4">
+                                    <div class="col-md-4"><div class="form-floating">{{ form.tax_code }}<label for="{{ form.tax_code.id_for_label }}">{{ form.tax_code.label }}</label></div></div>
+                                    <div class="col-md-4"><div class="form-floating">{{ form.tax_basis }}<label for="{{ form.tax_basis.id_for_label }}">{{ form.tax_basis.label }}</label></div></div>
+                                    <div class="col-md-4"><div class="form-floating">{{ form.ni_category }}<label for="{{ form.ni_category.id_for_label }}">{{ form.ni_category.label }}</label></div></div>
+                                </div>
+
+                                <h6 class="section-header"><i class="fas fa-file-contract me-2"></i>{% trans "P45 Details" %}</h6>
+                                <div class="row g-3 mb-4">
+                                    <div class="col-md-3"><div class="form-floating">{{ form.p45_tax_code }}<label for="{{ form.p45_tax_code.id_for_label }}">{{ form.p45_tax_code.label }}</label></div></div>
+                                    <div class="col-md-3"><div class="form-floating">{{ form.p45_tax_basis }}<label for="{{ form.p45_tax_basis.id_for_label }}">{{ form.p45_tax_basis.label }}</label></div></div>
+                                    <div class="col-md-3"><div class="form-floating">{{ form.p45_gross_earnings }}<label for="{{ form.p45_gross_earnings.id_for_label }}">{{ form.p45_gross_earnings.label }}</label></div></div>
+                                    <div class="col-md-3"><div class="form-floating">{{ form.p45_tax_paid }}<label for="{{ form.p45_tax_paid.id_for_label }}">{{ form.p45_tax_paid.label }}</label></div></div>
+                                </div>
+
+                                <h6 class="section-header"><i class="fas fa-clipboard-check me-2"></i>{% trans "Declarations" %}</h6>
+                                <div class="row g-3 mb-4">
+                                    <div class="col-md-6"><div class="form-floating">{{ form.starter_declaration }}<label for="{{ form.starter_declaration.id_for_label }}">{{ form.starter_declaration.label }}</label></div></div>
+                                    <div class="col-md-6"><div class="form-floating">{{ form.starter_student_loan }}<label for="{{ form.starter_student_loan.id_for_label }}">{{ form.starter_student_loan.label }}</label></div></div>
+                                </div>
+
+                                <h6 class="section-header"><i class="fas fa-graduation-cap me-2"></i>{% trans "Student Loans" %}</h6>
+                                <div class="row g-3">
+                                    <div class="col-md-3">
+                                        <div class="switch-card">
+                                            <div><h6 class="fw-semibold mb-0 text-dark" style="font-size: 0.9rem;">{% trans "Has Student Loan?" %}</h6></div>
+                                            <div class="form-check form-switch ms-2 mb-0">{{ form.has_student_loan }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="switch-card">
+                                            <div><h6 class="fw-semibold mb-0 text-dark" style="font-size: 0.9rem;">{% trans "Has Post-Grad Loan?" %}</h6></div>
+                                            <div class="form-check form-switch ms-2 mb-0">{{ form.has_pg_loan }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6"><div class="form-floating">{{ form.student_loan_plan }}<label for="{{ form.student_loan_plan.id_for_label }}">{{ form.student_loan_plan.label }}</label></div></div>
+                                    <div class="col-md-6"><div class="form-floating">{{ form.loan_start_date }}<label for="{{ form.loan_start_date.id_for_label }}">{{ form.loan_start_date.label }}</label></div></div>
+                                    <div class="col-md-6"><div class="form-floating">{{ form.loan_end_date }}<label for="{{ form.loan_end_date.id_for_label }}">{{ form.loan_end_date.label }}</label></div></div>
+                                </div>
+                            {% else %}
+                                <div class="row g-3">
+                                    {% for field in form %}
+                                        {% if field|in_section:"tax" and not field.is_hidden %}
+                                        <div class="col-md-4">
+                                            <div class="form-floating">
+                                                {{ field }}
+                                                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                            </div>
+                                        </div>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="tab-pane fade" id="pay">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="section-header mb-0">
+                                    <i class="fas fa-coins me-2"></i>{% trans "Compensation Overview" %}
+                                </h6>
+                                {% if employee.pk %}
+                                    <a href="{% url 'compensation:compensation_create' country_slug company.pk employee.pk %}" class="btn btn-sm btn-primary shadow-sm">
+                                        <i class="fas fa-plus me-1"></i> {% trans "Add Component" %}
+                                    </a>
+                                {% else %}
+                                    <button class="btn btn-sm btn-secondary shadow-sm" disabled title="{% trans 'Save employee first' %}">
+                                        <i class="fas fa-plus me-1"></i> {% trans "Add Component" %}
+                                    </button>
+                                {% endif %}
+                            </div>
+
+                            {% if employee.pk %}
+                                <div class="card shadow-none border mb-4">
+                                    <div class="card-body p-0"> 
+                                        <div class="p-4"> 
+                                            <table id="datatables-reponsive" class="table table-striped" style="width:100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-center">{% trans "Code" %}</th>
+                                                        <th>{% trans "Description" %}</th>
+                                                        <th class="text-center">{% trans "Category" %}</th>
+                                                        <th class="text-center">{% trans "Amount" %}</th>
+                                                        <th class="text-center">{% trans "Frequency" %}</th>
+                                                        <th class="text-center">{% trans "Dates" %}</th>
+                                                        <th class="text-center">{% trans "Actions" %}</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for c in active_components %}
+                                                    <tr>
+                                                        <td class="fw-bold text-center">
+                                                            <span class="text-brand">
+                                                                {% if c.pd_code %}
+                                                                    {{ c.pd_code.pdcode_code }}
+                                                                {% elif c.element %}
+                                                                    {{ c.element.element_code }}
+                                                                {% else %}
+                                                                    #{{ c.pk }}
+                                                                {% endif %}
+                                                            </span>
+                                                        </td>
+
+                                                        <td>
+                                                            <div class="fw-bold text-dark">
+                                                                {% if c.pd_code %}
+                                                                    {{ c.pd_code.pdcode_name }}
+                                                                {% elif c.element %}
+                                                                    {{ c.element.element_name }}
+                                                                {% else %}
+                                                                    <span class="text-muted">{% trans "Unknown" %}</span>
+                                                                {% endif %}
+                                                            </div>
+                                                            <small class="text-muted">
+                                                                {% if c.pd_code %}
+                                                                    {{ c.pd_code.pdcode_description|truncatechars:40 }}
+                                                                {% elif c.element %}
+                                                                    {{ c.element.element_description|truncatechars:40 }}
+                                                                {% endif %}
+                                                            </small>
+                                                        </td>
+
+                                                        <td class="text-center">
+                                                            {% if c.pd_code %}
+                                                                <span class="badge {% if c.pd_code.pdcode_category == 'Payment' %}bg-success-subtle text-success{% elif c.pd_code.pdcode_category == 'Deduction' %}bg-danger-subtle text-danger{% else %}bg-info-subtle text-info{% endif %} rounded-pill">
+                                                                    {{ c.pd_code.get_pdcode_category_display }}
+                                                                </span>
+                                                            {% elif c.element %}
+                                                                <span class="badge {% if c.element.element_category == 'Payment' %}bg-success-subtle text-success{% elif c.element.element_category == 'Deduction' %}bg-danger-subtle text-danger{% else %}bg-info-subtle text-info{% endif %} rounded-pill">
+                                                                    {{ c.element.get_element_category_display }}
+                                                                </span>
+                                                            {% else %}
+                                                                <span class="badge bg-secondary rounded-pill">{% trans "Unknown" %}</span>
+                                                            {% endif %}
+                                                        </td>
+                                                        
+                                                        <td class="text-center">
+                                                             <strong class="text-center">{{ c.amount|floatformat:2|intcomma }}</strong><br>
+                                                             <small class="text-muted">{{country.currency_code}}</small>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <span class="text-dark">
+                                                                <strong>{{ c.get_frequency_display }}</strong><br>
+                                                                <small class="text-muted">{{ c.get_category_display }}</small>
+                                                            </span>
+                                                        </td>
+                                                        <td class="text-center">
+                                                            <strong>{{ c.start_date|date:"d/m/Y" }}</strong><br>
+                                                            <small class="text-muted">
+                                                                {% if c.end_date %}
+                                                                    {{ c.end_date|date:"d/m/Y" }}
+                                                                {% else %}
+                                                                    <span class="fst-italic text-success">{% trans "Ongoing" %}</span>
+                                                                {% endif %}
+                                                            </small>
+                                                        </td>
+
+                                                        <td class="text-center table-action" style="position: relative; z-index: 2;">
+                                                            <a href="{% url 'compensation:compensation_edit' country_slug company.pk employee.pk c.pk %}" class="text-brand me-2" title="{% trans 'Edit' %}">
+                                                                <i class="align-middle fas fa-pen"></i>
+                                                            </a>
+                                                            <a href="{% url 'compensation:compensation_delete' country_slug company.pk employee.pk c.pk %}" class="text-danger" title="{% trans 'Delete' %}" onclick="return confirm('{% trans 'Are you sure you want to delete this component?' %}');">
+                                                                <i class="align-middle fas fa-trash"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    {% empty %}
+                                                    <tr>
+                                                        <td colspan="7" class="text-center py-4 text-muted">
+                                                            <i class="fas fa-info-circle me-1"></i> {% trans "No active compensation components found." %}
+                                                        </td>
+                                                    </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="alert alert-info shadow-sm">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    {% trans "Please <strong>save the new employee</strong> first. You can add compensation details after the employee profile is created." %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="tab-pane fade" id="account">
+                            <h6 class="section-header"><i class="fas fa-cog me-2"></i>{% trans "ExactusPay Access" %}</h6>
+                            
+                            {% if linked_user %}
+                                <div class="alert alert-success border-success d-flex align-items-center p-3">
+                                    <i class="fas fa-user-check fa-2x text-success me-3"></i>
+                                    <div>
+                                        <h6 class="alert-heading fw-bold mb-1">{% trans "User Account Active" %}</h6>
+                                        <p class="mb-0 small text-muted">{% blocktrans with username=linked_user.username %}Username: <strong>{{ username }}</strong>{% endblocktrans %}</p>
+                                        <p class="mb-0 small text-muted">{% blocktrans with last_login=linked_user.last_login|default:_("Never") %}Last Login: {{ last_login }}{% endblocktrans %}</p>
+                                    </div>
+                                </div>
+
+                                {% if access_form %}
+                                    <h6 class="section-header mt-4">{% trans "Permissions & Status" %}</h6>
+                                    <div class="row g-3">
+                                        {% for field in access_form %}
+                                        <div class="col-md-6">
+                                            <div class="form-floating">
+                                                {{ field }}
+                                                <label>{{ field.label }}</label>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+
+                            {% else %}
+                                <div class="alert alert-warning border-warning d-flex align-items-center p-3">
+                                    <i class="fas fa-user-lock fa-2x text-warning me-3"></i>
+                                    <div>
+                                        <h6 class="alert-heading fw-bold mb-1">{% trans "No Access Enabled" %}</h6>
+                                        <p class="mb-0 small text-muted">{% trans "This employee cannot log in to the employee portal." %}</p>
+                                    </div>
+                                </div>
+
+                                {% if form.email.value or employee and employee.email %}
+                                    <div class="card bg-light border-0 mt-3">
+                                        <div class="card-body">
+                                            <h6 class="fw-bold"><i class="fas fa-magic me-2"></i>{% trans "Enable Portal Access" %}</h6>
+                                            
+                                            <p class="text-muted small">{% blocktrans with email=form.email.value|default:employee.email %}This will create a user account linked to <strong>{{ email }}</strong> and email them a secure password setup link.{% endblocktrans %}</p>
+                                            
+                                            <button type="submit" name="create_user_account" value="true" class="btn btn-success mt-2">
+                                                <i class="fas fa-paper-plane me-2"></i>{% trans "Create Account & Send Welcome Email" %}
+                                            </button>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="alert alert-danger mt-3">
+                                        <i class="fas fa-exclamation-triangle me-2"></i>
+                                        <strong>{% trans "Email Required:" %}</strong> 
+                                        {% trans "Please enter an email address in the <a href=\"#\" onclick=\"document.querySelector('[data-bs-target=\\'#communication\\']').click()\">Communication Tab</a> and save changes before creating an account." %}
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mt-5 pt-3 border-top">
+                        <div>
+                            <button type="button" class="btn btn-outline-secondary me-2" id="prevTab" disabled>
+                                <i class="fas fa-chevron-left me-1"></i> {% trans "Previous" %}
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary" id="nextTab">
+                                {% trans "Next" %} <i class="fas fa-chevron-right ms-1"></i>
+                            </button>
+                        </div>
+                        <div>
+                            <a href="{% url 'employee:employee' country_slug company.company_id %}" class="btn btn-danger px-4 me-2">
+                                {% trans "Cancel" %}
+                            </a>
+                            <button type="submit" class="btn btn-primary px-4" id="submit-btn">
+                                {% trans "Save" %}
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    
+    // 1. Initialize Select2
+    $("select").select2({
+        theme: "bootstrap-5",
+        width: '100%',
+        dropdownParent: $('body')
+    });
+
+    // 2. Tab Navigation
+    const tabs = document.querySelectorAll('#createEmployeeTabs .nav-link');
+    const prevBtn = document.getElementById('prevTab');
+    const nextBtn = document.getElementById('nextTab');
+    let currentTabIndex = 0;
+
+    // Listen for Tab Changes
+    tabs.forEach((tab, index) => {
+        tab.addEventListener('shown.bs.tab', function (event) {
+            currentTabIndex = Array.from(tabs).indexOf(event.target);
+            updateNavButtons();
+            $('select').select2({ theme: "bootstrap-5", width: '100%' }); // Re-init focus
+        });
+    });
+
+    // Buttons
+    prevBtn.addEventListener('click', () => {
+        if (currentTabIndex > 0) bootstrap.Tab.getOrCreateInstance(tabs[currentTabIndex - 1]).show();
+    });
+    nextBtn.addEventListener('click', () => {
+        if (currentTabIndex < tabs.length - 1) bootstrap.Tab.getOrCreateInstance(tabs[currentTabIndex + 1]).show();
+    });
+
+    function updateNavButtons() {
+        prevBtn.disabled = currentTabIndex === 0;
+        nextBtn.disabled = currentTabIndex === tabs.length - 1;
+        if (currentTabIndex === tabs.length - 1) {
+            nextBtn.classList.add('invisible');
+        } else {
+            nextBtn.classList.remove('invisible');
+        }
+    }
+
+    // 3. Validation & Loading
+    const form = document.getElementById('employee-form');
+    form.addEventListener('submit', function(event) {
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            const invalidInput = form.querySelector('input:invalid, select:invalid');
+            if(invalidInput) {
+                const tabPane = invalidInput.closest('.tab-pane');
+                const tabId = tabPane.getAttribute('id');
+                const tabBtn = document.querySelector(`[data-bs-target="#${tabId}"]`);
+                if(tabBtn) {
+                    bootstrap.Tab.getOrCreateInstance(tabBtn).show();
+                }
+                setTimeout(() => invalidInput.focus(), 100);
+            }
+            form.classList.add('was-validated');
+        } else {
+            const btn = document.getElementById('submit-btn');
+            if (document.activeElement && document.activeElement.id === 'submit-btn') {
+                 btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>{% trans "Saving..." %}';
+                 btn.disabled = true;
+            }
+        }
+    });
+
+    updateNavButtons();
+});
+</script>
+{% endblock %}

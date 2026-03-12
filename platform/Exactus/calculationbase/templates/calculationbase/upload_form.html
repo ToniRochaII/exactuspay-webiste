@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Upload Calculation Bases{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="page-title-box">
+                <div class="page-title-right">
+                    <ol class="breadcrumb m-0">
+                        <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                        {% if country %}
+                            <li class="breadcrumb-item"><a href="{% url 'country:country' %}">Countries</a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'regulations:regulations' country.slug %}">Regulations</a></li>
+                            <li class="breadcrumb-item"><a href="{% url 'calculationbase:list' country.slug regulations.id %}">Calc Bases</a></li>
+                        {% else %}
+                             <li class="breadcrumb-item active">Global Tools</li>
+                        {% endif %}
+                        <li class="breadcrumb-item active">Upload</li>
+                    </ol>
+                </div>
+                <h4 class="page-title">
+                    {% if country %}
+                        Upload Calculation Bases ({{ country.iso2_code }} - {{ regulations.fiscal_year }})
+                    {% else %}
+                        Global Calculation Base Upload
+                    {% endif %}
+                </h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="alert alert-info border-0 shadow-sm">
+                        <h5><i class="fas fa-info-circle me-1"></i> Instructions</h5>
+                        <ul class="mb-0">
+                            <li>Download the template to see the correct column structure.</li>
+                            {% if not country %}
+                                <li><strong>Global Mode:</strong> Columns <code>country_code</code> and <code>fiscal_year</code> are <strong>REQUIRED</strong>.</li>
+                            {% endif %}
+                            <li><strong>Required:</strong> <code>element_code</code> (must exist in Elements).</li>
+                            <li><strong>Brackets:</strong> Columns for 16 brackets (00-15) are included. Leave unused brackets empty.</li>
+                        </ul>
+                    </div>
+
+                    <div class="card mt-4 shadow-sm border-light">
+                        <div class="card-body">
+                            <form method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                {{ form|crispy }}
+
+                                <div class="mt-4 border-top pt-3">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-upload me-1"></i> Process Upload
+                                    </button>
+                                    
+                                    {% if country %}
+                                        <a href="{% url 'calculationbase:list' country.slug regulations.id %}" class="btn btn-light ms-2">Cancel</a>
+                                        <a href="{% url 'calculationbase:download_template' country.slug regulations.id %}" 
+                                           class="btn btn-outline-success float-end">
+                                            <i class="fas fa-file-csv me-1"></i> Download Template
+                                        </a>
+                                    {% else %}
+                                        <a href="{% url 'dashboard' %}" class="btn btn-light ms-2">Cancel</a>
+                                        <a href="{% url 'calculationbase:download_template_global' %}" 
+                                           class="btn btn-outline-success float-end">
+                                            <i class="fas fa-file-csv me-1"></i> Download Global Template
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

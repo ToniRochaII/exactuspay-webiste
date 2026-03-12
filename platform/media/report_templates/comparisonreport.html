@@ -1,0 +1,32 @@
+<h2>Payroll Comparison</h2>
+<p>
+  Current period: {{ current_period }} |
+  Previous period: {{ previous_period }}
+</p>
+
+<table style="width:100%; border-collapse:collapse;">
+  <thead>
+    <tr>
+      <th style="text-align:left; border-bottom:1px solid #ccc;">Employee</th>
+      <th style="text-align:left; border-bottom:1px solid #ccc;">Code</th>
+      <th style="text-align:left; border-bottom:1px solid #ccc;">Label</th>
+      <th style="text-align:right; border-bottom:1px solid #ccc;">Current</th>
+      <th style="text-align:right; border-bottom:1px solid #ccc;">Previous</th>
+      <th style="text-align:right; border-bottom:1px solid #ccc;">Difference</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in comparison_rows %}
+      <tr>
+        <td style="padding:6px 4px;">{{ r.employee_name }}{% if r.employee_ref %} ({{ r.employee_ref }}){% endif %}</td>
+        <td style="padding:6px 4px;">{{ r.code }}</td>
+        <td style="padding:6px 4px;">{{ r.label }}</td>
+        <td style="padding:6px 4px; text-align:right;">{{ r.fmt_current }}</td>
+        <td style="padding:6px 4px; text-align:right;">{{ r.fmt_previous }}</td>
+        <td style="padding:6px 4px; text-align:right;"><strong>{{ r.fmt_difference }}</strong></td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="6">No data.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>

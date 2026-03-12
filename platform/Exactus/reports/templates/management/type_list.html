@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Report Types" %} | ExactusPay{% endblock %}
+
+{% block page_title %}
+<i class="bi bi-diagram-3 me-2"></i>{% trans "Report Types" %}
+{% endblock %}
+
+{% block extra_head %}
+<style>
+  body { background-color: #F4F4F4 !important; }
+  .wrapper:before { background: #F4F4F4 !important; }
+
+  :root{
+    --card-radius: 16px;
+    --border-color: #f0f0f0;
+  }
+
+  .card-hover-effect{
+    border-radius: var(--card-radius);
+    border: none;
+    overflow: hidden;
+    transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .card-hover-effect:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0,0,0,.08) !important;
+  }
+
+  .card-header{
+    background: #fff;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .btn-pill{
+    border-radius: 999px;
+    font-weight: 700;
+    padding: .55rem 1rem;
+  }
+
+  .badge-soft{
+    background: rgba(13,110,253,.08);
+    color: #0d6efd;
+    border: 1px solid rgba(13,110,253,.15);
+  }
+
+  .table thead th{ white-space: nowrap; vertical-align: middle; }
+  .table td{ vertical-align: middle; }
+
+  .code-pill{
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: .85rem;
+    padding: .35rem .55rem;
+    border-radius: 10px;
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    display: inline-block;
+  }
+
+  .empty-state{
+    padding: 3rem 1rem;
+    text-align: center;
+    background: #fff;
+  }
+  .empty-state i{
+    font-size: 3rem;
+    opacity: .25;
+  }
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'reports:report_manage_hub' %}">{% trans "Reports Hub" %}</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      {% trans "Types" %}
+    </li>
+  </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-12">
+
+    <div class="card card-hover-effect shadow-sm">
+      <div class="card-header pt-4 px-4 pb-3">
+        <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+          <div>
+            <h5 class="card-title mb-0">
+              <i class="bi bi-diagram-3 me-2 text-primary"></i>{% trans "Report Types" %}
+            </h5>
+            <h6 class="card-subtitle text-muted mt-1">
+              {% trans "Define the available report types used across layouts and configuration rules." %}
+            </h6>
+          </div>
+
+          <div class="d-flex gap-2">
+            <a href="{% url 'reports:report_manage_hub' %}" class="btn btn-outline-secondary btn-pill">
+              <i class="bi bi-arrow-left me-2"></i>{% trans "Back to Hub" %}
+            </a>
+            <a href="{% url 'reports:manage_types_add' %}" class="btn btn-primary btn-pill">
+              <i class="bi bi-plus-circle me-2"></i>{% trans "Add Type" %}
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-body p-0">
+        <div class="p-4">
+
+          <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+            <div class="text-muted small">
+              <i class="bi bi-info-circle me-1"></i>
+              {% trans "Tip: Keep the Code stable. Layouts and rules may depend on it." %}
+            </div>
+            <span class="badge badge-soft rounded-pill px-3 py-2">
+              {{ types|length|default:0 }} {% trans "Types" %}
+            </span>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-striped align-middle mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>{% trans "Code" %}</th>
+                  <th>{% trans "Name" %}</th>
+                  <th>{% trans "Category" %}</th>
+                  <th class="text-center">{% trans "Statutory" %}</th>
+                  <th class="text-end">{% trans "Actions" %}</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {% for type in types %}
+                <tr>
+                  <td><span class="code-pill">{{ type.code }}</span></td>
+
+                  <td class="fw-bold text-dark">{{ type.name }}</td>
+
+                  <td>
+                    <span class="badge rounded-pill bg-light text-dark border">
+                      {{ type.category.name }}
+                    </span>
+                  </td>
+
+                  <td class="text-center">
+                    {% if type.is_statutory %}
+                      <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle">
+                        <i class="bi bi-check2-circle me-1"></i>{% trans "Yes" %}
+                      </span>
+                    {% else %}
+                      <span class="badge rounded-pill bg-danger-subtle text-danger border border-danger-subtle">
+                        <i class="bi bi-x-circle me-1"></i>{% trans "No" %}
+                      </span>
+                    {% endif %}
+                  </td>
+
+                  <td class="text-end">
+                    <div class="d-inline-flex gap-2">
+                      <a href="{% url 'reports:manage_types_edit' type.pk %}"
+                         class="btn btn-sm btn-outline-warning">
+                        <i class="bi bi-pencil-square me-1"></i>{% trans "Edit" %}
+                      </a>
+                      <a href="{% url 'reports:manage_types_delete' type.pk %}"
+                         class="btn btn-sm btn-outline-danger"
+                         onclick="return confirm('{% trans "Delete this report type? This cannot be undone." %}');">
+                        <i class="bi bi-trash me-1"></i>{% trans "Delete" %}
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="5" class="p-0">
+                    <div class="empty-state">
+                      <i class="bi bi-diagram-3 d-block mb-2"></i>
+                      <h5 class="text-muted mb-1">{% trans "No report types found." %}</h5>
+                      <p class="text-muted small mb-3">
+                        {% trans "Create your first type to start organizing layouts and rules." %}
+                      </p>
+                      <a href="{% url 'reports:manage_types_add' %}" class="btn btn-primary btn-pill">
+                        <i class="bi bi-plus-circle me-2"></i>{% trans "Add Type" %}
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

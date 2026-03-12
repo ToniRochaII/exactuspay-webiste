@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Countries" %} | ExactusPay{% endblock %}
+{% block page_title %}{% trans "Countries" %}{% endblock %}
+
+{% block extra_head %}
+<link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.bootstrap5.min.css" rel="stylesheet">
+
+<style>
+    body { background-color: #F4F4F4 !important; }
+    .wrapper:before { background: #F4F4F4 !important; }
+    :root { --card-radius: 16px; --kpi-radius: 20px; --border-color: #f0f0f0; }
+
+    .card-hover-effect {
+        border-radius: 16px;
+        border: none;
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+        overflow: hidden;
+    }
+
+    .card-hover-effect:hover {
+        transform: translateY(0px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .card-header {
+        background-color: #fff;
+        border-bottom: 1px solid #f0f0f0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-12">
+    <div class="card card-hover-effect shadow-sm">
+      <div class="card-header pt-4 px-4">
+        <h5 class="card-title mb-0">{% trans "Country Configurations" %}</h5>
+        <h6 class="card-subtitle text-muted mt-1">
+          {% trans "Manage supported countries, currencies, and global settings." %}
+        </h6>
+      </div>
+
+      <div class="card-body p-0">
+        <div class="p-4">
+          <table id="datatables-reponsive" class="table table-striped" style="width:100%">
+            <thead>
+              <tr>
+                <th class="text-center">{% trans "ISO Code" %}</th>
+                <th>{% trans "Name" %}</th>
+                <th class="text-center">{% trans "Currency" %}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for country in countries %}
+              <tr class="clickable-row position-relative" style="transform: rotate(0);">
+                <td class="text-center">
+                  <strong>{{ country.iso2_code }}</strong><br>
+                  <small class="text-muted">{{ country.iso3_code }}</small>
+                </td>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <img src="{% static 'dis/img/flags/' %}{{ country.iso2_code|lower }}.png"
+                         alt="{{ country.iso2_code }}"
+                         width="30"
+                         class="me-2 border rounded-1"
+                         onerror="this.style.display='none'">
+
+                    <a href="{% url 'companies:company' country.slug %}" class="text-dark text-decoration-none stretched-link">
+                      {{ country.name }}
+                    </a>
+                  </div>
+                </td>
+                <td class="text-center">
+                  <strong>{{ country.currency_code }}</strong><br>
+                  <small class="text-muted">{{ country.currency_name }}</small>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/responsive.bootstrap5.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  $("#datatables-reponsive").DataTable({
+    responsive: true,
+    lengthChange: true,
+    pageLength: 10,
+    lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
+
+    language: {
+      search: "",
+      searchPlaceholder: "{% trans 'Search Countries' %}",
+      lengthMenu: "{% trans 'Show _MENU_ entries' %}"
+    },
+
+    dom: '<"row mb-3"<"col-md-6 d-flex align-items-center"l><"col-md-6"f>>' +
+         '<"row"<"col-sm-12"tr>>' +
+         '<"row mt-3"<"col-md-5"i><"col-md-7"p>>',
+
+    initComplete: function() {
+      $('.dataTables_filter input').addClass('form-control');
+      $('.dataTables_length select').addClass('form-select');
+    }
+  });
+});
+</script>
+{% endblock %}

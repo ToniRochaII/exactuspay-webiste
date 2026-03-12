@@ -1,0 +1,1488 @@
+# Файл PO Django для перевода на русский (ru)
+# Авторские права (C) 2026 ExactusPay
+# Этот файл распространяется под той же лицензией, что и пакет ExactusPay.
+# ПЕРВЫЙ АВТОР <АДРЕС ЭЛЕКТРОННОЙ ПОЧТЫ>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ExactusPay 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-19 10:00-0300\n"
+"PO-Revision-Date: 2026-02-19 10:00-0300\n"
+"Last-Translator: \n"
+"Language-Team: Russian <ru@exactuspay.com>\n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: templates/base.html:10 templates/demo.html:5 templates/features.html:5
+#: templates/platform.html:5 templates/pricing.html:5 templates/security.html:5
+msgid "Global Payroll Software | Multi-Country Payroll & Compliance Platform | ExactusPay"
+msgstr "Программное обеспечение для глобального расчета зарплаты | Платформа для расчета зарплаты и соблюдения нормативных требований в нескольких странах | ExactusPay"
+
+#: templates/base.html:15 templates/demo.html:10 templates/features.html:10
+#: templates/platform.html:10 templates/pricing.html:10 templates/security.html:10
+msgid ""
+"ExactusPay is a powerful global payroll software delivering multi-country payroll, automated compliance, real-time workforce analytics, standardized reporting, and payroll simulations. Manage international payroll accurately, securely, and at scale from one intelligent platform."
+msgstr ""
+"ExactusPay — это мощное программное обеспечение для глобального расчета заработной платы, обеспечивающее расчет зарплаты в нескольких странах, автоматизированное соблюдение нормативных требований, аналитику рабочей силы в реальном времени, стандартизированную отчетность и моделирование расчета зарплаты. Управляйте международной зарплатой точно, безопасно и в масштабе с одной интеллектуальной платформы."
+
+#: templates/base.html:21 templates/demo.html:15 templates/features.html:15
+#: templates/platform.html:15 templates/pricing.html:15 templates/security.html:15
+msgid "global payroll software, multi-country payroll, international payroll system, payroll compliance software, global payroll platform, payroll automation, payroll simulations, workforce analytics, multinational payroll management, cloud payroll solution, global HR payroll, payroll reporting software, international payroll compliance, scalable payroll platform"
+msgstr "программное обеспечение для глобального расчета зарплаты, расчет зарплаты в нескольких странах, международная система расчета зарплаты, программное обеспечение для соблюдения нормативных требований к зарплате, глобальная платформа расчета зарплаты, автоматизация расчета зарплаты, моделирование расчета зарплаты, аналитика рабочей силы, управление зарплатой в многонациональных компаниях, облачное решение для расчета зарплаты, глобальная зарплата отдела кадров, программное обеспечение для отчетности по зарплате, международное соблюдение нормативных требований к зарплате, масштабируемая платформа расчета зарплаты"
+
+#: templates/base.html:25 templates/demo.html:20 templates/features.html:20
+#: templates/platform.html:20 templates/pricing.html:20 templates/security.html:20
+#: templates/footer.html:5
+msgid "ExactusPay"
+msgstr "ExactusPay"
+
+#: templates/base.html:30 templates/demo.html:25 templates/features.html:25
+#: templates/platform.html:25 templates/pricing.html:25 templates/security.html:25
+msgid "ExactusPay | Global Payroll Software for Multi-Country Payroll & Compliance"
+msgstr "ExactusPay | Программное обеспечение для глобального расчета зарплаты для расчета зарплаты в нескольких странах и соблюдения нормативных требований"
+
+#: templates/base.html:34 templates/demo.html:29 templates/features.html:29
+#: templates/platform.html:29 templates/pricing.html:29 templates/security.html:29
+msgid "Run global payroll with confidence. Automated compliance, payroll simulations, standardized reporting, and real-time analytics in one powerful multi-country payroll platform."
+msgstr "Управляйте глобальной зарплатой с уверенностью. Автоматизированное соблюдение требований, моделирование зарплаты, стандартизированная отчетность и аналитика в реальном времени на одной мощной платформе для расчета зарплаты в нескольких странах."
+
+#: templates/base.html:40 templates/demo.html:35 templates/features.html:35
+#: templates/platform.html:35 templates/pricing.html:35 templates/security.html:35
+msgid "ExactusPay | Global Payroll Software"
+msgstr "ExactusPay | Программное обеспечение для глобального расчета зарплаты"
+
+#: templates/base.html:42 templates/demo.html:37 templates/features.html:37
+#: templates/platform.html:37 templates/pricing.html:37 templates/security.html:37
+msgid "Multi-country payroll, automated compliance, real-time workforce analytics, and payroll simulations—powered by ExactusPay."
+msgstr "Расчет зарплаты в нескольких странах, автоматизированное соблюдение требований, аналитика рабочей силы в реальном времени и моделирование расчета зарплаты — на базе ExactusPay."
+
+#: templates/base.html:61 templates/header.html:15 templates/demo.html:80
+#: templates/features.html:85 templates/platform.html:90 templates/pricing.html:95
+#: templates/security.html:85
+msgid "Skip to content"
+msgstr "Перейти к содержимому"
+
+#: templates/header.html:20 templates/mobile-nav.html:10
+msgid "Home"
+msgstr "Главная"
+
+#: templates/header.html:21 templates/mobile-nav.html:11
+msgid "Features"
+msgstr "Возможности"
+
+#: templates/header.html:22 templates/mobile-nav.html:12
+msgid "Platform"
+msgstr "Платформа"
+
+#: templates/header.html:23 templates/mobile-nav.html:13
+msgid "Security"
+msgstr "Безопасность"
+
+#: templates/header.html:24 templates/mobile-nav.html:14
+msgid "Pricing"
+msgstr "Цены"
+
+#: templates/header.html:28 templates/mobile-nav.html:18
+msgid "Log In"
+msgstr "Войти"
+
+#: templates/header.html:29 templates/mobile-nav.html:19
+msgid "Request Demo"
+msgstr "Запросить демо"
+
+#: templates/header.html:33 templates/mobile-nav.html:24
+msgid "Language"
+msgstr "Язык"
+
+#: templates/header.html:35 templates/mobile-nav.html:26
+msgid "Select language"
+msgstr "Выберите язык"
+
+#: templates/header.html:47
+msgid "Open menu"
+msgstr "Открыть меню"
+
+#: templates/mobile-nav.html:5
+msgid "Mobile navigation"
+msgstr "Мобильная навигация"
+
+#: templates/language-options.html:3
+msgid "🇧🇷 Português"
+msgstr "🇧🇷 Португальский"
+
+#: templates/language-options.html:4
+msgid "🇬🇧 English"
+msgstr "🇬🇧 Английский"
+
+#: templates/language-options.html:5
+msgid "🇪🇸 Español"
+msgstr "🇪🇸 Испанский"
+
+#: templates/language-options.html:6
+msgid "🇷🇺 Русский"
+msgstr "🇷🇺 Русский"
+
+#: templates/language-options.html:7
+msgid "🇸🇦 العربية"
+msgstr "🇸🇦 Арабский"
+
+#: templates/homepage.html:15
+msgid "Smart Global Payroll Platform"
+msgstr "Интеллектуальная платформа для глобального расчета зарплаты"
+
+#: templates/homepage.html:18
+msgid ""
+"Streamline global workforce management with AI-driven compliance, real-time insights, and seamless payroll processing across 40+ countries."
+msgstr ""
+"Оптимизируйте глобальное управление персоналом с помощью соответствия требованиям на основе ИИ, информации в реальном времени и бесперебойной обработки зарплаты в более чем 40 странах."
+
+#: templates/homepage.html:23
+msgid "Watch Demo"
+msgstr "Смотреть демо"
+
+#: templates/homepage.html:29
+msgid "99.8%"
+msgstr "99,8%"
+
+#: templates/homepage.html:30
+msgid "Accuracy Rate"
+msgstr "Точность"
+
+#: templates/homepage.html:33
+msgid "40+"
+msgstr "40+"
+
+#: templates/homepage.html:34
+msgid "Countries"
+msgstr "Стран"
+
+#: templates/homepage.html:37
+msgid "24"
+msgstr "24"
+
+#: templates/homepage.html:38
+msgid "Hours Support"
+msgstr "Поддержка 24 часа"
+
+#: templates/homepage.html:41
+msgid "100%"
+msgstr "100%"
+
+#: templates/homepage.html:42
+msgid "Compliance"
+msgstr "Соответствие требованиям"
+
+#: templates/homepage.html:50
+msgid "Powerful Features"
+msgstr "Мощные возможности"
+
+#: templates/homepage.html:51
+msgid "Designed for Global Scale"
+msgstr "Разработано для глобального масштаба"
+
+#: templates/homepage.html:52
+msgid "Everything you need to manage complex global payroll operations with confidence"
+msgstr "Все необходимое для управления сложными глобальными операциями по расчету зарплаты с уверенностью"
+
+#: templates/homepage.html:57
+msgid "AI-Powered Compliance"
+msgstr "Соответствие требованиям на основе ИИ"
+
+#: templates/homepage.html:58
+msgid "Automated regulatory updates and risk assessment across all jurisdictions with machine learning algorithms."
+msgstr "Автоматизированные обновления нормативных требований и оценка рисков во всех юрисдикциях с помощью алгоритмов машинного обучения."
+
+#: templates/homepage.html:62
+msgid "Real-time Analytics"
+msgstr "Аналитика в реальном времени"
+
+#: templates/homepage.html:63
+msgid "Comprehensive dashboards with live insights into payroll costs, compliance status, and operational metrics."
+msgstr "Комплексные панели мониторинга с информацией в реальном времени о затратах на зарплату, статусе соответствия требованиям и операционных показателях."
+
+#: templates/homepage.html:67
+msgid "Instant Processing"
+msgstr "Мгновенная обработка"
+
+#: templates/homepage.html:68
+msgid "Batch process thousands of payments across different currencies and banking systems simultaneously."
+msgstr "Пакетная обработка тысяч платежей в разных валютах и банковских системах одновременно."
+
+#: templates/homepage.html:72
+msgid "Enterprise Security"
+msgstr "Корпоративная безопасность"
+
+#: templates/homepage.html:73
+msgid "Bank-grade encryption, multi-factor authentication, and SOC 2 Type II certified infrastructure."
+msgstr "Шифрование банковского уровня, многофакторная аутентификация и инфраструктура, сертифицированная по SOC 2 Type II."
+
+#: templates/homepage.html:77
+msgid "Global Coverage"
+msgstr "Глобальное покрытие"
+
+#: templates/homepage.html:78
+msgid "Seamless payroll processing across 40+ countries with local compliance and tax expertise built-in."
+msgstr "Бесперебойная обработка зарплаты в более чем 40 странах со встроенным местным соблюдением требований и налоговой экспертизой."
+
+#: templates/homepage.html:82
+msgid "Audit Trail"
+msgstr "Журнал аудита"
+
+#: templates/homepage.html:83
+msgid "Complete transparency with immutable records for every transaction and compliance verification."
+msgstr "Полная прозрачность с неизменяемыми записями для каждой транзакции и проверки соответствия требованиям."
+
+#: templates/homepage.html:90
+msgid "Unified Platform"
+msgstr "Единая платформа"
+
+#: templates/homepage.html:91
+msgid "Everything in One Dashboard"
+msgstr "Все в одной панели управления"
+
+#: templates/homepage.html:92
+msgid "Manage your entire global payroll operation from a single, intuitive interface with real-time data and actionable insights."
+msgstr "Управляйте всей своей глобальной операцией по расчету зарплаты из единого интуитивно понятного интерфейса с данными в реальном времени и полезной информацией."
+
+#: templates/homepage.html:97
+msgid "Monitor payroll costs, compliance status, and operational metrics across all regions with live dashboards."
+msgstr "Отслеживайте затраты на зарплату, статус соответствия требованиям и операционные показатели во всех регионах с помощью панелей мониторинга в реальном времени."
+
+#: templates/homepage.html:101
+msgid "Multi-currency Support"
+msgstr "Поддержка нескольких валют"
+
+#: templates/homepage.html:102
+msgid "Process payments in 40+ currencies with automated forex management and optimal exchange rates."
+msgstr "Обрабатывайте платежи в более чем 40 валютах с автоматизированным управлением валютой и оптимальными обменными курсами."
+
+#: templates/homepage.html:106
+msgid "Automated Reporting"
+msgstr "Автоматизированная отчетность"
+
+#: templates/homepage.html:107
+msgid "Generate compliance reports, tax filings, and financial statements automatically across all jurisdictions."
+msgstr "Автоматически создавайте отчеты о соответствии требованиям, налоговые декларации и финансовую отчетность во всех юрисдикциях."
+
+#: templates/homepage.html:113
+msgid "Payroll Analytics"
+msgstr "Аналитика зарплаты"
+
+#: templates/homepage.html:115
+msgid "Live Dashboard"
+msgstr "Панель в реальном времени"
+
+#: templates/homepage.html:116
+msgid "Real-time insights into global payroll operations with predictive analytics."
+msgstr "Информация в реальном времени о глобальных операциях по расчету зарплаты с прогнозной аналитикой."
+
+#: templates/homepage.html:121
+msgid "Compliance Status"
+msgstr "Статус соответствия требованиям"
+
+#: templates/homepage.html:123
+msgid "All Systems Go"
+msgstr "Все системы работают"
+
+#: templates/homepage.html:124
+msgid "100% compliance across all active jurisdictions with automated updates."
+msgstr "100% соответствие требованиям во всех активных юрисдикциях с автоматическими обновлениями."
+
+#: templates/homepage.html:129
+msgid "Payment Processing"
+msgstr "Обработка платежей"
+
+#: templates/homepage.html:131
+msgid "Batch Ready"
+msgstr "Готово к пакетной обработке"
+
+#: templates/homepage.html:132
+msgid "Process payments in multiple currencies with automated reconciliation."
+msgstr "Обрабатывайте платежи в нескольких валютах с автоматической сверкой."
+
+#: templates/homepage.html:138
+msgid "Bank-Grade Protection"
+msgstr "Защита банковского уровня"
+
+#: templates/homepage.html:139
+msgid "Your global payroll data is protected by multiple layers of enterprise security"
+msgstr "Ваши глобальные данные о зарплате защищены многоуровневой корпоративной безопасностью"
+
+#: templates/homepage.html:143
+msgid "AES-256 Encryption"
+msgstr "Шифрование AES-256"
+
+#: templates/homepage.html:144
+msgid "All data encrypted in transit and at rest with military-grade encryption standards."
+msgstr "Все данные шифруются при передаче и хранении в соответствии со стандартами шифрования военного уровня."
+
+#: templates/homepage.html:148
+msgid "Multi-Factor Auth"
+msgstr "Многофакторная аутентификация"
+
+#: templates/homepage.html:149
+msgid "Enterprise-grade MFA with biometric options for all user access levels."
+msgstr "MFA корпоративного уровня с биометрическими опциями для всех уровней доступа пользователей."
+
+#: templates/homepage.html:153
+msgid "SOC 2 Certified"
+msgstr "Сертифицировано SOC 2"
+
+#: templates/homepage.html:154
+msgid "Regular third-party audits ensure continuous compliance with security standards."
+msgstr "Регулярные сторонние аудиты обеспечивают постоянное соответствие стандартам безопасности."
+
+#: templates/homepage.html:158
+msgid "Data Sovereignty"
+msgstr "Суверенитет данных"
+
+#: templates/homepage.html:159
+msgid "Regional data centers ensure compliance with local data protection regulations."
+msgstr "Региональные центры обработки данных обеспечивают соответствие местным нормативным требованиям по защите данных."
+
+#: templates/homepage.html:165
+msgid "Trusted by Leaders"
+msgstr "Доверие лидеров"
+
+#: templates/homepage.html:166
+msgid "Global Success Stories"
+msgstr "Истории глобального успеха"
+
+#: templates/homepage.html:167
+msgid "See how companies are transforming their global payroll operations with ExactusPay"
+msgstr "Узнайте, как компании трансформируют свои глобальные операции по расчету зарплаты с ExactusPay"
+
+#: templates/homepage.html:171
+msgid ""
+"\"ExactusPay revolutionized our global payroll operations. We reduced processing time by 80% while eliminating compliance errors across 15 countries. Their platform paid for itself within the first quarter, and the ROI has been phenomenal.\""
+msgstr ""
+"\"ExactusPay произвел революцию в наших глобальных операциях по расчету зарплаты. Мы сократили время обработки на 80%, одновременно устранив ошибки соблюдения требований в 15 странах. Их платформа окупилась в течение первого квартала, а рентабельность инвестиций была феноменальной.\""
+
+#: templates/homepage.html:177
+msgid "Sarah Rodriguez"
+msgstr "Сара Родригес"
+
+#: templates/homepage.html:178
+msgid "Global Operations Director, TechScale Inc."
+msgstr "Директор по глобальным операциям, TechScale Inc."
+
+#: templates/homepage.html:182
+msgid "Ready to Simplify Global Payroll?"
+msgstr "Готовы упростить глобальный расчет зарплаты?"
+
+#: templates/homepage.html:183
+msgid "Join 500+ enterprises that trust ExactusPay with their global workforce management. Schedule a personalized demo to see our platform in action."
+msgstr "Присоединяйтесь к более чем 500 предприятиям, которые доверяют ExactusPay управление своей глобальной рабочей силой. Запланируйте персонализированную демонстрацию, чтобы увидеть нашу платформу в действии."
+
+#: templates/homepage.html:187 templates/cta.html:5 templates/features.html:175
+#: templates/platform.html:185 templates/pricing.html:190
+msgid "Schedule Demo"
+msgstr "Запланировать демо"
+
+#: templates/demo.html:45
+msgid "See ExactusPay in Action"
+msgstr "Увидеть ExactusPay в действии"
+
+#: templates/demo.html:48
+msgid ""
+"Stop guessing your global labour costs. Get a personalised walkthrough of the platform that simplifies payroll for the Global South — with predictable compliance and one executive standard for reporting."
+msgstr ""
+"Перестаньте гадать о своих глобальных затратах на рабочую силу. Получите персонализированное знакомство с платформой, которая упрощает расчет зарплаты для Глобального Юга — с предсказуемым соблюдением требований и единым исполнительным стандартом отчетности."
+
+#: templates/demo.html:54
+msgid "What you'll see"
+msgstr "Что вы увидите"
+
+#: templates/demo.html:55
+msgid "Book a session"
+msgstr "Забронировать сессию"
+
+#: templates/demo.html:58
+msgid "Key outcomes"
+msgstr "Ключевые результаты"
+
+#: templates/demo.html:59 templates/features.html:64 templates/platform.html:64
+msgid "Single source of truth"
+msgstr "Единый источник правды"
+
+#: templates/demo.html:60
+msgid "Multi-country standard"
+msgstr "Многострановый стандарт"
+
+#: templates/demo.html:61
+msgid "Audit-ready controls"
+msgstr "Контроль, готовый к аудиту"
+
+#: templates/demo.html:62
+msgid "Cost visibility"
+msgstr "Прозрачность затрат"
+
+#: templates/demo.html:70
+msgid "What you get"
+msgstr "Что вы получаете"
+
+#: templates/demo.html:71
+msgid "A practical demo — not a sales pitch"
+msgstr "Практическая демонстрация — не рекламная презентация"
+
+#: templates/demo.html:72
+msgid "We focus on the exact workflows leaders need to expand safely across LATAM, Africa, and Asia."
+msgstr "Мы сосредоточены именно на тех рабочих процессах, которые нужны лидерам для безопасного расширения в Латинской Америке, Африке и Азии."
+
+#: templates/demo.html:77
+msgid "Run a live simulation"
+msgstr "Запустите живую симуляцию"
+
+#: templates/demo.html:78
+msgid "Forecast the full employer cost of a new hire in Brazil, Nigeria, or Indonesia — including statutory contributions."
+msgstr "Спрогнозируйте полную стоимость работодателя для нового найма в Бразилии, Нигерии или Индонезии — включая обязательные взносы."
+
+#: templates/demo.html:82
+msgid "Audit your compliance"
+msgstr "Проверьте свое соответствие требованиям"
+
+#: templates/demo.html:83
+msgid "See how the platform flags risks and gaps across tax logic, filings, and governance — keeping you audit-ready."
+msgstr "Узнайте, как платформа отмечает риски и пробелы в налоговой логике, отчетности и управлении — поддерживая вашу готовность к аудиту."
+
+#: templates/demo.html:87
+msgid "Unified reporting"
+msgstr "Унифицированная отчетность"
+
+#: templates/demo.html:88
+msgid "Watch 20+ countries roll up into one executive dashboard, with consistent definitions and clear visibility."
+msgstr "Наблюдайте, как более 20 стран объединяются в единую исполнительную панель с согласованными определениями и четкой видимостью."
+
+#: templates/demo.html:96
+msgid "Next steps"
+msgstr "Следующие шаги"
+
+#: templates/demo.html:97
+msgid "Clear steps. Zero pressure."
+msgstr "Четкие шаги. Никакого давления."
+
+#: templates/demo.html:98
+msgid "We keep it efficient and relevant — you leave with a plan, not a pile of slides."
+msgstr "Мы делаем все эффективно и по делу — вы уходите с планом, а не с кучей слайдов."
+
+#: templates/demo.html:103
+msgid "The Discovery (15 mins)"
+msgstr "Исследование (15 минут)"
+
+#: templates/demo.html:104
+msgid "We map your footprint (entities, contractors, EORs) and identify friction points across your target regions."
+msgstr "Мы составляем карту вашего присутствия (юридические лица, подрядчики, EOR) и определяем проблемные места в ваших целевых регионах."
+
+#: templates/demo.html:107
+msgid "The Tailored Walkthrough (30 mins)"
+msgstr "Индивидуальное знакомство (30 минут)"
+
+#: templates/demo.html:108
+msgid "No generic deck. We show country-specific examples, local tax logic, and the reporting you'll rely on."
+msgstr "Никаких общих презентаций. Мы показываем примеры для конкретных стран, местную налоговую логику и отчетность, на которую вы будете полагаться."
+
+#: templates/demo.html:111
+msgid "The Strategic Blueprint"
+msgstr "Стратегический план"
+
+#: templates/demo.html:112
+msgid "You leave with a pricing estimate, transition timeline, and a simulation output for your next hire."
+msgstr "Вы уходите с оценкой стоимости, графиком перехода и результатами моделирования для вашего следующего найма."
+
+#: templates/demo.html:120
+msgid "Why a demo?"
+msgstr "Зачем нужна демонстрация?"
+
+#: templates/demo.html:121
+msgid "Because expansion needs certainty"
+msgstr "Потому что расширение требует определенности"
+
+#: templates/demo.html:122
+msgid "See predictive cost, verify compliance, and meet the experts who support you day-to-day."
+msgstr "Узнайте прогнозируемую стоимость, проверьте соответствие требованиям и познакомьтесь с экспертами, которые поддерживают вас ежедневно."
+
+#: templates/demo.html:127
+msgid "See the future"
+msgstr "Увидьте будущее"
+
+#: templates/demo.html:128
+msgid "Most tools show historical spend. ExactusPay demonstrates how to predict employment cost before you hire."
+msgstr "Большинство инструментов показывают исторические расходы. ExactusPay демонстрирует, как прогнозировать стоимость трудоустройства до того, как вы наймете."
+
+#: templates/demo.html:132
+msgid "Verify compliance"
+msgstr "Проверьте соответствие требованиям"
+
+#: templates/demo.html:133
+msgid "Ask tough questions on POPIA, LGPD, or statutory contributions. We show the logic and evidence trails."
+msgstr "Задавайте сложные вопросы о POPIA, LGPD или обязательных взносах. Мы показываем логику и цепочки доказательств."
+
+#: templates/demo.html:137
+msgid "Meet your team"
+msgstr "Познакомьтесь со своей командой"
+
+#: templates/demo.html:138
+msgid "This isn't just software. You'll meet the support experts that operate as an extension of your team."
+msgstr "Это не просто программное обеспечение. Вы познакомитесь с экспертами по поддержке, которые работают как расширение вашей команды."
+
+#: templates/demo.html:146
+msgid "Request a demo"
+msgstr "Запросить демонстрацию"
+
+#: templates/demo.html:147
+msgid "Schedule your personal walkthrough"
+msgstr "Запланируйте личное знакомство"
+
+#: templates/demo.html:148
+msgid "Submit the form and we'll follow up quickly with the right session for your footprint."
+msgstr "Отправьте форму, и мы быстро свяжемся с вами, чтобы предложить подходящую сессию для вашего присутствия."
+
+#: templates/demo.html:153
+msgid "Schedule Your Personal Demo"
+msgstr "Запланируйте свою персональную демонстрацию"
+
+#: templates/demo.html:154
+msgid "No commitment required. We keep this focused, practical, and relevant to your target countries."
+msgstr "Никаких обязательств. Мы сохраняем фокус, практичность и соответствие вашим целевым странам."
+
+#: templates/demo.html:159
+msgid "First Name"
+msgstr "Имя"
+
+#: templates/demo.html:163
+msgid "Last Name"
+msgstr "Фамилия"
+
+#: templates/demo.html:168
+msgid "Work Email"
+msgstr "Рабочая электронная почта"
+
+#: templates/demo.html:173
+msgid "Company Name"
+msgstr "Название компании"
+
+#: templates/demo.html:178
+msgid "Number of Employees"
+msgstr "Количество сотрудников"
+
+#: templates/demo.html:179
+msgid "Select…"
+msgstr "Выбрать…"
+
+#: templates/demo.html:186
+msgid "Expansion Region (Optional)"
+msgstr "Регион расширения (необязательно)"
+
+#: templates/demo.html:187
+msgid "Not sure yet"
+msgstr "Пока не уверены"
+
+#: templates/demo.html:196
+msgid "Book My Session"
+msgstr "Забронировать мою сессию"
+
+#: templates/demo.html:200
+msgid "No commitment required. 100% data privacy."
+msgstr "Никаких обязательств. 100% конфиденциальность данных."
+
+#: templates/features.html:42
+msgid "Features built for real global payroll"
+msgstr "Возможности, созданные для реальной глобальной зарплаты"
+
+#: templates/features.html:45
+msgid "ExactusPay gives growing companies the capabilities of a global enterprise — without fragmented tools. Standardised data, automated compliance, and operational clarity across LATAM, Africa, and Asia."
+msgstr "ExactusPay предоставляет растущим компаниям возможности глобального предприятия — без фрагментированных инструментов. Стандартизированные данные, автоматизированное соблюдение требований и операционная прозрачность в Латинской Америке, Африке и Азии."
+
+#: templates/features.html:50
+msgid "Explore the Pillars"
+msgstr "Изучить основы"
+
+#: templates/features.html:51
+msgid "View Capabilities"
+msgstr "Просмотреть возможности"
+
+#: templates/features.html:54
+msgid "Feature outcomes"
+msgstr "Результаты функций"
+
+#: templates/features.html:55
+msgid "Standardised reports"
+msgstr "Стандартизированные отчеты"
+
+#: templates/features.html:56
+msgid "Compliance built-in"
+msgstr "Встроенное соблюдение требований"
+
+#: templates/features.html:57
+msgid "Multi-currency ready"
+msgstr "Готовность к нескольким валютам"
+
+#: templates/features.html:58
+msgid "Managed support"
+msgstr "Управляемая поддержка"
+
+#: templates/features.html:66
+msgid "Capabilities"
+msgstr "Возможности"
+
+#: templates/features.html:67
+msgid "Everything teams need to run payroll with confidence"
+msgstr "Все, что нужно командам для уверенного расчета зарплаты"
+
+#: templates/features.html:68
+msgid "From automation and analytics to audit trails and self-service, ExactusPay replaces local fragmentation with a single, reliable operating model."
+msgstr "От автоматизации и аналитики до журналов аудита и самообслуживания, ExactusPay заменяет локальную фрагментацию единой надежной операционной моделью."
+
+#: templates/features.html:73
+msgid "Compliance automation"
+msgstr "Автоматизация соблюдения требований"
+
+#: templates/features.html:74
+msgid "Built-in legal logic and validations that help you stay audit-ready as regulations evolve."
+msgstr "Встроенная юридическая логика и проверки, которые помогают вам оставаться готовым к аудиту по мере развития нормативных требований."
+
+#: templates/features.html:78
+msgid "Cost & payroll analytics"
+msgstr "Аналитика затрат и зарплаты"
+
+#: templates/features.html:79
+msgid "Dashboards that make Total Cost of Employment and key metrics visible across countries."
+msgstr "Панели мониторинга, которые делают общую стоимость занятости и ключевые показатели видимыми во всех странах."
+
+#: templates/features.html:83
+msgid "Fast, reliable processing"
+msgstr "Быстрая и надежная обработка"
+
+#: templates/features.html:84
+msgid "Run payroll at scale with structured inputs, automated checks, and stable exports."
+msgstr "Запускайте расчет зарплаты в масштабе со структурированными входными данными, автоматическими проверками и стабильным экспортом."
+
+#: templates/features.html:88
+msgid "Strong encryption, role-based access, and governance designed for payroll-grade sensitivity."
+msgstr "Надежное шифрование, доступ на основе ролей и управление, разработанные для чувствительности уровня зарплаты."
+
+#: templates/features.html:92
+msgid "One reporting structure across jurisdictions — no spreadsheet reconciliation between providers."
+msgstr "Единая структура отчетности во всех юрисдикциях — без сверки электронных таблиц между поставщиками."
+
+#: templates/features.html:96
+msgid "Audit trails & governance"
+msgstr "Журналы аудита и управление"
+
+#: templates/features.html:97
+msgid "Traceable calculations and change history to support internal review and external audits."
+msgstr "Отслеживаемые вычисления и история изменений для поддержки внутренних проверок и внешних аудитов."
+
+#: templates/features.html:105
+msgid "Core Pillars"
+msgstr "Основные принципы"
+
+#: templates/features.html:106
+msgid "Four pillars that replace payroll fragmentation"
+msgstr "Четыре принципа, которые заменяют фрагментацию зарплаты"
+
+#: templates/features.html:107
+msgid "These pillars work together to deliver accuracy, compliance, and clarity across every country you operate in."
+msgstr "Эти принципы работают вместе, чтобы обеспечить точность, соответствие требованиям и прозрачность в каждой стране, где вы работаете."
+
+#: templates/features.html:112
+msgid "Strategic payroll simulations"
+msgstr "Стратегическое моделирование зарплаты"
+
+#: templates/features.html:113
+msgid "Forecast full employment cost before you hire — including employer taxes, statutory contributions, and local burden."
+msgstr "Прогнозируйте полную стоимость занятости до найма — включая налоги работодателя, обязательные взносы и местные нагрузки."
+
+#: templates/features.html:115
+msgid "Pre-hire forecasting: model offers with accurate employer-cost breakdowns."
+msgstr "Прогнозирование до найма: моделируйте предложения с точной разбивкой затрат работодателя."
+
+#: templates/features.html:116
+msgid "Scenario planning: compare markets and hiring strategies side-by-side."
+msgstr "Планирование сценариев: сравнивайте рынки и стратегии найма бок о бок."
+
+#: templates/features.html:117
+msgid "Budget certainty: align HR and Finance with one set of numbers."
+msgstr "Определенность бюджета: согласуйте отделы кадров и финансов с одним набором чисел."
+
+#: templates/features.html:121
+msgid "Global-standardised reporting"
+msgstr "Глобально-стандартизированная отчетность"
+
+#: templates/features.html:122
+msgid "Replace inconsistent local formats with one reporting model that stays stable across countries and payroll cycles."
+msgstr "Замените несовместимые местные форматы единой моделью отчетности, которая остается стабильной во всех странах и циклах расчета зарплаты."
+
+#: templates/features.html:124
+msgid "Single dashboard: central visibility across payroll and workforce data."
+msgstr "Единая панель: централизованная видимость данных о зарплате и рабочей силе."
+
+#: templates/features.html:125
+msgid "Comparable outputs: consistent data definitions enable clean cross-country analysis."
+msgstr "Сопоставимые результаты: согласованные определения данных обеспечивают четкий межстрановой анализ."
+
+#: templates/features.html:126
+msgid "Decision clarity: executive-grade insights into costs, trends, and exposure."
+msgstr "Ясность решений: информация исполнительного уровня о затратах, тенденциях и подверженности рискам."
+
+#: templates/features.html:130
+msgid "Automated compliance & security"
+msgstr "Автоматизированное соблюдение требований и безопасность"
+
+#: templates/features.html:131
+msgid "Stay ahead of regulatory change with built-in rules, validations, and governance designed for sensitive payroll data."
+msgstr "Опережайте нормативные изменения со встроенными правилами, проверками и управлением, разработанными для конфиденциальных данных о зарплате."
+
+#: templates/features.html:133
+msgid "Legal logic: controls aligned to labour law and statutory requirements."
+msgstr "Юридическая логика: контроль, согласованный с трудовым законодательством и нормативными требованиями."
+
+#: templates/features.html:134
+msgid "Error reduction: automation and guardrails minimise manual mistakes."
+msgstr "Сокращение ошибок: автоматизация и защитные механизмы минимизируют ручные ошибки."
+
+#: templates/features.html:135
+msgid "Audit-ready: traceable calculations and data controls support reviews."
+msgstr "Готовность к аудиту: отслеживаемые вычисления и контроль данных поддерживают проверки."
+
+#: templates/features.html:139
+msgid "Integrations & connectivity"
+msgstr "Интеграции и связь"
+
+#: templates/features.html:140
+msgid "Connect your HR stack so data flows from hire to pay — with fewer handoffs, less re-entry, and consistent governance."
+msgstr "Подключите свой стек HR, чтобы данные передавались от найма до выплаты — с меньшим количеством передач, меньшим повторным вводом и согласованным управлением."
+
+#: templates/features.html:142
+msgid "HCM connectivity: integrate with tools like Workday and BambooHR."
+msgstr "Подключение HCM: интеграция с такими инструментами, как Workday и BambooHR."
+
+#: templates/features.html:143
+msgid "Scalable architecture: grow from mid-sized to global without rewiring operations."
+msgstr "Масштабируемая архитектура: растите от среднего до глобального уровня без изменения операций."
+
+#: templates/features.html:144
+msgid "Multi-language & FX: localised employee experience across currencies and regions."
+msgstr "Несколько языков и обмен валют: локализованный опыт сотрудников в разных валютах и регионах."
+
+#: templates/features.html:148 templates/platform.html:158 templates/pricing.html:163
+#: templates/security.html:158
+msgid "Schedule a Demo"
+msgstr "Запланировать демонстрацию"
+
+#: templates/platform.html:42
+msgid "A global payroll platform built for scale"
+msgstr "Глобальная платформа для расчета зарплаты, созданная для масштабирования"
+
+#: templates/platform.html:45
+msgid "ExactusPay is an end-to-end global payroll ecosystem that brings enterprise-grade consistency to high-growth markets. Replace fragmented local tools with a single source of truth — and run multi-country payroll with clarity, control, and confidence."
+msgstr "ExactusPay — это комплексная глобальная экосистема расчета зарплаты, которая обеспечивает согласованность корпоративного уровня на быстрорастущих рынках. Замените фрагментированные локальные инструменты единым источником правды — и управляйте зарплатой в нескольких странах с ясностью, контролем и уверенностью."
+
+#: templates/platform.html:50
+msgid "Explore Capabilities"
+msgstr "Изучить возможности"
+
+#: templates/platform.html:51
+msgid "View Architecture"
+msgstr "Посмотреть архитектуру"
+
+#: templates/platform.html:54
+msgid "Platform outcomes"
+msgstr "Результаты платформы"
+
+#: templates/platform.html:56
+msgid "TCOE visibility"
+msgstr "Прозрачность общей стоимости занятости"
+
+#: templates/platform.html:60
+msgid "Architecture of Excellence"
+msgstr "Архитектура совершенства"
+
+#: templates/platform.html:61
+msgid "One framework. Every country. One clear view."
+msgstr "Одна структура. Каждая страна. Один четкий обзор."
+
+#: templates/platform.html:62
+msgid "Whether you pay teams in Brazil, Nigeria, or Vietnam, payroll data is processed and presented in the same structure. That means fewer manual reconciliations and executive-grade visibility across jurisdictions."
+msgstr "Независимо от того, платите ли вы командам в Бразилии, Нигерии или Вьетнаме, данные о зарплате обрабатываются и представляются в одной и той же структуре. Это означает меньше ручных сверок и видимость на уровне руководства во всех юрисдикциях."
+
+#: templates/platform.html:67
+msgid "Global-standardised model"
+msgstr "Глобально-стандартизированная модель"
+
+#: templates/platform.html:68
+msgid "Common definitions for earnings, deductions, bases, and outputs — consistent across regions and providers."
+msgstr "Общие определения для доходов, вычетов, баз и результатов — согласованные во всех регионах и у всех поставщиков."
+
+#: templates/platform.html:72
+msgid "Total Cost of Employment"
+msgstr "Общая стоимость занятости"
+
+#: templates/platform.html:73
+msgid "See employer cost, statutory burdens, and tax exposure in one comparable view — globally and locally."
+msgstr "Увидеть стоимость работодателя, обязательные нагрузки и налоговые риски в одном сопоставимом виде — глобально и локально."
+
+#: templates/platform.html:77
+msgid "No spreadsheet reconciliation"
+msgstr "Без сверки электронных таблиц"
+
+#: templates/platform.html:78
+msgid "Stable exports and registers that don’t change format every month — country to country, cycle to cycle."
+msgstr "Стабильный экспорт и регистры, которые не меняют формат каждый месяц — от страны к стране, от цикла к циклу."
+
+#: templates/platform.html:86
+msgid "Strategic Capabilities"
+msgstr "Стратегические возможности"
+
+#: templates/platform.html:87
+msgid "Expand with confidence — operate with precision"
+msgstr "Расширяйтесь с уверенностью — работайте с точностью"
+
+#: templates/platform.html:88
+msgid "Plan ahead, stay compliant, connect your stack, and deliver a consistent employee experience — even across complex markets."
+msgstr "Планируйте заранее, соблюдайте требования, подключайте свой стек и обеспечивайте согласованный опыт сотрудников — даже на сложных рынках."
+
+#: templates/platform.html:93
+msgid "Predictive Simulation Engine"
+msgstr "Двигатель прогнозного моделирования"
+
+#: templates/platform.html:94
+msgid "Forecast full employment costs — including local taxes and statutory contributions — before you hire or enter a new market. Turn “what if?” questions into clear numbers."
+msgstr "Прогнозируйте полные затраты на трудоустройство — включая местные налоги и обязательные взносы — до того, как нанять сотрудника или выйти на новый рынок. Превращайте вопросы «что, если?» в четкие числа."
+
+#: templates/platform.html:97
+msgid "Pre-hire modelling: price offers accurately with full employer cost breakdowns."
+msgstr "Моделирование до найма: точно оценивайте предложения с полной разбивкой затрат работодателя."
+
+#: templates/platform.html:98
+msgid "Scenario comparisons: assess markets and hiring strategies side-by-side."
+msgstr "Сравнение сценариев: оценивайте рынки и стратегии найма бок о бок."
+
+#: templates/platform.html:99
+msgid "Budget confidence: align Finance, HR, and leadership on one set of numbers."
+msgstr "Уверенность в бюджете: согласуйте финансы, отдел кадров и руководство по одному набору чисел."
+
+#: templates/platform.html:103
+msgid "Automated Compliance Guardianship"
+msgstr "Автоматизированная защита соответствия требованиям"
+
+#: templates/platform.html:104
+msgid "Built-in legal logic adapts to shifting labour laws and tax regulations across LATAM, Africa, and Asia — keeping you audit-ready and protected from avoidable penalties."
+msgstr "Встроенная юридическая логика адаптируется к изменяющимся трудовым законам и налоговым нормам в Латинской Америке, Африке и Азии — поддерживая вашу готовность к аудиту и защиту от предотвратимых штрафов."
+
+#: templates/platform.html:107
+msgid "Regulation-aware rules: payroll logic tracks current statutory obligations."
+msgstr "Правила, учитывающие нормативные требования: логика расчета зарплаты отслеживает текущие обязательные обязательства."
+
+#: templates/platform.html:108
+msgid "Reduced risk: validations and governance to prevent common errors."
+msgstr "Сниженный риск: проверки и управление для предотвращения распространенных ошибок."
+
+#: templates/platform.html:109
+msgid "Evidence trails: traceable calculations and changes support audits."
+msgstr "Цепочки доказательств: отслеживаемые вычисления и изменения поддерживают аудиты."
+
+#: templates/platform.html:113
+msgid "Managed Service Connectivity"
+msgstr "Управляемое подключение сервисов"
+
+#: templates/platform.html:114
+msgid "ExactusPay connects to your HCM systems (e.g., Workday, BambooHR) so employee data flows cleanly from hire to pay — without manual re-entry and operational drift."
+msgstr "ExactusPay подключается к вашим системам HCM (например, Workday, BambooHR), так что данные сотрудников легко передаются от найма до выплаты — без ручного повторного ввода и операционного дрейфа."
+
+#: templates/platform.html:117
+msgid "Hire-to-pay pipeline: structured data exchange from onboarding to payment."
+msgstr "Конвейер от найма до выплаты: структурированный обмен данными от адаптации до платежа."
+
+#: templates/platform.html:118
+msgid "Operational consistency: one workflow across multiple countries/providers."
+msgstr "Операционная согласованность: один рабочий процесс в нескольких странах/у нескольких поставщиков."
+
+#: templates/platform.html:119
+msgid "Lower admin load: fewer handoffs and less spreadsheet work."
+msgstr "Снижение административной нагрузки: меньше передач и меньше работы с электронными таблицами."
+
+#: templates/platform.html:123
+msgid "Multi-Currency & Language Support"
+msgstr "Поддержка нескольких валют и языков"
+
+#: templates/platform.html:124
+msgid "Handle FX rules and banking complexity behind the scenes. Employees get a refined, localised experience — with multi-language access to payslips and documents."
+msgstr "Управляйте правилами обмена валют и банковской сложностью за кулисами. Сотрудники получают улучшенный, локализованный опыт — с многоязычным доступом к платежным квитанциям и документам."
+
+#: templates/platform.html:127
+msgid "FX handled centrally: exchange and payout workflows managed reliably."
+msgstr "Обмен валют управляется централизованно: надежное управление рабочими процессами обмена и выплат."
+
+#: templates/platform.html:128
+msgid "Local experience: multi-language portal for documents and payroll history."
+msgstr "Локальный опыт: многоязычный портал для документов и истории зарплаты."
+
+#: templates/platform.html:129
+msgid "Consistent standard: the same quality UX across every location."
+msgstr "Согласованный стандарт: одинаковое качество пользовательского опыта во всех местах."
+
+#: templates/platform.html:137
+msgid "Operational Precision"
+msgstr "Операционная точность"
+
+#: templates/platform.html:138
+msgid "Consolidate providers. Increase control."
+msgstr "Консолидируйте поставщиков. Увеличьте контроль."
+
+#: templates/platform.html:139
+msgid "Bring local payroll execution into one secure, standards-driven environment. Reduce manual work, strengthen governance, and scale internationally without adding chaos."
+msgstr "Объедините локальное выполнение расчета зарплаты в одной безопасной среде, управляемой стандартами. Сократите ручную работу, укрепите управление и масштабируйтесь на международном уровне без добавления хаоса."
+
+#: templates/platform.html:144
+msgid "Operating model"
+msgstr "Операционная модель"
+
+#: templates/platform.html:145
+msgid "One workflow"
+msgstr "Один рабочий процесс"
+
+#: templates/platform.html:146
+msgid "Replace disconnected processes with a consistent payroll workflow and reporting standard."
+msgstr "Замените разрозненные процессы согласованным рабочим процессом расчета зарплаты и стандартом отчетности."
+
+#: templates/platform.html:150
+msgid "Efficiency"
+msgstr "Эффективность"
+
+#: templates/platform.html:151
+msgid "Less manual effort"
+msgstr "Меньше ручных усилий"
+
+#: templates/platform.html:152
+msgid "Standard inputs and automated checks reduce rework, exceptions, and spreadsheet reconciliation."
+msgstr "Стандартные входные данные и автоматические проверки сокращают переделки, исключения и сверку электронных таблиц."
+
+#: templates/platform.html:156
+msgid "Scale"
+msgstr "Масштаб"
+
+#: templates/platform.html:157
+msgid "Built for expansion"
+msgstr "Создано для расширения"
+
+#: templates/platform.html:158
+msgid "Enter new countries with predictable governance, consistent data, and executive clarity from day one."
+msgstr "Выходите на новые рынки с предсказуемым управлением, согласованными данными и ясностью для руководства с первого дня."
+
+#: templates/security.html:42
+msgid "Security designed for global trust"
+msgstr "Безопасность, разработанная для глобального доверия"
+
+#: templates/security.html:45
+msgid "Payroll contains your most sensitive data — banking details, government IDs, and personal records. ExactusPay protects it with enterprise-grade security engineered for cross-border operations across LATAM, Africa, and Asia."
+msgstr "Расчет зарплаты содержит ваши самые конфиденциальные данные — банковские реквизиты, государственные удостоверения личности и личные записи. ExactusPay защищает их с помощью корпоративной безопасности, разработанной для трансграничных операций в Латинской Америке, Африке и Азии."
+
+#: templates/security.html:50
+msgid "Security highlights"
+msgstr "Основные моменты безопасности"
+
+#: templates/security.html:51
+msgid "AES-256 encryption"
+msgstr "Шифрование AES-256"
+
+#: templates/security.html:52
+msgid "Zero-trust access"
+msgstr "Доступ с нулевым доверием"
+
+#: templates/security.html:53
+msgid "Resilient backups"
+msgstr "Устойчивое резервное копирование"
+
+#: templates/security.html:60
+msgid "Defense in Depth"
+msgstr "Эшелонированная защита"
+
+#: templates/security.html:61
+msgid "Multi-layered protection at every stage"
+msgstr "Многоуровневая защита на каждом этапе"
+
+#: templates/security.html:62
+msgid "We use overlapping controls so your payroll data stays protected in transit, at rest, and during access."
+msgstr "Мы используем перекрывающиеся средства контроля, чтобы ваши данные о зарплате оставались защищенными при передаче, хранении и доступе."
+
+#: templates/security.html:67
+msgid "Advanced encryption"
+msgstr "Расширенное шифрование"
+
+#: templates/security.html:68
+msgid "AES-256 encryption protects sensitive data at rest and in transit, keeping it unreadable if intercepted."
+msgstr "Шифрование AES-256 защищает конфиденциальные данные при хранении и передаче, делая их нечитаемыми в случае перехвата."
+
+#: templates/security.html:73
+msgid "RBAC and MFA restrict access to only what each user needs — minimizing internal and accidental exposure risk."
+msgstr "RBAC и MFA ограничивают доступ только тем, что нужно каждому пользователю — минимизируя риск внутреннего и случайного раскрытия."
+
+#: templates/security.html:77
+msgid "Secure cloud infrastructure"
+msgstr "Безопасная облачная инфраструктура"
+
+#: templates/security.html:78
+msgid "Hosted on mature cloud environments with real-time backups, mirrored regions, and resilient disaster recovery."
+msgstr "Размещено в зрелых облачных средах с резервным копированием в реальном времени, зеркальными регионами и устойчивым восстановлением после сбоев."
+
+#: templates/security.html:86
+msgid "Access & Governance"
+msgstr "Доступ и управление"
+
+#: templates/security.html:87
+msgid "Built to reduce risk and prevent mistakes"
+msgstr "Создано для снижения рисков и предотвращения ошибок"
+
+#: templates/security.html:88
+msgid "Strong authentication, tight permissions, and full traceability help you maintain control at scale."
+msgstr "Надежная аутентификация, строгие разрешения и полная отслеживаемость помогают вам сохранять контроль в масштабе."
+
+#: templates/security.html:93
+msgid "Role-based access control (RBAC)"
+msgstr "Контроль доступа на основе ролей (RBAC)"
+
+#: templates/security.html:94
+msgid "Granular permissions ensure teams only see and change what they’re authorised to manage — by country, company, and function."
+msgstr "Детальные разрешения гарантируют, что команды видят и изменяют только то, что им разрешено — по стране, компании и функции."
+
+#: templates/security.html:98
+msgid "Multi-factor authentication (MFA)"
+msgstr "Многофакторная аутентификация (MFA)"
+
+#: templates/security.html:99
+msgid "Reduce account takeover risk with MFA options across user roles and operational workflows."
+msgstr "Снижайте риск захвата учетных записей с помощью опций MFA для всех ролей пользователей и операционных рабочих процессов."
+
+#: templates/security.html:103
+msgid "Audit trails & traceability"
+msgstr "Журналы аудита и отслеживаемость"
+
+#: templates/security.html:104
+msgid "Track changes, approvals, and calculation evidence to support reviews, audits, and compliance obligations."
+msgstr "Отслеживайте изменения, утверждения и доказательства вычислений для поддержки проверок, аудитов и обязательств по соблюдению требований."
+
+#: templates/security.html:108
+msgid "Proactive monitoring"
+msgstr "Упреждающий мониторинг"
+
+#: templates/security.html:109
+msgid "Operational monitoring and security checks help detect anomalies early and reduce time-to-response."
+msgstr "Операционный мониторинг и проверки безопасности помогают обнаруживать аномалии на ранней стадии и сокращать время реакции."
+
+#: templates/security.html:117
+msgid "Compliance & Sovereignty"
+msgstr "Соответствие требованиям и суверенитет"
+
+#: templates/security.html:118
+msgid "Aligned to international standards"
+msgstr "Соответствие международным стандартам"
+
+#: templates/security.html:119
+msgid "Security isn’t static. We design for evolving regulations and enforce privacy-by-design across the platform."
+msgstr "Безопасность не статична. Мы проектируем с учетом развивающихся нормативных требований и применяем конфиденциальность по замыслу на всей платформе."
+
+#: templates/security.html:124
+msgid "Standards"
+msgstr "Стандарты"
+
+#: templates/security.html:125
+msgid "GDPR & regional privacy alignment"
+msgstr "Соответствие GDPR и региональным требованиям конфиденциальности"
+
+#: templates/security.html:126
+msgid "Security controls are designed to align with GDPR and regional laws such as LGPD (Brazil) and POPIA (South Africa)."
+msgstr "Средства контроля безопасности разработаны для соответствия GDPR и региональным законам, таким как LGPD (Бразилия) и POPIA (Южная Африка)."
+
+#: templates/security.html:130
+msgid "Assurance"
+msgstr "Гарантия"
+
+#: templates/security.html:131
+msgid "Audits & penetration testing"
+msgstr "Аудиты и тестирование на проникновение"
+
+#: templates/security.html:132
+msgid "Regular internal and external reviews help identify weaknesses early and keep protections current."
+msgstr "Регулярные внутренние и внешние проверки помогают выявлять слабые места на ранней стадии и поддерживать актуальность защиты."
+
+#: templates/security.html:136
+msgid "Privacy by design"
+msgstr "Конфиденциальность по замыслу"
+
+#: templates/security.html:137
+msgid "Data minimisation"
+msgstr "Минимизация данных"
+
+#: templates/security.html:138
+msgid "We collect only what’s required for payroll and statutory obligations, and we securely dispose of data when no longer needed."
+msgstr "Мы собираем только то, что необходимо для расчета зарплаты и выполнения обязательных обязательств, и безопасно удаляем данные, когда они больше не нужны."
+
+#: templates/security.html:146
+msgid "Human-Centered Security"
+msgstr "Безопасность, ориентированная на человека"
+
+#: templates/security.html:147
+msgid "Technology + people, working together"
+msgstr "Технологии + люди, работающие вместе"
+
+#: templates/security.html:148
+msgid "Security is strongest when systems and teams reinforce each other — with training, support, and good hygiene."
+msgstr "Безопасность наиболее сильна, когда системы и команды усиливают друг друга — с помощью обучения, поддержки и надлежащей гигиены."
+
+#: templates/security.html:153
+msgid "A support team trained for vigilance"
+msgstr "Команда поддержки, обученная бдительности"
+
+#: templates/security.html:154
+msgid "Our specialists follow current cybersecurity best practices and help you maintain safe operational habits across your payroll workflows."
+msgstr "Наши специалисты следуют современным передовым методам кибербезопасности и помогают вам поддерживать безопасные операционные привычки в ваших рабочих процессах расчета зарплаты."
+
+#: templates/security.html:156
+msgid "Guidance to recognise phishing and social engineering attempts."
+msgstr "Руководство по распознаванию попыток фишинга и социальной инженерии."
+
+#: templates/security.html:157
+msgid "Credential hygiene best practices for admins and payroll operators."
+msgstr "Лучшие практики гигиены учетных данных для администраторов и операторов расчета зарплаты."
+
+#: templates/security.html:158
+msgid "Secure onboarding and access setup aligned to your organisational structure."
+msgstr "Безопасная адаптация и настройка доступа в соответствии с вашей организационной структурой."
+
+#: templates/security.html:162
+msgid "Credential controls"
+msgstr "Контроль учетных данных"
+
+#: templates/security.html:163
+msgid "MFA, strong password policies, and least-privilege access baked into daily operations."
+msgstr "MFA, строгие политики паролей и доступ с минимальными привилегиями, встроенные в повседневные операции."
+
+#: templates/security.html:167
+msgid "Operational safeguards"
+msgstr "Операционные гарантии"
+
+#: templates/security.html:168
+msgid "Approval workflows and traceability to reduce errors and prevent unauthorised changes."
+msgstr "Рабочие процессы утверждения и отслеживаемость для уменьшения ошибок и предотвращения несанкционированных изменений."
+
+#: templates/security.html:172
+msgid "Security culture"
+msgstr "Культура безопасности"
+
+#: templates/security.html:173
+msgid "Shared responsibility—your team + our platform + our experts."
+msgstr "Общая ответственность — ваша команда + наша платформа + наши эксперты."
+
+#: templates/security.html:179
+msgid "Want a deeper security walkthrough?"
+msgstr "Хотите более глубокого знакомства с безопасностью?"
+
+#: templates/security.html:180
+msgid "Talk to our team about your footprint, data residency needs, and access model — and we’ll map the right security posture for your cross-border payroll operations."
+msgstr "Поговорите с нашей командой о вашем присутствии, потребностях в месте хранения данных и модели доступа — и мы разработаем правильную стратегию безопасности для ваших трансграничных операций по расчету зарплаты."
+
+#: templates/pricing.html:42
+msgid "Transparent pricing for global payroll"
+msgstr "Прозрачные цены для глобального расчета зарплаты"
+
+#: templates/pricing.html:45
+msgid "ExactusPay believes in pricing that is as clear and transparent as our payroll reporting. We understand that every business has a unique footprint, which is why our pricing model is tailored to the specific countries and regions where you operate."
+msgstr "ExactusPay верит в цены, которые так же ясны и прозрачны, как наша отчетность по зарплате. Мы понимаем, что каждый бизнес имеет уникальное присутствие, поэтому наша модель ценообразования адаптирована к конкретным странам и регионам, где вы работаете."
+
+#: templates/pricing.html:53
+msgid "Simple & Predictable"
+msgstr "Просто и предсказуемо"
+
+#: templates/pricing.html:54
+msgid "Transparent & Flexible Pricing"
+msgstr "Прозрачные и гибкие цены"
+
+#: templates/pricing.html:55
+msgid "We do not believe in hidden fees or complex tiered structures that leave you guessing. Our pricing is straightforward."
+msgstr "Мы не верим в скрытые платежи или сложные многоуровневые структуры, которые заставляют вас гадать. Наши цены понятны."
+
+#: templates/pricing.html:60
+msgid "Per-Employee, Per-Month"
+msgstr "За сотрудника в месяц"
+
+#: templates/pricing.html:61
+msgid "You pay a simple, predictable rate based on the number of active employees you have in each country. No surprises, no complex calculations."
+msgstr "Вы платите простую, предсказуемую ставку, основанную на количестве активных сотрудников в каждой стране. Никаких сюрпризов, никаких сложных расчетов."
+
+#: templates/pricing.html:65
+msgid "Country-Specific Rates"
+msgstr "Ставки для конкретных стран"
+
+#: templates/pricing.html:66
+msgid "Costs are adjusted based on the complexity of the local jurisdiction (e.g., LATAM vs. Asia), ensuring you only pay for the specific compliance needs of that region."
+msgstr "Затраты корректируются в зависимости от сложности местной юрисдикции (например, Латинская Америка против Азии), гарантируя, что вы платите только за конкретные потребности в соблюдении требований этого региона."
+
+#: templates/pricing.html:70
+msgid "No Hidden Setup Fees"
+msgstr "Никаких скрытых комиссий за настройку"
+
+#: templates/pricing.html:71
+msgid "We are transparent about implementation costs upfront, so your budget remains secure from day one. What we quote is what you pay."
+msgstr "Мы заранее прозрачны в отношении затрат на внедрение, поэтому ваш бюджет остается защищенным с первого дня. Что мы указываем в предложении, то вы и платите."
+
+#: templates/pricing.html:79
+msgid "Everything You Need"
+msgstr "Все, что вам нужно"
+
+#: templates/pricing.html:80
+msgid "What's Included"
+msgstr "Что включено"
+
+#: templates/pricing.html:81
+msgid "Every ExactusPay plan comes with the core essentials needed to operate globally with confidence."
+msgstr "Каждый план ExactusPay включает основные необходимые компоненты для уверенной работы в глобальном масштабе."
+
+#: templates/pricing.html:86
+msgid "Full Compliance Management"
+msgstr "Полное управление соответствием требованиям"
+
+#: templates/pricing.html:87
+msgid "Automated updates for local tax and labor laws across all jurisdictions where you operate."
+msgstr "Автоматические обновления местных налоговых законов и законов о труде во всех юрисдикциях, где вы работаете."
+
+#: templates/pricing.html:91
+msgid "Global Reporting"
+msgstr "Глобальная отчетность"
+
+#: templates/pricing.html:92
+msgid "Access to our standardized reporting dashboard with real-time insights into payroll costs and compliance."
+msgstr "Доступ к нашей стандартизированной панели отчетности с информацией в реальном времени о затратах на зарплату и соблюдении требований."
+
+#: templates/pricing.html:96
+msgid "Employee Self-Service"
+msgstr "Самообслуживание сотрудников"
+
+#: templates/pricing.html:97
+msgid "A secure portal for payslips, tax documents, and personal information management in multiple languages."
+msgstr "Безопасный портал для платежных квитанций, налоговых документов и управления личной информацией на нескольких языках."
+
+#: templates/pricing.html:101
+msgid "24/7 Native Support"
+msgstr "Круглосуточная поддержка на родном языке"
+
+#: templates/pricing.html:102
+msgid "Access our expert team around the clock. We provide 24-hour assistance with native fluency in Portuguese, ensuring your LATAM operations never sleep."
+msgstr "Получайте доступ к нашей команде экспертов круглосуточно. Мы предоставляем круглосуточную помощь на родном португальском языке, гарантируя, что ваши операции в Латинской Америке никогда не спят."
+
+#: templates/pricing.html:110
+msgid "Regional Pricing"
+msgstr "Региональные цены"
+
+#: templates/pricing.html:112
+msgid "Pricing tailored to the complexity of each jurisdiction. Below are indicative monthly rates per employee."
+msgstr "Цены, адаптированные к сложности каждой юрисдикции. Ниже приведены ориентировочные ежемесячные ставки на одного сотрудника."
+
+#: templates/pricing.html:117
+msgid "North America"
+msgstr "Северная Америка"
+
+#: templates/pricing.html:118
+msgid "$19 | €17 | £15"
+msgstr "$19 | €17 | £15"
+
+#: templates/pricing.html:119
+msgid "per employee/month"
+msgstr "за сотрудника/месяц"
+
+#: templates/pricing.html:120 templates/pricing.html:128 templates/pricing.html:136
+msgid "Full compliance management"
+msgstr "Полное управление соответствием требованиям"
+
+#: templates/pricing.html:121
+msgid "Automated tax filings"
+msgstr "Автоматическая подача налоговых деклараций"
+
+#: templates/pricing.html:122 templates/pricing.html:130
+msgid "Employee self-service"
+msgstr "Самообслуживание сотрудников"
+
+#: templates/pricing.html:126
+msgid "Latin America"
+msgstr "Латинская Америка"
+
+#: templates/pricing.html:127
+msgid "$9 | €8 | £7"
+msgstr "$9 | €8 | £7"
+
+#: templates/pricing.html:129
+msgid "Complex jurisdiction handling"
+msgstr "Обработка сложных юрисдикций"
+
+#: templates/pricing.html:130
+msgid "Local tax expertise"
+msgstr "Местная налоговая экспертиза"
+
+#: templates/pricing.html:131
+msgid "24/7 Portuguese support"
+msgstr "Круглосуточная поддержка на португальском"
+
+#: templates/pricing.html:135
+msgid "Europe"
+msgstr "Европа"
+
+#: templates/pricing.html:137
+msgid "GDPR compliance"
+msgstr "Соответствие GDPR"
+
+#: templates/pricing.html:138
+msgid "Multi-currency processing"
+msgstr "Обработка в нескольких валютах"
+
+#: templates/pricing.html:139
+msgid "Works council support"
+msgstr "Поддержка производственных советов"
+
+#: templates/pricing.html:143
+msgid "Asia Pacific"
+msgstr "Азиатско-Тихоокеанский регион"
+
+#: templates/pricing.html:145
+msgid "Regional expertise"
+msgstr "Региональная экспертиза"
+
+#: templates/pricing.html:146
+msgid "Local banking integrations"
+msgstr "Интеграция с местными банками"
+
+#: templates/pricing.html:147
+msgid "Multi-language support"
+msgstr "Поддержка нескольких языков"
+
+#: templates/pricing.html:151
+msgid "Africa"
+msgstr "Африка"
+
+#: templates/pricing.html:153
+msgid "POPIA compliance"
+msgstr "Соответствие POPIA"
+
+#: templates/pricing.html:154
+msgid "Mobile money integration"
+msgstr "Интеграция с мобильными деньгами"
+
+#: templates/pricing.html:155
+msgid "Local payroll expertise"
+msgstr "Местная экспертиза по расчету зарплаты"
+
+#: templates/pricing.html:159
+msgid "Middle East"
+msgstr "Ближний Восток"
+
+#: templates/pricing.html:161
+msgid "WPS compliance"
+msgstr "Соответствие WPS"
+
+#: templates/pricing.html:162
+msgid "Multi-currency support"
+msgstr "Поддержка нескольких валют"
+
+#: templates/pricing.html:163
+msgid "Local labor law expertise"
+msgstr "Экспертиза местного трудового законодательства"
+
+#: templates/pricing.html:167
+msgid "* Rates are indicative. Final pricing depends on employee count and specific requirements."
+msgstr "* Ставки являются ориентировочными. Окончательная цена зависит от количества сотрудников и конкретных требований."
+
+#: templates/pricing.html:173
+msgid "Get Your Custom Quote"
+msgstr "Получите индивидуальное предложение"
+
+#: templates/pricing.html:174
+msgid "Because global expansion looks different for every company, we don't use a \"one size fits all\" price tag. To give you the most accurate and competitive rate, we need to understand your specific needs."
+msgstr "Поскольку глобальное расширение выглядит по-разному для каждой компании, мы не используем ценник «один размер подходит всем». Чтобы предложить вам наиболее точную и конкурентоспособную ставку, нам нужно понять ваши конкретные потребности."
+
+#: templates/pricing.html:176
+msgid "Ready to see your numbers?"
+msgstr "Готовы увидеть свои цифры?"
+
+#: templates/footer.html:12 templates/footer.html:22 templates/footer.html:32
+#: templates/footer.html:42
+msgid "Global Payroll"
+msgstr "Глобальная зарплата"
+
+#: templates/footer.html:13 templates/footer.html:23
+msgid "Compliance Automation"
+msgstr "Автоматизация соответствия требованиям"
+
+#: templates/footer.html:14 templates/footer.html:24
+msgid "Workforce Analytics"
+msgstr "Аналитика рабочей силы"
+
+#: templates/footer.html:15
+msgid "Tax Management"
+msgstr "Налоговое управление"
+
+#: templates/footer.html:20
+msgid "Solutions"
+msgstr "Решения"
+
+#: templates/footer.html:22
+msgid "Enterprise Expansion"
+msgstr "Расширение предприятия"
+
+#: templates/footer.html:23
+msgid "Mergers & Acquisitions"
+msgstr "Слияния и поглощения"
+
+#: templates/footer.html:24
+msgid "Compliance Management"
+msgstr "Управление соответствием требованиям"
+
+#: templates/footer.html:25
+msgid "Global Workforce"
+msgstr "Глобальная рабочая сила"
+
+#: templates/footer.html:30
+msgid "Resources"
+msgstr "Ресурсы"
+
+#: templates/footer.html:32
+msgid "Documentation"
+msgstr "Документация"
+
+#: templates/footer.html:33
+msgid "API Reference"
+msgstr "Справочник API"
+
+#: templates/footer.html:34
+msgid "Compliance Guides"
+msgstr "Руководства по соответствию требованиям"
+
+#: templates/footer.html:35
+msgid "Case Studies"
+msgstr "Примеры использования"
+
+#: templates/footer.html:40
+msgid "Company"
+msgstr "Компания"
+
+#: templates/footer.html:42
+msgid "About Us"
+msgstr "О нас"
+
+#: templates/footer.html:43
+msgid "Careers"
+msgstr "Карьера"
+
+#: templates/footer.html:45
+msgid "Contact"
+msgstr "Контакты"
+
+#: templates/footer.html:56
+msgid "All rights reserved."
+msgstr "Все права защищены."
+
+#: templates/footer.html:57
+msgid "GDPR Compliant | SOC 2 Type II Certified | ISO 27001"
+msgstr "Соответствие GDPR | Сертифицировано SOC 2 Type II | ISO 27001"

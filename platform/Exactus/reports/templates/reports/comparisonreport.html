@@ -1,0 +1,64 @@
+<table style="width:100%; border-collapse:collapse; font-family: Helvetica, Arial, sans-serif; font-size: 11px;">
+  <thead>
+    <tr style="background:#f5f7fb; border-bottom:2px solid #dee2e6;">
+      <th style="padding:8px; text-align:left;">Employee</th>
+      <th style="padding:8px; text-align:center;">Code</th>
+      <th style="padding:8px; text-align:left;">Description</th>
+      <th style="padding:8px; text-align:right;">Current</th>
+      <th style="padding:8px; text-align:right;">Previous</th>
+      <th style="padding:8px; text-align:right;">Difference</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for r in comparison_rows %}
+    <tr style="border-bottom:1px solid #eeeeee;">
+      
+      <!-- Employee -->
+      <td style="padding:8px; font-weight:600;">
+        {{ r.employee_name }}
+      </td>
+
+      <!-- Code -->
+      <td style="padding:8px; text-align:center; font-family: monospace;">
+        {{ r.code }}
+      </td>
+
+      <!-- Description -->
+      <td style="padding:8px;">
+        {{ r.label }}
+      </td>
+
+      <!-- Current -->
+      <td style="padding:8px; text-align:right;">
+        {{ r.current }}
+      </td>
+
+      <!-- Previous -->
+      <td style="padding:8px; text-align:right;">
+        {{ r.previous }}
+      </td>
+
+      <!-- Difference -->
+      <td style="padding:8px; text-align:right; font-weight:600;
+        {% if r.difference|floatformat:2 < 0 %}
+            color:#d63939;
+        {% elif r.difference|floatformat:2 > 0 %}
+            color:#1f9d55;
+        {% else %}
+            color:#6c757d;
+        {% endif %}
+      ">
+        {{ r.difference }}
+      </td>
+
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="6" style="padding:12px; text-align:center; color:#888;">
+        No comparison data available.
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

@@ -1,0 +1,82 @@
+<!-- templates/pdcodes/upload_result.html -->
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1>Upload Results - PD Codes - {{ company.trade_name }}</h1>
+    
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Upload Summary</h5>
+        </div>
+        <div class="card-body">
+            {% if result.dry_run %}
+                <div class="alert alert-warning">
+                    <strong>Dry Run Results:</strong> No data was saved to the database.
+                </div>
+            {% else %}
+                <div class="alert alert-success">
+                    <strong>Upload Completed Successfully!</strong>
+                </div>
+            {% endif %}
+            
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card text-white bg-success mb-3">
+                        <div class="card-body text-center">
+                            <h4>{{ result.created }}</h4>
+                            <p class="mb-0">Created</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-primary mb-3">
+                        <div class="card-body text-center">
+                            <h4>{{ result.updated }}</h4>
+                            <p class="mb-0">Updated</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-danger mb-3">
+                        <div class="card-body text-center">
+                            <h4>{{ result.errors|length }}</h4>
+                            <p class="mb-0">Errors</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-white bg-info mb-3">
+                        <div class="card-body text-center">
+                            <h4>{{ result.total_processed }}</h4>
+                            <p class="mb-0">Processed</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            {% if result.errors %}
+            <div class="mt-4">
+                <h5>Errors:</h5>
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        {% for error in result.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="mt-3">
+        <a href="{% url 'pdcodes:pdcode_upload' country_slug=country_slug company_id=company.company_id %}" 
+           class="btn btn-primary">Upload Another File</a>
+        <a href="{% url 'pdcodes:pdcodes' country_slug=country_slug company_id=company.company_id %}" 
+           class="btn btn-outline-secondary">Back to PD Codes List</a>
+        <a href="{% url 'pdcodes:download_pdcodes_template' country_slug=country_slug company_id=company.company_id %}" 
+           class="btn btn-outline-secondary">Download Template</a>
+    </div>
+</div>
+{% endblock %}

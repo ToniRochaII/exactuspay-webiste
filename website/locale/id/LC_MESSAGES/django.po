@@ -1,0 +1,1488 @@
+# File PO Django untuk terjemahan bahasa Indonesia (id)
+# Hak Cipta (C) 2026 ExactusPay
+# File ini didistribusikan di bawah lisensi yang sama dengan paket ExactusPay.
+# PENULIS PERTAMA <EMAIL>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: ExactusPay 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-19 10:00-0300\n"
+"PO-Revision-Date: 2026-02-19 10:00-0300\n"
+"Last-Translator: \n"
+"Language-Team: Indonesian <id@exactuspay.com>\n"
+"Language: id\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: templates/base.html:10 templates/demo.html:5 templates/features.html:5
+#: templates/platform.html:5 templates/pricing.html:5 templates/security.html:5
+msgid "Global Payroll Software | Multi-Country Payroll & Compliance Platform | ExactusPay"
+msgstr "Perangkat Lunak Penggajian Global | Platform Penggajian & Kepatuhan Multi-Negara | ExactusPay"
+
+#: templates/base.html:15 templates/demo.html:10 templates/features.html:10
+#: templates/platform.html:10 templates/pricing.html:10 templates/security.html:10
+msgid ""
+"ExactusPay is a powerful global payroll software delivering multi-country payroll, automated compliance, real-time workforce analytics, standardized reporting, and payroll simulations. Manage international payroll accurately, securely, and at scale from one intelligent platform."
+msgstr ""
+"ExactusPay adalah perangkat lunak penggajian global yang kuat yang memberikan penggajian multi-negara, kepatuhan otomatis, analisis tenaga kerja waktu nyata, pelaporan terstandarisasi, dan simulasi penggajian. Kelola penggajian internasional secara akurat, aman, dan berskala dari satu platform cerdas."
+
+#: templates/base.html:21 templates/demo.html:15 templates/features.html:15
+#: templates/platform.html:15 templates/pricing.html:15 templates/security.html:15
+msgid "global payroll software, multi-country payroll, international payroll system, payroll compliance software, global payroll platform, payroll automation, payroll simulations, workforce analytics, multinational payroll management, cloud payroll solution, global HR payroll, payroll reporting software, international payroll compliance, scalable payroll platform"
+msgstr "perangkat lunak penggajian global, penggajian multi-negara, sistem penggajian internasional, perangkat lunak kepatuhan penggajian, platform penggajian global, otomatisasi penggajian, simulasi penggajian, analisis tenaga kerja, manajemen penggajian multinasional, solusi penggajian cloud, penggajian SDM global, perangkat lunak pelaporan penggajian, kepatuhan penggajian internasional, platform penggajian terukur"
+
+#: templates/base.html:25 templates/demo.html:20 templates/features.html:20
+#: templates/platform.html:20 templates/pricing.html:20 templates/security.html:20
+#: templates/footer.html:5
+msgid "ExactusPay"
+msgstr "ExactusPay"
+
+#: templates/base.html:30 templates/demo.html:25 templates/features.html:25
+#: templates/platform.html:25 templates/pricing.html:25 templates/security.html:25
+msgid "ExactusPay | Global Payroll Software for Multi-Country Payroll & Compliance"
+msgstr "ExactusPay | Perangkat Lunak Penggajian Global untuk Penggajian & Kepatuhan Multi-Negara"
+
+#: templates/base.html:34 templates/demo.html:29 templates/features.html:29
+#: templates/platform.html:29 templates/pricing.html:29 templates/security.html:29
+msgid "Run global payroll with confidence. Automated compliance, payroll simulations, standardized reporting, and real-time analytics in one powerful multi-country payroll platform."
+msgstr "Jalankan penggajian global dengan percaya diri. Kepatuhan otomatis, simulasi penggajian, pelaporan terstandarisasi, dan analitik waktu nyata dalam satu platform penggajian multi-negara yang kuat."
+
+#: templates/base.html:40 templates/demo.html:35 templates/features.html:35
+#: templates/platform.html:35 templates/pricing.html:35 templates/security.html:35
+msgid "ExactusPay | Global Payroll Software"
+msgstr "ExactusPay | Perangkat Lunak Penggajian Global"
+
+#: templates/base.html:42 templates/demo.html:37 templates/features.html:37
+#: templates/platform.html:37 templates/pricing.html:37 templates/security.html:37
+msgid "Multi-country payroll, automated compliance, real-time workforce analytics, and payroll simulations—powered by ExactusPay."
+msgstr "Penggajian multi-negara, kepatuhan otomatis, analitik tenaga kerja waktu nyata, dan simulasi penggajian—didukung oleh ExactusPay."
+
+#: templates/base.html:61 templates/header.html:15 templates/demo.html:80
+#: templates/features.html:85 templates/platform.html:90 templates/pricing.html:95
+#: templates/security.html:85
+msgid "Skip to content"
+msgstr "Lewati ke konten"
+
+#: templates/header.html:20 templates/mobile-nav.html:10
+msgid "Home"
+msgstr "Beranda"
+
+#: templates/header.html:21 templates/mobile-nav.html:11
+msgid "Features"
+msgstr "Fitur"
+
+#: templates/header.html:22 templates/mobile-nav.html:12
+msgid "Platform"
+msgstr "Platform"
+
+#: templates/header.html:23 templates/mobile-nav.html:13
+msgid "Security"
+msgstr "Keamanan"
+
+#: templates/header.html:24 templates/mobile-nav.html:14
+msgid "Pricing"
+msgstr "Harga"
+
+#: templates/header.html:28 templates/mobile-nav.html:18
+msgid "Log In"
+msgstr "Masuk"
+
+#: templates/header.html:29 templates/mobile-nav.html:19
+msgid "Request Demo"
+msgstr "Minta Demo"
+
+#: templates/header.html:33 templates/mobile-nav.html:24
+msgid "Language"
+msgstr "Bahasa"
+
+#: templates/header.html:35 templates/mobile-nav.html:26
+msgid "Select language"
+msgstr "Pilih bahasa"
+
+#: templates/header.html:47
+msgid "Open menu"
+msgstr "Buka menu"
+
+#: templates/mobile-nav.html:5
+msgid "Mobile navigation"
+msgstr "Navigasi seluler"
+
+#: templates/language-options.html:3
+msgid "🇧🇷 Português"
+msgstr "🇧🇷 Portugis"
+
+#: templates/language-options.html:4
+msgid "🇬🇧 English"
+msgstr "🇬🇧 Inggris"
+
+#: templates/language-options.html:5
+msgid "🇪🇸 Español"
+msgstr "🇪🇸 Spanyol"
+
+#: templates/language-options.html:6
+msgid "🇷🇺 Русский"
+msgstr "🇷🇺 Rusia"
+
+#: templates/language-options.html:7
+msgid "🇸🇦 العربية"
+msgstr "🇸🇦 Arab"
+
+#: templates/homepage.html:15
+msgid "Smart Global Payroll Platform"
+msgstr "Platform Penggajian Global Cerdas"
+
+#: templates/homepage.html:18
+msgid ""
+"Streamline global workforce management with AI-driven compliance, real-time insights, and seamless payroll processing across 40+ countries."
+msgstr ""
+"Sederhanakan manajemen tenaga kerja global dengan kepatuhan berbasis AI, wawasan waktu nyata, dan pemrosesan penggajian yang mulus di 40+ negara."
+
+#: templates/homepage.html:23
+msgid "Watch Demo"
+msgstr "Tonton Demo"
+
+#: templates/homepage.html:29
+msgid "99.8%"
+msgstr "99,8%"
+
+#: templates/homepage.html:30
+msgid "Accuracy Rate"
+msgstr "Tingkat Akurasi"
+
+#: templates/homepage.html:33
+msgid "40+"
+msgstr "40+"
+
+#: templates/homepage.html:34
+msgid "Countries"
+msgstr "Negara"
+
+#: templates/homepage.html:37
+msgid "24"
+msgstr "24"
+
+#: templates/homepage.html:38
+msgid "Hours Support"
+msgstr "Dukungan 24 Jam"
+
+#: templates/homepage.html:41
+msgid "100%"
+msgstr "100%"
+
+#: templates/homepage.html:42
+msgid "Compliance"
+msgstr "Kepatuhan"
+
+#: templates/homepage.html:50
+msgid "Powerful Features"
+msgstr "Fitur Kuat"
+
+#: templates/homepage.html:51
+msgid "Designed for Global Scale"
+msgstr "Dirancang untuk Skala Global"
+
+#: templates/homepage.html:52
+msgid "Everything you need to manage complex global payroll operations with confidence"
+msgstr "Semua yang Anda butuhkan untuk mengelola operasi penggajian global yang kompleks dengan percaya diri"
+
+#: templates/homepage.html:57
+msgid "AI-Powered Compliance"
+msgstr "Kepatuhan Berbasis AI"
+
+#: templates/homepage.html:58
+msgid "Automated regulatory updates and risk assessment across all jurisdictions with machine learning algorithms."
+msgstr "Pembaruan peraturan otomatis dan penilaian risiko di semua yurisdiksi dengan algoritma pembelajaran mesin."
+
+#: templates/homepage.html:62
+msgid "Real-time Analytics"
+msgstr "Analitik Waktu Nyata"
+
+#: templates/homepage.html:63
+msgid "Comprehensive dashboards with live insights into payroll costs, compliance status, and operational metrics."
+msgstr "Dasbor komprehensif dengan wawasan langsung tentang biaya penggajian, status kepatuhan, dan metrik operasional."
+
+#: templates/homepage.html:67
+msgid "Instant Processing"
+msgstr "Pemrosesan Instan"
+
+#: templates/homepage.html:68
+msgid "Batch process thousands of payments across different currencies and banking systems simultaneously."
+msgstr "Pemrosesan batch ribuan pembayaran di berbagai mata uang dan sistem perbankan secara bersamaan."
+
+#: templates/homepage.html:72
+msgid "Enterprise Security"
+msgstr "Keamanan Perusahaan"
+
+#: templates/homepage.html:73
+msgid "Bank-grade encryption, multi-factor authentication, and SOC 2 Type II certified infrastructure."
+msgstr "Enkripsi setara perbankan, autentikasi multi-faktor, dan infrastruktur bersertifikat SOC 2 Tipe II."
+
+#: templates/homepage.html:77
+msgid "Global Coverage"
+msgstr "Cakupan Global"
+
+#: templates/homepage.html:78
+msgid "Seamless payroll processing across 40+ countries with local compliance and tax expertise built-in."
+msgstr "Pemrosesan penggajian yang mulus di 40+ negara dengan kepatuhan lokal dan keahlian perpajakan yang terintegrasi."
+
+#: templates/homepage.html:82
+msgid "Audit Trail"
+msgstr "Jejak Audit"
+
+#: templates/homepage.html:83
+msgid "Complete transparency with immutable records for every transaction and compliance verification."
+msgstr "Transparansi lengkap dengan catatan yang tidak dapat diubah untuk setiap transaksi dan verifikasi kepatuhan."
+
+#: templates/homepage.html:90
+msgid "Unified Platform"
+msgstr "Platform Terpadu"
+
+#: templates/homepage.html:91
+msgid "Everything in One Dashboard"
+msgstr "Semuanya dalam Satu Dasbor"
+
+#: templates/homepage.html:92
+msgid "Manage your entire global payroll operation from a single, intuitive interface with real-time data and actionable insights."
+msgstr "Kelola seluruh operasi penggajian global Anda dari satu antarmuka intuitif dengan data waktu nyata dan wawasan yang dapat ditindaklanjuti."
+
+#: templates/homepage.html:97
+msgid "Monitor payroll costs, compliance status, and operational metrics across all regions with live dashboards."
+msgstr "Pantau biaya penggajian, status kepatuhan, dan metrik operasional di semua wilayah dengan dasbor langsung."
+
+#: templates/homepage.html:101
+msgid "Multi-currency Support"
+msgstr "Dukungan Multi-mata Uang"
+
+#: templates/homepage.html:102
+msgid "Process payments in 40+ currencies with automated forex management and optimal exchange rates."
+msgstr "Proses pembayaran dalam 40+ mata uang dengan manajemen forex otomatis dan nilai tukar optimal."
+
+#: templates/homepage.html:106
+msgid "Automated Reporting"
+msgstr "Pelaporan Otomatis"
+
+#: templates/homepage.html:107
+msgid "Generate compliance reports, tax filings, and financial statements automatically across all jurisdictions."
+msgstr "Hasilkan laporan kepatuhan, pengajuan pajak, dan laporan keuangan secara otomatis di semua yurisdiksi."
+
+#: templates/homepage.html:113
+msgid "Payroll Analytics"
+msgstr "Analitik Penggajian"
+
+#: templates/homepage.html:115
+msgid "Live Dashboard"
+msgstr "Dasbor Langsung"
+
+#: templates/homepage.html:116
+msgid "Real-time insights into global payroll operations with predictive analytics."
+msgstr "Wawasan waktu nyata ke dalam operasi penggajian global dengan analitik prediktif."
+
+#: templates/homepage.html:121
+msgid "Compliance Status"
+msgstr "Status Kepatuhan"
+
+#: templates/homepage.html:123
+msgid "All Systems Go"
+msgstr "Semua Sistem Berjalan"
+
+#: templates/homepage.html:124
+msgid "100% compliance across all active jurisdictions with automated updates."
+msgstr "Kepatuhan 100% di semua yurisdiksi aktif dengan pembaruan otomatis."
+
+#: templates/homepage.html:129
+msgid "Payment Processing"
+msgstr "Pemrosesan Pembayaran"
+
+#: templates/homepage.html:131
+msgid "Batch Ready"
+msgstr "Siap Batch"
+
+#: templates/homepage.html:132
+msgid "Process payments in multiple currencies with automated reconciliation."
+msgstr "Proses pembayaran dalam berbagai mata uang dengan rekonsiliasi otomatis."
+
+#: templates/homepage.html:138
+msgid "Bank-Grade Protection"
+msgstr "Perlindungan Setara Perbankan"
+
+#: templates/homepage.html:139
+msgid "Your global payroll data is protected by multiple layers of enterprise security"
+msgstr "Data penggajian global Anda dilindungi oleh beberapa lapisan keamanan perusahaan"
+
+#: templates/homepage.html:143
+msgid "AES-256 Encryption"
+msgstr "Enkripsi AES-256"
+
+#: templates/homepage.html:144
+msgid "All data encrypted in transit and at rest with military-grade encryption standards."
+msgstr "Semua data dienkripsi saat transit dan saat diam dengan standar enkripsi setara militer."
+
+#: templates/homepage.html:148
+msgid "Multi-Factor Auth"
+msgstr "Otentikasi Multi-Faktor"
+
+#: templates/homepage.html:149
+msgid "Enterprise-grade MFA with biometric options for all user access levels."
+msgstr "MFA tingkat perusahaan dengan opsi biometrik untuk semua tingkat akses pengguna."
+
+#: templates/homepage.html:153
+msgid "SOC 2 Certified"
+msgstr "Bersertifikat SOC 2"
+
+#: templates/homepage.html:154
+msgid "Regular third-party audits ensure continuous compliance with security standards."
+msgstr "Audit pihak ketiga secara teratur memastikan kepatuhan berkelanjutan dengan standar keamanan."
+
+#: templates/homepage.html:158
+msgid "Data Sovereignty"
+msgstr "Kedaulatan Data"
+
+#: templates/homepage.html:159
+msgid "Regional data centers ensure compliance with local data protection regulations."
+msgstr "Pusat data regional memastikan kepatuhan terhadap peraturan perlindungan data setempat."
+
+#: templates/homepage.html:165
+msgid "Trusted by Leaders"
+msgstr "Dipercaya oleh Para Pemimpin"
+
+#: templates/homepage.html:166
+msgid "Global Success Stories"
+msgstr "Kisah Sukses Global"
+
+#: templates/homepage.html:167
+msgid "See how companies are transforming their global payroll operations with ExactusPay"
+msgstr "Lihat bagaimana perusahaan mengubah operasi penggajian global mereka dengan ExactusPay"
+
+#: templates/homepage.html:171
+msgid ""
+"\"ExactusPay revolutionized our global payroll operations. We reduced processing time by 80% while eliminating compliance errors across 15 countries. Their platform paid for itself within the first quarter, and the ROI has been phenomenal.\""
+msgstr ""
+"\"ExactusPay merevolusi operasi penggajian global kami. Kami mengurangi waktu pemrosesan hingga 80% sekaligus menghilangkan kesalahan kepatuhan di 15 negara. Platform mereka membayar sendiri dalam kuartal pertama, dan ROI-nya luar biasa.\""
+
+#: templates/homepage.html:177
+msgid "Sarah Rodriguez"
+msgstr "Sarah Rodriguez"
+
+#: templates/homepage.html:178
+msgid "Global Operations Director, TechScale Inc."
+msgstr "Direktur Operasi Global, TechScale Inc."
+
+#: templates/homepage.html:182
+msgid "Ready to Simplify Global Payroll?"
+msgstr "Siap Menyederhanakan Penggajian Global?"
+
+#: templates/homepage.html:183
+msgid "Join 500+ enterprises that trust ExactusPay with their global workforce management. Schedule a personalized demo to see our platform in action."
+msgstr "Bergabunglah dengan 500+ perusahaan yang mempercayakan manajemen tenaga kerja global mereka kepada ExactusPay. Jadwalkan demo yang dipersonalisasi untuk melihat platform kami beraksi."
+
+#: templates/homepage.html:187 templates/cta.html:5 templates/features.html:175
+#: templates/platform.html:185 templates/pricing.html:190
+msgid "Schedule Demo"
+msgstr "Jadwalkan Demo"
+
+#: templates/demo.html:45
+msgid "See ExactusPay in Action"
+msgstr "Lihat ExactusPay Beraksi"
+
+#: templates/demo.html:48
+msgid ""
+"Stop guessing your global labour costs. Get a personalised walkthrough of the platform that simplifies payroll for the Global South — with predictable compliance and one executive standard for reporting."
+msgstr ""
+"Berhenti menebak-nebak biaya tenaga kerja global Anda. Dapatkan panduan yang dipersonalisasi dari platform yang menyederhanakan penggajian untuk Global South — dengan kepatuhan yang dapat diprediksi dan satu standar pelaporan eksekutif."
+
+#: templates/demo.html:54
+msgid "What you'll see"
+msgstr "Apa yang akan Anda lihat"
+
+#: templates/demo.html:55
+msgid "Book a session"
+msgstr "Pesan sesi"
+
+#: templates/demo.html:58
+msgid "Key outcomes"
+msgstr "Hasil Utama"
+
+#: templates/demo.html:59 templates/features.html:64 templates/platform.html:64
+msgid "Single source of truth"
+msgstr "Sumber kebenaran tunggal"
+
+#: templates/demo.html:60
+msgid "Multi-country standard"
+msgstr "Standar multi-negara"
+
+#: templates/demo.html:61
+msgid "Audit-ready controls"
+msgstr "Kontrol siap audit"
+
+#: templates/demo.html:62
+msgid "Cost visibility"
+msgstr "Visibilitas biaya"
+
+#: templates/demo.html:70
+msgid "What you get"
+msgstr "Apa yang Anda dapatkan"
+
+#: templates/demo.html:71
+msgid "A practical demo — not a sales pitch"
+msgstr "Demo praktis — bukan promosi penjualan"
+
+#: templates/demo.html:72
+msgid "We focus on the exact workflows leaders need to expand safely across LATAM, Africa, and Asia."
+msgstr "Kami fokus pada alur kerja yang tepat yang dibutuhkan para pemimpin untuk berkembang dengan aman di seluruh LATAM, Afrika, dan Asia."
+
+#: templates/demo.html:77
+msgid "Run a live simulation"
+msgstr "Jalankan simulasi langsung"
+
+#: templates/demo.html:78
+msgid "Forecast the full employer cost of a new hire in Brazil, Nigeria, or Indonesia — including statutory contributions."
+msgstr "Perkirakan biaya penuh pemberi kerja untuk perekrutan baru di Brasil, Nigeria, atau Indonesia — termasuk kontribusi wajib."
+
+#: templates/demo.html:82
+msgid "Audit your compliance"
+msgstr "Audit kepatuhan Anda"
+
+#: templates/demo.html:83
+msgid "See how the platform flags risks and gaps across tax logic, filings, and governance — keeping you audit-ready."
+msgstr "Lihat bagaimana platform menandai risiko dan kesenjangan dalam logika pajak, pengajuan, dan tata kelola — membuat Anda siap audit."
+
+#: templates/demo.html:87
+msgid "Unified reporting"
+msgstr "Pelaporan terpadu"
+
+#: templates/demo.html:88
+msgid "Watch 20+ countries roll up into one executive dashboard, with consistent definitions and clear visibility."
+msgstr "Saksikan 20+ negara tergabung menjadi satu dasbor eksekutif, dengan definisi yang konsisten dan visibilitas yang jelas."
+
+#: templates/demo.html:96
+msgid "Next steps"
+msgstr "Langkah berikutnya"
+
+#: templates/demo.html:97
+msgid "Clear steps. Zero pressure."
+msgstr "Langkah jelas. Tanpa tekanan."
+
+#: templates/demo.html:98
+msgid "We keep it efficient and relevant — you leave with a plan, not a pile of slides."
+msgstr "Kami menjaganya tetap efisien dan relevan — Anda pergi dengan rencana, bukan tumpukan slide."
+
+#: templates/demo.html:103
+msgid "The Discovery (15 mins)"
+msgstr "Penemuan (15 menit)"
+
+#: templates/demo.html:104
+msgid "We map your footprint (entities, contractors, EORs) and identify friction points across your target regions."
+msgstr "Kami memetakan jejak Anda (entitas, kontraktor, EOR) dan mengidentifikasi titik-titik hambatan di seluruh wilayah target Anda."
+
+#: templates/demo.html:107
+msgid "The Tailored Walkthrough (30 mins)"
+msgstr "Panduan yang Disesuaikan (30 menit)"
+
+#: templates/demo.html:108
+msgid "No generic deck. We show country-specific examples, local tax logic, and the reporting you'll rely on."
+msgstr "Tidak ada presentasi generik. Kami menunjukkan contoh spesifik negara, logika pajak lokal, dan pelaporan yang akan Anda andalkan."
+
+#: templates/demo.html:111
+msgid "The Strategic Blueprint"
+msgstr "Cetak Biru Strategis"
+
+#: templates/demo.html:112
+msgid "You leave with a pricing estimate, transition timeline, and a simulation output for your next hire."
+msgstr "Anda pergi dengan perkiraan harga, garis waktu transisi, dan keluaran simulasi untuk perekrutan Anda berikutnya."
+
+#: templates/demo.html:120
+msgid "Why a demo?"
+msgstr "Mengapa demo?"
+
+#: templates/demo.html:121
+msgid "Because expansion needs certainty"
+msgstr "Karena ekspansi membutuhkan kepastian"
+
+#: templates/demo.html:122
+msgid "See predictive cost, verify compliance, and meet the experts who support you day-to-day."
+msgstr "Lihat biaya prediktif, verifikasi kepatuhan, dan temui para ahli yang mendukung Anda sehari-hari."
+
+#: templates/demo.html:127
+msgid "See the future"
+msgstr "Lihat masa depan"
+
+#: templates/demo.html:128
+msgid "Most tools show historical spend. ExactusPay demonstrates how to predict employment cost before you hire."
+msgstr "Sebagian besar alat menunjukkan pengeluaran historis. ExactusPay menunjukkan cara memprediksi biaya pekerjaan sebelum Anda merekrut."
+
+#: templates/demo.html:132
+msgid "Verify compliance"
+msgstr "Verifikasi kepatuhan"
+
+#: templates/demo.html:133
+msgid "Ask tough questions on POPIA, LGPD, or statutory contributions. We show the logic and evidence trails."
+msgstr "Ajukan pertanyaan sulit tentang POPIA, LGPD, atau kontribusi wajib. Kami menunjukkan logika dan jejak bukti."
+
+#: templates/demo.html:137
+msgid "Meet your team"
+msgstr "Temui tim Anda"
+
+#: templates/demo.html:138
+msgid "This isn't just software. You'll meet the support experts that operate as an extension of your team."
+msgstr "Ini bukan sekadar perangkat lunak. Anda akan bertemu para ahli dukungan yang beroperasi sebagai perpanjangan dari tim Anda."
+
+#: templates/demo.html:146
+msgid "Request a demo"
+msgstr "Minta demo"
+
+#: templates/demo.html:147
+msgid "Schedule your personal walkthrough"
+msgstr "Jadwalkan panduan pribadi Anda"
+
+#: templates/demo.html:148
+msgid "Submit the form and we'll follow up quickly with the right session for your footprint."
+msgstr "Kirim formulir dan kami akan menindaklanjuti dengan cepat dengan sesi yang tepat untuk jejak Anda."
+
+#: templates/demo.html:153
+msgid "Schedule Your Personal Demo"
+msgstr "Jadwalkan Demo Pribadi Anda"
+
+#: templates/demo.html:154
+msgid "No commitment required. We keep this focused, practical, and relevant to your target countries."
+msgstr "Tidak ada komitmen yang diperlukan. Kami menjaganya tetap fokus, praktis, dan relevan dengan negara target Anda."
+
+#: templates/demo.html:159
+msgid "First Name"
+msgstr "Nama Depan"
+
+#: templates/demo.html:163
+msgid "Last Name"
+msgstr "Nama Belakang"
+
+#: templates/demo.html:168
+msgid "Work Email"
+msgstr "Email Kantor"
+
+#: templates/demo.html:173
+msgid "Company Name"
+msgstr "Nama Perusahaan"
+
+#: templates/demo.html:178
+msgid "Number of Employees"
+msgstr "Jumlah Karyawan"
+
+#: templates/demo.html:179
+msgid "Select…"
+msgstr "Pilih…"
+
+#: templates/demo.html:186
+msgid "Expansion Region (Optional)"
+msgstr "Wilayah Ekspansi (Opsional)"
+
+#: templates/demo.html:187
+msgid "Not sure yet"
+msgstr "Belum yakin"
+
+#: templates/demo.html:196
+msgid "Book My Session"
+msgstr "Pesan Sesi Saya"
+
+#: templates/demo.html:200
+msgid "No commitment required. 100% data privacy."
+msgstr "Tidak ada komitmen yang diperlukan. 100% privasi data."
+
+#: templates/features.html:42
+msgid "Features built for real global payroll"
+msgstr "Fitur yang dibangun untuk penggajian global nyata"
+
+#: templates/features.html:45
+msgid "ExactusPay gives growing companies the capabilities of a global enterprise — without fragmented tools. Standardised data, automated compliance, and operational clarity across LATAM, Africa, and Asia."
+msgstr "ExactusPay memberi perusahaan yang sedang berkembang kemampuan perusahaan global — tanpa alat yang terfragmentasi. Data terstandarisasi, kepatuhan otomatis, dan kejelasan operasional di seluruh LATAM, Afrika, dan Asia."
+
+#: templates/features.html:50
+msgid "Explore the Pillars"
+msgstr "Jelajahi Pilar-Pilar"
+
+#: templates/features.html:51
+msgid "View Capabilities"
+msgstr "Lihat Kemampuan"
+
+#: templates/features.html:54
+msgid "Feature outcomes"
+msgstr "Hasil fitur"
+
+#: templates/features.html:55
+msgid "Standardised reports"
+msgstr "Laporan terstandarisasi"
+
+#: templates/features.html:56
+msgid "Compliance built-in"
+msgstr "Kepatuhan terintegrasi"
+
+#: templates/features.html:57
+msgid "Multi-currency ready"
+msgstr "Siap multi-mata uang"
+
+#: templates/features.html:58
+msgid "Managed support"
+msgstr "Dukungan terkelola"
+
+#: templates/features.html:66
+msgid "Capabilities"
+msgstr "Kemampuan"
+
+#: templates/features.html:67
+msgid "Everything teams need to run payroll with confidence"
+msgstr "Semua yang dibutuhkan tim untuk menjalankan penggajian dengan percaya diri"
+
+#: templates/features.html:68
+msgid "From automation and analytics to audit trails and self-service, ExactusPay replaces local fragmentation with a single, reliable operating model."
+msgstr "Dari otomatisasi dan analitik hingga jejak audit dan layanan mandiri, ExactusPay menggantikan fragmentasi lokal dengan model operasi tunggal yang andal."
+
+#: templates/features.html:73
+msgid "Compliance automation"
+msgstr "Otomatisasi kepatuhan"
+
+#: templates/features.html:74
+msgid "Built-in legal logic and validations that help you stay audit-ready as regulations evolve."
+msgstr "Logika hukum dan validasi terintegrasi yang membantu Anda tetap siap audit saat peraturan berkembang."
+
+#: templates/features.html:78
+msgid "Cost & payroll analytics"
+msgstr "Analitik biaya & penggajian"
+
+#: templates/features.html:79
+msgid "Dashboards that make Total Cost of Employment and key metrics visible across countries."
+msgstr "Dasbor yang membuat Total Biaya Ketenagakerjaan dan metrik kunci terlihat di seluruh negara."
+
+#: templates/features.html:83
+msgid "Fast, reliable processing"
+msgstr "Pemrosesan cepat dan andal"
+
+#: templates/features.html:84
+msgid "Run payroll at scale with structured inputs, automated checks, and stable exports."
+msgstr "Jalankan penggajian dalam skala besar dengan masukan terstruktur, pemeriksaan otomatis, dan ekspor yang stabil."
+
+#: templates/features.html:88
+msgid "Strong encryption, role-based access, and governance designed for payroll-grade sensitivity."
+msgstr "Enkripsi kuat, akses berbasis peran, dan tata kelola yang dirancang untuk sensitivitas tingkat penggajian."
+
+#: templates/features.html:92
+msgid "One reporting structure across jurisdictions — no spreadsheet reconciliation between providers."
+msgstr "Satu struktur pelaporan di semua yurisdiksi — tidak ada rekonsiliasi spreadsheet antar penyedia."
+
+#: templates/features.html:96
+msgid "Audit trails & governance"
+msgstr "Jejak audit & tata kelola"
+
+#: templates/features.html:97
+msgid "Traceable calculations and change history to support internal review and external audits."
+msgstr "Perhitungan yang dapat dilacak dan riwayat perubahan untuk mendukung tinjauan internal dan audit eksternal."
+
+#: templates/features.html:105
+msgid "Core Pillars"
+msgstr "Pilar Inti"
+
+#: templates/features.html:106
+msgid "Four pillars that replace payroll fragmentation"
+msgstr "Empat pilar yang menggantikan fragmentasi penggajian"
+
+#: templates/features.html:107
+msgid "These pillars work together to deliver accuracy, compliance, and clarity across every country you operate in."
+msgstr "Pilar-pilar ini bekerja sama untuk memberikan akurasi, kepatuhan, dan kejelasan di setiap negara tempat Anda beroperasi."
+
+#: templates/features.html:112
+msgid "Strategic payroll simulations"
+msgstr "Simulasi penggajian strategis"
+
+#: templates/features.html:113
+msgid "Forecast full employment cost before you hire — including employer taxes, statutory contributions, and local burden."
+msgstr "Perkirakan biaya pekerjaan penuh sebelum Anda merekrut — termasuk pajak pemberi kerja, kontribusi wajib, dan beban lokal."
+
+#: templates/features.html:115
+msgid "Pre-hire forecasting: model offers with accurate employer-cost breakdowns."
+msgstr "Peramalan pra-perekrutan: model penawaran dengan rincian biaya pemberi kerja yang akurat."
+
+#: templates/features.html:116
+msgid "Scenario planning: compare markets and hiring strategies side-by-side."
+msgstr "Perencanaan skenario: bandingkan pasar dan strategi perekrutan secara berdampingan."
+
+#: templates/features.html:117
+msgid "Budget certainty: align HR and Finance with one set of numbers."
+msgstr "Kepastian anggaran: selaraskan SDM dan Keuangan dengan satu set angka."
+
+#: templates/features.html:121
+msgid "Global-standardised reporting"
+msgstr "Pelaporan terstandarisasi global"
+
+#: templates/features.html:122
+msgid "Replace inconsistent local formats with one reporting model that stays stable across countries and payroll cycles."
+msgstr "Ganti format lokal yang tidak konsisten dengan satu model pelaporan yang tetap stabil di semua negara dan siklus penggajian."
+
+#: templates/features.html:124
+msgid "Single dashboard: central visibility across payroll and workforce data."
+msgstr "Dasbor tunggal: visibilitas pusat di seluruh data penggajian dan tenaga kerja."
+
+#: templates/features.html:125
+msgid "Comparable outputs: consistent data definitions enable clean cross-country analysis."
+msgstr "Keluaran yang sebanding: definisi data yang konsisten memungkinkan analisis lintas negara yang bersih."
+
+#: templates/features.html:126
+msgid "Decision clarity: executive-grade insights into costs, trends, and exposure."
+msgstr "Kejelasan keputusan: wawasan tingkat eksekutif tentang biaya, tren, dan eksposur."
+
+#: templates/features.html:130
+msgid "Automated compliance & security"
+msgstr "Kepatuhan & keamanan otomatis"
+
+#: templates/features.html:131
+msgid "Stay ahead of regulatory change with built-in rules, validations, and governance designed for sensitive payroll data."
+msgstr "Tetap terdepan dari perubahan peraturan dengan aturan, validasi, dan tata kelola terintegrasi yang dirancang untuk data penggajian sensitif."
+
+#: templates/features.html:133
+msgid "Legal logic: controls aligned to labour law and statutory requirements."
+msgstr "Logika hukum: kontrol yang selaras dengan hukum ketenagakerjaan dan persyaratan wajib."
+
+#: templates/features.html:134
+msgid "Error reduction: automation and guardrails minimise manual mistakes."
+msgstr "Pengurangan kesalahan: otomatisasi dan pelindung meminimalkan kesalahan manual."
+
+#: templates/features.html:135
+msgid "Audit-ready: traceable calculations and data controls support reviews."
+msgstr "Siap audit: perhitungan yang dapat dilacak dan kontrol data mendukung tinjauan."
+
+#: templates/features.html:139
+msgid "Integrations & connectivity"
+msgstr "Integrasi & konektivitas"
+
+#: templates/features.html:140
+msgid "Connect your HR stack so data flows from hire to pay — with fewer handoffs, less re-entry, and consistent governance."
+msgstr "Hubungkan tumpukan SDM Anda sehingga data mengalir dari perekrutan hingga pembayaran — dengan lebih sedikit serah terima, lebih sedikit entri ulang, dan tata kelola yang konsisten."
+
+#: templates/features.html:142
+msgid "HCM connectivity: integrate with tools like Workday and BambooHR."
+msgstr "Konektivitas HCM: integrasikan dengan alat seperti Workday dan BambooHR."
+
+#: templates/features.html:143
+msgid "Scalable architecture: grow from mid-sized to global without rewiring operations."
+msgstr "Arsitektur terukur: tumbuh dari skala menengah ke global tanpa mengubah operasi."
+
+#: templates/features.html:144
+msgid "Multi-language & FX: localised employee experience across currencies and regions."
+msgstr "Multi-bahasa & valas: pengalaman karyawan yang dilokalkan di seluruh mata uang dan wilayah."
+
+#: templates/features.html:148 templates/platform.html:158 templates/pricing.html:163
+#: templates/security.html:158
+msgid "Schedule a Demo"
+msgstr "Jadwalkan Demo"
+
+#: templates/platform.html:42
+msgid "A global payroll platform built for scale"
+msgstr "Platform penggajian global yang dibangun untuk skala"
+
+#: templates/platform.html:45
+msgid "ExactusPay is an end-to-end global payroll ecosystem that brings enterprise-grade consistency to high-growth markets. Replace fragmented local tools with a single source of truth — and run multi-country payroll with clarity, control, and confidence."
+msgstr "ExactusPay adalah ekosistem penggajian global ujung-ke-ujung yang menghadirkan konsistensi tingkat perusahaan ke pasar pertumbuhan tinggi. Ganti alat lokal yang terfragmentasi dengan satu sumber kebenaran — dan jalankan penggajian multi-negara dengan kejelasan, kontrol, dan keyakinan."
+
+#: templates/platform.html:50
+msgid "Explore Capabilities"
+msgstr "Jelajahi Kemampuan"
+
+#: templates/platform.html:51
+msgid "View Architecture"
+msgstr "Lihat Arsitektur"
+
+#: templates/platform.html:54
+msgid "Platform outcomes"
+msgstr "Hasil platform"
+
+#: templates/platform.html:56
+msgid "TCOE visibility"
+msgstr "Visibilitas Total Biaya Ketenagakerjaan"
+
+#: templates/platform.html:60
+msgid "Architecture of Excellence"
+msgstr "Arsitektur Keunggulan"
+
+#: templates/platform.html:61
+msgid "One framework. Every country. One clear view."
+msgstr "Satu kerangka kerja. Setiap negara. Satu pandangan jelas."
+
+#: templates/platform.html:62
+msgid "Whether you pay teams in Brazil, Nigeria, or Vietnam, payroll data is processed and presented in the same structure. That means fewer manual reconciliations and executive-grade visibility across jurisdictions."
+msgstr "Apakah Anda membayar tim di Brasil, Nigeria, atau Vietnam, data penggajian diproses dan disajikan dalam struktur yang sama. Itu berarti lebih sedikit rekonsiliasi manual dan visibilitas tingkat eksekutif di semua yurisdiksi."
+
+#: templates/platform.html:67
+msgid "Global-standardised model"
+msgstr "Model terstandarisasi global"
+
+#: templates/platform.html:68
+msgid "Common definitions for earnings, deductions, bases, and outputs — consistent across regions and providers."
+msgstr "Definisi umum untuk pendapatan, potongan, basis, dan keluaran — konsisten di semua wilayah dan penyedia."
+
+#: templates/platform.html:72
+msgid "Total Cost of Employment"
+msgstr "Total Biaya Ketenagakerjaan"
+
+#: templates/platform.html:73
+msgid "See employer cost, statutory burdens, and tax exposure in one comparable view — globally and locally."
+msgstr "Lihat biaya pemberi kerja, beban wajib, dan eksposur pajak dalam satu tampilan yang sebanding — secara global dan lokal."
+
+#: templates/platform.html:77
+msgid "No spreadsheet reconciliation"
+msgstr "Tidak ada rekonsiliasi spreadsheet"
+
+#: templates/platform.html:78
+msgid "Stable exports and registers that don’t change format every month — country to country, cycle to cycle."
+msgstr "Ekspor dan register yang stabil yang tidak mengubah format setiap bulan — dari negara ke negara, dari siklus ke siklus."
+
+#: templates/platform.html:86
+msgid "Strategic Capabilities"
+msgstr "Kemampuan Strategis"
+
+#: templates/platform.html:87
+msgid "Expand with confidence — operate with precision"
+msgstr "Berkembang dengan percaya diri — beroperasi dengan presisi"
+
+#: templates/platform.html:88
+msgid "Plan ahead, stay compliant, connect your stack, and deliver a consistent employee experience — even across complex markets."
+msgstr "Rencanakan ke depan, tetap patuh, hubungkan tumpukan Anda, dan berikan pengalaman karyawan yang konsisten — bahkan di pasar yang kompleks."
+
+#: templates/platform.html:93
+msgid "Predictive Simulation Engine"
+msgstr "Mesin Simulasi Prediktif"
+
+#: templates/platform.html:94
+msgid "Forecast full employment costs — including local taxes and statutory contributions — before you hire or enter a new market. Turn “what if?” questions into clear numbers."
+msgstr "Perkirakan biaya pekerjaan penuh — termasuk pajak lokal dan kontribusi wajib — sebelum Anda merekrut atau memasuki pasar baru. Ubah pertanyaan \"bagaimana jika?\" menjadi angka yang jelas."
+
+#: templates/platform.html:97
+msgid "Pre-hire modelling: price offers accurately with full employer cost breakdowns."
+msgstr "Pemodelan pra-perekrutan: harga penawaran secara akurat dengan rincian biaya pemberi kerja penuh."
+
+#: templates/platform.html:98
+msgid "Scenario comparisons: assess markets and hiring strategies side-by-side."
+msgstr "Perbandingan skenario: nilai pasar dan strategi perekrutan secara berdampingan."
+
+#: templates/platform.html:99
+msgid "Budget confidence: align Finance, HR, and leadership on one set of numbers."
+msgstr "Keyakinan anggaran: selaraskan Keuangan, SDM, dan kepemimpinan pada satu set angka."
+
+#: templates/platform.html:103
+msgid "Automated Compliance Guardianship"
+msgstr "Pengawasan Kepatuhan Otomatis"
+
+#: templates/platform.html:104
+msgid "Built-in legal logic adapts to shifting labour laws and tax regulations across LATAM, Africa, and Asia — keeping you audit-ready and protected from avoidable penalties."
+msgstr "Logika hukum terintegrasi beradaptasi dengan perubahan undang-undang ketenagakerjaan dan peraturan pajak di seluruh LATAM, Afrika, dan Asia — membuat Anda siap audit dan terlindungi dari hukuman yang dapat dihindari."
+
+#: templates/platform.html:107
+msgid "Regulation-aware rules: payroll logic tracks current statutory obligations."
+msgstr "Aturan yang sadar regulasi: logika penggajian melacak kewajiban wajib saat ini."
+
+#: templates/platform.html:108
+msgid "Reduced risk: validations and governance to prevent common errors."
+msgstr "Risiko berkurang: validasi dan tata kelola untuk mencegah kesalahan umum."
+
+#: templates/platform.html:109
+msgid "Evidence trails: traceable calculations and changes support audits."
+msgstr "Jejak bukti: perhitungan dan perubahan yang dapat dilacak mendukung audit."
+
+#: templates/platform.html:113
+msgid "Managed Service Connectivity"
+msgstr "Konektivitas Layanan Terkelola"
+
+#: templates/platform.html:114
+msgid "ExactusPay connects to your HCM systems (e.g., Workday, BambooHR) so employee data flows cleanly from hire to pay — without manual re-entry and operational drift."
+msgstr "ExactusPay terhubung ke sistem HCM Anda (mis., Workday, BambooHR) sehingga data karyawan mengalir dengan bersih dari perekrutan hingga pembayaran — tanpa entri ulang manual dan penyimpangan operasional."
+
+#: templates/platform.html:117
+msgid "Hire-to-pay pipeline: structured data exchange from onboarding to payment."
+msgstr "Jalur perekrutan-ke-pembayaran: pertukaran data terstruktur dari orientasi hingga pembayaran."
+
+#: templates/platform.html:118
+msgid "Operational consistency: one workflow across multiple countries/providers."
+msgstr "Konsistensi operasional: satu alur kerja di banyak negara/penyedia."
+
+#: templates/platform.html:119
+msgid "Lower admin load: fewer handoffs and less spreadsheet work."
+msgstr "Beban admin lebih rendah: lebih sedikit serah terima dan lebih sedikit pekerjaan spreadsheet."
+
+#: templates/platform.html:123
+msgid "Multi-Currency & Language Support"
+msgstr "Dukungan Multi-Mata Uang & Bahasa"
+
+#: templates/platform.html:124
+msgid "Handle FX rules and banking complexity behind the scenes. Employees get a refined, localised experience — with multi-language access to payslips and documents."
+msgstr "Tangani aturan valas dan kompleksitas perbankan di belakang layar. Karyawan mendapatkan pengalaman yang disempurnakan dan dilokalkan — dengan akses multi-bahasa ke slip gaji dan dokumen."
+
+#: templates/platform.html:127
+msgid "FX handled centrally: exchange and payout workflows managed reliably."
+msgstr "Valas ditangani secara terpusat: alur kerja pertukaran dan pembayaran dikelola dengan andal."
+
+#: templates/platform.html:128
+msgid "Local experience: multi-language portal for documents and payroll history."
+msgstr "Pengalaman lokal: portal multi-bahasa untuk dokumen dan riwayat penggajian."
+
+#: templates/platform.html:129
+msgid "Consistent standard: the same quality UX across every location."
+msgstr "Standar yang konsisten: UX kualitas yang sama di setiap lokasi."
+
+#: templates/platform.html:137
+msgid "Operational Precision"
+msgstr "Presisi Operasional"
+
+#: templates/platform.html:138
+msgid "Consolidate providers. Increase control."
+msgstr "Konsolidasi penyedia. Tingkatkan kontrol."
+
+#: templates/platform.html:139
+msgid "Bring local payroll execution into one secure, standards-driven environment. Reduce manual work, strengthen governance, and scale internationally without adding chaos."
+msgstr "Bawa eksekusi penggajian lokal ke dalam satu lingkungan aman yang digerakkan oleh standar. Kurangi pekerjaan manual, perkuat tata kelola, dan skala secara internasional tanpa menambah kekacauan."
+
+#: templates/platform.html:144
+msgid "Operating model"
+msgstr "Model operasi"
+
+#: templates/platform.html:145
+msgid "One workflow"
+msgstr "Satu alur kerja"
+
+#: templates/platform.html:146
+msgid "Replace disconnected processes with a consistent payroll workflow and reporting standard."
+msgstr "Ganti proses yang terputus dengan alur kerja penggajian yang konsisten dan standar pelaporan."
+
+#: templates/platform.html:150
+msgid "Efficiency"
+msgstr "Efisiensi"
+
+#: templates/platform.html:151
+msgid "Less manual effort"
+msgstr "Lebih sedikit upaya manual"
+
+#: templates/platform.html:152
+msgid "Standard inputs and automated checks reduce rework, exceptions, and spreadsheet reconciliation."
+msgstr "Masukan standar dan pemeriksaan otomatis mengurangi pengerjaan ulang, pengecualian, dan rekonsiliasi spreadsheet."
+
+#: templates/platform.html:156
+msgid "Scale"
+msgstr "Skala"
+
+#: templates/platform.html:157
+msgid "Built for expansion"
+msgstr "Dibangun untuk ekspansi"
+
+#: templates/platform.html:158
+msgid "Enter new countries with predictable governance, consistent data, and executive clarity from day one."
+msgstr "Masuki negara baru dengan tata kelola yang dapat diprediksi, data yang konsisten, dan kejelasan eksekutif sejak hari pertama."
+
+#: templates/security.html:42
+msgid "Security designed for global trust"
+msgstr "Keamanan yang dirancang untuk kepercayaan global"
+
+#: templates/security.html:45
+msgid "Payroll contains your most sensitive data — banking details, government IDs, and personal records. ExactusPay protects it with enterprise-grade security engineered for cross-border operations across LATAM, Africa, and Asia."
+msgstr "Penggajian berisi data Anda yang paling sensitif — rincian perbankan, ID pemerintah, dan catatan pribadi. ExactusPay melindunginya dengan keamanan tingkat perusahaan yang direkayasa untuk operasi lintas batas di seluruh LATAM, Afrika, dan Asia."
+
+#: templates/security.html:50
+msgid "Security highlights"
+msgstr "Sorotan keamanan"
+
+#: templates/security.html:51
+msgid "AES-256 encryption"
+msgstr "Enkripsi AES-256"
+
+#: templates/security.html:52
+msgid "Zero-trust access"
+msgstr "Akses zero-trust"
+
+#: templates/security.html:53
+msgid "Resilient backups"
+msgstr "Cadangan yang tangguh"
+
+#: templates/security.html:60
+msgid "Defense in Depth"
+msgstr "Pertahanan Berlapis"
+
+#: templates/security.html:61
+msgid "Multi-layered protection at every stage"
+msgstr "Perlindungan berlapis di setiap tahap"
+
+#: templates/security.html:62
+msgid "We use overlapping controls so your payroll data stays protected in transit, at rest, and during access."
+msgstr "Kami menggunakan kontrol yang tumpang tindih sehingga data penggajian Anda tetap terlindungi saat transit, saat diam, dan selama akses."
+
+#: templates/security.html:67
+msgid "Advanced encryption"
+msgstr "Enkripsi lanjutan"
+
+#: templates/security.html:68
+msgid "AES-256 encryption protects sensitive data at rest and in transit, keeping it unreadable if intercepted."
+msgstr "Enkripsi AES-256 melindungi data sensitif saat diam dan dalam transit, menjadikannya tidak terbaca jika dicegat."
+
+#: templates/security.html:73
+msgid "RBAC and MFA restrict access to only what each user needs — minimizing internal and accidental exposure risk."
+msgstr "RBAC dan MFA membatasi akses hanya pada apa yang dibutuhkan setiap pengguna — meminimalkan risiko paparan internal dan tidak disengaja."
+
+#: templates/security.html:77
+msgid "Secure cloud infrastructure"
+msgstr "Infrastruktur cloud yang aman"
+
+#: templates/security.html:78
+msgid "Hosted on mature cloud environments with real-time backups, mirrored regions, and resilient disaster recovery."
+msgstr "Dihosting di lingkungan cloud yang matang dengan cadangan waktu nyata, wilayah cermin, dan pemulihan bencana yang tangguh."
+
+#: templates/security.html:86
+msgid "Access & Governance"
+msgstr "Akses & Tata Kelola"
+
+#: templates/security.html:87
+msgid "Built to reduce risk and prevent mistakes"
+msgstr "Dibangun untuk mengurangi risiko dan mencegah kesalahan"
+
+#: templates/security.html:88
+msgid "Strong authentication, tight permissions, and full traceability help you maintain control at scale."
+msgstr "Otentikasi kuat, izin ketat, dan kemampuan telusur penuh membantu Anda mempertahankan kendali dalam skala besar."
+
+#: templates/security.html:93
+msgid "Role-based access control (RBAC)"
+msgstr "Kontrol akses berbasis peran (RBAC)"
+
+#: templates/security.html:94
+msgid "Granular permissions ensure teams only see and change what they’re authorised to manage — by country, company, and function."
+msgstr "Izin terperinci memastikan tim hanya melihat dan mengubah apa yang mereka berwenang kelola — menurut negara, perusahaan, dan fungsi."
+
+#: templates/security.html:98
+msgid "Multi-factor authentication (MFA)"
+msgstr "Otentikasi multi-faktor (MFA)"
+
+#: templates/security.html:99
+msgid "Reduce account takeover risk with MFA options across user roles and operational workflows."
+msgstr "Kurangi risiko pengambilalihan akun dengan opsi MFA di semua peran pengguna dan alur kerja operasional."
+
+#: templates/security.html:103
+msgid "Audit trails & traceability"
+msgstr "Jejak audit & kemampuan telusur"
+
+#: templates/security.html:104
+msgid "Track changes, approvals, and calculation evidence to support reviews, audits, and compliance obligations."
+msgstr "Lacak perubahan, persetujuan, dan bukti perhitungan untuk mendukung tinjauan, audit, dan kewajiban kepatuhan."
+
+#: templates/security.html:108
+msgid "Proactive monitoring"
+msgstr "Pemantauan proaktif"
+
+#: templates/security.html:109
+msgid "Operational monitoring and security checks help detect anomalies early and reduce time-to-response."
+msgstr "Pemantauan operasional dan pemeriksaan keamanan membantu mendeteksi anomali lebih awal dan mengurangi waktu respons."
+
+#: templates/security.html:117
+msgid "Compliance & Sovereignty"
+msgstr "Kepatuhan & Kedaulatan"
+
+#: templates/security.html:118
+msgid "Aligned to international standards"
+msgstr "Selaras dengan standar internasional"
+
+#: templates/security.html:119
+msgid "Security isn’t static. We design for evolving regulations and enforce privacy-by-design across the platform."
+msgstr "Keamanan tidak statis. Kami merancang untuk peraturan yang berkembang dan menegakkan privasi-by-design di seluruh platform."
+
+#: templates/security.html:124
+msgid "Standards"
+msgstr "Standar"
+
+#: templates/security.html:125
+msgid "GDPR & regional privacy alignment"
+msgstr "Penyelarasan GDPR & privasi regional"
+
+#: templates/security.html:126
+msgid "Security controls are designed to align with GDPR and regional laws such as LGPD (Brazil) and POPIA (South Africa)."
+msgstr "Kontrol keamanan dirancang untuk selaras dengan GDPR dan hukum regional seperti LGPD (Brasil) dan POPIA (Afrika Selatan)."
+
+#: templates/security.html:130
+msgid "Assurance"
+msgstr "Jaminan"
+
+#: templates/security.html:131
+msgid "Audits & penetration testing"
+msgstr "Audit & pengujian penetrasi"
+
+#: templates/security.html:132
+msgid "Regular internal and external reviews help identify weaknesses early and keep protections current."
+msgstr "Tinjauan internal dan eksternal secara teratur membantu mengidentifikasi kelemahan lebih awal dan menjaga perlindungan tetap terkini."
+
+#: templates/security.html:136
+msgid "Privacy by design"
+msgstr "Privasi by design"
+
+#: templates/security.html:137
+msgid "Data minimisation"
+msgstr "Minimasi data"
+
+#: templates/security.html:138
+msgid "We collect only what’s required for payroll and statutory obligations, and we securely dispose of data when no longer needed."
+msgstr "Kami hanya mengumpulkan apa yang diperlukan untuk penggajian dan kewajiban wajib, dan kami membuang data dengan aman saat tidak lagi diperlukan."
+
+#: templates/security.html:146
+msgid "Human-Centered Security"
+msgstr "Keamanan Berpusat pada Manusia"
+
+#: templates/security.html:147
+msgid "Technology + people, working together"
+msgstr "Teknologi + manusia, bekerja sama"
+
+#: templates/security.html:148
+msgid "Security is strongest when systems and teams reinforce each other — with training, support, and good hygiene."
+msgstr "Keamanan paling kuat ketika sistem dan tim saling memperkuat — dengan pelatihan, dukungan, dan kebersihan yang baik."
+
+#: templates/security.html:153
+msgid "A support team trained for vigilance"
+msgstr "Tim dukungan yang terlatih untuk kewaspadaan"
+
+#: templates/security.html:154
+msgid "Our specialists follow current cybersecurity best practices and help you maintain safe operational habits across your payroll workflows."
+msgstr "Spesialis kami mengikuti praktik terbaik keamanan siber terkini dan membantu Anda mempertahankan kebiasaan operasional yang aman di seluruh alur kerja penggajian Anda."
+
+#: templates/security.html:156
+msgid "Guidance to recognise phishing and social engineering attempts."
+msgstr "Panduan untuk mengenali upaya phishing dan rekayasa sosial."
+
+#: templates/security.html:157
+msgid "Credential hygiene best practices for admins and payroll operators."
+msgstr "Praktik terbaik kebersihan kredensial untuk admin dan operator penggajian."
+
+#: templates/security.html:158
+msgid "Secure onboarding and access setup aligned to your organisational structure."
+msgstr "Orientasi aman dan pengaturan akses yang selaras dengan struktur organisasi Anda."
+
+#: templates/security.html:162
+msgid "Credential controls"
+msgstr "Kontrol kredensial"
+
+#: templates/security.html:163
+msgid "MFA, strong password policies, and least-privilege access baked into daily operations."
+msgstr "MFA, kebijakan kata sandi yang kuat, dan akses hak istimewa minimum terintegrasi ke dalam operasi sehari-hari."
+
+#: templates/security.html:167
+msgid "Operational safeguards"
+msgstr "Perlindungan operasional"
+
+#: templates/security.html:168
+msgid "Approval workflows and traceability to reduce errors and prevent unauthorised changes."
+msgstr "Alur kerja persetujuan dan kemampuan telusur untuk mengurangi kesalahan dan mencegah perubahan yang tidak sah."
+
+#: templates/security.html:172
+msgid "Security culture"
+msgstr "Budaya keamanan"
+
+#: templates/security.html:173
+msgid "Shared responsibility—your team + our platform + our experts."
+msgstr "Tanggung jawab bersama — tim Anda + platform kami + para ahli kami."
+
+#: templates/security.html:179
+msgid "Want a deeper security walkthrough?"
+msgstr "Ingin panduan keamanan yang lebih dalam?"
+
+#: templates/security.html:180
+msgid "Talk to our team about your footprint, data residency needs, and access model — and we’ll map the right security posture for your cross-border payroll operations."
+msgstr "Bicaralah dengan tim kami tentang jejak Anda, kebutuhan residensi data, dan model akses — dan kami akan memetakan postur keamanan yang tepat untuk operasi penggajian lintas batas Anda."
+
+#: templates/pricing.html:42
+msgid "Transparent pricing for global payroll"
+msgstr "Harga transparan untuk penggajian global"
+
+#: templates/pricing.html:45
+msgid "ExactusPay believes in pricing that is as clear and transparent as our payroll reporting. We understand that every business has a unique footprint, which is why our pricing model is tailored to the specific countries and regions where you operate."
+msgstr "ExactusPay percaya pada harga yang sejelas dan setransparan pelaporan penggajian kami. Kami memahami bahwa setiap bisnis memiliki jejak yang unik, oleh karena itu model harga kami disesuaikan dengan negara dan wilayah spesifik tempat Anda beroperasi."
+
+#: templates/pricing.html:53
+msgid "Simple & Predictable"
+msgstr "Sederhana & Dapat Diprediksi"
+
+#: templates/pricing.html:54
+msgid "Transparent & Flexible Pricing"
+msgstr "Harga Transparan & Fleksibel"
+
+#: templates/pricing.html:55
+msgid "We do not believe in hidden fees or complex tiered structures that leave you guessing. Our pricing is straightforward."
+msgstr "Kami tidak percaya pada biaya tersembunyi atau struktur berjenjang yang rumit yang membuat Anda menebak-nebak. Harga kami sederhana."
+
+#: templates/pricing.html:60
+msgid "Per-Employee, Per-Month"
+msgstr "Per-Karyawan, Per-Bulan"
+
+#: templates/pricing.html:61
+msgid "You pay a simple, predictable rate based on the number of active employees you have in each country. No surprises, no complex calculations."
+msgstr "Anda membayar tarif sederhana dan dapat diprediksi berdasarkan jumlah karyawan aktif yang Anda miliki di setiap negara. Tidak ada kejutan, tidak ada perhitungan rumit."
+
+#: templates/pricing.html:65
+msgid "Country-Specific Rates"
+msgstr "Tarif Spesifik Negara"
+
+#: templates/pricing.html:66
+msgid "Costs are adjusted based on the complexity of the local jurisdiction (e.g., LATAM vs. Asia), ensuring you only pay for the specific compliance needs of that region."
+msgstr "Biaya disesuaikan berdasarkan kompleksitas yurisdiksi lokal (mis., LATAM vs. Asia), memastikan Anda hanya membayar untuk kebutuhan kepatuhan spesifik wilayah tersebut."
+
+#: templates/pricing.html:70
+msgid "No Hidden Setup Fees"
+msgstr "Tidak Ada Biaya Pengaturan Tersembunyi"
+
+#: templates/pricing.html:71
+msgid "We are transparent about implementation costs upfront, so your budget remains secure from day one. What we quote is what you pay."
+msgstr "Kami transparan tentang biaya implementasi di muka, sehingga anggaran Anda tetap aman sejak hari pertama. Apa yang kami kutip adalah apa yang Anda bayar."
+
+#: templates/pricing.html:79
+msgid "Everything You Need"
+msgstr "Semua yang Anda Butuhkan"
+
+#: templates/pricing.html:80
+msgid "What's Included"
+msgstr "Apa yang Termasuk"
+
+#: templates/pricing.html:81
+msgid "Every ExactusPay plan comes with the core essentials needed to operate globally with confidence."
+msgstr "Setiap paket ExactusPay dilengkapi dengan kebutuhan inti yang diperlukan untuk beroperasi secara global dengan percaya diri."
+
+#: templates/pricing.html:86
+msgid "Full Compliance Management"
+msgstr "Manajemen Kepatuhan Penuh"
+
+#: templates/pricing.html:87
+msgid "Automated updates for local tax and labor laws across all jurisdictions where you operate."
+msgstr "Pembaruan otomatis untuk undang-undang perpajakan dan ketenagakerjaan setempat di semua yurisdiksi tempat Anda beroperasi."
+
+#: templates/pricing.html:91
+msgid "Global Reporting"
+msgstr "Pelaporan Global"
+
+#: templates/pricing.html:92
+msgid "Access to our standardized reporting dashboard with real-time insights into payroll costs and compliance."
+msgstr "Akses ke dasbor pelaporan terstandarisasi kami dengan wawasan waktu nyata tentang biaya penggajian dan kepatuhan."
+
+#: templates/pricing.html:96
+msgid "Employee Self-Service"
+msgstr "Layanan Mandiri Karyawan"
+
+#: templates/pricing.html:97
+msgid "A secure portal for payslips, tax documents, and personal information management in multiple languages."
+msgstr "Portal aman untuk slip gaji, dokumen pajak, dan manajemen informasi pribadi dalam berbagai bahasa."
+
+#: templates/pricing.html:101
+msgid "24/7 Native Support"
+msgstr "Dukungan Lokal 24/7"
+
+#: templates/pricing.html:102
+msgid "Access our expert team around the clock. We provide 24-hour assistance with native fluency in Portuguese, ensuring your LATAM operations never sleep."
+msgstr "Akses tim ahli kami sepanjang waktu. Kami menyediakan bantuan 24 jam dengan kefasihan asli dalam bahasa Portugis, memastikan operasi LATAM Anda tidak pernah tidur."
+
+#: templates/pricing.html:110
+msgid "Regional Pricing"
+msgstr "Harga Regional"
+
+#: templates/pricing.html:112
+msgid "Pricing tailored to the complexity of each jurisdiction. Below are indicative monthly rates per employee."
+msgstr "Harga disesuaikan dengan kompleksitas setiap yurisdiksi. Di bawah ini adalah tarif bulanan indikatif per karyawan."
+
+#: templates/pricing.html:117
+msgid "North America"
+msgstr "Amerika Utara"
+
+#: templates/pricing.html:118
+msgid "$19 | €17 | £15"
+msgstr "$19 | €17 | £15"
+
+#: templates/pricing.html:119
+msgid "per employee/month"
+msgstr "per karyawan/bulan"
+
+#: templates/pricing.html:120 templates/pricing.html:128 templates/pricing.html:136
+msgid "Full compliance management"
+msgstr "Manajemen kepatuhan penuh"
+
+#: templates/pricing.html:121
+msgid "Automated tax filings"
+msgstr "Pengajuan pajak otomatis"
+
+#: templates/pricing.html:122 templates/pricing.html:130
+msgid "Employee self-service"
+msgstr "Layanan mandiri karyawan"
+
+#: templates/pricing.html:126
+msgid "Latin America"
+msgstr "Amerika Latin"
+
+#: templates/pricing.html:127
+msgid "$9 | €8 | £7"
+msgstr "$9 | €8 | £7"
+
+#: templates/pricing.html:129
+msgid "Complex jurisdiction handling"
+msgstr "Penanganan yurisdiksi kompleks"
+
+#: templates/pricing.html:130
+msgid "Local tax expertise"
+msgstr "Keahlian pajak lokal"
+
+#: templates/pricing.html:131
+msgid "24/7 Portuguese support"
+msgstr "Dukungan bahasa Portugis 24/7"
+
+#: templates/pricing.html:135
+msgid "Europe"
+msgstr "Eropa"
+
+#: templates/pricing.html:137
+msgid "GDPR compliance"
+msgstr "Kepatuhan GDPR"
+
+#: templates/pricing.html:138
+msgid "Multi-currency processing"
+msgstr "Pemrosesan multi-mata uang"
+
+#: templates/pricing.html:139
+msgid "Works council support"
+msgstr "Dukungan dewan pekerja"
+
+#: templates/pricing.html:143
+msgid "Asia Pacific"
+msgstr "Asia Pasifik"
+
+#: templates/pricing.html:145
+msgid "Regional expertise"
+msgstr "Keahlian regional"
+
+#: templates/pricing.html:146
+msgid "Local banking integrations"
+msgstr "Integrasi perbankan lokal"
+
+#: templates/pricing.html:147
+msgid "Multi-language support"
+msgstr "Dukungan multi-bahasa"
+
+#: templates/pricing.html:151
+msgid "Africa"
+msgstr "Afrika"
+
+#: templates/pricing.html:153
+msgid "POPIA compliance"
+msgstr "Kepatuhan POPIA"
+
+#: templates/pricing.html:154
+msgid "Mobile money integration"
+msgstr "Integrasi uang seluler"
+
+#: templates/pricing.html:155
+msgid "Local payroll expertise"
+msgstr "Keahlian penggajian lokal"
+
+#: templates/pricing.html:159
+msgid "Middle East"
+msgstr "Timur Tengah"
+
+#: templates/pricing.html:161
+msgid "WPS compliance"
+msgstr "Kepatuhan WPS"
+
+#: templates/pricing.html:162
+msgid "Multi-currency support"
+msgstr "Dukungan multi-mata uang"
+
+#: templates/pricing.html:163
+msgid "Local labor law expertise"
+msgstr "Keahlian hukum ketenagakerjaan lokal"
+
+#: templates/pricing.html:167
+msgid "* Rates are indicative. Final pricing depends on employee count and specific requirements."
+msgstr "* Tarif bersifat indikatif. Harga akhir tergantung pada jumlah karyawan dan persyaratan khusus."
+
+#: templates/pricing.html:173
+msgid "Get Your Custom Quote"
+msgstr "Dapatkan Penawaran Khusus Anda"
+
+#: templates/pricing.html:174
+msgid "Because global expansion looks different for every company, we don't use a \"one size fits all\" price tag. To give you the most accurate and competitive rate, we need to understand your specific needs."
+msgstr "Karena ekspansi global terlihat berbeda untuk setiap perusahaan, kami tidak menggunakan label harga \"satu ukuran untuk semua\". Untuk memberi Anda tarif yang paling akurat dan kompetitif, kami perlu memahami kebutuhan spesifik Anda."
+
+#: templates/pricing.html:176
+msgid "Ready to see your numbers?"
+msgstr "Siap melihat angka Anda?"
+
+#: templates/footer.html:12 templates/footer.html:22 templates/footer.html:32
+#: templates/footer.html:42
+msgid "Global Payroll"
+msgstr "Penggajian Global"
+
+#: templates/footer.html:13 templates/footer.html:23
+msgid "Compliance Automation"
+msgstr "Otomatisasi Kepatuhan"
+
+#: templates/footer.html:14 templates/footer.html:24
+msgid "Workforce Analytics"
+msgstr "Analitik Tenaga Kerja"
+
+#: templates/footer.html:15
+msgid "Tax Management"
+msgstr "Manajemen Pajak"
+
+#: templates/footer.html:20
+msgid "Solutions"
+msgstr "Solusi"
+
+#: templates/footer.html:22
+msgid "Enterprise Expansion"
+msgstr "Ekspansi Perusahaan"
+
+#: templates/footer.html:23
+msgid "Mergers & Acquisitions"
+msgstr "Merger & Akuisisi"
+
+#: templates/footer.html:24
+msgid "Compliance Management"
+msgstr "Manajemen Kepatuhan"
+
+#: templates/footer.html:25
+msgid "Global Workforce"
+msgstr "Tenaga Kerja Global"
+
+#: templates/footer.html:30
+msgid "Resources"
+msgstr "Sumber Daya"
+
+#: templates/footer.html:32
+msgid "Documentation"
+msgstr "Dokumentasi"
+
+#: templates/footer.html:33
+msgid "API Reference"
+msgstr "Referensi API"
+
+#: templates/footer.html:34
+msgid "Compliance Guides"
+msgstr "Panduan Kepatuhan"
+
+#: templates/footer.html:35
+msgid "Case Studies"
+msgstr "Studi Kasus"
+
+#: templates/footer.html:40
+msgid "Company"
+msgstr "Perusahaan"
+
+#: templates/footer.html:42
+msgid "About Us"
+msgstr "Tentang Kami"
+
+#: templates/footer.html:43
+msgid "Careers"
+msgstr "Karir"
+
+#: templates/footer.html:45
+msgid "Contact"
+msgstr "Kontak"
+
+#: templates/footer.html:56
+msgid "All rights reserved."
+msgstr "Hak cipta dilindungi undang-undang."
+
+#: templates/footer.html:57
+msgid "GDPR Compliant | SOC 2 Type II Certified | ISO 27001"
+msgstr "Patuh GDPR | Bersertifikat SOC 2 Tipe II | ISO 27001"

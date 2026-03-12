@@ -1,0 +1,451 @@
+
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Payslip</title>
+  <style>
+    @page { size: A4; margin: 1cm; }
+
+    body {
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 9pt;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    .page { page-break-after: always; padding-bottom: 55px; }
+    .page:last-child { page-break-after: auto; }
+
+    .header {
+      border-bottom: 2px solid #333;
+      padding-bottom: 10px;
+      margin-bottom: 16px;
+      width: 100%;
+    }
+    .clearfix:after { content: ""; display: table; clear: both; }
+    .company-info { float: left; width: 65%; }
+    .logo-wrap { float: right; width: 35%; text-align: right; }
+    .logo { max-height: 60px; max-width: 150px; }
+
+    .emp-box {
+      background-color: #f4f4f4;
+      border: 1px solid #ddd;
+      padding: 10px;
+      margin-bottom: 16px;
+      display: table;
+      width: 100%;
+    }
+    .emp-row { display: table-row; }
+    .emp-cell { display: table-cell; padding: 4px 10px; width: 25%; vertical-align: top; }
+    .label { display: block; font-size: 7pt; text-transform: uppercase; color: #666; }
+    .val { font-weight: bold; }
+
+    .content-grid {
+      display: table;
+      width: 100%;
+      border-top: 2px solid #333;
+      margin-bottom: 10px;
+      padding-top: 8px;
+    }
+    .col-left, .col-right { display: table-cell; width: 50%; vertical-align: top; }
+    .col-left { border-right: 1px dashed #ccc; padding-right: 12px; }
+    .col-right { padding-left: 12px; }
+
+    table.lines { width: 100%; border-collapse: collapse; }
+    table.lines th {
+      text-align: left;
+      border-bottom: 1px solid #000;
+      font-size: 8pt;
+      padding: 5px 0;
+    }
+    table.lines td {
+      padding: 4px 0;
+      border-bottom: 1px dotted #eee;
+      vertical-align: top;
+    }
+    .money { text-align: right; font-family: "Courier New", monospace; }
+
+    .totals-row { display: table; width: 100%; margin-top: 10px; }
+    .totals-cell { display: table-cell; width: 50%; vertical-align: top; }
+    .totals-left { padding-right: 12px; }
+    .totals-right { padding-left: 12px; }
+
+    .summary-box {
+      background-color: #eee;
+      padding: 8px;
+      font-weight: bold;
+      border-top: 1px solid #999;
+    }
+    .summary-table { width: 100%; border-collapse: collapse; }
+    .summary-table td { padding: 0; }
+    .summary-table td:last-child { text-align: right; }
+
+    .employer-box {
+      background-color: #fdfdfd;
+      border: 1px solid #ddd;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 8pt;
+    }
+
+    .bottom-grid { display: table; width: 100%; margin-top: 10px; }
+    .bottom-left, .bottom-right { display: table-cell; width: 50%; vertical-align: top; }
+    .bottom-left { padding-right: 10px; }
+    .bottom-right { padding-left: 10px; }
+
+    .ytd-box {
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      padding: 10px;
+      font-size: 8pt;
+    }
+
+    .net-box {
+      background-color: #333;
+      color: #fff;
+      padding: 12px;
+      font-size: 13pt;
+    }
+    .net-box table { width: 100%; border-collapse: collapse; }
+    .net-box td { color: #fff; }
+    .net-box td:last-child { text-align: right; font-weight: bold; }
+
+    .footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      border-top: 1px solid #ddd;
+      padding-top: 8px;
+      font-size: 8pt;
+      text-align: center;
+      background: #fff;
+    }
+
+    h1 { font-size: 14pt; }
+    h4 { font-size: 10pt; margin: 0 0 6px 0; }
+    p { margin: 3px 0; }
+  </style>
+</head>
+<body>
+
+{% for p in payslips %}
+  <div class="page">
+
+    <div class="header clearfix">
+      <div class="company-info">
+        <h1 style="margin:0;">
+          {% if company %}
+            {% if company.trade_name %}
+              {{ company.trade_name }}
+            {% elif company.name %}
+              {{ company.name }}
+            {% else %}
+              Company
+            {% endif %}
+          {% else %}
+            Company
+          {% endif %}
+        </h1>
+        <p>
+          {% if company %}
+            {{ company.address|default:"" }}
+          {% endif %}
+        </p>
+      </div>
+
+      <div class="logo-wrap">
+        {% if company and company.logo %}
+          <img
+            class="logo"
+            alt="Company logo"
+            src="{% if company_logo_url %}{{ company_logo_url }}{% else %}{{ base_url|default:"" }}{{ company.logo.url }}{% endif %}"
+          />
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="emp-box">
+      <div class="emp-row">
+        <div class="emp-cell">
+          <span class="label">Employee ID</span>
+          <span class="val">
+            {% if p.run and p.run.employee %}
+              {% if p.run.employee.employee_code %}
+                {{ p.run.employee.employee_code }}
+              {% elif p.run.employee.employee_id %}
+                {{ p.run.employee.employee_id }}
+              {% else %}
+                -
+              {% endif %}
+            {% else %}
+              -
+            {% endif %}
+          </span>
+        </div>
+        <div class="emp-cell">
+          <span class="label">Employee Name</span>
+          <span class="val">
+            {% if p.run and p.run.employee %}
+              {{ p.run.employee.employee_name|default:"" }} {{ p.run.employee.employee_surname|default:"" }}
+            {% else %}
+              -
+            {% endif %}
+          </span>
+        </div>
+
+        <div class="emp-cell">
+          <span class="label">Pay Date</span>
+          <span class="val">
+            {% if p.run and p.run.period %}
+              {{ p.run.period.payment_date|date:"d M Y"|default:"-" }}
+            {% else %}
+              -
+            {% endif %}
+          </span>
+        </div>
+        <div class="emp-cell">
+          <span class="label">Tax Period</span>
+          <span class="val">
+            {% if p.run and p.run.period %}
+              {{ p.run.period.period_number|default:"-" }}
+            {% else %}
+              -
+            {% endif %}
+          </span>
+        </div>
+      </div>
+
+      <div class="emp-row">
+        <div class="emp-cell">
+          <span class="label">Department</span>
+          <span class="val">
+            {% if p.run and p.run.employee %}
+              {{ p.run.employee.department|default:"-" }}
+            {% else %}
+              -
+            {% endif %}
+          </span>
+        </div>
+        <div class="emp-cell">
+          <span class="label">Tax Code</span>
+          <span class="val">
+            {% if p.run and p.run.employee %}
+              {{ p.run.employee.tax_info_03|default:"-" }}{{ p.run.employee.tax_info_05|default:"-" }}
+            {% else %}
+              -
+            {% endif %}
+          </span>
+        </div>
+        <div class="emp-cell">
+          <span class="label">NI Number</span>
+          <span class="val">
+            {% if p.run and p.run.employee %}
+              {% if p.run.employee.tax_info_01 %}
+                {{ p.run.employee.tax_info_01 }}
+              {% elif p.run.employee.national_id %}
+                {{ p.run.employee.national_id }}
+              {% else %}
+                -
+              {% endif %}
+            {% else %}
+              -
+            {% endif %}
+          </span>
+        </div>
+        <div class="emp-cell">
+          <span class="label">Payment Method</span>
+          <span class="val">
+            {% if p.run and p.run.employee %}
+              {{ p.run.employee.payment_method|default:"Bank Transfer" }}
+            {% else %}
+              Bank Transfer
+            {% endif %}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-grid">
+
+      <div class="col-left">
+        <h4>PAYMENTS</h4>
+
+        <table class="lines">
+          <thead>
+            <tr>
+              <th width="10%">Code</th>
+              <th width="55%">Description</th>
+              <th width="35%" class="money">Current</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in p.earnings %}
+              <tr>
+                <td>{{ item.code|default:"" }}</td>
+                <td>{{ item.pdcode_description|default:"-" }}</td>
+                <td class="money">{{ item.amount|default:0|floatformat:2 }}</td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="4">No payments recorded.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="col-right">
+        <h4>DEDUCTIONS</h4>
+
+        <table class="lines">
+          <thead>
+            <tr>
+              <th width="10%">Code</th>
+              <th width="55%">Description</th>
+              <th width="35%" class="money">Current</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in p.deductions %}
+              <tr>
+                <td>{{ item.code|default:"" }}</td>
+                <td>{{ item.element_description|default:"-" }}</td>
+                <td class="money">{{ item.amount|default:0|floatformat:2 }}</td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="4">No deductions recorded.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="totals-row">
+      <div class="totals-cell totals-left">
+        <div class="summary-box">
+          <table class="summary-table">
+            <tr>
+              <td>TOTAL GROSS PAY</td>
+              <td class="money">
+                {% if p.total_gross %}
+                  {{ p.total_gross|floatformat:2 }}
+                {% elif p.run and p.run.gross_pay %}
+                  {{ p.run.gross_pay|floatformat:2 }}
+                {% else %}
+                  0.00
+                {% endif %}
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="totals-cell totals-right">
+        <div class="summary-box">
+          <table class="summary-table">
+            <tr>
+              <td>TOTAL DEDUCTIONS</td>
+              <td class="money">
+                {% if p.total_deductions %}
+                  {{ p.total_deductions|floatformat:2 }}
+                {% elif p.run and p.run.total_deductions %}
+                  {{ p.run.total_deductions|floatformat:2 }}
+                {% else %}
+                  0.00
+                {% endif %}
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-grid">
+      <div class="bottom-left">
+        <div class="ytd-box">
+          <strong style="display:block; margin-bottom: 5px;">YEAR TO DATE SUMMARY</strong>
+          <table style="width:100%; border-collapse: collapse;">
+            <tr>
+              <td>Taxable Gross YTD:</td>
+              <td class="money">
+                {% if p.ytd_summary and p.ytd_summary.gross %}
+                  {{ p.ytd_summary.gross|floatformat:2 }}
+                {% else %}
+                  0.00
+                {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <td>Tax Paid YTD:</td>
+              <td class="money">
+                {% if p.ytd_summary and p.ytd_summary.tax %}
+                  {{ p.ytd_summary.tax|floatformat:2 }}
+                {% else %}
+                  0.00
+                {% endif %}
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="bottom-right">
+        <div class="net-box">
+          <table>
+            <tr>
+              <td style="font-size:10pt; text-transform:uppercase;">Net Pay</td>
+              <td>
+                {# ✅ FIXED: use country/company safely #}
+                {% if company and company.currency_symbol %}
+                  {{ company.currency_symbol }}
+                {% elif country and country.currency_symbol %}
+                  {{ country.currency_symbol }}
+                {% elif country and country.currency_code %}
+                  {{ country.currency_code }}
+                {% else %}
+                  £
+                {% endif %}
+
+                {% if p.net_pay %}
+                  {{ p.net_pay|floatformat:2 }}
+                {% elif p.run and p.run.net_pay %}
+                  {{ p.run.net_pay|floatformat:2 }}
+                {% else %}
+                  0.00
+                {% endif %}
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+{% endfor %}
+
+<div class="footer">
+  Generated by ExactusPay
+  {% if payslips %}
+    {% with first=payslips.0 %}
+      | Period:
+      {% if first.run %}
+        {% if first.run.period %}
+          {% if first.run.period.name %}
+            {{ first.run.period.name }}
+          {% else %}
+            {{ first.run.period }}
+          {% endif %}
+        {% else %}
+          -
+        {% endif %}
+      {% else %}
+        -
+      {% endif %}
+    {% endwith %}
+  {% endif %}
+</div>
+
+</body>
+</html>

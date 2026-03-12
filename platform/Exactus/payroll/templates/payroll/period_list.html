@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+{% load payroll_filters %}
+{% load accounts_role_filters %}
+{% load i18n %}
+
+{% block title %}
+  {% blocktrans with company_name=company.trade_name %}Payroll Periods — {{ company_name }} | ExactusPay{% endblocktrans %}
+{% endblock %}
+
+{% block page_title %}
+  {% trans "Payroll Periods" %}
+{% endblock %}
+
+{% block extra_head %}
+<link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.bootstrap5.min.css" rel="stylesheet">
+
+<style>
+  body { background-color: #F4F4F4 !important; }
+  .wrapper:before { background: #F4F4F4 !important; }
+  :root { --card-radius: 16px; --border-color: #f0f0f0; }
+
+  .card-hover-effect {
+    border-radius: 16px;
+    border: none;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    overflow: hidden;
+  }
+
+  .card-hover-effect:hover {
+    transform: translateY(0px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .card-header {
+    background-color: #fff;
+    border-bottom: 1px solid #f0f0f0;
+  }
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'companies:company' country_slug %}">{% trans "Companies" %}</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'payroll:payroll_list' country_slug company.company_id %}">{% trans "Payrolls" %}</a>
+    </li>
+    <li class="breadcrumb-item active">
+      {% blocktrans with fiscal_year=payroll.fiscal_year %}Payroll Year: {{ fiscal_year }}{% endblocktrans %}
+    </li>
+  </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-12">
+
+    <div class="card card-hover-effect shadow-sm">
+      <div class="card-header pt-4 px-4">
+        <h5 class="card-title mb-0">{% trans "Payroll Periods" %}</h5>
+        <h6 class="card-subtitle text-muted mt-1">
+          {% blocktrans with fiscal_year=payroll.fiscal_year %}
+            Manage processing periods for Fiscal Year {{ fiscal_year }}.
+          {% endblocktrans %}
+        </h6>
+      </div>
+
+      <div class="card-body p-0">
+        <div class="p-4">
+          {% if periods %}
+            <table id="datatables-reponsive" class="table table-striped" style="width:100%">
+              <thead>
+                <tr>
+                  <th class="text-center" style="width: 50px;">{% trans "Run ID" %}</th>
+                  <th>{% trans "Name" %}</th>
+                  <th class="text-center">{% trans "Date Range" %}</th>
+                  <th class="text-center">{% trans "Status" %}</th>
+                  <th class="text-end">{% trans "Total Net" %}</th>
+                  <th class="text-center">{% trans "Actions" %}</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {% for p in periods %}
+                  <tr>
+                    <td class="text-center text-muted fw-bold">
+                      {{ p.period_number }}
+                    </td>
+
+                    <td>
+                      <a href="{% url 'payroll:period_detail' country_slug company.company_id payroll.id p.id %}"
+                         class="fw-bold text-dark text-decoration-none">
+                        {{ p.name }}
+                      </a>
+                    </td>
+
+                    <td class="text-center small">
+                      <small>{{ p.start_date|date:"d/m/Y" }}</small><br>
+                      <strong class="fw-bold text-dark">{{ p.end_date|date:"d/m/Y" }}</strong>
+                    </td>
+
+                    <td class="text-center">
+                      <span class="badge rounded
+                        {% if p.status == 'COMPLETED' %}bg-success
+                        {% elif p.status == 'PROCESSED' %}bg-info
+                        {% elif p.status == 'AWAITING_APPROVAL' %}bg-warning text-dark
+                        {% else %}bg-secondary{% endif %}">
+                        {{ p.get_status_display }}
+                      </span>
+                    </td>
+
+                    <td class="text-end font-monospace fw-bold">
+                      {{ p.total_net|floatformat:2|intcomma }}
+                    </td>
+
+                    <td class="text-center table-action" style="position: relative; z-index: 2;">
+                      <a href="{% url 'payroll:period_detail' country_slug company.company_id payroll.id p.id %}"
+                         class="text-brand me-2"
+                         title="{% trans 'View Period' %}">
+                        <i class="align-middle fas fa-eye"></i>
+                      </a>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+
+          {% else %}
+            <div class="text-center py-5">
+              <div class="mb-3">
+                <i class="fas fa-calendar-alt fa-3x text-muted opacity-25"></i>
+              </div>
+              <h5 class="text-muted">{% trans "No periods found" %}</h5>
+              <p class="text-muted small mb-3">{% trans "Add a new period to begin payroll processing." %}</p>
+
+              <a href="{% url 'payroll:period_create' country_slug company.company_id 0 %}?payroll={{ payroll.id }}"
+                 class="btn btn-primary">
+                <i class="fas fa-plus-circle me-2"></i> {% trans "Create First Period" %}
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/responsive.bootstrap5.min.js"></script>
+
+<script>
+  // DataTables i18n strings from Django
+  const DT_I18N = {
+    search: "",
+    searchPlaceholder: "{% trans 'Search Periods...' %}",
+    lengthMenu: "{% trans 'Show _MENU_ entries' %}",
+    all: "{% trans 'All' %}"
+  };
+
+  document.addEventListener("DOMContentLoaded", function() {
+    if (document.getElementById("datatables-reponsive")) {
+      $("#datatables-reponsive").DataTable({
+        responsive: true,
+        lengthChange: true,
+        pageLength: 12,
+        lengthMenu: [[12, 24, 50, -1], [12, 24, 50, DT_I18N.all]],
+        order: [[0, "desc"]],
+        language: DT_I18N,
+        dom: '<"row mb-3"<"col-md-6 d-flex align-items-center"l><"col-md-6"f>>' +
+             '<"row"<"col-sm-12"tr>>' +
+             '<"row mt-3"<"col-md-5"i><"col-md-7"p>>',
+        initComplete: function() {
+          $('.dataTables_filter input').addClass('form-control');
+          $('.dataTables_length select').addClass('form-select');
+        }
+      });
+    }
+  });
+</script>
+{% endblock %}

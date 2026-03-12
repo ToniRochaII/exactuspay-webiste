@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title">User Access Allocation</h5>
+        <h6 class="card-subtitle text-muted">Grant users access to specific companies or groups.</h6>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    {{ form.user.label_tag }}
+                    {{ form.user }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.role.label_tag }}
+                    {{ form.role }}
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="mb-3">
+                <label class="form-label d-block">Allocation Type</label>
+                {% for radio in form.assign_type %}
+                    <div class="form-check form-check-inline">
+                        {{ radio.tag }}
+                        <label class="form-check-label" for="{{ radio.id_for_label }}">{{ radio.choice_label }}</label>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div id="company_field" class="mb-3">
+                {{ form.company.label_tag }}
+                {{ form.company }}
+                <div class="form-text">User will be assigned to this single company.</div>
+            </div>
+
+            <div id="group_field" class="mb-3" style="display:none;">
+                {{ form.client_group.label_tag }}
+                {{ form.client_group }}
+                <div class="form-text">User will be assigned to ALL companies in this group.</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-3">Grant Access</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function toggleAssignmentType(value) {
+        if (value === "COMPANY") {
+            document.getElementById("company_field").style.display = "block";
+            document.getElementById("group_field").style.display = "none";
+        } else {
+            document.getElementById("company_field").style.display = "none";
+            document.getElementById("group_field").style.display = "block";
+        }
+    }
+    
+    // Run once on load to set correct state (in case of validation errors)
+    document.addEventListener("DOMContentLoaded", function() {
+        var checked = document.querySelector('input[name="assign_type"]:checked');
+        if (checked) {
+            toggleAssignmentType(checked.value);
+        }
+    });
+</script>
+{% endblock %}

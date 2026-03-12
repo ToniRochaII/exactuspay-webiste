@@ -1,0 +1,242 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Upload Countries" %} | ExactusPay{% endblock %}
+
+{% block page_title %}
+<i class="fas fa-upload me-2"></i>{% trans "Upload Countries" %}
+{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="{% trans 'breadcrumb' %}">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'country:country' %}">{% trans "Countries" %}</a></li>
+    <li class="breadcrumb-item active">{% trans "Upload Countries" %}</li>
+  </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm border-0">
+
+  <!-- Header -->
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <div>
+      <h5 class="mb-0 fw-semibold">
+        <i class="fas fa-file-upload me-2"></i>{% trans "Upload Countries (CSV)" %}
+      </h5>
+      <small class="text-muted">
+        {% trans "Upload multiple countries at once using our standardized CSV format." %}
+      </small>
+    </div>
+
+    <a href="{% url 'country:country' %}" class="btn btn-outline-secondary btn-sm">
+      <i class="fas fa-arrow-left me-2"></i>{% trans "Back" %}
+    </a>
+  </div>
+
+  <div class="card-body">
+
+    <!-- CSV INSTRUCTIONS -->
+    <div class="alert alert-info border-0 shadow-sm">
+      <h6 class="fw-bold mb-2">
+        <i class="fas fa-info-circle me-2"></i>{% trans "CSV Format Requirements" %}
+      </h6>
+      <ul class="mb-0">
+        <li>{% blocktrans %}File must be in <strong>.csv</strong> format.{% endblocktrans %}</li>
+        <li>{% trans "The first row must contain column headers." %}</li>
+        <li>{% blocktrans %}<strong>Required fields:</strong> iso2_code, iso3_code, name{% endblocktrans %}</li>
+        <li>{% blocktrans %}<strong>Optional:</strong> status, official_language, currency_name, currency_code, numbering_format, currency_position, date_format, decimals, archive{% endblocktrans %}</li>
+      </ul>
+    </div>
+
+    <!-- TEMPLATE DOWNLOAD -->
+    <div class="alert alert-warning border-0 shadow-sm d-flex justify-content-between align-items-center">
+      <span>
+        {% blocktrans %}<strong>Need an example?</strong> Download our CSV template for correct formatting.{% endblocktrans %}
+      </span>
+      <a href="{% url 'country:download_csv_template' %}" class="btn btn-sm btn-outline-primary">
+        <i class="fas fa-download me-2"></i>{% trans "Download CSV Template" %}
+      </a>
+    </div>
+
+    <!-- UPLOAD FORM -->
+    <div class="card shadow-sm border-0 mt-4">
+      <div class="card-header">
+        <h6 class="mb-0 fw-semibold">
+          <i class="fas fa-file-csv me-2"></i>{% trans "Select CSV File" %}
+        </h6>
+      </div>
+      <div class="card-body">
+
+        <form method="post" enctype="multipart/form-data" id="uploadForm">
+          {% csrf_token %}
+
+          <div class="row g-3">
+            <div class="col-md-8">
+              {{ form.file|as_crispy_field }}
+            </div>
+
+            <div class="col-md-4">
+              {{ form.dry_run|as_crispy_field }}
+              <small class="text-muted">{% trans "Validate the file without saving to the database." %}</small>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <button type="submit" class="btn btn-primary" id="uploadBtn">
+              <i class="fas fa-upload me-2"></i>{% trans "Upload Countries" %}
+            </button>
+            <a href="{% url 'country:country' %}" class="btn btn-outline-secondary">
+              {% trans "Cancel" %}
+            </a>
+          </div>
+        </form>
+
+      </div>
+    </div>
+
+    <!-- SAMPLE PREVIEW -->
+    <div class="card shadow-sm border-0 mt-4">
+      <div class="card-header">
+        <h6 class="mb-0 fw-semibold">
+          <i class="fas fa-table me-2"></i>{% trans "Expected CSV Structure" %}
+        </h6>
+      </div>
+
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead class="table-light">
+              <tr>
+                <th>{% trans "iso2_code" %}</th>
+                <th>{% trans "iso3_code" %}</th>
+                <th>{% trans "name" %}</th>
+                <th>{% trans "status" %}</th>
+                <th>{% trans "currency_code" %}</th>
+                <th>{% trans "archive" %}</th>
+              </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>US</td>
+                <td>USA</td>
+                <td>{% trans "United States" %}</td>
+                <td>ACTIVE</td>
+                <td>USD</td>
+                <td>N</td>
+            </tr>
+            <tr>
+                <td>GB</td>
+                <td>GBR</td>
+                <td>{% trans "United Kingdom" %}</td>
+                <td>ACTIVE</td>
+                <td>GBP</td>
+                <td>N</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- FIELD REFERENCE -->
+    <div class="card shadow-sm border-0 mt-4">
+      <div class="card-header">
+        <h6 class="mb-0 fw-semibold">
+          <i class="fas fa-list me-2"></i>{% trans "Field Reference" %}
+        </h6>
+      </div>
+
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-striped align-middle">
+            <thead>
+              <tr>
+                <th>{% trans "Field" %}</th>
+                <th>{% trans "Required" %}</th>
+                <th>{% trans "Format" %}</th>
+                <th>{% trans "Allowed Values" %}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>{% trans "iso2_code" %}</strong></td>
+                <td>{% trans "Yes" %}</td>
+                <td>{% trans "2 letters" %}</td>
+                <td>{% trans "US, GB, FR…" %}</td>
+              </tr>
+              <tr>
+                <td><strong>{% trans "iso3_code" %}</strong></td>
+                <td>{% trans "Yes" %}</td>
+                <td>{% trans "3 letters" %}</td>
+                <td>{% trans "USA, GBR, FRA…" %}</td>
+              </tr>
+              <tr>
+                <td><strong>{% trans "name" %}</strong></td>
+                <td>{% trans "Yes" %}</td>
+                <td>{% trans "Text" %}</td>
+                <td>{% trans "Country name" %}</td>
+              </tr>
+              <tr>
+                <td>{% trans "status" %}</td>
+                <td>{% trans "No" %}</td>
+                <td>{% trans "Text" %}</td>
+                <td>{% trans "ACTIVE, IMPLEMENTING, INACTIVE" %}</td>
+              </tr>
+              <tr>
+                <td>{% trans "currency" %}</td>
+                <td>{% trans "No" %}</td>
+                <td>{% trans "3 letters" %}</td>
+                <td>{% trans "Dollar, Euro, Pound…" %}</td>
+              </tr>
+              <tr>
+                <td>{% trans "currency_code" %}</td>
+                <td>{% trans "No" %}</td>
+                <td>{% trans "3 letters" %}</td>
+                <td>{% trans "USD, EUR, GBP…" %}</td>
+              </tr>
+              <tr>
+                <td>{% trans "numbering_format" %}</td>
+                <td>{% trans "No" %}</td>
+                <td>{% trans "Text" %}</td>
+                <td>{% trans "1,000.00 / 1.000,00" %}</td>
+              </tr>
+              <tr>
+                <td>{% trans "currency_position" %}</td>
+                <td>{% trans "No" %}</td>
+                <td>{% trans "Text" %}</td>
+                <td>{% trans "BEFORE, AFTER" %}</td>
+              </tr>
+              <tr>
+                <td>{% trans "date_format" %}</td>
+                <td>{% trans "No" %}</td>
+                <td>{% trans "Text" %}</td>
+                <td>{% trans "DD/MM/YYYY etc." %}</td>
+              </tr>
+              <tr>
+                <td>{% trans "archive" %}</td>
+                <td>{% trans "No" %}</td>
+                <td>{% trans "Y or N" %}</td>
+                <td>{% trans "Default: N" %}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+document.getElementById("uploadForm").addEventListener("submit", function () {
+  const btn = document.getElementById("uploadBtn");
+  btn.disabled = true;
+  btn.innerHTML = '{% trans "Uploading..." %}';
+});
+</script>
+{% endblock %}

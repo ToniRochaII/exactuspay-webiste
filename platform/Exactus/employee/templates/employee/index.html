@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% load employee_role_filters %}
+
+{% block title %}
+  {% blocktrans with company_name=company.trade_name %}Employees — {{ company_name }} | ExactusPay{% endblocktrans %}
+{% endblock %}
+
+{% block page_title %}
+  {% blocktrans with company_name=company.trade_name %}Employees — {{ company_name }}{% endblocktrans %}
+{% endblock %}
+
+{% block extra_head %}
+<link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.bootstrap5.min.css" rel="stylesheet">
+
+<style>
+  body { background-color: #F4F4F4 !important; }
+  .wrapper:before { background: #F4F4F4 !important; }
+  :root { --card-radius: 16px; --border-color: #f0f0f0; }
+
+  .card-hover-effect{
+    border-radius: var(--card-radius);
+    border: none;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    overflow: hidden;
+  }
+  .card-hover-effect:hover{
+    transform: translateY(0px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
+  }
+  .card-header{
+    background-color: #fff;
+    border-bottom: 1px solid #f0f0f0;
+  }
+</style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<nav aria-label="{% trans 'breadcrumb' %}">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'country:country' %}">{% trans "Countries" %}</a></li>
+    <li class="breadcrumb-item">
+      <a href="{% url 'companies:company' company.country.slug %}">
+        {% blocktrans with country_name=company.country.name %}Companies — {{ country_name }}{% endblocktrans %}
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">
+      {% blocktrans with company_name=company.trade_name %}Employees — {{ company_name }}{% endblocktrans %}
+    </li>
+  </ol>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-12">
+
+    <div class="card card-hover-effect shadow-sm">
+      <div class="card-header pt-4 px-4">
+        <h5 class="card-title mb-0">{% trans "Employee Directory" %}</h5>
+        <h6 class="card-subtitle text-muted mt-1">
+          {% blocktrans with company_name=company.trade_name %}
+            Manage personnel, job titles, and departmental allocations for {{ company_name }}.
+          {% endblocktrans %}
+        </h6>
+      </div>
+
+      <div class="card-body p-0">
+        <div class="p-4">
+          <table id="datatables-reponsive" class="table table-striped align-middle" style="width:100%">
+            <thead>
+              <tr>
+                <th class="text-center" style="width:120px;">{% trans "ID" %}</th>
+                <th>{% trans "Full Name" %}</th>
+                <th class="text-center" style="width:140px;">{% trans "Gender" %}</th>
+                <th>{% trans "Job Title" %}</th>
+                <th class="text-center" style="width:110px;">{% trans "Actions" %}</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for employee in employees %}
+              <tr class="position-relative" style="transform: rotate(0);">
+                <td class="text-center align-middle">
+                  <span class="text-muted">{{ employee.employee_id|default:"—" }}</span>
+                </td>
+
+                <td class="align-middle">
+                  <a
+                    href="{% url 'employee:employee_edit' country_slug company.company_id employee.id %}"
+                    class="fw-bold text-dark text-decoration-none stretched-link"
+                    aria-label="{% trans 'Open employee' %}"
+                  >
+                    <strong>{{ employee.employee_surname|default:"" }}{% if employee.employee_surname %},{% endif %}</strong>
+                    <small class="text-muted">{{ employee.employee_name|default:"" }}</small>
+                  </a>
+                </td>
+
+                <td class="text-center align-middle">
+                  <span>{{ employee.gender|default:"—" }}</span>
+                </td>
+
+                <td class="align-middle">
+                  <strong>{{ employee.job_title|default:"—" }}</strong><br>
+                  <small class="text-muted">{{ employee.department|default:"" }}</small>
+                </td>
+
+                <td class="text-center align-middle table-action" style="position: relative; z-index: 2;">
+                  <a
+                    href="{% url 'employee:employee_edit' country_slug company.company_id employee.id %}"
+                    class="text-dark me-2"
+                    title="{% trans 'Open' %}"
+                    aria-label="{% trans 'Open' %}"
+                  >
+                    <i class="align-middle fas fa-arrow-right"></i>
+                  </a>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="5" class="text-center py-5">
+                  <div class="mb-2">
+                    <i class="fas fa-users fa-2x text-muted opacity-25"></i>
+                  </div>
+                  <h6 class="text-muted mb-1">{% trans "No employees found" %}</h6>
+                  <p class="text-muted small mb-0">{% trans "Create your first employee to start payroll processing." %}</p>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/responsive.bootstrap5.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+  // i18n strings (para evitar hardcode em inglês no JS)
+  const I18N_SEARCH_PLACEHOLDER = "{% trans 'Search Employees...' %}";
+  const I18N_LENGTH_MENU = "{% trans 'Show _MENU_ entries' %}";
+
+  $("#datatables-reponsive").DataTable({
+    responsive: true,
+    lengthChange: true,
+    pageLength: 10,
+    lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
+
+    // ✅ ordenar por "Full Name" (coluna 1). Antes estava a ordenar pela coluna "Gender"
+    order: [[1, "asc"]],
+
+    language: {
+      search: "",
+      searchPlaceholder: I18N_SEARCH_PLACEHOLDER,
+      lengthMenu: I18N_LENGTH_MENU
+    },
+
+    dom: '<"row mb-3"<"col-md-6 d-flex align-items-center"l><"col-md-6"f>>' +
+         '<"row"<"col-sm-12"tr>>' +
+         '<"row mt-3"<"col-md-5"i><"col-md-7"p>>',
+
+    initComplete: function() {
+      $('.dataTables_filter input').addClass('form-control');
+      $('.dataTables_length select').addClass('form-select');
+    }
+  });
+});
+</script>
+{% endblock %}

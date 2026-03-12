@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Payslip</title>
+  <style>
+    @page { size: A4; margin: 1.2cm; }
+    body{ font-family: Helvetica, Arial, sans-serif; font-size: 9.5pt; color:#222; margin:0; padding:0; line-height:1.35; }
+    .page{ page-break-after: always; padding-bottom: 60px; }
+    .page:last-child{ page-break-after:auto; }
+
+    .topbar{ border-bottom: 3px solid #0d6efd; padding-bottom: 10px; margin-bottom: 14px; width:100%; }
+    .clearfix:after{ content:""; display:table; clear:both; }
+    .brand-left{ float:left; width:70%; }
+    .brand-right{ float:right; width:30%; text-align:right; }
+    .logo{ max-height:60px; max-width:160px; }
+
+    .title{ margin:0; font-size: 16pt; color:#0d6efd; letter-spacing: .3px; }
+    .sub{ margin:4px 0 0 0; color:#444; font-size: 8.5pt; }
+
+    .facts{ display: table; width:100%; border:1px solid #e6e6e6; background:#fafafa; padding:10px; margin-bottom: 12px; }
+    .facts-row{ display: table-row; }
+    .facts-cell{ display: table-cell; width:25%; padding: 4px 8px; vertical-align: top; }
+    .label{ display:block; font-size:7pt; text-transform:uppercase; color:#666; margin-bottom:2px; }
+    .value{ font-weight:bold; }
+
+    .panels{ display: table; width:100%; border-top: 2px solid #111; margin-top: 6px; }
+    .panel{ display: table-cell; width: 33.333%; vertical-align: top; padding: 10px 10px 0 10px; }
+    .panel + .panel{ border-left: 1px dashed #cfcfcf; }
+    .panel h3{ margin:0 0 6px 0; font-size: 10pt; text-transform: uppercase; letter-spacing: .3px; }
+
+    table.lines{ width:100%; border-collapse: collapse; font-size: 8.5pt; }
+    table.lines th{ text-align:left; border-bottom: 1px solid #000; padding: 5px 0; font-size: 8pt; color:#111; }
+    table.lines td{ padding: 4px 0; border-bottom: 1px dotted #eee; vertical-align: top; }
+    .code{ width: 16%; color:#555; }
+    .desc{ width: 54%; }
+    .amt{ width: 30%; text-align:right; font-family: "Courier New", monospace; white-space:nowrap; }
+
+    .totals{ display: table; width:100%; margin-top: 12px; border: 1px solid #e6e6e6; }
+    .tot-cell{ display: table-cell; width: 33.333%; padding: 10px; vertical-align: middle; }
+    .tot-cell + .tot-cell{ border-left: 1px solid #e6e6e6; }
+    .tot-title{ display:block; font-size: 7pt; text-transform: uppercase; color:#666; margin-bottom:2px; }
+    .tot-val{ font-family:"Courier New", monospace; font-size: 11pt; font-weight:bold; text-align:right; display:block; }
+    .net{ background:#0d6efd; color:#fff; }
+    .net .tot-title{ color:#eaf2ff; }
+    .net .tot-val{ color:#fff; font-size: 13pt; }
+
+    .box{ border:1px solid #e6e6e6; background:#fcfcfc; padding:10px; font-size: 8.5pt; margin-top:10px; }
+    .box h4{ margin:0 0 6px 0; font-size: 9pt; text-transform: uppercase; color:#333; }
+    .kv{ width:100%; border-collapse: collapse; }
+    .kv td{ padding:2px 0; }
+    .kv td:last-child{ text-align:right; font-family:"Courier New", monospace; }
+
+    .footer{
+      position: fixed; bottom: 0; left: 1.2cm; right: 1.2cm;
+      border-top: 1px solid #eee; padding-top: 8px;
+      font-size: 8pt; text-align: center; color:#888; background:#fff;
+    }
+  </style>
+</head>
+
+<body>
+{% for p in payslips %}
+<div class="page">
+
+  <div class="topbar clearfix">
+    <div class="brand-left">
+      <h1 class="title">
+        {% if company %}
+          {% if company.trade_name %}{{ company.trade_name }}{% else %}{{ company.name }}{% endif %}
+        {% else %}
+          Company
+        {% endif %}
+      </h1>
+
+      <div class="sub">
+        {% if company and company.address %}
+          {{ company.address|linebreaksbr }}
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="brand-right">
+      {% if company and company.logo %}
+        <img class="logo" alt="Company logo"
+             src="{% if company_logo_url %}{{ company_logo_url }}{% else %}{{ base_url }}{{ company.logo.url }}{% endif %}">
+      {% endif %}
+      <div class="sub" style="text-align:right; margin-top:6px;">Payslip</div>
+    </div>
+  </div>
+
+  <div class="facts">
+    <div class="facts-row">
+      <div class="facts-cell">
+        <span class="label">Employee</span>
+        <span class="value">{{ p.run.employee.employee_name|default:"" }} {{ p.run.employee.employee_surname|default:"" }}</span>
+      </div>
+      <div class="facts-cell">
+        <span class="label">Employee ID</span>
+        <span class="value">{{ p.run.employee.employee_code|default:p.run.employee.employee_id|default:"-" }}</span>
+      </div>
+      <div class="facts-cell">
+        <span class="label">Pay date</span>
+        <span class="value">{{ p.run.period.payment_date|date:"d M Y" }}</span>
+      </div>
+      <div class="facts-cell">
+        <span class="label">Period</span>
+        <span class="value">
+          {% if p.run.period %}
+            {% if p.run.period.name %}{{ p.run.period.name }}{% else %}{{ p.run.period }}{% endif %}
+          {% else %}
+            -
+          {% endif %}
+        </span>
+      </div>
+    </div>
+
+    <div class="facts-row">
+      <div class="facts-cell">
+        <span class="label">Department</span>
+        <span class="value">{{ p.run.employee.department|default:"-" }}</span>
+      </div>
+      <div class="facts-cell">
+        <span class="label">Tax code</span>
+        <span class="value">{{ p.run.employee.tax_code|default:"-" }}</span>
+      </div>
+      <div class="facts-cell">
+        <span class="label">NI / National ID</span>
+        <span class="value">{{ p.run.employee.ni_number|default:p.run.employee.national_id|default:"-" }}</span>
+      </div>
+      <div class="facts-cell">
+        <span class="label">Payment method</span>
+        <span class="value">{{ p.run.employee.payment_method|default:"Bank Transfer" }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="panels">
+    <div class="panel">
+      <h3>Payments</h3>
+      <table class="lines">
+        <thead><tr><th class="code">Code</th><th class="desc">Description</th><th class="amt">Amount</th></tr></thead>
+        <tbody>
+          {% for item in p.earnings %}
+          <tr><td class="code">{{ item.code }}</td><td class="desc">{{ item.name }}</td><td class="amt">{{ item.amount|default:0|floatformat:2 }}</td></tr>
+          {% empty %}
+          <tr><td colspan="3">No payments recorded.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="panel">
+      <h3>Deductions</h3>
+      <table class="lines">
+        <thead><tr><th class="code">Code</th><th class="desc">Description</th><th class="amt">Amount</th></tr></thead>
+        <tbody>
+          {% for item in p.deductions %}
+          <tr><td class="code">{{ item.code }}</td><td class="desc">{{ item.name }}</td><td class="amt">{{ item.amount|default:0|floatformat:2 }}</td></tr>
+          {% empty %}
+          <tr><td colspan="3">No deductions recorded.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="panel">
+      <h3>Employer contributions</h3>
+      <table class="lines">
+        <thead><tr><th class="desc" style="width:70%;">Description</th><th class="amt" style="width:30%;">Amount</th></tr></thead>
+        <tbody>
+          {% for item in p.employer_costs %}
+          <tr>
+            <td class="desc">{{ item.name }}{% if item.code %} <span style="color:#777;">({{ item.code }})</span>{% endif %}</td>
+            <td class="amt">{{ item.amount|default:0|floatformat:2 }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="2">No employer contributions.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <div class="box">
+        <h4>Year to date</h4>
+        <table class="kv">
+          <tr><td>Taxable gross YTD</td><td>{{ p.ytd_summary.gross|default:0|floatformat:2 }}</td></tr>
+          <tr><td>Tax paid YTD</td><td>{{ p.ytd_summary.tax|default:0|floatformat:2 }}</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="totals">
+    <div class="tot-cell">
+      <span class="tot-title">Total gross pay (5000)</span>
+      <span class="tot-val">{{ p.run.gross_pay|default:0|floatformat:2 }}</span>
+    </div>
+    <div class="tot-cell">
+      <span class="tot-title">Total deductions</span>
+      <span class="tot-val">{{ p.run.total_deductions|default:0|floatformat:2 }}</span>
+    </div>
+    <div class="tot-cell net">
+      <span class="tot-title">Net pay (8000)</span>
+      <span class="tot-val">
+        {% if company and company.currency_symbol %}{{ company.currency_symbol }}{% else %}£{% endif %}
+        {{ p.run.net_pay|default:0|floatformat:2 }}
+      </span>
+    </div>
+  </div>
+
+</div>
+{% endfor %}
+
+<div class="footer">
+  Generated by ExactusPay
+  {% if payslips and payslips.0 and payslips.0.run and payslips.0.run.period %}
+    | Period:
+    {% if payslips.0.run.period.name %}{{ payslips.0.run.period.name }}{% else %}{{ payslips.0.run.period }}{% endif %}
+  {% endif %}
+</div>
+</body>
+</html>

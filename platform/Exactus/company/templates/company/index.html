@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% load company_role_filters %}
+{% load company_filters %}
+
+{% block title %}
+  {% blocktrans with country_name=country.name %}Companies — {{ country_name }} | ExactusPay{% endblocktrans %}
+{% endblock %}
+
+{% block page_title %}
+  {% blocktrans with country_name=country.name %}Companies — {{ country_name }}{% endblocktrans %}
+{% endblock %}
+
+{% block extra_head %}
+<link href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.bootstrap5.min.css" rel="stylesheet">
+
+<style>
+  body { background-color: #F4F4F4 !important; }
+  .wrapper:before { background: #F4F4F4 !important; }
+  :root { --card-radius: 16px; --border-color: #f0f0f0; }
+
+  .card-hover-effect{
+    border-radius: var(--card-radius);
+    border: none;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    overflow: hidden;
+  }
+  .card-hover-effect:hover{
+    transform: translateY(0px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
+  }
+  .card-header{
+    background-color: #fff;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  /* table polish */
+  .company-logo{
+    width: 50px; height: 50px;
+    object-fit: cover;
+  }
+  .muted-small{ font-size: .85rem; color: #6c757d; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-12">
+
+    <div class="card card-hover-effect shadow-sm">
+      <div class="card-header pt-4 px-4">
+        <div class="d-flex justify-content-between align-items-start gap-3">
+          <div>
+            <h5 class="card-title mb-0">{% trans "Company Directory" %}</h5>
+            <h6 class="card-subtitle text-muted mt-1">
+              {% blocktrans with country_name=country.name %}Manage all companies associated with {{ country_name }}.{% endblocktrans %}
+            </h6>
+          </div>
+
+          {% if user|has_role:"EXEC,ADMIN,COMPLIANCE,BILLING,IMPLEMENTATION,OPERATION" %}
+            <div class="text-end">
+              <a href="{% url 'companies:company_create' country.slug %}" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus me-2"></i>{% trans "Add Company" %}
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="card-body p-0">
+        <div class="p-4">
+          <table id="datatables-reponsive" class="table table-striped align-middle" style="width:100%">
+            <thead>
+              <tr>
+                <th class="text-center" style="width:140px;">{% trans "Number" %}</th>
+                <th>{% trans "Company Name" %}</th>
+                <th class="text-center" style="width:140px;">{% trans "Employees" %}</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {% for company in companies %}
+                <tr class="position-relative" style="transform: rotate(0);">
+                  <td class="text-center">
+                    <span class="text-muted">{{ company.company_number|default:"—" }}</span>
+                    {% if company.company_code %}
+                      <div class="muted-small">{{ company.company_code }}</div>
+                    {% endif %}
+                  </td>
+
+                  <td>
+                    <div class="d-flex align-items-center">
+                      {% if company.logo %}
+                        <img
+                          src="{{ company.logo.url }}"
+                          alt="{{ company.trade_name }}"
+                          class="me-3 rounded-5 company-logo"
+                        >
+                      {% else %}
+                        <div class="me-3 rounded-5 bg-light d-flex align-items-center justify-content-center company-logo">
+                          <i class="fas fa-building text-muted"></i>
+                        </div>
+                      {% endif %}
+
+                      <div class="d-flex flex-column">
+                        <a href="{% url 'employee:employee' country_slug=country.slug company_id=company.company_id %}"
+                           class="text-dark text-decoration-none stretched-link">
+                          <strong>{{ company.trade_name|default:company.legal_name }}</strong>
+                        </a>
+                        <span class="muted-small">
+                          {{ company.legal_name|default:"" }}
+                        </span>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td class="text-center">
+                    <span class="text-dark">{{ company.total_employees|default:"0" }}</span>
+                  </td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan="3" class="text-center py-5">
+                    <div class="mb-2">
+                      <i class="fas fa-building fa-2x text-muted opacity-25"></i>
+                    </div>
+                    <h6 class="text-muted mb-1">{% trans "No companies found" %}</h6>
+                    <p class="text-muted small mb-0">{% trans "Create your first company to start onboarding employees." %}</p>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.4.1/js/responsive.bootstrap5.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const table = $("#datatables-reponsive").DataTable({
+    responsive: true,
+    lengthChange: true,
+    pageLength: 25,
+    lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
+    order: [[1, "asc"]],
+
+    language: {
+      search: "",
+      searchPlaceholder: "{% trans 'Search Companies...' %}",
+      lengthMenu: "{% trans 'Show _MENU_ entries' %}"
+    },
+
+    dom: '<"row mb-3"<"col-md-6 d-flex align-items-center"l><"col-md-6"f>>' +
+         '<"row"<"col-sm-12"tr>>' +
+         '<"row mt-3"<"col-md-5"i><"col-md-7"p>>',
+
+    initComplete: function() {
+      $('.dataTables_filter input').addClass('form-control');
+      $('.dataTables_length select').addClass('form-select');
+    }
+  });
+});
+</script>
+{% endblock %}
