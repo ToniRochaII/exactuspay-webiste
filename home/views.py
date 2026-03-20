@@ -78,6 +78,7 @@ def demo_request(request):
         reply_to=[email] if email else None,
     )
 
+    
     try:
         msg.send(fail_silently=False)
         messages.success(request, "Thanks! Your request was received. We'll contact you shortly.")
