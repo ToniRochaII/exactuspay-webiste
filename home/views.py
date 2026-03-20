@@ -78,12 +78,11 @@ def demo_request(request):
         reply_to=[email] if email else None,
     )
 
-    
     try:
         msg.send(fail_silently=False)
         messages.success(request, "Thanks! Your request was received. We'll contact you shortly.")
-    except Exception:
-        logger.exception("Demo request email failed to send")
-        messages.error(request, "We couldn't send your request right now. Please try again shortly.")
+    except Exception as e:
+        logger.exception("Demo request email failed to send: %s", e)
+        messages.error(request, f"Mail error: {e}")
 
     return redirect("home:demo")

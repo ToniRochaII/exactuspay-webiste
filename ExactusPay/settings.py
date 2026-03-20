@@ -131,5 +131,4 @@ DEMO_REQUEST_TO_EMAIL = os.environ.get(
     "antonio.rocha@exactuspay.com",
 )
 
-
 EMAIL_TIMEOUT = 20
