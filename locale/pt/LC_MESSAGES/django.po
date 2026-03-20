@@ -360,8 +360,7 @@ msgid "Book My Session"
 msgstr "Agendar Minha Sessão"
 
 #: home/templates/home/demo.html:1080
-#, fuzzy, python-format
-#| msgid "No commitment required. 100% data privacy."
+#, python-format
 msgid "No commitment required. 100%% data privacy."
 msgstr "Sem compromisso. 100% de privacidade de dados."
 
@@ -496,7 +495,7 @@ msgstr "Contato"
 #: home/templates/home/demo.html:1166 home/templates/home/pricing.html:878
 #, python-format
 msgid "© %(current_year)s ExactusPay. All rights reserved."
-msgstr ""
+msgstr "© %(current_year)s ExactusPay. Todos os direitos reservados."
 
 #: home/templates/home/demo.html:1167 home/templates/home/features.html:840
 #: home/templates/home/index.html:957 home/templates/home/platform.html:993
@@ -532,8 +531,6 @@ msgid "Feature outcomes"
 msgstr "Resultados dos recursos"
 
 #: home/templates/home/features.html:643
-#, fuzzy
-#| msgid "Standardised reporting"
 msgid "Standardised reports"
 msgstr "Relatórios padronizados"
 
@@ -613,6 +610,8 @@ msgid ""
 "Strong encryption, role-based access, and governance designed for payroll-"
 "grade sensitivity."
 msgstr ""
+"Criptografia forte, acesso baseado em funções e governança projetados para a "
+"sensibilidade de nível de folha de pagamento."
 
 #: home/templates/home/features.html:693
 msgid ""
@@ -663,18 +662,12 @@ msgstr ""
 "empregador, contribuições legais e encargos locais."
 
 #: home/templates/home/features.html:723
-#, fuzzy
-#| msgid "Pre-hire modelling:"
 msgid "Pre-hire forecasting:"
-msgstr "Modelagem pré-contratação:"
+msgstr "Previsão pré-contratação:"
 
 #: home/templates/home/features.html:723
-#, fuzzy
-#| msgid "price offers accurately with full employer cost breakdowns."
 msgid "model offers with accurate employer-cost breakdowns."
-msgstr ""
-"precifique ofertas com precisão com detalhamentos completos de custos do "
-"empregador."
+msgstr "modele ofertas com detalhamentos precisos de custos do empregador."
 
 #: home/templates/home/features.html:724
 msgid "Scenario planning:"
@@ -816,10 +809,8 @@ msgstr ""
 "conformidade em todos os mercados — com uma plataforma que escala."
 
 #: home/templates/home/features.html:783 home/templates/home/platform.html:935
-#, fuzzy
-#| msgid "Schedule Demo"
 msgid "Schedule a Demo"
-msgstr "Agendar Demonstração"
+msgstr "Agendar uma Demonstração"
 
 #: home/templates/home/features.html:839 home/templates/home/index.html:956
 #: home/templates/home/platform.html:992
@@ -972,8 +963,6 @@ msgstr ""
 "operacionais em todas as regiões com painéis ao vivo."
 
 #: home/templates/home/index.html:770
-#, fuzzy
-#| msgid "Multi-currency support"
 msgid "Multi-currency Support"
 msgstr "Suporte multi-moeda"
 
@@ -986,10 +975,8 @@ msgstr ""
 "taxas de câmbio otimizadas."
 
 #: home/templates/home/index.html:775
-#, fuzzy
-#| msgid "Automated tax filings"
 msgid "Automated Reporting"
-msgstr "Declarações fiscais automatizadas"
+msgstr "Relatórios Automatizados"
 
 #: home/templates/home/index.html:776
 msgid ""
@@ -1023,9 +1010,7 @@ msgid "All Systems Go"
 msgstr "Todos os Sistemas OK"
 
 #: home/templates/home/index.html:803
-#, fuzzy, python-format
-#| msgid ""
-#| "100% compliance across all active jurisdictions with automated updates."
+#, python-format
 msgid ""
 "100%% compliance across all active jurisdictions with automated updates."
 msgstr ""
@@ -1120,12 +1105,7 @@ msgstr ""
 "pagamento com o ExactusPay"
 
 #: home/templates/home/index.html:870
-#, fuzzy, python-format
-#| msgid ""
-#| "\"ExactusPay revolutionized our global payroll operations. We reduced "
-#| "processing time by 80% while eliminating compliance errors across 15 "
-#| "countries. Their platform paid for itself within the first quarter, and "
-#| "the ROI has been phenomenal.\""
+#, python-format
 msgid ""
 "\"ExactusPay revolutionized our global payroll operations. We reduced "
 "processing time by 80%% while eliminating compliance errors across 15 "
@@ -1281,28 +1261,28 @@ msgstr ""
 "perguntas de \"e se?\" em números claros."
 
 #: home/templates/home/platform.html:814
-#, fuzzy
-#| msgid "price offers accurately with full employer cost breakdowns."
 msgid ""
 "<strong>Pre-hire modelling:</strong> price offers accurately with full "
 "employer cost breakdowns."
 msgstr ""
-"precifique ofertas com precisão com detalhamentos completos de custos do "
-"empregador."
+"<strong>Modelagem pré-contratação:</strong> precifique ofertas com precisão "
+"com detalhamentos completos de custos do empregador."
 
 #: home/templates/home/platform.html:815
-#, fuzzy
-#| msgid "compare markets and hiring strategies side-by-side."
 msgid ""
 "<strong>Scenario comparisons:</strong> assess markets and hiring strategies "
 "side-by-side."
-msgstr "compare mercados e estratégias de contratação lado a lado."
+msgstr ""
+"<strong>Comparação de cenários:</strong> avalie mercados e estratégias de "
+"contratação lado a lado."
 
 #: home/templates/home/platform.html:816
 msgid ""
 "<strong>Budget confidence:</strong> align Finance, HR, and leadership on one "
 "set of numbers."
 msgstr ""
+"<strong>Confiança orçamentária:</strong> alinhe Finanças, RH e liderança em "
+"um único conjunto de números."
 
 #: home/templates/home/platform.html:824
 msgid "Automated Compliance Guardianship"
@@ -1323,20 +1303,24 @@ msgid ""
 "<strong>Regulation-aware rules:</strong> payroll logic tracks current "
 "statutory obligations."
 msgstr ""
+"<strong>Regras conscientes de regulamentação:</strong> a lógica da folha de "
+"pagamento acompanha as obrigações legais atuais."
 
 #: home/templates/home/platform.html:835
 msgid ""
 "<strong>Reduced risk:</strong> validations and governance to prevent common "
 "errors."
 msgstr ""
+"<strong>Risco reduzido:</strong> validações e governança para prevenir erros "
+"comuns."
 
 #: home/templates/home/platform.html:836
-#, fuzzy
-#| msgid "traceable calculations and changes support audits."
 msgid ""
 "<strong>Evidence trails:</strong> traceable calculations and changes support "
 "audits."
-msgstr "cálculos e alterações rastreáveis apoiam auditorias."
+msgstr ""
+"<strong>Rastros de evidência:</strong> cálculos e alterações rastreáveis "
+"apoiam auditorias."
 
 #: home/templates/home/platform.html:844
 msgid "Managed Service Connectivity"
@@ -1357,21 +1341,23 @@ msgid ""
 "<strong>Hire-to-pay pipeline:</strong> structured data exchange from "
 "onboarding to payment."
 msgstr ""
+"<strong>Pipeline de contratação ao pagamento:</strong> troca estruturada de "
+"dados desde a integração até o pagamento."
 
 #: home/templates/home/platform.html:855
-#, fuzzy
-#| msgid "one workflow across multiple countries/providers."
 msgid ""
 "<strong>Operational consistency:</strong> one workflow across multiple "
 "countries/providers."
-msgstr "um fluxo de trabalho em vários países/provedores."
+msgstr ""
+"<strong>Consistência operacional:</strong> um fluxo de trabalho em vários "
+"países/provedores."
 
 #: home/templates/home/platform.html:856
-#, fuzzy
-#| msgid "fewer handoffs and less spreadsheet work."
 msgid ""
 "<strong>Lower admin load:</strong> fewer handoffs and less spreadsheet work."
-msgstr "menos transferências e menos trabalho com planilhas."
+msgstr ""
+"<strong>Menor carga administrativa:</strong> menos transferências e menos "
+"trabalho com planilhas."
 
 #: home/templates/home/platform.html:864
 msgid "Multi-Currency & Language Support"
@@ -1388,29 +1374,28 @@ msgstr ""
 "idioma a contracheques e documentos."
 
 #: home/templates/home/platform.html:874
-#, fuzzy
-#| msgid "exchange and payout workflows managed reliably."
 msgid ""
 "<strong>FX handled centrally:</strong> exchange and payout workflows managed "
 "reliably."
 msgstr ""
-"fluxos de trabalho de câmbio e pagamento gerenciados de forma confiável."
+"<strong>Câmbio gerenciado centralmente:</strong> fluxos de trabalho de "
+"câmbio e pagamento gerenciados de forma confiável."
 
 #: home/templates/home/platform.html:875
-#, fuzzy
-#| msgid "multi-language portal for documents and payroll history."
 msgid ""
 "<strong>Local experience:</strong> multi-language portal for documents and "
 "payroll history."
-msgstr "portal multi-idioma para documentos e histórico de folha de pagamento."
+msgstr ""
+"<strong>Experiência local:</strong> portal multi-idioma para documentos e "
+"histórico de folha de pagamento."
 
 #: home/templates/home/platform.html:876
-#, fuzzy
-#| msgid "the same quality UX across every location."
 msgid ""
 "<strong>Consistent standard:</strong> the same quality UX across every "
 "location."
-msgstr "a mesma experiência de usuário de qualidade em todas as localidades."
+msgstr ""
+"<strong>Padrão consistente:</strong> a mesma experiência de usuário de "
+"qualidade em todas as localidades."
 
 #: home/templates/home/platform.html:887
 msgid "Operational Precision"
@@ -1479,34 +1464,23 @@ msgstr ""
 "clareza executiva desde o primeiro dia."
 
 #: home/templates/home/platform.html:924
-#, fuzzy
-#| msgid "Ready to bring global payroll under one roof?"
 msgid "Bring global payroll under one roof"
-msgstr "Pronto para unificar a folha de pagamento global?"
+msgstr "Unifique a folha de pagamento global"
 
 #: home/templates/home/platform.html:927
-#, fuzzy
-#| msgid ""
-#| "ExactusPay gives you a single source of truth, consistent reporting, and "
-#| "compliance-ready processes — without the typical complexity."
 msgid ""
 "Get a single source of truth, standardised reporting, and compliance-ready "
 "processes — without the typical global payroll complexity."
 msgstr ""
-"O ExactusPay oferece uma única fonte da verdade, relatórios consistentes e "
-"processos prontos para conformidade — sem a complexidade típica."
+"Obtenha uma única fonte da verdade, relatórios padronizados e processos "
+"prontos para conformidade — sem a complexidade típica da folha de pagamento "
+"global."
 
 #: home/templates/home/pricing.html:646
 msgid "Transparent pricing for global payroll"
 msgstr "Preços transparentes para folha de pagamento global"
 
 #: home/templates/home/pricing.html:648
-#, fuzzy
-#| msgid ""
-#| "ExactusPay believes in pricing that is as clear and transparent as our "
-#| "payroll reporting. We understand that every business has a unique "
-#| "footprint, which is why our pricing model is tailored to the specific "
-#| "countries and regions where you operate."
 msgid ""
 "\n"
 "                    ExactusPay believes in pricing that is as clear and "
@@ -1515,10 +1489,12 @@ msgid ""
 "specific countries and regions where you operate.\n"
 "                    "
 msgstr ""
-"A ExactusPay acredita em preços tão claros e transparentes quanto nossos "
-"relatórios de folha de pagamento. Entendemos que cada negócio tem uma pegada "
-"única, e é por isso que nosso modelo de preços é adaptado aos países e "
-"regiões específicos onde você opera."
+"\n"
+"                    A ExactusPay acredita em preços tão claros e "
+"transparentes quanto nossos relatórios de folha de pagamento. Entendemos que "
+"cada negócio tem uma pegada única, e é por isso que nosso modelo de preços é "
+"adaptado aos países e regiões específicos onde você opera.\n"
+"                    "
 
 #: home/templates/home/pricing.html:659
 msgid "Simple & Predictable"
@@ -1628,10 +1604,8 @@ msgstr ""
 "informações pessoais em vários idiomas."
 
 #: home/templates/home/pricing.html:717
-#, fuzzy
-#| msgid "Dedicated Support"
 msgid "24/7 Native Support"
-msgstr "Suporte Dedicado"
+msgstr "Suporte Nativo 24/7"
 
 #: home/templates/home/pricing.html:719
 msgid ""
@@ -1641,6 +1615,11 @@ msgid ""
 "ensuring your LATAM operations never sleep.\n"
 "                            "
 msgstr ""
+"\n"
+"                            Acesse nossa equipe de especialistas 24 horas "
+"por dia. Fornecemos assistência 24 horas com fluência nativa em português e "
+"espanhol, garantindo que suas operações na América Latina nunca parem.\n"
+"                            "
 
 #: home/templates/home/pricing.html:732
 msgid "Regional Pricing"
@@ -1689,10 +1668,8 @@ msgid "Local tax expertise"
 msgstr "Expertise tributária local"
 
 #: home/templates/home/pricing.html:756
-#, fuzzy
-#| msgid "Portuguese & Spanish support"
 msgid "24/7 Portuguese & Spanish support"
-msgstr "Suporte em português e espanhol"
+msgstr "Suporte 24/7 em português e espanhol"
 
 #: home/templates/home/pricing.html:761
 msgid "Europe"
@@ -1771,11 +1748,6 @@ msgid "Get Your Custom Quote"
 msgstr "Obtenha Seu Orçamento Personalizado"
 
 #: home/templates/home/pricing.html:816
-#, fuzzy
-#| msgid ""
-#| "Because global expansion looks different for every company, we don't use "
-#| "a 'one size fits all' price tag. To give you the most accurate and "
-#| "competitive rate, we need to understand your specific needs."
 msgid ""
 "\n"
 "                    Because global expansion looks different for every "
@@ -1784,9 +1756,11 @@ msgid ""
 "needs.\n"
 "                    "
 msgstr ""
-"Como a expansão global é diferente para cada empresa, não usamos um preço "
-"único. Para lhe oferecer a taxa mais precisa e competitiva, precisamos "
-"entender suas necessidades específicas."
+"\n"
+"                    Como a expansão global é diferente para cada empresa, "
+"não usamos um preço único. Para lhe oferecer a taxa mais precisa e "
+"competitiva, precisamos entender suas necessidades específicas.\n"
+"                    "
 
 #: home/templates/home/pricing.html:820
 msgid "Ready to see your numbers?"
@@ -2090,57 +2064,9 @@ msgstr ""
 "suas operações de folha de pagamento transfronteiriças."
 
 #: home/templates/home/security.html:945
-#, fuzzy
-#| msgid "Request a demo"
 msgid "Request a Demo"
-msgstr "Solicitar uma demonstração"
+msgstr "Solicitar uma Demonstração"
 
 #: home/templates/home/security.html:1001
-#, fuzzy
-#| msgid "All rights reserved."
 msgid "©  ExactusPay. All rights reserved."
-msgstr "Todos os direitos reservados."
-
-#~ msgid "ExactusPay | Global Payroll Intelligence Platform"
-#~ msgstr ""
-#~ "ExactusPay | Plataforma de Inteligência para Folha de Pagamento Global"
-
-#, fuzzy
-#~| msgid "Transparent & Flexible Pricing"
-#~ msgid "ExactusPay | Transparent Pricing"
-#~ msgstr "Preços Transparentes e Flexíveis"
-
-#, fuzzy
-#~| msgid "Enterprise Security"
-#~ msgid "ExactusPay | Enterprise Security"
-#~ msgstr "Segurança Empresarial"
-
-#~ msgid "LATAM"
-#~ msgstr "América Latina"
-
-#~ msgid "Asia"
-#~ msgstr "Ásia"
-
-#~ msgid "Global"
-#~ msgstr "Global"
-
-#~ msgid "Evidence trails:"
-#~ msgstr "Rastros de evidência:"
-
-#~ msgid "Operational consistency:"
-#~ msgstr "Consistência operacional:"
-
-#~ msgid "Lower admin load:"
-#~ msgstr "Menor carga administrativa:"
-
-#~ msgid "FX handled centrally:"
-#~ msgstr "Câmbio gerenciado centralmente:"
-
-#~ msgid "Local experience:"
-#~ msgstr "Experiência local:"
-
-#~ msgid "Consistent standard:"
-#~ msgstr "Padrão consistente:"
-
-#~ msgid "Security highlights"
-#~ msgstr "Destaques de segurança"
+msgstr "© ExactusPay. Todos os direitos reservados."
