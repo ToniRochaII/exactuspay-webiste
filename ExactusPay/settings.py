@@ -1,13 +1,23 @@
 from __future__ import annotations
 
 import os
+import dj_database_url
+
+
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
-DEBUG = os.environ.get("DEBUG", "0") == "1"
+# -----------------------------------------------------------------------------
+# Core
+# -----------------------------------------------------------------------------
+DEBUG = True
 
+SECRET_KEY = os.environ.get("SECRET_KEY") or ("dev-secret-key" if DEBUG else None)
+if not SECRET_KEY:
+    raise RuntimeError("SECRET_KEY missing in production (DEBUG=False). Set it in Render env vars.")
+
+SECRET_KEY = SECRET_KEY or "dev-secret-key"
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
@@ -17,17 +27,33 @@ ALLOWED_HOSTS = [
     ".onrender.com",
 ]
 
+# If Render provides an external URL, trust it for CSRF too
+RENDER_EXTERNAL_URL = os.environ.get("RENDER_EXTERNAL_URL", "").strip()
+
 CSRF_TRUSTED_ORIGINS = [
     "https://exactuspay.com",
     "https://www.exactuspay.com",
-    "http://127.0.0.1",
-    "http://localhost",
 ]
+if RENDER_EXTERNAL_URL.startswith("https://"):
+    CSRF_TRUSTED_ORIGINS.append(RENDER_EXTERNAL_URL)
+
+if DEBUG:
+    CSRF_TRUSTED_ORIGINS += [
+        "http://127.0.0.1",
+        "http://localhost",
+        "https://127.0.0.1",
+        "https://localhost",
+    ]
 
 # Render / proxy headers (safe to keep)
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-USE_X_FORWARDED_HOST = True
+# Render commonly sets one of these vars; using either is more robust than RENDER=="true"
+if os.environ.get("RENDER") or RENDER_EXTERNAL_URL:
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    USE_X_FORWARDED_HOST = True
 
+# -----------------------------------------------------------------------------
+# Apps / Middleware
+# -----------------------------------------------------------------------------
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -42,7 +68,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.locale.LocaleMiddleware",  # must be after sessions
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -55,7 +81,7 @@ ROOT_URLCONF = "ExactusPay.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],
+        "DIRS": [BASE_DIR / "home" / "templates",],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -71,6 +97,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "ExactusPay.wsgi.application"
 
+# -----------------------------------------------------------------------------
+# Database
+# -----------------------------------------------------------------------------
+# Marketing website can be SQLite; Render filesystem may be ephemeral.
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -78,6 +108,9 @@ DATABASES = {
     }
 }
 
+# -----------------------------------------------------------------------------
+# Password validation
+# -----------------------------------------------------------------------------
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -85,50 +118,93 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-# i18n
+# -----------------------------------------------------------------------------
+# i18n / l10n
+# -----------------------------------------------------------------------------
 LANGUAGE_CODE = "en"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
+# Per your preference: Portuguese translations (no Spanish)
 LANGUAGES = [
     ("en", "English"),
-    ("es", "Español"),
     ("pt", "Português"),
+    ("es", "Español"),
+    ("ru", "Русский"),
+    ("ar", "العربية"),
+    ("fr", "Français"),
+    ("de", "Deutsch"),
+    ("pl", "Polski"),
+    ("it", "Italiano"),
+    ("id", "Indonesian"),
+    ("th", "ไทย"),
+    ("sw", "Swahili"),
+
+
+
 ]
 
 LOCALE_PATHS = [BASE_DIR / "locale"]
 
-# static
+# -----------------------------------------------------------------------------
+# Static files (WhiteNoise)
+# -----------------------------------------------------------------------------
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_DIRS = [BASE_DIR / "static"]
+
+# Only include STATICFILES_DIRS if the folder exists (avoids warnings)
+_static_dir = BASE_DIR / "static"
+STATICFILES_DIRS = [_static_dir] if _static_dir.exists() else []
+
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+WHITENOISE_MANIFEST_STRICT = False
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-
 # -----------------------------------------------------------------------------
-# Email (Hostinger / ExtendCP SMTP)
+# Email (Hostinger SMTP over SSL 465)
 # -----------------------------------------------------------------------------
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-
-EMAIL_HOST = os.environ.get("EMAIL_HOST", "mta.extendcp.co.uk")
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.gmail.com")
 EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
 
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
+EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "1") == "1"
+EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL", "0") == "1"
 
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "no-reply@exactuspay.com")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "Mtfbwy130!")
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER or "no-reply@localhost")
 
+if DEBUG:
+    # Dev-friendly: don't require SMTP creds
+    # Option 1: print emails to console
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-DEFAULT_FROM_EMAIL = f"ExactusPay <{EMAIL_HOST_USER}>"
-SERVER_EMAIL = DEFAULT_FROM_EMAIL
-
-DEMO_REQUEST_TO_EMAIL = os.environ.get(
-    "DEMO_REQUEST_TO_EMAIL",
-    "antonio.rocha@exactuspay.com",
-)
+    # (Optional) If you prefer file backend:
+    # EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+    # EMAIL_FILE_PATH = BASE_DIR / "tmp_emails"
+else:
+    # Production: fail fast if missing
+    if not EMAIL_HOST_PASSWORD:
+        raise RuntimeError("EMAIL_HOST_PASSWORD is missing. Set it in Render env vars.")
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 EMAIL_TIMEOUT = 20
+
+
+# -----------------------------------------------------------------------------
+# Security (production)
+# -----------------------------------------------------------------------------
+if not DEBUG:
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True
+
+    # Recommended security headers
+    SECURE_HSTS_SECONDS = int(os.environ.get("SECURE_HSTS_SECONDS", "3600"))  # start small; raise to 31536000 later
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+    X_FRAME_OPTIONS = "DENY"

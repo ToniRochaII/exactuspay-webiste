@@ -1,51 +1,36 @@
-{% load i18n %} {% get_current_language as LANGUAGE_CODE %} {%
-get_available_languages as LANGUAGES %} {% get_language_info_list for LANGUAGES
-as languages %}
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+{% get_available_languages as LANGUAGES %}
+{% get_language_info_list for LANGUAGES as languages %}
 <!doctype html>
 <html lang="{{ LANGUAGE_CODE }}">
   <head>
-    <!-- Google tag (gtag.js) -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-XTL69YL5WC"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-
-      gtag("config", "G-XTL69YL5WC");
-    </script>
-
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
     <title>
-      {% trans "Global Payroll Software | Multi-Country Payroll & Compliance Platform | ExactusPay" %}
+      {% trans "Global Payroll Software | Multi-Country Payroll & Compliance
+      Platform | ExactusPay" %}
     </title>
 
     <meta
       name="description"
       content="ExactusPay is a powerful global payroll software delivering multi-country payroll, automated compliance, real-time workforce analytics, standardized reporting, and payroll simulations. Manage international payroll accurately, securely, and at scale from one intelligent platform."
     />
-
     <meta
       name="keywords"
       content="global payroll software, multi-country payroll, international payroll system, payroll compliance software, global payroll platform, payroll automation, payroll simulations, workforce analytics, multinational payroll management, cloud payroll solution, global HR payroll, payroll reporting software, international payroll compliance, scalable payroll platform"
     />
-
     <meta name="author" content="ExactusPay" />
     <meta
       name="robots"
       content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1"
     />
-    <meta name="googlebot" content="index, follow" />
-    <meta name="bingbot" content="index, follow" />
+
     <link rel="canonical" href="https://www.exactuspay.com/" />
 
-    <!-- Language & International -->
-    <meta http-equiv="content-language" content="{{ LANGUAGE_CODE }}" />
     <link rel="alternate" hreflang="en" href="https://www.exactuspay.com/" />
     <link rel="alternate" hreflang="pt" href="https://www.exactuspay.com/pt/" />
     <link rel="alternate" hreflang="es" href="https://www.exactuspay.com/es/" />
@@ -55,7 +40,6 @@ as languages %}
       href="https://www.exactuspay.com/"
     />
 
-    <!-- Open Graph (Facebook / LinkedIn) -->
     <meta property="og:type" content="website" />
     <meta
       property="og:title"
@@ -72,7 +56,6 @@ as languages %}
     />
     <meta property="og:site_name" content="ExactusPay" />
 
-    <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="ExactusPay | Global Payroll Software" />
     <meta
@@ -84,35 +67,41 @@ as languages %}
       content="https://www.exactuspay.com/static/img/og-exactuspay.png"
     />
 
-    <!-- App / Platform Identity -->
     <meta name="application-name" content="ExactusPay" />
     <meta name="apple-mobile-web-app-title" content="ExactusPay" />
     <meta name="theme-color" content="#1f4b7a" />
 
-    <!-- Performance -->
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
 
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
+
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-XTL69YL5WC"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+      gtag("config", "G-XTL69YL5WC");
+    </script>
 
     <style>
       :root {
         --color-primary: #1f4b7ae6;
         --color-secondary: rgba(71, 84, 128, 0.9);
         --color-accent: rgba(103, 170, 199, 0.9);
-        --color-light: rgba(116, 181, 204, 0.9);
-        --color-mint: rgba(237, 245, 243, 0.9);
-
         --color-primary-solid: rgb(31, 75, 122);
-        --color-secondary-solid: rgb(71, 84, 128);
-        --color-accent-solid: rgb(243, 246, 247);
 
         --gradient-midnight: linear-gradient(90deg, #000814 0%, #1f4b7a 100%);
         --gradient-testimonials: linear-gradient(
@@ -122,9 +111,7 @@ as languages %}
         );
 
         --bg-primary: #ffffff;
-        --bg-secondary: #f8fafc;
         --bg-tertiary: #f1f5f9;
-        --bg-card: #ffffff;
 
         --text-primary: #0f172a;
         --text-secondary: #475569;
@@ -148,10 +135,15 @@ as languages %}
       html {
         scroll-behavior: smooth;
       }
-
       body {
-        font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
-        font-weight: 400;
+        font-family:
+          "Inter",
+          system-ui,
+          -apple-system,
+          Segoe UI,
+          Roboto,
+          Arial,
+          sans-serif;
         background: var(--bg-primary);
         color: var(--text-primary);
         line-height: 1.6;
@@ -164,6 +156,24 @@ as languages %}
         padding: 0 24px;
       }
 
+      /* Skip link */
+      .skip-link {
+        position: absolute;
+        top: -44px;
+        left: 16px;
+        padding: 10px 14px;
+        border-radius: 12px;
+        background: #fff;
+        color: #0f172a;
+        text-decoration: none;
+        box-shadow: var(--shadow-md);
+        z-index: 2000;
+        transition: top 0.2s ease;
+      }
+      .skip-link:focus {
+        top: 16px;
+      }
+
       /* Typography */
       h1,
       h2,
@@ -171,45 +181,41 @@ as languages %}
       h4 {
         font-family: "Poppins", sans-serif;
         font-weight: 700;
-        line-height: 1.2;
+        line-height: 1.15;
       }
-
       h1 {
-        font-size: 4rem;
-        margin-bottom: 24px;
+        font-size: clamp(2.1rem, 5vw, 4rem);
+        margin-bottom: 20px;
         background: linear-gradient(135deg, #ffffff, #f0f9ff);
         -webkit-background-clip: text;
         background-clip: text;
         color: transparent;
       }
-
       h2 {
-        font-size: 3.2rem;
-        margin-bottom: 20px;
-        color: var(--text-primary);
+        font-size: clamp(1.8rem, 4vw, 3.2rem);
+        margin-bottom: 16px;
       }
       h3 {
-        font-size: 1.8rem;
-        margin-bottom: 16px;
-        color: var(--color-primary-solid);
+        font-size: 1.5rem;
+        margin-bottom: 12px;
       }
       p {
         color: var(--text-secondary);
-        font-size: 1.125rem;
-        margin-bottom: 24px;
+        font-size: 1.05rem;
+        margin-bottom: 20px;
       }
 
       .section-title {
         text-align: center;
-        margin-bottom: 60px;
+        margin-bottom: 48px;
       }
       .section-title .subtitle {
-        color: var(--color-secondary-solid);
-        font-weight: 600;
+        color: rgba(71, 84, 128, 1);
+        font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 3px;
-        margin-bottom: 16px;
-        font-size: 14px;
+        letter-spacing: 2.5px;
+        margin-bottom: 12px;
+        font-size: 12px;
       }
 
       /* Buttons */
@@ -217,44 +223,50 @@ as languages %}
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        padding: 16px 32px;
-        border-radius: 40px;
-        font-weight: 600;
+        padding: 14px 24px;
+        border-radius: 999px;
+        font-weight: 700;
         font-size: 16px;
         text-decoration: none;
-        transition: all 0.3s ease;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease,
+          background 0.2s ease;
         border: none;
         cursor: pointer;
         gap: 10px;
-        position: relative;
-        overflow: hidden;
+        white-space: nowrap;
+      }
+      .btn:focus-visible {
+        outline: 3px solid rgba(150, 224, 217, 0.9);
+        outline-offset: 3px;
       }
 
       .btn-primary {
         background: var(--color-primary-solid);
-        color: white;
+        color: #fff;
         box-shadow: 0 8px 20px rgba(31, 75, 122, 0.2);
       }
       .btn-primary:hover {
-        transform: translateY(-3px);
+        transform: translateY(-2px);
         box-shadow: var(--shadow-xl);
         background: #0f3a5e;
       }
 
       .btn-secondary {
-        background: rgba(255, 255, 255, 0.1);
-        color: white;
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.12);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.22);
         backdrop-filter: blur(10px);
       }
       .btn-secondary:hover {
         background: rgba(255, 255, 255, 0.2);
-        transform: translateY(-3px);
+        transform: translateY(-2px);
       }
 
       .btn-lg {
-        padding: 18px 42px;
-        font-size: 18px;
+        padding: 16px 28px;
+        font-size: 17px;
       }
 
       /* Header */
@@ -266,59 +278,51 @@ as languages %}
         z-index: 1000;
         background: var(--gradient-midnight);
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        padding: 20px 0;
-        transition: all 0.3s ease;
+        padding: 14px 0;
+        transition:
+          transform 0.25s ease,
+          box-shadow 0.25s ease;
+        will-change: transform;
       }
+
       .nav-container {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 18px;
+        gap: 14px;
       }
       .sidebar-brand {
-        color: white;
-        display: block;
-        font-size: 1.8rem;
-        font-weight: 700;
-        text-decoration: none;
+        color: #fff;
+        font-size: 1.6rem;
+        font-weight: 800;
       }
 
       .nav-links {
         display: flex;
-        gap: 40px;
+        gap: 28px;
         list-style: none;
       }
       .nav-links a {
-        color: rgba(255, 255, 255, 0.85);
+        color: rgba(255, 255, 255, 0.86);
         text-decoration: none;
-        font-weight: 500;
-        transition: all 0.3s;
-        position: relative;
+        font-weight: 600;
+        transition: color 0.2s ease;
         padding: 8px 0;
-        white-space: nowrap;
-      }
-      .nav-links a::after {
-        content: "";
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 0;
-        height: 2px;
-        background: #96e0d9;
-        transition: width 0.3s ease;
       }
       .nav-links a:hover {
-        color: white;
-      }
-      .nav-links a:hover::after {
-        width: 100%;
+        color: #fff;
       }
 
       .nav-actions {
         display: flex;
-        gap: 12px;
+        gap: 10px;
         align-items: center;
-        flex-wrap: wrap;
+      }
+
+      .nav-actions .btn {
+        font-size: 0.9rem;
+        padding: 10px 20px;
+        font-weight: 700;
       }
 
       /* Language switcher */
@@ -326,20 +330,17 @@ as languages %}
         display: flex;
         align-items: center;
       }
+
       .lang-pill {
         display: inline-flex;
         align-items: center;
-        gap: 10px;
-        padding: 10px 12px;
+        gap: 8px;
+        padding: 6px 10px;
         border-radius: 999px;
         background: rgba(255, 255, 255, 0.08);
         border: 1px solid rgba(255, 255, 255, 0.16);
         backdrop-filter: blur(10px);
         box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
-        margin-right: 6px;
-      }
-      .lang-pill i {
-        color: #96e0d9;
       }
 
       .lang-select {
@@ -349,125 +350,185 @@ as languages %}
         background: transparent;
         border: none;
         color: rgba(255, 255, 255, 0.92);
-        font-weight: 800;
-        font-size: 0.95rem;
-        padding: 2px 28px 2px 4px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        line-height: 1;
+        padding: 0 24px 0 2px;
         outline: none;
         cursor: pointer;
-        letter-spacing: 0.02em;
+      }
+
+      .lang-caret {
+        margin-left: -18px;
+        pointer-events: none;
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 0.75rem;
       }
       .lang-select option {
         color: #0f172a;
       }
-      .lang-caret {
-        margin-left: -22px;
-        pointer-events: none;
-        color: rgba(255, 255, 255, 0.75);
-        font-size: 0.85rem;
-      }
-      .lang-submit {
+
+      /* Mobile menu button */
+      .menu-btn {
         display: none;
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+      .menu-btn:focus-visible {
+        outline: 3px solid rgba(150, 224, 217, 0.9);
+        outline-offset: 3px;
+      }
+
+      /* Mobile drawer */
+      .mobile-nav {
+        display: none;
+        position: fixed;
+        top: 72px;
+        left: 0;
+        width: 100%;
+        background: rgba(0, 8, 20, 0.96);
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        z-index: 999;
+        padding: 16px 0;
+      }
+      .mobile-nav.open {
+        display: block;
+      }
+      .mobile-nav .container {
+        display: grid;
+        gap: 14px;
+      }
+      .mobile-links {
+        list-style: none;
+        display: grid;
+        gap: 10px;
+      }
+      .mobile-links a {
+        display: block;
+        padding: 12px 14px;
+        border-radius: 14px;
+        text-decoration: none;
+        color: rgba(255, 255, 255, 0.92);
+        font-weight: 650;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.05);
+      }
+      .mobile-links a:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+      }
+
+      .mobile-actions {
+        display: grid;
+        gap: 10px;
+        margin-top: 6px;
+      }
+      .mobile-actions .btn {
+        width: 100%;
+      }
+      .mobile-lang {
+        margin-top: 6px;
       }
 
       /* Hero */
       .hero {
-        padding: 180px 0 120px;
-        position: relative;
-        overflow: hidden;
+        padding: 160px 0 96px;
         background: var(--gradient-midnight);
       }
       .hero-content {
         max-width: 1000px;
         margin: 0 auto;
         text-align: center;
-        position: relative;
-        z-index: 2;
       }
       .hero p {
-        font-size: 1.3rem;
-        margin-bottom: 40px;
+        font-size: clamp(1.05rem, 2.2vw, 1.3rem);
+        margin-bottom: 28px;
         color: rgba(255, 255, 255, 0.9);
         max-width: 800px;
         margin-left: auto;
         margin-right: auto;
       }
+
       .hero-actions {
         display: flex;
-        gap: 20px;
+        gap: 14px;
         justify-content: center;
-        margin-bottom: 70px;
         flex-wrap: wrap;
+        margin-bottom: 42px;
       }
       .hero-stats {
         display: flex;
         justify-content: center;
-        gap: 30px;
-        margin-top: 40px;
+        gap: 16px;
         flex-wrap: wrap;
       }
       .stat-item {
         text-align: center;
-        padding: 28px 32px;
+        padding: 18px 18px;
         background: rgba(255, 255, 255, 0.05);
         backdrop-filter: blur(10px);
         border-radius: var(--border-radius);
         border: 1px solid rgba(255, 255, 255, 0.1);
-        min-width: 200px;
-        transition: all 0.3s ease;
-      }
-      .stat-item:hover {
-        transform: translateY(-5px);
-        background: rgba(255, 255, 255, 0.1);
-        border-color: rgba(255, 255, 255, 0.3);
+        min-width: 150px;
       }
       .stat-number {
-        font-size: 2.8rem;
-        font-weight: 800;
-        margin-bottom: 8px;
-        color: white;
+        font-size: 2.2rem;
+        font-weight: 900;
+        margin-bottom: 6px;
+        color: #fff;
       }
       .stat-label {
-        color: rgba(255, 255, 255, 0.7);
-        font-size: 14px;
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 12px;
         text-transform: uppercase;
-        letter-spacing: 1.5px;
+        letter-spacing: 1.2px;
       }
 
-      /* Features */
+      /* Sections */
       .features {
-        padding: 120px 0;
-        background: #ffffff;
+        padding: 96px 0;
+        background: #fff;
       }
       .features-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 30px;
-        margin-top: 50px;
+        gap: 22px;
+        margin-top: 36px;
       }
       .feature-card {
-        background: #ffffff;
+        background: #fff;
         border-radius: var(--border-radius-lg);
-        padding: 40px 28px;
+        padding: 32px 22px;
         border: 1px solid var(--border-color);
         box-shadow: var(--shadow-md);
-        transition: all 0.4s ease;
-        text-align: left;
+        transition:
+          transform 0.25s ease,
+          box-shadow 0.25s ease,
+          border-color 0.25s ease;
       }
       .feature-card:hover {
-        transform: translateY(-8px);
+        transform: translateY(-6px);
         border-color: var(--color-primary-solid);
         box-shadow: var(--shadow-xl);
       }
       .feature-icon {
-        width: 64px;
-        height: 64px;
-        border-radius: 18px;
+        width: 56px;
+        height: 56px;
+        border-radius: 16px;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 0 24px 0;
-        font-size: 26px;
-        color: white;
+        margin: 0 0 18px 0;
+        font-size: 22px;
+        color: #fff;
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
       }
       .features-grid .feature-card:nth-child(1) .feature-icon {
@@ -489,32 +550,20 @@ as languages %}
         background: linear-gradient(135deg, #06b6d4, #0891b2);
       }
 
-      .feature-card h3 {
-        font-size: 1.5rem;
-        margin-bottom: 12px;
-        color: var(--text-primary);
-      }
-      .feature-card p {
-        color: var(--text-secondary);
-        font-size: 1rem;
-        margin-bottom: 0;
-        line-height: 1.6;
-      }
-
       /* Platform */
       .platform {
-        padding: 120px 0;
+        padding: 96px 0;
         background: rgba(31, 75, 122, 0.95);
-        color: white;
+        color: #fff;
       }
       .platform-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 60px;
+        gap: 44px;
         align-items: center;
       }
       .platform-content h2 {
-        color: white;
+        color: #fff;
       }
       .platform-content .section-description {
         color: rgba(255, 255, 255, 0.9);
@@ -524,33 +573,31 @@ as languages %}
       }
 
       .platform-feature {
-        margin-bottom: 30px;
+        margin-bottom: 22px;
       }
       .platform-feature h3 {
-        color: white;
-        margin-bottom: 8px;
-        font-size: 1.6rem;
+        color: #fff;
+        margin-bottom: 6px;
+        font-size: 1.35rem;
       }
       .platform-feature h3 i {
         color: #96e0d9;
-        margin-right: 12px;
+        margin-right: 10px;
       }
       .platform-feature p {
-        color: rgba(255, 255, 255, 0.8);
-        margin-left: 42px;
+        color: rgba(255, 255, 255, 0.82);
+        margin-left: 38px;
       }
 
       .platform-visual {
         position: relative;
-        height: 500px;
+        height: 520px;
       }
-
       .floating-card {
         position: absolute;
-        background: #ffffff;
+        background: #fff;
         border-radius: 20px;
-        border: none;
-        padding: 28px;
+        padding: 24px;
         box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
         width: 300px;
       }
@@ -558,7 +605,7 @@ as languages %}
         display: flex;
         align-items: center;
         gap: 12px;
-        margin-bottom: 16px;
+        margin-bottom: 12px;
       }
       .card-icon {
         width: 44px;
@@ -567,12 +614,12 @@ as languages %}
         display: flex;
         align-items: center;
         justify-content: center;
-        color: white;
+        color: #fff;
         font-size: 20px;
       }
 
       .card-1 {
-        top: 50px;
+        top: 34px;
         left: 0;
         animation: float 6s ease-in-out infinite;
       }
@@ -584,7 +631,6 @@ as languages %}
       }
 
       .card-2 {
-        top: 222px;
         left: 60px;
         animation: float 6s ease-in-out infinite 1s;
       }
@@ -596,7 +642,7 @@ as languages %}
       }
 
       .card-3 {
-        top: 400px;
+        top: 360px;
         left: 120px;
         animation: float 6s ease-in-out infinite 2s;
       }
@@ -619,39 +665,42 @@ as languages %}
 
       /* Security */
       .security {
-        padding: 100px 0;
+        padding: 88px 0;
         background: var(--bg-tertiary);
       }
       .security-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 24px;
-        margin-top: 50px;
+        gap: 18px;
+        margin-top: 34px;
       }
       .security-item {
         text-align: center;
-        padding: 40px 24px;
-        background: var(--bg-card);
+        padding: 28px 18px;
+        background: #fff;
         border-radius: var(--border-radius);
         border: 1px solid var(--border-color);
         box-shadow: var(--shadow-md);
-        transition: all 0.3s ease;
+        transition:
+          transform 0.25s ease,
+          box-shadow 0.25s ease,
+          border-color 0.25s ease;
       }
       .security-item:hover {
         border-color: var(--color-primary-solid);
-        transform: translateY(-5px);
+        transform: translateY(-4px);
         box-shadow: var(--shadow-lg);
       }
       .security-icon {
-        width: 72px;
-        height: 72px;
-        border-radius: 50%;
+        width: 64px;
+        height: 64px;
+        border-radius: 999px;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin: 0 auto 24px;
-        font-size: 28px;
-        color: white;
+        margin: 0 auto 16px;
+        font-size: 24px;
+        color: #fff;
       }
       .security-grid .security-item:nth-child(1) .security-icon {
         background: linear-gradient(135deg, #3b82f6, #2563eb);
@@ -666,22 +715,13 @@ as languages %}
         background: linear-gradient(135deg, #f97316, #ea580c);
       }
 
-      .security-item h3 {
-        font-size: 1.3rem;
-        margin-bottom: 12px;
-      }
-      .security-item p {
-        font-size: 0.95rem;
-        margin-bottom: 0;
-      }
-
       /* Testimonials */
       .testimonials {
-        padding: 120px 0;
+        padding: 96px 0;
         background: var(--gradient-testimonials);
       }
       .testimonials h2 {
-        color: #ffffff;
+        color: #fff;
       }
       .testimonials .subtitle {
         color: #cef2ea;
@@ -691,113 +731,111 @@ as languages %}
       }
 
       .testimonial-card {
-        background: var(--bg-card);
+        background: #fff;
         border-radius: var(--border-radius-lg);
-        padding: 50px;
+        padding: 34px 24px;
         max-width: 900px;
-        margin: 40px auto 0;
+        margin: 28px auto 0;
         box-shadow: var(--shadow-lg);
         position: relative;
       }
       .testimonial-card::before {
         content: '"';
         position: absolute;
-        top: 20px;
-        left: 30px;
-        font-size: 120px;
+        top: 12px;
+        left: 16px;
+        font-size: 96px;
         color: var(--color-primary-solid);
-        opacity: 0.1;
+        opacity: 0.12;
         font-family: serif;
+        line-height: 1;
       }
       .testimonial-content {
-        font-size: 1.2rem;
+        font-size: 1.05rem;
         line-height: 1.7;
-        margin-bottom: 30px;
-        position: relative;
-        z-index: 2;
+        margin-bottom: 18px;
         color: var(--text-secondary);
         font-style: italic;
       }
+
       .testimonial-author {
         display: flex;
         align-items: center;
-        gap: 20px;
+        gap: 14px;
       }
       .author-avatar {
-        width: 60px;
-        height: 60px;
+        width: 54px;
+        height: 54px;
         background: var(--color-primary-solid);
-        border-radius: 50%;
+        border-radius: 999px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-weight: 700;
-        font-size: 20px;
-        color: white;
+        font-weight: 800;
+        font-size: 18px;
+        color: #fff;
+        flex: 0 0 auto;
       }
 
       /* CTA */
       .cta {
-        padding: 120px 0;
+        padding: 96px 0;
         background: var(--gradient-midnight);
-        position: relative;
-        overflow: hidden;
       }
       .cta-content {
-        max-width: 700px;
+        max-width: 720px;
         margin: 0 auto;
         text-align: center;
-        position: relative;
-        z-index: 2;
       }
       .cta h2 {
-        color: white;
-        margin-bottom: 20px;
+        color: #fff;
+        margin-bottom: 14px;
       }
       .cta p {
         color: rgba(255, 255, 255, 0.9);
-        font-size: 1.2rem;
-        margin-bottom: 40px;
+        font-size: 1.1rem;
+        margin-bottom: 22px;
       }
       .cta-actions {
         display: flex;
-        gap: 20px;
+        gap: 12px;
         justify-content: center;
         flex-wrap: wrap;
       }
-
       .btn-cta-primary {
-        background: white;
+        background: #fff;
         color: var(--color-primary-solid);
       }
 
       /* Footer */
       footer {
         background: var(--gradient-midnight);
-        padding: 80px 0 40px;
+        padding: 64px 0 34px;
         border-top: 1px solid rgba(255, 255, 255, 0.1);
       }
       .footer-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 40px;
-        margin-bottom: 60px;
+        gap: 28px;
+        margin-bottom: 44px;
       }
       .footer-col h4 {
-        color: #ffffff;
-        margin-bottom: 24px;
-        font-size: 18px;
+        color: #fff;
+        margin-bottom: 18px;
+        font-size: 16px;
       }
       .footer-links {
         list-style: none;
       }
       .footer-links li {
-        margin-bottom: 14px;
+        margin-bottom: 12px;
       }
       .footer-links a {
-        color: rgba(255, 255, 255, 0.8);
+        color: rgba(255, 255, 255, 0.82);
         text-decoration: none;
-        transition: all 0.3s;
+        transition:
+          transform 0.2s ease,
+          color 0.2s ease;
         display: flex;
         align-items: center;
         gap: 8px;
@@ -805,66 +843,63 @@ as languages %}
       }
       .footer-links a:hover {
         color: #96e0d9;
-        transform: translateX(5px);
+        transform: translateX(4px);
       }
 
       .footer-bottom {
-        padding-top: 40px;
+        padding-top: 28px;
         border-top: 1px solid rgba(255, 255, 255, 0.1);
         display: flex;
         justify-content: space-between;
         align-items: center;
         flex-wrap: wrap;
-        gap: 20px;
+        gap: 18px;
       }
 
       .social-links {
         display: flex;
-        gap: 16px;
+        gap: 12px;
       }
       .social-links a {
-        width: 44px;
-        height: 44px;
-        background: transparent;
+        width: 42px;
+        height: 42px;
         border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: white;
+        color: #fff;
         font-size: 18px;
-        transition: all 0.3s;
+        transition:
+          transform 0.2s ease,
+          background 0.2s ease,
+          color 0.2s ease,
+          border-color 0.2s ease;
         text-decoration: none;
         border: 1px solid rgba(255, 255, 255, 0.3);
       }
       .social-links a:hover {
-        background: white;
+        background: #fff;
         color: var(--color-primary-solid);
-        transform: translateY(-3px);
-        border-color: white;
+        transform: translateY(-2px);
+        border-color: #fff;
       }
 
       .copyright {
-        color: rgba(255, 255, 255, 0.6);
+        color: rgba(255, 255, 255, 0.65);
         font-size: 14px;
       }
 
-      /* Responsive */
+      /* Responsive improvements */
       @media (max-width: 1024px) {
-        h1 {
-          font-size: 3.2rem;
-        }
-        h2 {
-          font-size: 2.6rem;
-        }
         .features-grid {
           grid-template-columns: repeat(2, 1fr);
         }
         .platform-grid {
           grid-template-columns: 1fr;
-          gap: 40px;
+          gap: 34px;
         }
         .platform-visual {
-          height: 450px;
+          height: 440px;
           order: -1;
         }
         .security-grid {
@@ -874,535 +909,552 @@ as languages %}
           grid-template-columns: repeat(2, 1fr);
         }
         .nav-links {
-          gap: 24px;
+          gap: 18px;
         }
       }
+
       @media (max-width: 860px) {
         .nav-links {
           display: none;
         }
+        .menu-btn {
+          display: inline-flex;
+        }
+        header {
+          padding: 12px 0;
+        }
       }
+
       @media (max-width: 768px) {
-        h1 {
-          font-size: 2.5rem;
+        .container {
+          padding: 0 16px;
         }
-        h2 {
-          font-size: 2rem;
-        }
+
         .hero {
-          padding: 150px 0 80px;
+          padding: 132px 0 76px;
         }
         .hero-actions {
           flex-direction: column;
           align-items: center;
         }
+        .hero-actions .btn {
+          width: 100%;
+          max-width: 420px;
+        }
+
         .hero-stats {
-          gap: 20px;
+          gap: 12px;
         }
         .stat-item {
-          min-width: 160px;
-          padding: 20px;
+          min-width: 148px;
+          padding: 16px;
+        }
+
+        .features {
+          padding: 76px 0;
         }
         .features-grid {
           grid-template-columns: 1fr;
         }
+
+        .platform {
+          padding: 76px 0;
+        }
         .platform-visual {
-          height: 400px;
+          height: 380px;
         }
         .floating-card {
-          width: 240px;
-          padding: 20px;
+          width: min(280px, 90vw);
+          padding: 18px;
+        }
+        .card-2 {
+          left: 20px;
+          top: 0px;
         }
         .card-3 {
           left: 20px;
           top: 240px;
         }
+
+        .security {
+          padding: 68px 0;
+        }
         .security-grid {
           grid-template-columns: 1fr;
+        }
+
+        .testimonials {
+          padding: 76px 0;
+        }
+        .testimonial-card {
+          padding: 26px 18px;
+        }
+        .testimonial-card::before {
+          font-size: 84px;
+        }
+
+        .cta {
+          padding: 76px 0;
         }
         .cta-actions {
           flex-direction: column;
           align-items: center;
         }
+        .cta-actions .btn {
+          width: 100%;
+          max-width: 420px;
+        }
+
         .footer-grid {
           grid-template-columns: 1fr;
         }
-        .btn {
-          width: 100%;
-          justify-content: center;
+        .footer-bottom {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .nav-actions .btn {
+          display: none;
         }
         .nav-actions {
-          width: 100%;
-          justify-content: flex-end;
+          gap: 8px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        * {
+          animation: none !important;
+          transition: none !important;
         }
       }
     </style>
   </head>
 
   <body>
-    {% include "partials/navbar.html" %}
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const observerOptions = { threshold: 0.1 };
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.style.opacity = "1";
-              entry.target.style.transform = "translateY(0)";
-            }
-          });
-        }, observerOptions);
 
-        document.querySelectorAll("section").forEach((section) => {
-          section.style.opacity = "0";
-          section.style.transform = "translateY(20px)";
-          section.style.transition = "all 0.8s ease-out";
-          observer.observe(section);
-        });
-      });
-    </script>
-
-    <!-- HEADER -->
     <header>
       <div class="container nav-container">
-        <a
-          href="{% url 'home:home' %}"
-          class="logo"
-          style="text-decoration: none"
-        >
+        <a href="{% url 'home:home' %}" class="logo" style="text-decoration: none">
           <div class="sidebar-brand">ExactusPay</div>
         </a>
 
         <ul class="nav-links">
           <li><a href="{% url 'home:home' %}">{% trans "Home" %}</a></li>
-          <li>
-            <a href="{% url 'home:features' %}">{% trans "Features" %}</a>
-          </li>
-          <li>
-            <a href="{% url 'home:platform' %}">{% trans "Platform" %}</a>
-          </li>
-          <li>
-            <a href="{% url 'home:security' %}">{% trans "Security" %}</a>
-          </li>
+          <li><a href="{% url 'home:features' %}">{% trans "Features" %}</a></li>
+          <li><a href="{% url 'home:platform' %}" style="color: #fff">{% trans "Platform" %}</a></li>
+          <li><a href="{% url 'home:security' %}">{% trans "Security" %}</a></li>
           <li><a href="{% url 'home:pricing' %}">{% trans "Pricing" %}</a></li>
         </ul>
 
         <div class="nav-actions">
-          <a
-            href="https://payroll.exactuspay.com/login"
-            class="btn btn-secondary"
-            >{% trans "Log In" %}</a
+          <button
+            class="menu-btn"
+            type="button"
+            aria-label="{% trans 'Open menu' %}"
+            aria-expanded="false"
+            aria-controls="mobileNav"
           >
-          <a href="{% url 'home:demo' %}" class="btn btn-primary"
-            >{% trans "Request Demo" %}</a
-          >
+            <i class="fas fa-bars"></i>
+          </button>
 
-          <!-- ✅ Language switcher -->
-          <form
-            class="lang-form"
-            action="{% url 'set_language' %}"
-            method="post"
-          >
+          <a href="https://payroll.exactuspay.com/login" class="btn btn-secondary">{% trans "Log In" %}</a>
+          <a href="{% url 'home:demo' %}" class="btn btn-primary">{% trans "Request Demo" %}</a>
+
+          <form class="lang-form" action="{% url 'set_language' %}" method="post">
             {% csrf_token %}
-            <input
-              type="hidden"
-              name="next"
-              value="{{ request.get_full_path }}"
-            />
-
+            <input type="hidden" name="next" value="{{ request.get_full_path }}" />
             <div class="lang-pill" title="{% trans 'Language' %}">
-              <select
-                class="lang-select"
-                name="language"
-                aria-label="{% trans 'Select language' %}"
-                onchange="this.form.submit()"
-              >
-                {% for lang in languages %} {% if lang.code == "pt" %}
-                <option
-                  value="pt"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇧🇷
-                </option>
-                {% elif lang.code == "es" %}
-                <option
-                  value="es"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇪🇸
-                </option>
-                {% elif lang.code == "en" %}
-                <option
-                  value="en"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇬🇧
-                </option>
-                {% elif lang.code == "ru" %}
-                <option
-                  value="ru"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇷🇺
-                </option>
-                {% else %}
-                <option value="{{ lang.code }}">{{ lang.code|upper }}</option>
-                {% endif %} {% endfor %}
+              <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="this.form.submit()">
+                {% for lang in languages %}
+                  {% if lang.code == "pt" %}
+                    <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷 Português</option>
+                  {% elif lang.code == "en" %}
+                    <option value="en" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇬🇧 English</option>
+                  {% elif lang.code == "es" %}
+                    <option value="es" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇪🇸 Español</option>
+                  {% elif lang.code == "ru" %}
+                    <option value="ru" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇷🇺 Русский</option>
+                  {% elif lang.code == "ar" %}
+                    <option value="ar" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇸🇦 العربية</option>
+                  {% elif lang.code == "fr" %}
+                    <option value="fr" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇫🇷 Français</option>
+                  {% elif lang.code == "de" %}
+                    <option value="de" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇩🇪 Deutsch</option>
+                  {% elif lang.code == "pl" %}
+                    <option value="pl" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇵🇱 Polski</option>
+                  {% elif lang.code == "it" %}
+                    <option value="it" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇹 Italiano</option>
+                  {% elif lang.code == "id" %}
+                    <option value="id" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇩 Indonesian</option>
+                  {% elif lang.code == "th" %}
+                    <option value="th" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇭 ไทย</option>
+                  {% elif lang.code == "sw" %}
+                    <option value="sw" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇿 Swahili</option>
+                  {% elif lang.code == "ha" %}
+                    <option value="ha" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇳🇬 Hausa</option>
+                  {% else %}
+                    <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>{{ lang.code|upper }}</option>
+                  {% endif %}
+                {% endfor %}
               </select>
-
-              <span class="lang-caret" aria-hidden="true">
-                <i class="fas fa-chevron-down"></i>
-              </span>
+              <span class="lang-caret" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
             </div>
           </form>
         </div>
       </div>
     </header>
 
-    <!-- HERO -->
-    <section class="hero">
+    <nav id="mobileNav" class="mobile-nav" aria-label="{% trans 'Mobile navigation' %}">
       <div class="container">
-        <div class="hero-content">
-          <h1>{% trans "Intelligent Global Payroll Platform" %}</h1>
+        <ul class="mobile-links">
+          <li><a href="{% url 'home:home' %}">{% trans "Home" %}</a></li>
+          <li><a href="{% url 'home:features' %}">{% trans "Features" %}</a></li>
+          <li><a href="{% url 'home:platform' %}">{% trans "Platform" %}</a></li>
+          <li><a href="{% url 'home:security' %}">{% trans "Security" %}</a></li>
+          <li><a href="{% url 'home:pricing' %}">{% trans "Pricing" %}</a></li>
+        </ul>
 
-          <p>
-            {% blocktrans trimmed %} Streamline global workforce management with
-            AI-driven compliance, real-time insights, and seamless payroll
-            processing across 40+ countries. {% endblocktrans %}
-          </p>
+        <div class="mobile-actions">
+          <a href="https://payroll.exactuspay.com/login" class="btn btn-secondary">{% trans "Log In" %}</a>
+          <a href="{% url 'home:demo' %}" class="btn btn-primary">{% trans "Request Demo" %}</a>
+        </div>
 
-          <div class="hero-actions">
-            <a href="{% url 'home:demo' %}" class="btn btn-primary btn-lg">
-              <i class="fas fa-play-circle"></i> {% trans "Watch Demo" %}
-            </a>
-          </div>
-
-          <div class="hero-stats">
-            <div class="stat-item">
-              <div class="stat-number">99.7%</div>
-              <div class="stat-label">{% trans "Accuracy Rate" %}</div>
+        <div class="mobile-lang">
+          <form class="lang-form" action="{% url 'set_language' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+            <div class="lang-pill" title="{% trans 'Language' %}">
+              <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="this.form.submit()">
+                {% for lang in languages %}
+                  {% if lang.code == "pt" %}
+                    <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷 Português</option>
+                  {% elif lang.code == "en" %}
+                    <option value="en" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇬🇧 English</option>
+                  {% elif lang.code == "es" %}
+                    <option value="es" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇪🇸 Español</option>
+                  {% elif lang.code == "ru" %}
+                    <option value="ru" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇷🇺 Русский</option>
+                  {% elif lang.code == "ar" %}
+                    <option value="ar" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇸🇦 العربية</option>
+                  {% elif lang.code == "fr" %}
+                    <option value="fr" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇫🇷 Français</option>
+                  {% elif lang.code == "de" %}
+                    <option value="de" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇩🇪 Deutsch</option>
+                  {% elif lang.code == "pl" %}
+                    <option value="pl" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇵🇱 Polski</option>
+                  {% elif lang.code == "it" %}
+                    <option value="it" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇹 Italiano</option>
+                  {% elif lang.code == "id" %}
+                    <option value="id" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇩 Indonesian</option>
+                  {% elif lang.code == "th" %}
+                    <option value="th" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇭 ไทย</option>
+                  {% elif lang.code == "sw" %}
+                    <option value="sw" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇿 Swahili</option>
+                  {% elif lang.code == "ha" %}
+                    <option value="ha" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇳🇬 Hausa</option>
+                  {% else %}
+                    <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>{{ lang.code|upper }}</option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+              <span class="lang-caret" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
             </div>
-            <div class="stat-item">
-              <div class="stat-number">40+</div>
-              <div class="stat-label">{% trans "Countries" %}</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-number">24</div>
-              <div class="stat-label">{% trans "Hours Support" %}</div>
-            </div>
-            <div class="stat-item">
-              <div class="stat-number">100%</div>
-              <div class="stat-label">{% trans "Compliance" %}</div>
-            </div>
-          </div>
+          </form>
         </div>
       </div>
-    </section>
+    </nav>
 
-    <!-- FEATURES -->
-    <section id="features" class="features">
-      <div class="container">
-        <div class="section-title">
-          <div class="subtitle">{% trans "Powerful Features" %}</div>
-          <h2>{% trans "Designed for Global Scale" %}</h2>
-          <p>
-            {% trans "Everything you need to manage complex global payroll
-            operations with confidence" %}
-          </p>
-        </div>
+    <main id="main">
+      <section class="hero">
+        <div class="container">
+          <div class="hero-content">
+            <h1>{% trans "Smart Global Payroll Platform" %}</h1>
 
-        <div class="features-grid">
-          <div class="feature-card">
-            <div class="feature-icon"><i class="fas fa-robot"></i></div>
-            <h3>{% trans "AI-Powered Compliance" %}</h3>
             <p>
-              {% trans "Automated regulatory updates and risk assessment across
-              all jurisdictions with machine learning algorithms." %}
+              {% blocktrans trimmed %}
+                Streamline global workforce management with AI-driven compliance,
+                real-time insights, and seamless payroll processing across 40+
+                countries.
+              {% endblocktrans %}
             </p>
-          </div>
 
-          <div class="feature-card">
-            <div class="feature-icon"><i class="fas fa-clock"></i></div>
-            <h3>{% trans "Real-time Analytics" %}</h3>
-            <p>
-              {% trans "Comprehensive dashboards with live insights into payroll
-              costs, compliance status, and operational metrics." %}
-            </p>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-icon"><i class="fas fa-bolt"></i></div>
-            <h3>{% trans "Instant Processing" %}</h3>
-            <p>
-              {% trans "Batch process thousands of payments across different
-              currencies and banking systems simultaneously." %}
-            </p>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
-            <h3>{% trans "Enterprise Security" %}</h3>
-            <p>
-              {% trans "Bank-grade encryption, multi-factor authentication, and
-              SOC 2 Type II certified infrastructure." %}
-            </p>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-icon">
-              <i class="fas fa-globe-americas"></i>
-            </div>
-            <h3>{% trans "Global Coverage" %}</h3>
-            <p>
-              {% trans "Seamless payroll processing across 40+ countries with
-              local compliance and tax expertise built-in." %}
-            </p>
-          </div>
-
-          <div class="feature-card">
-            <div class="feature-icon"><i class="fas fa-file-contract"></i></div>
-            <h3>{% trans "Audit Trail" %}</h3>
-            <p>
-              {% trans "Complete transparency with immutable records for every
-              transaction and compliance verification." %}
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- PLATFORM -->
-    <section id="platform" class="platform">
-      <div class="container">
-        <div class="platform-grid">
-          <div class="platform-content">
-            <div style="margin-bottom: 40px">
-              <div class="subtitle">{% trans "Unified Platform" %}</div>
-              <h2>{% trans "Everything in One Dashboard" %}</h2>
-              <p class="section-description">
-                {% trans "Manage your entire global payroll operation from a
-                single, intuitive interface with real-time data and actionable
-                insights." %}
-              </p>
+            <div class="hero-actions">
+              <a href="{% url 'home:demo' %}" class="btn btn-primary btn-lg">
+                <i class="fas fa-play-circle"></i> {% trans "Book Demo" %}
+              </a>
             </div>
 
-            <div class="platform-feature">
-              <h3>
-                <i class="fas fa-check-circle"></i>{% trans "Real-time
-                Analytics" %}
-              </h3>
-              <p>
-                {% trans "Monitor payroll costs, compliance status, and
-                operational metrics across all regions with live dashboards." %}
-              </p>
-            </div>
-
-            <div class="platform-feature">
-              <h3>
-                <i class="fas fa-check-circle"></i>{% trans "Multi-currency
-                Support" %}
-              </h3>
-              <p>
-                {% trans "Process payments in 40+ currencies with automated
-                forex management and optimal exchange rates." %}
-              </p>
-            </div>
-
-            <div class="platform-feature">
-              <h3>
-                <i class="fas fa-check-circle"></i>{% trans "Automated
-                Reporting" %}
-              </h3>
-              <p>
-                {% trans "Generate compliance reports, tax filings, and
-                financial statements automatically across all jurisdictions." %}
-              </p>
-            </div>
-          </div>
-
-          <div class="platform-visual" aria-hidden="true">
-            <div class="floating-card card-1">
-              <div class="card-header">
-                <div class="card-icon"><i class="fas fa-chart-bar"></i></div>
-                <div>
-                  <h4>{% trans "Payroll Analytics" %}</h4>
-                  <p style="color: var(--text-muted); font-size: 13px">
-                    {% trans "Live Dashboard" %}
-                  </p>
-                </div>
+            <div class="hero-stats">
+              <div class="stat-item">
+                <div class="stat-number">99.8%</div>
+                <div class="stat-label">{% trans "Accuracy Rate" %}</div>
               </div>
-              <p style="color: var(--text-secondary); font-size: 14px">
-                {% trans "Real-time insights into global payroll operations with
-                predictive analytics." %}
-              </p>
-            </div>
-
-            <div class="floating-card card-2">
-              <div class="card-header">
-                <div class="card-icon"><i class="fas fa-shield"></i></div>
-                <div>
-                  <h4>{% trans "Compliance Status" %}</h4>
-                  <p style="color: var(--text-muted); font-size: 13px">
-                    {% trans "All Systems Go" %}
-                  </p>
-                </div>
+              <div class="stat-item">
+                <div class="stat-number">40+</div>
+                <div class="stat-label">{% trans "Countries" %}</div>
               </div>
-              <p style="color: var(--text-secondary); font-size: 14px">
-                {% trans "100% compliance across all active jurisdictions with
-                automated updates." %}
-              </p>
-            </div>
-
-            <div class="floating-card card-3">
-              <div class="card-header">
-                <div class="card-icon">
-                  <i class="fas fa-money-check-alt"></i>
-                </div>
-                <div>
-                  <h4>{% trans "Payment Processing" %}</h4>
-                  <p style="color: var(--text-muted); font-size: 13px">
-                    {% trans "Batch Ready" %}
-                  </p>
-                </div>
+              <div class="stat-item">
+                <div class="stat-number">24</div>
+                <div class="stat-label">{% trans "Hours Support" %}</div>
               </div>
-              <p style="color: var(--text-secondary); font-size: 14px">
-                {% trans "Process payments in multiple currencies with automated
-                reconciliation." %}
+              <div class="stat-item">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">{% trans "Compliance" %}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="features" class="features">
+        <div class="container">
+          <div class="section-title">
+            <div class="subtitle">{% trans "Powerful Features" %}</div>
+            <h2>{% trans "Designed for Global Scale" %}</h2>
+            <p>
+              {% trans "Everything you need to manage complex global payroll operations with confidence" %}
+            </p>
+          </div>
+
+          <div class="features-grid">
+            <div class="feature-card">
+              <div class="feature-icon"><i class="fas fa-robot"></i></div>
+              <h3>{% trans "AI-Powered Compliance" %}</h3>
+              <p>
+                {% trans "Automated regulatory updates and risk assessment across all jurisdictions with machine learning algorithms." %}
+              </p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon"><i class="fas fa-clock"></i></div>
+              <h3>{% trans "Real-time Analytics" %}</h3>
+              <p>
+                {% trans "Comprehensive dashboards with live insights into payroll costs, compliance status, and operational metrics." %}
+              </p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+              <h3>{% trans "Instant Processing" %}</h3>
+              <p>
+                {% trans "Batch process thousands of payments across different currencies and banking systems simultaneously." %}
+              </p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+              <h3>{% trans "Enterprise Security" %}</h3>
+              <p>
+                {% trans "Bank-grade encryption, multi-factor authentication, and SOC 2 Type II certified infrastructure." %}
+              </p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon"><i class="fas fa-globe-americas"></i></div>
+              <h3>{% trans "Global Coverage" %}</h3>
+              <p>
+                {% trans "Seamless payroll processing across 40+ countries with local compliance and tax expertise built-in." %}
+              </p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon"><i class="fas fa-file-contract"></i></div>
+              <h3>{% trans "Audit Trail" %}</h3>
+              <p>
+                {% trans "Complete transparency with immutable records for every transaction and compliance verification." %}
               </p>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- SECURITY -->
-    <section id="security" class="security">
-      <div class="container">
-        <div class="section-title">
-          <div class="subtitle">{% trans "Enterprise Security" %}</div>
-          <h2>{% trans "Bank-Grade Protection" %}</h2>
-          <p>
-            {% trans "Your global payroll data is protected by multiple layers
-            of enterprise security" %}
-          </p>
+      <section id="platform" class="platform">
+        <div class="container">
+          <div class="platform-grid">
+            <div class="platform-content">
+              <div style="margin-bottom: 30px">
+                <div class="subtitle">{% trans "Unified Platform" %}</div>
+                <h2>{% trans "Everything in One Dashboard" %}</h2>
+                <p class="section-description">
+                  {% trans "Manage your entire global payroll operation from a single, intuitive interface with real-time data and actionable insights." %}
+                </p>
+              </div>
+
+              <div class="platform-feature">
+                <h3>
+                  <i class="fas fa-check-circle"></i>{% trans "Real-time Analytics" %}
+                </h3>
+                <p>
+                  {% trans "Monitor payroll costs, compliance status, and operational metrics across all regions with live dashboards." %}
+                </p>
+              </div>
+
+              <div class="platform-feature">
+                <h3>
+                  <i class="fas fa-check-circle"></i>{% trans "Multi-currency Support" %}
+                </h3>
+                <p>
+                  {% trans "Process payments in 40+ currencies with automated forex management and optimal exchange rates." %}
+                </p>
+              </div>
+
+              <div class="platform-feature">
+                <h3>
+                  <i class="fas fa-check-circle"></i>{% trans "Automated Reporting" %}
+                </h3>
+                <p>
+                  {% trans "Generate compliance reports, tax filings, and financial statements automatically across all jurisdictions." %}
+                </p>
+              </div>
+            </div>
+
+            <div class="platform-visual" aria-hidden="true">
+              <div class="floating-card card-1">
+                <div class="card-header">
+                  <div class="card-icon"><i class="fas fa-chart-bar"></i></div>
+                  <div>
+                    <h4>{% trans "Payroll Analytics" %}</h4>
+                    <p style="color: var(--text-muted); font-size: 13px">
+                      {% trans "Live Dashboard" %}
+                    </p>
+                  </div>
+                </div>
+                <p style="color: var(--text-secondary); font-size: 14px">
+                  {% trans "Real-time insights into global payroll operations with predictive analytics." %}
+                </p>
+              </div>
+
+              <div class="floating-card card-2">
+                <div class="card-header">
+                  <div class="card-icon"><i class="fas fa-shield"></i></div>
+                  <div>
+                    <h4>{% trans "Compliance Status" %}</h4>
+                    <p style="color: var(--text-muted); font-size: 13px">
+                      {% trans "All Systems Go" %}
+                    </p>
+                  </div>
+                </div>
+                <p style="color: var(--text-secondary); font-size: 14px">
+                  {% trans "100% compliance across all active jurisdictions with automated updates." %}
+                </p>
+              </div>
+
+              <div class="floating-card card-3">
+                <div class="card-header">
+                  <div class="card-icon"><i class="fas fa-money-check-alt"></i></div>
+                  <div>
+                    <h4>{% trans "Payment Processing" %}</h4>
+                    <p style="color: var(--text-muted); font-size: 13px">
+                      {% trans "Batch Ready" %}
+                    </p>
+                  </div>
+                </div>
+                <p style="color: var(--text-secondary); font-size: 14px">
+                  {% trans "Process payments in multiple currencies with automated reconciliation." %}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
+      </section>
 
-        <div class="security-grid">
-          <div class="security-item">
-            <div class="security-icon"><i class="fas fa-lock"></i></div>
-            <h3>{% trans "AES-256 Encryption" %}</h3>
+      <section id="security" class="security">
+        <div class="container">
+          <div class="section-title">
+            <div class="subtitle">{% trans "Enterprise Security" %}</div>
+            <h2>{% trans "Bank-Grade Protection" %}</h2>
             <p>
-              {% trans "All data encrypted in transit and at rest with
-              military-grade encryption standards." %}
+              {% trans "Your global payroll data is protected by multiple layers of enterprise security" %}
             </p>
           </div>
-          <div class="security-item">
-            <div class="security-icon"><i class="fas fa-user-shield"></i></div>
-            <h3>{% trans "Multi-Factor Auth" %}</h3>
-            <p>
-              {% trans "Enterprise-grade MFA with biometric options for all user
-              access levels." %}
-            </p>
-          </div>
-          <div class="security-item">
-            <div class="security-icon"><i class="fas fa-shield-alt"></i></div>
-            <h3>{% trans "SOC 2 Certified" %}</h3>
-            <p>
-              {% trans "Regular third-party audits ensure continuous compliance
-              with security standards." %}
-            </p>
-          </div>
-          <div class="security-item">
-            <div class="security-icon"><i class="fas fa-database"></i></div>
-            <h3>{% trans "Data Sovereignty" %}</h3>
-            <p>
-              {% trans "Regional data centers ensure compliance with local data
-              protection regulations." %}
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- TESTIMONIALS -->
-    <section id="testimonials" class="testimonials">
-      <div class="container">
-        <div class="section-title">
-          <div class="subtitle">{% trans "Trusted by Leaders" %}</div>
-          <h2>{% trans "Global Success Stories" %}</h2>
-          <p>
-            {% trans "See how companies are transforming their global payroll
-            operations with ExactusPay" %}
-          </p>
-        </div>
-
-        <div class="testimonial-card">
-          <div class="testimonial-content">
-            {% blocktrans trimmed %} "Running a tourist company in Brazil means
-            managing seasonal staff and making sure payroll is always correct. I
-            know the Brazilian payroll system well, but it still takes time to
-            handle everything. With ExactusPay, it’s simple. They understand the
-            local regulations perfectly and everything runs smoothly every
-            month." {% endblocktrans %}
-          </div>
-
-          <div class="testimonial-author">
-            <div class="author-avatar">JC</div>
-            <div>
-              <h4>{% trans "Jeorjes Costa" %}</h4>
-              <p style="color: var(--text-muted)">
-                {% trans "Palmas, Brazil" %}
+          <div class="security-grid">
+            <div class="security-item">
+              <div class="security-icon"><i class="fas fa-lock"></i></div>
+              <h3>{% trans "AES-256 Encryption" %}</h3>
+              <p>
+                {% trans "All data encrypted in transit and at rest with military-grade encryption standards." %}
+              </p>
+            </div>
+            <div class="security-item">
+              <div class="security-icon"><i class="fas fa-user-shield"></i></div>
+              <h3>{% trans "Multi-Factor Auth" %}</h3>
+              <p>
+                {% trans "Enterprise-grade MFA with biometric options for all user access levels." %}
+              </p>
+            </div>
+            <div class="security-item">
+              <div class="security-icon"><i class="fas fa-shield-alt"></i></div>
+              <h3>{% trans "SOC 2 Certified" %}</h3>
+              <p>
+                {% trans "Regular third-party audits ensure continuous compliance with security standards." %}
+              </p>
+            </div>
+            <div class="security-item">
+              <div class="security-icon"><i class="fas fa-database"></i></div>
+              <h3>{% trans "Data Sovereignty" %}</h3>
+              <p>
+                {% trans "Regional data centers ensure compliance with local data protection regulations." %}
               </p>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- CTA -->
-    <section class="cta">
-      <div class="container">
-        <div class="cta-content">
-          <h2>{% trans "Ready to Simplify Global Payroll?" %}</h2>
-          <p>
-            {% blocktrans trimmed %} Join 500+ enterprises that trust ExactusPay
-            with their global workforce management. Schedule a personalized demo
-            to see our platform in action. {% endblocktrans %}
-          </p>
-          <div class="cta-actions">
-            <a href="{% url 'home:demo' %}" class="btn btn-cta-primary btn-lg">
-              <i class="fas fa-calendar-check"></i> {% trans "Schedule Demo" %}
-            </a>
+      <section id="testimonials" class="testimonials">
+        <div class="container">
+          <div class="section-title">
+            <div class="subtitle">{% trans "Trusted by Leaders" %}</div>
+            <h2>{% trans "Global Success Stories" %}</h2>
+            <p>
+              {% trans "See how companies are transforming their global payroll operations with ExactusPay" %}
+            </p>
+          </div>
+
+          <div class="testimonial-card">
+            <div class="testimonial-content">
+              {% blocktrans trimmed %}
+                "ExactusPay revolutionized our global payroll operations. We reduced
+                processing time by 80% while eliminating compliance errors across 15
+                countries. Their platform paid for itself within the first quarter,
+                and the ROI has been phenomenal."
+              {% endblocktrans %}
+            </div>
+
+            <div class="testimonial-author">
+              <div class="author-avatar">SR</div>
+              <div>
+                <h4>{% trans "Sarah Rodriguez" %}</h4>
+                <p style="color: var(--text-muted); margin-bottom: 0">
+                  {% trans "Global Operations Director, TechScale Inc." %}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- FOOTER -->
+      <section class="cta">
+        <div class="container">
+          <div class="cta-content">
+            <h2>{% trans "Ready to Simplify Global Payroll?" %}</h2>
+            <p>
+              {% trans "Join 500+ enterprises that trust ExactusPay with their global workforce management. Schedule a personalized demo to see our platform in action." %}
+            </p>
+
+            <div class="cta-actions">
+              <a href="{% url 'home:demo' %}" class="btn btn-cta-primary btn-lg">
+                <i class="fas fa-calendar-check"></i> {% trans "Schedule Demo" %}
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
     <footer>
       <div class="container">
         <div class="footer-grid">
@@ -1410,28 +1462,16 @@ as languages %}
             <h4>{% trans "Platform" %}</h4>
             <ul class="footer-links">
               <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "Global
-                  Payroll" %}</a
-                >
+                <a href="#"><i class="fas fa-chevron-right"></i> {% trans "Global Payroll" %}</a>
               </li>
               <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "Compliance
-                  Automation" %}</a
-                >
+                <a href="#"><i class="fas fa-chevron-right"></i> {% trans "Compliance Automation" %}</a>
               </li>
               <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "Workforce
-                  Analytics" %}</a
-                >
+                <a href="#"><i class="fas fa-chevron-right"></i> {% trans "Workforce Analytics" %}</a>
               </li>
               <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "Tax
-                  Management" %}</a
-                >
+                <a href="#"><i class="fas fa-chevron-right"></i> {% trans "Tax Management" %}</a>
               </li>
             </ul>
           </div>
@@ -1440,28 +1480,16 @@ as languages %}
             <h4>{% trans "Solutions" %}</h4>
             <ul class="footer-links">
               <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "Enterprise
-                  Expansion" %}</a
-                >
+                <a href="#"><i class="fas fa-chevron-right"></i> {% trans "Enterprise Expansion" %}</a>
               </li>
               <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "Mergers &
-                  Acquisitions" %}</a
-                >
+                <a href="#"><i class="fas fa-chevron-right"></i> {% trans "Mergers & Acquisitions" %}</a>
               </li>
               <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "Compliance
-                  Management" %}</a
-                >
+                <a href="#"><i class="fas fa-chevron-right"></i> {% trans "Compliance Management" %}</a>
               </li>
               <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "Global
-                  Workforce" %}</a
-                >
+                <a href="#"><i class="fas fa-chevron-right"></i> {% trans "Global Workforce" %}</a>
               </li>
             </ul>
           </div>
@@ -1470,28 +1498,16 @@ as languages %}
             <h4>{% trans "Resources" %}</h4>
             <ul class="footer-links">
               <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "Documentation"
-                  %}</a
-                >
+                <a href="#"><i class="fas fa-chevron-right"></i> {% trans "Documentation" %}</a>
               </li>
               <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "API Reference"
-                  %}</a
-                >
+                <a href="#"><i class="fas fa-chevron-right"></i> {% trans "API Reference" %}</a>
               </li>
               <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "Compliance
-                  Guides" %}</a
-                >
+                <a href="#"><i class="fas fa-chevron-right"></i> {% trans "Compliance Guides" %}</a>
               </li>
               <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "Case Studies"
-                  %}</a
-                >
+                <a href="#"><i class="fas fa-chevron-right"></i> {% trans "Case Studies" %}</a>
               </li>
             </ul>
           </div>
@@ -1500,26 +1516,16 @@ as languages %}
             <h4>{% trans "Company" %}</h4>
             <ul class="footer-links">
               <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "About Us"
-                  %}</a
-                >
+                <a href="#"><i class="fas fa-chevron-right"></i> {% trans "About Us" %}</a>
               </li>
               <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "Careers" %}</a
-                >
+                <a href="#"><i class="fas fa-chevron-right"></i> {% trans "Careers" %}</a>
               </li>
               <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "Security"
-                  %}</a
-                >
+                <a href="#"><i class="fas fa-chevron-right"></i> {% trans "Security" %}</a>
               </li>
               <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "Contact" %}</a
-                >
+                <a href="#"><i class="fas fa-chevron-right"></i> {% trans "Contact" %}</a>
               </li>
             </ul>
           </div>
@@ -1527,127 +1533,168 @@ as languages %}
 
         <div class="footer-bottom">
           <div>
-            <a
-              href="{% url 'home:home' %}"
-              class="logo"
-              style="text-decoration: none"
-            >
-              <div
-                class="sidebar-brand"
-                style="color: #ffffff; font-size: 24px"
-              >
-                ExactusPay
-              </div>
+            <a href="{% url 'home:home' %}" style="text-decoration: none">
+              <div class="sidebar-brand" style="color: #fff; font-size: 22px">ExactusPay</div>
             </a>
             <div class="copyright">
               © {% now "Y" %} ExactusPay. {% trans "All rights reserved." %}<br />
-              <small style="color: rgba(255, 255, 255, 0.6)"
-                >{% trans "GDPR Compliant | SOC 2 Type II Certified | ISO 27001"
-                %}</small
-              >
+              <small style="color: rgba(255, 255, 255, 0.6)">
+                {% trans "GDPR Compliant | SOC 2 Type II Certified | ISO 27001" %}
+              </small>
             </div>
           </div>
 
           <div class="social-links">
-            <a
-              href="https://www.linkedin.com/company/exactuspay"
-              aria-label="LinkedIn"
-              ><i class="fab fa-linkedin"></i
-            ></a>
+            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+            <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+            <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
           </div>
         </div>
       </div>
     </footer>
-    <script>
+
+    <script defer>
       document.addEventListener("DOMContentLoaded", function () {
-        // Fade-in animation on scroll for sections
-        const observerOptions = { threshold: 0.1 };
-        const observer = new IntersectionObserver((entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.style.opacity = "1";
-              entry.target.style.transform = "translateY(0)";
-            }
+        // Mobile menu toggle
+        const btn = document.querySelector(".menu-btn");
+        const mobileNav = document.getElementById("mobileNav");
+
+        const closeMobileNav = () => {
+          if (!mobileNav) return;
+          mobileNav.classList.remove("open");
+          if (btn) {
+            btn.setAttribute("aria-expanded", "false");
+            btn.innerHTML = '<i class="fas fa-bars"></i>';
+          }
+        };
+
+        if (btn && mobileNav) {
+          btn.addEventListener("click", () => {
+            const isOpen = mobileNav.classList.toggle("open");
+            btn.setAttribute("aria-expanded", String(isOpen));
+            btn.innerHTML = isOpen
+              ? '<i class="fas fa-times"></i>'
+              : '<i class="fas fa-bars"></i>';
           });
-        }, observerOptions);
 
-        document.querySelectorAll("section").forEach((section) => {
-          section.style.opacity = "0";
-          section.style.transform = "translateY(20px)";
-          section.style.transition = "all 0.8s ease-out";
-          observer.observe(section);
-        });
+          // Close on outside click
+          document.addEventListener("click", (e) => {
+            if (!mobileNav.classList.contains("open")) return;
+            const target = e.target;
+            const insideNav = mobileNav.contains(target);
+            const insideBtn = btn.contains(target);
+            if (!insideNav && !insideBtn) closeMobileNav();
+          });
 
-        // Animate floating cards
-        const cards = document.querySelectorAll(".floating-card");
-        cards.forEach((card, index) => {
-          card.style.animationDelay = `${index * 0.5}s`;
-        });
+          // Close on link click
+          mobileNav
+            .querySelectorAll("a")
+            .forEach((a) => a.addEventListener("click", closeMobileNav));
+
+          // Close on ESC
+          document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") closeMobileNav();
+          });
+        }
+
+        // Fade-in animation on scroll for sections
+        const sections = document.querySelectorAll("main section");
+        if ("IntersectionObserver" in window && sections.length) {
+          const sectionObserver = new IntersectionObserver(
+            (entries, obs) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  entry.target.style.opacity = "1";
+                  entry.target.style.transform = "translateY(0)";
+                  obs.unobserve(entry.target);
+                }
+              });
+            },
+            { threshold: 0.1 }
+          );
+
+          sections.forEach((section) => {
+            section.style.opacity = "0";
+            section.style.transform = "translateY(20px)";
+            section.style.transition = "all 0.7s ease-out";
+            sectionObserver.observe(section);
+          });
+        }
 
         // Animated counter for stats
         const stats = document.querySelectorAll(".stat-number");
-        const statObserverOptions = { threshold: 0.5, rootMargin: "0px" };
+        if ("IntersectionObserver" in window && stats.length) {
+          const statObserver = new IntersectionObserver(
+            (entries, obs) => {
+              entries.forEach((entry) => {
+                if (!entry.isIntersecting) return;
 
-        const statObserver = new IntersectionObserver((entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              const stat = entry.target;
-              const target = parseFloat(
-                stat.textContent.replace(/[^0-9.]/g, ""),
-              );
-              const hasPercent = stat.textContent.includes("%");
-              const hasPlus = stat.textContent.includes("+");
-              let current = 0;
-              const increment = target / 50;
+                const el = entry.target;
+                const raw = el.textContent.trim();
+                const target = parseFloat(raw.replace(/[^0-9.]/g, ""));
+                const hasPercent = raw.includes("%");
+                const hasPlus = raw.includes("+");
 
-              const updateStat = () => {
-                if (current < target) {
+                let current = 0;
+                const steps = 45;
+                const increment = target / steps;
+
+                const tick = () => {
                   current += increment;
                   if (current >= target) {
-                    stat.textContent =
-                      target.toFixed(target % 1 === 0 ? 0 : 1) +
+                    el.textContent =
+                      (target % 1 === 0 ? target.toFixed(0) : target.toFixed(1)) +
                       (hasPercent ? "%" : "") +
                       (hasPlus ? "+" : "");
-                  } else {
-                    stat.textContent =
-                      Math.floor(current) +
-                      (hasPercent ? "%" : "") +
-                      (hasPlus ? "+" : "");
-                    setTimeout(updateStat, 30);
+                    return;
                   }
-                }
-              };
-              updateStat();
-              statObserver.unobserve(stat);
-            }
-          });
-        }, statObserverOptions);
+                  el.textContent =
+                    String(Math.floor(current)) +
+                    (hasPercent ? "%" : "") +
+                    (hasPlus ? "+" : "");
+                  window.setTimeout(tick, 28);
+                };
 
-        stats.forEach((stat) => statObserver.observe(stat));
+                tick();
+                obs.unobserve(el);
+              });
+            },
+            { threshold: 0.5 }
+          );
+
+          stats.forEach((s) => statObserver.observe(s));
+        }
 
         // Header scroll effect
-        let lastScroll = 0;
         const header = document.querySelector("header");
+        if (header) {
+          let lastScroll = 0;
+          window.addEventListener(
+            "scroll",
+            () => {
+              const current = window.pageYOffset || 0;
 
-        window.addEventListener("scroll", () => {
-          const currentScroll = window.pageYOffset;
+              if (current > lastScroll && current > 100) {
+                header.style.transform = "translateY(-100%)";
+                closeMobileNav();
+              } else {
+                header.style.transform = "translateY(0)";
+              }
 
-          if (currentScroll > lastScroll && currentScroll > 100) {
-            header.style.transform = "translateY(-100%)";
-          } else {
-            header.style.transform = "translateY(0)";
-          }
+              if (current > 50) {
+                header.style.boxShadow = "0 10px 30px rgba(0,0,0,0.3)";
+                header.style.backdropFilter = "blur(20px)";
+              } else {
+                header.style.boxShadow = "var(--shadow-sm)";
+                header.style.backdropFilter = "blur(10px)";
+              }
 
-          if (currentScroll > 50) {
-            header.style.boxShadow = "0 10px 30px rgba(0,0,0,0.3)";
-            header.style.backdropFilter = "blur(20px)";
-          } else {
-            header.style.boxShadow = "var(--shadow-sm)";
-            header.style.backdropFilter = "blur(10px)";
-          }
-
-          lastScroll = currentScroll;
-        });
+              lastScroll = current;
+            },
+            { passive: true }
+          );
+        }
       });
     </script>
   </body>

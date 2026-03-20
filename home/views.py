@@ -1,88 +1,86 @@
-import logging
-
+from django.shortcuts import render, redirect
+from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib import messages
-from django.core.mail import EmailMessage
-from django.shortcuts import redirect, render
-from django.views.decorators.http import require_POST
+from django.utils.translation import gettext as _
+import logging
 
 logger = logging.getLogger(__name__)
 
+def home_view(request):
+    return render(request, 'home/index.html')
 
-def index(request):
-    return render(request, "home/index.html")
+def features_view(request):
+    return render(request, 'home/features.html')
+
+def platform_view(request):
+    return render(request, 'home/platform.html')
+
+def security_view(request):
+    return render(request, 'home/security.html')
+
+def pricing_view(request):
+    return render(request, 'home/pricing.html')
+
+def demo_view(request):
+    return render(request, 'home/demo.html')
+
+def demo_request_view(request):
+    """Handles the form submission from demo.html and sends the email."""
+    if request.method == 'POST':
+        # 1. Extract data from the form
+        first_name = request.POST.get('first_name', '').strip()
+        last_name = request.POST.get('last_name', '').strip()
+        email = request.POST.get('email', '').strip()
+        company = request.POST.get('company', '').strip()
+        employees = request.POST.get('employees', '').strip()
+        region = request.POST.get('region', 'Not sure yet').strip()
+
+        # 2. Basic Validation
+        if not all([first_name, last_name, email, company, employees]):
+            messages.error(request, _("Please fill out all required fields."))
+            return redirect('home:demo')
+
+        # 3. Construct the Email
+        subject = f"New Demo Request: {company} ({first_name} {last_name})"
+        email_body = f"""
+        You have received a new demo request from the ExactusPay website.
+
+        Details:
+        -------------------------
+        Name: {first_name} {last_name}
+        Work Email: {email}
+        Company: {company}
+        Number of Employees: {employees}
+        Expansion Region: {region}
+        """
+
+        # 4. Send the Email
+        try:
+            send_mail(
+                subject=subject,
+                message=email_body,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[settings.DEMO_REQUEST_TO_EMAIL],
+                fail_silently=False,
+            )
+            # 5. Show success message on the frontend
+            messages.success(request, _("Thank you! Your demo request has been sent successfully. We will contact you soon."))
+
+        except Exception as e:
+            logger.error(f"Failed to send demo request email: {e}")
+            messages.error(request, _("There was a technical error sending your request. Please try again later."))
+
+        # Redirect back to the demo page so the user sees the alert message
+        return redirect('home:demo')
+
+    # If someone tries to visit the URL directly without submitting the form
+    return redirect('home:demo')
 
 
-def platform(request):
-    return render(request, "home/platform.html")
 
+def brazil_article_0001(request):
+    return render(request, 'articles/br/article_0001.html')
 
-def features(request):
-    return render(request, "home/features.html")
-
-
-def security(request):
-    return render(request, "home/security.html")
-
-
-def pricing(request):
-    return render(request, "home/pricing.html")
-
-
-def resources(request):
-    return render(request, "home/resources.html")
-
-
-def demo_page(request):
-    return render(request, "home/demo.html", {"current_year": 2026})
-
-
-@require_POST
-def demo_request(request):
-    first_name = (request.POST.get("first_name") or "").strip()
-    last_name = (request.POST.get("last_name") or "").strip()
-    email = (request.POST.get("email") or "").strip()
-    company = (request.POST.get("company") or "").strip()
-    employees = (request.POST.get("employees") or "").strip()
-    region = (request.POST.get("region") or "").strip()
-
-    missing = [k for k, v in {
-        "first_name": first_name,
-        "last_name": last_name,
-        "email": email,
-        "company": company,
-        "employees": employees,
-    }.items() if not v]
-
-    if missing:
-        messages.error(request, "Please complete all required fields.")
-        return redirect("home:demo")
-
-    subject = f"New Demo Request — {company}"
-    body = (
-        "A new demo request was submitted:\n\n"
-        f"Name: {first_name} {last_name}\n"
-        f"Work Email: {email}\n"
-        f"Company: {company}\n"
-        f"Employees: {employees}\n"
-        f"Region: {region or 'Not sure yet'}\n\n"
-        f"Source path: {request.get_full_path()}\n"
-        f"IP: {request.META.get('REMOTE_ADDR', '')}\n"
-    )
-
-    msg = EmailMessage(
-        subject=subject,
-        body=body,
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        to=[getattr(settings, "DEMO_REQUEST_TO_EMAIL", "antonio.rocha@exactuspay.com")],
-        reply_to=[email] if email else None,
-    )
-
-    try:
-        msg.send(fail_silently=False)
-        messages.success(request, "Thanks! Your request was received. We'll contact you shortly.")
-    except Exception as e:
-        logger.exception("Demo request email failed to send: %s", e)
-        messages.error(request, f"Mail error: {e}")
-
-    return redirect("home:demo")
+def chile_article_0001(request):
+    return render(request, 'articles/cl/article_0001.html')

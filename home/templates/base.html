@@ -1,0 +1,569 @@
+{% load i18n static %}
+{% get_current_language as LANGUAGE_CODE %}
+{% get_available_languages as LANGUAGES %}
+{% get_language_info_list for LANGUAGES as languages %}
+
+<!doctype html>
+<html lang="{{ LANGUAGE_CODE }}">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XTL69YL5WC"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag("js", new Date());
+      gtag("config", "G-XTL69YL5WC");
+    </script>
+
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+    <title>{% block title %}{% trans "Global Payroll Software | Multi-Country Payroll & Compliance Platform | ExactusPay" %}{% endblock %}</title>
+
+    {# SEO default (pode sobrescrever por página) #}
+    <meta name="description" content="{% block meta_description %}ExactusPay is a powerful global payroll software delivering multi-country payroll, automated compliance, real-time workforce analytics, standardized reporting, and payroll simulations. Manage international payroll accurately, securely, and at scale from one intelligent platform.{% endblock %}" />
+    <meta name="keywords" content="{% block meta_keywords %}global payroll software, multi-country payroll, international payroll system, payroll compliance software, global payroll platform, payroll automation, payroll simulations, workforce analytics, multinational payroll management, cloud payroll solution, global HR payroll, payroll reporting software, international payroll compliance, scalable payroll platform{% endblock %}" />
+    <meta name="author" content="ExactusPay" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow" />
+    <meta name="bingbot" content="index, follow" />
+
+    <link rel="canonical" href="{% block canonical %}https://www.exactuspay.com/{% endblock %}" />
+
+    <!-- Language / hreflang -->
+    <meta http-equiv="content-language" content="{{ LANGUAGE_CODE }}" />
+    <link rel="alternate" hreflang="en" href="https://www.exactuspay.com/" />
+    <link rel="alternate" hreflang="pt" href="https://www.exactuspay.com/pt/" />
+    <link rel="alternate" hreflang="es" href="https://www.exactuspay.com/es/" />
+    <link rel="alternate" hreflang="x-default" href="https://www.exactuspay.com/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="{% block og_title %}ExactusPay | Global Payroll Software for Multi-Country Payroll & Compliance{% endblock %}" />
+    <meta property="og:description" content="{% block og_description %}Run global payroll with confidence. Automated compliance, payroll simulations, standardized reporting, and real-time analytics in one powerful multi-country payroll platform.{% endblock %}" />
+    <meta property="og:url" content="{% block og_url %}https://www.exactuspay.com/{% endblock %}" />
+    <meta property="og:image" content="{% block og_image %}https://www.exactuspay.com/static/img/og-exactuspay.png{% endblock %}" />
+    <meta property="og:site_name" content="ExactusPay" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{% block twitter_title %}ExactusPay | Global Payroll Software{% endblock %}" />
+    <meta name="twitter:description" content="{% block twitter_description %}Multi-country payroll, automated compliance, real-time workforce analytics, and payroll simulations—powered by ExactusPay.{% endblock %}" />
+    <meta name="twitter:image" content="{% block twitter_image %}https://www.exactuspay.com/static/img/og-exactuspay.png{% endblock %}" />
+
+    <meta name="application-name" content="ExactusPay" />
+    <meta name="apple-mobile-web-app-title" content="ExactusPay" />
+    <meta name="theme-color" content="#1f4b7a" />
+
+    <!-- Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    {# CSS base (extraído do padrão repetido nas suas páginas) #}
+    <style>
+      :root{
+        --color-primary-solid: rgb(31, 75, 122);
+        --color-secondary-solid: rgb(71, 84, 128);
+        --gradient-midnight: linear-gradient(90deg, #000814 0%, #1F4B7A 100%);
+
+        --bg-primary:#fff;
+        --bg-secondary:#F8FAFC;
+        --bg-tertiary:#F1F5F9;
+        --bg-card:#fff;
+
+        --text-primary:#0F172A;
+        --text-secondary:#475569;
+        --text-muted:#64748B;
+
+        --shadow-sm: 0 2px 8px rgba(31, 75, 122, 0.05);
+        --shadow-md: 0 4px 16px rgba(31, 75, 122, 0.08);
+        --shadow-lg: 0 10px 40px rgba(31, 75, 122, 0.10);
+        --shadow-xl: 0 20px 60px rgba(31, 75, 122, 0.12);
+
+        --border-radius: 16px;
+        --border-radius-lg: 24px;
+        --border-color: rgba(226, 232, 240, 0.85);
+
+        --mint: #96E0D9;
+
+        /* Gradients comuns (aparecem em platform/pricing/security) */
+        --grad-blue: linear-gradient(135deg,#2563eb,#1e40af);
+        --grad-teal: linear-gradient(135deg,#14b8a6,#0f766e);
+        --grad-teal2: linear-gradient(135deg,#14b8a6,#0f766e);
+        --grad-purple: linear-gradient(135deg,#8b5cf6,#6d28d9);
+        --grad-amber: linear-gradient(135deg,#f59e0b,#b45309);
+        --grad-rose: linear-gradient(135deg,#f43f5e,#be123c);
+        --grad-cyan: linear-gradient(135deg,#22d3ee,#0ea5e9);
+
+        --header-h: 76px;
+      }
+
+      *{ margin:0; padding:0; box-sizing:border-box; }
+      html{ scroll-behavior:smooth; }
+      body{
+        font-family:'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        line-height:1.6;
+        overflow-x:hidden;
+      }
+
+      .container{ max-width:1280px; margin:0 auto; padding:0 24px; }
+
+      /* A11y */
+      .skip-link{
+        position:absolute; left:16px; top:-60px;
+        background:#fff; color:#0f172a;
+        padding:10px 14px; border-radius:12px;
+        text-decoration:none; box-shadow: var(--shadow-md);
+        z-index:2000; transition: top .2s ease;
+      }
+      .skip-link:focus{ top:16px; }
+      :focus-visible{ outline:3px solid rgba(150,224,217,.92); outline-offset:3px; }
+
+      h1,h2,h3,h4{ font-family:'Poppins',sans-serif; font-weight:800; line-height:1.15; }
+      h1{
+        font-size: clamp(2.1rem, 5vw, 4rem);
+        margin-bottom: 18px;
+        background: linear-gradient(135deg, #FFFFFF, #F0F9FF);
+        -webkit-background-clip:text; background-clip:text; color:transparent;
+      }
+      h2{ font-size: clamp(1.8rem, 4vw, 3.2rem); margin-bottom: 16px; }
+      h3{ font-size: 1.55rem; margin-bottom: 12px; color: var(--text-primary); }
+      p{ color: var(--text-secondary); font-size: 1.05rem; margin-bottom: 20px; }
+
+      .section-title{ text-align:center; margin-bottom: 46px; }
+      .section-title .subtitle{
+        color: var(--color-secondary-solid);
+        font-weight:900;
+        text-transform:uppercase;
+        letter-spacing:2.5px;
+        margin-bottom:12px;
+        font-size:12px;
+      }
+
+      /* Buttons */
+      .btn{
+        display:inline-flex; align-items:center; justify-content:center;
+        padding: 14px 24px;
+        border-radius:999px;
+        font-weight:800;
+        font-size:16px;
+        text-decoration:none;
+        border:none; cursor:pointer;
+        gap:10px;
+        transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+        white-space: nowrap;
+      }
+      .btn-primary{
+        background: var(--color-primary-solid);
+        color:#fff;
+        box-shadow: 0 8px 20px rgba(31,75,122,0.2);
+      }
+      .btn-primary:hover{ transform: translateY(-2px); box-shadow: var(--shadow-xl); background:#0f3a5e; }
+      .btn-secondary{
+        background: rgba(255,255,255,0.12);
+        color:#fff;
+        border:1px solid rgba(255,255,255,0.22);
+        backdrop-filter: blur(10px);
+      }
+      .btn-secondary:hover{ background: rgba(255,255,255,0.20); transform: translateY(-2px); }
+      .btn-outline{
+        background: transparent;
+        border: 2px solid rgba(255,255,255,0.85);
+        color:#fff;
+      }
+      .btn-outline:hover{ background: rgba(255,255,255,0.10); transform: translateY(-2px); }
+      .btn-lg{ padding: 16px 28px; font-size: 17px; }
+
+      /* Header + nav (padrão igual nas páginas) */
+      header{
+        position:fixed; top:0; left:0; width:100%;
+        z-index:1000;
+        background: var(--gradient-midnight);
+        border-bottom:1px solid rgba(255,255,255,0.10);
+        padding: 12px 0;
+        transition: transform .25s ease, box-shadow .25s ease;
+        will-change: transform;
+      }
+      .nav-container{ display:flex; justify-content:space-between; align-items:center; gap:14px; }
+      .sidebar-brand{ color:#fff; font-size:1.6rem; font-weight:900; text-decoration:none; }
+
+      .nav-links{ display:flex; gap:24px; list-style:none; }
+      .nav-links a{
+        color: rgba(255,255,255,0.86);
+        text-decoration:none;
+        font-weight:800;
+        position:relative;
+        padding: 8px 0;
+        transition: color .2s ease;
+      }
+      .nav-links a::after{
+        content:"";
+        position:absolute; bottom:0; left:0;
+        width:0; height:2px;
+        background: var(--mint);
+        transition: width .25s ease;
+      }
+      .nav-links a:hover{ color:#fff; }
+      .nav-links a:hover::after{ width:100%; }
+
+      .nav-actions{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+      .nav-actions .btn{ font-size: 0.9rem; padding: 10px 20px; font-weight: 700; }
+
+      /* Language switcher (padrão) */
+      .lang-form{ display:flex; align-items:center; }
+      .lang-pill{
+        display:inline-flex; align-items:center; gap:8px;
+        padding: 6px 10px;
+        border-radius:999px;
+        background: rgba(255,255,255,.08);
+        border: 1px solid rgba(255,255,255,.16);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 10px 24px rgba(0,0,0,.16);
+      }
+      .lang-select{
+        appearance:none;
+        background:transparent;
+        border:none;
+        color: rgba(255,255,255,.92);
+        font-weight:600;
+        font-size:.9rem;
+        line-height:1;
+        padding: 0 24px 0 2px;
+        outline:none;
+        cursor:pointer;
+      }
+      .lang-caret{
+        margin-left:-18px;
+        pointer-events:none;
+        color: rgba(255,255,255,.75);
+        font-size:.75rem;
+      }
+      .lang-select option{ color:#0f172a; font-size:1rem; }
+
+      /* Mobile menu button + drawer */
+      .menu-btn{
+        display:none;
+        width:44px; height:44px;
+        border-radius:12px;
+        border:1px solid rgba(255,255,255,0.22);
+        background: rgba(255,255,255,0.10);
+        color:#fff;
+        align-items:center; justify-content:center;
+        cursor:pointer;
+      }
+      .mobile-nav{
+        display:none;
+        position:fixed;
+        top: var(--header-h);
+        left:0; width:100%;
+        background: rgba(0,8,20,0.96);
+        border-bottom: 1px solid rgba(255,255,255,0.12);
+        backdrop-filter: blur(14px);
+        z-index:999;
+        padding: 14px 0;
+      }
+      .mobile-nav.open{ display:block; }
+      .mobile-nav .container{ display:grid; gap: 12px; }
+      .mobile-links{ list-style:none; display:grid; gap:10px; }
+      .mobile-links a{
+        display:block;
+        padding: 12px 14px;
+        border-radius: 14px;
+        text-decoration:none;
+        color: rgba(255,255,255,0.92);
+        font-weight: 800;
+        border: 1px solid rgba(255,255,255,0.10);
+        background: rgba(255,255,255,0.05);
+      }
+      .mobile-links a:hover{ background: rgba(255,255,255,0.10); color:#fff; }
+      .mobile-actions{ display:grid; gap:10px; }
+      .mobile-actions .btn{ width:100%; }
+      .mobile-lang{ margin-top:4px; }
+
+      /* Footer (padrão comum) */
+      footer{
+        background: var(--gradient-midnight);
+        padding: 64px 0 34px;
+        border-top: 1px solid rgba(255,255,255,0.1);
+      }
+      .footer-grid{
+        display:grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 26px;
+        margin-bottom: 44px;
+      }
+      .footer-col h4{ color:#fff; margin-bottom: 16px; font-size:16px; }
+      .footer-links{ list-style:none; }
+      .footer-links li{ margin-bottom: 12px; }
+      .footer-links a{
+        color: rgba(255,255,255,0.82);
+        text-decoration:none;
+        display:flex; align-items:center; gap:8px;
+        font-size:0.95rem;
+        transition: transform .2s ease, color .2s ease;
+      }
+      .footer-links a:hover{ color: var(--mint); transform: translateX(4px); }
+      .footer-links i{
+        background: var(--grad-cyan);
+        -webkit-background-clip:text;
+        -webkit-text-fill-color:transparent;
+      }
+
+      .footer-bottom{
+        padding-top: 28px;
+        border-top: 1px solid rgba(255,255,255,0.1);
+        display:flex; justify-content:space-between; align-items:center;
+        flex-wrap:wrap; gap: 16px;
+      }
+      .social-links{ display:flex; gap: 12px; }
+      .social-links a{
+        width: 42px; height: 42px;
+        border-radius: 12px;
+        display:flex; align-items:center; justify-content:center;
+        color:#fff; font-size:18px;
+        text-decoration:none;
+        border: 1px solid rgba(255,255,255,0.3);
+        transition: transform .2s ease, background .2s ease, border-color .2s ease;
+      }
+      .social-links a:hover{
+        background: rgba(255,255,255,0.14);
+        transform: translateY(-2px);
+        border-color: rgba(255,255,255,0.6);
+      }
+      .copyright{ color: rgba(255,255,255,0.65); font-size:14px; }
+
+      /* Page-specific additions */
+      {% block extra_css %}{% endblock %}
+
+      /* Responsive */
+      @media (max-width: 1024px){
+        .footer-grid{ grid-template-columns: repeat(2, 1fr); }
+      }
+      @media (max-width: 860px){
+        .nav-links{ display:none; }
+        .menu-btn{ display:inline-flex; }
+        .nav-actions{ display:none; }     /* mantém header limpo em mobile */
+        form.lang-form{ display:none; }   /* language selector vai para o drawer */
+        :root{ --header-h: 68px; }
+      }
+      @media (max-width: 768px){
+        .container{ padding: 0 16px; }
+        .btn{ width:100%; justify-content:center; }
+        .footer-grid{ grid-template-columns: 1fr; }
+      }
+    </style>
+
+    {% block head_extra %}{% endblock %}
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">{% trans "Skip to content" %}</a>
+
+    <header>
+      <div class="container nav-container">
+        <a class="sidebar-brand" href="{% url 'home:home' %}">ExactusPay</a>
+
+        <ul class="nav-links" aria-label="{% trans 'Primary navigation' %}">
+          <li><a href="{% url 'home:features' %}">{% trans "Features" %}</a></li>
+          <li><a href="{% url 'home:platform' %}">{% trans "Platform" %}</a></li>
+          <li><a href="{% url 'home:pricing' %}">{% trans "Pricing" %}</a></li>
+          <li><a href="{% url 'home:security' %}">{% trans "Security" %}</a></li>
+        </ul>
+
+        <div class="nav-actions">
+          <a class="btn btn-secondary" href="{% url 'home:demo' %}">
+            <i class="fas fa-calendar-check"></i> {% trans "Book a Demo" %}
+          </a>
+
+          <form class="lang-form" action="{% url 'set_language' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            <div class="lang-pill" aria-label="{% trans 'Select language' %}">
+              <i class="fas fa-globe"></i>
+              <select class="lang-select" name="language" onchange="this.form.submit()">
+                {% for language in languages %}
+                  <option value="{{ language.code }}" {% if language.code == LANGUAGE_CODE %}selected{% endif %}>
+                    {{ language.name_local }}
+                  </option>
+                {% endfor %}
+              </select>
+              <span class="lang-caret"><i class="fas fa-chevron-down"></i></span>
+            </div>
+          </form>
+        </div>
+
+        <button class="menu-btn" type="button" aria-label="{% trans 'Open menu' %}" aria-expanded="false">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </header>
+
+    <nav class="mobile-nav" id="mobileNav" aria-label="{% trans 'Mobile navigation' %}">
+      <div class="container">
+        <ul class="mobile-links">
+          <li><a href="{% url 'home:home' %}">{% trans "Home" %}</a></li>
+          <li><a href="{% url 'home:features' %}">{% trans "Features" %}</a></li>
+          <li><a href="{% url 'home:platform' %}">{% trans "Platform" %}</a></li>
+          <li><a href="{% url 'home:pricing' %}">{% trans "Pricing" %}</a></li>
+          <li><a href="{% url 'home:security' %}">{% trans "Security" %}</a></li>
+          <li><a href="{% url 'home:demo' %}">{% trans "Book a Demo" %}</a></li>
+        </ul>
+
+        <div class="mobile-lang">
+          <form class="lang-form" action="{% url 'set_language' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            <div class="lang-pill">
+              <i class="fas fa-globe"></i>
+              <select class="lang-select" name="language" onchange="this.form.submit()">
+                {% for language in languages %}
+                  <option value="{{ language.code }}" {% if language.code == LANGUAGE_CODE %}selected{% endif %}>
+                    {{ language.name_local }}
+                  </option>
+                {% endfor %}
+              </select>
+              <span class="lang-caret"><i class="fas fa-chevron-down"></i></span>
+            </div>
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <main id="main">
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+      <div class="container">
+        <div class="footer-grid">
+          <div class="footer-col">
+            <h4>ExactusPay</h4>
+            <ul class="footer-links">
+              <li><a href="{% url 'home:platform' %}"><i class="fas fa-layer-group"></i> {% trans "Platform" %}</a></li>
+              <li><a href="{% url 'home:features' %}"><i class="fas fa-bolt"></i> {% trans "Features" %}</a></li>
+              <li><a href="{% url 'home:pricing' %}"><i class="fas fa-tag"></i> {% trans "Pricing" %}</a></li>
+              <li><a href="{% url 'home:security' %}"><i class="fas fa-shield-halved"></i> {% trans "Security" %}</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>{% trans "Get started" %}</h4>
+            <ul class="footer-links">
+              <li><a href="{% url 'home:demo' %}"><i class="fas fa-calendar-check"></i> {% trans "Book a Demo" %}</a></li>
+              <li><a href="{% url 'home:pricing' %}"><i class="fas fa-rectangle-list"></i> {% trans "See Pricing" %}</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>{% trans "Company" %}</h4>
+            <ul class="footer-links">
+              <li><a href="{% url 'home:home' %}"><i class="fas fa-house"></i> {% trans "Home" %}</a></li>
+              <li><a href="{% url 'home:features' %}"><i class="fas fa-star"></i> {% trans "Features" %}</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>{% trans "Social" %}</h4>
+            <div class="social-links">
+              <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+              <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+              <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+              <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer-bottom">
+          <div class="copyright">
+            © {% now "Y" %} ExactusPay. {% trans "All rights reserved." %}
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script defer>
+      document.addEventListener('DOMContentLoaded', () => {
+        // Mobile menu (mesma lógica do platform) :contentReference[oaicite:5]{index=5}
+        const btn = document.querySelector('.menu-btn');
+        const mobileNav = document.getElementById('mobileNav');
+
+        const closeMobileNav = () => {
+          if (!mobileNav || !btn) return;
+          mobileNav.classList.remove('open');
+          btn.setAttribute('aria-expanded', 'false');
+          btn.innerHTML = '<i class="fas fa-bars"></i>';
+        };
+
+        if (btn && mobileNav) {
+          btn.addEventListener('click', () => {
+            const isOpen = mobileNav.classList.toggle('open');
+            btn.setAttribute('aria-expanded', String(isOpen));
+            btn.innerHTML = isOpen ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+          });
+
+          mobileNav.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMobileNav));
+
+          document.addEventListener('click', (e) => {
+            if (!mobileNav.classList.contains('open')) return;
+            const t = e.target;
+            if (!mobileNav.contains(t) && !btn.contains(t)) closeMobileNav();
+          });
+
+          document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeMobileNav();
+          });
+        }
+
+        // Section reveal (leve e com unobserve) :contentReference[oaicite:6]{index=6}
+        const sections = document.querySelectorAll('main section');
+        if ('IntersectionObserver' in window && sections.length) {
+          const obs = new IntersectionObserver((entries, o) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                entry.target.style.opacity = "1";
+                entry.target.style.transform = "translateY(0)";
+                o.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.12 });
+
+          sections.forEach(s => {
+            s.style.opacity = "0";
+            s.style.transform = "translateY(18px)";
+            s.style.transition = "all 0.7s ease-out";
+            obs.observe(s);
+          });
+        }
+
+        // Header hide/show on scroll (mobile-friendly) :contentReference[oaicite:7]{index=7}
+        const header = document.querySelector('header');
+        if (header) {
+          let last = 0;
+          window.addEventListener('scroll', () => {
+            const cur = window.pageYOffset || 0;
+            if (cur > last && cur > 110) {
+              header.style.transform = 'translateY(-100%)';
+              closeMobileNav();
+            } else {
+              header.style.transform = 'translateY(0)';
+            }
+            header.style.boxShadow = (cur > 50)
+              ? '0 10px 30px rgba(0,0,0,0.3)'
+              : 'var(--shadow-sm)';
+            last = cur;
+          }, { passive: true });
+        }
+
+        {% block extra_js_inline %}{% endblock %}
+      });
+    </script>
+
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

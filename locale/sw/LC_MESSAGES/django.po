@@ -1,7 +1,7 @@
-# Django PO file for Portuguese (pt) translation
+# Django PO file for Swahili (sw) translation
 # Copyright (C) 2026 ExactusPay
 # This file is distributed under the same license as the ExactusPay package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+# FIRST AUTHOR <EMAIL>, 2026.
 #
 msgid ""
 msgstr ""
@@ -10,29 +10,29 @@ msgstr ""
 "POT-Creation-Date: 2026-02-19 10:00-0300\n"
 "PO-Revision-Date: 2026-02-19 10:00-0300\n"
 "Last-Translator: \n"
-"Language-Team: Portuguese <pt@exactuspay.com>\n"
-"Language: pt_BR\n"
+"Language-Team: Swahili <sw@exactuspay.com>\n"
+"Language: sw\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: templates/base.html:10 templates/demo.html:5 templates/features.html:5
 #: templates/platform.html:5 templates/pricing.html:5 templates/security.html:5
 msgid "Global Payroll Software | Multi-Country Payroll & Compliance Platform | ExactusPay"
-msgstr "Software de Folha Global | Plataforma de Folha de Pagamento e Conformidade Multi-País | ExactusPay"
+msgstr "Programu ya Malipo ya Mishahara ya Kimataifa | Jukwaa la Malipo ya Nchi Nyingi na Uzingatiaji | ExactusPay"
 
 #: templates/base.html:15 templates/demo.html:10 templates/features.html:10
 #: templates/platform.html:10 templates/pricing.html:10 templates/security.html:10
 msgid ""
 "ExactusPay is a powerful global payroll software delivering multi-country payroll, automated compliance, real-time workforce analytics, standardized reporting, and payroll simulations. Manage international payroll accurately, securely, and at scale from one intelligent platform."
 msgstr ""
-"ExactusPay é um poderoso software de folha de pagamento global que oferece folha multi-país, conformidade automatizada, análises de força de trabalho em tempo real, relatórios padronizados e simulações de folha. Gerencie a folha de pagamento internacional com precisão, segurança e em escala a partir de uma plataforma inteligente."
+"ExactusPay ni programu yenye nguvu ya malipo ya mishahara ya kimataifa inayotoa malipo ya nchi nyingi, uzingatiaji wa kiotomatiki, uchanganuzi wa nguvu kazi kwa wakati halisi, uwasilishaji wa ripoti uliosanifishwa, na uigaji wa mishahara. Simamia mishahara ya kimataifa kwa usahihi, kwa usalama, na kwa kiwango kikubwa kupitia jukwaa moja mahiri."
 
 #: templates/base.html:21 templates/demo.html:15 templates/features.html:15
 #: templates/platform.html:15 templates/pricing.html:15 templates/security.html:15
 msgid "global payroll software, multi-country payroll, international payroll system, payroll compliance software, global payroll platform, payroll automation, payroll simulations, workforce analytics, multinational payroll management, cloud payroll solution, global HR payroll, payroll reporting software, international payroll compliance, scalable payroll platform"
-msgstr "software de folha de pagamento global, folha multi-país, sistema de folha internacional, software de conformidade de folha, plataforma de folha global, automação de folha, simulações de folha, análises de força de trabalho, gestão de folha multinacional, solução de folha em nuvem, folha de RH global, software de relatórios de folha, conformidade de folha internacional, plataforma de folha escalável"
+msgstr "programu ya mishahara ya kimataifa, mishahara ya nchi nyingi, mfumo wa mishahara wa kimataifa, programu ya uzingatiaji wa mishahara, jukwaa la mishahara ya kimataifa, uotomatiki wa mishahara, uigaji wa mishahara, uchanganuzi wa nguvu kazi, usimamizi wa mishahara wa kimataifa (multinational), suluhisho la mishahara la wingu, mishahara ya HR ya kimataifa, programu ya ripoti za mishahara, uzingatiaji wa mishahara wa kimataifa, jukwaa la mishahara linaloweza kupanuka"
 
 #: templates/base.html:25 templates/demo.html:20 templates/features.html:20
 #: templates/platform.html:20 templates/pricing.html:20 templates/security.html:20
@@ -43,114 +43,114 @@ msgstr "ExactusPay"
 #: templates/base.html:30 templates/demo.html:25 templates/features.html:25
 #: templates/platform.html:25 templates/pricing.html:25 templates/security.html:25
 msgid "ExactusPay | Global Payroll Software for Multi-Country Payroll & Compliance"
-msgstr "ExactusPay | Software de Folha Global para Folha Multi-País e Conformidade"
+msgstr "ExactusPay | Programu ya Mishahara ya Kimataifa kwa Malipo ya Nchi Nyingi na Uzingatiaji"
 
 #: templates/base.html:34 templates/demo.html:29 templates/features.html:29
 #: templates/platform.html:29 templates/pricing.html:29 templates/security.html:29
 msgid "Run global payroll with confidence. Automated compliance, payroll simulations, standardized reporting, and real-time analytics in one powerful multi-country payroll platform."
-msgstr "Execute a folha global com confiança. Conformidade automatizada, simulações de folha, relatórios padronizados e análises em tempo real em uma poderosa plataforma de folha multi-país."
+msgstr "Endesha mishahara ya kimataifa kwa ujasiri. Uzingatiaji wa kiotomatiki, uigaji wa mishahara, ripoti zilizosawazishwa, na uchanganuzi wa wakati halisi katika jukwaa moja lenye nguvu la mishahara ya nchi nyingi."
 
 #: templates/base.html:40 templates/demo.html:35 templates/features.html:35
 #: templates/platform.html:35 templates/pricing.html:35 templates/security.html:35
 msgid "ExactusPay | Global Payroll Software"
-msgstr "ExactusPay | Software de Folha Global"
+msgstr "ExactusPay | Programu ya Mishahara ya Kimataifa"
 
 #: templates/base.html:42 templates/demo.html:37 templates/features.html:37
 #: templates/platform.html:37 templates/pricing.html:37 templates/security.html:37
 msgid "Multi-country payroll, automated compliance, real-time workforce analytics, and payroll simulations—powered by ExactusPay."
-msgstr "Folha multi-país, conformidade automatizada, análises de força de trabalho em tempo real e simulações de folha—desenvolvido pela ExactusPay."
+msgstr "Mishahara ya nchi nyingi, uzingatiaji wa kiotomatiki, uchanganuzi wa nguvu kazi kwa wakati halisi, na uigaji wa mishahara—ukiwezeshwa na ExactusPay."
 
 #: templates/base.html:61 templates/header.html:15 templates/demo.html:80
 #: templates/features.html:85 templates/platform.html:90 templates/pricing.html:95
 #: templates/security.html:85
 msgid "Skip to content"
-msgstr "Pular para o conteúdo"
+msgstr "Ruka hadi kwenye maudhui"
 
 #: templates/header.html:20 templates/mobile-nav.html:10
 msgid "Home"
-msgstr "Início"
+msgstr "Mwanzo"
 
 #: templates/header.html:21 templates/mobile-nav.html:11
 msgid "Features"
-msgstr "Recursos"
+msgstr "Vipengele"
 
 #: templates/header.html:22 templates/mobile-nav.html:12
 msgid "Platform"
-msgstr "Plataforma"
+msgstr "Jukwaa"
 
 #: templates/header.html:23 templates/mobile-nav.html:13
 msgid "Security"
-msgstr "Segurança"
+msgstr "Usalama"
 
 #: templates/header.html:24 templates/mobile-nav.html:14
 msgid "Pricing"
-msgstr "Preços"
+msgstr "Bei"
 
 #: templates/header.html:28 templates/mobile-nav.html:18
 msgid "Log In"
-msgstr "Entrar"
+msgstr "Ingia"
 
 #: templates/header.html:29 templates/mobile-nav.html:19
 msgid "Request Demo"
-msgstr "Solicitar Demonstração"
+msgstr "Omba Onyesho"
 
 #: templates/header.html:33 templates/mobile-nav.html:24
 msgid "Language"
-msgstr "Idioma"
+msgstr "Lugha"
 
 #: templates/header.html:35 templates/mobile-nav.html:26
 msgid "Select language"
-msgstr "Selecionar idioma"
+msgstr "Chagua lugha"
 
 #: templates/header.html:47
 msgid "Open menu"
-msgstr "Abrir menu"
+msgstr "Fungua menyu"
 
 #: templates/mobile-nav.html:5
 msgid "Mobile navigation"
-msgstr "Navegação móvel"
+msgstr "Uabiri wa simu"
 
 #: templates/language-options.html:3
 msgid "🇧🇷 Português"
-msgstr "🇧🇷 Português"
+msgstr "🇧🇷 Kireno"
 
 #: templates/language-options.html:4
 msgid "🇬🇧 English"
-msgstr "🇬🇧 Inglês"
+msgstr "🇬🇧 Kiingereza"
 
 #: templates/language-options.html:5
 msgid "🇪🇸 Español"
-msgstr "🇪🇸 Espanhol"
+msgstr "🇪🇸 Kihispania"
 
 #: templates/language-options.html:6
 msgid "🇷🇺 Русский"
-msgstr "🇷🇺 Russo"
+msgstr "🇷🇺 Kirusi"
 
 #: templates/language-options.html:7
 msgid "🇸🇦 العربية"
-msgstr "🇸🇦 Árabe"
+msgstr "🇸🇦 Kiarabu"
 
 #: templates/homepage.html:15
 msgid "Smart Global Payroll Platform"
-msgstr "Plataforma Inteligente de Folha Global"
+msgstr "Jukwaa Mahiri la Mishahara ya Kimataifa"
 
 #: templates/homepage.html:18
 msgid ""
 "Streamline global workforce management with AI-driven compliance, real-time insights, and seamless payroll processing across 40+ countries."
 msgstr ""
-"Simplifique a gestão global da força de trabalho com conformidade orientada por IA, insights em tempo real e processamento de folha contínuo em mais de 40 países."
+"Rahisisha usimamizi wa nguvu kazi ya kimataifa kwa uzingatiaji unaoendeshwa na AI, maarifa ya wakati halisi, na uchakataji wa mishahara usio na vikwazo katika nchi zaidi ya 40."
 
 #: templates/homepage.html:23
 msgid "Watch Demo"
-msgstr "Assistir Demonstração"
+msgstr "Tazama Onyesho"
 
 #: templates/homepage.html:29
 msgid "99.8%"
-msgstr "99,8%"
+msgstr "99.8%"
 
 #: templates/homepage.html:30
 msgid "Accuracy Rate"
-msgstr "Taxa de Precisão"
+msgstr "Kiwango cha Usahihi"
 
 #: templates/homepage.html:33
 msgid "40+"
@@ -158,7 +158,7 @@ msgstr "40+"
 
 #: templates/homepage.html:34
 msgid "Countries"
-msgstr "Países"
+msgstr "Nchi"
 
 #: templates/homepage.html:37
 msgid "24"
@@ -166,7 +166,7 @@ msgstr "24"
 
 #: templates/homepage.html:38
 msgid "Hours Support"
-msgstr "Suporte 24 Horas"
+msgstr "Msaada wa Saa 24"
 
 #: templates/homepage.html:41
 msgid "100%"
@@ -174,193 +174,193 @@ msgstr "100%"
 
 #: templates/homepage.html:42
 msgid "Compliance"
-msgstr "Conformidade"
+msgstr "Uzingatiaji"
 
 #: templates/homepage.html:50
 msgid "Powerful Features"
-msgstr "Recursos Poderosos"
+msgstr "Vipengele Vyenye Nguvu"
 
 #: templates/homepage.html:51
 msgid "Designed for Global Scale"
-msgstr "Projetado para Escala Global"
+msgstr "Iliyoundwa kwa Kiwango cha Kimataifa"
 
 #: templates/homepage.html:52
 msgid "Everything you need to manage complex global payroll operations with confidence"
-msgstr "Tudo o que você precisa para gerenciar operações complexas de folha global com confiança"
+msgstr "Kila kitu unachohitaji ili kusimamia shughuli tata za mishahara ya kimataifa kwa ujasiri"
 
 #: templates/homepage.html:57
 msgid "AI-Powered Compliance"
-msgstr "Conformidade com IA"
+msgstr "Uzingatiaji Unaowezeshwa na AI"
 
 #: templates/homepage.html:58
 msgid "Automated regulatory updates and risk assessment across all jurisdictions with machine learning algorithms."
-msgstr "Atualizações regulatórias automatizadas e avaliação de riscos em todas as jurisdições com algoritmos de aprendizado de máquina."
+msgstr "Masasisho ya kanuni za kiotomatiki na tathmini ya hatari katika mamlaka zote kwa kutumia algoriti za ujifunzaji wa mashine."
 
 #: templates/homepage.html:62
 msgid "Real-time Analytics"
-msgstr "Análises em Tempo Real"
+msgstr "Uchanganuzi wa Wakati Halisi"
 
 #: templates/homepage.html:63
 msgid "Comprehensive dashboards with live insights into payroll costs, compliance status, and operational metrics."
-msgstr "Dashboards abrangentes com insights ao vivo sobre custos de folha, status de conformidade e métricas operacionais."
+msgstr "Dashibodi kamili zenye maarifa ya moja kwa moja kuhusu gharama za mishahara, hali ya uzingatiaji, na vipimo vya uendeshaji."
 
 #: templates/homepage.html:67
 msgid "Instant Processing"
-msgstr "Processamento Instantâneo"
+msgstr "Uchakataji wa Papo Hapo"
 
 #: templates/homepage.html:68
 msgid "Batch process thousands of payments across different currencies and banking systems simultaneously."
-msgstr "Processamento em lote de milhares de pagamentos em diferentes moedas e sistemas bancários simultaneamente."
+msgstr "Chakata kwa mfumo wa kundi maelfu ya malipo katika sarafu na mifumo ya benki tofauti kwa wakati mmoja."
 
 #: templates/homepage.html:72
 msgid "Enterprise Security"
-msgstr "Segurança Empresarial"
+msgstr "Usalama wa Kiwango cha Biashara"
 
 #: templates/homepage.html:73
 msgid "Bank-grade encryption, multi-factor authentication, and SOC 2 Type II certified infrastructure."
-msgstr "Criptografia de nível bancário, autenticação multifator e infraestrutura certificada SOC 2 Tipo II."
+msgstr "Usimbaji wa kiwango cha benki, uthibitishaji wa hatua nyingi (MFA), na miundombinu iliyoidhinishwa SOC 2 Aina ya II."
 
 #: templates/homepage.html:77
 msgid "Global Coverage"
-msgstr "Cobertura Global"
+msgstr "Ufunikaji wa Kimataifa"
 
 #: templates/homepage.html:78
 msgid "Seamless payroll processing across 40+ countries with local compliance and tax expertise built-in."
-msgstr "Processamento de folha contínuo em mais de 40 países com conformidade local e expertise tributária integrada."
+msgstr "Uchakataji wa mishahara usio na vikwazo katika nchi zaidi ya 40 ukiwa na uzingatiaji wa ndani na utaalamu wa kodi uliojengewa ndani."
 
 #: templates/homepage.html:82
 msgid "Audit Trail"
-msgstr "Trilha de Auditoria"
+msgstr "Rekodi ya Ukaguzi"
 
 #: templates/homepage.html:83
 msgid "Complete transparency with immutable records for every transaction and compliance verification."
-msgstr "Transparência completa com registros imutáveis para cada transação e verificação de conformidade."
+msgstr "Uwazi kamili wenye rekodi zisizobadilika kwa kila muamala na uthibitishaji wa uzingatiaji."
 
 #: templates/homepage.html:90
 msgid "Unified Platform"
-msgstr "Plataforma Unificada"
+msgstr "Jukwaa Lililounganishwa"
 
 #: templates/homepage.html:91
 msgid "Everything in One Dashboard"
-msgstr "Tudo em um Único Dashboard"
+msgstr "Kila Kitu katika Dashibodi Moja"
 
 #: templates/homepage.html:92
 msgid "Manage your entire global payroll operation from a single, intuitive interface with real-time data and actionable insights."
-msgstr "Gerencie toda a sua operação de folha global a partir de uma interface única e intuitiva com dados em tempo real e insights acionáveis."
+msgstr "Simamia operesheni yako yote ya mishahara ya kimataifa kutoka kiolesura kimoja rahisi kueleweka chenye data ya wakati halisi na maarifa yanayotekelezeka."
 
 #: templates/homepage.html:97
 msgid "Monitor payroll costs, compliance status, and operational metrics across all regions with live dashboards."
-msgstr "Monitore custos de folha, status de conformidade e métricas operacionais em todas as regiões com dashboards ao vivo."
+msgstr "Fuatilia gharama za mishahara, hali ya uzingatiaji, na vipimo vya uendeshaji katika maeneo yote kwa dashibodi za moja kwa moja."
 
 #: templates/homepage.html:101
 msgid "Multi-currency Support"
-msgstr "Suporte a Múltiplas Moedas"
+msgstr "Msaada wa Sarafu Nyingi"
 
 #: templates/homepage.html:102
 msgid "Process payments in 40+ currencies with automated forex management and optimal exchange rates."
-msgstr "Processe pagamentos em mais de 40 moedas com gestão automatizada de câmbio e taxas de câmbio otimizadas."
+msgstr "Chakata malipo katika sarafu zaidi ya 40 kwa usimamizi wa forex wa kiotomatiki na viwango bora vya ubadilishaji."
 
 #: templates/homepage.html:106
 msgid "Automated Reporting"
-msgstr "Relatórios Automatizados"
+msgstr "Ripoti za Kiotomatiki"
 
 #: templates/homepage.html:107
 msgid "Generate compliance reports, tax filings, and financial statements automatically across all jurisdictions."
-msgstr "Gere relatórios de conformidade, declarações fiscais e demonstrações financeiras automaticamente em todas as jurisdições."
+msgstr "Tengeneza ripoti za uzingatiaji, taarifa za kodi, na taarifa za fedha kiotomatiki katika mamlaka zote."
 
 #: templates/homepage.html:113
 msgid "Payroll Analytics"
-msgstr "Análises de Folha"
+msgstr "Uchanganuzi wa Mishahara"
 
 #: templates/homepage.html:115
 msgid "Live Dashboard"
-msgstr "Dashboard ao Vivo"
+msgstr "Dashibodi ya Moja kwa Moja"
 
 #: templates/homepage.html:116
 msgid "Real-time insights into global payroll operations with predictive analytics."
-msgstr "Insights em tempo real sobre operações de folha global com análises preditivas."
+msgstr "Maarifa ya wakati halisi kuhusu operesheni za mishahara ya kimataifa kwa uchanganuzi wa utabiri."
 
 #: templates/homepage.html:121
 msgid "Compliance Status"
-msgstr "Status de Conformidade"
+msgstr "Hali ya Uzingatiaji"
 
 #: templates/homepage.html:123
 msgid "All Systems Go"
-msgstr "Todos os Sistemas Operacionais"
+msgstr "Mifumo Yote Iko Tayari"
 
 #: templates/homepage.html:124
 msgid "100% compliance across all active jurisdictions with automated updates."
-msgstr "100% de conformidade em todas as jurisdições ativas com atualizações automatizadas."
+msgstr "Uzingatiaji wa 100% katika mamlaka zote zinazotumika kwa masasisho ya kiotomatiki."
 
 #: templates/homepage.html:129
 msgid "Payment Processing"
-msgstr "Processamento de Pagamentos"
+msgstr "Uchakataji wa Malipo"
 
 #: templates/homepage.html:131
 msgid "Batch Ready"
-msgstr "Pronto para Lote"
+msgstr "Tayari kwa Kundi"
 
 #: templates/homepage.html:132
 msgid "Process payments in multiple currencies with automated reconciliation."
-msgstr "Processe pagamentos em múltiplas moedas com reconciliação automatizada."
+msgstr "Chakata malipo katika sarafu nyingi kwa upatanisho wa kiotomatiki."
 
 #: templates/homepage.html:138
 msgid "Bank-Grade Protection"
-msgstr "Proteção de Nível Bancário"
+msgstr "Ulinzi wa Kiwango cha Benki"
 
 #: templates/homepage.html:139
 msgid "Your global payroll data is protected by multiple layers of enterprise security"
-msgstr "Seus dados globais de folha são protegidos por múltiplas camadas de segurança empresarial"
+msgstr "Data yako ya mishahara ya kimataifa inalindwa na tabaka nyingi za usalama wa kiwango cha biashara"
 
 #: templates/homepage.html:143
 msgid "AES-256 Encryption"
-msgstr "Criptografia AES-256"
+msgstr "Usimbaji AES-256"
 
 #: templates/homepage.html:144
 msgid "All data encrypted in transit and at rest with military-grade encryption standards."
-msgstr "Todos os dados criptografados em trânsito e em repouso com padrões de criptografia de nível militar."
+msgstr "Data yote imesimbwa wakati wa usafirishaji na inapohifadhiwa kwa viwango vya usimbaji wa kiwango cha kijeshi."
 
 #: templates/homepage.html:148
 msgid "Multi-Factor Auth"
-msgstr "Autenticação Multifator"
+msgstr "Uthibitishaji wa Hatua Nyingi"
 
 #: templates/homepage.html:149
 msgid "Enterprise-grade MFA with biometric options for all user access levels."
-msgstr "MFA de nível empresarial com opções biométricas para todos os níveis de acesso de usuário."
+msgstr "MFA ya kiwango cha biashara yenye chaguo za kibayometriki kwa viwango vyote vya ufikiaji wa watumiaji."
 
 #: templates/homepage.html:153
 msgid "SOC 2 Certified"
-msgstr "Certificado SOC 2"
+msgstr "Imeidhinishwa SOC 2"
 
 #: templates/homepage.html:154
 msgid "Regular third-party audits ensure continuous compliance with security standards."
-msgstr "Auditorias regulares de terceiros garantem conformidade contínua com os padrões de segurança."
+msgstr "Ukaguzi wa mara kwa mara wa wahusika wengine huhakikisha uzingatiaji endelevu wa viwango vya usalama."
 
 #: templates/homepage.html:158
 msgid "Data Sovereignty"
-msgstr "Soberania de Dados"
+msgstr "Ukuu wa Data"
 
 #: templates/homepage.html:159
 msgid "Regional data centers ensure compliance with local data protection regulations."
-msgstr "Data centers regionais garantem conformidade com regulamentações locais de proteção de dados."
+msgstr "Vituo vya data vya kikanda huhakikisha uzingatiaji wa kanuni za ulinzi wa data za ndani."
 
 #: templates/homepage.html:165
 msgid "Trusted by Leaders"
-msgstr "Confiado por Líderes"
+msgstr "Inayoaminika na Viongozi"
 
 #: templates/homepage.html:166
 msgid "Global Success Stories"
-msgstr "Histórias de Sucesso Global"
+msgstr "Hadithi za Mafanikio ya Kimataifa"
 
 #: templates/homepage.html:167
 msgid "See how companies are transforming their global payroll operations with ExactusPay"
-msgstr "Veja como empresas estão transformando suas operações de folha global com a ExactusPay"
+msgstr "Ona jinsi makampuni yanavyobadilisha operesheni zao za mishahara ya kimataifa kwa ExactusPay"
 
 #: templates/homepage.html:171
 msgid ""
 "\"ExactusPay revolutionized our global payroll operations. We reduced processing time by 80% while eliminating compliance errors across 15 countries. Their platform paid for itself within the first quarter, and the ROI has been phenomenal.\""
 msgstr ""
-"\"A ExactusPay revolucionou nossas operações de folha global. Reduzimos o tempo de processamento em 80% enquanto eliminamos erros de conformidade em 15 países. A plataforma se pagou no primeiro trimestre, e o ROI tem sido fenomenal.\""
+"\"ExactusPay ilibadilisha kabisa operesheni zetu za mishahara ya kimataifa. Tulipunguza muda wa uchakataji kwa 80% huku tukiondoa makosa ya uzingatiaji katika nchi 15. Jukwaa lao lilijilipa ndani ya robo ya kwanza, na faida kwa uwekezaji (ROI) imekuwa ya ajabu.\""
 
 #: templates/homepage.html:177
 msgid "Sarah Rodriguez"
@@ -368,931 +368,923 @@ msgstr "Sarah Rodriguez"
 
 #: templates/homepage.html:178
 msgid "Global Operations Director, TechScale Inc."
-msgstr "Diretora de Operações Globais, TechScale Inc."
+msgstr "Mkurugenzi wa Uendeshaji wa Kimataifa, TechScale Inc."
 
 #: templates/homepage.html:182
 msgid "Ready to Simplify Global Payroll?"
-msgstr "Pronto para Simplificar a Folha Global?"
+msgstr "Uko Tayari Kurahisisha Mishahara ya Kimataifa?"
 
 #: templates/homepage.html:183
 msgid "Join 500+ enterprises that trust ExactusPay with their global workforce management. Schedule a personalized demo to see our platform in action."
-msgstr "Junte-se a mais de 500 empresas que confiam na ExactusPay para sua gestão global de força de trabalho. Agende uma demonstração personalizada para ver nossa plataforma em ação."
+msgstr "Jiunge na kampuni zaidi ya 500 zinazoamini ExactusPay kwa usimamizi wao wa nguvu kazi ya kimataifa. Panga onyesho lililobinafsishwa ili kuona jukwaa letu likifanya kazi."
 
 #: templates/homepage.html:187 templates/cta.html:5 templates/features.html:175
 #: templates/platform.html:185 templates/pricing.html:190
 msgid "Schedule Demo"
-msgstr "Agendar Demonstração"
+msgstr "Panga Onyesho"
 
 #: templates/demo.html:45
 msgid "See ExactusPay in Action"
-msgstr "Veja a ExactusPay em Ação"
+msgstr "Ona ExactusPay Ikifanya Kazi"
 
 #: templates/demo.html:48
 msgid ""
 "Stop guessing your global labour costs. Get a personalised walkthrough of the platform that simplifies payroll for the Global South — with predictable compliance and one executive standard for reporting."
 msgstr ""
-"Pare de adivinhar seus custos trabalhistas globais. Obtenha uma demonstração personalizada da plataforma que simplifica a folha de pagamento para o Sul Global — com conformidade previsível e um padrão executivo para relatórios."
+"Acha kubashiri gharama zako za kazi za kimataifa. Pata mwongozo wa kibinafsi wa jukwaa linalorahisisha mishahara kwa Global South — kwa uzingatiaji unaotabirika na kiwango kimoja cha uongozi kwa ripoti."
 
 #: templates/demo.html:54
 msgid "What you'll see"
-msgstr "O que você verá"
+msgstr "Utakachokiona"
 
 #: templates/demo.html:55
 msgid "Book a session"
-msgstr "Agendar uma sessão"
+msgstr "Weka nafasi ya kikao"
 
 #: templates/demo.html:58
 msgid "Key outcomes"
-msgstr "Principais resultados"
+msgstr "Matokeo makuu"
 
 #: templates/demo.html:59 templates/features.html:64 templates/platform.html:64
 msgid "Single source of truth"
-msgstr "Fonte única da verdade"
+msgstr "Chanzo kimoja cha ukweli"
 
 #: templates/demo.html:60
 msgid "Multi-country standard"
-msgstr "Padrão multi-país"
+msgstr "Kiwango cha nchi nyingi"
 
 #: templates/demo.html:61
 msgid "Audit-ready controls"
-msgstr "Controles prontos para auditoria"
+msgstr "Udhibiti tayari kwa ukaguzi"
 
 #: templates/demo.html:62
 msgid "Cost visibility"
-msgstr "Visibilidade de custos"
+msgstr "Uonekano wa gharama"
 
 #: templates/demo.html:70
 msgid "What you get"
-msgstr "O que você obtém"
+msgstr "Unachopata"
 
 #: templates/demo.html:71
 msgid "A practical demo — not a sales pitch"
-msgstr "Uma demonstração prática — não um discurso de vendas"
+msgstr "Onyesho la vitendo — si uwasilishaji wa mauzo"
 
 #: templates/demo.html:72
 msgid "We focus on the exact workflows leaders need to expand safely across LATAM, Africa, and Asia."
-msgstr "Focamos exatamente nos fluxos de trabalho que líderes precisam para expandir com segurança pela América Latina, África e Ásia."
+msgstr "Tunazingatia michakato halisi ambayo viongozi wanahitaji ili kupanuka kwa usalama katika LATAM, Afrika, na Asia."
 
 #: templates/demo.html:77
 msgid "Run a live simulation"
-msgstr "Execute uma simulação ao vivo"
+msgstr "Endesha uigaji wa moja kwa moja"
 
 #: templates/demo.html:78
 msgid "Forecast the full employer cost of a new hire in Brazil, Nigeria, or Indonesia — including statutory contributions."
-msgstr "Projete o custo total do empregador para uma nova contratação no Brasil, Nigéria ou Indonésia — incluindo contribuições legais."
+msgstr "Tabiri gharama kamili ya mwajiri kwa ajira mpya nchini Brazil, Nigeria, au Indonesia — ikijumuisha michango ya kisheria."
 
 #: templates/demo.html:82
 msgid "Audit your compliance"
-msgstr "Audite sua conformidade"
+msgstr "Kagua uzingatiaji wako"
 
 #: templates/demo.html:83
 msgid "See how the platform flags risks and gaps across tax logic, filings, and governance — keeping you audit-ready."
-msgstr "Veja como a plataforma sinaliza riscos e lacunas na lógica tributária, declarações e governança — mantendo você pronto para auditoria."
+msgstr "Ona jinsi jukwaa linavyoashiria hatari na mapungufu katika mantiki ya kodi, uwasilishaji, na utawala — likikuweka tayari kwa ukaguzi."
 
 #: templates/demo.html:87
 msgid "Unified reporting"
-msgstr "Relatórios unificados"
+msgstr "Ripoti zilizounganishwa"
 
 #: templates/demo.html:88
 msgid "Watch 20+ countries roll up into one executive dashboard, with consistent definitions and clear visibility."
-msgstr "Veja mais de 20 países se consolidarem em um único dashboard executivo, com definições consistentes e visibilidade clara."
+msgstr "Tazama nchi zaidi ya 20 zikijumlishwa kwenye dashibodi moja ya uongozi, zikiwa na ufafanuzi thabiti na uonekano wazi."
 
 #: templates/demo.html:96
 msgid "Next steps"
-msgstr "Próximos passos"
+msgstr "Hatua zinazofuata"
 
 #: templates/demo.html:97
 msgid "Clear steps. Zero pressure."
-msgstr "Passos claros. Pressão zero."
+msgstr "Hatua wazi. Bila shinikizo."
 
 #: templates/demo.html:98
 msgid "We keep it efficient and relevant — you leave with a plan, not a pile of slides."
-msgstr "Mantemos tudo eficiente e relevante — você sai com um plano, não com uma pilha de slides."
+msgstr "Tunaifanya iwe yenye ufanisi na inayohusika — unaondoka na mpango, si rundo la slaidi."
 
 #: templates/demo.html:103
 msgid "The Discovery (15 mins)"
-msgstr "A Descoberta (15 minutos)"
+msgstr "Ugunduzi (dakika 15)"
 
 #: templates/demo.html:104
 msgid "We map your footprint (entities, contractors, EORs) and identify friction points across your target regions."
-msgstr "Mapeamos sua presença (entidades, contratados, EORs) e identificamos pontos de atrito em suas regiões-alvo."
+msgstr "Tunachora ramani ya uwepo wako (huluki, wakandarasi, EOR) na kutambua maeneo ya msuguano katika maeneo yako lengwa."
 
 #: templates/demo.html:107
 msgid "The Tailored Walkthrough (30 mins)"
-msgstr "A Demonstração Personalizada (30 minutos)"
+msgstr "Mwongozo Uliobinafsishwa (dakika 30)"
 
 #: templates/demo.html:108
 msgid "No generic deck. We show country-specific examples, local tax logic, and the reporting you'll rely on."
-msgstr "Nada de apresentações genéricas. Mostramos exemplos específicos por país, lógica tributária local e os relatórios que você utilizará."
+msgstr "Hakuna wasilisho la jumla. Tunaonyesha mifano mahususi kwa nchi, mantiki ya kodi ya ndani, na ripoti utakazotegemea."
 
 #: templates/demo.html:111
 msgid "The Strategic Blueprint"
-msgstr "O Plano Estratégico"
+msgstr "Mpango Mkakati"
 
 #: templates/demo.html:112
 msgid "You leave with a pricing estimate, transition timeline, and a simulation output for your next hire."
-msgstr "Você sai com uma estimativa de preços, cronograma de transição e um resultado de simulação para sua próxima contratação."
+msgstr "Unaondoka na makadirio ya bei, ratiba ya mpito, na matokeo ya uigaji kwa ajira yako inayofuata."
 
 #: templates/demo.html:120
 msgid "Why a demo?"
-msgstr "Por que uma demonstração?"
+msgstr "Kwa nini onyesho?"
 
 #: templates/demo.html:121
 msgid "Because expansion needs certainty"
-msgstr "Porque expansão exige certeza"
+msgstr "Kwa sababu upanuzi unahitaji uhakika"
 
 #: templates/demo.html:122
 msgid "See predictive cost, verify compliance, and meet the experts who support you day-to-day."
-msgstr "Veja o custo preditivo, verifique a conformidade e conheça os especialistas que apoiam você no dia a dia."
+msgstr "Ona gharama za utabiri, thibitisha uzingatiaji, na kutana na wataalamu wanaokuunga mkono kila siku."
 
 #: templates/demo.html:127
 msgid "See the future"
-msgstr "Veja o futuro"
+msgstr "Ona yajayo"
 
 #: templates/demo.html:128
 msgid "Most tools show historical spend. ExactusPay demonstrates how to predict employment cost before you hire."
-msgstr "A maioria das ferramentas mostra gastos históricos. A ExactusPay demonstra como prever o custo de contratação antes de você contratar."
+msgstr "Zana nyingi huonyesha matumizi ya zamani. ExactusPay inaonyesha jinsi ya kutabiri gharama ya ajira kabla ya kuajiri."
 
 #: templates/demo.html:132
 msgid "Verify compliance"
-msgstr "Verifique a conformidade"
+msgstr "Thibitisha uzingatiaji"
 
 #: templates/demo.html:133
 msgid "Ask tough questions on POPIA, LGPD, or statutory contributions. We show the logic and evidence trails."
-msgstr "Faça perguntas difíceis sobre POPIA, LGPD ou contribuições legais. Mostramos a lógica e os rastros de evidências."
+msgstr "Uliza maswali magumu kuhusu POPIA, LGPD, au michango ya kisheria. Tunaonyesha mantiki na nyayo za ushahidi."
 
 #: templates/demo.html:137
 msgid "Meet your team"
-msgstr "Conheça sua equipe"
+msgstr "Kutana na timu yako"
 
 #: templates/demo.html:138
 msgid "This isn't just software. You'll meet the support experts that operate as an extension of your team."
-msgstr "Isto não é apenas software. Você conhecerá os especialistas de suporte que atuam como uma extensão da sua equipe."
+msgstr "Hii si programu tu. Utakutana na wataalamu wa msaada wanaofanya kazi kama sehemu ya timu yako."
 
 #: templates/demo.html:146
 msgid "Request a demo"
-msgstr "Solicite uma demonstração"
+msgstr "Omba onyesho"
 
 #: templates/demo.html:147
 msgid "Schedule your personal walkthrough"
-msgstr "Agende sua demonstração personalizada"
+msgstr "Panga mwongozo wako binafsi"
 
 #: templates/demo.html:148
 msgid "Submit the form and we'll follow up quickly with the right session for your footprint."
-msgstr "Envie o formulário e entraremos em contato rapidamente com a sessão adequada para sua realidade."
+msgstr "Wasilisha fomu na tutafuatilia haraka kwa kikao sahihi kulingana na uwepo wako."
 
 #: templates/demo.html:153
 msgid "Schedule Your Personal Demo"
-msgstr "Agende Sua Demonstração Personalizada"
+msgstr "Panga Onyesho Lako Binafsi"
 
 #: templates/demo.html:154
 msgid "No commitment required. We keep this focused, practical, and relevant to your target countries."
-msgstr "Sem compromisso. Mantemos o foco, a praticidade e a relevância para seus países-alvo."
+msgstr "Hakuna kujifunga kunakohitajika. Tunaweka hili lenye mwelekeo, la vitendo, na linalofaa kwa nchi zako lengwa."
 
 #: templates/demo.html:159
 msgid "First Name"
-msgstr "Nome"
+msgstr "Jina la Kwanza"
 
 #: templates/demo.html:163
 msgid "Last Name"
-msgstr "Sobrenome"
+msgstr "Jina la Mwisho"
 
 #: templates/demo.html:168
 msgid "Work Email"
-msgstr "E-mail Profissional"
+msgstr "Barua Pepe ya Kazi"
 
 #: templates/demo.html:173
 msgid "Company Name"
-msgstr "Nome da Empresa"
+msgstr "Jina la Kampuni"
 
 #: templates/demo.html:178
 msgid "Number of Employees"
-msgstr "Número de Funcionários"
+msgstr "Idadi ya Wafanyakazi"
 
 #: templates/demo.html:179
 msgid "Select…"
-msgstr "Selecionar…"
+msgstr "Chagua…"
 
 #: templates/demo.html:186
 msgid "Expansion Region (Optional)"
-msgstr "Região de Expansão (Opcional)"
+msgstr "Eneo la Upanuzi (Hiari)"
 
 #: templates/demo.html:187
 msgid "Not sure yet"
-msgstr "Ainda não sei"
+msgstr "Bado sina uhakika"
 
 #: templates/demo.html:196
 msgid "Book My Session"
-msgstr "Agendar Minha Sessão"
+msgstr "Weka Nafasi ya Kikao Changu"
 
 #: templates/demo.html:200
 msgid "No commitment required. 100% data privacy."
-msgstr "Sem compromisso. 100% de privacidade de dados."
+msgstr "Hakuna kujifunga kunakohitajika. Faragha ya data 100%."
 
 #: templates/features.html:42
 msgid "Features built for real global payroll"
-msgstr "Recursos desenvolvidos para folha global real"
+msgstr "Vipengele vilivyojengwa kwa mishahara halisi ya kimataifa"
 
 #: templates/features.html:45
 msgid "ExactusPay gives growing companies the capabilities of a global enterprise — without fragmented tools. Standardised data, automated compliance, and operational clarity across LATAM, Africa, and Asia."
-msgstr "A ExactusPay oferece às empresas em crescimento as capacidades de uma empresa global — sem ferramentas fragmentadas. Dados padronizados, conformidade automatizada e clareza operacional na América Latina, África e Ásia."
+msgstr "ExactusPay huwapa kampuni zinazokua uwezo wa shirika la kimataifa — bila zana zilizogawanyika. Data iliyosanifishwa, uzingatiaji wa kiotomatiki, na uwazi wa uendeshaji katika LATAM, Afrika, na Asia."
 
 #: templates/features.html:50
 msgid "Explore the Pillars"
-msgstr "Explorar os Pilares"
+msgstr "Chunguza Nguzo"
 
 #: templates/features.html:51
 msgid "View Capabilities"
-msgstr "Ver Capacidades"
+msgstr "Tazama Uwezo"
 
 #: templates/features.html:54
 msgid "Feature outcomes"
-msgstr "Resultados dos recursos"
+msgstr "Matokeo ya vipengele"
 
 #: templates/features.html:55
 msgid "Standardised reports"
-msgstr "Relatórios padronizados"
+msgstr "Ripoti zilizosawazishwa"
 
 #: templates/features.html:56
 msgid "Compliance built-in"
-msgstr "Conformidade incorporada"
+msgstr "Uzingatiaji umejengewa ndani"
 
 #: templates/features.html:57
 msgid "Multi-currency ready"
-msgstr "Pronto para múltiplas moedas"
+msgstr "Tayari kwa sarafu nyingi"
 
 #: templates/features.html:58
 msgid "Managed support"
-msgstr "Suporte gerenciado"
+msgstr "Msaada unaosimamiwa"
 
 #: templates/features.html:66
 msgid "Capabilities"
-msgstr "Capacidades"
+msgstr "Uwezo"
 
 #: templates/features.html:67
 msgid "Everything teams need to run payroll with confidence"
-msgstr "Tudo o que as equipes precisam para executar a folha com confiança"
+msgstr "Kila kitu timu zinahitaji kuendesha mishahara kwa ujasiri"
 
 #: templates/features.html:68
 msgid "From automation and analytics to audit trails and self-service, ExactusPay replaces local fragmentation with a single, reliable operating model."
-msgstr "Da automação e análises a trilhas de auditoria e autoatendimento, a ExactusPay substitui a fragmentação local por um modelo operacional único e confiável."
+msgstr "Kuanzia uotomatiki na uchanganuzi hadi nyayo za ukaguzi na kujihudumia, ExactusPay hubadilisha mgawanyiko wa ndani kwa modeli moja ya uendeshaji iliyo thabiti na ya kuaminika."
 
 #: templates/features.html:73
 msgid "Compliance automation"
-msgstr "Automação de conformidade"
+msgstr "Uotomatiki wa uzingatiaji"
 
 #: templates/features.html:74
 msgid "Built-in legal logic and validations that help you stay audit-ready as regulations evolve."
-msgstr "Lógica legal e validações incorporadas que ajudam você a se manter pronto para auditoria à medida que as regulamentações evoluem."
+msgstr "Mantiki ya kisheria na uthibitishaji uliojengewa ndani unaokusaidia kubaki tayari kwa ukaguzi kadri kanuni zinavyobadilika."
 
 #: templates/features.html:78
 msgid "Cost & payroll analytics"
-msgstr "Análises de custo e folha"
+msgstr "Uchanganuzi wa gharama na mishahara"
 
 #: templates/features.html:79
 msgid "Dashboards that make Total Cost of Employment and key metrics visible across countries."
-msgstr "Dashboards que tornam o Custo Total de Emprego e as principais métricas visíveis em todos os países."
+msgstr "Dashibodi zinazofanya Jumla ya Gharama ya Ajira na vipimo muhimu vionekane katika nchi zote."
 
 #: templates/features.html:83
 msgid "Fast, reliable processing"
-msgstr "Processamento rápido e confiável"
+msgstr "Uchakataji wa haraka na wa kuaminika"
 
 #: templates/features.html:84
 msgid "Run payroll at scale with structured inputs, automated checks, and stable exports."
-msgstr "Execute a folha em escala com entradas estruturadas, verificações automatizadas e exportações estáveis."
+msgstr "Endesha mishahara kwa kiwango kikubwa kwa ingizo lililopangwa, ukaguzi wa kiotomatiki, na usafirishaji wa data thabiti."
 
 #: templates/features.html:88
 msgid "Strong encryption, role-based access, and governance designed for payroll-grade sensitivity."
-msgstr "Criptografia forte, acesso baseado em funções e governança projetados para a sensibilidade de nível de folha de pagamento."
+msgstr "Usimbaji thabiti, ufikiaji kulingana na jukumu, na utawala ulioundwa kwa unyeti wa kiwango cha mishahara."
 
 #: templates/features.html:92
 msgid "One reporting structure across jurisdictions — no spreadsheet reconciliation between providers."
-msgstr "Uma estrutura de relatórios em todas as jurisdições — sem reconciliação de planilhas entre provedores."
+msgstr "Muundo mmoja wa ripoti katika mamlaka zote — hakuna upatanisho wa lahajedwali kati ya watoa huduma."
 
 #: templates/features.html:96
 msgid "Audit trails & governance"
-msgstr "Trilhas de auditoria e governança"
+msgstr "Nyayo za ukaguzi na utawala"
 
 #: templates/features.html:97
 msgid "Traceable calculations and change history to support internal review and external audits."
-msgstr "Cálculos rastreáveis e histórico de alterações para apoiar revisões internas e auditorias externas."
+msgstr "Hesabu zinazoweza kufuatiliwa na historia ya mabadiliko kusaidia mapitio ya ndani na ukaguzi wa nje."
 
 #: templates/features.html:105
 msgid "Core Pillars"
-msgstr "Pilares Centrais"
+msgstr "Nguzo Kuu"
 
 #: templates/features.html:106
 msgid "Four pillars that replace payroll fragmentation"
-msgstr "Quatro pilares que substituem a fragmentação da folha"
+msgstr "Nguzo nne zinazobadilisha mgawanyiko wa mishahara"
 
 #: templates/features.html:107
 msgid "These pillars work together to deliver accuracy, compliance, and clarity across every country you operate in."
-msgstr "Esses pilares trabalham juntos para oferecer precisão, conformidade e clareza em todos os países onde você opera."
+msgstr "Nguzo hizi hufanya kazi pamoja kutoa usahihi, uzingatiaji, na uwazi katika kila nchi unayoendesha shughuli."
 
 #: templates/features.html:112
 msgid "Strategic payroll simulations"
-msgstr "Simulações estratégicas de folha"
+msgstr "Uigaji wa mishahara wa kimkakati"
 
 #: templates/features.html:113
 msgid "Forecast full employment cost before you hire — including employer taxes, statutory contributions, and local burden."
-msgstr "Projete o custo total de emprego antes de contratar — incluindo impostos do empregador, contribuições legais e encargos locais."
+msgstr "Tabiri gharama kamili ya ajira kabla ya kuajiri — ikijumuisha kodi za mwajiri, michango ya kisheria, na mzigo wa ndani."
 
 #: templates/features.html:115
-msgid "Pre-hire forecasting:"
-msgstr "Previsão pré-contratação:"
-
-msgid "model offers with accurate employer-cost breakdowns."
-msgstr "modele ofertas com detalhamentos precisos de custos do empregador."
+msgid "Pre-hire forecasting: model offers with accurate employer-cost breakdowns."
+msgstr "Utabiri kabla ya kuajiri: tengeneza mifano ya ofa kwa mgawanyo sahihi wa gharama za mwajiri."
 
 #: templates/features.html:116
 msgid "Scenario planning: compare markets and hiring strategies side-by-side."
-msgstr "Planejamento de cenários: compare mercados e estratégias de contratação lado a lado."
+msgstr "Upangaji wa hali (scenario): linganisha masoko na mikakati ya kuajiri kwa upande kwa upande."
 
 #: templates/features.html:117
 msgid "Budget certainty: align HR and Finance with one set of numbers."
-msgstr "Certeza orçamentária: alinhe RH e Finanças com um conjunto de números."
+msgstr "Uhakika wa bajeti: linganisha HR na Fedha kwa seti moja ya takwimu."
 
 #: templates/features.html:121
 msgid "Global-standardised reporting"
-msgstr "Relatórios padronizados globalmente"
+msgstr "Ripoti zilizosawazishwa kimataifa"
 
 #: templates/features.html:122
 msgid "Replace inconsistent local formats with one reporting model that stays stable across countries and payroll cycles."
-msgstr "Substitua formatos locais inconsistentes por um modelo de relatórios que permanece estável em todos os países e ciclos de folha."
+msgstr "Badilisha miundo ya ndani isiyo thabiti kwa modeli moja ya ripoti inayobaki thabiti katika nchi zote na mizunguko ya mishahara."
 
 #: templates/features.html:124
 msgid "Single dashboard: central visibility across payroll and workforce data."
-msgstr "Dashboard único: visibilidade central dos dados de folha e força de trabalho."
+msgstr "Dashibodi moja: uonekano wa kati wa data ya mishahara na nguvu kazi."
 
 #: templates/features.html:125
 msgid "Comparable outputs: consistent data definitions enable clean cross-country analysis."
-msgstr "Resultados comparáveis: definições de dados consistentes permitem análises claras entre países."
+msgstr "Matokeo yanayolinganishwa: ufafanuzi thabiti wa data huwezesha uchanganuzi safi wa nchi kwa nchi."
 
 #: templates/features.html:126
 msgid "Decision clarity: executive-grade insights into costs, trends, and exposure."
-msgstr "Clareza de decisão: insights de nível executivo sobre custos, tendências e exposição."
+msgstr "Uwazi wa maamuzi: maarifa ya kiwango cha uongozi kuhusu gharama, mienendo, na kiwango cha hatari."
 
 #: templates/features.html:130
 msgid "Automated compliance & security"
-msgstr "Conformidade e segurança automatizadas"
+msgstr "Uzingatiaji na usalama wa kiotomatiki"
 
 #: templates/features.html:131
 msgid "Stay ahead of regulatory change with built-in rules, validations, and governance designed for sensitive payroll data."
-msgstr "Mantenha-se à frente das mudanças regulatórias com regras, validações e governança incorporadas, projetadas para dados sensíveis de folha."
+msgstr "Kaa mbele ya mabadiliko ya kanuni kwa sheria, uthibitishaji, na utawala uliojengewa ndani ulioundwa kwa data nyeti ya mishahara."
 
 #: templates/features.html:133
 msgid "Legal logic: controls aligned to labour law and statutory requirements."
-msgstr "Lógica legal: controles alinhados à legislação trabalhista e requisitos legais."
+msgstr "Mantiki ya kisheria: udhibiti uliolinganishwa na sheria za ajira na mahitaji ya kisheria."
 
 #: templates/features.html:134
 msgid "Error reduction: automation and guardrails minimise manual mistakes."
-msgstr "Redução de erros: automação e barreiras de proteção minimizam erros manuais."
+msgstr "Kupunguza makosa: uotomatiki na vizuizi hupunguza makosa ya mikono."
 
 #: templates/features.html:135
 msgid "Audit-ready: traceable calculations and data controls support reviews."
-msgstr "Pronto para auditoria: cálculos rastreáveis e controles de dados apoiam revisões."
+msgstr "Tayari kwa ukaguzi: hesabu zinazofuatilika na udhibiti wa data huunga mkono mapitio."
 
 #: templates/features.html:139
 msgid "Integrations & connectivity"
-msgstr "Integrações e conectividade"
+msgstr "Ujumuishaji na muunganisho"
 
 #: templates/features.html:140
 msgid "Connect your HR stack so data flows from hire to pay — with fewer handoffs, less re-entry, and consistent governance."
-msgstr "Conecte sua pilha de RH para que os dados fluam da contratação ao pagamento — com menos transferências, menos reinserções e governança consistente."
+msgstr "Unganisha mkusanyiko wako wa HR ili data itiririke kutoka kuajiri hadi kulipa — kwa makabidhiano machache, uingizaji mdogo wa data upya, na utawala thabiti."
 
 #: templates/features.html:142
 msgid "HCM connectivity: integrate with tools like Workday and BambooHR."
-msgstr "Conectividade HCM: integre-se com ferramentas como Workday e BambooHR."
+msgstr "Muunganisho wa HCM: unganisha na zana kama Workday na BambooHR."
 
 #: templates/features.html:143
 msgid "Scalable architecture: grow from mid-sized to global without rewiring operations."
-msgstr "Arquitetura escalável: cresça de médio porte para global sem reestruturar operações."
+msgstr "Usanifu unaoweza kupanuka: kembangkan kutoka kampuni ya kati hadi kimataifa bila kubadili upya uendeshaji."
 
 #: templates/features.html:144
 msgid "Multi-language & FX: localised employee experience across currencies and regions."
-msgstr "Multi-idioma e câmbio: experiência do funcionário localizada em todas as moedas e regiões."
+msgstr "Lugha nyingi na FX: uzoefu wa mfanyakazi uliolocalishwa katika sarafu na maeneo mbalimbali."
 
 #: templates/features.html:148 templates/platform.html:158 templates/pricing.html:163
 #: templates/security.html:158
 msgid "Schedule a Demo"
-msgstr "Agendar uma Demonstração"
+msgstr "Panga Onyesho"
 
 #: templates/platform.html:42
 msgid "A global payroll platform built for scale"
-msgstr "Uma plataforma global de folha construída para escala"
+msgstr "Jukwaa la mishahara ya kimataifa lililojengwa kwa ajili ya kupanuka"
 
 #: templates/platform.html:45
 msgid "ExactusPay is an end-to-end global payroll ecosystem that brings enterprise-grade consistency to high-growth markets. Replace fragmented local tools with a single source of truth — and run multi-country payroll with clarity, control, and confidence."
-msgstr "A ExactusPay é um ecossistema completo de folha global que traz consistência de nível empresarial para mercados de alto crescimento. Substitua ferramentas locais fragmentadas por uma única fonte da verdade — e execute a folha multi-país com clareza, controle e confiança."
+msgstr "ExactusPay ni ekosistimu ya mishahara ya kimataifa ya mwanzo hadi mwisho inayoleta uthabiti wa kiwango cha biashara katika masoko yanayokua haraka. Badilisha zana za ndani zilizogawanyika kwa chanzo kimoja cha ukweli — na endesha mishahara ya nchi nyingi kwa uwazi, udhibiti, na ujasiri."
 
 #: templates/platform.html:50
 msgid "Explore Capabilities"
-msgstr "Explorar Capacidades"
+msgstr "Chunguza Uwezo"
 
 #: templates/platform.html:51
 msgid "View Architecture"
-msgstr "Ver Arquitetura"
+msgstr "Tazama Usanifu"
 
 #: templates/platform.html:54
 msgid "Platform outcomes"
-msgstr "Resultados da plataforma"
+msgstr "Matokeo ya jukwaa"
 
 #: templates/platform.html:56
 msgid "TCOE visibility"
-msgstr "Visibilidade do Custo Total de Emprego"
+msgstr "Uonekano wa TCOE"
 
 #: templates/platform.html:60
 msgid "Architecture of Excellence"
-msgstr "Arquitetura de Excelência"
+msgstr "Usanifu wa Ubora"
 
 #: templates/platform.html:61
 msgid "One framework. Every country. One clear view."
-msgstr "Um framework. Todos os países. Uma visão clara."
+msgstr "Mfumo mmoja. Kila nchi. Mwonekano mmoja ulio wazi."
 
 #: templates/platform.html:62
 msgid "Whether you pay teams in Brazil, Nigeria, or Vietnam, payroll data is processed and presented in the same structure. That means fewer manual reconciliations and executive-grade visibility across jurisdictions."
-msgstr "Quer você pague equipes no Brasil, Nigéria ou Vietnã, os dados da folha são processados e apresentados na mesma estrutura. Isso significa menos reconciliações manuais e visibilidade de nível executivo em todas as jurisdições."
+msgstr "Iwe unalipa timu nchini Brazil, Nigeria, au Vietnam, data ya mishahara huchakatwa na kuwasilishwa kwa muundo ule ule. Hilo linamaanisha upatanisho mdogo wa mikono na uonekano wa kiwango cha uongozi katika mamlaka zote."
 
 #: templates/platform.html:67
 msgid "Global-standardised model"
-msgstr "Modelo padronizado globalmente"
+msgstr "Modeli iliyosanifishwa kimataifa"
 
 #: templates/platform.html:68
 msgid "Common definitions for earnings, deductions, bases, and outputs — consistent across regions and providers."
-msgstr "Definições comuns para rendimentos, deduções, bases e resultados — consistentes em todas as regiões e provedores."
+msgstr "Ufafanuzi wa pamoja wa mapato, makato, misingi, na matokeo — thabiti katika maeneo na watoa huduma."
 
 #: templates/platform.html:72
 msgid "Total Cost of Employment"
-msgstr "Custo Total de Emprego"
+msgstr "Jumla ya Gharama ya Ajira"
 
 #: templates/platform.html:73
 msgid "See employer cost, statutory burdens, and tax exposure in one comparable view — globally and locally."
-msgstr "Veja o custo do empregador, encargos legais e exposição tributária em uma visão comparável — global e localmente."
+msgstr "Ona gharama ya mwajiri, mizigo ya kisheria, na kiwango cha hatari ya kodi katika mwonekano mmoja unaolinganishwa — kimataifa na ndani."
 
 #: templates/platform.html:77
 msgid "No spreadsheet reconciliation"
-msgstr "Sem reconciliação de planilhas"
+msgstr "Hakuna upatanisho wa lahajedwali"
 
 #: templates/platform.html:78
 msgid "Stable exports and registers that don’t change format every month — country to country, cycle to cycle."
-msgstr "Exportações e registros estáveis que não mudam de formato todos os meses — país a país, ciclo a ciclo."
+msgstr "Usafirishaji wa data na rejesta thabiti ambazo hazibadilishi muundo kila mwezi — nchi kwa nchi, mzunguko kwa mzunguko."
 
 #: templates/platform.html:86
 msgid "Strategic Capabilities"
-msgstr "Capacidades Estratégicas"
+msgstr "Uwezo wa Kimkakati"
 
 #: templates/platform.html:87
 msgid "Expand with confidence — operate with precision"
-msgstr "Expanda com confiança — opere com precisão"
+msgstr "Panuka kwa ujasiri — fanya kazi kwa usahihi"
 
 #: templates/platform.html:88
 msgid "Plan ahead, stay compliant, connect your stack, and deliver a consistent employee experience — even across complex markets."
-msgstr "Planeje com antecedência, mantenha a conformidade, conecte sua pilha e ofereça uma experiência consistente ao funcionário — mesmo em mercados complexos."
+msgstr "Panga mapema, baki katika uzingatiaji, unganisha mifumo yako, na toa uzoefu thabiti wa mfanyakazi — hata katika masoko magumu."
 
 #: templates/platform.html:93
 msgid "Predictive Simulation Engine"
-msgstr "Mecanismo de Simulação Preditiva"
+msgstr "Injini ya Uigaji wa Utabiri"
 
 #: templates/platform.html:94
 msgid "Forecast full employment costs — including local taxes and statutory contributions — before you hire or enter a new market. Turn “what if?” questions into clear numbers."
-msgstr "Projete os custos totais de emprego — incluindo impostos locais e contribuições legais — antes de contratar ou entrar em um novo mercado. Transforme perguntas do tipo \"e se?\" em números claros."
+msgstr "Tabiri gharama kamili za ajira — ikijumuisha kodi za ndani na michango ya kisheria — kabla ya kuajiri au kuingia soko jipya. Geuza maswali ya “vipi ikiwa?” kuwa takwimu wazi."
 
 #: templates/platform.html:97
 msgid "Pre-hire modelling: price offers accurately with full employer cost breakdowns."
-msgstr "Modelagem pré-contratação: precifique ofertas com precisão com detalhamentos completos de custos do empregador."
+msgstr "Uundaji wa mfano kabla ya kuajiri: panga bei ya ofa kwa usahihi kwa mgawanyo kamili wa gharama za mwajiri."
 
 #: templates/platform.html:98
 msgid "Scenario comparisons: assess markets and hiring strategies side-by-side."
-msgstr "Comparações de cenários: avalie mercados e estratégias de contratação lado a lado."
+msgstr "Ulinganisho wa hali: tathmini masoko na mikakati ya kuajiri kwa upande kwa upande."
 
 #: templates/platform.html:99
 msgid "Budget confidence: align Finance, HR, and leadership on one set of numbers."
-msgstr "Confiança orçamentária: alinhe Finanças, RH e liderança em um conjunto de números."
+msgstr "Ujasiri wa bajeti: linganisha Fedha, HR, na uongozi kwa seti moja ya takwimu."
 
 #: templates/platform.html:103
 msgid "Automated Compliance Guardianship"
-msgstr "Guardião de Conformidade Automatizado"
+msgstr "Ulinzi wa Uzingatiaji wa Kiotomatiki"
 
 #: templates/platform.html:104
 msgid "Built-in legal logic adapts to shifting labour laws and tax regulations across LATAM, Africa, and Asia — keeping you audit-ready and protected from avoidable penalties."
-msgstr "A lógica legal incorporada se adapta às mudanças nas leis trabalhistas e regulamentações fiscais na América Latina, África e Ásia — mantendo você pronto para auditoria e protegido contra penalidades evitáveis."
+msgstr "Mantiki ya kisheria iliyo ndani hubadilika kulingana na mabadiliko ya sheria za ajira na kanuni za kodi katika LATAM, Afrika, na Asia — ikikuweka tayari kwa ukaguzi na kukulinda dhidi ya adhabu zinazoweza kuepukika."
 
 #: templates/platform.html:107
 msgid "Regulation-aware rules: payroll logic tracks current statutory obligations."
-msgstr "Regras conscientes de regulamentação: a lógica da folha acompanha as obrigações legais atuais."
+msgstr "Sheria zinazotambua kanuni: mantiki ya mishahara hufuata wajibu wa sasa wa kisheria."
 
 #: templates/platform.html:108
 msgid "Reduced risk: validations and governance to prevent common errors."
-msgstr "Risco reduzido: validações e governança para prevenir erros comuns."
+msgstr "Hatari iliyopunguzwa: uthibitishaji na utawala kuzuia makosa ya kawaida."
 
 #: templates/platform.html:109
 msgid "Evidence trails: traceable calculations and changes support audits."
-msgstr "Rastros de evidências: cálculos e alterações rastreáveis apoiam auditorias."
+msgstr "Nyayo za ushahidi: hesabu na mabadiliko yanayofuatilika huunga mkono ukaguzi."
 
 #: templates/platform.html:113
 msgid "Managed Service Connectivity"
-msgstr "Conectividade de Serviço Gerenciado"
+msgstr "Muunganisho wa Huduma Inayosimamiwa"
 
 #: templates/platform.html:114
 msgid "ExactusPay connects to your HCM systems (e.g., Workday, BambooHR) so employee data flows cleanly from hire to pay — without manual re-entry and operational drift."
-msgstr "A ExactusPay conecta-se aos seus sistemas de HCM (por exemplo, Workday, BambooHR) para que os dados do funcionário fluam de forma limpa da contratação ao pagamento — sem reinserção manual e desvio operacional."
+msgstr "ExactusPay huunganisha na mifumo yako ya HCM (mf. Workday, BambooHR) ili data ya mfanyakazi itiririke kwa usafi kutoka kuajiri hadi kulipa — bila kuingiza upya kwa mikono na bila kuyumba kwa uendeshaji."
 
 #: templates/platform.html:117
 msgid "Hire-to-pay pipeline: structured data exchange from onboarding to payment."
-msgstr "Pipeline da contratação ao pagamento: troca estruturada de dados do onboarding ao pagamento."
+msgstr "Mtiririko kuajiri-hadi-kulipa: ubadilishanaji wa data uliopangwa kutoka onboarding hadi malipo."
 
 #: templates/platform.html:118
 msgid "Operational consistency: one workflow across multiple countries/providers."
-msgstr "Consistência operacional: um fluxo de trabalho em vários países/provedores."
+msgstr "Uthabiti wa uendeshaji: mtiririko mmoja katika nchi/watoa huduma wengi."
 
 #: templates/platform.html:119
 msgid "Lower admin load: fewer handoffs and less spreadsheet work."
-msgstr "Menor carga administrativa: menos transferências e menos trabalho com planilhas."
+msgstr "Mzigo mdogo wa usimamizi: makabidhiano machache na kazi ndogo ya lahajedwali."
 
 #: templates/platform.html:123
 msgid "Multi-Currency & Language Support"
-msgstr "Suporte a Múltiplas Moedas e Idiomas"
+msgstr "Msaada wa Sarafu Nyingi na Lugha Nyingi"
 
 #: templates/platform.html:124
 msgid "Handle FX rules and banking complexity behind the scenes. Employees get a refined, localised experience — with multi-language access to payslips and documents."
-msgstr "Lide com regras de câmbio e complexidade bancária nos bastidores. Os funcionários obtêm uma experiência refinada e localizada — com acesso multi-idioma a recibos de pagamento e documentos."
+msgstr "Shughulikia sheria za FX na ugumu wa benki nyuma ya pazia. Wafanyakazi hupata uzoefu ulioboreshwa na uliolocalishwa — pamoja na ufikiaji wa lugha nyingi kwa vocha za mishahara na nyaraka."
 
 #: templates/platform.html:127
 msgid "FX handled centrally: exchange and payout workflows managed reliably."
-msgstr "Câmbio tratado centralmente: fluxos de trabalho de câmbio e pagamento gerenciados de forma confiável."
+msgstr "FX hushughulikiwa katikati: mtiririko wa ubadilishaji na malipo unasimamiwa kwa uaminifu."
 
 #: templates/platform.html:128
 msgid "Local experience: multi-language portal for documents and payroll history."
-msgstr "Experiência local: portal multi-idioma para documentos e histórico de folha."
+msgstr "Uzoefu wa ndani: lango la lugha nyingi kwa nyaraka na historia ya mishahara."
 
 #: templates/platform.html:129
 msgid "Consistent standard: the same quality UX across every location."
-msgstr "Padrão consistente: a mesma experiência de usuário de qualidade em todas as localidades."
+msgstr "Kiwango thabiti: UX yenye ubora ule ule katika kila eneo."
 
 #: templates/platform.html:137
 msgid "Operational Precision"
-msgstr "Precisão Operacional"
+msgstr "Usahihi wa Uendeshaji"
 
 #: templates/platform.html:138
 msgid "Consolidate providers. Increase control."
-msgstr "Consolide provedores. Aumente o controle."
+msgstr "Unganisha watoa huduma. Ongeza udhibiti."
 
 #: templates/platform.html:139
 msgid "Bring local payroll execution into one secure, standards-driven environment. Reduce manual work, strengthen governance, and scale internationally without adding chaos."
-msgstr "Traga a execução da folha local para um ambiente seguro e orientado por padrões. Reduza o trabalho manual, fortaleça a governança e dimensione internacionalmente sem adicionar caos."
+msgstr "Leta utekelezaji wa mishahara ya ndani kwenye mazingira moja salama yanayoongozwa na viwango. Punguza kazi ya mikono, imarisha utawala, na panuka kimataifa bila kuongeza vurugu."
 
 #: templates/platform.html:144
 msgid "Operating model"
-msgstr "Modelo operacional"
+msgstr "Modeli ya uendeshaji"
 
 #: templates/platform.html:145
 msgid "One workflow"
-msgstr "Um fluxo de trabalho"
+msgstr "Mtiririko mmoja"
 
 #: templates/platform.html:146
 msgid "Replace disconnected processes with a consistent payroll workflow and reporting standard."
-msgstr "Substitua processos desconectados por um fluxo de trabalho de folha e padrão de relatórios consistentes."
+msgstr "Badilisha michakato iliyotenganishwa kwa mtiririko thabiti wa mishahara na kiwango cha ripoti."
 
 #: templates/platform.html:150
 msgid "Efficiency"
-msgstr "Eficiência"
+msgstr "Ufanisi"
 
 #: templates/platform.html:151
 msgid "Less manual effort"
-msgstr "Menos esforço manual"
+msgstr "Juhudi ndogo ya mikono"
 
 #: templates/platform.html:152
 msgid "Standard inputs and automated checks reduce rework, exceptions, and spreadsheet reconciliation."
-msgstr "Entradas padronizadas e verificações automatizadas reduzem retrabalho, exceções e reconciliação de planilhas."
+msgstr "Ingizo sanifu na ukaguzi wa kiotomatiki hupunguza kazi ya kurudia, visa vya kipekee, na upatanisho wa lahajedwali."
 
 #: templates/platform.html:156
 msgid "Scale"
-msgstr "Escala"
+msgstr "Kupanuka"
 
 #: templates/platform.html:157
 msgid "Built for expansion"
-msgstr "Construído para expansão"
+msgstr "Imejengwa kwa ajili ya upanuzi"
 
 #: templates/platform.html:158
 msgid "Enter new countries with predictable governance, consistent data, and executive clarity from day one."
-msgstr "Entre em novos países com governança previsível, dados consistentes e clareza executiva desde o primeiro dia."
+msgstr "Ingia nchi mpya kwa utawala unaotabirika, data thabiti, na uwazi wa uongozi tangu siku ya kwanza."
 
 #: templates/security.html:42
 msgid "Security designed for global trust"
-msgstr "Segurança projetada para confiança global"
+msgstr "Usalama ulioundwa kwa uaminifu wa kimataifa"
 
 #: templates/security.html:45
 msgid "Payroll contains your most sensitive data — banking details, government IDs, and personal records. ExactusPay protects it with enterprise-grade security engineered for cross-border operations across LATAM, Africa, and Asia."
-msgstr "A folha contém seus dados mais sensíveis — detalhes bancários, documentos de identificação e registros pessoais. A ExactusPay os protege com segurança de nível empresarial projetada para operações transfronteiriças na América Latina, África e Ásia."
+msgstr "Mishahara ina data yako nyeti zaidi — maelezo ya benki, vitambulisho vya serikali, na rekodi binafsi. ExactusPay huilinda kwa usalama wa kiwango cha biashara ulioundwa kwa operesheni za mipakani katika LATAM, Afrika, na Asia."
 
 #: templates/security.html:50
 msgid "Security highlights"
-msgstr "Destaques de segurança"
+msgstr "Mambo muhimu ya usalama"
 
 #: templates/security.html:51
 msgid "AES-256 encryption"
-msgstr "Criptografia AES-256"
+msgstr "Usimbaji AES-256"
 
 #: templates/security.html:52
 msgid "Zero-trust access"
-msgstr "Acesso de confiança zero"
+msgstr "Ufikiaji wa zero-trust"
 
 #: templates/security.html:53
 msgid "Resilient backups"
-msgstr "Backups resilientes"
-
+msgstr "Nakala rudufu zilizo imara"
 
 #: templates/security.html:60
 msgid "Defense in Depth"
-msgstr "Defesa em Profundidade"
+msgstr "Ulinzi wa Tabaka kwa Tabaka"
 
 #: templates/security.html:61
 msgid "Multi-layered protection at every stage"
-msgstr "Proteção em múltiplas camadas em todas as etapas"
+msgstr "Ulinzi wa tabaka nyingi katika kila hatua"
 
 #: templates/security.html:62
 msgid "We use overlapping controls so your payroll data stays protected in transit, at rest, and during access."
-msgstr "Usamos controles sobrepostos para que seus dados de folha permaneçam protegidos em trânsito, em repouso e durante o acesso."
+msgstr "Tunatumia udhibiti unaoingiliana ili data yako ya mishahara ibaki salama wakati wa kusafirishwa, inapohifadhiwa, na wakati wa ufikiaji."
 
 #: templates/security.html:67
 msgid "Advanced encryption"
-msgstr "Criptografia avançada"
+msgstr "Usimbaji wa hali ya juu"
 
 #: templates/security.html:68
 msgid "AES-256 encryption protects sensitive data at rest and in transit, keeping it unreadable if intercepted."
-msgstr "A criptografia AES-256 protege dados sensíveis em repouso e em trânsito, mantendo-os ilegíveis se interceptados."
-
-
+msgstr "Usimbaji AES-256 hulinda data nyeti inapohifadhiwa na wakati wa kusafirishwa, na kuifanya isisomeke ikiwa itanaswa."
 
 #: templates/security.html:73
 msgid "RBAC and MFA restrict access to only what each user needs — minimizing internal and accidental exposure risk."
-msgstr "RBAC e MFA restringem o acesso apenas ao que cada usuário precisa — minimizando o risco de exposição interna e acidental."
+msgstr "RBAC na MFA hupunguza ufikiaji kwa kile tu ambacho kila mtumiaji anahitaji — kupunguza hatari ya kuvuja kwa ndani au kimakosa."
 
 #: templates/security.html:77
 msgid "Secure cloud infrastructure"
-msgstr "Infraestrutura de nuvem segura"
+msgstr "Miundombinu salama ya wingu"
 
 #: templates/security.html:78
 msgid "Hosted on mature cloud environments with real-time backups, mirrored regions, and resilient disaster recovery."
-msgstr "Hospedado em ambientes de nuvem maduros com backups em tempo real, regiões espelhadas e recuperação de desastres resiliente."
+msgstr "Inahostishwa kwenye mazingira thabiti ya wingu yenye nakala rudufu za wakati halisi, maeneo yaliyosawazishwa, na urejeshaji wa majanga ulio imara."
 
 #: templates/security.html:86
 msgid "Access & Governance"
-msgstr "Acesso e Governança"
+msgstr "Ufikiaji na Utawala"
 
 #: templates/security.html:87
 msgid "Built to reduce risk and prevent mistakes"
-msgstr "Construído para reduzir riscos e prevenir erros"
+msgstr "Imejengwa kupunguza hatari na kuzuia makosa"
 
 #: templates/security.html:88
 msgid "Strong authentication, tight permissions, and full traceability help you maintain control at scale."
-msgstr "Autenticação forte, permissões rigorosas e rastreabilidade completa ajudam você a manter o controle em escala."
+msgstr "Uthibitishaji thabiti, ruhusa kali, na ufuatiliaji kamili hukusaidia kudumisha udhibiti kwa kiwango kikubwa."
 
 #: templates/security.html:93
 msgid "Role-based access control (RBAC)"
-msgstr "Controle de acesso baseado em funções (RBAC)"
+msgstr "Udhibiti wa ufikiaji unaotegemea majukumu (RBAC)"
 
 #: templates/security.html:94
 msgid "Granular permissions ensure teams only see and change what they’re authorised to manage — by country, company, and function."
-msgstr "Permissões granulares garantem que as equipes vejam e alterem apenas o que estão autorizadas a gerenciar — por país, empresa e função."
+msgstr "Ruhusa za kina huhakikisha timu zinaona na kubadilisha tu kile walichoidhinishwa kusimamia — kwa nchi, kampuni, na kazi."
 
 #: templates/security.html:98
 msgid "Multi-factor authentication (MFA)"
-msgstr "Autenticação multifator (MFA)"
+msgstr "Uthibitishaji wa hatua nyingi (MFA)"
 
 #: templates/security.html:99
 msgid "Reduce account takeover risk with MFA options across user roles and operational workflows."
-msgstr "Reduza o risco de invasão de contas com opções de MFA em todas as funções de usuário e fluxos de trabalho operacionais."
+msgstr "Punguza hatari ya kuchukuliwa kwa akaunti kwa chaguo za MFA katika majukumu ya watumiaji na mtiririko wa kazi za uendeshaji."
 
 #: templates/security.html:103
 msgid "Audit trails & traceability"
-msgstr "Trilhas de auditoria e rastreabilidade"
+msgstr "Nyayo za ukaguzi na ufuatiliaji"
 
 #: templates/security.html:104
 msgid "Track changes, approvals, and calculation evidence to support reviews, audits, and compliance obligations."
-msgstr "Acompanhe alterações, aprovações e evidências de cálculo para apoiar revisões, auditorias e obrigações de conformidade."
+msgstr "Fuatilia mabadiliko, idhini, na ushahidi wa hesabu ili kuunga mkono mapitio, ukaguzi, na wajibu wa uzingatiaji."
 
 #: templates/security.html:108
 msgid "Proactive monitoring"
-msgstr "Monitoramento proativo"
+msgstr "Ufuatiliaji wa mapema"
 
 #: templates/security.html:109
 msgid "Operational monitoring and security checks help detect anomalies early and reduce time-to-response."
-msgstr "O monitoramento operacional e as verificações de segurança ajudam a detectar anomalias precocemente e reduzir o tempo de resposta."
+msgstr "Ufuatiliaji wa uendeshaji na ukaguzi wa usalama husaidia kugundua kasoro mapema na kupunguza muda wa kujibu."
 
 #: templates/security.html:117
 msgid "Compliance & Sovereignty"
-msgstr "Conformidade e Soberania"
+msgstr "Uzingatiaji na Ukuu"
 
 #: templates/security.html:118
 msgid "Aligned to international standards"
-msgstr "Alinhado aos padrões internacionais"
+msgstr "Imeandaliwa kulingana na viwango vya kimataifa"
 
 #: templates/security.html:119
 msgid "Security isn’t static. We design for evolving regulations and enforce privacy-by-design across the platform."
-msgstr "A segurança não é estática. Projetamos para regulamentações em evolução e aplicamos privacidade desde a concepção em toda a plataforma."
+msgstr "Usalama si wa kudumu. Tunaunda kwa kanuni zinazoendelea kubadilika na kutekeleza faragha-kwa-muundo (privacy-by-design) katika jukwaa lote."
 
 #: templates/security.html:124
 msgid "Standards"
-msgstr "Padrões"
+msgstr "Viwango"
 
 #: templates/security.html:125
 msgid "GDPR & regional privacy alignment"
-msgstr "Alinhamento com GDPR e privacidade regional"
+msgstr "Ulinganifu wa GDPR na faragha ya kikanda"
 
 #: templates/security.html:126
 msgid "Security controls are designed to align with GDPR and regional laws such as LGPD (Brazil) and POPIA (South Africa)."
-msgstr "Os controles de segurança são projetados para se alinhar ao GDPR e às leis regionais, como LGPD (Brasil) e POPIA (África do Sul)."
+msgstr "Udhibiti wa usalama umeundwa kuendana na GDPR na sheria za kikanda kama LGPD (Brazil) na POPIA (Afrika Kusini)."
 
 #: templates/security.html:130
 msgid "Assurance"
-msgstr "Garantia"
+msgstr "Uhakikisho"
 
 #: templates/security.html:131
 msgid "Audits & penetration testing"
-msgstr "Auditorias e testes de penetração"
+msgstr "Ukaguzi na majaribio ya kupenya (penetration testing)"
 
 #: templates/security.html:132
 msgid "Regular internal and external reviews help identify weaknesses early and keep protections current."
-msgstr "Revisões internas e externas regulares ajudam a identificar fraquezas precocemente e manter as proteções atualizadas."
+msgstr "Mapitio ya mara kwa mara ya ndani na nje husaidia kutambua udhaifu mapema na kuweka ulinzi kuwa wa sasa."
 
 #: templates/security.html:136
 msgid "Privacy by design"
-msgstr "Privacidade desde a concepção"
+msgstr "Faragha kwa muundo"
 
 #: templates/security.html:137
 msgid "Data minimisation"
-msgstr "Minimização de dados"
+msgstr "Upunguzaji wa data"
 
 #: templates/security.html:138
 msgid "We collect only what’s required for payroll and statutory obligations, and we securely dispose of data when no longer needed."
-msgstr "Coletamos apenas o necessário para obrigações de folha e legais, e descartamos dados com segurança quando não são mais necessários."
+msgstr "Tunakusanya tu kinachohitajika kwa mishahara na wajibu wa kisheria, na tunatupa data kwa usalama inapokuwa haitahitajiki tena."
 
 #: templates/security.html:146
 msgid "Human-Centered Security"
-msgstr "Segurança Centrada no Ser Humano"
+msgstr "Usalama Unaozingatia Binadamu"
 
 #: templates/security.html:147
 msgid "Technology + people, working together"
-msgstr "Tecnologia + pessoas, trabalhando juntas"
+msgstr "Teknolojia + watu, wakifanya kazi pamoja"
 
 #: templates/security.html:148
 msgid "Security is strongest when systems and teams reinforce each other — with training, support, and good hygiene."
-msgstr "A segurança é mais forte quando sistemas e equipes se reforçam mutuamente — com treinamento, suporte e boa higiene."
+msgstr "Usalama huwa imara zaidi wakati mifumo na timu zinaimarishana — kwa mafunzo, msaada, na nidhamu bora ya usalama."
 
 #: templates/security.html:153
 msgid "A support team trained for vigilance"
-msgstr "Uma equipe de suporte treinada para vigilância"
+msgstr "Timu ya msaada iliyoandaliwa kwa umakini"
 
 #: templates/security.html:154
 msgid "Our specialists follow current cybersecurity best practices and help you maintain safe operational habits across your payroll workflows."
-msgstr "Nossos especialistas seguem as melhores práticas atuais de segurança cibernética e ajudam você a manter hábitos operacionais seguros em seus fluxos de trabalho de folha."
+msgstr "Wataalamu wetu hufuata mbinu bora za sasa za usalama wa mtandao na hukusaidia kudumisha tabia salama za uendeshaji katika michakato yako ya mishahara."
 
 #: templates/security.html:156
 msgid "Guidance to recognise phishing and social engineering attempts."
-msgstr "Orientação para reconhecer tentativas de phishing e engenharia social."
+msgstr "Mwongozo wa kutambua majaribio ya phishing na uhandisi wa kijamii."
 
 #: templates/security.html:157
 msgid "Credential hygiene best practices for admins and payroll operators."
-msgstr "Melhores práticas de higiene de credenciais para administradores e operadores de folha."
+msgstr "Mbinu bora za usafi wa vitambulisho (credential hygiene) kwa wasimamizi na waendeshaji wa mishahara."
 
 #: templates/security.html:158
 msgid "Secure onboarding and access setup aligned to your organisational structure."
-msgstr "Onboarding seguro e configuração de acesso alinhados à sua estrutura organizacional."
+msgstr "Onboarding salama na usanidi wa ufikiaji unaolingana na muundo wa shirika lako."
 
 #: templates/security.html:162
 msgid "Credential controls"
-msgstr "Controles de credenciais"
+msgstr "Udhibiti wa vitambulisho"
 
 #: templates/security.html:163
 msgid "MFA, strong password policies, and least-privilege access baked into daily operations."
-msgstr "MFA, políticas de senha fortes e acesso com privilégios mínimos incorporados às operações diárias."
+msgstr "MFA, sera thabiti za nenosiri, na ufikiaji wa haki ndogo kabisa (least-privilege) umejumuishwa kwenye uendeshaji wa kila siku."
 
 #: templates/security.html:167
 msgid "Operational safeguards"
-msgstr "Salvaguardas operacionais"
+msgstr "Vihifadhi vya uendeshaji"
 
 #: templates/security.html:168
 msgid "Approval workflows and traceability to reduce errors and prevent unauthorised changes."
-msgstr "Fluxos de trabalho de aprovação e rastreabilidade para reduzir erros e prevenir alterações não autorizadas."
+msgstr "Mtiririko wa idhini na ufuatiliaji ili kupunguza makosa na kuzuia mabadiliko yasiyoidhinishwa."
 
 #: templates/security.html:172
 msgid "Security culture"
-msgstr "Cultura de segurança"
+msgstr "Utamaduni wa usalama"
 
 #: templates/security.html:173
 msgid "Shared responsibility—your team + our platform + our experts."
-msgstr "Responsabilidade compartilhada—sua equipe + nossa plataforma + nossos especialistas."
+msgstr "Wajibu wa pamoja—timu yako + jukwaa letu + wataalamu wetu."
 
 #: templates/security.html:179
 msgid "Want a deeper security walkthrough?"
-msgstr "Quer uma análise de segurança mais aprofundada?"
+msgstr "Unataka mwongozo wa kina kuhusu usalama?"
 
 #: templates/security.html:180
 msgid "Talk to our team about your footprint, data residency needs, and access model — and we’ll map the right security posture for your cross-border payroll operations."
-msgstr "Converse com nossa equipe sobre sua presença, necessidades de residência de dados e modelo de acesso — e mapearemos a postura de segurança certa para suas operações de folha transfronteiriças."
+msgstr "Zungumza na timu yetu kuhusu uwepo wako, mahitaji ya makazi ya data (data residency), na modeli ya ufikiaji — na tutachora mkao sahihi wa usalama kwa operesheni zako za mishahara za mipakani."
 
 #: templates/pricing.html:42
 msgid "Transparent pricing for global payroll"
-msgstr "Preços transparentes para folha global"
+msgstr "Bei wazi kwa mishahara ya kimataifa"
 
 #: templates/pricing.html:45
 msgid "ExactusPay believes in pricing that is as clear and transparent as our payroll reporting. We understand that every business has a unique footprint, which is why our pricing model is tailored to the specific countries and regions where you operate."
-msgstr "A ExactusPay acredita em preços tão claros e transparentes quanto nossos relatórios de folha. Entendemos que cada negócio tem uma presença única, e é por isso que nosso modelo de preços é adaptado aos países e regiões específicos onde você opera."
+msgstr "ExactusPay inaamini katika bei iliyo wazi kama ripoti zetu za mishahara. Tunaelewa kuwa kila biashara ina uwepo wa kipekee, ndiyo maana modeli yetu ya bei inabinafsishwa kwa nchi na maeneo mahususi unayoendesha shughuli."
 
 #: templates/pricing.html:53
 msgid "Simple & Predictable"
-msgstr "Simples e Previsível"
+msgstr "Rahisi na Inayotabirika"
 
 #: templates/pricing.html:54
 msgid "Transparent & Flexible Pricing"
-msgstr "Preços Transparentes e Flexíveis"
+msgstr "Bei Wazi na Inayobadilika"
 
 #: templates/pricing.html:55
 msgid "We do not believe in hidden fees or complex tiered structures that leave you guessing. Our pricing is straightforward."
-msgstr "Não acreditamos em taxas ocultas ou estruturas hierárquicas complexas que deixam você adivinhando. Nossos preços são diretos."
+msgstr "Hatuamini ada zilizofichwa au miundo tata ya viwango vinavyokuacha ukibashiri. Bei zetu ni za moja kwa moja."
 
 #: templates/pricing.html:60
 msgid "Per-Employee, Per-Month"
-msgstr "Por Funcionário, Por Mês"
+msgstr "Kwa Mfanyakazi, Kwa Mwezi"
 
 #: templates/pricing.html:61
 msgid "You pay a simple, predictable rate based on the number of active employees you have in each country. No surprises, no complex calculations."
-msgstr "Você paga uma taxa simples e previsível com base no número de funcionários ativos que possui em cada país. Sem surpresas, sem cálculos complexos."
+msgstr "Unalipa kiwango rahisi, kinachotabirika kulingana na idadi ya wafanyakazi wanaofanya kazi katika kila nchi. Hakuna mshangao, hakuna mahesabu magumu."
 
 #: templates/pricing.html:65
 msgid "Country-Specific Rates"
-msgstr "Taxas Específicas por País"
+msgstr "Viwango Mahususi kwa Nchi"
 
 #: templates/pricing.html:66
 msgid "Costs are adjusted based on the complexity of the local jurisdiction (e.g., LATAM vs. Asia), ensuring you only pay for the specific compliance needs of that region."
-msgstr "Os custos são ajustados com base na complexidade da jurisdição local (por exemplo, América Latina vs. Ásia), garantindo que você pague apenas pelas necessidades específicas de conformidade daquela região."
+msgstr "Gharama hurekebishwa kulingana na ugumu wa mamlaka ya ndani (mf. LATAM dhidi ya Asia), kuhakikisha unalipa tu kwa mahitaji mahususi ya uzingatiaji ya eneo hilo."
 
 #: templates/pricing.html:70
 msgid "No Hidden Setup Fees"
-msgstr "Sem Taxas de Configuração Ocultas"
+msgstr "Hakuna Ada za Usanidi Zilizofichwa"
 
 #: templates/pricing.html:71
 msgid "We are transparent about implementation costs upfront, so your budget remains secure from day one. What we quote is what you pay."
-msgstr "Somos transparentes sobre os custos de implementação antecipadamente, para que seu orçamento permaneça seguro desde o primeiro dia. O que cotamos é o que você paga."
+msgstr "Tuko wazi kuhusu gharama za utekelezaji mapema, ili bajeti yako ibaki salama tangu siku ya kwanza. Tunachokukadiria ndicho unacholipa."
 
 #: templates/pricing.html:79
 msgid "Everything You Need"
-msgstr "Tudo o que Você Precisa"
+msgstr "Kila Kitu Unachohitaji"
 
 #: templates/pricing.html:80
 msgid "What's Included"
-msgstr "O que está Incluído"
+msgstr "Nini Kimejumuishwa"
 
 #: templates/pricing.html:81
 msgid "Every ExactusPay plan comes with the core essentials needed to operate globally with confidence."
-msgstr "Todo plano da ExactusPay vem com os recursos essenciais necessários para operar globalmente com confiança."
+msgstr "Kila mpango wa ExactusPay unakuja na misingi muhimu inayohitajika kufanya kazi kimataifa kwa ujasiri."
 
 #: templates/pricing.html:86
 msgid "Full Compliance Management"
-msgstr "Gestão Completa de Conformidade"
+msgstr "Usimamizi Kamili wa Uzingatiaji"
 
 #: templates/pricing.html:87
 msgid "Automated updates for local tax and labor laws across all jurisdictions where you operate."
-msgstr "Atualizações automatizadas para leis fiscais e trabalhistas locais em todas as jurisdições onde você opera."
+msgstr "Masasisho ya kiotomatiki ya sheria za kodi na ajira za ndani katika mamlaka zote unazoendesha shughuli."
 
 #: templates/pricing.html:91
 msgid "Global Reporting"
-msgstr "Relatórios Globais"
+msgstr "Ripoti za Kimataifa"
 
 #: templates/pricing.html:92
 msgid "Access to our standardized reporting dashboard with real-time insights into payroll costs and compliance."
-msgstr "Acesso ao nosso dashboard de relatórios padronizados com insights em tempo real sobre custos de folha e conformidade."
+msgstr "Ufikiaji wa dashibodi yetu ya ripoti iliyo sanifu yenye maarifa ya wakati halisi kuhusu gharama za mishahara na uzingatiaji."
 
 #: templates/pricing.html:96
 msgid "Employee Self-Service"
-msgstr "Autoatendimento do Funcionário"
+msgstr "Kujihudumia kwa Mfanyakazi"
 
 #: templates/pricing.html:97
 msgid "A secure portal for payslips, tax documents, and personal information management in multiple languages."
-msgstr "Um portal seguro para recibos de pagamento, documentos fiscais e gerenciamento de informações pessoais em vários idiomas."
+msgstr "Lango salama kwa vocha za mishahara, nyaraka za kodi, na usimamizi wa taarifa binafsi kwa lugha nyingi."
 
 #: templates/pricing.html:101
 msgid "24/7 Native Support"
-msgstr "Suporte Nativo 24/7"
+msgstr "Msaada wa Kiasili 24/7"
 
 #: templates/pricing.html:102
 msgid "Access our expert team around the clock. We provide 24-hour assistance with native fluency in Portuguese, ensuring your LATAM operations never sleep."
-msgstr "Acesse nossa equipe de especialistas 24 horas por dia. Oferecemos assistência 24 horas com fluência nativa em português, garantindo que suas operações na América Latina nunca durmam."
+msgstr "Pata timu yetu ya wataalamu muda wote. Tunatoa msaada wa saa 24 kwa ufasaha wa asili wa Kireno, kuhakikisha operesheni zako za LATAM haziwahi kusimama."
 
 #: templates/pricing.html:110
 msgid "Regional Pricing"
-msgstr "Preços Regionais"
-
-
+msgstr "Bei za Kikanda"
 
 #: templates/pricing.html:112
 msgid "Pricing tailored to the complexity of each jurisdiction. Below are indicative monthly rates per employee."
-msgstr "Preços adaptados à complexidade de cada jurisdição. Abaixo estão as taxas mensais indicativas por funcionário."
+msgstr "Bei zilizobinafsishwa kulingana na ugumu wa kila mamlaka. Chini ni viwango vya mfano vya kila mwezi kwa mfanyakazi."
 
 #: templates/pricing.html:117
 msgid "North America"
-msgstr "América do Norte"
+msgstr "Amerika Kaskazini"
 
 #: templates/pricing.html:118
 msgid "$19 | €17 | £15"
@@ -1300,23 +1292,23 @@ msgstr "$19 | €17 | £15"
 
 #: templates/pricing.html:119
 msgid "per employee/month"
-msgstr "por funcionário/mês"
+msgstr "kwa mfanyakazi/mwezi"
 
 #: templates/pricing.html:120 templates/pricing.html:128 templates/pricing.html:136
 msgid "Full compliance management"
-msgstr "Gestão completa de conformidade"
+msgstr "Usimamizi kamili wa uzingatiaji"
 
 #: templates/pricing.html:121
 msgid "Automated tax filings"
-msgstr "Declarações fiscais automatizadas"
+msgstr "Uwasilishaji wa kodi wa kiotomatiki"
 
 #: templates/pricing.html:122 templates/pricing.html:130
 msgid "Employee self-service"
-msgstr "Autoatendimento do funcionário"
+msgstr "Kujihudumia kwa mfanyakazi"
 
 #: templates/pricing.html:126
 msgid "Latin America"
-msgstr "América Latina"
+msgstr "Amerika ya Kusini (LATAM)"
 
 #: templates/pricing.html:127
 msgid "$9 | €8 | £7"
@@ -1324,367 +1316,173 @@ msgstr "$9 | €8 | £7"
 
 #: templates/pricing.html:129
 msgid "Complex jurisdiction handling"
-msgstr "Manuseio de jurisdição complexa"
+msgstr "Kushughulikia mamlaka changamano"
 
 #: templates/pricing.html:130
 msgid "Local tax expertise"
-msgstr "Expertise tributária local"
+msgstr "Utaalamu wa kodi wa ndani"
 
 #: templates/pricing.html:131
 msgid "24/7 Portuguese support"
-msgstr "Suporte em português 24/7"
+msgstr "Msaada wa Kireno 24/7"
 
 #: templates/pricing.html:135
 msgid "Europe"
-msgstr "Europa"
+msgstr "Ulaya"
 
 #: templates/pricing.html:137
 msgid "GDPR compliance"
-msgstr "Conformidade com GDPR"
+msgstr "Uzingatiaji wa GDPR"
 
 #: templates/pricing.html:138
 msgid "Multi-currency processing"
-msgstr "Processamento em múltiplas moedas"
+msgstr "Uchakataji wa sarafu nyingi"
 
 #: templates/pricing.html:139
 msgid "Works council support"
-msgstr "Suporte a conselhos de trabalhadores"
+msgstr "Msaada wa baraza la wafanyakazi"
 
 #: templates/pricing.html:143
 msgid "Asia Pacific"
-msgstr "Ásia-Pacífico"
+msgstr "Asia Pasifiki"
 
 #: templates/pricing.html:145
 msgid "Regional expertise"
-msgstr "Expertise regional"
+msgstr "Utaalamu wa kikanda"
 
 #: templates/pricing.html:146
 msgid "Local banking integrations"
-msgstr "Integrações bancárias locais"
+msgstr "Muunganisho wa benki za ndani"
 
 #: templates/pricing.html:147
 msgid "Multi-language support"
-msgstr "Suporte multi-idioma"
+msgstr "Msaada wa lugha nyingi"
 
 #: templates/pricing.html:151
 msgid "Africa"
-msgstr "África"
+msgstr "Afrika"
 
 #: templates/pricing.html:153
 msgid "POPIA compliance"
-msgstr "Conformidade com POPIA"
+msgstr "Uzingatiaji wa POPIA"
 
 #: templates/pricing.html:154
 msgid "Mobile money integration"
-msgstr "Integração com dinheiro móvel"
+msgstr "Muunganisho wa pesa za simu (mobile money)"
 
 #: templates/pricing.html:155
 msgid "Local payroll expertise"
-msgstr "Expertise local em folha"
+msgstr "Utaalamu wa mishahara wa ndani"
 
 #: templates/pricing.html:159
 msgid "Middle East"
-msgstr "Oriente Médio"
+msgstr "Mashariki ya Kati"
 
 #: templates/pricing.html:161
 msgid "WPS compliance"
-msgstr "Conformidade com WPS"
+msgstr "Uzingatiaji wa WPS"
 
 #: templates/pricing.html:162
 msgid "Multi-currency support"
-msgstr "Suporte a múltiplas moedas"
+msgstr "Msaada wa sarafu nyingi"
 
 #: templates/pricing.html:163
 msgid "Local labor law expertise"
-msgstr "Expertise em legislação trabalhista local"
+msgstr "Utaalamu wa sheria za ajira za ndani"
 
 #: templates/pricing.html:167
 msgid "* Rates are indicative. Final pricing depends on employee count and specific requirements."
-msgstr "* As taxas são indicativas. O preço final depende do número de funcionários e requisitos específicos."
+msgstr "* Viwango ni vya mfano. Bei ya mwisho inategemea idadi ya wafanyakazi na mahitaji mahususi."
 
 #: templates/pricing.html:173
 msgid "Get Your Custom Quote"
-msgstr "Obtenha Seu Orçamento Personalizado"
+msgstr "Pata Nukuu Yako Maalum"
 
 #: templates/pricing.html:174
 msgid "Because global expansion looks different for every company, we don't use a \"one size fits all\" price tag. To give you the most accurate and competitive rate, we need to understand your specific needs."
-msgstr "Como a expansão global é diferente para cada empresa, não usamos um preço \"tamanho único\". Para lhe oferecer a taxa mais precisa e competitiva, precisamos entender suas necessidades específicas."
+msgstr "Kwa kuwa upanuzi wa kimataifa unaonekana tofauti kwa kila kampuni, hatutumii bei ya \"saizi moja kwa wote\". Ili kukupa kiwango sahihi na cha ushindani, tunahitaji kuelewa mahitaji yako mahususi."
 
 #: templates/pricing.html:176
 msgid "Ready to see your numbers?"
-msgstr "Pronto para ver seus números?"
-
-
+msgstr "Uko tayari kuona takwimu zako?"
 
 #: templates/footer.html:12 templates/footer.html:22 templates/footer.html:32
 #: templates/footer.html:42
 msgid "Global Payroll"
-msgstr "Folha Global"
+msgstr "Mishahara ya Kimataifa"
 
 #: templates/footer.html:13 templates/footer.html:23
 msgid "Compliance Automation"
-msgstr "Automação de Conformidade"
+msgstr "Uotomatiki wa Uzingatiaji"
 
 #: templates/footer.html:14 templates/footer.html:24
 msgid "Workforce Analytics"
-msgstr "Análises de Força de Trabalho"
+msgstr "Uchanganuzi wa Nguvu Kazi"
 
 #: templates/footer.html:15
 msgid "Tax Management"
-msgstr "Gestão Tributária"
+msgstr "Usimamizi wa Kodi"
 
 #: templates/footer.html:20
 msgid "Solutions"
-msgstr "Soluções"
+msgstr "Suluhisho"
 
 #: templates/footer.html:22
 msgid "Enterprise Expansion"
-msgstr "Expansão Empresarial"
+msgstr "Upanuzi wa Biashara"
 
 #: templates/footer.html:23
 msgid "Mergers & Acquisitions"
-msgstr "Fusões e Aquisições"
+msgstr "Muunganisho na Ununuzi (M&A)"
 
 #: templates/footer.html:24
 msgid "Compliance Management"
-msgstr "Gestão de Conformidade"
+msgstr "Usimamizi wa Uzingatiaji"
 
 #: templates/footer.html:25
 msgid "Global Workforce"
-msgstr "Força de Trabalho Global"
+msgstr "Nguvu Kazi ya Kimataifa"
 
 #: templates/footer.html:30
 msgid "Resources"
-msgstr "Recursos"
+msgstr "Rasilimali"
 
 #: templates/footer.html:32
 msgid "Documentation"
-msgstr "Documentação"
+msgstr "Nyaraka"
 
 #: templates/footer.html:33
 msgid "API Reference"
-msgstr "Referência da API"
+msgstr "Marejeo ya API"
 
 #: templates/footer.html:34
 msgid "Compliance Guides"
-msgstr "Guias de Conformidade"
+msgstr "Miongozo ya Uzingatiaji"
 
 #: templates/footer.html:35
 msgid "Case Studies"
-msgstr "Estudos de Caso"
+msgstr "Tafiti Kifani"
 
 #: templates/footer.html:40
 msgid "Company"
-msgstr "Empresa"
+msgstr "Kampuni"
 
 #: templates/footer.html:42
 msgid "About Us"
-msgstr "Sobre Nós"
+msgstr "Kuhusu Sisi"
 
 #: templates/footer.html:43
 msgid "Careers"
-msgstr "Carreiras"
+msgstr "Ajira"
 
 #: templates/footer.html:45
 msgid "Contact"
-msgstr "Contato"
+msgstr "Wasiliana"
 
 #: templates/footer.html:56
 msgid "All rights reserved."
-msgstr "Todos os direitos reservados."
+msgstr "Haki zote zimehifadhiwa."
 
 #: templates/footer.html:57
 msgid "GDPR Compliant | SOC 2 Type II Certified | ISO 27001"
-msgstr "Conformidade com GDPR | Certificado SOC 2 Tipo II | ISO 27001"
-
-# ================================
-# FEATURES.HTML
-# ================================
-
-#: templates/features.html:116
-msgid "Scenario planning:"
-msgstr "Planejamento de cenários:"
-
-#: templates/features.html:116
-msgid "compare markets and hiring strategies side-by-side."
-msgstr "compare mercados e estratégias de contratação lado a lado."
-
-#: templates/features.html:117
-msgid "Budget certainty:"
-msgstr "Certeza orçamentária:"
-
-#: templates/features.html:117
-msgid "align HR and Finance with one set of numbers."
-msgstr "alinhe RH e Finanças com um conjunto de números."
-
-#: templates/features.html:124
-msgid "Single dashboard:"
-msgstr "Dashboard único:"
-
-#: templates/features.html:124
-msgid "central visibility across payroll and workforce data."
-msgstr "visibilidade central dos dados de folha e força de trabalho."
-
-#: templates/features.html:125
-msgid "Comparable outputs:"
-msgstr "Resultados comparáveis:"
-
-#: templates/features.html:125
-msgid "consistent data definitions enable clean cross-country analysis."
-msgstr "definições de dados consistentes permitem análises claras entre países."
-
-#: templates/features.html:126
-msgid "Decision clarity:"
-msgstr "Clareza de decisão:"
-
-#: templates/features.html:126
-msgid "executive-grade insights into costs, trends, and exposure."
-msgstr "insights de nível executivo sobre custos, tendências e exposição."
-
-#: templates/features.html:133
-msgid "Legal logic:"
-msgstr "Lógica legal:"
-
-#: templates/features.html:133
-msgid "controls aligned to labour law and statutory requirements."
-msgstr "controles alinhados à legislação trabalhista e requisitos legais."
-
-#: templates/features.html:134
-msgid "Error reduction:"
-msgstr "Redução de erros:"
-
-#: templates/features.html:134
-msgid "automation and guardrails minimise manual mistakes."
-msgstr "automação e barreiras de proteção minimizam erros manuais."
-
-#: templates/features.html:135
-msgid "Audit-ready:"
-msgstr "Pronto para auditoria:"
-
-#: templates/features.html:135
-msgid "traceable calculations and data controls support reviews."
-msgstr "cálculos rastreáveis e controles de dados apoiam revisões."
-
-#: templates/features.html:142
-msgid "HCM connectivity:"
-msgstr "Conectividade HCM:"
-
-#: templates/features.html:142
-msgid "integrate with tools like Workday and BambooHR."
-msgstr "integre-se com ferramentas como Workday e BambooHR."
-
-#: templates/features.html:143
-msgid "Scalable architecture:"
-msgstr "Arquitetura escalável:"
-
-#: templates/features.html:143
-msgid "grow from mid-sized to global without rewiring operations."
-msgstr "cresça de médio porte para global sem reestruturar operações."
-
-#: templates/features.html:144
-msgid "Multi-language & FX:"
-msgstr "Multi-idioma e câmbio:"
-
-#: templates/features.html:144
-msgid "localised employee experience across currencies and regions."
-msgstr "experiência do funcionário localizada em todas as moedas e regiões."
-
-# ================================
-# PLATFORM.HTML
-# ================================
-
-#: templates/platform.html:97
-msgid "Pre-hire modelling:"
-msgstr "Modelagem pré-contratação:"
-
-#: templates/platform.html:97
-msgid "price offers accurately with full employer cost breakdowns."
-msgstr "precifique ofertas com precisão com detalhamentos completos de custos do empregador."
-
-#: templates/platform.html:98
-msgid "Scenario comparisons:"
-msgstr "Comparações de cenários:"
-
-#: templates/platform.html:98
-msgid "assess markets and hiring strategies side-by-side."
-msgstr "avalie mercados e estratégias de contratação lado a lado."
-
-#: templates/platform.html:99
-msgid "Budget confidence:"
-msgstr "Confiança orçamentária:"
-
-#: templates/platform.html:99
-msgid "align Finance, HR, and leadership on one set of numbers."
-msgstr "alinhe Finanças, RH e liderança em um conjunto de números."
-
-#: templates/platform.html:107
-msgid "Regulation-aware rules:"
-msgstr "Regras conscientes de regulamentação:"
-
-#: templates/platform.html:107
-msgid "payroll logic tracks current statutory obligations."
-msgstr "a lógica da folha acompanha as obrigações legais atuais."
-
-#: templates/platform.html:108
-msgid "Reduced risk:"
-msgstr "Risco reduzido:"
-
-#: templates/platform.html:108
-msgid "validations and governance to prevent common errors."
-msgstr "validações e governança para prevenir erros comuns."
-
-#: templates/platform.html:109
-msgid "Evidence trails:"
-msgstr "Rastros de evidências:"
-
-#: templates/platform.html:109
-msgid "traceable calculations and changes support audits."
-msgstr "cálculos e alterações rastreáveis apoiam auditorias."
-
-#: templates/platform.html:117
-msgid "Hire-to-pay pipeline:"
-msgstr "Pipeline da contratação ao pagamento:"
-
-#: templates/platform.html:117
-msgid "structured data exchange from onboarding to payment."
-msgstr "troca estruturada de dados do onboarding ao pagamento."
-
-#: templates/platform.html:118
-msgid "Operational consistency:"
-msgstr "Consistência operacional:"
-
-#: templates/platform.html:118
-msgid "one workflow across multiple countries/providers."
-msgstr "um fluxo de trabalho em vários países/provedores."
-
-#: templates/platform.html:119
-msgid "Lower admin load:"
-msgstr "Menor carga administrativa:"
-
-#: templates/platform.html:119
-msgid "fewer handoffs and less spreadsheet work."
-msgstr "menos transferências e menos trabalho com planilhas."
-
-#: templates/platform.html:127
-msgid "FX handled centrally:"
-msgstr "Câmbio tratado centralmente:"
-
-#: templates/platform.html:127
-msgid "exchange and payout workflows managed reliably."
-msgstr "fluxos de trabalho de câmbio e pagamento gerenciados de forma confiável."
-
-#: templates/platform.html:128
-msgid "Local experience:"
-msgstr "Experiência local:"
-
-#: templates/platform.html:128
-msgid "multi-language portal for documents and payroll history."
-msgstr "portal multi-idioma para documentos e histórico de folha."
-
-#: templates/platform.html:129
-msgid "Consistent standard:"
-msgstr "Padrão consistente:"
-
-#: templates/platform.html:129
-msgid "the same quality UX across every location."
-msgstr "a mesma experiência de usuário de qualidade em todas as localidades."
+msgstr "Inazingatia GDPR | Imeidhinishwa SOC 2 Aina ya II | ISO 27001"
