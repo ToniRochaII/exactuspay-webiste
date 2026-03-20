@@ -74,7 +74,7 @@ def demo_request(request):
         subject=subject,
         body=body,
         from_email=settings.DEFAULT_FROM_EMAIL,
-        to=[getattr(settings, "DEMO_REQUEST_TO_EMAIL", "antoniorocha@exactuspay.com")],
+        to=[getattr(settings, "DEMO_REQUEST_TO_EMAIL", "antonio.rocha@exactuspay.com")],
         reply_to=[email] if email else None,
     )
 
