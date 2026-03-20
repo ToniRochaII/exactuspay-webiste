@@ -108,7 +108,9 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-# Email configuration
+# -----------------------------------------------------------------------------
+# Email (Hostinger / ExtendCP SMTP)
+# -----------------------------------------------------------------------------
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 EMAIL_HOST = os.environ.get("EMAIL_HOST", "mta.extendcp.co.uk")
@@ -119,6 +121,9 @@ EMAIL_USE_SSL = False
 
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "no-reply@exactuspay.com")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+
+if not EMAIL_HOST_PASSWORD:
+    raise RuntimeError("EMAIL_HOST_PASSWORD is missing")
 
 DEFAULT_FROM_EMAIL = f"ExactusPay <{EMAIL_HOST_USER}>"
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
