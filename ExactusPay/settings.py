@@ -111,6 +111,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # -----------------------------------------------------------------------------
 # Email (Hostinger / ExtendCP SMTP)
 # -----------------------------------------------------------------------------
+
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.office365.com")
@@ -119,20 +120,18 @@ EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
-# Authenticate with the licensed mailbox
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "antonio.rocha@exactuspay.com")
+# Licensed mailbox used for SMTP login
+EMAIL_HOST_USER = os.environ.get(
+    "EMAIL_HOST_USER",
+    "antonio.rocha@exactuspay.com",
+)
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
 
-# Show the shared mailbox as the sender
+# Shared mailbox shown to recipients
 DEFAULT_FROM_EMAIL = os.environ.get(
     "DEFAULT_FROM_EMAIL",
     "ExactusPay <no-reply@exactuspay.com>",
 )
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
-
-DEMO_REQUEST_TO_EMAIL = os.environ.get(
-    "DEMO_REQUEST_TO_EMAIL",
-    "antonio.rocha@exactuspay.com",
-)
 
 EMAIL_TIMEOUT = 20
