@@ -119,11 +119,15 @@ EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "no-reply@exactuspay.com")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "Mtfbwy130!")
+# Authenticate with the licensed mailbox
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "antonio.rocha@exactuspay.com")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
 
-
-DEFAULT_FROM_EMAIL = f"ExactusPay <{EMAIL_HOST_USER}>"
+# Show the shared mailbox as the sender
+DEFAULT_FROM_EMAIL = os.environ.get(
+    "DEFAULT_FROM_EMAIL",
+    "ExactusPay <no-reply@exactuspay.com>",
+)
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
 DEMO_REQUEST_TO_EMAIL = os.environ.get(
