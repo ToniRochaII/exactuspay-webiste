@@ -125,7 +125,7 @@ EMAIL_HOST_USER = os.environ.get(
     "EMAIL_HOST_USER",
     "antonio.rocha@exactuspay.com",
 )
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "Mtfbwy130!")
 
 # Shared mailbox shown to recipients
 DEFAULT_FROM_EMAIL = os.environ.get(
