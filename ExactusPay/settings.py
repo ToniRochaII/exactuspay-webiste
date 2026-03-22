@@ -123,7 +123,7 @@ EMAIL_USE_SSL = False
 # Licensed mailbox used for SMTP login
 EMAIL_HOST_USER = os.environ.get(
     "EMAIL_HOST_USER",
-    "antonio.rocha@exactuspay.com",
+    "Antonio.Rocha@exactuspay.com",
 )
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "Mtfbwy130!")
 
