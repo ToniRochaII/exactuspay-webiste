@@ -5,7 +5,6 @@
 <!DOCTYPE html>
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
-  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-XTL69YL5WC"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -14,49 +13,41 @@
     gtag('config', 'G-XTL69YL5WC');
   </script>
 
-
-
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{% trans "Global Payroll Software | Multi-Country Payroll & Compliance Platform | ExactusPay" %}</title>
 
-  <meta name="description" content="ExactusPay is a powerful global payroll software delivering multi-country payroll, automated compliance, real-time workforce analytics, standardized reporting, and payroll simulations. Manage international payroll accurately, securely, and at scale from one intelligent platform." />
-  <meta name="keywords" content="global payroll software, multi-country payroll, international payroll system, payroll compliance software, global payroll platform, payroll automation, payroll simulations, workforce analytics, multinational payroll management, cloud payroll solution, global HR payroll, payroll reporting software, international payroll compliance, scalable payroll platform" />
+  <title>{% trans "Global Payroll Platform | Multi-Country Payroll Infrastructure | ExactusPay" %}</title>
+  <meta name="description" content="{% trans 'ExactusPay is a global payroll platform built for scale. Standardise payroll operations, reporting, compliance, and total cost visibility across multiple countries with one secure operating model.' %}" />
+  <meta name="keywords" content="{% trans 'global payroll platform, multi-country payroll platform, international payroll infrastructure, payroll operating model, global payroll reporting, payroll compliance platform, total cost of employment, payroll standardisation, ExactusPay platform' %}" />
   <meta name="author" content="ExactusPay" />
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
   <meta name="googlebot" content="index, follow" />
   <meta name="bingbot" content="index, follow" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
-  <link rel="canonical" href="https://www.exactuspay.com/" />
-
-  <!-- Language & International -->
   <meta http-equiv="content-language" content="{{ LANGUAGE_CODE }}" />
-  <link rel="alternate" hreflang="en" href="https://www.exactuspay.com/" />
-  <link rel="alternate" hreflang="pt" href="https://www.exactuspay.com/pt/" />
-  <link rel="alternate" hreflang="es" href="https://www.exactuspay.com/es/" />
-  <link rel="alternate" hreflang="x-default" href="https://www.exactuspay.com/" />
-
-  <!-- Open Graph -->
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="ExactusPay | Global Payroll Software for Multi-Country Payroll & Compliance" />
-  <meta property="og:description" content="Run global payroll with confidence. Automated compliance, payroll simulations, standardized reporting, and real-time analytics in one powerful multi-country payroll platform." />
-  <meta property="og:url" content="https://www.exactuspay.com/" />
-  <meta property="og:image" content="https://www.exactuspay.com/static/img/og-exactuspay.png" />
-  <meta property="og:site_name" content="ExactusPay" />
-
-  <!-- Twitter / X -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="ExactusPay | Global Payroll Software" />
-  <meta name="twitter:description" content="Multi-country payroll, automated compliance, real-time workforce analytics, and payroll simulations—powered by ExactusPay." />
-  <meta name="twitter:image" content="https://www.exactuspay.com/static/img/og-exactuspay.png" />
-
-  <!-- App Identity -->
   <meta name="application-name" content="ExactusPay" />
   <meta name="apple-mobile-web-app-title" content="ExactusPay" />
   <meta name="theme-color" content="#1f4b7a" />
 
-  <!-- Performance -->
+  <link rel="canonical" href="https://www.exactuspay.com/platform/" />
+  <link rel="alternate" hreflang="en" href="https://www.exactuspay.com/platform/" />
+  <link rel="alternate" hreflang="pt" href="https://www.exactuspay.com/pt/platform/" />
+  <link rel="alternate" hreflang="es" href="https://www.exactuspay.com/es/platform/" />
+  <link rel="alternate" hreflang="x-default" href="https://www.exactuspay.com/platform/" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="{% trans 'ExactusPay | Global Payroll Platform Built for Scale' %}" />
+  <meta property="og:description" content="{% trans 'Run multi-country payroll with one platform for standardised reporting, total cost visibility, compliance, and operational control.' %}" />
+  <meta property="og:url" content="https://www.exactuspay.com/platform/" />
+  <meta property="og:image" content="https://www.exactuspay.com/static/img/og-exactuspay.png" />
+  <meta property="og:site_name" content="ExactusPay" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="{% trans 'ExactusPay | Global Payroll Platform' %}" />
+  <meta name="twitter:description" content="{% trans 'A global payroll platform for standardised reporting, multi-country compliance, and total cost visibility.' %}" />
+  <meta name="twitter:image" content="https://www.exactuspay.com/static/img/og-exactuspay.png" />
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -77,7 +68,7 @@
 
       --shadow-sm: 0 2px 8px rgba(31, 75, 122, 0.05);
       --shadow-md: 0 4px 16px rgba(31, 75, 122, 0.08);
-      --shadow-lg: 0 10px 40px rgba(31, 75, 122, 0.1);
+      --shadow-lg: 0 10px 40px rgba(31, 75, 122, 0.10);
       --shadow-xl: 0 20px 60px rgba(31, 75, 122, 0.12);
 
       --border-radius: 16px;
@@ -96,41 +87,61 @@
       --header-h: 76px;
     }
 
-    *{ margin:0; padding:0; box-sizing:border-box; }
-    html{ scroll-behavior:smooth; }
-    body{
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
       font-family:'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       background: var(--bg-primary);
       color: var(--text-primary);
       line-height:1.6;
       overflow-x:hidden;
     }
-    .container{ max-width:1280px; margin:0 auto; padding:0 24px; }
 
-    /* A11y */
-    .skip-link{
-      position:absolute; left:16px; top:-50px;
-      background:#fff; color:#0f172a;
-      padding:10px 14px; border-radius:12px;
-      text-decoration:none; box-shadow: var(--shadow-md);
-      z-index:2000; transition: top .2s ease;
+    .container { max-width:1280px; margin:0 auto; padding:0 24px; }
+
+    .skip-link {
+      position:absolute;
+      left:16px;
+      top:-50px;
+      background:#fff;
+      color:#0f172a;
+      padding:10px 14px;
+      border-radius:12px;
+      text-decoration:none;
+      box-shadow: var(--shadow-md);
+      z-index:2000;
+      transition: top .2s ease;
     }
-    .skip-link:focus{ top:16px; }
-    :focus-visible{ outline:3px solid rgba(150,224,217,.9); outline-offset:3px; }
 
-    h1,h2,h3,h4{ font-family:'Poppins',sans-serif; font-weight:800; line-height:1.15; }
-    h1{
+    .skip-link:focus { top:16px; }
+
+    :focus-visible {
+      outline:3px solid rgba(150,224,217,.9);
+      outline-offset:3px;
+    }
+
+    h1, h2, h3, h4 {
+      font-family:'Poppins',sans-serif;
+      font-weight:800;
+      line-height:1.15;
+    }
+
+    h1 {
       font-size: clamp(2.1rem, 5vw, 4rem);
-      margin-bottom: 18px;
+      margin-bottom:18px;
       background: linear-gradient(135deg, #FFFFFF, #F0F9FF);
-      -webkit-background-clip:text; background-clip:text; color:transparent;
+      -webkit-background-clip:text;
+      background-clip:text;
+      color:transparent;
     }
-    h2{ font-size: clamp(1.8rem, 4vw, 3.2rem); margin-bottom: 16px; }
-    h3{ font-size: 1.55rem; margin-bottom: 12px; color: var(--text-primary); }
-    p{ color: var(--text-secondary); font-size: 1.05rem; margin-bottom: 20px; }
 
-    .section-title{ text-align:center; margin-bottom: 46px; }
-    .section-title .subtitle{
+    h2 { font-size: clamp(1.8rem, 4vw, 3.2rem); margin-bottom:16px; }
+    h3 { font-size: 1.55rem; margin-bottom:12px; color: var(--text-primary); }
+    h4 { font-size: 1.2rem; }
+    p { color: var(--text-secondary); font-size: 1.05rem; margin-bottom: 20px; }
+
+    .section-title { text-align:center; margin-bottom: 46px; }
+    .section-title .subtitle {
       color: var(--color-secondary-solid);
       font-weight:800;
       text-transform:uppercase;
@@ -139,7 +150,7 @@
       font-size:12px;
     }
 
-    .btn{
+    .btn {
       display:inline-flex;
       align-items:center;
       justify-content:center;
@@ -149,43 +160,83 @@
       font-size:16px;
       text-decoration:none;
       transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
-      border:none; cursor:pointer; gap:10px;
+      border:none;
+      cursor:pointer;
+      gap:10px;
       white-space: nowrap;
     }
-    .btn-primary{
+
+    .btn-primary {
       background: var(--color-primary-solid);
       color:#fff;
       box-shadow: 0 8px 20px rgba(31,75,122,0.2);
     }
-    .btn-primary:hover{ transform: translateY(-2px); box-shadow: var(--shadow-xl); background:#0f3a5e; }
-    .btn-secondary{
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-xl);
+      background:#0f3a5e;
+    }
+
+    .btn-secondary {
       background: rgba(255,255,255,0.12);
       color:#fff;
       border:1px solid rgba(255,255,255,0.22);
       backdrop-filter: blur(10px);
     }
-    .btn-secondary:hover{ background: rgba(255,255,255,0.20); transform: translateY(-2px); }
-    .btn-outline{
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.20);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
       background: transparent;
       border: 2px solid rgba(255,255,255,0.85);
       color:#fff;
     }
-    .btn-outline:hover{ background: rgba(255,255,255,0.10); transform: translateY(-2px); }
-    .btn-lg{ padding: 16px 28px; font-size: 17px; }
 
-    /* Header */
-    header{
-      position: fixed; top:0; left:0; width:100%; z-index:1000;
+    .btn-outline:hover {
+      background: rgba(255,255,255,0.10);
+      transform: translateY(-2px);
+    }
+
+    .btn-lg { padding: 16px 28px; font-size: 17px; }
+
+    header {
+      position: fixed;
+      top:0;
+      left:0;
+      width:100%;
+      z-index:1000;
       background: var(--gradient-midnight);
       border-bottom: 1px solid rgba(255,255,255,0.1);
       padding: 12px 0;
       transition: transform .25s ease, box-shadow .25s ease;
       will-change: transform;
     }
-    .nav-container{ display:flex; justify-content:space-between; align-items:center; gap:14px; }
-    .sidebar-brand{ color:#fff; font-size:1.6rem; font-weight:900; }
-    .nav-links{ display:flex; gap:24px; list-style:none; }
-    .nav-links a{
+
+    .nav-container {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:14px;
+    }
+
+    .logo { text-decoration:none; }
+    .sidebar-brand {
+      color:#fff;
+      font-size:1.6rem;
+      font-weight:900;
+    }
+
+    .nav-links {
+      display:flex;
+      gap:24px;
+      list-style:none;
+    }
+
+    .nav-links a {
       color: rgba(255,255,255,0.86);
       text-decoration:none;
       font-weight:700;
@@ -193,71 +244,82 @@
       position:relative;
       white-space: nowrap;
     }
-    .nav-links a::after{
+
+    .nav-links a::after {
       content:'';
       position:absolute;
-      bottom:0; left:0;
-      width:0; height:2px;
+      bottom:0;
+      left:0;
+      width:0;
+      height:2px;
       background: var(--mint);
       transition: width .25s ease;
     }
-    .nav-links a:hover{ color:#fff; }
-    .nav-links a:hover::after{ width:100%; }
 
-    .nav-actions{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
-
-    /* Language */
-    .lang-form{ display:flex; align-items:center; }
-      /* Update these two classes in your <style> block */
-
-      .lang-pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        /* Reduced padding (was 10px 12px) */
-        padding: 6px 10px;
-        border-radius: 999px;
-        background: rgba(255, 255, 255, .08);
-        border: 1px solid rgba(255, 255, 255, .16);
-        backdrop-filter: blur(10px);
-        box-shadow: 0 10px 24px rgba(0, 0, 0, .16);
-      }
-
-      .lang-select {
-        appearance: none;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        background: transparent;
-        border: none;
-        color: rgba(255, 255, 255, .92);
-        /* Reduced font size (was 1.2rem) and weight */
-        font-weight: 600;
-        font-size: 0.9rem;
-        line-height: 1;
-        padding: 0 24px 0 2px;
-        outline: none;
-        cursor: pointer;
-      }
-
-      /* Optional: Adjust the arrow size to match */
-      .lang-caret {
-        margin-left: -18px;
-        pointer-events: none;
-        color: rgba(255, 255, 255, .75);
-        font-size: 0.75rem; /* Slightly smaller */
-      }
-    .lang-select option{ color:#0f172a; font-size:1rem; }
-    .lang-caret{
-      margin-left:-20px;
-      pointer-events:none;
-      color: rgba(255,255,255,0.75);
-      font-size: .85rem;
+    .nav-links a:hover,
+    .nav-links a.active {
+      color:#fff;
     }
 
-    /* Mobile menu */
-    .menu-btn{
+    .nav-links a:hover::after,
+    .nav-links a.active::after {
+      width:100%;
+    }
+
+    .nav-right {
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+
+    .nav-actions {
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .lang-form { display:flex; align-items:center; }
+
+    .lang-pill {
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.16);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 24px rgba(0,0,0,.16);
+    }
+
+    .lang-select {
+      appearance:none;
+      -webkit-appearance:none;
+      -moz-appearance:none;
+      background: transparent;
+      border:none;
+      color: rgba(255,255,255,.92);
+      font-weight:600;
+      font-size:0.9rem;
+      line-height:1;
+      padding:0 24px 0 2px;
+      outline:none;
+      cursor:pointer;
+    }
+
+    .lang-select option { color:#0f172a; }
+    .lang-caret {
+      margin-left:-18px;
+      pointer-events:none;
+      color: rgba(255,255,255,.75);
+      font-size:0.75rem;
+    }
+
+    .menu-btn {
       display:none;
-      width:44px; height:44px;
+      width:44px;
+      height:44px;
       border-radius:12px;
       border:1px solid rgba(255,255,255,0.22);
       background: rgba(255,255,255,0.10);
@@ -266,7 +328,8 @@
       justify-content:center;
       cursor:pointer;
     }
-    .mobile-nav{
+
+    .mobile-nav {
       display:none;
       position:fixed;
       top: var(--header-h);
@@ -278,10 +341,17 @@
       z-index:999;
       padding: 14px 0;
     }
-    .mobile-nav.open{ display:block; }
-    .mobile-nav .container{ display:grid; gap: 12px; }
-    .mobile-links{ list-style:none; display:grid; gap:10px; }
-    .mobile-links a{
+
+    .mobile-nav.open { display:block; }
+    .mobile-nav .container { display:grid; gap: 12px; }
+
+    .mobile-links {
+      list-style:none;
+      display:grid;
+      gap:10px;
+    }
+
+    .mobile-links a {
       display:block;
       padding: 12px 14px;
       border-radius: 14px;
@@ -291,26 +361,47 @@
       border: 1px solid rgba(255,255,255,0.10);
       background: rgba(255,255,255,0.05);
     }
-    .mobile-links a:hover{ background: rgba(255,255,255,0.10); color:#fff; }
-    .mobile-actions{ display:grid; gap:10px; }
-    .mobile-actions .btn{ width:100%; }
-    .mobile-lang{ margin-top:4px; }
 
-    /* Hero */
-    .platform-hero{
+    .mobile-links a:hover {
+      background: rgba(255,255,255,0.10);
+      color:#fff;
+    }
+
+    .mobile-actions {
+      display:grid;
+      gap:10px;
+    }
+
+    .mobile-actions .btn { width:100%; }
+    .mobile-lang { margin-top:4px; }
+
+    section {
+      opacity:0;
+      transform:translateY(20px);
+      transition:all .8s ease-out;
+    }
+
+    section.visible {
+      opacity:1;
+      transform:translateY(0);
+    }
+
+    .platform-hero {
       padding: calc(var(--header-h) + 88px) 0 86px;
       position:relative;
       overflow:hidden;
       background: var(--gradient-midnight);
     }
-    .platform-hero-content{
+
+    .platform-hero-content {
       max-width: 980px;
       margin: 0 auto;
       text-align:center;
       position:relative;
       z-index:2;
     }
-    .platform-hero p{
+
+    .platform-hero p {
       font-size: clamp(1.05rem, 2.2vw, 1.3rem);
       margin-bottom: 26px;
       color: rgba(255,255,255,0.92);
@@ -318,7 +409,8 @@
       margin-left:auto;
       margin-right:auto;
     }
-    .hero-actions{
+
+    .hero-actions {
       display:flex;
       gap:12px;
       justify-content:center;
@@ -326,15 +418,18 @@
       margin-top: 8px;
     }
 
-    .trust-strip{
+    .trust-strip {
       display:flex;
       gap:12px;
       justify-content:center;
       flex-wrap:wrap;
       margin-top: 22px;
     }
-    .trust-pill{
-      display:inline-flex; align-items:center; gap:10px;
+
+    .trust-pill {
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
       padding:10px 12px;
       border-radius:999px;
       background: rgba(255,255,255,0.10);
@@ -345,22 +440,31 @@
       transition: transform .2s ease, box-shadow .2s ease;
       white-space: nowrap;
     }
-    .trust-pill i{
+
+    .trust-pill i {
       background: var(--grad-cyan);
       -webkit-background-clip:text;
       -webkit-text-fill-color:transparent;
     }
-    .trust-pill:hover{ transform: translateY(-2px); box-shadow: 0 14px 30px rgba(0,0,0,0.18); }
 
-    /* Sections */
-    .architecture{ padding: 86px 0; background: var(--bg-primary); }
-    .tri-grid{
+    .trust-pill:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.18);
+    }
+
+    .architecture {
+      padding: 86px 0;
+      background: var(--bg-primary);
+    }
+
+    .tri-grid {
       display:grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 22px;
       margin-top: 34px;
     }
-    .tri-card{
+
+    .tri-card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: var(--border-radius-lg);
@@ -369,11 +473,20 @@
       transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
       height:100%;
     }
-    .tri-card:hover{ transform: translateY(-5px); box-shadow: var(--shadow-xl); border-color: rgba(31,75,122,0.25); }
-    .tri-icon{
-      width:58px; height:58px;
+
+    .tri-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-xl);
+      border-color: rgba(31,75,122,0.25);
+    }
+
+    .tri-icon {
+      width:58px;
+      height:58px;
       border-radius: 18px;
-      display:flex; align-items:center; justify-content:center;
+      display:flex;
+      align-items:center;
+      justify-content:center;
       margin-bottom: 16px;
       font-size: 22px;
       color:#fff;
@@ -381,19 +494,40 @@
       box-shadow: 0 10px 22px rgba(37,99,235,.35);
       transition: transform .25s ease, box-shadow .25s ease;
     }
-    .tri-card:nth-child(2) .tri-icon{ background: var(--grad-teal); box-shadow: 0 10px 22px rgba(20,184,166,.32); }
-    .tri-card:nth-child(3) .tri-icon{ background: var(--grad-purple); box-shadow: 0 10px 22px rgba(139,92,246,.32); }
-    .tri-card:hover .tri-icon{ transform: scale(1.06); box-shadow: 0 14px 30px rgba(0,0,0,0.22); }
-    .tri-card p{ margin-bottom: 0; font-size: 1rem; }
 
-    .capabilities{ padding: 86px 0; background: var(--bg-secondary); }
-    .cap-grid{
+    .tri-card:nth-child(2) .tri-icon {
+      background: var(--grad-teal);
+      box-shadow: 0 10px 22px rgba(20,184,166,.32);
+    }
+
+    .tri-card:nth-child(3) .tri-icon {
+      background: var(--grad-purple);
+      box-shadow: 0 10px 22px rgba(139,92,246,.32);
+    }
+
+    .tri-card:hover .tri-icon {
+      transform: scale(1.06);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.22);
+    }
+
+    .tri-card p {
+      margin-bottom: 0;
+      font-size: 1rem;
+    }
+
+    .capabilities {
+      padding: 86px 0;
+      background: var(--bg-secondary);
+    }
+
+    .cap-grid {
       display:grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 22px;
       margin-top: 34px;
     }
-    .cap-card{
+
+    .cap-card {
       background: var(--bg-card);
       border-radius: var(--border-radius-lg);
       border: 1px solid var(--border-color);
@@ -402,12 +536,27 @@
       transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
       height:100%;
     }
-    .cap-card:hover{ transform: translateY(-5px); box-shadow: var(--shadow-xl); border-color: rgba(31,75,122,0.25); }
-    .cap-top{ display:flex; gap: 14px; align-items:flex-start; margin-bottom: 12px; }
-    .cap-icon{
-      width:54px; height:54px;
+
+    .cap-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-xl);
+      border-color: rgba(31,75,122,0.25);
+    }
+
+    .cap-top {
+      display:flex;
+      gap: 14px;
+      align-items:flex-start;
+      margin-bottom: 12px;
+    }
+
+    .cap-icon {
+      width:54px;
+      height:54px;
       border-radius: 16px;
-      display:flex; align-items:center; justify-content:center;
+      display:flex;
+      align-items:center;
+      justify-content:center;
       font-size: 20px;
       color:#fff;
       background: var(--grad-cyan);
@@ -415,15 +564,44 @@
       flex-shrink:0;
       transition: transform .25s ease, box-shadow .25s ease;
     }
-    .cap-card:nth-child(2) .cap-icon{ background: var(--grad-rose); box-shadow: 0 8px 18px rgba(244,63,94,.30); }
-    .cap-card:nth-child(3) .cap-icon{ background: var(--grad-purple); box-shadow: 0 8px 18px rgba(139,92,246,.30); }
-    .cap-card:nth-child(4) .cap-icon{ background: var(--grad-amber); box-shadow: 0 8px 18px rgba(245,158,11,.30); }
-    .cap-card:hover .cap-icon{ transform: scale(1.06); box-shadow: 0 14px 30px rgba(0,0,0,0.22); }
-    .cap-card p{ margin-bottom: 14px; font-size: 1rem; }
 
-    .cap-list{ list-style:none; display:grid; gap: 10px; margin-top: 8px; padding-left:0; }
-    .cap-list li{
-      display:flex; gap: 10px; align-items:flex-start;
+    .cap-card:nth-child(2) .cap-icon {
+      background: var(--grad-rose);
+      box-shadow: 0 8px 18px rgba(244,63,94,.30);
+    }
+
+    .cap-card:nth-child(3) .cap-icon {
+      background: var(--grad-purple);
+      box-shadow: 0 8px 18px rgba(139,92,246,.30);
+    }
+
+    .cap-card:nth-child(4) .cap-icon {
+      background: var(--grad-amber);
+      box-shadow: 0 8px 18px rgba(245,158,11,.30);
+    }
+
+    .cap-card:hover .cap-icon {
+      transform: scale(1.06);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.22);
+    }
+
+    .cap-card p {
+      margin-bottom: 14px;
+      font-size: 1rem;
+    }
+
+    .cap-list {
+      list-style:none;
+      display:grid;
+      gap: 10px;
+      margin-top: 8px;
+      padding-left:0;
+    }
+
+    .cap-list li {
+      display:flex;
+      gap: 10px;
+      align-items:flex-start;
       padding: 12px 12px;
       border-radius: 14px;
       border: 1px solid rgba(226,232,240,0.9);
@@ -431,7 +609,8 @@
       color: var(--text-secondary);
       font-size: 0.98rem;
     }
-    .cap-list i{
+
+    .cap-list i {
       background: var(--grad-teal);
       -webkit-background-clip:text;
       -webkit-text-fill-color:transparent;
@@ -439,16 +618,24 @@
       margin-top: 2px;
       min-width: 18px;
     }
-    .cap-list strong{ color: var(--text-primary); }
 
-    .precision{ padding: 86px 0; background: var(--bg-primary); }
-    .precision-grid{
+    .cap-list strong {
+      color: var(--text-primary);
+    }
+
+    .precision {
+      padding: 86px 0;
+      background: var(--bg-primary);
+    }
+
+    .precision-grid {
       display:grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 22px;
       margin-top: 34px;
     }
-    .precision-card{
+
+    .precision-card {
       background: var(--bg-card);
       border-radius: var(--border-radius);
       border: 1px solid var(--border-color);
@@ -457,10 +644,17 @@
       transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
       height:100%;
     }
-    .precision-card:hover{ transform: translateY(-5px); box-shadow: var(--shadow-lg); border-color: rgba(31,75,122,0.25); }
 
-    .precision-tag{
-      display:inline-flex; align-items:center; gap: 8px;
+    .precision-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+      border-color: rgba(31,75,122,0.25);
+    }
+
+    .precision-tag {
+      display:inline-flex;
+      align-items:center;
+      gap: 8px;
       padding: 8px 12px;
       border-radius: 999px;
       background: rgba(255,255,255,0.95);
@@ -470,193 +664,254 @@
       font-size:0.92rem;
       margin-bottom: 12px;
     }
-    .precision-tag i{
+
+    .precision-tag i {
       background: var(--grad-blue);
       -webkit-background-clip:text;
       -webkit-text-fill-color:transparent;
       font-size: 14px;
     }
-    .precision-card:nth-child(2) .precision-tag i{ background: var(--grad-teal); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-    .precision-card:nth-child(3) .precision-tag i{ background: var(--grad-purple); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
 
-    .platform-cta{
+    .precision-card:nth-child(2) .precision-tag i {
+      background: var(--grad-teal);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+
+    .precision-card:nth-child(3) .precision-tag i {
+      background: var(--grad-purple);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+
+    .platform-cta {
       padding: 86px 0;
       background: var(--gradient-midnight);
       color:#fff;
     }
-    .cta-content{ max-width: 900px; margin: 0 auto; text-align:center; }
-    .cta-content h2{ color:#fff; margin-bottom: 12px; }
-    .cta-content p{ color: rgba(255,255,255,0.92); font-size: 1.1rem; margin-bottom: 22px; }
-    .cta-actions{ display:flex; gap: 14px; justify-content:center; flex-wrap:wrap; }
-    .btn-cta-primary{ background:#fff; color: var(--color-primary-solid); }
 
-    footer{
+    .cta-content {
+      max-width: 900px;
+      margin: 0 auto;
+      text-align:center;
+    }
+
+    .cta-content h2 {
+      color:#fff;
+      margin-bottom: 12px;
+    }
+
+    .cta-content p {
+      color: rgba(255,255,255,0.92);
+      font-size: 1.1rem;
+      margin-bottom: 22px;
+    }
+
+    .cta-actions {
+      display:flex;
+      gap: 14px;
+      justify-content:center;
+      flex-wrap:wrap;
+    }
+
+    .btn-cta-primary {
+      background:#fff;
+      color: var(--color-primary-solid);
+    }
+
+    footer {
       background: var(--gradient-midnight);
       padding: 64px 0 34px;
       border-top: 1px solid rgba(255,255,255,0.1);
     }
-    .footer-grid{
+
+    .footer-grid {
       display:grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 26px;
       margin-bottom: 44px;
     }
-    .footer-col h4{ color:#fff; margin-bottom: 16px; font-size:16px; }
-    .footer-links{ list-style:none; }
-    .footer-links li{ margin-bottom: 12px; }
-    .footer-links a{
+
+    .footer-col h4 {
+      color:#fff;
+      margin-bottom: 16px;
+      font-size:16px;
+    }
+
+    .footer-links {
+      list-style:none;
+    }
+
+    .footer-links li {
+      margin-bottom: 12px;
+    }
+
+    .footer-links a {
       color: rgba(255,255,255,0.82);
       text-decoration:none;
       transition: transform .2s ease, color .2s ease;
-      display:flex; align-items:center; gap:8px;
+      display:flex;
+      align-items:center;
+      gap:8px;
       font-size:0.95rem;
     }
-    .footer-links a:hover{ color: var(--mint); transform: translateX(4px); }
-    .footer-links i{
+
+    .footer-links a:hover {
+      color: var(--mint);
+      transform: translateX(4px);
+    }
+
+    .footer-links i {
       background: var(--grad-cyan);
       -webkit-background-clip:text;
       -webkit-text-fill-color:transparent;
     }
 
-    .footer-bottom{
+    .footer-bottom {
       padding-top: 28px;
       border-top: 1px solid rgba(255,255,255,0.1);
-      display:flex; justify-content: space-between; align-items:center;
-      flex-wrap:wrap; gap: 16px;
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap: 16px;
     }
-    .social-links{ display:flex; gap: 12px; }
-    .social-links a{
-      width: 42px; height: 42px;
+
+    .social-links {
+      display:flex;
+      gap: 12px;
+    }
+
+    .social-links a {
+      width: 42px;
+      height: 42px;
       border-radius: 12px;
-      display:flex; align-items:center; justify-content:center;
-      color:#fff; font-size:18px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#fff;
+      font-size:18px;
       transition: transform .2s ease, background .2s ease, border-color .2s ease;
       text-decoration:none;
       border: 1px solid rgba(255,255,255,0.3);
     }
-    .social-links a:hover{
+
+    .social-links a:hover {
       background: rgba(255,255,255,0.14);
       transform: translateY(-2px);
       border-color: rgba(255,255,255,0.6);
     }
-    .copyright{ color: rgba(255,255,255,0.65); font-size:14px; }
 
-    /* Responsive */
-    @media (max-width: 1024px){
-      .tri-grid{ grid-template-columns: repeat(2, 1fr); }
-      .cap-grid{ grid-template-columns: 1fr; }
-      .precision-grid{ grid-template-columns: repeat(2, 1fr); }
-      .footer-grid{ grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 860px){
-      .nav-links{ display:none; }
-      .menu-btn{ display:inline-flex; }
-      :root{ --header-h: 68px; }
-    }
-    @media (max-width: 768px){
-      .container{ padding: 0 16px; }
-
-      /* keep header uncluttered on mobile */
-      .nav-actions .btn{ display:none; }
-
-      .nav-actions .btn {
-        font-size: 0.9rem;   /* Reduced from 16px to ~14px */
-        padding: 10px 20px;  /* Reduced from 16px 32px */
-        font-weight: 700;    /* Optional: slightly lighter weight */
-      }
-
-      .hero-actions{ flex-direction: column; align-items:center; }
-      .hero-actions .btn{ width:100%; max-width: 420px; }
-
-      .tri-grid{ grid-template-columns: 1fr; }
-      .precision-grid{ grid-template-columns: 1fr; }
-      .footer-grid{ grid-template-columns: 1fr; }
-
-      .cta-actions{ flex-direction: column; align-items:center; }
-      .cta-actions .btn{ width:100%; max-width: 420px; }
-
-      .btn{ width:100%; justify-content:center; }
+    .copyright {
+      color: rgba(255,255,255,0.65);
+      font-size:14px;
     }
 
-    @media (prefers-reduced-motion: reduce){
-      html{ scroll-behavior:auto; }
-      *{ animation:none !important; transition:none !important; }
+    @media (max-width: 1024px) {
+      .tri-grid { grid-template-columns: repeat(2, 1fr); }
+      .cap-grid { grid-template-columns: 1fr; }
+      .precision-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 860px) {
+      .nav-links { display:none; }
+      .menu-btn { display:inline-flex; }
+      .nav-actions .btn,
+      .nav-actions .lang-form { display:none; }
+      :root { --header-h: 68px; }
+    }
+
+    @media (max-width: 768px) {
+      .container { padding: 0 16px; }
+      .hero-actions { flex-direction: column; align-items:center; }
+      .hero-actions .btn { width:100%; max-width: 420px; }
+      .tri-grid { grid-template-columns: 1fr; }
+      .precision-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .cta-actions { flex-direction: column; align-items:center; }
+      .cta-actions .btn { width:100%; max-width: 420px; }
+      .btn { width:100%; justify-content:center; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior:auto; }
+      * { animation:none !important; transition:none !important; }
     }
   </style>
 </head>
 
 <body>
+<a href="#main" class="skip-link">{% trans "Skip to content" %}</a>
 
 <header>
   <div class="container nav-container">
-    <a href="{% url 'home:home' %}" class="logo" style="text-decoration:none;">
+    <a href="{% url 'home:home' %}" class="logo">
       <div class="sidebar-brand">ExactusPay</div>
     </a>
 
     <ul class="nav-links">
       <li><a href="{% url 'home:home' %}">{% trans "Home" %}</a></li>
       <li><a href="{% url 'home:features' %}">{% trans "Features" %}</a></li>
-      <li><a href="{% url 'home:platform' %}" style="color:#fff;">{% trans "Platform" %}</a></li>
+      <li><a href="{% url 'home:platform' %}" class="active">{% trans "Platform" %}</a></li>
       <li><a href="{% url 'home:security' %}">{% trans "Security" %}</a></li>
       <li><a href="{% url 'home:pricing' %}">{% trans "Pricing" %}</a></li>
     </ul>
 
-    <div class="nav-actions">
-      <!-- Mobile menu button -->
+    <div class="nav-right">
+      <div class="nav-actions">
+        <a href="https://payroll.exactuspay.com/login" class="btn btn-secondary">{% trans "Log In" %}</a>
+        <a href="{% url 'home:demo' %}" class="btn btn-primary">{% trans "Request Demo" %}</a>
+
+        <form class="lang-form" action="{% url 'set_language' %}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.get_full_path }}">
+          <div class="lang-pill" title="{% trans 'Language' %}">
+            <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="this.form.submit()">
+              {% for lang in languages %}
+                {% if lang.code == "pt" %}
+                  <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷 Português</option>
+                {% elif lang.code == "en" %}
+                  <option value="en" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇬🇧 English</option>
+                {% elif lang.code == "es" %}
+                  <option value="es" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇪🇸 Español</option>
+                {% elif lang.code == "ru" %}
+                  <option value="ru" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇷🇺 Русский</option>
+                {% elif lang.code == "ar" %}
+                  <option value="ar" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇸🇦 العربية</option>
+                {% elif lang.code == "fr" %}
+                  <option value="fr" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇫🇷 Français</option>
+                {% elif lang.code == "de" %}
+                  <option value="de" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇩🇪 Deutsch</option>
+                {% elif lang.code == "pl" %}
+                  <option value="pl" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇵🇱 Polski</option>
+                {% elif lang.code == "it" %}
+                  <option value="it" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇹 Italiano</option>
+                {% elif lang.code == "id" %}
+                  <option value="id" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇩 Indonesian</option>
+                {% elif lang.code == "th" %}
+                  <option value="th" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇭 ไทย</option>
+                {% elif lang.code == "sw" %}
+                  <option value="sw" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇿 Swahili</option>
+                {% elif lang.code == "ha" %}
+                  <option value="ha" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇳🇬 Hausa</option>
+                {% else %}
+                  <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>{{ lang.code|upper }}</option>
+                {% endif %}
+              {% endfor %}
+            </select>
+            <span class="lang-caret" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
+          </div>
+        </form>
+      </div>
+
       <button class="menu-btn" type="button" aria-label="{% trans 'Open menu' %}" aria-expanded="false" aria-controls="mobileNav">
         <i class="fas fa-bars"></i>
       </button>
-
-      <!-- Desktop actions -->
-      <a href="https://payroll.exactuspay.com/login" class="btn btn-secondary">{% trans "Log In" %}</a>
-      <a href="{% url 'home:demo' %}" class="btn btn-primary">{% trans "Request Demo" %}</a>
-
-      <!-- Desktop language -->
-      <form class="lang-form" action="{% url 'set_language' %}" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
-        <div class="lang-pill" title="{% trans 'Language' %}">
-                <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="this.form.submit()">
-                  {% for lang in languages %}
-                    {% if lang.code == "pt" %}
-                      <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷 Português</option>
-                    {% elif lang.code == "en" %}
-                      <option value="en" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇬🇧 English</option>
-                    {% elif lang.code == "es" %}
-                      <option value="es" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇪🇸 Español</option>
-                    {% elif lang.code == "ru" %}
-                      <option value="ru" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇷🇺 Русский</option>
-                    {% elif lang.code == "ar" %}
-                      <option value="ar" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇸🇦 العربية</option>
-                    {% elif lang.code == "fr" %}
-                      <option value="fr" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇫🇷 Français</option>
-                    {% elif lang.code == "de" %}
-                      <option value="de" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇩🇪 Deutsch</option>
-                    {% elif lang.code == "pl" %}
-                      <option value="pl" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇵🇱 Polski</option>
-                    {% elif lang.code == "it" %}
-                      <option value="it" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇹 Italiano</option>
-                    {% elif lang.code == "id" %}
-                      <option value="id" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇩 Indonesian</option>
-                    {% elif lang.code == "th" %}
-                      <option value="th" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇭 ไทย</option>
-                    {% elif lang.code == "sw" %}
-                      <option value="sw" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇿 Swahili</option>
-                    {% elif lang.code == "ha" %}
-                      <option value="ha" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇳🇬 Hausa</option>
-                    {% else %}
-                      <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>{{ lang.code|upper }}</option>
-                    {% endif %}
-                  {% endfor %}
-                </select>
-          <span class="lang-caret" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
-        </div>
-      </form>
     </div>
   </div>
 </header>
 
-<!-- Mobile drawer -->
 <nav id="mobileNav" class="mobile-nav" aria-label="{% trans 'Mobile navigation' %}">
   <div class="container">
     <ul class="mobile-links">
@@ -675,41 +930,41 @@
     <div class="mobile-lang">
       <form class="lang-form" action="{% url 'set_language' %}" method="post">
         {% csrf_token %}
-        <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
+        <input type="hidden" name="next" value="{{ request.get_full_path }}">
         <div class="lang-pill" title="{% trans 'Language' %}">
-                <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="this.form.submit()">
-                  {% for lang in languages %}
-                    {% if lang.code == "pt" %}
-                      <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷 Português</option>
-                    {% elif lang.code == "en" %}
-                      <option value="en" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇬🇧 English</option>
-                    {% elif lang.code == "es" %}
-                      <option value="es" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇪🇸 Español</option>
-                    {% elif lang.code == "ru" %}
-                      <option value="ru" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇷🇺 Русский</option>
-                    {% elif lang.code == "ar" %}
-                      <option value="ar" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇸🇦 العربية</option>
-                    {% elif lang.code == "fr" %}
-                      <option value="fr" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇫🇷 Français</option>
-                    {% elif lang.code == "de" %}
-                      <option value="de" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇩🇪 Deutsch</option>
-                    {% elif lang.code == "pl" %}
-                      <option value="pl" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇵🇱 Polski</option>
-                    {% elif lang.code == "it" %}
-                      <option value="it" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇹 Italiano</option>
-                    {% elif lang.code == "id" %}
-                      <option value="id" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇩 Indonesian</option>
-                    {% elif lang.code == "th" %}
-                      <option value="th" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇭 ไทย</option>
-                    {% elif lang.code == "sw" %}
-                      <option value="sw" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇿 Swahili</option>
-                    {% elif lang.code == "ha" %}
-                      <option value="ha" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇳🇬 Hausa</option>
-                    {% else %}
-                      <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>{{ lang.code|upper }}</option>
-                    {% endif %}
-                  {% endfor %}
-                </select>
+          <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="this.form.submit()">
+            {% for lang in languages %}
+              {% if lang.code == "pt" %}
+                <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷 Português</option>
+              {% elif lang.code == "en" %}
+                <option value="en" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇬🇧 English</option>
+              {% elif lang.code == "es" %}
+                <option value="es" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇪🇸 Español</option>
+              {% elif lang.code == "ru" %}
+                <option value="ru" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇷🇺 Русский</option>
+              {% elif lang.code == "ar" %}
+                <option value="ar" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇸🇦 العربية</option>
+              {% elif lang.code == "fr" %}
+                <option value="fr" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇫🇷 Français</option>
+              {% elif lang.code == "de" %}
+                <option value="de" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇩🇪 Deutsch</option>
+              {% elif lang.code == "pl" %}
+                <option value="pl" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇵🇱 Polski</option>
+              {% elif lang.code == "it" %}
+                <option value="it" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇹 Italiano</option>
+              {% elif lang.code == "id" %}
+                <option value="id" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇩 Indonesian</option>
+              {% elif lang.code == "th" %}
+                <option value="th" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇭 ไทย</option>
+              {% elif lang.code == "sw" %}
+                <option value="sw" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇿 Swahili</option>
+              {% elif lang.code == "ha" %}
+                <option value="ha" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇳🇬 Hausa</option>
+              {% else %}
+                <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>{{ lang.code|upper }}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
           <span class="lang-caret" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
         </div>
       </form>
@@ -718,15 +973,14 @@
 </nav>
 
 <main id="main">
-  <!-- HERO -->
   <section class="platform-hero">
     <div class="container">
       <div class="platform-hero-content">
         <h1>{% trans "A global payroll platform built for scale" %}</h1>
         <p>
           {% blocktrans trimmed %}
-          ExactusPay is an end-to-end global payroll ecosystem that brings enterprise-grade consistency to high-growth markets.
-          Replace fragmented local tools with a single source of truth — and run multi-country payroll with clarity, control, and confidence.
+            ExactusPay is an end-to-end global payroll ecosystem that brings enterprise-grade consistency to high-growth markets.
+            Replace fragmented local tools with a single source of truth — and run multi-country payroll with clarity, control, and confidence.
           {% endblocktrans %}
         </p>
 
@@ -749,7 +1003,6 @@
     </div>
   </section>
 
-  <!-- ARCHITECTURE -->
   <section class="architecture" id="architecture">
     <div class="container">
       <div class="section-title">
@@ -757,8 +1010,8 @@
         <h2>{% trans "One framework. Every country. One clear view." %}</h2>
         <p>
           {% blocktrans trimmed %}
-          Whether you pay teams in Brazil, Nigeria, or Vietnam, payroll data is processed and presented in the same structure.
-          That means fewer manual reconciliations and executive-grade visibility across jurisdictions.
+            Whether you pay teams in Brazil, Nigeria, or Vietnam, payroll data is processed and presented in the same structure.
+            That means fewer manual reconciliations and executive-grade visibility across jurisdictions.
           {% endblocktrans %}
         </p>
       </div>
@@ -785,7 +1038,6 @@
     </div>
   </section>
 
-  <!-- CAPABILITIES -->
   <section class="capabilities" id="capabilities">
     <div class="container">
       <div class="section-title">
@@ -793,7 +1045,7 @@
         <h2>{% trans "Expand with confidence — operate with precision" %}</h2>
         <p>
           {% blocktrans trimmed %}
-          Plan ahead, stay compliant, connect your stack, and deliver a consistent employee experience — even across complex markets.
+            Plan ahead, stay compliant, connect your stack, and deliver a consistent employee experience — even across complex markets.
           {% endblocktrans %}
         </p>
       </div>
@@ -806,8 +1058,8 @@
               <h3>{% trans "Predictive Simulation Engine" %}</h3>
               <p>
                 {% blocktrans trimmed %}
-                Forecast full employment costs — including local taxes and statutory contributions — before you hire or enter a new market.
-                Turn “what if?” questions into clear numbers.
+                  Forecast full employment costs — including local taxes and statutory contributions — before you hire or enter a new market.
+                  Turn “what if?” questions into clear numbers.
                 {% endblocktrans %}
               </p>
             </div>
@@ -826,8 +1078,8 @@
               <h3>{% trans "Automated Compliance Guardianship" %}</h3>
               <p>
                 {% blocktrans trimmed %}
-                Built-in legal logic adapts to shifting labour laws and tax regulations across LATAM, Africa, and Asia —
-                keeping you audit-ready and protected from avoidable penalties.
+                  Built-in legal logic adapts to shifting labour laws and tax regulations across LATAM, Africa, and Asia —
+                  keeping you audit-ready and protected from avoidable penalties.
                 {% endblocktrans %}
               </p>
             </div>
@@ -846,8 +1098,8 @@
               <h3>{% trans "Managed Service Connectivity" %}</h3>
               <p>
                 {% blocktrans trimmed %}
-                ExactusPay connects to your HCM systems (e.g., Workday, BambooHR) so employee data flows cleanly from hire to pay —
-                without manual re-entry and operational drift.
+                  ExactusPay connects to your HCM systems (e.g., Workday, BambooHR) so employee data flows cleanly from hire to pay —
+                  without manual re-entry and operational drift.
                 {% endblocktrans %}
               </p>
             </div>
@@ -866,8 +1118,8 @@
               <h3>{% trans "Multi-Currency & Language Support" %}</h3>
               <p>
                 {% blocktrans trimmed %}
-                Handle FX rules and banking complexity behind the scenes. Employees get a refined, localised experience —
-                with multi-language access to payslips and documents.
+                  Handle FX rules and banking complexity behind the scenes. Employees get a refined, localised experience —
+                  with multi-language access to payslips and documents.
                 {% endblocktrans %}
               </p>
             </div>
@@ -882,7 +1134,6 @@
     </div>
   </section>
 
-  <!-- OPERATIONAL PRECISION -->
   <section class="precision" id="precision">
     <div class="container">
       <div class="section-title">
@@ -890,8 +1141,8 @@
         <h2>{% trans "Consolidate providers. Increase control." %}</h2>
         <p>
           {% blocktrans trimmed %}
-          Bring local payroll execution into one secure, standards-driven environment. Reduce manual work, strengthen governance,
-          and scale internationally without adding chaos.
+            Bring local payroll execution into one secure, standards-driven environment. Reduce manual work, strengthen governance,
+            and scale internationally without adding chaos.
           {% endblocktrans %}
         </p>
       </div>
@@ -918,15 +1169,14 @@
     </div>
   </section>
 
-  <!-- CTA -->
   <section class="platform-cta" id="cta">
     <div class="container">
       <div class="cta-content">
         <h2>{% trans "Bring global payroll under one roof" %}</h2>
         <p>
           {% blocktrans trimmed %}
-          Get a single source of truth, standardised reporting, and compliance-ready processes — without the typical
-          global payroll complexity.
+            Get a single source of truth, standardised reporting, and compliance-ready processes — without the typical
+            global payroll complexity.
           {% endblocktrans %}
         </p>
 
@@ -996,10 +1246,7 @@
       </div>
 
       <div class="social-links">
-        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-        <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
-        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+        <a href="https://www.linkedin.com/company/exactuspay" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
       </div>
     </div>
   </div>
@@ -1007,7 +1254,6 @@
 
 <script defer>
   document.addEventListener('DOMContentLoaded', () => {
-    // Mobile menu
     const btn = document.querySelector('.menu-btn');
     const mobileNav = document.getElementById('mobileNav');
 
@@ -1038,40 +1284,39 @@
       });
     }
 
-    // Section reveal (unobserve for perf)
     const sections = document.querySelectorAll('main section');
     if ('IntersectionObserver' in window && sections.length) {
-      const obs = new IntersectionObserver((entries, o) => {
+      const obs = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            entry.target.style.opacity = "1";
-            entry.target.style.transform = "translateY(0)";
-            o.unobserve(entry.target);
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
           }
         });
       }, { threshold: 0.12 });
 
-      sections.forEach(s => {
-        s.style.opacity = "0";
-        s.style.transform = "translateY(18px)";
-        s.style.transition = "all 0.7s ease-out";
-        obs.observe(s);
-      });
+      sections.forEach(section => obs.observe(section));
+    } else {
+      sections.forEach(section => section.classList.add('visible'));
     }
 
-    // Header hide/show on scroll (nice on mobile)
     const header = document.querySelector('header');
     if (header) {
       let last = 0;
       window.addEventListener('scroll', () => {
         const cur = window.pageYOffset || 0;
+
         if (cur > last && cur > 110) {
           header.style.transform = 'translateY(-100%)';
           closeMobileNav();
         } else {
           header.style.transform = 'translateY(0)';
         }
-        header.style.boxShadow = (cur > 50) ? '0 10px 30px rgba(0,0,0,0.3)' : 'var(--shadow-sm)';
+
+        header.style.boxShadow = cur > 50
+          ? '0 10px 30px rgba(0,0,0,0.3)'
+          : 'var(--shadow-sm)';
+
         last = cur;
       }, { passive: true });
     }

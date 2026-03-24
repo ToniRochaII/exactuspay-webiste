@@ -1,28 +1,24 @@
-{% load i18n %} {% get_current_language as LANGUAGE_CODE %} {%
-get_available_languages as LANGUAGES %} {% get_language_info_list for LANGUAGES
-as languages %}
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+{% get_available_languages as LANGUAGES %}
+{% get_language_info_list for LANGUAGES as languages %}
 <!doctype html>
 <html lang="{{ LANGUAGE_CODE }}">
   <head>
-
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XTL69YL5WC"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-XTL69YL5WC');
-</script>
-
-
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XTL69YL5WC"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XTL69YL5WC');
+    </script>
 
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>
-      {% trans "Global Payroll Software | Multi-Country Payroll & Compliance
-      Platform | ExactusPay" %}
+      {% trans "Global Payroll Software | Multi-Country Payroll & Compliance Platform | ExactusPay" %}
     </title>
 
     <meta
@@ -48,11 +44,7 @@ as languages %}
     <link rel="alternate" hreflang="en" href="https://www.exactuspay.com/" />
     <link rel="alternate" hreflang="pt" href="https://www.exactuspay.com/pt/" />
     <link rel="alternate" hreflang="es" href="https://www.exactuspay.com/es/" />
-    <link
-      rel="alternate"
-      hreflang="x-default"
-      href="https://www.exactuspay.com/"
-    />
+    <link rel="alternate" hreflang="x-default" href="https://www.exactuspay.com/" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -349,9 +341,9 @@ as languages %}
         flex-wrap: wrap;
       }
       .nav-actions .btn {
-        font-size: 0.9rem; /* Reduced from 16px to ~14px */
-        padding: 10px 20px; /* Reduced from 16px 32px */
-        font-weight: 700; /* Optional: slightly lighter weight */
+        font-size: 0.9rem;
+        padding: 10px 20px;
+        font-weight: 700;
       }
 
       /* Language switcher */
@@ -359,13 +351,11 @@ as languages %}
         display: flex;
         align-items: center;
       }
-      /* Update these two classes in your <style> block */
 
       .lang-pill {
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        /* Reduced padding (was 10px 12px) */
         padding: 6px 10px;
         border-radius: 999px;
         background: rgba(255, 255, 255, 0.08);
@@ -381,7 +371,6 @@ as languages %}
         background: transparent;
         border: none;
         color: rgba(255, 255, 255, 0.92);
-        /* Reduced font size (was 1.2rem) and weight */
         font-weight: 600;
         font-size: 0.9rem;
         line-height: 1;
@@ -390,22 +379,16 @@ as languages %}
         cursor: pointer;
       }
 
-      /* Optional: Adjust the arrow size to match */
-      .lang-caret {
-        margin-left: -18px;
-        pointer-events: none;
-        color: rgba(255, 255, 255, 0.75);
-        font-size: 0.75rem; /* Slightly smaller */
-      }
       .lang-select option {
         color: #0f172a;
         font-size: 1rem;
       }
+
       .lang-caret {
-        margin-left: -20px;
+        margin-left: -18px;
         pointer-events: none;
         color: rgba(255, 255, 255, 0.75);
-        font-size: 0.85rem;
+        font-size: 0.75rem;
       }
 
       /* Mobile menu */
@@ -962,7 +945,6 @@ as languages %}
         }
       }
       @media (max-width: 768px) {
-        /* keep header uncluttered on mobile */
         .nav-actions .btn {
           display: none;
         }
@@ -1001,32 +983,19 @@ as languages %}
   <body>
     <header>
       <div class="container nav-container">
-        <a
-          href="{% url 'home:home' %}"
-          class="logo"
-          style="text-decoration: none"
-        >
+        <a href="{% url 'home:home' %}" class="logo" style="text-decoration: none">
           <div class="sidebar-brand">ExactusPay</div>
         </a>
 
         <ul class="nav-links">
           <li><a href="{% url 'home:home' %}">{% trans "Home" %}</a></li>
-          <li>
-            <a href="{% url 'home:features' %}">{% trans "Features" %}</a>
-          </li>
-          <li>
-            <a href="{% url 'home:platform' %}">{% trans "Platform" %}</a>
-          </li>
-          <li>
-            <a href="{% url 'home:security' %}" style="color: #fff"
-              >{% trans "Security" %}</a
-            >
-          </li>
+          <li><a href="{% url 'home:features' %}">{% trans "Features" %}</a></li>
+          <li><a href="{% url 'home:platform' %}">{% trans "Platform" %}</a></li>
+          <li><a href="{% url 'home:security' %}" style="color: #fff">{% trans "Security" %}</a></li>
           <li><a href="{% url 'home:pricing' %}">{% trans "Pricing" %}</a></li>
         </ul>
 
         <div class="nav-actions">
-          <!-- Mobile menu button -->
           <button
             class="menu-btn"
             type="button"
@@ -1037,28 +1006,12 @@ as languages %}
             <i class="fas fa-bars"></i>
           </button>
 
-          <!-- Desktop actions -->
-          <a
-            href="https://payroll.exactuspay.com/login"
-            class="btn btn-secondary"
-            >{% trans "Log In" %}</a
-          >
-          <a href="{% url 'home:demo' %}" class="btn btn-primary"
-            >{% trans "Request Demo" %}</a
-          >
+          <a href="https://payroll.exactuspay.com/login" class="btn btn-secondary">{% trans "Log In" %}</a>
+          <a href="{% url 'home:demo' %}" class="btn btn-primary">{% trans "Request Demo" %}</a>
 
-          <!-- Language selector -->
-          <form
-            class="lang-form"
-            action="{% url 'set_language' %}"
-            method="post"
-          >
+          <form class="lang-form" action="{% url 'set_language' %}" method="post">
             {% csrf_token %}
-            <input
-              type="hidden"
-              name="next"
-              value="{{ request.get_full_path }}"
-            />
+            <input type="hidden" name="next" value="{{ request.get_full_path }}" />
             <div class="lang-pill" title="{% trans 'Language' %}">
               <select
                 class="lang-select"
@@ -1066,243 +1019,64 @@ as languages %}
                 aria-label="{% trans 'Select language' %}"
                 onchange="this.form.submit()"
               >
-                {% for lang in languages %} {% if lang.code == "pt" %}
-                <option
-                  value="pt"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇧🇷 Português
-                </option>
-                {% elif lang.code == "en" %}
-                <option
-                  value="en"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇬🇧 English
-                </option>
-                {% elif lang.code == "es" %}
-                <option
-                  value="es"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇪🇸 Español
-                </option>
-                {% elif lang.code == "ru" %}
-                <option
-                  value="ru"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇷🇺 Русский
-                </option>
-                {% elif lang.code == "ar" %}
-                <option
-                  value="ar"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇸🇦 العربية
-                </option>
-                {% elif lang.code == "fr" %}
-                <option
-                  value="fr"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇫🇷 Français
-                </option>
-                {% elif lang.code == "de" %}
-                <option
-                  value="de"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇩🇪 Deutsch
-                </option>
-                {% elif lang.code == "pl" %}
-                <option
-                  value="pl"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇵🇱 Polski
-                </option>
-                {% elif lang.code == "it" %}
-                <option
-                  value="it"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇮🇹 Italiano
-                </option>
-                {% elif lang.code == "id" %}
-                <option
-                  value="id"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇮🇩 Indonesian
-                </option>
-                {% elif lang.code == "th" %}
-                <option
-                  value="th"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇹🇭 ไทย
-                </option>
-                {% elif lang.code == "sw" %}
-                <option
-                  value="sw"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇹🇿 Swahili
-                </option>
-                {% elif lang.code == "ha" %}
-                <option
-                  value="ha"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇳🇬 Hausa
-                </option>
-                {% else %}
-                <option
-                  value="{{ lang.code }}"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  {{ lang.code|upper }}
-                </option>
-                {% endif %} {% endfor %}
+                {% for lang in languages %}
+                  {% if lang.code == "pt" %}
+                    <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷 Português</option>
+                  {% elif lang.code == "en" %}
+                    <option value="en" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇬🇧 English</option>
+                  {% elif lang.code == "es" %}
+                    <option value="es" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇪🇸 Español</option>
+                  {% elif lang.code == "ru" %}
+                    <option value="ru" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇷🇺 Русский</option>
+                  {% elif lang.code == "ar" %}
+                    <option value="ar" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇸🇦 العربية</option>
+                  {% elif lang.code == "fr" %}
+                    <option value="fr" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇫🇷 Français</option>
+                  {% elif lang.code == "de" %}
+                    <option value="de" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇩🇪 Deutsch</option>
+                  {% elif lang.code == "pl" %}
+                    <option value="pl" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇵🇱 Polski</option>
+                  {% elif lang.code == "it" %}
+                    <option value="it" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇹 Italiano</option>
+                  {% elif lang.code == "id" %}
+                    <option value="id" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇩 Indonesian</option>
+                  {% elif lang.code == "th" %}
+                    <option value="th" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇭 ไทย</option>
+                  {% elif lang.code == "sw" %}
+                    <option value="sw" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇿 Swahili</option>
+                  {% elif lang.code == "ha" %}
+                    <option value="ha" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇳🇬 Hausa</option>
+                  {% else %}
+                    <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>{{ lang.code|upper }}</option>
+                  {% endif %}
+                {% endfor %}
               </select>
-              <span class="lang-caret" aria-hidden="true"
-                ><i class="fas fa-chevron-down"></i
-              ></span>
+              <span class="lang-caret" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
             </div>
           </form>
         </div>
       </div>
     </header>
 
-    <!-- Mobile drawer -->
-    <nav
-      id="mobileNav"
-      class="mobile-nav"
-      aria-label="{% trans 'Mobile navigation' %}"
-    >
+    <nav id="mobileNav" class="mobile-nav" aria-label="{% trans 'Mobile navigation' %}">
       <div class="container">
         <ul class="mobile-links">
           <li><a href="{% url 'home:home' %}">{% trans "Home" %}</a></li>
-          <li>
-            <a href="{% url 'home:features' %}">{% trans "Features" %}</a>
-          </li>
-          <li>
-            <a href="{% url 'home:platform' %}">{% trans "Platform" %}</a>
-          </li>
-          <li>
-            <a href="{% url 'home:security' %}">{% trans "Security" %}</a>
-          </li>
+          <li><a href="{% url 'home:features' %}">{% trans "Features" %}</a></li>
+          <li><a href="{% url 'home:platform' %}">{% trans "Platform" %}</a></li>
+          <li><a href="{% url 'home:security' %}">{% trans "Security" %}</a></li>
           <li><a href="{% url 'home:pricing' %}">{% trans "Pricing" %}</a></li>
         </ul>
 
         <div class="mobile-actions">
-          <a
-            href="https://payroll.exactuspay.com/login"
-            class="btn btn-secondary"
-            >{% trans "Log In" %}</a
-          >
-          <a href="{% url 'home:demo' %}" class="btn btn-primary"
-            >{% trans "Request Demo" %}</a
-          >
+          <a href="https://payroll.exactuspay.com/login" class="btn btn-secondary">{% trans "Log In" %}</a>
+          <a href="{% url 'home:demo' %}" class="btn btn-primary">{% trans "Request Demo" %}</a>
         </div>
 
         <div class="mobile-lang">
-          <form
-            class="lang-form"
-            action="{% url 'set_language' %}"
-            method="post"
-          >
+          <form class="lang-form" action="{% url 'set_language' %}" method="post">
             {% csrf_token %}
-            <input
-              type="hidden"
-              name="next"
-              value="{{ request.get_full_path }}"
-            />
+            <input type="hidden" name="next" value="{{ request.get_full_path }}" />
             <div class="lang-pill" title="{% trans 'Language' %}">
               <select
                 class="lang-select"
@@ -1310,193 +1084,39 @@ as languages %}
                 aria-label="{% trans 'Select language' %}"
                 onchange="this.form.submit()"
               >
-                {% for lang in languages %} {% if lang.code == "pt" %}
-                <option
-                  value="pt"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇧🇷 Português
-                </option>
-                {% elif lang.code == "en" %}
-                <option
-                  value="en"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇬🇧 English
-                </option>
-                {% elif lang.code == "es" %}
-                <option
-                  value="es"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇪🇸 Español
-                </option>
-                {% elif lang.code == "ru" %}
-                <option
-                  value="ru"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇷🇺 Русский
-                </option>
-                {% elif lang.code == "ar" %}
-                <option
-                  value="ar"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇸🇦 العربية
-                </option>
-                {% elif lang.code == "fr" %}
-                <option
-                  value="fr"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇫🇷 Français
-                </option>
-                {% elif lang.code == "de" %}
-                <option
-                  value="de"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇩🇪 Deutsch
-                </option>
-                {% elif lang.code == "pl" %}
-                <option
-                  value="pl"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇵🇱 Polski
-                </option>
-                {% elif lang.code == "it" %}
-                <option
-                  value="it"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇮🇹 Italiano
-                </option>
-                {% elif lang.code == "id" %}
-                <option
-                  value="id"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇮🇩 Indonesian
-                </option>
-                {% elif lang.code == "th" %}
-                <option
-                  value="th"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇹🇭 ไทย
-                </option>
-                {% elif lang.code == "sw" %}
-                <option
-                  value="sw"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇹🇿 Swahili
-                </option>
-                {% elif lang.code == "ha" %}
-                <option
-                  value="ha"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  🇳🇬 Hausa
-                </option>
-                {% else %}
-                <option
-                  value="{{ lang.code }}"
-                  {%
-                  if
-                  lang.code=""
-                  ="LANGUAGE_CODE"
-                  %}selected{%
-                  endif
-                  %}
-                >
-                  {{ lang.code|upper }}
-                </option>
-                {% endif %} {% endfor %}
+                {% for lang in languages %}
+                  {% if lang.code == "pt" %}
+                    <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷 Português</option>
+                  {% elif lang.code == "en" %}
+                    <option value="en" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇬🇧 English</option>
+                  {% elif lang.code == "es" %}
+                    <option value="es" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇪🇸 Español</option>
+                  {% elif lang.code == "ru" %}
+                    <option value="ru" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇷🇺 Русский</option>
+                  {% elif lang.code == "ar" %}
+                    <option value="ar" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇸🇦 العربية</option>
+                  {% elif lang.code == "fr" %}
+                    <option value="fr" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇫🇷 Français</option>
+                  {% elif lang.code == "de" %}
+                    <option value="de" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇩🇪 Deutsch</option>
+                  {% elif lang.code == "pl" %}
+                    <option value="pl" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇵🇱 Polski</option>
+                  {% elif lang.code == "it" %}
+                    <option value="it" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇹 Italiano</option>
+                  {% elif lang.code == "id" %}
+                    <option value="id" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇩 Indonesian</option>
+                  {% elif lang.code == "th" %}
+                    <option value="th" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇭 ไทย</option>
+                  {% elif lang.code == "sw" %}
+                    <option value="sw" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇿 Swahili</option>
+                  {% elif lang.code == "ha" %}
+                    <option value="ha" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇳🇬 Hausa</option>
+                  {% else %}
+                    <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>{{ lang.code|upper }}</option>
+                  {% endif %}
+                {% endfor %}
               </select>
-              <span class="lang-caret" aria-hidden="true"
-                ><i class="fas fa-chevron-down"></i
-              ></span>
+              <span class="lang-caret" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
             </div>
           </form>
         </div>
@@ -1509,33 +1129,16 @@ as languages %}
           <div class="security-hero-content">
             <h1>{% trans "Security designed for global trust" %}</h1>
             <p>
-              {% blocktrans trimmed %} Payroll contains your most sensitive data
-              — banking details, government IDs, and personal records.
-              ExactusPay protects it with enterprise-grade security engineered
-              for cross-border operations across LATAM, Africa, and Asia. {%
-              endblocktrans %}
+              {% blocktrans trimmed %}
+              Payroll contains your most sensitive data — banking details, government IDs, and personal records. ExactusPay protects it with enterprise-grade security engineered for cross-border operations across LATAM, Africa, and Asia.
+              {% endblocktrans %}
             </p>
 
-            <div
-              class="trust-strip"
-              aria-label="{% trans 'Security highlights' %}"
-            >
-              <span class="trust-pill"
-                ><i class="fa-solid fa-lock"></i> {% trans "AES-256 encryption"
-                %}</span
-              >
-              <span class="trust-pill"
-                ><i class="fa-solid fa-user-shield"></i> {% trans "Zero-trust
-                access" %}</span
-              >
-              <span class="trust-pill"
-                ><i class="fa-solid fa-database"></i> {% trans "Resilient
-                backups" %}</span
-              >
-              <span class="trust-pill"
-                ><i class="fa-solid fa-clipboard-check"></i> {% trans
-                "Audit-ready controls" %}</span
-              >
+            <div class="trust-strip" aria-label="{% trans 'Security highlights' %}">
+              <span class="trust-pill"><i class="fa-solid fa-lock"></i> {% trans "AES-256 encryption" %}</span>
+              <span class="trust-pill"><i class="fa-solid fa-user-shield"></i> {% trans "Zero-trust access" %}</span>
+              <span class="trust-pill"><i class="fa-solid fa-database"></i> {% trans "Resilient backups" %}</span>
+              <span class="trust-pill"><i class="fa-solid fa-clipboard-check"></i> {% trans "Audit-ready controls" %}</span>
             </div>
           </div>
         </div>
@@ -1546,38 +1149,26 @@ as languages %}
           <div class="section-title">
             <div class="subtitle">{% trans "Defense in Depth" %}</div>
             <h2>{% trans "Multi-layered protection at every stage" %}</h2>
-            <p>
-              {% trans "We use overlapping controls so your payroll data stays
-              protected in transit, at rest, and during access." %}
-            </p>
+            <p>{% trans "We use overlapping controls so your payroll data stays protected in transit, at rest, and during access." %}</p>
           </div>
 
           <div class="defense-grid">
             <div class="defense-card">
               <div class="defense-icon"><i class="fas fa-lock"></i></div>
               <h3>{% trans "Advanced encryption" %}</h3>
-              <p>
-                {% trans "AES-256 encryption protects sensitive data at rest and
-                in transit, keeping it unreadable if intercepted." %}
-              </p>
+              <p>{% trans "AES-256 encryption protects sensitive data at rest and in transit, keeping it unreadable if intercepted." %}</p>
             </div>
 
             <div class="defense-card">
               <div class="defense-icon"><i class="fas fa-user-shield"></i></div>
               <h3>{% trans "Zero-trust access" %}</h3>
-              <p>
-                {% trans "RBAC and MFA restrict access to only what each user
-                needs — minimizing internal and accidental exposure risk." %}
-              </p>
+              <p>{% trans "RBAC and MFA restrict access to only what each user needs — minimizing internal and accidental exposure risk." %}</p>
             </div>
 
             <div class="defense-card">
               <div class="defense-icon"><i class="fas fa-cloud"></i></div>
               <h3>{% trans "Secure cloud infrastructure" %}</h3>
-              <p>
-                {% trans "Hosted on mature cloud environments with real-time
-                backups, mirrored regions, and resilient disaster recovery." %}
-              </p>
+              <p>{% trans "Hosted on mature cloud environments with real-time backups, mirrored regions, and resilient disaster recovery." %}</p>
             </div>
           </div>
         </div>
@@ -1588,10 +1179,7 @@ as languages %}
           <div class="section-title">
             <div class="subtitle">{% trans "Access & Governance" %}</div>
             <h2>{% trans "Built to reduce risk and prevent mistakes" %}</h2>
-            <p>
-              {% trans "Strong authentication, tight permissions, and full
-              traceability help you maintain control at scale." %}
-            </p>
+            <p>{% trans "Strong authentication, tight permissions, and full traceability help you maintain control at scale." %}</p>
           </div>
 
           <div class="controls-grid">
@@ -1599,11 +1187,7 @@ as languages %}
               <div class="control-icon"><i class="fas fa-key"></i></div>
               <div class="control-content">
                 <h4>{% trans "Role-based access control (RBAC)" %}</h4>
-                <p>
-                  {% trans "Granular permissions ensure teams only see and
-                  change what they’re authorised to manage — by country,
-                  company, and function." %}
-                </p>
+                <p>{% trans "Granular permissions ensure teams only see and change what they’re authorised to manage — by country, company, and function." %}</p>
               </div>
             </div>
 
@@ -1611,36 +1195,23 @@ as languages %}
               <div class="control-icon"><i class="fas fa-fingerprint"></i></div>
               <div class="control-content">
                 <h4>{% trans "Multi-factor authentication (MFA)" %}</h4>
-                <p>
-                  {% trans "Reduce account takeover risk with MFA options across
-                  user roles and operational workflows." %}
-                </p>
+                <p>{% trans "Reduce account takeover risk with MFA options across user roles and operational workflows." %}</p>
               </div>
             </div>
 
             <div class="control-card">
-              <div class="control-icon">
-                <i class="fas fa-clipboard-list"></i>
-              </div>
+              <div class="control-icon"><i class="fas fa-clipboard-list"></i></div>
               <div class="control-content">
                 <h4>{% trans "Audit trails & traceability" %}</h4>
-                <p>
-                  {% trans "Track changes, approvals, and calculation evidence
-                  to support reviews, audits, and compliance obligations." %}
-                </p>
+                <p>{% trans "Track changes, approvals, and calculation evidence to support reviews, audits, and compliance obligations." %}</p>
               </div>
             </div>
 
             <div class="control-card">
-              <div class="control-icon">
-                <i class="fas fa-triangle-exclamation"></i>
-              </div>
+              <div class="control-icon"><i class="fas fa-triangle-exclamation"></i></div>
               <div class="control-content">
                 <h4>{% trans "Proactive monitoring" %}</h4>
-                <p>
-                  {% trans "Operational monitoring and security checks help
-                  detect anomalies early and reduce time-to-response." %}
-                </p>
+                <p>{% trans "Operational monitoring and security checks help detect anomalies early and reduce time-to-response." %}</p>
               </div>
             </div>
           </div>
@@ -1652,48 +1223,26 @@ as languages %}
           <div class="section-title">
             <div class="subtitle">{% trans "Compliance & Sovereignty" %}</div>
             <h2>{% trans "Aligned to international standards" %}</h2>
-            <p>
-              {% trans "Security isn’t static. We design for evolving
-              regulations and enforce privacy-by-design across the platform." %}
-            </p>
+            <p>{% trans "Security isn’t static. We design for evolving regulations and enforce privacy-by-design across the platform." %}</p>
           </div>
 
           <div class="compliance-grid">
             <div class="compliance-card">
-              <div class="tag">
-                <i class="fas fa-scale-balanced"></i> {% trans "Standards" %}
-              </div>
+              <div class="tag"><i class="fas fa-scale-balanced"></i> {% trans "Standards" %}</div>
               <h4>{% trans "GDPR & regional privacy alignment" %}</h4>
-              <p>
-                {% trans "Security controls are designed to align with GDPR and
-                regional laws such as LGPD (Brazil) and POPIA (South Africa)."
-                %}
-              </p>
+              <p>{% trans "Security controls are designed to align with GDPR and regional laws such as LGPD (Brazil) and POPIA (South Africa)." %}</p>
             </div>
 
             <div class="compliance-card">
-              <div class="tag">
-                <i class="fas fa-screwdriver-wrench"></i> {% trans "Assurance"
-                %}
-              </div>
+              <div class="tag"><i class="fas fa-screwdriver-wrench"></i> {% trans "Assurance" %}</div>
               <h4>{% trans "Audits & penetration testing" %}</h4>
-              <p>
-                {% trans "Regular internal and external reviews help identify
-                weaknesses early and keep protections current." %}
-              </p>
+              <p>{% trans "Regular internal and external reviews help identify weaknesses early and keep protections current." %}</p>
             </div>
 
             <div class="compliance-card">
-              <div class="tag">
-                <i class="fas fa-shield-heart"></i> {% trans "Privacy by design"
-                %}
-              </div>
+              <div class="tag"><i class="fas fa-shield-heart"></i> {% trans "Privacy by design" %}</div>
               <h4>{% trans "Data minimisation" %}</h4>
-              <p>
-                {% trans "We collect only what’s required for payroll and
-                statutory obligations, and we securely dispose of data when no
-                longer needed." %}
-              </p>
+              <p>{% trans "We collect only what’s required for payroll and statutory obligations, and we securely dispose of data when no longer needed." %}</p>
             </div>
           </div>
         </div>
@@ -1704,71 +1253,36 @@ as languages %}
           <div class="section-title">
             <div class="subtitle">{% trans "Human-Centered Security" %}</div>
             <h2>{% trans "Technology + people, working together" %}</h2>
-            <p>
-              {% trans "Security is strongest when systems and teams reinforce
-              each other — with training, support, and good hygiene." %}
-            </p>
+            <p>{% trans "Security is strongest when systems and teams reinforce each other — with training, support, and good hygiene." %}</p>
           </div>
 
           <div class="human-wrap">
             <div class="human-grid">
               <div>
-                <h3 style="color: var(--text-primary)">
-                  {% trans "A support team trained for vigilance" %}
-                </h3>
+                <h3 style="color: var(--text-primary)">{% trans "A support team trained for vigilance" %}</h3>
                 <p style="margin-bottom: 10px">
-                  {% trans "Our specialists follow current cybersecurity best
-                  practices and help you maintain safe operational habits across
-                  your payroll workflows." %}
+                  {% trans "Our specialists follow current cybersecurity best practices and help you maintain safe operational habits across your payroll workflows." %}
                 </p>
 
                 <ul class="human-list">
-                  <li>
-                    <i class="fas fa-check-circle"></i
-                    ><span
-                      >{% trans "Guidance to recognise phishing and social
-                      engineering attempts." %}</span
-                    >
-                  </li>
-                  <li>
-                    <i class="fas fa-check-circle"></i
-                    ><span
-                      >{% trans "Credential hygiene best practices for admins
-                      and payroll operators." %}</span
-                    >
-                  </li>
-                  <li>
-                    <i class="fas fa-check-circle"></i
-                    ><span
-                      >{% trans "Secure onboarding and access setup aligned to
-                      your organisational structure." %}</span
-                    >
-                  </li>
+                  <li><i class="fas fa-check-circle"></i><span>{% trans "Guidance to recognise phishing and social engineering attempts." %}</span></li>
+                  <li><i class="fas fa-check-circle"></i><span>{% trans "Credential hygiene best practices for admins and payroll operators." %}</span></li>
+                  <li><i class="fas fa-check-circle"></i><span>{% trans "Secure onboarding and access setup aligned to your organisational structure." %}</span></li>
                 </ul>
               </div>
 
               <div class="micro-cards">
                 <div class="micro">
                   <strong>{% trans "Credential controls" %}</strong>
-                  <span
-                    >{% trans "MFA, strong password policies, and
-                    least-privilege access baked into daily operations."
-                    %}</span
-                  >
+                  <span>{% trans "MFA, strong password policies, and least-privilege access baked into daily operations." %}</span>
                 </div>
                 <div class="micro">
                   <strong>{% trans "Operational safeguards" %}</strong>
-                  <span
-                    >{% trans "Approval workflows and traceability to reduce
-                    errors and prevent unauthorised changes." %}</span
-                  >
+                  <span>{% trans "Approval workflows and traceability to reduce errors and prevent unauthorised changes." %}</span>
                 </div>
                 <div class="micro">
                   <strong>{% trans "Security culture" %}</strong>
-                  <span
-                    >{% trans "Shared responsibility—your team + our platform +
-                    our experts." %}</span
-                  >
+                  <span>{% trans "Shared responsibility—your team + our platform + our experts." %}</span>
                 </div>
               </div>
             </div>
@@ -1781,18 +1295,13 @@ as languages %}
           <div class="cta-content">
             <h2>{% trans "Want a deeper security walkthrough?" %}</h2>
             <p>
-              {% blocktrans trimmed %} Talk to our team about your footprint,
-              data residency needs, and access model — and we’ll map the right
-              security posture for your cross-border payroll operations. {%
-              endblocktrans %}
+              {% blocktrans trimmed %}
+              Talk to our team about your footprint, data residency needs, and access model — and we’ll map the right security posture for your cross-border payroll operations.
+              {% endblocktrans %}
             </p>
             <div class="cta-actions">
-              <a
-                href="{% url 'home:demo' %}"
-                class="btn btn-cta-primary btn-lg"
-              >
-                <i class="fas fa-calendar-check"></i> {% trans "Request a Demo"
-                %}
+              <a href="{% url 'home:demo' %}" class="btn btn-cta-primary btn-lg">
+                <i class="fas fa-calendar-check"></i> {% trans "Request a Demo" %}
               </a>
             </div>
           </div>
@@ -1806,147 +1315,58 @@ as languages %}
           <div class="footer-col">
             <h4>{% trans "Platform" %}</h4>
             <ul class="footer-links">
-              <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "Global
-                  Payroll" %}</a
-                >
-              </li>
-              <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "Compliance
-                  Automation" %}</a
-                >
-              </li>
-              <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "Workforce
-                  Analytics" %}</a
-                >
-              </li>
-              <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "Tax
-                  Management" %}</a
-                >
-              </li>
+              <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Global Payroll" %}</a></li>
+              <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Compliance Automation" %}</a></li>
+              <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Workforce Analytics" %}</a></li>
+              <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Tax Management" %}</a></li>
             </ul>
           </div>
 
           <div class="footer-col">
             <h4>{% trans "Solutions" %}</h4>
             <ul class="footer-links">
-              <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "Enterprise
-                  Expansion" %}</a
-                >
-              </li>
-              <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "Mergers &
-                  Acquisitions" %}</a
-                >
-              </li>
-              <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "Compliance
-                  Management" %}</a
-                >
-              </li>
-              <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "Global
-                  Workforce" %}</a
-                >
-              </li>
+              <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Enterprise Expansion" %}</a></li>
+              <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Mergers & Acquisitions" %}</a></li>
+              <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Compliance Management" %}</a></li>
+              <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Global Workforce" %}</a></li>
             </ul>
           </div>
 
           <div class="footer-col">
             <h4>{% trans "Resources" %}</h4>
             <ul class="footer-links">
-              <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "Documentation"
-                  %}</a
-                >
-              </li>
-              <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "API Reference"
-                  %}</a
-                >
-              </li>
-              <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "Compliance
-                  Guides" %}</a
-                >
-              </li>
-              <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "Case Studies"
-                  %}</a
-                >
-              </li>
+              <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Documentation" %}</a></li>
+              <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "API Reference" %}</a></li>
+              <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Compliance Guides" %}</a></li>
+              <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Case Studies" %}</a></li>
             </ul>
           </div>
 
           <div class="footer-col">
             <h4>{% trans "Company" %}</h4>
             <ul class="footer-links">
-              <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "About Us"
-                  %}</a
-                >
-              </li>
-              <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "Careers" %}</a
-                >
-              </li>
-              <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "Security"
-                  %}</a
-                >
-              </li>
-              <li>
-                <a href="#"
-                  ><i class="fas fa-chevron-right"></i> {% trans "Contact" %}</a
-                >
-              </li>
+              <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "About Us" %}</a></li>
+              <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Careers" %}</a></li>
+              <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Security" %}</a></li>
+              <li><a href="#"><i class="fas fa-chevron-right"></i> {% trans "Contact" %}</a></li>
             </ul>
           </div>
         </div>
 
         <div class="footer-bottom">
           <div>
-            <a
-              href="{% url 'home:home' %}"
-              class="logo"
-              style="text-decoration: none"
-            >
-              <div class="sidebar-brand" style="color: #fff; font-size: 22px">
-                ExactusPay
-              </div>
+            <a href="{% url 'home:home' %}" class="logo" style="text-decoration: none">
+              <div class="sidebar-brand" style="color: #fff; font-size: 22px">ExactusPay</div>
             </a>
             <div class="copyright">
               © {% now "Y" %} ExactusPay. {% trans "All rights reserved." %}<br />
-              <small style="color: rgba(255, 255, 255, 0.6)"
-                >{% trans "GDPR Compliant | SOC 2 Type II Certified | ISO 27001"
-                %}</small
-              >
+              <small style="color: rgba(255, 255, 255, 0.6)">{% trans "GDPR Compliant | SOC 2 Type II Certified | ISO 27001" %}</small>
             </div>
           </div>
 
           <div class="social-links">
             <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-            <a href="#" aria-label="LinkedIn"
-              ><i class="fab fa-linkedin"></i
-            ></a>
+            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
             <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
             <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
           </div>
@@ -1956,7 +1376,6 @@ as languages %}
 
     <script defer>
       document.addEventListener("DOMContentLoaded", () => {
-        // Mobile menu
         const btn = document.querySelector(".menu-btn");
         const mobileNav = document.getElementById("mobileNav");
 
@@ -1976,9 +1395,7 @@ as languages %}
               : '<i class="fas fa-bars"></i>';
           });
 
-          mobileNav
-            .querySelectorAll("a")
-            .forEach((a) => a.addEventListener("click", closeMobileNav));
+          mobileNav.querySelectorAll("a").forEach((a) => a.addEventListener("click", closeMobileNav));
 
           document.addEventListener("click", (e) => {
             if (!mobileNav.classList.contains("open")) return;
@@ -1991,7 +1408,6 @@ as languages %}
           });
         }
 
-        // Section reveal (unobserve for perf)
         const sections = document.querySelectorAll("main section");
         if ("IntersectionObserver" in window && sections.length) {
           const obs = new IntersectionObserver(
@@ -2004,7 +1420,7 @@ as languages %}
                 }
               });
             },
-            { threshold: 0.12 },
+            { threshold: 0.12 }
           );
 
           sections.forEach((s) => {
@@ -2015,7 +1431,6 @@ as languages %}
           });
         }
 
-        // Header hide/show on scroll (nice on mobile)
         const header = document.querySelector("header");
         if (header) {
           let last = 0;
@@ -2033,7 +1448,7 @@ as languages %}
                 cur > 50 ? "0 10px 30px rgba(0,0,0,0.3)" : "var(--shadow-sm)";
               last = cur;
             },
-            { passive: true },
+            { passive: true }
           );
         }
       });
