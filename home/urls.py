@@ -22,7 +22,7 @@ urlpatterns = [
     path('articles/br/overview/2', views.brazil_article_0002, name='brazil_article_0002'),
     path('articles/br/overview/3', views.brazil_article_0003, name='brazil_article_0003'),
     path('articles/br/overview/4', views.brazil_article_0004, name='brazil_article_0004'),
-    path('articles/br/overview/5', views.brazil_article_0005, name='brazil_article_0005');
+    path('articles/br/overview/5', views.brazil_article_0005, name='brazil_article_0005'),
 
 
 
