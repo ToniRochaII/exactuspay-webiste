@@ -77,5 +77,15 @@ Expansion Region: {region}
 def brazil_article_0001(request):
     return render(request, 'articles/br/article_0001.html')
 
-def chile_article_0001(request):
-    return render(request, 'articles/cl/article_0001.html')
+def brazil_article_0002(request):
+    return render(request, 'articles/br/article_0002.html')
+
+def brazil_article_0003(request):
+    return render(request, 'articles/br/article_0003.html')
+
+def brazil_article_0004(request):
+    return render(request, 'articles/br/article_0004.html')
+
+def brazil_article_0005(request):
+    return render(request, 'articles/br/article_0005.html')
+
