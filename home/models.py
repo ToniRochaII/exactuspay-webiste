@@ -1,8 +1,8 @@
 from pathlib import Path
-from urllib.parse import urljoin
 
 from django.conf import settings
 from django.db import models
+from django.templatetags.static import static
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
@@ -100,7 +100,7 @@ class CountryProfile(models.Model):
             return ""
         if self.flag_media_path.startswith(("http://", "https://", "/")):
             return self.flag_media_path
-        return urljoin(settings.MEDIA_URL, self.flag_media_path)
+        return static(f"img/{self.flag_media_path.lstrip('/')}")
 
     @property
     def flag_inline_svg(self) -> str:
@@ -109,14 +109,14 @@ class CountryProfile(models.Model):
         if self.flag_media_path.startswith(("http://", "https://", "/")):
             return ""
 
-        flag_path = Path(settings.MEDIA_ROOT) / self.flag_media_path
+        static_flags_root = (Path(settings.BASE_DIR) / "static" / "img").resolve()
+        flag_path = static_flags_root / self.flag_media_path
         try:
-            resolved_media_root = Path(settings.MEDIA_ROOT).resolve()
             resolved_flag_path = flag_path.resolve()
         except OSError:
             return ""
 
-        if resolved_media_root not in resolved_flag_path.parents:
+        if static_flags_root not in resolved_flag_path.parents:
             return ""
         if not resolved_flag_path.exists():
             return ""
