@@ -917,13 +917,13 @@ msgstr ""
 msgid ""
 "Clean setup, repeatable payroll approvals, and a reliable path from local "
 "outputs to executive reporting."
-msgstr ""
+msgstr "Чистая настройка, повторяемые согласования расчёта зарплаты и надёжный путь от локальных результатов к управленческой отчётности."
 
 #: home/country_translation_inventory.py:144
 msgid ""
 "Commercial education page today, expandable country intelligence profile as "
 "the platform feed deepens."
-msgstr ""
+msgstr "Сегодня это коммерческая ознакомительная страница, которую можно расширить до полноценного странового профиля по мере углубления данных платформы."
 
 #: home/country_translation_inventory.py:145
 #, fuzzy
@@ -1132,10 +1132,9 @@ msgid "Euro (EUR)"
 msgstr ""
 
 #: home/country_translation_inventory.py:180
-#, fuzzy
 #| msgid "See ExactusPay in Action"
 msgid "ExactusPay implementation use"
-msgstr "Увидеть ExactusPay в действии"
+msgstr "Использование ExactusPay при внедрении"
 
 #: home/country_translation_inventory.py:181
 msgid ""
@@ -2287,10 +2286,9 @@ msgid "Turkish lira (TRY)"
 msgstr ""
 
 #: home/country_translation_inventory.py:359
-#, fuzzy
 #| msgid "Typical pay currency"
 msgid "Typical employer focus"
-msgstr "Типичная валюта выплаты"
+msgstr "Типичный фокус работодателя"
 
 #: home/country_translation_inventory.py:360
 msgid "Typically 1 January to 31 December"
@@ -6151,5 +6149,6 @@ msgstr ""
 
 #~ msgid "$9 | €8 | £7"
 #~ msgstr "$9 | €8 | £7"
+
 
 

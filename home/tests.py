@@ -59,6 +59,15 @@ class PublicPageTests(TestCase):
             "United Kingdom can be presented with a strong commercial summary first, then deeper payroll intelligence as implementation progresses.",
         )
 
+    def test_localized_country_page_translates_dynamic_payroll_labels(self):
+        response = self.client.get("/th/countries/brazil/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "จุดเน้นทั่วไปของนายจ้าง")
+        self.assertContains(response, "การใช้งาน ExactusPay ในการนำไปใช้")
+        self.assertNotContains(response, "Typical employer focus")
+        self.assertNotContains(response, "ExactusPay implementation use")
+
     def test_country_hub_includes_full_seeded_footprint(self):
         response = self.client.get(reverse("home:country_hub"))
 

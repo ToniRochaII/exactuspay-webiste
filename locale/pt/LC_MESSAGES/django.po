@@ -926,13 +926,13 @@ msgstr ""
 msgid ""
 "Clean setup, repeatable payroll approvals, and a reliable path from local "
 "outputs to executive reporting."
-msgstr ""
+msgstr "Configuração limpa, aprovações de payroll repetíveis e um caminho fiável dos resultados locais para o reporting executivo."
 
 #: home/country_translation_inventory.py:144
 msgid ""
 "Commercial education page today, expandable country intelligence profile as "
 "the platform feed deepens."
-msgstr ""
+msgstr "Hoje é uma página de enquadramento comercial, expansível para um perfil de inteligência do país à medida que o feed da plataforma se aprofunda."
 
 #: home/country_translation_inventory.py:145
 #, fuzzy
@@ -1141,10 +1141,9 @@ msgid "Euro (EUR)"
 msgstr ""
 
 #: home/country_translation_inventory.py:180
-#, fuzzy
 #| msgid "See ExactusPay in Action"
 msgid "ExactusPay implementation use"
-msgstr "Veja a ExactusPay em Ação"
+msgstr "Uso da ExactusPay na implementação"
 
 #: home/country_translation_inventory.py:181
 msgid ""
@@ -2296,10 +2295,9 @@ msgid "Turkish lira (TRY)"
 msgstr ""
 
 #: home/country_translation_inventory.py:359
-#, fuzzy
 #| msgid "Typical pay currency"
 msgid "Typical employer focus"
-msgstr "Moeda típica de pagamento"
+msgstr "Foco típico do empregador"
 
 #: home/country_translation_inventory.py:360
 msgid "Typically 1 January to 31 December"
@@ -6385,5 +6383,6 @@ msgstr ""
 #~ "À medida que as forças de trabalho globais continuam a crescer, a "
 #~ "necessidade por soluções de folha de pagamento mais inteligentes, rápidas "
 #~ "e conectadas só tende a aumentar."
+
 
 
