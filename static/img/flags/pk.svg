@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-label="Pakistan flag">
-  <rect width="160" height="480" fill="#fff"/>
-  <rect x="160" width="480" height="480" fill="#01411c"/>
-  <circle cx="408" cy="220" r="88" fill="#fff"/>
-  <circle cx="430" cy="205" r="78" fill="#01411c"/>
-  <polygon points="470,142 482,177 519,177 489,199 500,234 470,212 440,234 451,199 421,177 458,177" fill="#fff"/>
-</svg>

@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-label="Ethiopia flag">
-  <rect width="640" height="160" fill="#078930"/>
-  <rect y="160" width="640" height="160" fill="#fcd116"/>
-  <rect y="320" width="640" height="160" fill="#da121a"/>
-  <circle cx="320" cy="240" r="82" fill="#0f47af"/>
-  <polygon points="320,176 335,221 383,221 344,249 359,294 320,266 281,294 296,249 257,221 305,221" fill="#fcd116"/>
-</svg>

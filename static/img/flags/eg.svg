@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-label="Egypt flag">
-  <rect width="640" height="160" fill="#ce1126"/>
-  <rect y="160" width="640" height="160" fill="#fff"/>
-  <rect y="320" width="640" height="160" fill="#000"/>
-  <rect x="290" y="180" width="60" height="120" rx="12" fill="#c09300"/>
-</svg>

@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-label="Philippines flag">
-  <rect width="640" height="240" fill="#0038a8"/>
-  <rect y="240" width="640" height="240" fill="#ce1126"/>
-  <polygon points="0,0 260,240 0,480" fill="#fff"/>
-  <circle cx="82" cy="240" r="34" fill="#fcd116"/>
-  <circle cx="52" cy="86" r="12" fill="#fcd116"/>
-  <circle cx="52" cy="394" r="12" fill="#fcd116"/>
-  <circle cx="216" cy="240" r="12" fill="#fcd116"/>
-</svg>

@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-label="Panama flag">
-  <rect width="320" height="240" fill="#fff"/>
-  <rect x="320" width="320" height="240" fill="#d21034"/>
-  <rect y="240" width="320" height="240" fill="#005293"/>
-  <rect x="320" y="240" width="320" height="240" fill="#fff"/>
-  <polygon points="160,60 174,104 220,104 183,131 197,175 160,148 123,175 137,131 100,104 146,104" fill="#005293"/>
-  <polygon points="480,300 494,344 540,344 503,371 517,415 480,388 443,415 457,371 420,344 466,344" fill="#d21034"/>
-</svg>

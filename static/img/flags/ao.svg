@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-label="Angola flag">
-  <rect width="640" height="240" fill="#cc092f"/>
-  <rect y="240" width="640" height="240" fill="#111"/>
-  <circle cx="320" cy="240" r="60" fill="none" stroke="#f7d116" stroke-width="18"/>
-  <polygon points="320,150 338,206 397,206 349,240 367,296 320,262 273,296 291,240 243,206 302,206" fill="#f7d116"/>
-</svg>

@@ -94,7 +94,7 @@
     height: 100%;
     object-fit: cover;
   }
-  .country-flag svg {
+  .country-flag png {
     width: 100%;
     height: 100%;
     display: block;
@@ -329,8 +329,8 @@
 
           <div class="country-hero-top">
             <div class="country-flag">
-              {% if country.flag_inline_svg %}
-                {{ country.flag_inline_svg }}
+              {% if country.flag_inline_png %}
+                {{ country.flag_inline_png }}
               {% elif country.flag_url %}
                 <img src="{{ country.flag_url }}" alt="{% blocktrans trimmed with country_name=country.country_name %}{{ country_name }} flag{% endblocktrans %}" />
               {% else %}
@@ -522,3 +522,6 @@
     </div>
   </section>
 {% endblock %}
+
+
+
