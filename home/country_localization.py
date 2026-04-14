@@ -352,6 +352,7 @@ def localize_country(country):
         iso_code=country.iso_code,
         country_name=translated_country_name,
         official_name=_translate_value(country.official_name),
+        flag_inline_svg=country.flag_inline_svg,
         flag_url=country.flag_url,
         capital=_translate_value(country.capital),
         primary_languages=_translate_value(country.primary_languages),

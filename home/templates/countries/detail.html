@@ -94,6 +94,11 @@
     height: 100%;
     object-fit: cover;
   }
+  .country-flag svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
   .country-flag-fallback {
     color: #fff;
     font-size: 1.15rem;
@@ -324,7 +329,9 @@
 
           <div class="country-hero-top">
             <div class="country-flag">
-              {% if country.flag_url %}
+              {% if country.flag_inline_svg %}
+                {{ country.flag_inline_svg }}
+              {% elif country.flag_url %}
                 <img src="{{ country.flag_url }}" alt="{% blocktrans trimmed with country_name=country.country_name %}{{ country_name }} flag{% endblocktrans %}" />
               {% else %}
                 <span class="country-flag-fallback">{{ country.iso_code }}</span>
