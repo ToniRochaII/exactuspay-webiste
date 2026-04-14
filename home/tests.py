@@ -4,7 +4,7 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from accounts.models import Profile
-from home.models import DemoRequest
+from home.models import CountryProfile, DemoRequest
 
 User = get_user_model()
 
@@ -13,6 +13,8 @@ class PublicPageTests(TestCase):
     def test_core_pages_are_available(self):
         routes = [
             reverse("home:home"),
+            reverse("home:country_hub"),
+            reverse("home:country_detail", kwargs={"slug": "brazil"}),
             reverse("home:features"),
             reverse("home:platform"),
             reverse("home:security"),
@@ -37,6 +39,23 @@ class PublicPageTests(TestCase):
     def test_localised_route_is_available(self):
         response = self.client.get("/pt/features/")
         self.assertEqual(response.status_code, 200)
+
+    def test_country_page_uses_seeded_country_data(self):
+        country = CountryProfile.objects.get(slug="brazil")
+        response = self.client.get(reverse("home:country_detail", kwargs={"slug": country.slug}))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, country.country_name)
+        self.assertContains(response, country.hero_intro)
+        self.assertContains(response, country.flag_url)
+
+    def test_country_hub_includes_full_seeded_footprint(self):
+        response = self.client.get(reverse("home:country_hub"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(CountryProfile.objects.filter(is_published=True).count(), 21)
+        self.assertContains(response, "Angola")
+        self.assertContains(response, "United Arab Emirates")
 
 
 @override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")

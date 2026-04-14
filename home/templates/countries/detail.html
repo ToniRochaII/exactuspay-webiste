@@ -1,0 +1,517 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% if country.seo_title %}{{ country.seo_title }}{% else %}{{ country.country_name }} Payroll Guide | ExactusPay{% endif %}{% endblock %}
+{% block meta_description %}{{ country.meta_description|default:country.hero_intro }}{% endblock %}
+{% block meta_keywords %}{{ country.meta_keywords|default:"country payroll, global payroll, payroll intelligence, ExactusPay" }}{% endblock %}
+{% block canonical %}{{ request.build_absolute_uri }}{% endblock %}
+{% block og_title %}{% if country.seo_title %}{{ country.seo_title }}{% else %}{{ country.country_name }} Payroll Guide | ExactusPay{% endif %}{% endblock %}
+{% block og_description %}{{ country.meta_description|default:country.hero_intro }}{% endblock %}
+{% block og_url %}{{ request.build_absolute_uri }}{% endblock %}
+{% block og_image %}{% if country.flag_url %}{{ request.scheme }}://{{ request.get_host }}{{ country.flag_url }}{% else %}https://www.exactuspay.com/static/img/og-exactuspay.png{% endif %}{% endblock %}
+{% block twitter_title %}{% if country.seo_title %}{{ country.seo_title }}{% else %}{{ country.country_name }} Payroll Guide | ExactusPay{% endif %}{% endblock %}
+{% block twitter_description %}{{ country.meta_description|default:country.hero_intro }}{% endblock %}
+{% block twitter_image %}{% if country.flag_url %}{{ request.scheme }}://{{ request.get_host }}{{ country.flag_url }}{% else %}https://www.exactuspay.com/static/img/og-exactuspay.png{% endif %}{% endblock %}
+
+{% block head_extra %}
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "{{ country.country_name|escapejs }} payroll guide",
+      "description": "{{ country.meta_description|default:country.hero_intro|escapejs }}",
+      "url": "{{ request.build_absolute_uri|escapejs }}"
+    }
+  </script>
+{% endblock %}
+
+{% block extra_css %}
+  .country-hero {
+    padding: calc(var(--header-h) + 72px) 0 72px;
+    background:
+      radial-gradient(circle at top right, rgba(150, 224, 217, 0.18), transparent 28%),
+      linear-gradient(135deg, #07111f 0%, #133b60 55%, #1f4b7a 100%);
+  }
+  .country-breadcrumbs {
+    display: inline-flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 18px;
+    color: rgba(255, 255, 255, 0.74);
+    font-size: 0.95rem;
+  }
+  .country-breadcrumbs a {
+    color: rgba(255, 255, 255, 0.86);
+    text-decoration: none;
+  }
+  .country-breadcrumbs a:hover {
+    color: #fff;
+  }
+  .country-hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(300px, 0.8fr);
+    gap: 28px;
+    align-items: start;
+  }
+  .country-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 0.88rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+  }
+  .country-hero-copy p {
+    color: rgba(255, 255, 255, 0.82);
+    max-width: 760px;
+  }
+  .country-hero-top {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+  .country-flag {
+    width: 74px;
+    height: 74px;
+    border-radius: 20px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .country-flag img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .country-flag-fallback {
+    color: #fff;
+    font-size: 1.15rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+  }
+  .country-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+  }
+  .country-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: rgba(255, 255, 255, 0.92);
+    font-weight: 700;
+  }
+  .country-chip i {
+    color: var(--mint);
+  }
+  .country-hero-panel,
+  .country-section-card,
+  .country-data-card,
+  .country-side-card,
+  .country-glance-card {
+    background: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
+  }
+  .country-hero-panel {
+    padding: 28px;
+  }
+  .country-hero-panel h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+  }
+  .country-hero-panel p {
+    margin-bottom: 18px;
+    font-size: 0.98rem;
+  }
+  .country-hero-panel .meta {
+    display: grid;
+    gap: 12px;
+    margin: 20px 0 24px;
+  }
+  .country-hero-panel .meta-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.9);
+  }
+  .country-hero-panel .meta-item span:first-child {
+    color: var(--text-muted);
+    font-weight: 700;
+  }
+  .country-hero-panel .meta-item span:last-child {
+    color: var(--text-primary);
+    font-weight: 800;
+    text-align: right;
+  }
+  .country-shell {
+    padding: 72px 0 96px;
+    background: var(--bg-secondary);
+  }
+  .country-glance-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 30px;
+  }
+  .country-glance-card {
+    padding: 24px;
+  }
+  .country-glance-card .icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.12), rgba(20, 184, 166, 0.14));
+    color: var(--color-primary-solid);
+    font-size: 1.2rem;
+  }
+  .country-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.7fr) minmax(280px, 0.9fr);
+    gap: 28px;
+    align-items: start;
+  }
+  .country-main {
+    display: grid;
+    gap: 24px;
+  }
+  .country-section-card {
+    padding: 32px;
+  }
+  .country-section-card h2 {
+    font-size: clamp(1.5rem, 2vw, 2.15rem);
+    margin-bottom: 10px;
+  }
+  .country-section-card .section-lead {
+    margin-bottom: 22px;
+  }
+  .country-fact-grid,
+  .country-data-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .country-data-card {
+    padding: 20px;
+    min-height: 100%;
+  }
+  .country-data-card .label {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+  }
+  .country-data-card .value {
+    color: var(--text-primary);
+    font-size: 1.02rem;
+    font-weight: 700;
+    margin-bottom: 0;
+  }
+  .country-rich-sections {
+    display: grid;
+    gap: 20px;
+  }
+  .country-rich-sections section + section {
+    padding-top: 20px;
+    border-top: 1px solid rgba(226, 232, 240, 0.85);
+  }
+  .country-rich-sections ul,
+  .country-side-card ul {
+    margin: 14px 0 0 20px;
+    color: var(--text-secondary);
+  }
+  .country-rich-sections li + li,
+  .country-side-card li + li {
+    margin-top: 10px;
+  }
+  .country-side-card {
+    padding: 28px;
+    position: sticky;
+    top: calc(var(--header-h) + 24px);
+    display: grid;
+    gap: 22px;
+  }
+  .country-side-block + .country-side-block {
+    padding-top: 20px;
+    border-top: 1px solid rgba(226, 232, 240, 0.9);
+  }
+  .country-side-card h3 {
+    font-size: 1.15rem;
+    margin-bottom: 8px;
+  }
+  .country-side-card .note {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    margin-bottom: 0;
+  }
+  .country-side-card .btn {
+    width: 100%;
+  }
+  .country-empty-state {
+    padding: 22px;
+    border-radius: var(--border-radius);
+    background: rgba(226, 232, 240, 0.45);
+    color: var(--text-secondary);
+    font-weight: 600;
+  }
+  @media (max-width: 1080px) {
+    .country-hero-grid,
+    .country-layout {
+      grid-template-columns: 1fr;
+    }
+    .country-side-card {
+      position: static;
+    }
+  }
+  @media (max-width: 768px) {
+    .country-glance-grid,
+    .country-fact-grid,
+    .country-data-grid {
+      grid-template-columns: 1fr;
+    }
+    .country-section-card,
+    .country-side-card,
+    .country-hero-panel {
+      padding: 24px;
+    }
+    .country-hero-top {
+      align-items: flex-start;
+    }
+  }
+{% endblock %}
+
+{% block content %}
+  <section class="country-hero">
+    <div class="container">
+      <div class="country-breadcrumbs">
+        <a href="{% url 'home:home' %}">{% trans "Home" %}</a>
+        <i class="fas fa-chevron-right"></i>
+        <a href="{% url 'home:country_hub' %}">{% trans "Countries" %}</a>
+        <i class="fas fa-chevron-right"></i>
+        <span>{{ country.country_name }}</span>
+      </div>
+
+      <div class="country-hero-grid">
+        <div class="country-hero-copy">
+          <div class="country-eyebrow">
+            <i class="fas fa-globe"></i>
+            {% trans "Country Payroll Guide" %}
+          </div>
+
+          <div class="country-hero-top">
+            <div class="country-flag">
+              {% if country.flag_url %}
+                <img src="{{ country.flag_url }}" alt="{{ country.country_name }} flag" />
+              {% else %}
+                <span class="country-flag-fallback">{{ country.iso_code }}</span>
+              {% endif %}
+            </div>
+            <div>
+              <h1>{{ country.country_name }}</h1>
+              <p>{{ country.hero_intro }}</p>
+            </div>
+          </div>
+
+          {% if hero_highlights %}
+            <div class="country-chips" aria-label="{% trans 'Country highlights' %}">
+              {% for item in hero_highlights %}
+                <span class="country-chip">
+                  <i class="fas fa-circle-check"></i>
+                  {{ item }}
+                </span>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+
+        <aside class="country-hero-panel">
+          <h3>{% trans "Operate with country-level payroll confidence" %}</h3>
+          <p>
+            {% trans "Use one country page template across your footprint: local payroll context, employer facts, and platform-ready intelligence in one commercial format." %}
+          </p>
+
+          <div class="meta">
+            <div class="meta-item">
+              <span>{% trans "Country code" %}</span>
+              <span>{{ country.iso_code }}</span>
+            </div>
+            {% if country.payroll_frequency %}
+              <div class="meta-item">
+                <span>{% trans "Payroll frequency" %}</span>
+                <span>{{ country.payroll_frequency }}</span>
+              </div>
+            {% endif %}
+            {% if country.pay_currency %}
+              <div class="meta-item">
+                <span>{% trans "Typical pay currency" %}</span>
+                <span>{{ country.pay_currency }}</span>
+              </div>
+            {% endif %}
+            {% if country.last_reviewed_on %}
+              <div class="meta-item">
+                <span>{% trans "Last reviewed" %}</span>
+                <span>{{ country.last_reviewed_on|date:"j M Y" }}</span>
+              </div>
+            {% endif %}
+          </div>
+
+          <a class="btn btn-primary" href="{% url 'home:demo' %}">
+            <i class="fas fa-calendar-check"></i> {% trans "Request Demo" %}
+          </a>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="country-shell">
+    <div class="container">
+      {% if glance_cards %}
+        <div class="country-glance-grid">
+          {% for card in glance_cards %}
+            <div class="country-glance-card">
+              <div class="icon"><i class="fas {{ card.icon|default:'fa-map' }}"></i></div>
+              <h3>{{ card.title }}</h3>
+              <p>{{ card.body }}</p>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <div class="country-layout">
+        <div class="country-main">
+          <section class="country-section-card">
+            <h2>{% trans "Country overview" %}</h2>
+            <p class="section-lead">
+              {{ country.overview|default:country.hero_intro }}
+            </p>
+          </section>
+
+          <section class="country-section-card">
+            <h2>{% trans "Key facts" %}</h2>
+            {% if country_facts %}
+              <div class="country-fact-grid">
+                {% for item in country_facts %}
+                  <div class="country-data-card">
+                    <div class="label">{{ item.label }}</div>
+                    <p class="value">{{ item.value }}</p>
+                  </div>
+                {% endfor %}
+              </div>
+            {% else %}
+              <div class="country-empty-state">
+                {% trans "Country metadata can be added as ExactusPay expands this profile." %}
+              </div>
+            {% endif %}
+          </section>
+
+          <section class="country-section-card">
+            <h2>{% trans "Payroll intelligence" %}</h2>
+            <p class="section-lead">
+              {% trans "A structured view of the payroll details employers usually need first: pay rhythm, statutory themes, employment controls, and country-specific operating notes." %}
+            </p>
+            {% if payroll_intelligence %}
+              <div class="country-data-grid">
+                {% for item in payroll_intelligence %}
+                  <div class="country-data-card">
+                    <div class="label">{{ item.label }}</div>
+                    <p class="value">{{ item.value }}</p>
+                    {% if item.note %}
+                      <p class="note">{{ item.note }}</p>
+                    {% endif %}
+                  </div>
+                {% endfor %}
+              </div>
+            {% else %}
+              <div class="country-empty-state">
+                {% trans "Payroll intelligence can render as soon as the platform feed or content record provides country-specific data points." %}
+              </div>
+            {% endif %}
+          </section>
+
+          <section class="country-section-card">
+            <h2>{% trans "Employer guidance" %}</h2>
+            {% if content_sections %}
+              <div class="country-rich-sections">
+                {% for section in content_sections %}
+                  <section>
+                    <h3>{{ section.title }}</h3>
+                    <p>{{ section.body }}</p>
+                    {% if section.bullets %}
+                      <ul>
+                        {% for bullet in section.bullets %}
+                          <li>{{ bullet }}</li>
+                        {% endfor %}
+                      </ul>
+                    {% endif %}
+                  </section>
+                {% endfor %}
+              </div>
+            {% else %}
+              <div class="country-empty-state">
+                {% trans "Long-form country guidance can be attached to this template country by country." %}
+              </div>
+            {% endif %}
+          </section>
+        </div>
+
+        <aside class="country-side-card">
+          <div class="country-side-block">
+            <h3>{% trans "Why this structure works" %}</h3>
+            <p class="note">
+              {% trans "The page combines commercial context, employer facts, and payroll detail in one reusable layout that can scale across ExactusPay markets." %}
+            </p>
+          </div>
+
+          <div class="country-side-block">
+            <h3>{% trans "Key employer considerations" %}</h3>
+            {% if employer_considerations %}
+              <ul>
+                {% for item in employer_considerations %}
+                  <li>{{ item }}</li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <p class="note">
+                {% trans "Add employer considerations here when local implementation notes are available." %}
+              </p>
+            {% endif %}
+          </div>
+
+          <div class="country-side-block">
+            <h3>{% trans "Need a country-specific walkthrough?" %}</h3>
+            <p class="note">
+              {% trans "ExactusPay can turn market-by-market payroll complexity into one reporting standard, one operating model, and one executive view." %}
+            </p>
+            <a class="btn btn-primary" href="{% url 'home:demo' %}">
+              <i class="fas fa-calendar-check"></i> {% trans "Book a session" %}
+            </a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+{% endblock %}

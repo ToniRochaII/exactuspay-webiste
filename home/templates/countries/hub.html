@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Country Payroll Pages | ExactusPay" %}{% endblock %}
+{% block meta_description %}{% trans "Explore country payroll pages built by ExactusPay with employer facts, payroll intelligence, and country-level operating guidance." %}{% endblock %}
+{% block canonical %}{{ request.build_absolute_uri }}{% endblock %}
+{% block og_title %}{% trans "Country Payroll Pages | ExactusPay" %}{% endblock %}
+{% block og_description %}{% trans "Explore country payroll pages built by ExactusPay with employer facts, payroll intelligence, and country-level operating guidance." %}{% endblock %}
+{% block og_url %}{{ request.build_absolute_uri }}{% endblock %}
+{% block twitter_title %}{% trans "Country Payroll Pages | ExactusPay" %}{% endblock %}
+{% block twitter_description %}{% trans "Explore country payroll pages built by ExactusPay with employer facts, payroll intelligence, and country-level operating guidance." %}{% endblock %}
+
+{% block extra_css %}
+  .country-hub-hero {
+    padding: calc(var(--header-h) + 72px) 0 72px;
+    background:
+      radial-gradient(circle at top left, rgba(150, 224, 217, 0.22), transparent 22%),
+      linear-gradient(135deg, #07111f 0%, #163c61 60%, #1f4b7a 100%);
+  }
+  .country-hub-hero p {
+    max-width: 760px;
+    color: rgba(255, 255, 255, 0.84);
+  }
+  .country-hub-list {
+    padding: 72px 0 96px;
+    background: var(--bg-secondary);
+  }
+  .country-card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+  .country-card {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 24px;
+    background: #fff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
+  }
+  .country-card-top {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .country-card-flag {
+    width: 58px;
+    height: 58px;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(226, 232, 240, 0.95);
+    background: var(--bg-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .country-card-flag img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .country-card-flag span {
+    font-weight: 900;
+    color: var(--color-primary-solid);
+  }
+  .country-card .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .country-card .meta span {
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(31, 75, 122, 0.08);
+    color: var(--color-primary-solid);
+    font-weight: 800;
+    font-size: 0.88rem;
+  }
+  .country-card .btn {
+    margin-top: auto;
+  }
+  @media (max-width: 1024px) {
+    .country-card-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 768px) {
+    .country-card-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+{% endblock %}
+
+{% block content %}
+  <section class="country-hub-hero">
+    <div class="container">
+      <div class="section-title" style="text-align:left; margin-bottom:0;">
+        <div class="subtitle" style="color: rgba(255,255,255,0.72);">{% trans "Country payroll pages" %}</div>
+        <h1>{% trans "Country-level payroll intelligence, built to scale" %}</h1>
+        <p>
+          {% trans "This hub uses one reusable ExactusPay structure for country pages: a strong hero, employer facts, payroll intelligence, and country-specific operating guidance." %}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="country-hub-list">
+    <div class="container">
+      <div class="country-card-grid">
+        {% for country in countries %}
+          <article class="country-card">
+            <div class="country-card-top">
+              <div class="country-card-flag">
+                {% if country.flag_url %}
+                  <img src="{{ country.flag_url }}" alt="{{ country.country_name }} flag" />
+                {% else %}
+                  <span>{{ country.iso_code }}</span>
+                {% endif %}
+              </div>
+              <div>
+                <h3 style="margin-bottom:4px;">{{ country.country_name }}</h3>
+                {% if country.official_name %}
+                  <p style="margin-bottom:0;">{{ country.official_name }}</p>
+                {% endif %}
+              </div>
+            </div>
+
+            <p>{{ country.hero_intro }}</p>
+
+            <div class="meta">
+              {% if country.payroll_frequency %}<span>{{ country.payroll_frequency }}</span>{% endif %}
+              {% if country.pay_currency %}<span>{{ country.pay_currency }}</span>{% endif %}
+              {% if country.primary_languages %}<span>{{ country.primary_languages }}</span>{% endif %}
+            </div>
+
+            <a class="btn btn-primary" href="{% url 'home:country_detail' slug=country.slug %}">
+              <i class="fas fa-arrow-right"></i> {% trans "View country page" %}
+            </a>
+          </article>
+        {% empty %}
+          <div class="country-card">
+            <h3>{% trans "No countries published yet" %}</h3>
+            <p>{% trans "Add country profiles in Django admin to populate this hub." %}</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endblock %}

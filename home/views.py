@@ -8,8 +8,21 @@ import logging
 
 from .article_library import BRAZIL_ARTICLES
 from .forms import DemoRequestForm
+from .models import CountryProfile
 
 logger = logging.getLogger(__name__)
+
+
+def _build_country_context(country: CountryProfile) -> dict:
+    return {
+        "country": country,
+        "country_facts": country.fact_items,
+        "payroll_intelligence": country.payroll_intelligence_items,
+        "glance_cards": country.glance_cards or [],
+        "hero_highlights": country.hero_highlights or [],
+        "content_sections": country.content_sections or [],
+        "employer_considerations": country.employer_considerations or [],
+    }
 
 def home_view(request):
     return render(request, 'home/index.html')
@@ -28,6 +41,30 @@ def pricing_view(request):
 
 def demo_view(request):
     return render(request, 'home/demo.html')
+
+
+def country_hub_view(request):
+    countries = CountryProfile.objects.filter(is_published=True)
+    return render(
+        request,
+        "countries/hub.html",
+        {
+            "countries": countries,
+        },
+    )
+
+
+def country_detail_view(request, slug):
+    try:
+        country = CountryProfile.objects.get(slug=slug, is_published=True)
+    except CountryProfile.DoesNotExist as exc:
+        raise Http404("Country profile not found.") from exc
+
+    return render(
+        request,
+        "countries/detail.html",
+        _build_country_context(country),
+    )
 
 def demo_request_view(request):
     if request.method != "POST":
