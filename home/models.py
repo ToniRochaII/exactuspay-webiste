@@ -94,31 +94,56 @@ class CountryProfile(models.Model):
     def __str__(self) -> str:
         return self.country_name
 
+    def _resolved_static_flag_path(self) -> Path | None:
+        if not self.flag_media_path or self.flag_media_path.startswith(("http://", "https://", "/")):
+            return None
+
+        static_flags_root = (Path(settings.BASE_DIR) / "static" / "img").resolve()
+        requested_relative_path = Path(self.flag_media_path.lstrip("/"))
+        candidate_paths = [requested_relative_path]
+
+        if requested_relative_path.suffix.lower() == ".svg":
+            candidate_paths.append(requested_relative_path.with_suffix(".png"))
+        elif requested_relative_path.suffix.lower() == ".png":
+            candidate_paths.append(requested_relative_path.with_suffix(".svg"))
+
+        iso_flag_relative_path = Path("flags") / f"{self.iso_code.lower()}.png"
+        if iso_flag_relative_path not in candidate_paths:
+            candidate_paths.append(iso_flag_relative_path)
+
+        for relative_path in candidate_paths:
+            try:
+                resolved_flag_path = (static_flags_root / relative_path).resolve()
+            except OSError:
+                continue
+            if static_flags_root not in resolved_flag_path.parents:
+                continue
+            if resolved_flag_path.exists():
+                return resolved_flag_path
+        return None
+
     @property
     def flag_url(self) -> str:
         if not self.flag_media_path:
             return ""
         if self.flag_media_path.startswith(("http://", "https://", "/")):
             return self.flag_media_path
+
+        resolved_flag_path = self._resolved_static_flag_path()
+        if resolved_flag_path:
+            relative_path = resolved_flag_path.relative_to((Path(settings.BASE_DIR) / "static").resolve())
+            return static(relative_path.as_posix())
         return static(f"img/{self.flag_media_path.lstrip('/')}")
 
     @property
     def flag_inline_svg(self) -> str:
-        if not self.flag_media_path or not self.flag_media_path.lower().endswith(".svg"):
+        if not self.flag_media_path:
             return ""
         if self.flag_media_path.startswith(("http://", "https://", "/")):
             return ""
 
-        static_flags_root = (Path(settings.BASE_DIR) / "static" / "img").resolve()
-        flag_path = static_flags_root / self.flag_media_path
-        try:
-            resolved_flag_path = flag_path.resolve()
-        except OSError:
-            return ""
-
-        if static_flags_root not in resolved_flag_path.parents:
-            return ""
-        if not resolved_flag_path.exists():
+        resolved_flag_path = self._resolved_static_flag_path()
+        if not resolved_flag_path or resolved_flag_path.suffix.lower() != ".svg":
             return ""
 
         return mark_safe(resolved_flag_path.read_text(encoding="utf-8"))
