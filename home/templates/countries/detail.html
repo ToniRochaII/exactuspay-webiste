@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block title %}{% if country.seo_title %}{{ country.seo_title }}{% else %}{{ country.country_name }} Payroll Guide | ExactusPay{% endif %}{% endblock %}
+{% block title %}{% if country.seo_title %}{{ country.seo_title }}{% else %}{% blocktrans trimmed with country_name=country.country_name %}{{ country_name }} Payroll Guide | ExactusPay{% endblocktrans %}{% endif %}{% endblock %}
 {% block meta_description %}{{ country.meta_description|default:country.hero_intro }}{% endblock %}
 {% block meta_keywords %}{{ country.meta_keywords|default:"country payroll, global payroll, payroll intelligence, ExactusPay" }}{% endblock %}
 {% block canonical %}{{ request.build_absolute_uri }}{% endblock %}
-{% block og_title %}{% if country.seo_title %}{{ country.seo_title }}{% else %}{{ country.country_name }} Payroll Guide | ExactusPay{% endif %}{% endblock %}
+{% block og_title %}{% if country.seo_title %}{{ country.seo_title }}{% else %}{% blocktrans trimmed with country_name=country.country_name %}{{ country_name }} Payroll Guide | ExactusPay{% endblocktrans %}{% endif %}{% endblock %}
 {% block og_description %}{{ country.meta_description|default:country.hero_intro }}{% endblock %}
 {% block og_url %}{{ request.build_absolute_uri }}{% endblock %}
 {% block og_image %}{% if country.flag_url %}{{ request.scheme }}://{{ request.get_host }}{{ country.flag_url }}{% else %}https://www.exactuspay.com/static/img/og-exactuspay.png{% endif %}{% endblock %}
-{% block twitter_title %}{% if country.seo_title %}{{ country.seo_title }}{% else %}{{ country.country_name }} Payroll Guide | ExactusPay{% endif %}{% endblock %}
+{% block twitter_title %}{% if country.seo_title %}{{ country.seo_title }}{% else %}{% blocktrans trimmed with country_name=country.country_name %}{{ country_name }} Payroll Guide | ExactusPay{% endblocktrans %}{% endif %}{% endblock %}
 {% block twitter_description %}{{ country.meta_description|default:country.hero_intro }}{% endblock %}
 {% block twitter_image %}{% if country.flag_url %}{{ request.scheme }}://{{ request.get_host }}{{ country.flag_url }}{% else %}https://www.exactuspay.com/static/img/og-exactuspay.png{% endif %}{% endblock %}
 
@@ -18,7 +18,7 @@
     {
       "@context": "https://schema.org",
       "@type": "WebPage",
-      "name": "{{ country.country_name|escapejs }} payroll guide",
+      "name": "{% blocktrans trimmed with country_name=country.country_name %}{{ country_name }} payroll guide{% endblocktrans %}",
       "description": "{{ country.meta_description|default:country.hero_intro|escapejs }}",
       "url": "{{ request.build_absolute_uri|escapejs }}"
     }
@@ -325,7 +325,7 @@
           <div class="country-hero-top">
             <div class="country-flag">
               {% if country.flag_url %}
-                <img src="{{ country.flag_url }}" alt="{{ country.country_name }} flag" />
+                <img src="{{ country.flag_url }}" alt="{% blocktrans trimmed with country_name=country.country_name %}{{ country_name }} flag{% endblocktrans %}" />
               {% else %}
                 <span class="country-flag-fallback">{{ country.iso_code }}</span>
               {% endif %}

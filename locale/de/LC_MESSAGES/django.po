@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ExactusPay 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-14 09:04+0000\n"
+"POT-Creation-Date: 2026-04-14 13:24+0100\n"
 "PO-Revision-Date: 2026-02-19 10:00-0300\n"
 "Last-Translator: \n"
 "Language-Team: German <de@exactuspay.com>\n"
@@ -30,7 +30,6 @@ msgid "profiles"
 msgstr ""
 
 #: accounts/templates/accounts/login.html:4
-#| msgid "ExactusPay"
 msgid "Log In | ExactusPay"
 msgstr "ExactusPay"
 
@@ -55,19 +54,19 @@ msgid ""
 msgstr ""
 
 #: accounts/templates/accounts/login.html:90
-#: home/templates/articles/br/article_0001.html:751
-#: home/templates/articles/br/article_0001.html:814
-#: home/templates/articles/cl/article_0001.html:954
-#: home/templates/articles/cl/article_0001.html:1012
-#: home/templates/base.html:393 home/templates/base.html:434
-#: home/templates/base.html:494 home/templates/home/demo.html:1032
-#: home/templates/home/demo.html:1095 home/templates/home/features.html:609
-#: home/templates/home/features.html:670 home/templates/home/index.html:972
-#: home/templates/home/index.html:1035 home/templates/home/platform.html:863
-#: home/templates/home/platform.html:926 home/templates/home/pricing.html:942
-#: home/templates/home/pricing.html:1005 home/templates/home/security.html:1009
-#: home/templates/home/security.html:1072
-#: home/templates/partials/navbar.html:17
+#: home/templates/articles/br/article_0001.html:752
+#: home/templates/articles/br/article_0001.html:816
+#: home/templates/articles/cl/article_0001.html:955
+#: home/templates/articles/cl/article_0001.html:1014
+#: home/templates/base.html:394 home/templates/base.html:436
+#: home/templates/base.html:496 home/templates/home/demo.html:1042
+#: home/templates/home/demo.html:1106 home/templates/home/features.html:613
+#: home/templates/home/features.html:677 home/templates/home/index.html:973
+#: home/templates/home/index.html:1037 home/templates/home/platform.html:873
+#: home/templates/home/platform.html:937 home/templates/home/pricing.html:943
+#: home/templates/home/pricing.html:1007 home/templates/home/security.html:1010
+#: home/templates/home/security.html:1074
+#: home/templates/partials/navbar.html:18
 msgid "Log In"
 msgstr "Anmelden"
 
@@ -80,7 +79,6 @@ msgid "Create one here"
 msgstr ""
 
 #: accounts/templates/accounts/profile.html:4
-#| msgid "ExactusPay"
 msgid "Profile | ExactusPay"
 msgstr "ExactusPay"
 
@@ -88,8 +86,8 @@ msgstr "ExactusPay"
 msgid "Update your ExactusPay profile, language, and contact information."
 msgstr ""
 
-#: accounts/templates/accounts/profile.html:13 home/templates/base.html:383
-#: home/templates/base.html:432 home/templates/base.html:492
+#: accounts/templates/accounts/profile.html:13 home/templates/base.html:384
+#: home/templates/base.html:434 home/templates/base.html:494
 msgid "Profile"
 msgstr ""
 
@@ -106,8 +104,7 @@ msgstr ""
 msgid "Save profile"
 msgstr ""
 
-#: accounts/templates/accounts/profile.html:54 home/templates/base.html:388
-#| msgid "Log In"
+#: accounts/templates/accounts/profile.html:54 home/templates/base.html:389
 msgid "Log Out"
 msgstr "Anmelden"
 
@@ -131,17 +128,16 @@ msgid ""
 "language preferences."
 msgstr ""
 
-#: accounts/templates/accounts/register.html:37 home/templates/base.html:436
-#: home/templates/base.html:482
+#: accounts/templates/accounts/register.html:37 home/templates/base.html:438
+#: home/templates/base.html:484
 msgid "Create account"
-msgstr ""
+msgstr "Konto erstellen"
 
 #: accounts/views.py:22
 msgid "Your account has been created."
 msgstr ""
 
 #: accounts/views.py:26
-#| msgid "See ExactusPay in Action"
 msgid "Create Your ExactusPay Account"
 msgstr "ExactusPay in Aktion sehen"
 
@@ -156,7 +152,6 @@ msgid "Your profile has been updated."
 msgstr ""
 
 #: accounts/views.py:46
-#| msgid "ExactusPay"
 msgid "Your ExactusPay Profile"
 msgstr "ExactusPay"
 
@@ -164,7 +159,88 @@ msgstr "ExactusPay"
 msgid "Manage your ExactusPay account profile and language preferences."
 msgstr ""
 
-#: home/models.py:14 home/templates/home/demo.html:1311
+#: home/country_localization.py:39
+#, fuzzy, python-format
+#| msgid "Profile | ExactusPay"
+msgid ""
+"%(country_name)s Payroll Guide | Country Payroll Intelligence | ExactusPay"
+msgstr "Payroll-Leitfaden für %(country_name)s | ExactusPay"
+
+#: home/country_localization.py:78 home/models.py:106
+msgid "Official country name"
+msgstr "Offizieller Landesname"
+
+#: home/country_localization.py:79 home/models.py:107
+msgid "Capital"
+msgstr "Hauptstadt"
+
+#: home/country_localization.py:80 home/models.py:108
+msgid "Main language(s)"
+msgstr "Hauptsprache(n)"
+
+#: home/country_localization.py:81 home/models.py:109
+msgid "Currency"
+msgstr "Währung"
+
+#: home/country_localization.py:82 home/models.py:110
+msgid "Population"
+msgstr "Bevölkerung"
+
+#: home/country_localization.py:83 home/models.py:111
+msgid "Time zone(s)"
+msgstr "Zeitzone(n)"
+
+#: home/country_localization.py:84 home/models.py:112
+msgid "International dialling code"
+msgstr "Internationale Vorwahl"
+
+#: home/country_localization.py:85 home/models.py:113
+msgid "Date format"
+msgstr "Datumsformat"
+
+#: home/country_localization.py:86 home/models.py:114
+msgid "Internet domain"
+msgstr "Internet-Domain"
+
+#: home/country_localization.py:94 home/models.py:121
+#: home/templates/countries/detail.html:364
+msgid "Payroll frequency"
+msgstr "Payroll-Frequenz"
+
+#: home/country_localization.py:95 home/models.py:122
+#: home/templates/countries/detail.html:370
+msgid "Typical pay currency"
+msgstr "Übliche Auszahlungswährung"
+
+#: home/country_localization.py:96 home/models.py:123
+msgid "Tax year"
+msgstr "Steuerjahr"
+
+#: home/country_localization.py:97 home/models.py:124
+msgid "Standard working week"
+msgstr "Übliche Arbeitswoche"
+
+#: home/country_localization.py:98 home/models.py:125
+msgid "Public holiday count"
+msgstr "Anzahl gesetzlicher Feiertage"
+
+#: home/country_localization.py:99 home/models.py:126
+msgid "Common statutory elements"
+msgstr "Übliche gesetzliche Elemente"
+
+#: home/country_localization.py:100 home/models.py:127
+msgid "Employer contribution summary"
+msgstr "Zusammenfassung der Arbeitgeberbeiträge"
+
+#: home/country_localization.py:101 home/models.py:128
+msgid "Termination / notice highlights"
+msgstr "Wichtige Punkte zu Kündigung / Frist"
+
+#: home/country_localization.py:102 home/models.py:129
+msgid "Minimum wage indicator"
+msgstr "Mindestlohn-Indikator"
+
+#: home/models.py:17 home/templates/home/demo.html:1325
 msgid "Not sure yet"
 msgstr "Noch nicht sicher"
 
@@ -177,7 +253,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/article_base.html:154
-#| msgid "Countries"
 msgid "Country Guide"
 msgstr "Länder"
 
@@ -204,29 +279,28 @@ msgid "Employer cost calculations"
 msgstr ""
 
 #: home/templates/articles/article_base.html:182
-#| msgid "Local payroll expertise"
 msgid "Local payroll operations"
 msgstr "Lokale Gehaltskompetenz"
 
 #: home/templates/articles/article_base.html:183
-#| msgid "Compliance Guides"
 msgid "Compliance evidence trails"
 msgstr "Compliance-Leitfäden"
 
 #: home/templates/articles/article_base.html:186
-#: home/templates/articles/br/article_0001.html:752
-#: home/templates/articles/br/article_0001.html:815
-#: home/templates/articles/cl/article_0001.html:955
-#: home/templates/articles/cl/article_0001.html:1013
-#: home/templates/base.html:396 home/templates/base.html:435
-#: home/templates/base.html:480 home/templates/home/demo.html:1033
-#: home/templates/home/demo.html:1096 home/templates/home/features.html:610
-#: home/templates/home/features.html:671 home/templates/home/index.html:973
-#: home/templates/home/index.html:1036 home/templates/home/platform.html:864
-#: home/templates/home/platform.html:927 home/templates/home/pricing.html:943
-#: home/templates/home/pricing.html:1006 home/templates/home/security.html:1010
-#: home/templates/home/security.html:1073
-#: home/templates/partials/navbar.html:18
+#: home/templates/articles/br/article_0001.html:753
+#: home/templates/articles/br/article_0001.html:817
+#: home/templates/articles/cl/article_0001.html:956
+#: home/templates/articles/cl/article_0001.html:1015
+#: home/templates/base.html:397 home/templates/base.html:437
+#: home/templates/base.html:482 home/templates/countries/detail.html:383
+#: home/templates/home/demo.html:1043 home/templates/home/demo.html:1107
+#: home/templates/home/features.html:614 home/templates/home/features.html:678
+#: home/templates/home/index.html:974 home/templates/home/index.html:1038
+#: home/templates/home/platform.html:874 home/templates/home/platform.html:938
+#: home/templates/home/pricing.html:944 home/templates/home/pricing.html:1008
+#: home/templates/home/security.html:1011
+#: home/templates/home/security.html:1075
+#: home/templates/partials/navbar.html:19
 msgid "Request Demo"
 msgstr "Demo anfordern"
 
@@ -235,161 +309,177 @@ msgid "Transforming Global Payroll with Precision & Intelligence | ExactusPay"
 msgstr ""
 
 #: home/templates/articles/br/article_0001.html:733
-#: home/templates/articles/br/article_0001.html:806
+#: home/templates/articles/br/article_0001.html:807
 #: home/templates/articles/cl/article_0001.html:936
-#: home/templates/articles/cl/article_0001.html:1004
-#: home/templates/base.html:426 home/templates/base.html:489
-#: home/templates/home/demo.html:1023 home/templates/home/demo.html:1087
-#: home/templates/home/features.html:595 home/templates/home/features.html:662
-#: home/templates/home/index.html:954 home/templates/home/index.html:1027
-#: home/templates/home/platform.html:854 home/templates/home/platform.html:918
-#: home/templates/home/pricing.html:924 home/templates/home/pricing.html:997
-#: home/templates/home/security.html:991 home/templates/home/security.html:1064
-#: home/templates/partials/navbar.html:9
+#: home/templates/articles/cl/article_0001.html:1005
+#: home/templates/base.html:427 home/templates/base.html:491
+#: home/templates/countries/detail.html:311 home/templates/home/demo.html:1023
+#: home/templates/home/demo.html:1097 home/templates/home/features.html:594
+#: home/templates/home/features.html:668 home/templates/home/index.html:954
+#: home/templates/home/index.html:1028 home/templates/home/platform.html:854
+#: home/templates/home/platform.html:928 home/templates/home/pricing.html:924
+#: home/templates/home/pricing.html:998 home/templates/home/security.html:991
+#: home/templates/home/security.html:1065 home/templates/partials/navbar.html:9
 msgid "Home"
 msgstr "Startseite"
 
 #: home/templates/articles/br/article_0001.html:734
-#: home/templates/articles/br/article_0001.html:807
+#: home/templates/articles/br/article_0001.html:808
 #: home/templates/articles/cl/article_0001.html:937
-#: home/templates/articles/cl/article_0001.html:1005
-#: home/templates/base.html:374 home/templates/base.html:427
-#: home/templates/base.html:471 home/templates/base.html:490
-#: home/templates/home/demo.html:1024 home/templates/home/demo.html:1088
-#: home/templates/home/features.html:596 home/templates/home/features.html:663
-#: home/templates/home/index.html:955 home/templates/home/index.html:1028
-#: home/templates/home/platform.html:855 home/templates/home/platform.html:919
-#: home/templates/home/pricing.html:925 home/templates/home/pricing.html:998
-#: home/templates/home/security.html:992 home/templates/home/security.html:1065
+#: home/templates/articles/cl/article_0001.html:1006
+#: home/templates/base.html:374 home/templates/base.html:428
+#: home/templates/base.html:473 home/templates/base.html:492
+#: home/templates/home/demo.html:1024 home/templates/home/demo.html:1098
+#: home/templates/home/features.html:595 home/templates/home/features.html:669
+#: home/templates/home/index.html:955 home/templates/home/index.html:1029
+#: home/templates/home/platform.html:855 home/templates/home/platform.html:929
+#: home/templates/home/pricing.html:925 home/templates/home/pricing.html:999
+#: home/templates/home/security.html:992 home/templates/home/security.html:1066
 #: home/templates/partials/navbar.html:10
 msgid "Features"
 msgstr "Funktionen"
 
 #: home/templates/articles/br/article_0001.html:735
-#: home/templates/articles/br/article_0001.html:808
-#: home/templates/articles/br/article_0001.html:984
+#: home/templates/articles/br/article_0001.html:809
+#: home/templates/articles/br/article_0001.html:986
 #: home/templates/articles/cl/article_0001.html:938
-#: home/templates/articles/cl/article_0001.html:1006
-#: home/templates/articles/cl/article_0001.html:1394
-#: home/templates/base.html:375 home/templates/base.html:428
-#: home/templates/base.html:470 home/templates/home/demo.html:1025
-#: home/templates/home/demo.html:1089 home/templates/home/demo.html:1353
-#: home/templates/home/features.html:597 home/templates/home/features.html:664
-#: home/templates/home/features.html:889 home/templates/home/index.html:956
-#: home/templates/home/index.html:1029 home/templates/home/index.html:1329
-#: home/templates/home/platform.html:856 home/templates/home/platform.html:920
-#: home/templates/home/platform.html:1197 home/templates/home/pricing.html:926
-#: home/templates/home/pricing.html:999 home/templates/home/pricing.html:1294
-#: home/templates/home/security.html:993 home/templates/home/security.html:1066
+#: home/templates/articles/cl/article_0001.html:1007
+#: home/templates/articles/cl/article_0001.html:1396
+#: home/templates/base.html:375 home/templates/base.html:429
+#: home/templates/base.html:472 home/templates/home/demo.html:1025
+#: home/templates/home/demo.html:1099 home/templates/home/demo.html:1367
+#: home/templates/home/features.html:596 home/templates/home/features.html:670
+#: home/templates/home/features.html:898 home/templates/home/index.html:956
+#: home/templates/home/index.html:1030 home/templates/home/index.html:1331
+#: home/templates/home/platform.html:856 home/templates/home/platform.html:930
+#: home/templates/home/platform.html:1212 home/templates/home/pricing.html:926
+#: home/templates/home/pricing.html:1000 home/templates/home/pricing.html:1293
+#: home/templates/home/security.html:993 home/templates/home/security.html:1067
 #: home/templates/home/security.html:1316
 #: home/templates/partials/navbar.html:11
 msgid "Platform"
 msgstr "Plattform"
 
 #: home/templates/articles/br/article_0001.html:736
-#: home/templates/articles/br/article_0001.html:809
-#: home/templates/articles/br/article_0001.html:1018
+#: home/templates/articles/br/article_0001.html:810
 #: home/templates/articles/cl/article_0001.html:939
-#: home/templates/articles/cl/article_0001.html:1007
-#: home/templates/articles/cl/article_0001.html:1428
-#: home/templates/base.html:377 home/templates/base.html:430
-#: home/templates/base.html:473 home/templates/home/demo.html:1026
-#: home/templates/home/demo.html:1090 home/templates/home/demo.html:1387
-#: home/templates/home/features.html:598 home/templates/home/features.html:665
-#: home/templates/home/features.html:923 home/templates/home/index.html:957
-#: home/templates/home/index.html:1030 home/templates/home/index.html:1363
-#: home/templates/home/platform.html:857 home/templates/home/platform.html:921
-#: home/templates/home/platform.html:1231 home/templates/home/pricing.html:927
-#: home/templates/home/pricing.html:1000 home/templates/home/pricing.html:1328
-#: home/templates/home/security.html:994 home/templates/home/security.html:1067
-#: home/templates/home/security.html:1350
+#: home/templates/articles/cl/article_0001.html:1008
+#: home/templates/base.html:376 home/templates/base.html:430
+#: home/templates/countries/detail.html:313 home/templates/home/demo.html:1026
+#: home/templates/home/demo.html:1100 home/templates/home/features.html:597
+#: home/templates/home/features.html:671 home/templates/home/index.html:957
+#: home/templates/home/index.html:1031 home/templates/home/index.html:1115
+#: home/templates/home/platform.html:857 home/templates/home/platform.html:931
+#: home/templates/home/pricing.html:927 home/templates/home/pricing.html:1001
+#: home/templates/home/security.html:994 home/templates/home/security.html:1068
 #: home/templates/partials/navbar.html:12
+msgid "Countries"
+msgstr "Länder"
+
+#: home/templates/articles/br/article_0001.html:737
+#: home/templates/articles/br/article_0001.html:811
+#: home/templates/articles/br/article_0001.html:1020
+#: home/templates/articles/cl/article_0001.html:940
+#: home/templates/articles/cl/article_0001.html:1009
+#: home/templates/articles/cl/article_0001.html:1430
+#: home/templates/base.html:378 home/templates/base.html:432
+#: home/templates/base.html:475 home/templates/home/demo.html:1027
+#: home/templates/home/demo.html:1101 home/templates/home/demo.html:1401
+#: home/templates/home/features.html:598 home/templates/home/features.html:672
+#: home/templates/home/features.html:932 home/templates/home/index.html:958
+#: home/templates/home/index.html:1032 home/templates/home/index.html:1365
+#: home/templates/home/platform.html:858 home/templates/home/platform.html:932
+#: home/templates/home/platform.html:1246 home/templates/home/pricing.html:928
+#: home/templates/home/pricing.html:1002 home/templates/home/pricing.html:1327
+#: home/templates/home/security.html:995 home/templates/home/security.html:1069
+#: home/templates/home/security.html:1350
+#: home/templates/partials/navbar.html:13
 msgid "Security"
 msgstr "Sicherheit"
 
-#: home/templates/articles/br/article_0001.html:737
-#: home/templates/articles/br/article_0001.html:810
-#: home/templates/articles/cl/article_0001.html:940
-#: home/templates/articles/cl/article_0001.html:1008
-#: home/templates/base.html:376 home/templates/base.html:429
-#: home/templates/base.html:472 home/templates/home/demo.html:1027
-#: home/templates/home/demo.html:1091 home/templates/home/features.html:599
-#: home/templates/home/features.html:666 home/templates/home/index.html:958
-#: home/templates/home/index.html:1031 home/templates/home/platform.html:858
-#: home/templates/home/platform.html:922 home/templates/home/pricing.html:928
-#: home/templates/home/pricing.html:1001 home/templates/home/security.html:995
-#: home/templates/home/security.html:1068
-#: home/templates/partials/navbar.html:13
+#: home/templates/articles/br/article_0001.html:738
+#: home/templates/articles/br/article_0001.html:812
+#: home/templates/articles/cl/article_0001.html:941
+#: home/templates/articles/cl/article_0001.html:1010
+#: home/templates/base.html:377 home/templates/base.html:431
+#: home/templates/base.html:474 home/templates/home/demo.html:1028
+#: home/templates/home/demo.html:1102 home/templates/home/features.html:599
+#: home/templates/home/features.html:673 home/templates/home/index.html:959
+#: home/templates/home/index.html:1033 home/templates/home/platform.html:859
+#: home/templates/home/platform.html:933 home/templates/home/pricing.html:929
+#: home/templates/home/pricing.html:1003 home/templates/home/security.html:996
+#: home/templates/home/security.html:1070
+#: home/templates/partials/navbar.html:14
 msgid "Pricing"
 msgstr "Preise"
 
-#: home/templates/articles/br/article_0001.html:744
-#: home/templates/articles/cl/article_0001.html:947
-#: home/templates/base.html:417 home/templates/home/demo.html:1077
-#: home/templates/home/features.html:604 home/templates/home/index.html:965
-#: home/templates/home/platform.html:908 home/templates/home/pricing.html:935
-#: home/templates/home/security.html:1002
+#: home/templates/articles/br/article_0001.html:745
+#: home/templates/articles/cl/article_0001.html:948
+#: home/templates/base.html:418 home/templates/home/demo.html:1035
+#: home/templates/home/features.html:606 home/templates/home/index.html:966
+#: home/templates/home/platform.html:866 home/templates/home/pricing.html:936
+#: home/templates/home/security.html:1003
 msgid "Open menu"
 msgstr "Menü öffnen"
 
-#: home/templates/articles/br/article_0001.html:757
-#: home/templates/articles/br/article_0001.html:821
-#: home/templates/articles/cl/article_0001.html:960
-#: home/templates/articles/cl/article_0001.html:1020
-#: home/templates/home/demo.html:1039 home/templates/home/demo.html:1103
-#: home/templates/home/features.html:616 home/templates/home/features.html:678
-#: home/templates/home/index.html:978 home/templates/home/index.html:1042
-#: home/templates/home/platform.html:869 home/templates/home/platform.html:934
-#: home/templates/home/pricing.html:948 home/templates/home/pricing.html:1013
-#: home/templates/home/security.html:1015
-#: home/templates/home/security.html:1080
-#: home/templates/partials/navbar.html:24
+#: home/templates/articles/br/article_0001.html:758
+#: home/templates/articles/br/article_0001.html:823
+#: home/templates/articles/cl/article_0001.html:961
+#: home/templates/articles/cl/article_0001.html:1022
+#: home/templates/home/demo.html:1048 home/templates/home/demo.html:1113
+#: home/templates/home/features.html:619 home/templates/home/features.html:684
+#: home/templates/home/index.html:979 home/templates/home/index.html:1044
+#: home/templates/home/platform.html:879 home/templates/home/platform.html:944
+#: home/templates/home/pricing.html:949 home/templates/home/pricing.html:1014
+#: home/templates/home/security.html:1016
+#: home/templates/home/security.html:1081
+#: home/templates/partials/navbar.html:25
 msgid "Language"
 msgstr "Sprache"
 
-#: home/templates/articles/br/article_0001.html:761
-#: home/templates/articles/br/article_0001.html:825
-#: home/templates/articles/cl/article_0001.html:961
-#: home/templates/articles/cl/article_0001.html:1021
-#: home/templates/base.html:403 home/templates/home/demo.html:1040
-#: home/templates/home/demo.html:1104 home/templates/home/features.html:617
-#: home/templates/home/features.html:679 home/templates/home/index.html:982
-#: home/templates/home/index.html:1046 home/templates/home/platform.html:870
-#: home/templates/home/platform.html:935 home/templates/home/pricing.html:952
-#: home/templates/home/pricing.html:1017 home/templates/home/security.html:1019
-#: home/templates/home/security.html:1084
-#: home/templates/partials/navbar.html:25
+#: home/templates/articles/br/article_0001.html:762
+#: home/templates/articles/br/article_0001.html:827
+#: home/templates/articles/cl/article_0001.html:962
+#: home/templates/articles/cl/article_0001.html:1023
+#: home/templates/base.html:404 home/templates/home/demo.html:1052
+#: home/templates/home/demo.html:1117 home/templates/home/features.html:623
+#: home/templates/home/features.html:688 home/templates/home/index.html:983
+#: home/templates/home/index.html:1048 home/templates/home/platform.html:883
+#: home/templates/home/platform.html:948 home/templates/home/pricing.html:953
+#: home/templates/home/pricing.html:1018 home/templates/home/security.html:1020
+#: home/templates/home/security.html:1085
+#: home/templates/partials/navbar.html:26
 msgid "Select language"
 msgstr "Sprache auswählen"
 
-#: home/templates/articles/br/article_0001.html:803
-#: home/templates/articles/cl/article_0001.html:1001
-#: home/templates/base.html:423 home/templates/home/demo.html:1084
-#: home/templates/home/features.html:659 home/templates/home/index.html:1024
-#: home/templates/home/platform.html:915 home/templates/home/pricing.html:994
-#: home/templates/home/security.html:1061
+#: home/templates/articles/br/article_0001.html:804
+#: home/templates/articles/cl/article_0001.html:1002
+#: home/templates/base.html:424 home/templates/home/demo.html:1094
+#: home/templates/home/features.html:665 home/templates/home/index.html:1025
+#: home/templates/home/platform.html:925 home/templates/home/pricing.html:995
+#: home/templates/home/security.html:1062
 msgid "Mobile navigation"
 msgstr "Mobile Navigation"
 
-#: home/templates/articles/br/article_0001.html:870
+#: home/templates/articles/br/article_0001.html:872
 msgid "Insights"
 msgstr ""
 
-#: home/templates/articles/br/article_0001.html:871
+#: home/templates/articles/br/article_0001.html:873
 msgid "Transforming Global Payroll with Precision & Intelligence"
 msgstr ""
 
-#: home/templates/articles/br/article_0001.html:873
+#: home/templates/articles/br/article_0001.html:875
 msgid ""
 "How modern organisations are simplifying international payroll through "
 "automation, compliance, and real-time intelligence."
 msgstr ""
 
-#: home/templates/articles/br/article_0001.html:882
+#: home/templates/articles/br/article_0001.html:884
 msgid "Article"
 msgstr ""
 
-#: home/templates/articles/br/article_0001.html:885
+#: home/templates/articles/br/article_0001.html:887
 msgid ""
 "Managing payroll across multiple countries has never been simple. Different "
 "tax laws, evolving regulations, currency fluctuations, and compliance "
@@ -397,22 +487,21 @@ msgid ""
 "to manage efficiently."
 msgstr ""
 
-#: home/templates/articles/br/article_0001.html:889
+#: home/templates/articles/br/article_0001.html:891
 msgid ""
 "But complexity does not have to mean chaos. With the right technology, "
 "global payroll can become a streamlined, intelligent, and scalable operation."
 msgstr ""
 
-#: home/templates/articles/br/article_0001.html:893
+#: home/templates/articles/br/article_0001.html:895
 msgid "That is where ExactusPay is redefining the global payroll landscape."
 msgstr ""
 
-#: home/templates/articles/br/article_0001.html:896
-#| msgid "Smart Global Payroll Platform"
+#: home/templates/articles/br/article_0001.html:898
 msgid "A Smarter Approach to Global Payroll"
 msgstr "Intelligente globale Gehaltsplattform"
 
-#: home/templates/articles/br/article_0001.html:899
+#: home/templates/articles/br/article_0001.html:901
 msgid ""
 "ExactusPay provides a powerful AI-driven platform that enables organisations "
 "to manage payroll across more than 40 countries from a single unified "
@@ -421,66 +510,63 @@ msgid ""
 "visibility in real time."
 msgstr ""
 
-#: home/templates/articles/br/article_0001.html:903
+#: home/templates/articles/br/article_0001.html:905
 msgid ""
 "This unified approach eliminates inefficiencies and significantly reduces "
 "the risk of costly errors, while ensuring that every payroll cycle is "
 "accurate, compliant, and secure."
 msgstr ""
 
-#: home/templates/articles/br/article_0001.html:906
+#: home/templates/articles/br/article_0001.html:908
 msgid "What Makes ExactusPay Different?"
 msgstr ""
 
-#: home/templates/articles/br/article_0001.html:911
-#| msgid "AI-Powered Compliance"
+#: home/templates/articles/br/article_0001.html:913
 msgid "AI-powered compliance"
 msgstr "KI-gestützte Compliance"
 
-#: home/templates/articles/br/article_0001.html:912
+#: home/templates/articles/br/article_0001.html:914
 msgid ""
 "technology that adapts to changing regulations and helps organisations stay "
 "aligned across jurisdictions."
 msgstr ""
 
-#: home/templates/articles/br/article_0001.html:915
-#| msgid "Real-time Analytics"
+#: home/templates/articles/br/article_0001.html:917
 msgid "Real-time analytics"
 msgstr "Echtzeit-Analysen"
 
-#: home/templates/articles/br/article_0001.html:916
+#: home/templates/articles/br/article_0001.html:918
 msgid ""
 "live visibility into payroll costs, operational performance, and workforce "
 "trends for faster decision-making."
 msgstr ""
 
-#: home/templates/articles/br/article_0001.html:919
-#: home/templates/home/pricing.html:1225
+#: home/templates/articles/br/article_0001.html:921
+#: home/templates/home/pricing.html:1224
 msgid "Multi-currency processing"
 msgstr "Multi-Währungsverarbeitung"
 
-#: home/templates/articles/br/article_0001.html:920
+#: home/templates/articles/br/article_0001.html:922
 msgid ""
 "global payroll execution with the flexibility businesses need to support "
 "international teams."
 msgstr ""
 
-#: home/templates/articles/br/article_0001.html:923
-#| msgid "Enterprise Security"
+#: home/templates/articles/br/article_0001.html:925
 msgid "Enterprise-grade security"
 msgstr "Unternehmenssicherheit"
 
-#: home/templates/articles/br/article_0001.html:924
+#: home/templates/articles/br/article_0001.html:926
 msgid ""
 "strong protection for sensitive payroll data with transparency and full "
 "audit support."
 msgstr ""
 
-#: home/templates/articles/br/article_0001.html:929
+#: home/templates/articles/br/article_0001.html:931
 msgid "Why Global Payroll Needs to Evolve"
 msgstr ""
 
-#: home/templates/articles/br/article_0001.html:932
+#: home/templates/articles/br/article_0001.html:934
 msgid ""
 "In a world where organisations are expanding faster than ever, traditional "
 "payroll systems often struggle to keep pace. Manual processes, disconnected "
@@ -488,223 +574,222 @@ msgid ""
 "businesses to unnecessary risk."
 msgstr ""
 
-#: home/templates/articles/br/article_0001.html:936
+#: home/templates/articles/br/article_0001.html:938
 msgid ""
 "Modern organisations need payroll solutions that are accurate, automated, "
 "and globally compliant. This is no longer a competitive advantage alone. It "
 "is a business necessity."
 msgstr ""
 
-#: home/templates/articles/br/article_0001.html:939
+#: home/templates/articles/br/article_0001.html:941
 msgid "Reducing Complexity, Improving Efficiency"
 msgstr ""
 
-#: home/templates/articles/br/article_0001.html:942
+#: home/templates/articles/br/article_0001.html:944
 msgid ""
 "Forward-thinking organisations are already leveraging ExactusPay to simplify "
 "global payroll operations, reduce administrative burden, and improve "
 "efficiency across regions."
 msgstr ""
 
-#: home/templates/articles/br/article_0001.html:946
+#: home/templates/articles/br/article_0001.html:948
 msgid ""
 "With a single platform delivering visibility, automation, and control, teams "
 "can move beyond fragmented payroll management and toward a more connected "
 "operating model."
 msgstr ""
 
-#: home/templates/articles/br/article_0001.html:949
+#: home/templates/articles/br/article_0001.html:951
 msgid "The Future of Global Payroll Is Here"
 msgstr ""
 
-#: home/templates/articles/br/article_0001.html:952
+#: home/templates/articles/br/article_0001.html:954
 msgid ""
 "The future of global payroll is smarter, faster, and more connected. "
 "Businesses that invest in intelligent payroll infrastructure today are "
 "better prepared to scale internationally tomorrow."
 msgstr ""
 
-#: home/templates/articles/br/article_0001.html:956
+#: home/templates/articles/br/article_0001.html:958
 msgid ""
 "ExactusPay is helping shape that future by giving organisations the tools "
 "they need to manage global workforce operations with confidence, precision, "
 "and intelligence."
 msgstr ""
 
-#: home/templates/articles/br/article_0001.html:965
-#| msgid "Ready to Simplify Global Payroll?"
+#: home/templates/articles/br/article_0001.html:967
 msgid "Ready to Transform Your Global Payroll?"
 msgstr "Bereit, die globale Gehaltsabrechnung zu vereinfachen?"
 
-#: home/templates/articles/br/article_0001.html:967
+#: home/templates/articles/br/article_0001.html:969
 msgid ""
 "Discover how ExactusPay can simplify your operations and give you complete "
 "control over your global workforce."
 msgstr ""
 
-#: home/templates/articles/br/article_0001.html:972
-#: home/templates/home/demo.html:1341 home/templates/home/index.html:1317
+#: home/templates/articles/br/article_0001.html:974
+#: home/templates/home/demo.html:1355 home/templates/home/index.html:1319
 msgid "Schedule Demo"
 msgstr "Demo vereinbaren"
 
-#: home/templates/articles/br/article_0001.html:986
-#: home/templates/articles/cl/article_0001.html:1396
-#: home/templates/home/demo.html:1355 home/templates/home/features.html:891
-#: home/templates/home/index.html:1331 home/templates/home/platform.html:1199
-#: home/templates/home/pricing.html:1296 home/templates/home/security.html:1318
+#: home/templates/articles/br/article_0001.html:988
+#: home/templates/articles/cl/article_0001.html:1398
+#: home/templates/home/demo.html:1369 home/templates/home/features.html:900
+#: home/templates/home/index.html:1333 home/templates/home/platform.html:1214
+#: home/templates/home/pricing.html:1295 home/templates/home/security.html:1318
 msgid "Global Payroll"
 msgstr "Globale Gehaltsabrechnung"
 
-#: home/templates/articles/br/article_0001.html:987
-#: home/templates/articles/cl/article_0001.html:1397
-#: home/templates/home/demo.html:1356 home/templates/home/features.html:892
-#: home/templates/home/index.html:1332 home/templates/home/platform.html:1200
-#: home/templates/home/pricing.html:1297 home/templates/home/security.html:1319
+#: home/templates/articles/br/article_0001.html:989
+#: home/templates/articles/cl/article_0001.html:1399
+#: home/templates/home/demo.html:1370 home/templates/home/features.html:901
+#: home/templates/home/index.html:1334 home/templates/home/platform.html:1215
+#: home/templates/home/pricing.html:1296 home/templates/home/security.html:1319
 msgid "Compliance Automation"
 msgstr "Compliance-Automatisierung"
 
-#: home/templates/articles/br/article_0001.html:988
-#: home/templates/articles/cl/article_0001.html:1398
-#: home/templates/home/demo.html:1357 home/templates/home/features.html:893
-#: home/templates/home/index.html:1333 home/templates/home/platform.html:1201
-#: home/templates/home/pricing.html:1298 home/templates/home/security.html:1320
+#: home/templates/articles/br/article_0001.html:990
+#: home/templates/articles/cl/article_0001.html:1400
+#: home/templates/home/demo.html:1371 home/templates/home/features.html:902
+#: home/templates/home/index.html:1335 home/templates/home/platform.html:1216
+#: home/templates/home/pricing.html:1297 home/templates/home/security.html:1320
 msgid "Workforce Analytics"
 msgstr "Personalanalysen"
 
-#: home/templates/articles/br/article_0001.html:989
-#: home/templates/articles/cl/article_0001.html:1399
-#: home/templates/home/demo.html:1358 home/templates/home/features.html:894
-#: home/templates/home/index.html:1334 home/templates/home/platform.html:1202
-#: home/templates/home/pricing.html:1299 home/templates/home/security.html:1321
+#: home/templates/articles/br/article_0001.html:991
+#: home/templates/articles/cl/article_0001.html:1401
+#: home/templates/home/demo.html:1372 home/templates/home/features.html:903
+#: home/templates/home/index.html:1336 home/templates/home/platform.html:1217
+#: home/templates/home/pricing.html:1298 home/templates/home/security.html:1321
 msgid "Tax Management"
 msgstr "Steuerverwaltung"
 
-#: home/templates/articles/br/article_0001.html:994
-#: home/templates/articles/cl/article_0001.html:1404
-#: home/templates/home/demo.html:1363 home/templates/home/features.html:899
-#: home/templates/home/index.html:1339 home/templates/home/platform.html:1207
-#: home/templates/home/pricing.html:1304 home/templates/home/security.html:1326
+#: home/templates/articles/br/article_0001.html:996
+#: home/templates/articles/cl/article_0001.html:1406
+#: home/templates/home/demo.html:1377 home/templates/home/features.html:908
+#: home/templates/home/index.html:1341 home/templates/home/platform.html:1222
+#: home/templates/home/pricing.html:1303 home/templates/home/security.html:1326
 msgid "Solutions"
 msgstr "Lösungen"
 
-#: home/templates/articles/br/article_0001.html:996
-#: home/templates/articles/cl/article_0001.html:1406
-#: home/templates/home/demo.html:1365 home/templates/home/features.html:901
-#: home/templates/home/index.html:1341 home/templates/home/platform.html:1209
-#: home/templates/home/pricing.html:1306 home/templates/home/security.html:1328
+#: home/templates/articles/br/article_0001.html:998
+#: home/templates/articles/cl/article_0001.html:1408
+#: home/templates/home/demo.html:1379 home/templates/home/features.html:910
+#: home/templates/home/index.html:1343 home/templates/home/platform.html:1224
+#: home/templates/home/pricing.html:1305 home/templates/home/security.html:1328
 msgid "Enterprise Expansion"
 msgstr "Unternehmensexpansion"
 
-#: home/templates/articles/br/article_0001.html:997
-#: home/templates/articles/cl/article_0001.html:1407
-#: home/templates/home/demo.html:1366 home/templates/home/features.html:902
-#: home/templates/home/index.html:1342 home/templates/home/platform.html:1210
-#: home/templates/home/pricing.html:1307 home/templates/home/security.html:1329
+#: home/templates/articles/br/article_0001.html:999
+#: home/templates/articles/cl/article_0001.html:1409
+#: home/templates/home/demo.html:1380 home/templates/home/features.html:911
+#: home/templates/home/index.html:1344 home/templates/home/platform.html:1225
+#: home/templates/home/pricing.html:1306 home/templates/home/security.html:1329
 msgid "Mergers & Acquisitions"
 msgstr "Fusionen und Übernahmen"
 
-#: home/templates/articles/br/article_0001.html:998
-#: home/templates/articles/cl/article_0001.html:1408
-#: home/templates/home/demo.html:1367 home/templates/home/features.html:903
-#: home/templates/home/index.html:1343 home/templates/home/platform.html:1211
-#: home/templates/home/pricing.html:1308 home/templates/home/security.html:1330
+#: home/templates/articles/br/article_0001.html:1000
+#: home/templates/articles/cl/article_0001.html:1410
+#: home/templates/home/demo.html:1381 home/templates/home/features.html:912
+#: home/templates/home/index.html:1345 home/templates/home/platform.html:1226
+#: home/templates/home/pricing.html:1307 home/templates/home/security.html:1330
 msgid "Compliance Management"
 msgstr "Compliance-Management"
 
-#: home/templates/articles/br/article_0001.html:999
-#: home/templates/articles/cl/article_0001.html:1409
-#: home/templates/home/demo.html:1368 home/templates/home/features.html:904
-#: home/templates/home/index.html:1344 home/templates/home/platform.html:1212
-#: home/templates/home/pricing.html:1309 home/templates/home/security.html:1331
+#: home/templates/articles/br/article_0001.html:1001
+#: home/templates/articles/cl/article_0001.html:1411
+#: home/templates/home/demo.html:1382 home/templates/home/features.html:913
+#: home/templates/home/index.html:1346 home/templates/home/platform.html:1227
+#: home/templates/home/pricing.html:1308 home/templates/home/security.html:1331
 msgid "Global Workforce"
 msgstr "Globale Belegschaft"
 
-#: home/templates/articles/br/article_0001.html:1004
-#: home/templates/articles/cl/article_0001.html:1414
-#: home/templates/home/demo.html:1373 home/templates/home/features.html:909
-#: home/templates/home/index.html:1349 home/templates/home/platform.html:1217
-#: home/templates/home/pricing.html:1314 home/templates/home/security.html:1336
+#: home/templates/articles/br/article_0001.html:1006
+#: home/templates/articles/cl/article_0001.html:1416
+#: home/templates/home/demo.html:1387 home/templates/home/features.html:918
+#: home/templates/home/index.html:1351 home/templates/home/platform.html:1232
+#: home/templates/home/pricing.html:1313 home/templates/home/security.html:1336
 msgid "Resources"
 msgstr "Ressourcen"
 
-#: home/templates/articles/br/article_0001.html:1006
-#: home/templates/articles/cl/article_0001.html:1416
-#: home/templates/home/demo.html:1375 home/templates/home/features.html:911
-#: home/templates/home/index.html:1351 home/templates/home/platform.html:1219
-#: home/templates/home/pricing.html:1316 home/templates/home/security.html:1338
+#: home/templates/articles/br/article_0001.html:1008
+#: home/templates/articles/cl/article_0001.html:1418
+#: home/templates/home/demo.html:1389 home/templates/home/features.html:920
+#: home/templates/home/index.html:1353 home/templates/home/platform.html:1234
+#: home/templates/home/pricing.html:1315 home/templates/home/security.html:1338
 msgid "Documentation"
 msgstr "Dokumentation"
 
-#: home/templates/articles/br/article_0001.html:1007
-#: home/templates/articles/cl/article_0001.html:1417
-#: home/templates/home/demo.html:1376 home/templates/home/features.html:912
-#: home/templates/home/index.html:1352 home/templates/home/platform.html:1220
-#: home/templates/home/pricing.html:1317 home/templates/home/security.html:1339
+#: home/templates/articles/br/article_0001.html:1009
+#: home/templates/articles/cl/article_0001.html:1419
+#: home/templates/home/demo.html:1390 home/templates/home/features.html:921
+#: home/templates/home/index.html:1354 home/templates/home/platform.html:1235
+#: home/templates/home/pricing.html:1316 home/templates/home/security.html:1339
 msgid "API Reference"
 msgstr "API-Referenz"
 
-#: home/templates/articles/br/article_0001.html:1008
-#: home/templates/articles/cl/article_0001.html:1418
-#: home/templates/home/demo.html:1377 home/templates/home/features.html:913
-#: home/templates/home/index.html:1353 home/templates/home/platform.html:1221
-#: home/templates/home/pricing.html:1318 home/templates/home/security.html:1340
+#: home/templates/articles/br/article_0001.html:1010
+#: home/templates/articles/cl/article_0001.html:1420
+#: home/templates/home/demo.html:1391 home/templates/home/features.html:922
+#: home/templates/home/index.html:1355 home/templates/home/platform.html:1236
+#: home/templates/home/pricing.html:1317 home/templates/home/security.html:1340
 msgid "Compliance Guides"
 msgstr "Compliance-Leitfäden"
 
-#: home/templates/articles/br/article_0001.html:1009
-#: home/templates/articles/cl/article_0001.html:1419
-#: home/templates/home/demo.html:1378 home/templates/home/features.html:914
-#: home/templates/home/index.html:1354 home/templates/home/platform.html:1222
-#: home/templates/home/pricing.html:1319 home/templates/home/security.html:1341
+#: home/templates/articles/br/article_0001.html:1011
+#: home/templates/articles/cl/article_0001.html:1421
+#: home/templates/home/demo.html:1392 home/templates/home/features.html:923
+#: home/templates/home/index.html:1356 home/templates/home/platform.html:1237
+#: home/templates/home/pricing.html:1318 home/templates/home/security.html:1341
 msgid "Case Studies"
 msgstr "Fallstudien"
 
-#: home/templates/articles/br/article_0001.html:1014
-#: home/templates/articles/cl/article_0001.html:1424
-#: home/templates/base.html:487 home/templates/home/demo.html:1383
-#: home/templates/home/features.html:919 home/templates/home/index.html:1359
-#: home/templates/home/platform.html:1227 home/templates/home/pricing.html:1324
+#: home/templates/articles/br/article_0001.html:1016
+#: home/templates/articles/cl/article_0001.html:1426
+#: home/templates/base.html:489 home/templates/home/demo.html:1397
+#: home/templates/home/features.html:928 home/templates/home/index.html:1361
+#: home/templates/home/platform.html:1242 home/templates/home/pricing.html:1323
 #: home/templates/home/security.html:1346
 msgid "Company"
 msgstr "Unternehmen"
 
-#: home/templates/articles/br/article_0001.html:1016
-#: home/templates/articles/cl/article_0001.html:1426
-#: home/templates/home/demo.html:1385 home/templates/home/features.html:921
-#: home/templates/home/index.html:1361 home/templates/home/platform.html:1229
-#: home/templates/home/pricing.html:1326 home/templates/home/security.html:1348
+#: home/templates/articles/br/article_0001.html:1018
+#: home/templates/articles/cl/article_0001.html:1428
+#: home/templates/home/demo.html:1399 home/templates/home/features.html:930
+#: home/templates/home/index.html:1363 home/templates/home/platform.html:1244
+#: home/templates/home/pricing.html:1325 home/templates/home/security.html:1348
 msgid "About Us"
 msgstr "Über uns"
 
-#: home/templates/articles/br/article_0001.html:1017
-#: home/templates/articles/cl/article_0001.html:1427
-#: home/templates/home/demo.html:1386 home/templates/home/features.html:922
-#: home/templates/home/index.html:1362 home/templates/home/platform.html:1230
-#: home/templates/home/pricing.html:1327 home/templates/home/security.html:1349
+#: home/templates/articles/br/article_0001.html:1019
+#: home/templates/articles/cl/article_0001.html:1429
+#: home/templates/home/demo.html:1400 home/templates/home/features.html:931
+#: home/templates/home/index.html:1364 home/templates/home/platform.html:1245
+#: home/templates/home/pricing.html:1326 home/templates/home/security.html:1349
 msgid "Careers"
 msgstr "Karriere"
 
-#: home/templates/articles/br/article_0001.html:1019
-#: home/templates/articles/cl/article_0001.html:1429
-#: home/templates/home/demo.html:1388 home/templates/home/features.html:924
-#: home/templates/home/index.html:1364 home/templates/home/platform.html:1232
-#: home/templates/home/pricing.html:1329 home/templates/home/security.html:1351
+#: home/templates/articles/br/article_0001.html:1021
+#: home/templates/articles/cl/article_0001.html:1431
+#: home/templates/home/demo.html:1402 home/templates/home/features.html:933
+#: home/templates/home/index.html:1366 home/templates/home/platform.html:1247
+#: home/templates/home/pricing.html:1328 home/templates/home/security.html:1351
 msgid "Contact"
 msgstr "Kontakt"
 
-#: home/templates/articles/br/article_0001.html:1030
-#: home/templates/articles/cl/article_0001.html:1440
-#: home/templates/base.html:512 home/templates/home/features.html:935
-#: home/templates/home/index.html:1375 home/templates/home/platform.html:1243
-#: home/templates/home/pricing.html:1340 home/templates/home/security.html:1362
+#: home/templates/articles/br/article_0001.html:1032
+#: home/templates/articles/cl/article_0001.html:1442
+#: home/templates/base.html:511 home/templates/home/features.html:944
+#: home/templates/home/index.html:1377 home/templates/home/platform.html:1258
+#: home/templates/home/pricing.html:1339 home/templates/home/security.html:1362
 msgid "All rights reserved."
 msgstr "Alle Rechte vorbehalten."
 
-#: home/templates/articles/br/article_0001.html:1032
-#: home/templates/articles/cl/article_0001.html:1442
-#: home/templates/home/demo.html:1402 home/templates/home/features.html:936
-#: home/templates/home/index.html:1377 home/templates/home/platform.html:1244
-#: home/templates/home/pricing.html:1341 home/templates/home/security.html:1363
+#: home/templates/articles/br/article_0001.html:1034
+#: home/templates/articles/cl/article_0001.html:1444
+#: home/templates/home/demo.html:1416 home/templates/home/features.html:945
+#: home/templates/home/index.html:1379 home/templates/home/platform.html:1259
+#: home/templates/home/pricing.html:1340 home/templates/home/security.html:1363
 msgid "GDPR Compliant | SOC 2 Type II Certified | ISO 27001"
 msgstr "DSGVO-konform | SOC-2-Type-II-zertifiziert | ISO 27001"
 
@@ -763,7 +848,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/br/article_0002.html:25
-#| msgid "Multi-country standard"
 msgid "Control standard"
 msgstr "Länderübergreifender Standard"
 
@@ -824,7 +908,6 @@ msgid "Keep evidence of approvals and any post-payroll adjustments."
 msgstr ""
 
 #: home/templates/articles/br/article_0002.html:49
-#| msgid "Standardised reports"
 msgid "3. Standardise reporting for headquarters"
 msgstr "Standardisierte Berichte"
 
@@ -979,7 +1062,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/br/article_0004.html:21
-#| msgid "Cost visibility"
 msgid "Visibility"
 msgstr "Kostentransparenz"
 
@@ -1073,7 +1155,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/br/article_0005.html:21
-#| msgid "Standards"
 msgid "Data standard"
 msgstr "Standards"
 
@@ -1083,7 +1164,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/br/article_0005.html:25
-#| msgid "Fast, reliable processing"
 msgid "Scalable process"
 msgstr "Schnelle, zuverlässige Verarbeitung"
 
@@ -1145,120 +1225,114 @@ msgstr ""
 msgid "Skip to content"
 msgstr "Zum Inhalt springen"
 
-#: home/templates/articles/cl/article_0001.html:1065
+#: home/templates/articles/cl/article_0001.html:1067
 msgid "How to Set Up a Business and Run Payroll in Chile"
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1067
+#: home/templates/articles/cl/article_0001.html:1069
 msgid ""
 "A step-by-step guide for expanding enterprises — from incorporation to "
 "compliant payroll (UF, RUT/SII, social security, and Legal Gratification). "
 "Powered by ExactusPay."
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1075
-#| msgid "Request a demo"
+#: home/templates/articles/cl/article_0001.html:1077
 msgid "Request a Personalized Demo"
 msgstr "Eine Demo anfordern"
 
-#: home/templates/articles/cl/article_0001.html:1078
+#: home/templates/articles/cl/article_0001.html:1080
 msgid "Read the Guide"
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1082
-#| msgid "Security highlights"
+#: home/templates/articles/cl/article_0001.html:1084
 msgid "Guide highlights"
 msgstr "Sicherheits-Highlights"
 
-#: home/templates/articles/cl/article_0001.html:1083
+#: home/templates/articles/cl/article_0001.html:1085
 msgid "Entity Setup"
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1084
+#: home/templates/articles/cl/article_0001.html:1086
 msgid "Legal Gratification"
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1085
+#: home/templates/articles/cl/article_0001.html:1087
 msgid "UF Calculations"
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1086
-#| msgid "Compliance"
+#: home/templates/articles/cl/article_0001.html:1088
 msgid "SII Compliance"
 msgstr "Compliance"
 
-#: home/templates/articles/cl/article_0001.html:1098
+#: home/templates/articles/cl/article_0001.html:1100
 msgid "Chile Expansion Guide"
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1100
+#: home/templates/articles/cl/article_0001.html:1102
 msgid "Entity Setup + Payroll Compliance (UF, SII, AFP, FONASA/ISAPRE)"
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1103
+#: home/templates/articles/cl/article_0001.html:1105
 msgid ""
 "Chile is one of Latin America's most stable and transparent economies — but "
 "compliant hiring and payroll require navigating strict labour laws, complex "
 "taxes, and local indices like UF."
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1110
-#| msgid "Security highlights"
+#: home/templates/articles/cl/article_0001.html:1112
 msgid "Article highlights"
 msgstr "Sicherheits-Highlights"
 
-#: home/templates/articles/cl/article_0001.html:1112
+#: home/templates/articles/cl/article_0001.html:1114
 msgid "Country: Chile (CL)"
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1113
+#: home/templates/articles/cl/article_0001.html:1115
 msgid "Focus: Compliance + Payroll"
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1115
-#| msgid "Built for expansion"
+#: home/templates/articles/cl/article_0001.html:1117
 msgid "Built for audit-ready operations"
 msgstr "Für Expansion entwickelt"
 
-#: home/templates/articles/cl/article_0001.html:1121
+#: home/templates/articles/cl/article_0001.html:1123
 msgid ""
 "Translation note: this article is designed to be translated into Portuguese, "
 "Spanish, German, French, and Italian. We kept headings, lists, and key terms "
 "structured for clean localization."
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1127
-#| msgid "Key outcomes"
+#: home/templates/articles/cl/article_0001.html:1129
 msgid "Key context"
 msgstr "Wichtige Ergebnisse"
 
-#: home/templates/articles/cl/article_0001.html:1129
+#: home/templates/articles/cl/article_0001.html:1131
 msgid "What makes Chile unique?"
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1130
+#: home/templates/articles/cl/article_0001.html:1132
 msgid ""
 "Payroll commonly uses both CLP and UF (Unidad de Fomento), an inflation-"
 "indexed unit calculated daily. Contribution caps and tax brackets can shift "
 "with UF — making accuracy and timing critical."
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1137
+#: home/templates/articles/cl/article_0001.html:1139
 msgid "Part 1: Setting Up a Business Entity in Chile"
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1139
+#: home/templates/articles/cl/article_0001.html:1141
 msgid ""
 "Chile has modernized incorporation significantly. The process can be faster "
 "than many neighbouring countries, but foreign companies still need careful "
 "documentation and local representation."
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1145
+#: home/templates/articles/cl/article_0001.html:1147
 msgid "1) Choose Your Legal Structure"
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1147
+#: home/templates/articles/cl/article_0001.html:1149
 #, python-format
 msgid ""
 "For most international businesses, the SpA (Sociedad por Acciones) is a "
@@ -1267,11 +1341,11 @@ msgid ""
 "than a traditional S.A."
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1154
+#: home/templates/articles/cl/article_0001.html:1156
 msgid "2) Register the Company"
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1156
+#: home/templates/articles/cl/article_0001.html:1158
 msgid ""
 "You can register through the traditional notary route or via the government "
 "portal \"Tu Empresa en un Día\". Incorporation typically requires Articles "
@@ -1280,11 +1354,11 @@ msgid ""
 "representative in Chile."
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1163
+#: home/templates/articles/cl/article_0001.html:1165
 msgid "3) Obtain Your Tax ID (RUT) with the SII"
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1165
+#: home/templates/articles/cl/article_0001.html:1167
 msgid ""
 "After registration, you must register with the Chilean Internal Revenue "
 "Service (SII — Servicio de Impuestos Internos) to obtain a RUT (Rol Único "
@@ -1292,135 +1366,135 @@ msgid ""
 "or operate normally."
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1171
+#: home/templates/articles/cl/article_0001.html:1173
 msgid "4) Open a Corporate Bank Account"
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1173
+#: home/templates/articles/cl/article_0001.html:1175
 msgid ""
 "To pay employees locally and remit taxes, you generally need an in-country "
 "corporate bank account. This step may require the physical presence of your "
 "local legal representative depending on the bank's requirements."
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1179
+#: home/templates/articles/cl/article_0001.html:1181
 msgid "5) Secure a Municipal License (Patente Municipal)"
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1181
+#: home/templates/articles/cl/article_0001.html:1183
 msgid ""
 "Before commencing operations, apply for a Patente Municipal (municipal "
 "business licence) from the municipality where your legal address is "
 "registered."
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1187
+#: home/templates/articles/cl/article_0001.html:1189
 msgid "Part 2: Navigating Payroll & Employment Laws in Chile"
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1189
+#: home/templates/articles/cl/article_0001.html:1191
 msgid ""
 "Payroll is where complexity accelerates. Many statutory caps and tax "
 "brackets are tied to UF — so the calculations must be kept current and "
 "consistently applied each pay cycle."
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1195
+#: home/templates/articles/cl/article_0001.html:1197
 msgid "1) Mandatory Employer Contributions"
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1197
+#: home/templates/articles/cl/article_0001.html:1199
 #, python-format
 msgid ""
 "Employers typically pay statutory contributions in addition to gross salary "
 "(often around 4%%–5%%, depending on factors like industry risk)."
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1206
-#: home/templates/articles/cl/article_0001.html:1271
+#: home/templates/articles/cl/article_0001.html:1208
+#: home/templates/articles/cl/article_0001.html:1273
 msgid "Unemployment Insurance (AFC)"
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1208
+#: home/templates/articles/cl/article_0001.html:1210
 #, python-format
 msgid ""
 "Employers contribute 2.4%% for permanent employees (and 3%% for fixed-term "
 "contracts)."
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1217
+#: home/templates/articles/cl/article_0001.html:1219
 msgid "Survivor & Disability Insurance (SIS)"
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1219
+#: home/templates/articles/cl/article_0001.html:1221
 #, python-format
 msgid ""
 "Typically around 1.5%% (rates can vary based on applicable rules and "
 "providers)."
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1228
+#: home/templates/articles/cl/article_0001.html:1230
 msgid "Work Accident & Disease Insurance (Mutual)"
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1230
+#: home/templates/articles/cl/article_0001.html:1232
 #, python-format
 msgid ""
 "A baseline of 0.93%% plus a risk-based premium up to ~3.4%% depending on "
 "your industry."
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1238
+#: home/templates/articles/cl/article_0001.html:1240
 msgid "2) Employee Deductions (Withholdings)"
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1240
+#: home/templates/articles/cl/article_0001.html:1242
 #, python-format
 msgid ""
 "Employers must withhold and remit the employee's share of social security "
 "(often ~17.6%% of gross pay) and monthly income tax."
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1249
+#: home/templates/articles/cl/article_0001.html:1251
 msgid "Pension Fund (AFP)"
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1251
+#: home/templates/articles/cl/article_0001.html:1253
 #, python-format
 msgid "10%% paid to the private pension administrator chosen by the employee."
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1260
+#: home/templates/articles/cl/article_0001.html:1262
 msgid "Health Insurance (FONASA or ISAPRE)"
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1262
+#: home/templates/articles/cl/article_0001.html:1264
 #, python-format
 msgid ""
 "7%% paid to either the public system (FONASA) or a private insurer (ISAPRE)."
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1273
+#: home/templates/articles/cl/article_0001.html:1275
 #, python-format
 msgid "0.6%% for permanent employees (employee portion)."
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1282
+#: home/templates/articles/cl/article_0001.html:1284
 msgid "Income Tax"
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1284
+#: home/templates/articles/cl/article_0001.html:1286
 #, python-format
 msgid ""
 "Progressive monthly tax from 0%% up to 40%%, determined by UF-linked tax "
 "brackets."
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1292
+#: home/templates/articles/cl/article_0001.html:1294
 msgid "3) Legal Gratification (Profit Sharing)"
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1294
+#: home/templates/articles/cl/article_0001.html:1296
 #, python-format
 msgid ""
 "Under the Chilean Labour Code, profitable companies must share 30%% of net "
@@ -1429,11 +1503,11 @@ msgid ""
 "requirement."
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1300
+#: home/templates/articles/cl/article_0001.html:1302
 msgid "Part 3: The Danger of Vendor Bloat"
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1302
+#: home/templates/articles/cl/article_0001.html:1304
 msgid ""
 "Many companies start with a local accounting firm — but expansion across "
 "LATAM can create a fragmented vendor stack: PDFs, spreadsheets, different "
@@ -1442,70 +1516,66 @@ msgid ""
 "penalties."
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1309
+#: home/templates/articles/cl/article_0001.html:1311
 msgid "Part 4: How ExactusPay Accelerates Your Expansion"
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1311
+#: home/templates/articles/cl/article_0001.html:1313
 msgid ""
 "ExactusPay eliminates friction by replacing fragmented local vendors with a "
 "single, technology-driven ecosystem built for the Global South."
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1320
-#| msgid "Strategic payroll simulations"
+#: home/templates/articles/cl/article_0001.html:1322
 msgid "Predictive Payroll Simulations"
 msgstr "Strategische Gehaltssimulationen"
 
-#: home/templates/articles/cl/article_0001.html:1321
+#: home/templates/articles/cl/article_0001.html:1323
 msgid ""
 "Model Total Cost of Employment before you hire. Input base salary and "
 "simulate TCOE using the latest UF, caps, and Legal Gratification rules."
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1325
-#| msgid "AI-Powered Compliance"
+#: home/templates/articles/cl/article_0001.html:1327
 msgid "Zero-Error Compliance"
 msgstr "KI-gestützte Compliance"
 
-#: home/templates/articles/cl/article_0001.html:1326
+#: home/templates/articles/cl/article_0001.html:1328
 msgid ""
 "Automated legal logic keeps calculations current when statutory caps or tax "
 "rules change — ensuring filings remain compliant and audit-ready."
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1330
-#| msgid "Global-standardised reporting"
+#: home/templates/articles/cl/article_0001.html:1332
 msgid "Global-Standardized Reporting"
 msgstr "Global standardisierte Berichterstattung"
 
-#: home/templates/articles/cl/article_0001.html:1331
+#: home/templates/articles/cl/article_0001.html:1333
 msgid ""
 "Normalize Chile payroll data into the same reporting format as the UK, "
 "Brazil, or Nigeria so CFOs get one unified dashboard."
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1335
-#: home/templates/home/pricing.html:1172
+#: home/templates/articles/cl/article_0001.html:1337
+#: home/templates/home/pricing.html:1171
 msgid "24/7 Native Support"
 msgstr "24/7 Muttersprachlicher Support"
 
-#: home/templates/articles/cl/article_0001.html:1336
+#: home/templates/articles/cl/article_0001.html:1338
 msgid ""
 "Round-the-clock support from experts with native fluency in Spanish and "
 "Portuguese — acting as an extension of your HR team."
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1340
-#| msgid "Next steps"
+#: home/templates/articles/cl/article_0001.html:1342
 msgid "Next step"
 msgstr "Nächste Schritte"
 
-#: home/templates/articles/cl/article_0001.html:1342
+#: home/templates/articles/cl/article_0001.html:1344
 msgid "Ready to scale without the complexity?"
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1343
+#: home/templates/articles/cl/article_0001.html:1345
 msgid ""
 "Geographic borders shouldn't block access to top talent, and local "
 "compliance shouldn't slow growth. If you're planning an expansion into Chile "
@@ -1513,38 +1583,35 @@ msgid ""
 "clarity, and control you need."
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1353
-#| msgid "Schedule Your Personal Demo"
+#: home/templates/articles/cl/article_0001.html:1355
 msgid "Request a Personalized Demo Today"
 msgstr "Vereinbaren Sie Ihre persönliche Demo"
 
-#: home/templates/articles/cl/article_0001.html:1358
+#: home/templates/articles/cl/article_0001.html:1360
 msgid ""
 "Disclaimer: This content is for general informational purposes and does not "
 "constitute legal or tax advice."
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1369
-#: home/templates/home/demo.html:1148
+#: home/templates/articles/cl/article_0001.html:1371
+#: home/templates/home/demo.html:1162
 msgid "See ExactusPay in Action"
 msgstr "ExactusPay in Aktion sehen"
 
-#: home/templates/articles/cl/article_0001.html:1371
+#: home/templates/articles/cl/article_0001.html:1373
 msgid ""
 "Get a personalized walkthrough of our Simulation Engine, compliance logic, "
 "and executive reporting — and see exactly how we run secure, accurate "
 "payroll across the Global South."
 msgstr ""
 
-#: home/templates/articles/cl/article_0001.html:1379
-#: home/templates/home/index.html:1102
-#| msgid "Book a session"
+#: home/templates/articles/cl/article_0001.html:1381
+#: home/templates/home/index.html:1104
 msgid "Book Demo"
 msgstr "Eine Sitzung buchen"
 
-#: home/templates/articles/cl/article_0001.html:1382
-#: home/templates/home/demo.html:1342
-#| msgid "Pricing"
+#: home/templates/articles/cl/article_0001.html:1384
+#: home/templates/home/demo.html:1356
 msgid "View Pricing"
 msgstr "Preise"
 
@@ -1599,7 +1666,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/cr/article_0001.html:25
-#| msgid "Regional expertise"
 msgid "Regional scale"
 msgstr "Regionale Kompetenz"
 
@@ -1651,22 +1717,202 @@ msgstr ""
 "Gehaltsabrechnung und Compliance | ExactusPay"
 
 #: home/templates/base.html:373
-#| msgid "Mobile navigation"
 msgid "Primary navigation"
 msgstr "Mobile Navigation"
 
-#: home/templates/base.html:478
+#: home/templates/base.html:480
 msgid "Get started"
 msgstr ""
 
-#: home/templates/base.html:481
-#| msgid "Pricing"
+#: home/templates/base.html:483
 msgid "See Pricing"
 msgstr "Preise"
 
-#: home/templates/base.html:500
+#: home/templates/base.html:502
 msgid "Social"
 msgstr ""
+
+#: home/templates/countries/detail.html:4
+#: home/templates/countries/detail.html:8
+#: home/templates/countries/detail.html:12
+#, fuzzy, python-format
+#| msgid "Profile | ExactusPay"
+msgid "%(country_name)s Payroll Guide | ExactusPay"
+msgstr "Payroll-Leitfaden für %(country_name)s | ExactusPay"
+
+#: home/templates/countries/detail.html:21
+#, fuzzy, python-format
+#| msgid "Country Guide"
+msgid "%(country_name)s payroll guide"
+msgstr "Payroll-Leitfaden für %(country_name)s"
+
+#: home/templates/countries/detail.html:322
+msgid "Country Payroll Guide"
+msgstr "Länderspezifischer Payroll-Leitfaden"
+
+#: home/templates/countries/detail.html:328
+#, python-format
+msgid "%(country_name)s flag"
+msgstr "Flagge von %(country_name)s"
+
+#: home/templates/countries/detail.html:340
+msgid "Country highlights"
+msgstr "Länder-Highlights"
+
+#: home/templates/countries/detail.html:352
+msgid "Operate with country-level payroll confidence"
+msgstr "Arbeiten Sie mit Payroll-Sicherheit auf Länderebene"
+
+#: home/templates/countries/detail.html:354
+msgid ""
+"Use one country page template across your footprint: local payroll context, "
+"employer facts, and platform-ready intelligence in one commercial format."
+msgstr ""
+"Verwenden Sie eine einheitliche Länderseiten-Vorlage über Ihren gesamten "
+"Footprint hinweg: lokaler Payroll-Kontext, Arbeitgeberdaten und "
+"plattformfähige Insights in einem kommerziell klaren Format."
+
+#: home/templates/countries/detail.html:359
+msgid "Country code"
+msgstr "Ländercode"
+
+#: home/templates/countries/detail.html:376
+msgid "Last reviewed"
+msgstr "Zuletzt geprüft"
+
+#: home/templates/countries/detail.html:407
+msgid "Country overview"
+msgstr "Länderüberblick"
+
+#: home/templates/countries/detail.html:414
+msgid "Key facts"
+msgstr "Wichtige Fakten"
+
+#: home/templates/countries/detail.html:426
+msgid "Country metadata can be added as ExactusPay expands this profile."
+msgstr ""
+"Ländermetadaten können hinzugefügt werden, wenn ExactusPay dieses Profil "
+"erweitert."
+
+#: home/templates/countries/detail.html:432
+msgid "Payroll intelligence"
+msgstr "Payroll-Intelligence"
+
+#: home/templates/countries/detail.html:434
+msgid ""
+"A structured view of the payroll details employers usually need first: pay "
+"rhythm, statutory themes, employment controls, and country-specific "
+"operating notes."
+msgstr ""
+"Ein strukturierter Blick auf die Payroll-Details, die Arbeitgeber meist "
+"zuerst benötigen: Zahlungsrhythmus, gesetzliche Themen, "
+"Beschäftigungskontrollen und länderspezifische operative Hinweise."
+
+#: home/templates/countries/detail.html:450
+msgid ""
+"Payroll intelligence can render as soon as the platform feed or content "
+"record provides country-specific data points."
+msgstr ""
+"Payroll-Intelligence kann angezeigt werden, sobald der Plattform-Feed oder "
+"der Content-Datensatz länderspezifische Datenpunkte bereitstellt."
+
+#: home/templates/countries/detail.html:456
+msgid "Employer guidance"
+msgstr "Hinweise für Arbeitgeber"
+
+#: home/templates/countries/detail.html:475
+msgid ""
+"Long-form country guidance can be attached to this template country by "
+"country."
+msgstr ""
+"Ausführliche Länderhinweise können diesem Template Land für Land hinzugefügt "
+"werden."
+
+#: home/templates/countries/detail.html:483
+msgid "Why this structure works"
+msgstr "Warum diese Struktur funktioniert"
+
+#: home/templates/countries/detail.html:485
+msgid ""
+"The page combines commercial context, employer facts, and payroll detail in "
+"one reusable layout that can scale across ExactusPay markets."
+msgstr ""
+"Die Seite verbindet kommerziellen Kontext, Arbeitgeberdaten und Payroll-"
+"Details in einem wiederverwendbaren Layout, das über alle ExactusPay-Märkte "
+"skalieren kann."
+
+#: home/templates/countries/detail.html:490
+msgid "Key employer considerations"
+msgstr "Wichtige Punkte für Arbeitgeber"
+
+#: home/templates/countries/detail.html:499
+msgid ""
+"Add employer considerations here when local implementation notes are "
+"available."
+msgstr ""
+"Fügen Sie hier Hinweise für Arbeitgeber hinzu, sobald lokale "
+"Implementierungsnotizen vorliegen."
+
+#: home/templates/countries/detail.html:505
+msgid "Need a country-specific walkthrough?"
+msgstr "Benötigen Sie eine länderspezifische Einführung?"
+
+#: home/templates/countries/detail.html:507
+msgid ""
+"ExactusPay can turn market-by-market payroll complexity into one reporting "
+"standard, one operating model, and one executive view."
+msgstr ""
+"ExactusPay kann Payroll-Komplexität von Markt zu Markt in einen Reporting-"
+"Standard, ein Betriebsmodell und eine Managementansicht überführen."
+
+#: home/templates/countries/detail.html:510 home/templates/home/demo.html:1171
+msgid "Book a session"
+msgstr "Eine Sitzung buchen"
+
+#: home/templates/countries/hub.html:4 home/templates/countries/hub.html:7
+#: home/templates/countries/hub.html:10
+msgid "Country Payroll Pages | ExactusPay"
+msgstr "Länderseiten für Payroll | ExactusPay"
+
+#: home/templates/countries/hub.html:5 home/templates/countries/hub.html:8
+#: home/templates/countries/hub.html:11
+msgid ""
+"Explore country payroll pages built by ExactusPay with employer facts, "
+"payroll intelligence, and country-level operating guidance."
+msgstr ""
+"Entdecken Sie die Länderseiten von ExactusPay mit Arbeitgeberdaten, Payroll-"
+"Insights und operativen Hinweisen auf Länderebene."
+
+#: home/templates/countries/hub.html:101
+msgid "Country payroll pages"
+msgstr "Länderseiten für Payroll"
+
+#: home/templates/countries/hub.html:102
+msgid "Country-level payroll intelligence, built to scale"
+msgstr "Payroll-Intelligence auf Länderebene, für Skalierung aufgebaut"
+
+#: home/templates/countries/hub.html:104
+msgid ""
+"This hub uses one reusable ExactusPay structure for country pages: a strong "
+"hero, employer facts, payroll intelligence, and country-specific operating "
+"guidance."
+msgstr ""
+"Dieser Hub nutzt eine wiederverwendbare ExactusPay-Struktur für "
+"Länderseiten: ein starkes Hero-Element, Arbeitgeberdaten, Payroll-Insights "
+"und länderspezifische operative Hinweise."
+
+#: home/templates/countries/hub.html:140
+msgid "View country page"
+msgstr "Länderseite ansehen"
+
+#: home/templates/countries/hub.html:145
+msgid "No countries published yet"
+msgstr "Noch keine Länder veröffentlicht"
+
+#: home/templates/countries/hub.html:146
+msgid "Add country profiles in Django admin to populate this hub."
+msgstr ""
+"Fügen Sie Länderprofile im Django-Admin hinzu, um diesen Hub zu füllen."
 
 #: home/templates/home/demo.html:19
 msgid "Request a Global Payroll Demo | ExactusPay"
@@ -1687,7 +1933,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/home/demo.html:46 home/templates/home/demo.html:56
-#| msgid "ExactusPay | Global Payroll Software"
 msgid "ExactusPay | Request a Global Payroll Demo"
 msgstr "ExactusPay | Globale Gehaltssoftware"
 
@@ -1698,9 +1943,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/home/demo.html:59
-#| msgid ""
-#| "ExactusPay | Global Payroll Software for Multi-Country Payroll & "
-#| "Compliance"
 msgid ""
 "See ExactusPay in action with a tailored demo for multi-country payroll, "
 "compliance, and reporting."
@@ -1708,7 +1950,7 @@ msgstr ""
 "ExactusPay | Globale Gehaltssoftware für länderübergreifende "
 "Gehaltsabrechnung und Compliance"
 
-#: home/templates/home/demo.html:1150
+#: home/templates/home/demo.html:1164
 msgid ""
 "Stop guessing your global labour costs. Get a personalised walkthrough of "
 "the platform that simplifies payroll for the Global South — with predictable "
@@ -1719,44 +1961,39 @@ msgstr ""
 "den Globalen Süden vereinfacht – mit vorhersagbarer Compliance und einem "
 "einheitlichen Führungsstandard für die Berichterstattung."
 
-#: home/templates/home/demo.html:1156
-#| msgid "What you'll see"
+#: home/templates/home/demo.html:1170
 msgid "What you’ll see"
 msgstr "Was Sie sehen werden"
 
-#: home/templates/home/demo.html:1157
-msgid "Book a session"
-msgstr "Eine Sitzung buchen"
-
-#: home/templates/home/demo.html:1160
+#: home/templates/home/demo.html:1174
 msgid "Key outcomes"
 msgstr "Wichtige Ergebnisse"
 
-#: home/templates/home/demo.html:1161 home/templates/home/platform.html:997
+#: home/templates/home/demo.html:1175 home/templates/home/platform.html:1012
 msgid "Single source of truth"
 msgstr "Einzige Quelle der Wahrheit"
 
-#: home/templates/home/demo.html:1162 home/templates/home/features.html:787
+#: home/templates/home/demo.html:1176 home/templates/home/features.html:796
 msgid "Multi-country standard"
 msgstr "Länderübergreifender Standard"
 
-#: home/templates/home/demo.html:1163 home/templates/home/security.html:1141
+#: home/templates/home/demo.html:1177 home/templates/home/security.html:1141
 msgid "Audit-ready controls"
 msgstr "Prüfungsbereite Kontrollen"
 
-#: home/templates/home/demo.html:1164
+#: home/templates/home/demo.html:1178
 msgid "Cost visibility"
 msgstr "Kostentransparenz"
 
-#: home/templates/home/demo.html:1173
+#: home/templates/home/demo.html:1187
 msgid "What you get"
 msgstr "Was Sie erhalten"
 
-#: home/templates/home/demo.html:1174
+#: home/templates/home/demo.html:1188
 msgid "A practical demo — not a sales pitch"
 msgstr "Eine praktische Demo – kein Verkaufsgespräch"
 
-#: home/templates/home/demo.html:1175
+#: home/templates/home/demo.html:1189
 msgid ""
 "We focus on the exact workflows leaders need to expand safely across LATAM, "
 "Africa, and Asia."
@@ -1764,11 +2001,11 @@ msgstr ""
 "Wir konzentrieren uns auf die genauen Arbeitsabläufe, die Führungskräfte für "
 "eine sichere Expansion in Lateinamerika, Afrika und Asien benötigen."
 
-#: home/templates/home/demo.html:1181
+#: home/templates/home/demo.html:1195
 msgid "Run a live simulation"
 msgstr "Führen Sie eine Live-Simulation durch"
 
-#: home/templates/home/demo.html:1182
+#: home/templates/home/demo.html:1196
 msgid ""
 "Forecast the full employer cost of a new hire in Brazil, Nigeria, or "
 "Indonesia — including statutory contributions."
@@ -1777,11 +2014,11 @@ msgstr ""
 "Brasilien, Nigeria oder Indonesien – einschließlich der gesetzlichen "
 "Beiträge."
 
-#: home/templates/home/demo.html:1187
+#: home/templates/home/demo.html:1201
 msgid "Audit your compliance"
 msgstr "Prüfen Sie Ihre Compliance"
 
-#: home/templates/home/demo.html:1188
+#: home/templates/home/demo.html:1202
 msgid ""
 "See how the platform flags risks and gaps across tax logic, filings, and "
 "governance — keeping you audit-ready."
@@ -1790,11 +2027,11 @@ msgstr ""
 "Einreichungen und der Governance kennzeichnet – und Sie so prüfungsbereit "
 "hält."
 
-#: home/templates/home/demo.html:1193
+#: home/templates/home/demo.html:1207
 msgid "Unified reporting"
 msgstr "Einheitliche Berichterstattung"
 
-#: home/templates/home/demo.html:1194
+#: home/templates/home/demo.html:1208
 msgid ""
 "Watch 20+ countries roll up into one executive dashboard, with consistent "
 "definitions and clear visibility."
@@ -1802,15 +2039,15 @@ msgstr ""
 "Beobachten Sie, wie über 20 Länder in einem einzigen Führungsdashboard "
 "zusammengefasst werden, mit konsistenten Definitionen und klarer Transparenz."
 
-#: home/templates/home/demo.html:1203
+#: home/templates/home/demo.html:1217
 msgid "Next steps"
 msgstr "Nächste Schritte"
 
-#: home/templates/home/demo.html:1204
+#: home/templates/home/demo.html:1218
 msgid "Clear steps. Zero pressure."
 msgstr "Klare Schritte. Kein Druck."
 
-#: home/templates/home/demo.html:1205
+#: home/templates/home/demo.html:1219
 msgid ""
 "We keep it efficient and relevant — you leave with a plan, not a pile of "
 "slides."
@@ -1818,11 +2055,11 @@ msgstr ""
 "Wir halten es effizient und relevant – Sie gehen mit einem Plan, nicht mit "
 "einem Stapel Folien."
 
-#: home/templates/home/demo.html:1211
+#: home/templates/home/demo.html:1225
 msgid "The Discovery (15 mins)"
 msgstr "Die Entdeckungsphase (15 Minuten)"
 
-#: home/templates/home/demo.html:1212
+#: home/templates/home/demo.html:1226
 msgid ""
 "We map your footprint (entities, contractors, EORs) and identify friction "
 "points across your target regions."
@@ -1830,14 +2067,11 @@ msgstr ""
 "Wir kartieren Ihre Präsenz (Unternehmen, Auftragnehmer, EORs) und "
 "identifizieren Problemstellen in Ihren Zielregionen."
 
-#: home/templates/home/demo.html:1217
+#: home/templates/home/demo.html:1231
 msgid "The Tailored Walkthrough (30 mins)"
 msgstr "Die maßgeschneiderte Führung (30 Minuten)"
 
-#: home/templates/home/demo.html:1218
-#| msgid ""
-#| "No generic deck. We show country-specific examples, local tax logic, and "
-#| "the reporting you'll rely on."
+#: home/templates/home/demo.html:1232
 msgid ""
 "No generic deck. We show country-specific examples, local tax logic, and the "
 "reporting you’ll rely on."
@@ -1845,11 +2079,11 @@ msgstr ""
 "Keine generische Präsentation. Wir zeigen länderspezifische Beispiele, "
 "lokale Steuerlogik und die Berichte, auf die Sie sich verlassen können."
 
-#: home/templates/home/demo.html:1223
+#: home/templates/home/demo.html:1237
 msgid "The Strategic Blueprint"
 msgstr "Der strategische Plan"
 
-#: home/templates/home/demo.html:1224
+#: home/templates/home/demo.html:1238
 msgid ""
 "You leave with a pricing estimate, transition timeline, and a simulation "
 "output for your next hire."
@@ -1857,15 +2091,15 @@ msgstr ""
 "Sie gehen mit einer Preissschätzung, einem Zeitplan für die Umstellung und "
 "einem Simulationsergebnis für Ihre nächste Einstellung."
 
-#: home/templates/home/demo.html:1233
+#: home/templates/home/demo.html:1247
 msgid "Why a demo?"
 msgstr "Warum eine Demo?"
 
-#: home/templates/home/demo.html:1234
+#: home/templates/home/demo.html:1248
 msgid "Because expansion needs certainty"
 msgstr "Weil Expansion Sicherheit braucht"
 
-#: home/templates/home/demo.html:1235
+#: home/templates/home/demo.html:1249
 msgid ""
 "See predictive cost, verify compliance, and meet the experts who support you "
 "day-to-day."
@@ -1873,11 +2107,11 @@ msgstr ""
 "Sehen Sie vorhersagbare Kosten, überprüfen Sie die Compliance und treffen "
 "Sie die Experten, die Sie täglich unterstützen."
 
-#: home/templates/home/demo.html:1241
+#: home/templates/home/demo.html:1255
 msgid "See the future"
 msgstr "Sehen Sie die Zukunft"
 
-#: home/templates/home/demo.html:1242
+#: home/templates/home/demo.html:1256
 msgid ""
 "Most tools show historical spend. ExactusPay demonstrates how to predict "
 "employment cost before you hire."
@@ -1885,11 +2119,11 @@ msgstr ""
 "Die meisten Tools zeigen historische Ausgaben. ExactusPay zeigt, wie Sie die "
 "Beschäftigungskosten vor der Einstellung vorhersagen können."
 
-#: home/templates/home/demo.html:1247
+#: home/templates/home/demo.html:1261
 msgid "Verify compliance"
 msgstr "Compliance überprüfen"
 
-#: home/templates/home/demo.html:1248
+#: home/templates/home/demo.html:1262
 msgid ""
 "Ask tough questions on POPIA, LGPD, or statutory contributions. We show the "
 "logic and evidence trails."
@@ -1897,14 +2131,11 @@ msgstr ""
 "Stellen Sie schwierige Fragen zu POPIA, LGPD oder gesetzlichen Beiträgen. "
 "Wir zeigen die Logik und die Beweisketten."
 
-#: home/templates/home/demo.html:1253
+#: home/templates/home/demo.html:1267
 msgid "Meet your team"
 msgstr "Lernen Sie Ihr Team kennen"
 
-#: home/templates/home/demo.html:1254
-#| msgid ""
-#| "This isn't just software. You'll meet the support experts that operate as "
-#| "an extension of your team."
+#: home/templates/home/demo.html:1268
 msgid ""
 "This isn’t just software. You’ll meet the support experts that operate as an "
 "extension of your team."
@@ -1912,18 +2143,15 @@ msgstr ""
 "Dies ist nicht nur Software. Sie werden die Support-Experten kennenlernen, "
 "die als Erweiterung Ihres Teams agieren."
 
-#: home/templates/home/demo.html:1263 home/templates/home/pricing.html:1282
+#: home/templates/home/demo.html:1277 home/templates/home/pricing.html:1281
 msgid "Request a demo"
 msgstr "Eine Demo anfordern"
 
-#: home/templates/home/demo.html:1264
+#: home/templates/home/demo.html:1278
 msgid "Schedule your personal walkthrough"
 msgstr "Vereinbaren Sie Ihre persönliche Führung"
 
-#: home/templates/home/demo.html:1265
-#| msgid ""
-#| "Submit the form and we'll follow up quickly with the right session for "
-#| "your footprint."
+#: home/templates/home/demo.html:1279
 msgid ""
 "Submit the form and we’ll follow up quickly with the right session for your "
 "footprint."
@@ -1931,11 +2159,11 @@ msgstr ""
 "Senden Sie das Formular ab, und wir werden uns schnell mit der richtigen "
 "Sitzung für Ihre Präsenz bei Ihnen melden."
 
-#: home/templates/home/demo.html:1270
+#: home/templates/home/demo.html:1284
 msgid "Schedule Your Personal Demo"
 msgstr "Vereinbaren Sie Ihre persönliche Demo"
 
-#: home/templates/home/demo.html:1271
+#: home/templates/home/demo.html:1285
 msgid ""
 "No commitment required. We keep this focused, practical, and relevant to "
 "your target countries."
@@ -1943,65 +2171,66 @@ msgstr ""
 "Keine Verpflichtung. Wir bleiben fokussiert, praktisch und relevant für Ihre "
 "Zielländer."
 
-#: home/templates/home/demo.html:1278
+#: home/templates/home/demo.html:1292
 msgid "First Name"
 msgstr "Vorname"
 
-#: home/templates/home/demo.html:1283
+#: home/templates/home/demo.html:1297
 msgid "Last Name"
 msgstr "Nachname"
 
-#: home/templates/home/demo.html:1288
+#: home/templates/home/demo.html:1302
 msgid "Work Email"
 msgstr "Geschäftliche E-Mail"
 
-#: home/templates/home/demo.html:1293
+#: home/templates/home/demo.html:1307
 msgid "Company Name"
 msgstr "Unternehmensname"
 
-#: home/templates/home/demo.html:1298
+#: home/templates/home/demo.html:1312
 msgid "Number of Employees"
 msgstr "Anzahl der Mitarbeiter"
 
-#: home/templates/home/demo.html:1300
+#: home/templates/home/demo.html:1314
 msgid "Select…"
 msgstr "Auswählen…"
 
-#: home/templates/home/demo.html:1309
+#: home/templates/home/demo.html:1323
 msgid "Expansion Region (Optional)"
 msgstr "Expansionsregion (optional)"
 
-#: home/templates/home/demo.html:1322
+#: home/templates/home/demo.html:1336
 msgid "Book My Session"
 msgstr "Meine Sitzung buchen"
 
-#: home/templates/home/demo.html:1327
+#: home/templates/home/demo.html:1341
 #, python-format
-#| msgid "No commitment required. 100% data privacy."
 msgid "No commitment required. 100%% data privacy."
-msgstr "Keine Verpflichtung. 100% Datenschutz."
+msgstr "Keine Verpflichtung. 100%% Datenschutz."
 
-#: home/templates/home/demo.html:1338
-#| msgid "Ready to Simplify Global Payroll?"
+#: home/templates/home/demo.html:1352
 msgid "Ready to bring global payroll under one roof?"
 msgstr "Bereit, die globale Gehaltsabrechnung zu vereinfachen?"
 
-#: home/templates/home/demo.html:1339
+#: home/templates/home/demo.html:1353
 msgid ""
 "ExactusPay gives you a single source of truth, consistent reporting, and "
 "compliance-ready processes — without the typical complexity."
-msgstr "Erhalten Sie eine zentrale Quelle der Wahrheit, standardisierte Berichte und compliance-fähige Prozesse – ohne die typische Komplexität globaler Lohnabrechnung."
+msgstr ""
+"Erhalten Sie eine zentrale Quelle der Wahrheit, standardisierte Berichte und "
+"compliance-fähige Prozesse – ohne die typische Komplexität globaler "
+"Lohnabrechnung."
 
-#: home/templates/home/demo.html:1401
+#: home/templates/home/demo.html:1415
 #, python-format
 msgid "© %(current_year)s ExactusPay. All rights reserved."
 msgstr "© %(current_year)s ExactusPay. Alle Rechte vorbehalten."
 
-#: home/templates/home/features.html:724
+#: home/templates/home/features.html:733
 msgid "Features built for real global payroll"
 msgstr "Funktionen für echte globale Gehaltsabrechnung"
 
-#: home/templates/home/features.html:726
+#: home/templates/home/features.html:735
 msgid ""
 "ExactusPay gives growing companies the capabilities of a global enterprise — "
 "without fragmented tools. Standardised data, automated compliance, and "
@@ -2012,43 +2241,43 @@ msgstr ""
 "automatisierte Compliance und operative Klarheit in Lateinamerika, Afrika "
 "und Asien."
 
-#: home/templates/home/features.html:733
+#: home/templates/home/features.html:742
 msgid "Explore the Pillars"
 msgstr "Die Säulen erkunden"
 
-#: home/templates/home/features.html:734
+#: home/templates/home/features.html:743
 msgid "View Capabilities"
 msgstr "Funktionen anzeigen"
 
-#: home/templates/home/features.html:737
+#: home/templates/home/features.html:746
 msgid "Feature outcomes"
 msgstr "Funktionsergebnisse"
 
-#: home/templates/home/features.html:738
+#: home/templates/home/features.html:747
 msgid "Standardised reports"
 msgstr "Standardisierte Berichte"
 
-#: home/templates/home/features.html:739
+#: home/templates/home/features.html:748
 msgid "Compliance built-in"
 msgstr "Integrierte Compliance"
 
-#: home/templates/home/features.html:740
+#: home/templates/home/features.html:749
 msgid "Multi-currency ready"
 msgstr "Multi-Währungsbereit"
 
-#: home/templates/home/features.html:741
+#: home/templates/home/features.html:750
 msgid "Managed support"
 msgstr "Verwalteter Support"
 
-#: home/templates/home/features.html:750
+#: home/templates/home/features.html:759
 msgid "Capabilities"
 msgstr "Fähigkeiten"
 
-#: home/templates/home/features.html:751
+#: home/templates/home/features.html:760
 msgid "Everything teams need to run payroll with confidence"
 msgstr "Alles, was Teams für eine sichere Gehaltsabrechnung benötigen"
 
-#: home/templates/home/features.html:753
+#: home/templates/home/features.html:762
 msgid ""
 "From automation and analytics to audit trails and self-service, ExactusPay "
 "replaces local fragmentation with a single, reliable operating model."
@@ -2057,11 +2286,11 @@ msgstr ""
 "ersetzt ExactusPay die lokale Fragmentierung durch ein einziges, "
 "zuverlässiges Betriebsmodell."
 
-#: home/templates/home/features.html:763
+#: home/templates/home/features.html:772
 msgid "Compliance automation"
 msgstr "Compliance-Automatisierung"
 
-#: home/templates/home/features.html:764
+#: home/templates/home/features.html:773
 msgid ""
 "Built-in legal logic and validations that help you stay audit-ready as "
 "regulations evolve."
@@ -2069,11 +2298,11 @@ msgstr ""
 "Integrierte Rechtslogik und Validierungen, die Ihnen helfen, bei der "
 "Entwicklung von Vorschriften prüfungsbereit zu bleiben."
 
-#: home/templates/home/features.html:769
+#: home/templates/home/features.html:778
 msgid "Cost & payroll analytics"
 msgstr "Kosten- und Gehaltsanalysen"
 
-#: home/templates/home/features.html:770
+#: home/templates/home/features.html:779
 msgid ""
 "Dashboards that make Total Cost of Employment and key metrics visible across "
 "countries."
@@ -2081,11 +2310,11 @@ msgstr ""
 "Dashboards, die die Gesamtkosten der Beschäftigung und wichtige Kennzahlen "
 "länderübergreifend sichtbar machen."
 
-#: home/templates/home/features.html:775
+#: home/templates/home/features.html:784
 msgid "Fast, reliable processing"
 msgstr "Schnelle, zuverlässige Verarbeitung"
 
-#: home/templates/home/features.html:776
+#: home/templates/home/features.html:785
 msgid ""
 "Run payroll at scale with structured inputs, automated checks, and stable "
 "exports."
@@ -2093,12 +2322,11 @@ msgstr ""
 "Führen Sie die Gehaltsabrechnung im großen Maßstab mit strukturierten "
 "Eingaben, automatisierten Prüfungen und stabilen Exporten durch."
 
-#: home/templates/home/features.html:781
-#| msgid "Enterprise Security"
+#: home/templates/home/features.html:790
 msgid "Enterprise security"
 msgstr "Unternehmenssicherheit"
 
-#: home/templates/home/features.html:782
+#: home/templates/home/features.html:791
 msgid ""
 "Strong encryption, role-based access, and governance designed for payroll-"
 "grade sensitivity."
@@ -2106,7 +2334,7 @@ msgstr ""
 "Starke Verschlüsselung, rollenbasierter Zugriff und Governance, entwickelt "
 "für die Sensibilität von Gehaltsdaten."
 
-#: home/templates/home/features.html:788
+#: home/templates/home/features.html:797
 msgid ""
 "One reporting structure across jurisdictions — no spreadsheet reconciliation "
 "between providers."
@@ -2114,11 +2342,11 @@ msgstr ""
 "Eine Berichtsstruktur für alle Rechtsgebiete – kein Abgleich von "
 "Tabellenkalkulationen zwischen Anbietern."
 
-#: home/templates/home/features.html:793
+#: home/templates/home/features.html:802
 msgid "Audit trails & governance"
 msgstr "Prüfpfade und Governance"
 
-#: home/templates/home/features.html:794
+#: home/templates/home/features.html:803
 msgid ""
 "Traceable calculations and change history to support internal review and "
 "external audits."
@@ -2126,15 +2354,15 @@ msgstr ""
 "Nachvollziehbare Berechnungen und Änderungshistorie zur Unterstützung "
 "interner Überprüfungen und externer Audits."
 
-#: home/templates/home/features.html:803
+#: home/templates/home/features.html:812
 msgid "Core Pillars"
 msgstr "Kernsäulen"
 
-#: home/templates/home/features.html:804
+#: home/templates/home/features.html:813
 msgid "Four pillars that replace payroll fragmentation"
 msgstr "Vier Säulen, die die Fragmentierung der Gehaltsabrechnung ersetzen"
 
-#: home/templates/home/features.html:805
+#: home/templates/home/features.html:814
 msgid ""
 "These pillars work together to deliver accuracy, compliance, and clarity "
 "across every country you operate in."
@@ -2142,11 +2370,11 @@ msgstr ""
 "Diese Säulen arbeiten zusammen, um Genauigkeit, Compliance und Klarheit in "
 "jedem Land, in dem Sie tätig sind, zu gewährleisten."
 
-#: home/templates/home/features.html:813
+#: home/templates/home/features.html:822
 msgid "Strategic payroll simulations"
 msgstr "Strategische Gehaltssimulationen"
 
-#: home/templates/home/features.html:814
+#: home/templates/home/features.html:823
 msgid ""
 "Forecast full employment cost before you hire — including employer taxes, "
 "statutory contributions, and local burden."
@@ -2155,30 +2383,30 @@ msgstr ""
 "einschließlich Arbeitgebersteuern, gesetzlicher Beiträge und lokaler "
 "Belastungen."
 
-#: home/templates/home/features.html:818
+#: home/templates/home/features.html:827
 msgid ""
 "Pre-hire forecasting: model offers with accurate employer-cost breakdowns."
 msgstr ""
 "Prognose vor der Einstellung: Modellieren Sie Angebote mit genauen "
 "Aufschlüsselungen der Arbeitgeberkosten."
 
-#: home/templates/home/features.html:819
+#: home/templates/home/features.html:828
 msgid "Scenario planning: compare markets and hiring strategies side-by-side."
 msgstr ""
 "Szenarioplanung: Vergleichen Sie Märkte und Einstellungsstrategien "
 "nebeneinander."
 
-#: home/templates/home/features.html:820
+#: home/templates/home/features.html:829
 msgid "Budget certainty: align HR and Finance with one set of numbers."
 msgstr ""
 "Budget-Sicherheit: Bringen Sie HR und Finanzen mit einem einzigen Zahlensatz "
 "in Einklang."
 
-#: home/templates/home/features.html:828
+#: home/templates/home/features.html:837
 msgid "Global-standardised reporting"
 msgstr "Global standardisierte Berichterstattung"
 
-#: home/templates/home/features.html:829
+#: home/templates/home/features.html:838
 msgid ""
 "Replace inconsistent local formats with one reporting model that stays "
 "stable across countries and payroll cycles."
@@ -2186,12 +2414,12 @@ msgstr ""
 "Ersetzen Sie inkonsistente lokale Formate durch ein einziges Berichtsmodell, "
 "das über Länder und Gehaltszyklen hinweg stabil bleibt."
 
-#: home/templates/home/features.html:833
+#: home/templates/home/features.html:842
 msgid "Single dashboard: central visibility across payroll and workforce data."
 msgstr ""
 "Einzelnes Dashboard: zentrale Transparenz über Gehalts- und Personaldaten."
 
-#: home/templates/home/features.html:834
+#: home/templates/home/features.html:843
 msgid ""
 "Comparable outputs: consistent data definitions enable clean cross-country "
 "analysis."
@@ -2199,18 +2427,18 @@ msgstr ""
 "Vergleichbare Ergebnisse: Konsistente Datendefinitionen ermöglichen eine "
 "saubere länderübergreifende Analyse."
 
-#: home/templates/home/features.html:835
+#: home/templates/home/features.html:844
 msgid ""
 "Decision clarity: executive-grade insights into costs, trends, and exposure."
 msgstr ""
 "Entscheidungsklarheit: Einblicke auf Führungsebene in Kosten, Trends und "
 "Risiken."
 
-#: home/templates/home/features.html:843
+#: home/templates/home/features.html:852
 msgid "Automated compliance & security"
 msgstr "Automatisierte Compliance und Sicherheit"
 
-#: home/templates/home/features.html:844
+#: home/templates/home/features.html:853
 msgid ""
 "Stay ahead of regulatory change with built-in rules, validations, and "
 "governance designed for sensitive payroll data."
@@ -2219,29 +2447,29 @@ msgstr ""
 "Validierungen und einer für sensible Gehaltsdaten entwickelten Governance "
 "immer einen Schritt voraus."
 
-#: home/templates/home/features.html:848
+#: home/templates/home/features.html:857
 msgid "Legal logic: controls aligned to labour law and statutory requirements."
 msgstr ""
 "Rechtslogik: Kontrollen, die auf Arbeitsrecht und gesetzliche Anforderungen "
 "abgestimmt sind."
 
-#: home/templates/home/features.html:849
+#: home/templates/home/features.html:858
 msgid "Error reduction: automation and guardrails minimise manual mistakes."
 msgstr ""
 "Fehlerreduzierung: Automatisierung und Leitplanken minimieren manuelle "
 "Fehler."
 
-#: home/templates/home/features.html:850
+#: home/templates/home/features.html:859
 msgid "Audit-ready: traceable calculations and data controls support reviews."
 msgstr ""
 "Prüfungsbereit: Nachvollziehbare Berechnungen und Datenkontrollen "
 "unterstützen Überprüfungen."
 
-#: home/templates/home/features.html:858
+#: home/templates/home/features.html:867
 msgid "Integrations & connectivity"
 msgstr "Integrationen und Konnektivität"
 
-#: home/templates/home/features.html:859
+#: home/templates/home/features.html:868
 msgid ""
 "Connect your HR stack so data flows from hire to pay — with fewer handoffs, "
 "less re-entry, and consistent governance."
@@ -2250,11 +2478,11 @@ msgstr ""
 "Zahlung fließen – mit weniger Übergaben, weniger Neueingaben und "
 "konsistenter Governance."
 
-#: home/templates/home/features.html:863
+#: home/templates/home/features.html:872
 msgid "HCM connectivity: integrate with tools like Workday and BambooHR."
 msgstr "HCM-Konnektivität: Integration mit Tools wie Workday und BambooHR."
 
-#: home/templates/home/features.html:864
+#: home/templates/home/features.html:873
 msgid ""
 "Scalable architecture: grow from mid-sized to global without rewiring "
 "operations."
@@ -2262,7 +2490,7 @@ msgstr ""
 "Skalierbare Architektur: Wachsen Sie vom mittelständischen zum globalen "
 "Unternehmen, ohne Ihre Abläufe neu strukturieren zu müssen."
 
-#: home/templates/home/features.html:865
+#: home/templates/home/features.html:874
 msgid ""
 "Multi-language & FX: localised employee experience across currencies and "
 "regions."
@@ -2270,12 +2498,11 @@ msgstr ""
 "Mehrsprachigkeit & Devisen: Lokalisierte Mitarbeitererfahrung über Währungen "
 "und Regionen hinweg."
 
-#: home/templates/home/features.html:875
-#| msgid "Ready to Simplify Global Payroll?"
+#: home/templates/home/features.html:884
 msgid "Ready to simplify global payroll?"
 msgstr "Bereit, die globale Gehaltsabrechnung zu vereinfachen?"
 
-#: home/templates/home/features.html:876
+#: home/templates/home/features.html:885
 msgid ""
 "Standardise your reporting, reduce manual work, and stay compliant across "
 "markets — with one platform that scales."
@@ -2283,15 +2510,15 @@ msgstr ""
 "Standardisieren Sie Ihr Reporting, reduzieren Sie manuelle Arbeit und "
 "bleiben Sie in allen Märkten compliant – mit einer Plattform, die mitwächst."
 
-#: home/templates/home/features.html:878 home/templates/home/platform.html:1185
+#: home/templates/home/features.html:887 home/templates/home/platform.html:1200
 msgid "Schedule a Demo"
 msgstr "Eine Demo vereinbaren"
 
-#: home/templates/home/index.html:1091
+#: home/templates/home/index.html:1093
 msgid "Smart Global Payroll Platform"
 msgstr "Intelligente globale Gehaltsplattform"
 
-#: home/templates/home/index.html:1094
+#: home/templates/home/index.html:1096
 msgid ""
 "Streamline global workforce management with AI-driven compliance, real-time "
 "insights, and seamless payroll processing across 40+ countries."
@@ -2299,31 +2526,27 @@ msgstr ""
 "Optimieren Sie das globale Personalmanagement mit KI-gesteuerter Compliance, "
 "Echtzeit-Einblicken und nahtloser Gehaltsabrechnung in über 40 Ländern."
 
-#: home/templates/home/index.html:1109
+#: home/templates/home/index.html:1111
 msgid "Accuracy Rate"
 msgstr "Genauigkeitsrate"
 
-#: home/templates/home/index.html:1113
-msgid "Countries"
-msgstr "Länder"
-
-#: home/templates/home/index.html:1117
+#: home/templates/home/index.html:1119
 msgid "Hours Support"
 msgstr "24-Stunden-Support"
 
-#: home/templates/home/index.html:1121
+#: home/templates/home/index.html:1123
 msgid "Compliance"
 msgstr "Compliance"
 
-#: home/templates/home/index.html:1131
+#: home/templates/home/index.html:1133
 msgid "Powerful Features"
 msgstr "Leistungsstarke Funktionen"
 
-#: home/templates/home/index.html:1132
+#: home/templates/home/index.html:1134
 msgid "Designed for Global Scale"
 msgstr "Für globalen Maßstab entwickelt"
 
-#: home/templates/home/index.html:1133
+#: home/templates/home/index.html:1135
 msgid ""
 "Everything you need to manage complex global payroll operations with "
 "confidence"
@@ -2331,11 +2554,11 @@ msgstr ""
 "Alles, was Sie für die sichere Verwaltung komplexer globaler "
 "Gehaltsabrechnungen benötigen"
 
-#: home/templates/home/index.html:1139
+#: home/templates/home/index.html:1141
 msgid "AI-Powered Compliance"
 msgstr "KI-gestützte Compliance"
 
-#: home/templates/home/index.html:1140
+#: home/templates/home/index.html:1142
 msgid ""
 "Automated regulatory updates and risk assessment across all jurisdictions "
 "with machine learning algorithms."
@@ -2343,11 +2566,11 @@ msgstr ""
 "Automatisierte behördliche Aktualisierungen und Risikobewertung in allen "
 "Rechtsgebieten mit Algorithmen des maschinellen Lernens."
 
-#: home/templates/home/index.html:1145 home/templates/home/index.html:1189
+#: home/templates/home/index.html:1147 home/templates/home/index.html:1191
 msgid "Real-time Analytics"
 msgstr "Echtzeit-Analysen"
 
-#: home/templates/home/index.html:1146
+#: home/templates/home/index.html:1148
 msgid ""
 "Comprehensive dashboards with live insights into payroll costs, compliance "
 "status, and operational metrics."
@@ -2355,11 +2578,11 @@ msgstr ""
 "Umfassende Dashboards mit Live-Einblicken in Gehaltskosten, Compliance-"
 "Status und operative Kennzahlen."
 
-#: home/templates/home/index.html:1151
+#: home/templates/home/index.html:1153
 msgid "Instant Processing"
 msgstr "Sofortige Verarbeitung"
 
-#: home/templates/home/index.html:1152
+#: home/templates/home/index.html:1154
 msgid ""
 "Batch process thousands of payments across different currencies and banking "
 "systems simultaneously."
@@ -2367,11 +2590,11 @@ msgstr ""
 "Stapelverarbeitung von Tausenden von Zahlungen in verschiedenen Währungen "
 "und Bankensystemen gleichzeitig."
 
-#: home/templates/home/index.html:1157 home/templates/home/index.html:1251
+#: home/templates/home/index.html:1159 home/templates/home/index.html:1253
 msgid "Enterprise Security"
 msgstr "Unternehmenssicherheit"
 
-#: home/templates/home/index.html:1158
+#: home/templates/home/index.html:1160
 msgid ""
 "Bank-grade encryption, multi-factor authentication, and SOC 2 Type II "
 "certified infrastructure."
@@ -2379,11 +2602,11 @@ msgstr ""
 "Bankenkonforme Verschlüsselung, Multi-Faktor-Authentifizierung und SOC-2-"
 "Type-II-zertifizierte Infrastruktur."
 
-#: home/templates/home/index.html:1163
+#: home/templates/home/index.html:1165
 msgid "Global Coverage"
 msgstr "Globale Abdeckung"
 
-#: home/templates/home/index.html:1164
+#: home/templates/home/index.html:1166
 msgid ""
 "Seamless payroll processing across 40+ countries with local compliance and "
 "tax expertise built-in."
@@ -2391,11 +2614,11 @@ msgstr ""
 "Nahtlose Gehaltsabrechnung in über 40 Ländern mit integrierter lokaler "
 "Compliance- und Steuerkompetenz."
 
-#: home/templates/home/index.html:1169
+#: home/templates/home/index.html:1171
 msgid "Audit Trail"
 msgstr "Prüfpfad"
 
-#: home/templates/home/index.html:1170
+#: home/templates/home/index.html:1172
 msgid ""
 "Complete transparency with immutable records for every transaction and "
 "compliance verification."
@@ -2403,15 +2626,15 @@ msgstr ""
 "Vollständige Transparenz mit unveränderlichen Aufzeichnungen für jede "
 "Transaktion und Compliance-Überprüfung."
 
-#: home/templates/home/index.html:1181
+#: home/templates/home/index.html:1183
 msgid "Unified Platform"
 msgstr "Einheitliche Plattform"
 
-#: home/templates/home/index.html:1182
+#: home/templates/home/index.html:1184
 msgid "Everything in One Dashboard"
 msgstr "Alles in einem Dashboard"
 
-#: home/templates/home/index.html:1184
+#: home/templates/home/index.html:1186
 msgid ""
 "Manage your entire global payroll operation from a single, intuitive "
 "interface with real-time data and actionable insights."
@@ -2419,7 +2642,7 @@ msgstr ""
 "Verwalten Sie Ihre gesamte globale Gehaltsabrechnung über eine einzige, "
 "intuitive Oberfläche mit Echtzeitdaten und umsetzbaren Erkenntnissen."
 
-#: home/templates/home/index.html:1190
+#: home/templates/home/index.html:1192
 msgid ""
 "Monitor payroll costs, compliance status, and operational metrics across all "
 "regions with live dashboards."
@@ -2427,11 +2650,11 @@ msgstr ""
 "Überwachen Sie Gehaltskosten, Compliance-Status und operative Kennzahlen in "
 "allen Regionen mit Live-Dashboards."
 
-#: home/templates/home/index.html:1194
+#: home/templates/home/index.html:1196
 msgid "Multi-currency Support"
 msgstr "Multi-Währungs-Unterstützung"
 
-#: home/templates/home/index.html:1195
+#: home/templates/home/index.html:1197
 msgid ""
 "Process payments in 40+ currencies with automated forex management and "
 "optimal exchange rates."
@@ -2439,11 +2662,11 @@ msgstr ""
 "Verarbeiten Sie Zahlungen in über 40 Währungen mit automatisiertem "
 "Devisenmanagement und optimalen Wechselkursen."
 
-#: home/templates/home/index.html:1199
+#: home/templates/home/index.html:1201
 msgid "Automated Reporting"
 msgstr "Automatisierte Berichterstattung"
 
-#: home/templates/home/index.html:1200
+#: home/templates/home/index.html:1202
 msgid ""
 "Generate compliance reports, tax filings, and financial statements "
 "automatically across all jurisdictions."
@@ -2451,55 +2674,53 @@ msgstr ""
 "Erstellen Sie automatisch Compliance-Berichte, Steuererklärungen und "
 "Jahresabschlüsse für alle Rechtsgebiete."
 
-#: home/templates/home/index.html:1209
+#: home/templates/home/index.html:1211
 msgid "Payroll Analytics"
 msgstr "Gehaltsanalysen"
 
-#: home/templates/home/index.html:1210
+#: home/templates/home/index.html:1212
 msgid "Live Dashboard"
 msgstr "Live-Dashboard"
 
-#: home/templates/home/index.html:1214
+#: home/templates/home/index.html:1216
 msgid ""
 "Real-time insights into global payroll operations with predictive analytics."
 msgstr ""
 "Echtzeit-Einblicke in globale Gehaltsabrechnungen mit prädiktiver Analytik."
 
-#: home/templates/home/index.html:1222
+#: home/templates/home/index.html:1224
 msgid "Compliance Status"
 msgstr "Compliance-Status"
 
-#: home/templates/home/index.html:1223
+#: home/templates/home/index.html:1225
 msgid "All Systems Go"
 msgstr "Alle Systeme betriebsbereit"
 
-#: home/templates/home/index.html:1227
+#: home/templates/home/index.html:1229
 #, python-format
-#| msgid ""
-#| "100% compliance across all active jurisdictions with automated updates."
 msgid ""
 "100%% compliance across all active jurisdictions with automated updates."
 msgstr ""
-"100% Compliance in allen aktiven Rechtsgebieten mit automatisierten Updates."
+"100%% Compliance in allen aktiven Rechtsgebieten mit automatisierten Updates."
 
-#: home/templates/home/index.html:1235
+#: home/templates/home/index.html:1237
 msgid "Payment Processing"
 msgstr "Zahlungsabwicklung"
 
-#: home/templates/home/index.html:1236
+#: home/templates/home/index.html:1238
 msgid "Batch Ready"
 msgstr "Stapelverarbeitung bereit"
 
-#: home/templates/home/index.html:1240
+#: home/templates/home/index.html:1242
 msgid "Process payments in multiple currencies with automated reconciliation."
 msgstr ""
 "Verarbeiten Sie Zahlungen in mehreren Währungen mit automatisiertem Abgleich."
 
-#: home/templates/home/index.html:1252
+#: home/templates/home/index.html:1254
 msgid "Bank-Grade Protection"
 msgstr "Bankenkonformer Schutz"
 
-#: home/templates/home/index.html:1253
+#: home/templates/home/index.html:1255
 msgid ""
 "Your global payroll data is protected by multiple layers of enterprise "
 "security"
@@ -2507,11 +2728,11 @@ msgstr ""
 "Ihre globalen Gehaltsdaten sind durch mehrere Ebenen der "
 "Unternehmenssicherheit geschützt"
 
-#: home/templates/home/index.html:1259
+#: home/templates/home/index.html:1261
 msgid "AES-256 Encryption"
 msgstr "AES-256-Verschlüsselung"
 
-#: home/templates/home/index.html:1260
+#: home/templates/home/index.html:1262
 msgid ""
 "All data encrypted in transit and at rest with military-grade encryption "
 "standards."
@@ -2519,21 +2740,21 @@ msgstr ""
 "Alle Daten werden während der Übertragung und im Ruhezustand nach "
 "militärischen Verschlüsselungsstandards verschlüsselt."
 
-#: home/templates/home/index.html:1264
+#: home/templates/home/index.html:1266
 msgid "Multi-Factor Auth"
 msgstr "Multi-Faktor-Authentifizierung"
 
-#: home/templates/home/index.html:1265
+#: home/templates/home/index.html:1267
 msgid "Enterprise-grade MFA with biometric options for all user access levels."
 msgstr ""
 "Unternehmensgerechte MFA mit biometrischen Optionen für alle "
 "Benutzerzugriffsebenen."
 
-#: home/templates/home/index.html:1269
+#: home/templates/home/index.html:1271
 msgid "SOC 2 Certified"
 msgstr "SOC-2-zertifiziert"
 
-#: home/templates/home/index.html:1270
+#: home/templates/home/index.html:1272
 msgid ""
 "Regular third-party audits ensure continuous compliance with security "
 "standards."
@@ -2541,11 +2762,11 @@ msgstr ""
 "Regelmäßige Audits durch Dritte gewährleisten die kontinuierliche Einhaltung "
 "der Sicherheitsstandards."
 
-#: home/templates/home/index.html:1274
+#: home/templates/home/index.html:1276
 msgid "Data Sovereignty"
 msgstr "Datensouveränität"
 
-#: home/templates/home/index.html:1275
+#: home/templates/home/index.html:1277
 msgid ""
 "Regional data centers ensure compliance with local data protection "
 "regulations."
@@ -2553,15 +2774,15 @@ msgstr ""
 "Regionale Rechenzentren gewährleisten die Einhaltung lokaler "
 "Datenschutzbestimmungen."
 
-#: home/templates/home/index.html:1284
+#: home/templates/home/index.html:1286
 msgid "Trusted by Leaders"
 msgstr "Von Führungskräften empfohlen"
 
-#: home/templates/home/index.html:1285
+#: home/templates/home/index.html:1287
 msgid "Global Success Stories"
 msgstr "Globale Erfolgsgeschichten"
 
-#: home/templates/home/index.html:1286
+#: home/templates/home/index.html:1288
 msgid ""
 "See how companies are transforming their global payroll operations with "
 "ExactusPay"
@@ -2569,7 +2790,7 @@ msgstr ""
 "Erfahren Sie, wie Unternehmen ihre globalen Gehaltsabrechnungen mit "
 "ExactusPay transformieren"
 
-#: home/templates/home/index.html:1291
+#: home/templates/home/index.html:1293
 msgid ""
 "\"Running a tourist company in Brazil means managing seasonal staff and "
 "making sure payroll is always correct. I know the Brazilian payroll system "
@@ -2583,19 +2804,11 @@ msgstr ""
 "abzuwickeln. Mit ExactusPay ist es einfach. Sie verstehen die lokalen "
 "Vorschriften perfekt und jeden Monat läuft alles reibungslos.\""
 
-#: home/templates/home/index.html:1299
-msgid "Jeorjes Costa"
-msgstr ""
-
-#: home/templates/home/index.html:1300
-msgid "Palmas, Brazil"
-msgstr ""
-
-#: home/templates/home/index.html:1310
+#: home/templates/home/index.html:1312
 msgid "Ready to Simplify Global Payroll?"
 msgstr "Bereit, die globale Gehaltsabrechnung zu vereinfachen?"
 
-#: home/templates/home/index.html:1312
+#: home/templates/home/index.html:1314
 msgid ""
 "Join 500+ enterprises that trust ExactusPay with their global workforce "
 "management. Schedule a personalized demo to see our platform in action."
@@ -2605,9 +2818,6 @@ msgstr ""
 "unsere Plattform in Aktion zu sehen."
 
 #: home/templates/home/platform.html:20
-#| msgid ""
-#| "Global Payroll Software | Multi-Country Payroll & Compliance Platform | "
-#| "ExactusPay"
 msgid ""
 "Global Payroll Platform | Multi-Country Payroll Infrastructure | ExactusPay"
 msgstr ""
@@ -2630,7 +2840,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/home/platform.html:40
-#| msgid "A global payroll platform built for scale"
 msgid "ExactusPay | Global Payroll Platform Built for Scale"
 msgstr "Eine globale Gehaltsplattform, die für Skalierbarkeit entwickelt wurde"
 
@@ -2641,7 +2850,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/home/platform.html:47
-#| msgid "ExactusPay | Global Payroll Software"
 msgid "ExactusPay | Global Payroll Platform"
 msgstr "ExactusPay | Globale Gehaltssoftware"
 
@@ -2651,11 +2859,11 @@ msgid ""
 "compliance, and total cost visibility."
 msgstr ""
 
-#: home/templates/home/platform.html:979
+#: home/templates/home/platform.html:994
 msgid "A global payroll platform built for scale"
 msgstr "Eine globale Gehaltsplattform, die für Skalierbarkeit entwickelt wurde"
 
-#: home/templates/home/platform.html:981
+#: home/templates/home/platform.html:996
 msgid ""
 "ExactusPay is an end-to-end global payroll ecosystem that brings enterprise-"
 "grade consistency to high-growth markets. Replace fragmented local tools "
@@ -2668,41 +2876,39 @@ msgstr ""
 "länderübergreifende Gehaltsabrechnung mit Klarheit, Kontrolle und Zuversicht "
 "durch."
 
-#: home/templates/home/platform.html:989
+#: home/templates/home/platform.html:1004
 msgid "Explore Capabilities"
 msgstr "Funktionen erkunden"
 
-#: home/templates/home/platform.html:992
+#: home/templates/home/platform.html:1007
 msgid "View Architecture"
 msgstr "Architektur anzeigen"
 
-#: home/templates/home/platform.html:996
+#: home/templates/home/platform.html:1011
 msgid "Platform outcomes"
 msgstr "Plattformergebnisse"
 
-#: home/templates/home/platform.html:998
-#| msgid "Standardised reports"
+#: home/templates/home/platform.html:1013
 msgid "Standardised reporting"
 msgstr "Standardisierte Berichte"
 
-#: home/templates/home/platform.html:999
+#: home/templates/home/platform.html:1014
 msgid "TCOE visibility"
 msgstr "Transparenz der Gesamtbeschäftigungskosten"
 
-#: home/templates/home/platform.html:1000
-#| msgid "Audit-ready controls"
+#: home/templates/home/platform.html:1015
 msgid "Audit-ready"
 msgstr "Prüfungsbereite Kontrollen"
 
-#: home/templates/home/platform.html:1009
+#: home/templates/home/platform.html:1024
 msgid "Architecture of Excellence"
 msgstr "Architektur der Exzellenz"
 
-#: home/templates/home/platform.html:1010
+#: home/templates/home/platform.html:1025
 msgid "One framework. Every country. One clear view."
 msgstr "Ein Rahmenwerk. Jedes Land. Eine klare Sicht."
 
-#: home/templates/home/platform.html:1012
+#: home/templates/home/platform.html:1027
 msgid ""
 "Whether you pay teams in Brazil, Nigeria, or Vietnam, payroll data is "
 "processed and presented in the same structure. That means fewer manual "
@@ -2713,11 +2919,11 @@ msgstr ""
 "weniger manuelle Abstimmungen und Transparenz auf Führungsebene über alle "
 "Rechtsgebiete hinweg."
 
-#: home/templates/home/platform.html:1022
+#: home/templates/home/platform.html:1037
 msgid "Global-standardised model"
 msgstr "Global standardisiertes Modell"
 
-#: home/templates/home/platform.html:1023
+#: home/templates/home/platform.html:1038
 msgid ""
 "Common definitions for earnings, deductions, bases, and outputs — consistent "
 "across regions and providers."
@@ -2725,11 +2931,11 @@ msgstr ""
 "Gemeinsame Definitionen für Einkünfte, Abzüge, Grundlagen und Ergebnisse – "
 "konsistent über Regionen und Anbieter hinweg."
 
-#: home/templates/home/platform.html:1028
+#: home/templates/home/platform.html:1043
 msgid "Total Cost of Employment"
 msgstr "Gesamtkosten der Beschäftigung"
 
-#: home/templates/home/platform.html:1029
+#: home/templates/home/platform.html:1044
 msgid ""
 "See employer cost, statutory burdens, and tax exposure in one comparable "
 "view — globally and locally."
@@ -2737,11 +2943,11 @@ msgstr ""
 "Sehen Sie Arbeitgeberkosten, gesetzliche Belastungen und Steuerrisiken in "
 "einer vergleichbaren Ansicht – global und lokal."
 
-#: home/templates/home/platform.html:1034
+#: home/templates/home/platform.html:1049
 msgid "No spreadsheet reconciliation"
 msgstr "Kein Tabellenkalkulationsabgleich"
 
-#: home/templates/home/platform.html:1035
+#: home/templates/home/platform.html:1050
 msgid ""
 "Stable exports and registers that don’t change format every month — country "
 "to country, cycle to cycle."
@@ -2749,15 +2955,15 @@ msgstr ""
 "Stabile Exporte und Register, die nicht jeden Monat ihr Format ändern – von "
 "Land zu Land, von Zyklus zu Zyklus."
 
-#: home/templates/home/platform.html:1044
+#: home/templates/home/platform.html:1059
 msgid "Strategic Capabilities"
 msgstr "Strategische Fähigkeiten"
 
-#: home/templates/home/platform.html:1045
+#: home/templates/home/platform.html:1060
 msgid "Expand with confidence — operate with precision"
 msgstr "Mit Zuversicht expandieren – mit Präzision operieren"
 
-#: home/templates/home/platform.html:1047
+#: home/templates/home/platform.html:1062
 msgid ""
 "Plan ahead, stay compliant, connect your stack, and deliver a consistent "
 "employee experience — even across complex markets."
@@ -2766,11 +2972,11 @@ msgstr ""
 "und bieten Sie ein konsistentes Mitarbeitererlebnis – selbst in komplexen "
 "Märkten."
 
-#: home/templates/home/platform.html:1058
+#: home/templates/home/platform.html:1073
 msgid "Predictive Simulation Engine"
 msgstr "Prädiktive Simulationsmaschine"
 
-#: home/templates/home/platform.html:1060
+#: home/templates/home/platform.html:1075
 msgid ""
 "Forecast full employment costs — including local taxes and statutory "
 "contributions — before you hire or enter a new market. Turn “what if?” "
@@ -2780,10 +2986,7 @@ msgstr ""
 "Steuern und gesetzlicher Beiträge – bevor Sie einstellen oder in einen neuen "
 "Markt eintreten. Verwandeln Sie „Was wäre, wenn?“-Fragen in klare Zahlen."
 
-#: home/templates/home/platform.html:1068
-#| msgid ""
-#| "Pre-hire modelling: price offers accurately with full employer cost "
-#| "breakdowns."
+#: home/templates/home/platform.html:1083
 msgid ""
 "<strong>Pre-hire modelling:</strong> price offers accurately with full "
 "employer cost breakdowns."
@@ -2791,9 +2994,7 @@ msgstr ""
 "Modellierung vor der Einstellung: Bepreisen Sie Angebote genau mit "
 "vollständigen Aufschlüsselungen der Arbeitgeberkosten."
 
-#: home/templates/home/platform.html:1069
-#| msgid ""
-#| "Scenario comparisons: assess markets and hiring strategies side-by-side."
+#: home/templates/home/platform.html:1084
 msgid ""
 "<strong>Scenario comparisons:</strong> assess markets and hiring strategies "
 "side-by-side."
@@ -2801,10 +3002,7 @@ msgstr ""
 "Szenarienvergleiche: Bewerten Sie Märkte und Einstellungsstrategien "
 "nebeneinander."
 
-#: home/templates/home/platform.html:1070
-#| msgid ""
-#| "Budget confidence: align Finance, HR, and leadership on one set of "
-#| "numbers."
+#: home/templates/home/platform.html:1085
 msgid ""
 "<strong>Budget confidence:</strong> align Finance, HR, and leadership on one "
 "set of numbers."
@@ -2812,11 +3010,11 @@ msgstr ""
 "Budgetvertrauen: Bringen Sie Finanzen, HR und Führung auf einen einzigen "
 "Zahlensatz."
 
-#: home/templates/home/platform.html:1078
+#: home/templates/home/platform.html:1093
 msgid "Automated Compliance Guardianship"
 msgstr "Automatisierte Compliance-Überwachung"
 
-#: home/templates/home/platform.html:1080
+#: home/templates/home/platform.html:1095
 msgid ""
 "Built-in legal logic adapts to shifting labour laws and tax regulations "
 "across LATAM, Africa, and Asia — keeping you audit-ready and protected from "
@@ -2826,10 +3024,7 @@ msgstr ""
 "Steuervorschriften in Lateinamerika, Afrika und Asien an – und hält Sie so "
 "prüfungsbereit und vor vermeidbaren Strafen geschützt."
 
-#: home/templates/home/platform.html:1088
-#| msgid ""
-#| "Regulation-aware rules: payroll logic tracks current statutory "
-#| "obligations."
+#: home/templates/home/platform.html:1103
 msgid ""
 "<strong>Regulation-aware rules:</strong> payroll logic tracks current "
 "statutory obligations."
@@ -2837,8 +3032,7 @@ msgstr ""
 "Regulierungsbewusste Regeln: Die Gehaltslogik verfolgt aktuelle gesetzliche "
 "Verpflichtungen."
 
-#: home/templates/home/platform.html:1089
-#| msgid "Reduced risk: validations and governance to prevent common errors."
+#: home/templates/home/platform.html:1104
 msgid ""
 "<strong>Reduced risk:</strong> validations and governance to prevent common "
 "errors."
@@ -2846,8 +3040,7 @@ msgstr ""
 "Reduziertes Risiko: Validierungen und Governance zur Vermeidung häufiger "
 "Fehler."
 
-#: home/templates/home/platform.html:1090
-#| msgid "Evidence trails: traceable calculations and changes support audits."
+#: home/templates/home/platform.html:1105
 msgid ""
 "<strong>Evidence trails:</strong> traceable calculations and changes support "
 "audits."
@@ -2855,11 +3048,11 @@ msgstr ""
 "Beweisketten: Nachvollziehbare Berechnungen und Änderungen unterstützen "
 "Audits."
 
-#: home/templates/home/platform.html:1098
+#: home/templates/home/platform.html:1113
 msgid "Managed Service Connectivity"
 msgstr "Verwaltete Service-Konnektivität"
 
-#: home/templates/home/platform.html:1100
+#: home/templates/home/platform.html:1115
 msgid ""
 "ExactusPay connects to your HCM systems (e.g., Workday, BambooHR) so "
 "employee data flows cleanly from hire to pay — without manual re-entry and "
@@ -2869,9 +3062,7 @@ msgstr ""
 "so dass Mitarbeiterdaten sauber von der Einstellung bis zur Zahlung fließen "
 "– ohne manuelle Neueingabe und operative Abweichungen."
 
-#: home/templates/home/platform.html:1108
-#| msgid ""
-#| "Hire-to-pay pipeline: structured data exchange from onboarding to payment."
+#: home/templates/home/platform.html:1123
 msgid ""
 "<strong>Hire-to-pay pipeline:</strong> structured data exchange from "
 "onboarding to payment."
@@ -2879,28 +3070,25 @@ msgstr ""
 "Hire-to-Pay-Pipeline: Strukturierter Datenaustausch vom Onboarding bis zur "
 "Zahlung."
 
-#: home/templates/home/platform.html:1109
-#| msgid ""
-#| "Operational consistency: one workflow across multiple countries/providers."
+#: home/templates/home/platform.html:1124
 msgid ""
 "<strong>Operational consistency:</strong> one workflow across multiple "
 "countries/providers."
 msgstr ""
 "Operative Konsistenz: Ein Workflow über mehrere Länder/Anbieter hinweg."
 
-#: home/templates/home/platform.html:1110
-#| msgid "Lower admin load: fewer handoffs and less spreadsheet work."
+#: home/templates/home/platform.html:1125
 msgid ""
 "<strong>Lower admin load:</strong> fewer handoffs and less spreadsheet work."
 msgstr ""
 "Geringere Verwaltungslast: Weniger Übergaben und weniger "
 "Tabellenkalkulationsarbeit."
 
-#: home/templates/home/platform.html:1118
+#: home/templates/home/platform.html:1133
 msgid "Multi-Currency & Language Support"
 msgstr "Multi-Währungs- und Sprachunterstützung"
 
-#: home/templates/home/platform.html:1120
+#: home/templates/home/platform.html:1135
 msgid ""
 "Handle FX rules and banking complexity behind the scenes. Employees get a "
 "refined, localised experience — with multi-language access to payslips and "
@@ -2910,9 +3098,7 @@ msgstr ""
 "Mitarbeiter erhalten ein verfeinertes, lokalisiertes Erlebnis – mit "
 "mehrsprachigem Zugriff auf Gehaltsabrechnungen und Dokumente."
 
-#: home/templates/home/platform.html:1128
-#| msgid ""
-#| "FX handled centrally: exchange and payout workflows managed reliably."
+#: home/templates/home/platform.html:1143
 msgid ""
 "<strong>FX handled centrally:</strong> exchange and payout workflows managed "
 "reliably."
@@ -2920,32 +3106,29 @@ msgstr ""
 "Devisen zentral verwaltet: Wechselkurs- und Auszahlungsworkflows werden "
 "zuverlässig verwaltet."
 
-#: home/templates/home/platform.html:1129
-#| msgid ""
-#| "Local experience: multi-language portal for documents and payroll history."
+#: home/templates/home/platform.html:1144
 msgid ""
 "<strong>Local experience:</strong> multi-language portal for documents and "
 "payroll history."
 msgstr ""
 "Lokales Erlebnis: Mehrsprachiges Portal für Dokumente und Gehaltshistorie."
 
-#: home/templates/home/platform.html:1130
-#| msgid "Consistent standard: the same quality UX across every location."
+#: home/templates/home/platform.html:1145
 msgid ""
 "<strong>Consistent standard:</strong> the same quality UX across every "
 "location."
 msgstr ""
 "Konsistenter Standard: Dasselbe UX in hoher Qualität an jedem Standort."
 
-#: home/templates/home/platform.html:1140
+#: home/templates/home/platform.html:1155
 msgid "Operational Precision"
 msgstr "Operative Präzision"
 
-#: home/templates/home/platform.html:1141
+#: home/templates/home/platform.html:1156
 msgid "Consolidate providers. Increase control."
 msgstr "Konsolidieren Sie Anbieter. Erhöhen Sie die Kontrolle."
 
-#: home/templates/home/platform.html:1143
+#: home/templates/home/platform.html:1158
 msgid ""
 "Bring local payroll execution into one secure, standards-driven environment. "
 "Reduce manual work, strengthen governance, and scale internationally without "
@@ -2955,15 +3138,15 @@ msgstr ""
 "Umgebung. Reduzieren Sie manuelle Arbeit, stärken Sie die Governance und "
 "skalieren Sie international, ohne Chaos zu verursachen."
 
-#: home/templates/home/platform.html:1152
+#: home/templates/home/platform.html:1167
 msgid "Operating model"
 msgstr "Betriebsmodell"
 
-#: home/templates/home/platform.html:1153
+#: home/templates/home/platform.html:1168
 msgid "One workflow"
 msgstr "Ein Workflow"
 
-#: home/templates/home/platform.html:1154
+#: home/templates/home/platform.html:1169
 msgid ""
 "Replace disconnected processes with a consistent payroll workflow and "
 "reporting standard."
@@ -2971,15 +3154,15 @@ msgstr ""
 "Ersetzen Sie unverbundene Prozesse durch einen konsistenten Gehaltsworkflow "
 "und Berichtsstandard."
 
-#: home/templates/home/platform.html:1158
+#: home/templates/home/platform.html:1173
 msgid "Efficiency"
 msgstr "Effizienz"
 
-#: home/templates/home/platform.html:1159
+#: home/templates/home/platform.html:1174
 msgid "Less manual effort"
 msgstr "Weniger manueller Aufwand"
 
-#: home/templates/home/platform.html:1160
+#: home/templates/home/platform.html:1175
 msgid ""
 "Standard inputs and automated checks reduce rework, exceptions, and "
 "spreadsheet reconciliation."
@@ -2987,15 +3170,15 @@ msgstr ""
 "Standardeingaben und automatisierte Prüfungen reduzieren Nacharbeit, "
 "Ausnahmen und Tabellenkalkulationsabgleich."
 
-#: home/templates/home/platform.html:1164
+#: home/templates/home/platform.html:1179
 msgid "Scale"
 msgstr "Skalierung"
 
-#: home/templates/home/platform.html:1165
+#: home/templates/home/platform.html:1180
 msgid "Built for expansion"
 msgstr "Für Expansion entwickelt"
 
-#: home/templates/home/platform.html:1166
+#: home/templates/home/platform.html:1181
 msgid ""
 "Enter new countries with predictable governance, consistent data, and "
 "executive clarity from day one."
@@ -3003,11 +3186,11 @@ msgstr ""
 "Treten Sie von Tag eins an mit vorhersagbarer Governance, konsistenten Daten "
 "und Führungsklarheit in neue Länder ein."
 
-#: home/templates/home/platform.html:1175
+#: home/templates/home/platform.html:1190
 msgid "Bring global payroll under one roof"
 msgstr "Bringen Sie die globale Lohnabrechnung unter ein Dach"
 
-#: home/templates/home/platform.html:1177
+#: home/templates/home/platform.html:1192
 msgid ""
 "Get a single source of truth, standardised reporting, and compliance-ready "
 "processes — without the typical global payroll complexity."
@@ -3017,9 +3200,6 @@ msgstr ""
 "Lohnabrechnung."
 
 #: home/templates/home/pricing.html:20
-#| msgid ""
-#| "Global Payroll Software | Multi-Country Payroll & Compliance Platform | "
-#| "ExactusPay"
 msgid ""
 "Global Payroll Pricing | Transparent Multi-Country Payroll Costs | ExactusPay"
 msgstr ""
@@ -3034,13 +3214,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/home/pricing.html:28
-#| msgid ""
-#| "global payroll software, multi-country payroll, international payroll "
-#| "system, payroll compliance software, global payroll platform, payroll "
-#| "automation, payroll simulations, workforce analytics, multinational "
-#| "payroll management, cloud payroll solution, global HR payroll, payroll "
-#| "reporting software, international payroll compliance, scalable payroll "
-#| "platform"
 msgid ""
 "global payroll pricing, multi-country payroll pricing, international payroll "
 "costs, payroll compliance pricing, global payroll platform pricing, per "
@@ -3054,7 +3227,6 @@ msgstr ""
 "Gehalts-Compliance, skalierbare Gehaltsplattform"
 
 #: home/templates/home/pricing.html:44 home/templates/home/pricing.html:54
-#| msgid "ExactusPay | Global Payroll Software"
 msgid "ExactusPay | Global Payroll Pricing"
 msgstr "ExactusPay | Globale Gehaltssoftware"
 
@@ -3070,11 +3242,11 @@ msgid ""
 "rates and regional support."
 msgstr ""
 
-#: home/templates/home/pricing.html:1063
+#: home/templates/home/pricing.html:1062
 msgid "Transparent pricing for global payroll"
 msgstr "Transparente Preise für globale Gehaltsabrechnung"
 
-#: home/templates/home/pricing.html:1065
+#: home/templates/home/pricing.html:1064
 msgid ""
 "ExactusPay believes in pricing that is as clear and transparent as our "
 "payroll reporting. We understand that every business has a unique footprint, "
@@ -3086,15 +3258,15 @@ msgstr ""
 "Präsenz hat, weshalb unser Preismodell auf die spezifischen Länder und "
 "Regionen zugeschnitten ist, in denen Sie tätig sind."
 
-#: home/templates/home/pricing.html:1077
+#: home/templates/home/pricing.html:1076
 msgid "Simple & Predictable"
 msgstr "Einfach & vorhersagbar"
 
-#: home/templates/home/pricing.html:1078
+#: home/templates/home/pricing.html:1077
 msgid "Transparent & Flexible Pricing"
 msgstr "Transparente & flexible Preisgestaltung"
 
-#: home/templates/home/pricing.html:1080
+#: home/templates/home/pricing.html:1079
 msgid ""
 "We do not believe in hidden fees or complex tiered structures that leave you "
 "guessing. Our pricing is straightforward."
@@ -3103,11 +3275,11 @@ msgstr ""
 "Strukturen, die Sie raten lassen. Unsere Preisgestaltung ist einfach und "
 "direkt."
 
-#: home/templates/home/pricing.html:1089
+#: home/templates/home/pricing.html:1088
 msgid "Per-Employee, Per-Month"
 msgstr "Pro Mitarbeiter, pro Monat"
 
-#: home/templates/home/pricing.html:1091
+#: home/templates/home/pricing.html:1090
 msgid ""
 "You pay a simple, predictable rate based on the number of active employees "
 "you have in each country. No surprises, no complex calculations."
@@ -3116,15 +3288,11 @@ msgstr ""
 "aktiven Mitarbeiter, die Sie in jedem Land haben. Keine Überraschungen, "
 "keine komplexen Berechnungen."
 
-#: home/templates/home/pricing.html:1099 home/templates/home/pricing.html:1188
+#: home/templates/home/pricing.html:1098 home/templates/home/pricing.html:1187
 msgid "Country-Specific Rates"
 msgstr "Länderspezifische Sätze"
 
-#: home/templates/home/pricing.html:1101
-#| msgid ""
-#| "Costs are adjusted based on the complexity of the local jurisdiction "
-#| "(e.g., LATAM vs. Asia), ensuring you only pay for the specific compliance "
-#| "needs of that region."
+#: home/templates/home/pricing.html:1100
 msgid ""
 "Costs are adjusted based on the complexity of the local jurisdiction, "
 "ensuring you only pay for the specific compliance needs of that region."
@@ -3133,11 +3301,11 @@ msgstr ""
 "(z.B. Lateinamerika vs. Asien) angepasst, sodass Sie nur für die "
 "spezifischen Compliance-Anforderungen dieser Region zahlen."
 
-#: home/templates/home/pricing.html:1109
+#: home/templates/home/pricing.html:1108
 msgid "No Hidden Setup Fees"
 msgstr "Keine versteckten Einrichtungsgebühren"
 
-#: home/templates/home/pricing.html:1111
+#: home/templates/home/pricing.html:1110
 msgid ""
 "We are transparent about implementation costs upfront, so your budget "
 "remains secure from day one. What we quote is what you pay."
@@ -3145,15 +3313,15 @@ msgstr ""
 "Wir sind von Anfang an transparent über die Implementierungskosten, damit "
 "Ihr Budget vom ersten Tag an sicher bleibt. Was wir anbieten, zahlen Sie."
 
-#: home/templates/home/pricing.html:1123
+#: home/templates/home/pricing.html:1122
 msgid "Everything You Need"
 msgstr "Alles, was Sie brauchen"
 
-#: home/templates/home/pricing.html:1124
+#: home/templates/home/pricing.html:1123
 msgid "What's Included"
 msgstr "Was ist enthalten"
 
-#: home/templates/home/pricing.html:1126
+#: home/templates/home/pricing.html:1125
 msgid ""
 "Every ExactusPay plan comes with the core essentials needed to operate "
 "globally with confidence."
@@ -3161,11 +3329,11 @@ msgstr ""
 "Jeder ExactusPay-Plan enthält die Kernausstattung, die für sicheres globales "
 "Operieren erforderlich ist."
 
-#: home/templates/home/pricing.html:1136
+#: home/templates/home/pricing.html:1135
 msgid "Full Compliance Management"
 msgstr "Vollständiges Compliance-Management"
 
-#: home/templates/home/pricing.html:1138
+#: home/templates/home/pricing.html:1137
 msgid ""
 "Automated updates for local tax and labor laws across all jurisdictions "
 "where you operate."
@@ -3173,11 +3341,11 @@ msgstr ""
 "Automatisierte Updates für lokale Steuer- und Arbeitsgesetze in allen "
 "Rechtsgebieten, in denen Sie tätig sind."
 
-#: home/templates/home/pricing.html:1148
+#: home/templates/home/pricing.html:1147
 msgid "Global Reporting"
 msgstr "Globale Berichterstattung"
 
-#: home/templates/home/pricing.html:1150
+#: home/templates/home/pricing.html:1149
 msgid ""
 "Access to our standardized reporting dashboard with real-time insights into "
 "payroll costs and compliance."
@@ -3185,11 +3353,11 @@ msgstr ""
 "Zugang zu unserem standardisierten Berichtsdashboard mit Echtzeit-Einblicken "
 "in Gehaltskosten und Compliance."
 
-#: home/templates/home/pricing.html:1160
+#: home/templates/home/pricing.html:1159
 msgid "Employee Self-Service"
 msgstr "Mitarbeiter-Self-Service"
 
-#: home/templates/home/pricing.html:1162
+#: home/templates/home/pricing.html:1161
 msgid ""
 "A secure portal for payslips, tax documents, and personal information "
 "management in multiple languages."
@@ -3197,7 +3365,7 @@ msgstr ""
 "Ein sicheres Portal für Gehaltsabrechnungen, Steuerdokumente und die "
 "Verwaltung persönlicher Daten in mehreren Sprachen."
 
-#: home/templates/home/pricing.html:1174
+#: home/templates/home/pricing.html:1173
 msgid ""
 "Access our expert team around the clock. We provide 24-hour assistance with "
 "native fluency in Portuguese, ensuring your LATAM operations never sleep."
@@ -3206,11 +3374,11 @@ msgstr ""
 "die Uhr Unterstützung mit muttersprachlicher Portugiesisch-Kompetenz und "
 "stellen so sicher, dass Ihre LATAM-Operationen niemals schlafen."
 
-#: home/templates/home/pricing.html:1187
+#: home/templates/home/pricing.html:1186
 msgid "Regional Pricing"
 msgstr "Regionale Preisgestaltung"
 
-#: home/templates/home/pricing.html:1190
+#: home/templates/home/pricing.html:1189
 msgid ""
 "Pricing tailored to the complexity of each jurisdiction. Below are "
 "indicative monthly rates per employee."
@@ -3218,105 +3386,105 @@ msgstr ""
 "Preisgestaltung, zugeschnitten auf die Komplexität jeder Gerichtsbarkeit. "
 "Nachfolgend finden Sie indikative monatliche Sätze pro Mitarbeiter."
 
-#: home/templates/home/pricing.html:1198
+#: home/templates/home/pricing.html:1197
 msgid "North America"
 msgstr "Nordamerika"
 
-#: home/templates/home/pricing.html:1200 home/templates/home/pricing.html:1211
-#: home/templates/home/pricing.html:1222 home/templates/home/pricing.html:1233
-#: home/templates/home/pricing.html:1244 home/templates/home/pricing.html:1255
+#: home/templates/home/pricing.html:1199 home/templates/home/pricing.html:1210
+#: home/templates/home/pricing.html:1221 home/templates/home/pricing.html:1232
+#: home/templates/home/pricing.html:1243 home/templates/home/pricing.html:1254
 msgid "per employee/month"
 msgstr "pro Mitarbeiter/Monat"
 
-#: home/templates/home/pricing.html:1202
+#: home/templates/home/pricing.html:1201
 msgid "Full compliance management"
 msgstr "Vollständiges Compliance-Management"
 
-#: home/templates/home/pricing.html:1203
+#: home/templates/home/pricing.html:1202
 msgid "Automated tax filings"
 msgstr "Automatisierte Steuererklärungen"
 
-#: home/templates/home/pricing.html:1204
+#: home/templates/home/pricing.html:1203
 msgid "Employee self-service"
 msgstr "Mitarbeiter-Self-Service"
 
-#: home/templates/home/pricing.html:1209
+#: home/templates/home/pricing.html:1208
 msgid "Latin America"
 msgstr "Lateinamerika"
 
-#: home/templates/home/pricing.html:1213
+#: home/templates/home/pricing.html:1212
 msgid "Complex jurisdiction handling"
 msgstr "Komplexe Gerichtsbarkeitsabwicklung"
 
-#: home/templates/home/pricing.html:1214
+#: home/templates/home/pricing.html:1213
 msgid "Local tax expertise"
 msgstr "Lokale Steuerkompetenz"
 
-#: home/templates/home/pricing.html:1215
+#: home/templates/home/pricing.html:1214
 msgid "24/7 Portuguese support"
 msgstr "24/7 Portugiesisch-Support"
 
-#: home/templates/home/pricing.html:1220
+#: home/templates/home/pricing.html:1219
 msgid "Europe"
 msgstr "Europa"
 
-#: home/templates/home/pricing.html:1224
+#: home/templates/home/pricing.html:1223
 msgid "GDPR compliance"
 msgstr "DSGVO-Konformität"
 
-#: home/templates/home/pricing.html:1226
+#: home/templates/home/pricing.html:1225
 msgid "Works council support"
 msgstr "Betriebsratsunterstützung"
 
-#: home/templates/home/pricing.html:1231
+#: home/templates/home/pricing.html:1230
 msgid "Asia Pacific"
 msgstr "Asien-Pazifik"
 
-#: home/templates/home/pricing.html:1235
+#: home/templates/home/pricing.html:1234
 msgid "Regional expertise"
 msgstr "Regionale Kompetenz"
 
-#: home/templates/home/pricing.html:1236
+#: home/templates/home/pricing.html:1235
 msgid "Local banking integrations"
 msgstr "Lokale Bankenintegrationen"
 
-#: home/templates/home/pricing.html:1237
+#: home/templates/home/pricing.html:1236
 msgid "Multi-language support"
 msgstr "Mehrsprachige Unterstützung"
 
-#: home/templates/home/pricing.html:1242
+#: home/templates/home/pricing.html:1241
 msgid "Africa"
 msgstr "Afrika"
 
-#: home/templates/home/pricing.html:1246
+#: home/templates/home/pricing.html:1245
 msgid "POPIA compliance"
 msgstr "POPIA-Konformität"
 
-#: home/templates/home/pricing.html:1247
+#: home/templates/home/pricing.html:1246
 msgid "Mobile money integration"
 msgstr "Mobile-Geld-Integration"
 
-#: home/templates/home/pricing.html:1248
+#: home/templates/home/pricing.html:1247
 msgid "Local payroll expertise"
 msgstr "Lokale Gehaltskompetenz"
 
-#: home/templates/home/pricing.html:1253
+#: home/templates/home/pricing.html:1252
 msgid "Middle East"
 msgstr "Naher Osten"
 
-#: home/templates/home/pricing.html:1257
+#: home/templates/home/pricing.html:1256
 msgid "WPS compliance"
 msgstr "WPS-Konformität"
 
-#: home/templates/home/pricing.html:1258
+#: home/templates/home/pricing.html:1257
 msgid "Multi-currency support"
 msgstr "Multi-Währungs-Unterstützung"
 
-#: home/templates/home/pricing.html:1259
+#: home/templates/home/pricing.html:1258
 msgid "Local labor law expertise"
 msgstr "Lokale Arbeitsrechtskompetenz"
 
-#: home/templates/home/pricing.html:1265
+#: home/templates/home/pricing.html:1264
 msgid ""
 "* Rates are indicative. Final pricing depends on employee count and specific "
 "requirements."
@@ -3324,15 +3492,11 @@ msgstr ""
 "* Die Sätze sind indikativ. Die endgültige Preisgestaltung hängt von der "
 "Mitarbeiterzahl und den spezifischen Anforderungen ab."
 
-#: home/templates/home/pricing.html:1273
+#: home/templates/home/pricing.html:1272
 msgid "Get Your Custom Quote"
 msgstr "Holen Sie sich Ihr individuelles Angebot"
 
-#: home/templates/home/pricing.html:1275
-#| msgid ""
-#| "Because global expansion looks different for every company, we don't use "
-#| "a \"one size fits all\" price tag. To give you the most accurate and "
-#| "competitive rate, we need to understand your specific needs."
+#: home/templates/home/pricing.html:1274
 msgid ""
 "Because global expansion looks different for every company, we do not use a "
 "one-size-fits-all price tag. To give you the most accurate and competitive "
@@ -3343,7 +3507,7 @@ msgstr ""
 "wettbewerbsfähigsten Satz nennen zu können, müssen wir Ihre spezifischen "
 "Bedürfnisse verstehen."
 
-#: home/templates/home/pricing.html:1279
+#: home/templates/home/pricing.html:1278
 msgid "Ready to see your numbers?"
 msgstr "Bereit, Ihre Zahlen zu sehen?"
 
@@ -3654,21 +3818,20 @@ msgstr ""
 "entwickeln."
 
 #: home/templates/home/security.html:1304
-#| msgid "Request a demo"
 msgid "Request a Demo"
 msgstr "Eine Demo anfordern"
 
-#: home/views.py:38
+#: home/views.py:82
 msgid "Please fill out all required fields."
 msgstr ""
 
-#: home/views.py:65
+#: home/views.py:109
 msgid ""
 "Thank you! Your demo request has been sent successfully. We will contact you "
 "soon."
 msgstr ""
 
-#: home/views.py:71
+#: home/views.py:115
 msgid ""
 "There was a technical error sending your request. Please try again later."
 msgstr ""

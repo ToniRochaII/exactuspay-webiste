@@ -7,6 +7,12 @@ from django.utils.translation import gettext as _
 import logging
 
 from .article_library import BRAZIL_ARTICLES
+from .country_localization import (
+    localize_country,
+    localized_fact_items,
+    localized_nested_content,
+    localized_payroll_intelligence,
+)
 from .forms import DemoRequestForm
 from .models import CountryProfile
 
@@ -14,14 +20,15 @@ logger = logging.getLogger(__name__)
 
 
 def _build_country_context(country: CountryProfile) -> dict:
+    localized_country = localize_country(country)
     return {
-        "country": country,
-        "country_facts": country.fact_items,
-        "payroll_intelligence": country.payroll_intelligence_items,
-        "glance_cards": country.glance_cards or [],
-        "hero_highlights": country.hero_highlights or [],
-        "content_sections": country.content_sections or [],
-        "employer_considerations": country.employer_considerations or [],
+        "country": localized_country,
+        "country_facts": localized_fact_items(country),
+        "payroll_intelligence": localized_payroll_intelligence(country),
+        "glance_cards": localized_nested_content(country.glance_cards or []),
+        "hero_highlights": localized_nested_content(country.hero_highlights or []),
+        "content_sections": localized_nested_content(country.content_sections or []),
+        "employer_considerations": localized_nested_content(country.employer_considerations or []),
     }
 
 def home_view(request):
@@ -44,7 +51,7 @@ def demo_view(request):
 
 
 def country_hub_view(request):
-    countries = CountryProfile.objects.filter(is_published=True)
+    countries = [localize_country(country) for country in CountryProfile.objects.filter(is_published=True)]
     return render(
         request,
         "countries/hub.html",
