@@ -120,7 +120,7 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 MEDIA_URL = os.environ.get("MEDIA_URL", "/media/")
 render_media_root = Path(os.environ.get("MEDIA_ROOT", "/var/data/media"))
 MEDIA_ROOT = render_media_root if ON_RENDER and render_media_root.parent.exists() else BASE_DIR / "media"
-SERVE_MEDIA_FILES = DEBUG or ON_RENDER or os.environ.get("SERVE_MEDIA_FILES", "0") == "1"
+SERVE_MEDIA_FILES = os.environ.get("SERVE_MEDIA_FILES", "1") == "1"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
