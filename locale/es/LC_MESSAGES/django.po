@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ExactusPay 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-14 08:31+0000\n"
+"POT-Creation-Date: 2026-04-14 09:04+0000\n"
 "PO-Revision-Date: 2026-02-19 10:00-0300\n"
 "Last-Translator: \n"
 "Language-Team: Spanish <es@exactuspay.com>\n"
@@ -36,7 +36,9 @@ msgstr "Iniciar Sesión | ExactusPay"
 #: accounts/templates/accounts/login.html:5
 msgid ""
 "Log in to your ExactusPay account to manage your profile and preferences."
-msgstr "Inicie sesión en su cuenta de ExactusPay para gestionar su perfil y preferencias."
+msgstr ""
+"Inicie sesión en su cuenta de ExactusPay para gestionar su perfil y "
+"preferencias."
 
 #: accounts/templates/accounts/login.html:67
 #: accounts/templates/accounts/register.html:13
@@ -167,7 +169,8 @@ msgstr "Su perfil de ExactusPay"
 
 #: accounts/views.py:47
 msgid "Manage your ExactusPay account profile and language preferences."
-msgstr "Gestione el perfil de su cuenta de ExactusPay y las preferencias de idioma."
+msgstr ""
+"Gestione el perfil de su cuenta de ExactusPay y las preferencias de idioma."
 
 #: home/models.py:14 home/templates/home/demo.html:1311
 msgid "Not sure yet"
@@ -2191,39 +2194,28 @@ msgstr ""
 "impuestos del empleador, contribuciones legales y cargas locales."
 
 #: home/templates/home/features.html:818
-msgid "Pre-hire forecasting:"
-msgstr ""
-
-#: home/templates/home/features.html:818
 #, fuzzy
 #| msgid ""
 #| "Pre-hire forecasting: model offers with accurate employer-cost breakdowns."
-msgid "model offers with accurate employer-cost breakdowns."
+msgid ""
+"Pre-hire forecasting: model offers with accurate employer-cost breakdowns."
 msgstr ""
 "Pronóstico pre-contratación: modele ofertas con desgloses precisos de costos "
 "del empleador."
 
 #: home/templates/home/features.html:819
-msgid "Scenario planning:"
-msgstr ""
-
-#: home/templates/home/features.html:819
 #, fuzzy
 #| msgid ""
 #| "Scenario planning: compare markets and hiring strategies side-by-side."
-msgid "compare markets and hiring strategies side-by-side."
+msgid "Scenario planning: compare markets and hiring strategies side-by-side."
 msgstr ""
 "Planificación de escenarios: compare mercados y estrategias de contratación "
 "lado a lado."
 
 #: home/templates/home/features.html:820
-msgid "Budget certainty:"
-msgstr ""
-
-#: home/templates/home/features.html:820
 #, fuzzy
 #| msgid "Budget certainty: align HR and Finance with one set of numbers."
-msgid "align HR and Finance with one set of numbers."
+msgid "Budget certainty: align HR and Finance with one set of numbers."
 msgstr ""
 "Certidumbre presupuestaria: alinee RRHH y Finanzas con un conjunto de "
 "números."
@@ -2242,42 +2234,31 @@ msgstr ""
 
 #: home/templates/home/features.html:833
 #, fuzzy
-#| msgid "Live Dashboard"
-msgid "Single dashboard:"
-msgstr "Panel en Vivo"
-
-#: home/templates/home/features.html:833
-#, fuzzy
 #| msgid ""
 #| "Single dashboard: central visibility across payroll and workforce data."
-msgid "central visibility across payroll and workforce data."
+msgid "Single dashboard: central visibility across payroll and workforce data."
 msgstr ""
 "Panel único: visibilidad central de los datos de nómina y fuerza laboral."
-
-#: home/templates/home/features.html:834
-msgid "Comparable outputs:"
-msgstr ""
 
 #: home/templates/home/features.html:834
 #, fuzzy
 #| msgid ""
 #| "Comparable outputs: consistent data definitions enable clean cross-"
 #| "country analysis."
-msgid "consistent data definitions enable clean cross-country analysis."
+msgid ""
+"Comparable outputs: consistent data definitions enable clean cross-country "
+"analysis."
 msgstr ""
 "Resultados comparables: definiciones de datos consistentes permiten análisis "
 "claros entre países."
-
-#: home/templates/home/features.html:835
-msgid "Decision clarity:"
-msgstr ""
 
 #: home/templates/home/features.html:835
 #, fuzzy
 #| msgid ""
 #| "Decision clarity: executive-grade insights into costs, trends, and "
 #| "exposure."
-msgid "executive-grade insights into costs, trends, and exposure."
+msgid ""
+"Decision clarity: executive-grade insights into costs, trends, and exposure."
 msgstr ""
 "Claridad de decisión: información de nivel ejecutivo sobre costos, "
 "tendencias y exposición."
@@ -2295,41 +2276,27 @@ msgstr ""
 "gobernanza integradas, diseñadas para datos sensibles de nómina."
 
 #: home/templates/home/features.html:848
-msgid "Legal logic:"
-msgstr ""
-
-#: home/templates/home/features.html:848
 #, fuzzy
 #| msgid ""
 #| "Legal logic: controls aligned to labour law and statutory requirements."
-msgid "controls aligned to labour law and statutory requirements."
+msgid "Legal logic: controls aligned to labour law and statutory requirements."
 msgstr ""
 "Lógica legal: controles alineados con la legislación laboral y requisitos "
 "legales."
 
 #: home/templates/home/features.html:849
-msgid "Error reduction:"
-msgstr ""
-
-#: home/templates/home/features.html:849
 #, fuzzy
 #| msgid "Error reduction: automation and guardrails minimise manual mistakes."
-msgid "automation and guardrails minimise manual mistakes."
+msgid "Error reduction: automation and guardrails minimise manual mistakes."
 msgstr ""
 "Reducción de errores: la automatización y las barreras de protección "
 "minimizan los errores manuales."
 
 #: home/templates/home/features.html:850
 #, fuzzy
-#| msgid "Audit-ready controls"
-msgid "Audit-ready:"
-msgstr "Controles listos para auditoría"
-
-#: home/templates/home/features.html:850
-#, fuzzy
 #| msgid ""
 #| "Audit-ready: traceable calculations and data controls support reviews."
-msgid "traceable calculations and data controls support reviews."
+msgid "Audit-ready: traceable calculations and data controls support reviews."
 msgstr ""
 "Listo para auditoría: cálculos trazables y controles de datos apoyan las "
 "revisiones."
@@ -2349,44 +2316,30 @@ msgstr ""
 
 #: home/templates/home/features.html:863
 #, fuzzy
-#| msgid "Managed Service Connectivity"
-msgid "HCM connectivity:"
-msgstr "Conectividad de Servicio Gestionado"
-
-#: home/templates/home/features.html:863
-#, fuzzy
 #| msgid "HCM connectivity: integrate with tools like Workday and BambooHR."
-msgid "integrate with tools like Workday and BambooHR."
+msgid "HCM connectivity: integrate with tools like Workday and BambooHR."
 msgstr "Conectividad HCM: intégrese con herramientas como Workday y BambooHR."
-
-#: home/templates/home/features.html:864
-#, fuzzy
-#| msgid "View Architecture"
-msgid "Scalable architecture:"
-msgstr "Ver Arquitectura"
 
 #: home/templates/home/features.html:864
 #, fuzzy
 #| msgid ""
 #| "Scalable architecture: grow from mid-sized to global without rewiring "
 #| "operations."
-msgid "grow from mid-sized to global without rewiring operations."
+msgid ""
+"Scalable architecture: grow from mid-sized to global without rewiring "
+"operations."
 msgstr ""
 "Arquitectura escalable: crezca de mediano a global sin reconfigurar "
 "operaciones."
 
 #: home/templates/home/features.html:865
 #, fuzzy
-#| msgid "Multi-language support"
-msgid "Multi-language & FX:"
-msgstr "Soporte multi-idioma"
-
-#: home/templates/home/features.html:865
-#, fuzzy
 #| msgid ""
 #| "Multi-language & FX: localised employee experience across currencies and "
 #| "regions."
-msgid "localised employee experience across currencies and regions."
+msgid ""
+"Multi-language & FX: localised employee experience across currencies and "
+"regions."
 msgstr ""
 "Multi-idioma y divisas: experiencia del empleado localizada en todas las "
 "monedas y regiones."
@@ -2401,7 +2354,7 @@ msgstr "¿Listo para Simplificar la Nómina Global?"
 msgid ""
 "Standardise your reporting, reduce manual work, and stay compliant across "
 "markets — with one platform that scales."
-msgstr ""
+msgstr "Estandarice sus informes, reduzca el trabajo manual y mantenga el cumplimiento en todos los mercados, con una sola plataforma que escala."
 
 #: home/templates/home/features.html:878 home/templates/home/platform.html:1185
 msgid "Schedule a Demo"
@@ -2698,7 +2651,7 @@ msgid ""
 "well, but it still takes time to handle everything. With ExactusPay, it’s "
 "simple. They understand the local regulations perfectly and everything runs "
 "smoothly every month.\""
-msgstr ""
+msgstr "\"Dirigir una empresa turística en Brasil significa gestionar personal estacional y asegurarse de que la nómina siempre sea correcta. Conozco bien el sistema de nómina brasileño, pero aun así lleva tiempo encargarse de todo. Con ExactusPay es sencillo. Entienden perfectamente la normativa local y todo funciona sin problemas cada mes.\""
 
 #: home/templates/home/index.html:1299
 msgid "Jeorjes Costa"
@@ -3136,13 +3089,13 @@ msgstr ""
 
 #: home/templates/home/platform.html:1175
 msgid "Bring global payroll under one roof"
-msgstr ""
+msgstr "Reúna la nómina global bajo un mismo techo"
 
 #: home/templates/home/platform.html:1177
 msgid ""
 "Get a single source of truth, standardised reporting, and compliance-ready "
 "processes — without the typical global payroll complexity."
-msgstr ""
+msgstr "Obtenga una única fuente de verdad, informes estandarizados y procesos listos para el cumplimiento, sin la complejidad habitual de la nómina global."
 
 #: home/templates/home/pricing.html:20
 #, fuzzy
@@ -3803,6 +3756,31 @@ msgid ""
 "There was a technical error sending your request. Please try again later."
 msgstr ""
 
+#, fuzzy
+#~| msgid "Live Dashboard"
+#~ msgid "Single dashboard:"
+#~ msgstr "Panel en Vivo"
+
+#, fuzzy
+#~| msgid "Audit-ready controls"
+#~ msgid "Audit-ready:"
+#~ msgstr "Controles listos para auditoría"
+
+#, fuzzy
+#~| msgid "Managed Service Connectivity"
+#~ msgid "HCM connectivity:"
+#~ msgstr "Conectividad de Servicio Gestionado"
+
+#, fuzzy
+#~| msgid "View Architecture"
+#~ msgid "Scalable architecture:"
+#~ msgstr "Ver Arquitectura"
+
+#, fuzzy
+#~| msgid "Multi-language support"
+#~ msgid "Multi-language & FX:"
+#~ msgstr "Soporte multi-idioma"
+
 #~ msgid ""
 #~ "ExactusPay is a powerful global payroll software delivering multi-country "
 #~ "payroll, automated compliance, real-time workforce analytics, "
@@ -3883,3 +3861,5 @@ msgstr ""
 
 #~ msgid "$9 | €8 | £7"
 #~ msgstr "$9 | €8 | £7"
+
+

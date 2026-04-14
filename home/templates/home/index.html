@@ -980,7 +980,7 @@
                 class="lang-select"
                 name="language"
                 aria-label="{% trans 'Select language' %}"
-                onchange="this.form.submit()"
+                onchange="window.switchSiteLanguage(this)"
               >
                 {% for lang in languages %}
                   {% if lang.code == "pt" %}
@@ -1044,7 +1044,7 @@
               class="lang-select"
               name="language"
               aria-label="{% trans 'Select language' %}"
-              onchange="this.form.submit()"
+              onchange="window.switchSiteLanguage(this)"
             >
               {% for lang in languages %}
                 {% if lang.code == "pt" %}
@@ -1296,7 +1296,7 @@
             <div class="testimonial-author">
               <div class="author-avatar">JC</div>
               <div>
-                <h4>{% trans "Jeorjes Costa" %}</h4>
+                <h4>{% trans "George Costa" %}</h4>
                 <p style="color: var(--text-muted);">{% trans "Palmas, Brazil" %}</p>
               </div>
             </div>
@@ -1390,6 +1390,34 @@
     </footer>
 
     <script>
+      const supportedLanguageCodes = [{% for lang in languages %}"{{ lang.code }}"{% if not forloop.last %}, {% endif %}{% endfor %}];
+      const defaultLanguageCode = "en";
+
+      window.switchSiteLanguage = function(select) {
+        if (!select || !select.form) return;
+
+        const currentPath = window.location.pathname || "/";
+        const currentQuery = window.location.search || "";
+        const currentHash = window.location.hash || "";
+        const hadTrailingSlash = currentPath.endsWith("/");
+        const segments = currentPath.split("/").filter(Boolean);
+        const neutralSegments = segments.length && supportedLanguageCodes.includes(segments[0])
+          ? segments.slice(1)
+          : segments;
+
+        let neutralPath = neutralSegments.length ? `/${neutralSegments.join("/")}` : "/";
+        if (neutralSegments.length && hadTrailingSlash) neutralPath += "/";
+
+        const targetPath = select.value === defaultLanguageCode
+          ? neutralPath
+          : `/${select.value}${neutralPath === "/" ? "/" : neutralPath}`;
+
+        const nextInput = select.form.querySelector('input[name="next"]');
+        if (nextInput) nextInput.value = `${targetPath}${currentQuery}${currentHash}`;
+
+        select.form.submit();
+      };
+
       document.addEventListener("DOMContentLoaded", function () {
         const btn = document.querySelector(".menu-btn");
         const mobileNav = document.getElementById("mobileNav");

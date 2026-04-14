@@ -614,7 +614,7 @@
   {% csrf_token %}
   <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
   <div class="lang-pill" title="{% trans 'Language' %}">
-    <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="this.form.submit()">
+    <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="window.switchSiteLanguage(this)">
       {% for lang in languages %}
         {% if lang.code == "pt" %}
           <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷 Português</option>
@@ -676,7 +676,7 @@
   {% csrf_token %}
   <input type="hidden" name="next" value="{{ request.get_full_path }}"/>
   <div class="lang-pill" title="{% trans 'Language' %}">
-    <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="this.form.submit()">
+    <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="window.switchSiteLanguage(this)">
       {% for lang in languages %}
         {% if lang.code == "pt" %}
           <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷 Português</option>
@@ -815,9 +815,9 @@
               </div>
             </div>
             <ul class="pillar-list">
-              <li><i class="fas fa-check-circle"></i><span><strong>{% trans "Pre-hire forecasting:" %}</strong> {% trans "model offers with accurate employer-cost breakdowns." %}</span></li>
-              <li><i class="fas fa-check-circle"></i><span><strong>{% trans "Scenario planning:" %}</strong> {% trans "compare markets and hiring strategies side-by-side." %}</span></li>
-              <li><i class="fas fa-check-circle"></i><span><strong>{% trans "Budget certainty:" %}</strong> {% trans "align HR and Finance with one set of numbers." %}</span></li>
+              <li><i class="fas fa-check-circle"></i><span>{% trans "Pre-hire forecasting: model offers with accurate employer-cost breakdowns." %}</span></li>
+              <li><i class="fas fa-check-circle"></i><span>{% trans "Scenario planning: compare markets and hiring strategies side-by-side." %}</span></li>
+              <li><i class="fas fa-check-circle"></i><span>{% trans "Budget certainty: align HR and Finance with one set of numbers." %}</span></li>
             </ul>
           </div>
 
@@ -830,9 +830,9 @@
               </div>
             </div>
             <ul class="pillar-list">
-              <li><i class="fas fa-check-circle"></i><span><strong>{% trans "Single dashboard:" %}</strong> {% trans "central visibility across payroll and workforce data." %}</span></li>
-              <li><i class="fas fa-check-circle"></i><span><strong>{% trans "Comparable outputs:" %}</strong> {% trans "consistent data definitions enable clean cross-country analysis." %}</span></li>
-              <li><i class="fas fa-check-circle"></i><span><strong>{% trans "Decision clarity:" %}</strong> {% trans "executive-grade insights into costs, trends, and exposure." %}</span></li>
+              <li><i class="fas fa-check-circle"></i><span>{% trans "Single dashboard: central visibility across payroll and workforce data." %}</span></li>
+              <li><i class="fas fa-check-circle"></i><span>{% trans "Comparable outputs: consistent data definitions enable clean cross-country analysis." %}</span></li>
+              <li><i class="fas fa-check-circle"></i><span>{% trans "Decision clarity: executive-grade insights into costs, trends, and exposure." %}</span></li>
             </ul>
           </div>
 
@@ -845,9 +845,9 @@
               </div>
             </div>
             <ul class="pillar-list">
-              <li><i class="fas fa-check-circle"></i><span><strong>{% trans "Legal logic:" %}</strong> {% trans "controls aligned to labour law and statutory requirements." %}</span></li>
-              <li><i class="fas fa-check-circle"></i><span><strong>{% trans "Error reduction:" %}</strong> {% trans "automation and guardrails minimise manual mistakes." %}</span></li>
-              <li><i class="fas fa-check-circle"></i><span><strong>{% trans "Audit-ready:" %}</strong> {% trans "traceable calculations and data controls support reviews." %}</span></li>
+              <li><i class="fas fa-check-circle"></i><span>{% trans "Legal logic: controls aligned to labour law and statutory requirements." %}</span></li>
+              <li><i class="fas fa-check-circle"></i><span>{% trans "Error reduction: automation and guardrails minimise manual mistakes." %}</span></li>
+              <li><i class="fas fa-check-circle"></i><span>{% trans "Audit-ready: traceable calculations and data controls support reviews." %}</span></li>
             </ul>
           </div>
 
@@ -860,9 +860,9 @@
               </div>
             </div>
             <ul class="pillar-list">
-              <li><i class="fas fa-check-circle"></i><span><strong>{% trans "HCM connectivity:" %}</strong> {% trans "integrate with tools like Workday and BambooHR." %}</span></li>
-              <li><i class="fas fa-check-circle"></i><span><strong>{% trans "Scalable architecture:" %}</strong> {% trans "grow from mid-sized to global without rewiring operations." %}</span></li>
-              <li><i class="fas fa-check-circle"></i><span><strong>{% trans "Multi-language & FX:" %}</strong> {% trans "localised employee experience across currencies and regions." %}</span></li>
+              <li><i class="fas fa-check-circle"></i><span>{% trans "HCM connectivity: integrate with tools like Workday and BambooHR." %}</span></li>
+              <li><i class="fas fa-check-circle"></i><span>{% trans "Scalable architecture: grow from mid-sized to global without rewiring operations." %}</span></li>
+              <li><i class="fas fa-check-circle"></i><span>{% trans "Multi-language & FX: localised employee experience across currencies and regions." %}</span></li>
             </ul>
           </div>
         </div>
@@ -948,6 +948,34 @@
   </footer>
 
   <script defer>
+    const supportedLanguageCodes = [{% for lang in languages %}"{{ lang.code }}"{% if not forloop.last %}, {% endif %}{% endfor %}];
+    const defaultLanguageCode = "en";
+
+    window.switchSiteLanguage = function(select) {
+      if (!select || !select.form) return;
+
+      const currentPath = window.location.pathname || "/";
+      const currentQuery = window.location.search || "";
+      const currentHash = window.location.hash || "";
+      const hadTrailingSlash = currentPath.endsWith("/");
+      const segments = currentPath.split("/").filter(Boolean);
+      const neutralSegments = segments.length && supportedLanguageCodes.includes(segments[0])
+        ? segments.slice(1)
+        : segments;
+
+      let neutralPath = neutralSegments.length ? `/${neutralSegments.join("/")}` : "/";
+      if (neutralSegments.length && hadTrailingSlash) neutralPath += "/";
+
+      const targetPath = select.value === defaultLanguageCode
+        ? neutralPath
+        : `/${select.value}${neutralPath === "/" ? "/" : neutralPath}`;
+
+      const nextInput = select.form.querySelector('input[name="next"]');
+      if (nextInput) nextInput.value = `${targetPath}${currentQuery}${currentHash}`;
+
+      select.form.submit();
+    };
+
     document.addEventListener('DOMContentLoaded', () => {
       // Mobile menu
       const btn = document.querySelector('.menu-btn');

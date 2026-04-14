@@ -22,7 +22,7 @@
         <input type="hidden" name="next" value="{{ request.get_full_path }}">
 
         <div class="lang-pill" title="{% trans 'Language' %}">
-          <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="this.form.submit()">
+          <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="window.switchSiteLanguage(this)">
             {% for lang in languages %}
               {% if lang.code == "pt" %}
                 <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷</option>

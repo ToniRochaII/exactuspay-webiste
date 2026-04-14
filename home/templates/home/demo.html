@@ -1037,7 +1037,7 @@
             {% csrf_token %}
             <input type="hidden" name="next" value="{{ request.get_full_path }}" />
             <div class="lang-pill" title="{% trans 'Language' %}">
-              <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="this.form.submit()">
+              <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="window.switchSiteLanguage(this)">
                 {% for lang in languages %}
                   {% if lang.code == "pt" %}
                     <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷 Português</option>
@@ -1101,7 +1101,7 @@
             {% csrf_token %}
             <input type="hidden" name="next" value="{{ request.get_full_path }}" />
             <div class="lang-pill" title="{% trans 'Language' %}">
-              <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="this.form.submit()">
+              <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="window.switchSiteLanguage(this)">
                 {% for lang in languages %}
                   {% if lang.code == "pt" %}
                     <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷 Português</option>
@@ -1439,6 +1439,34 @@
     </script>
 
     <script>
+      const supportedLanguageCodes = [{% for lang in languages %}"{{ lang.code }}"{% if not forloop.last %}, {% endif %}{% endfor %}];
+      const defaultLanguageCode = "en";
+
+      window.switchSiteLanguage = function(select) {
+        if (!select || !select.form) return;
+
+        const currentPath = window.location.pathname || "/";
+        const currentQuery = window.location.search || "";
+        const currentHash = window.location.hash || "";
+        const hadTrailingSlash = currentPath.endsWith("/");
+        const segments = currentPath.split("/").filter(Boolean);
+        const neutralSegments = segments.length && supportedLanguageCodes.includes(segments[0])
+          ? segments.slice(1)
+          : segments;
+
+        let neutralPath = neutralSegments.length ? `/${neutralSegments.join("/")}` : "/";
+        if (neutralSegments.length && hadTrailingSlash) neutralPath += "/";
+
+        const targetPath = select.value === defaultLanguageCode
+          ? neutralPath
+          : `/${select.value}${neutralPath === "/" ? "/" : neutralPath}`;
+
+        const nextInput = select.form.querySelector('input[name="next"]');
+        if (nextInput) nextInput.value = `${targetPath}${currentQuery}${currentHash}`;
+
+        select.form.submit();
+      };
+
       document.addEventListener("DOMContentLoaded", function () {
         const observer = new IntersectionObserver(
           (entries) => {
