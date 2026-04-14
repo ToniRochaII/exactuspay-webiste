@@ -1,0 +1,42 @@
+{% extends "articles/article_base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "How to Run Payroll in Costa Rica | ExactusPay" %}{% endblock %}
+{% block meta_description %}{% trans "A practical guide to payroll setup and employer obligations in Costa Rica, including social security, reporting discipline, and payroll operating controls." %}{% endblock %}
+{% block canonical %}https://www.exactuspay.com/resources/costa-rica-payroll-guide/{% endblock %}
+{% block og_title %}{% trans "How to Run Payroll in Costa Rica | ExactusPay" %}{% endblock %}
+{% block og_description %}{% trans "A practical guide to payroll setup and employer obligations in Costa Rica, including social security, reporting discipline, and payroll operating controls." %}{% endblock %}
+{% block og_url %}https://www.exactuspay.com/resources/costa-rica-payroll-guide/{% endblock %}
+{% block twitter_title %}{% trans "How to Run Payroll in Costa Rica | ExactusPay" %}{% endblock %}
+{% block twitter_description %}{% trans "A practical guide to payroll setup and employer obligations in Costa Rica, including social security, reporting discipline, and payroll operating controls." %}{% endblock %}
+{% block article_heading %}{% trans "How to run payroll in Costa Rica with stronger control from day one" %}{% endblock %}
+{% block article_intro %}{% trans "Costa Rica payroll requires a reliable local process for contributions, filings, employee records, and supporting evidence. The easiest way to keep control is to standardise the payroll operating model before volume grows." %}{% endblock %}
+{% block article_region %}{% trans "Costa Rica" %}{% endblock %}
+{% block article_summary %}
+  <div class="summary-card">
+    <h4>{% trans "Entity readiness" %}</h4>
+    <p>{% trans "Confirm the employing structure, registrations, and operating responsibilities before onboarding employees." %}</p>
+  </div>
+  <div class="summary-card">
+    <h4>{% trans "Payroll discipline" %}</h4>
+    <p>{% trans "Treat payroll as a controlled process with validated inputs, approvals, and statutory outputs." %}</p>
+  </div>
+  <div class="summary-card">
+    <h4>{% trans "Regional scale" %}</h4>
+    <p>{% trans "Translate local outputs into one reporting standard across LATAM." %}</p>
+  </div>
+{% endblock %}
+{% block article_content %}
+  <section>
+    <h2>{% trans "1. Start with the local operating model" %}</h2>
+    <p>{% trans "Before the first payroll cycle, identify who owns local registrations, payroll processing, approvals, and statutory remittances. Those ownership boundaries matter more than they appear at the start." %}</p>
+  </section>
+  <section>
+    <h2>{% trans "2. Protect payroll quality with stronger input controls" %}</h2>
+    <p>{% trans "Compensation changes, new hires, leave, and terminations should move through one documented process. When inputs arrive late or without approval, payroll teams lose time to manual corrections and finance loses confidence in the numbers." %}</p>
+  </section>
+  <section>
+    <h2>{% trans "3. Report Costa Rica in the same language as the rest of the group" %}</h2>
+    <p>{% trans "A local provider may produce local-format outputs, but headquarters still needs clean, comparable payroll visibility. A shared reporting model is what turns local execution into regional control." %}</p>
+  </section>
+{% endblock %}

@@ -1006,7 +1006,7 @@
             <i class="fas fa-bars"></i>
           </button>
 
-          <a href="https://mypayroll.exactuspay.com/login" class="btn btn-secondary">{% trans "Log In" %}</a>
+          <a href="{{ external_payroll_login_url }}" class="btn btn-secondary">{% trans "Log In" %}</a>
           <a href="{% url 'home:demo' %}" class="btn btn-primary">{% trans "Request Demo" %}</a>
 
           <form class="lang-form" action="{% url 'set_language' %}" method="post">
@@ -1069,7 +1069,7 @@
         </ul>
 
         <div class="mobile-actions">
-          <a href="https://mypayroll.exactuspay.com/login" class="btn btn-secondary">{% trans "Log In" %}</a>
+          <a href="{{ external_payroll_login_url }}" class="btn btn-secondary">{% trans "Log In" %}</a>
           <a href="{% url 'home:demo' %}" class="btn btn-primary">{% trans "Request Demo" %}</a>
         </div>
 

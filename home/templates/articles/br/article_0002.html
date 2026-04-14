@@ -1,0 +1,52 @@
+{% extends "articles/article_base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Payroll in Brazil: Core Employer Costs and Reporting Deadlines | ExactusPay" %}{% endblock %}
+{% block meta_description %}{% trans "A practical overview of employer payroll costs in Brazil, including social security, FGTS, 13th salary, paid vacation, and recurring reporting obligations." %}{% endblock %}
+{% block canonical %}https://www.exactuspay.com/articles/br/overview/2/{% endblock %}
+{% block og_title %}{% trans "Payroll in Brazil: Core Employer Costs and Reporting Deadlines | ExactusPay" %}{% endblock %}
+{% block og_description %}{% trans "A practical overview of employer payroll costs in Brazil, including social security, FGTS, 13th salary, paid vacation, and recurring reporting obligations." %}{% endblock %}
+{% block og_url %}https://www.exactuspay.com/articles/br/overview/2/{% endblock %}
+{% block twitter_title %}{% trans "Payroll in Brazil: Core Employer Costs and Reporting Deadlines | ExactusPay" %}{% endblock %}
+{% block twitter_description %}{% trans "A practical overview of employer payroll costs in Brazil, including social security, FGTS, 13th salary, paid vacation, and recurring reporting obligations." %}{% endblock %}
+{% block article_heading %}{% trans "Payroll in Brazil: employer cost, timing, and control points" %}{% endblock %}
+{% block article_intro %}{% trans "Brazilian payroll is manageable when you treat it as a recurring calendar of labour, tax, and social security obligations rather than just a monthly net-pay exercise." %}{% endblock %}
+{% block article_region %}{% trans "Brazil" %}{% endblock %}
+{% block article_summary %}
+  <div class="summary-card">
+    <h4>{% trans "Recurring cost" %}</h4>
+    <p>{% trans "Budget for salary, employer INSS, FGTS, vacation accruals, and 13th salary accruals." %}</p>
+  </div>
+  <div class="summary-card">
+    <h4>{% trans "Monthly cycle" %}</h4>
+    <p>{% trans "Brazilian payroll requires tight cut-offs, eSocial events, and coordinated tax remittances." %}</p>
+  </div>
+  <div class="summary-card">
+    <h4>{% trans "Control standard" %}</h4>
+    <p>{% trans "Maintain country-level logic with a group-level reporting standard for auditability." %}</p>
+  </div>
+{% endblock %}
+{% block article_content %}
+  <section>
+    <h2>{% trans "1. Model the full employer cost, not just gross pay" %}</h2>
+    <p>{% trans "A headline salary in Brazil is only the starting point. Employer planning usually needs a wider cost envelope that includes INSS, FGTS, paid vacation, 13th salary, and any negotiated benefits or collective bargaining provisions." %}</p>
+    <ul>
+      <li>{% trans "Employer social contributions can materially change the true cost of employment." %}</li>
+      <li>{% trans "Mandatory accruals should be reflected in management reporting before the payout month arrives." %}</li>
+      <li>{% trans "Country-level assumptions should feed one global cost model." %}</li>
+    </ul>
+  </section>
+  <section>
+    <h2>{% trans "2. Build the payroll calendar around statutory events" %}</h2>
+    <p>{% trans "Strong Brazilian payroll operations depend on disciplined cut-offs. Variable pay, leave events, terminations, and master-data updates all need to be captured in time for calculation, validation, and statutory reporting." %}</p>
+    <ul>
+      <li>{% trans "Agree a cut-off for variable inputs and HR events." %}</li>
+      <li>{% trans "Validate employer and employee contribution outputs before filing." %}</li>
+      <li>{% trans "Keep evidence of approvals and any post-payroll adjustments." %}</li>
+    </ul>
+  </section>
+  <section>
+    <h2>{% trans "3. Standardise reporting for headquarters" %}</h2>
+    <p>{% trans "Local payroll in Brazil contains terminology and statutory concepts that do not travel cleanly into executive reporting. Finance leaders usually need a mapped reporting layer that turns local outputs into one board-ready standard across countries." %}</p>
+  </section>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "articles/article_base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Scaling Payroll in Brazil: Operating Principles for Multi-Entity and Regional Growth | ExactusPay" %}{% endblock %}
+{% block meta_description %}{% trans "Operating principles for scaling payroll in Brazil across business units, legal entities, and regional growth programmes without losing control." %}{% endblock %}
+{% block canonical %}https://www.exactuspay.com/articles/br/overview/5/{% endblock %}
+{% block og_title %}{% trans "Scaling Payroll in Brazil: Operating Principles for Multi-Entity and Regional Growth | ExactusPay" %}{% endblock %}
+{% block og_description %}{% trans "Operating principles for scaling payroll in Brazil across business units, legal entities, and regional growth programmes without losing control." %}{% endblock %}
+{% block og_url %}https://www.exactuspay.com/articles/br/overview/5/{% endblock %}
+{% block twitter_title %}{% trans "Scaling Payroll in Brazil: Operating Principles for Multi-Entity and Regional Growth | ExactusPay" %}{% endblock %}
+{% block twitter_description %}{% trans "Operating principles for scaling payroll in Brazil across business units, legal entities, and regional growth programmes without losing control." %}{% endblock %}
+{% block article_heading %}{% trans "Scaling payroll in Brazil without creating reporting fragmentation" %}{% endblock %}
+{% block article_intro %}{% trans "As headcount and entity complexity increase, Brazilian payroll operations often become harder to govern. The solution is to scale controls, data standards, and reporting together rather than market by market." %}{% endblock %}
+{% block article_region %}{% trans "Brazil" %}{% endblock %}
+{% block article_summary %}
+  <div class="summary-card">
+    <h4>{% trans "Control model" %}</h4>
+    <p>{% trans "Set clear ownership between payroll operations, finance, and local HR from the start." %}</p>
+  </div>
+  <div class="summary-card">
+    <h4>{% trans "Data standard" %}</h4>
+    <p>{% trans "Use one global reporting schema even when local providers or entities differ." %}</p>
+  </div>
+  <div class="summary-card">
+    <h4>{% trans "Scalable process" %}</h4>
+    <p>{% trans "Make country-level execution repeatable instead of rebuilding it every time the footprint expands." %}</p>
+  </div>
+{% endblock %}
+{% block article_content %}
+  <section>
+    <h2>{% trans "1. Separate local execution from group governance" %}</h2>
+    <p>{% trans "Brazilian payroll should be run with local precision, but governance should be handled through one shared operating framework. That means standard calendars, approval checkpoints, reporting definitions, and risk management across the group." %}</p>
+  </section>
+  <section>
+    <h2>{% trans "2. Reduce dependency on manual reconciliation" %}</h2>
+    <p>{% trans "Growth exposes process weaknesses quickly. If each entity or country requires a bespoke reconciliation approach, reporting latency and error risk both rise. Standard data outputs and controlled change management are what keep scaling sustainable." %}</p>
+  </section>
+  <section>
+    <h2>{% trans "3. Build for expansion, not just the current headcount" %}</h2>
+    <p>{% trans "The best time to standardise controls is before the next market, entity, or business line is added. That is how payroll stays resilient as the regional footprint grows." %}</p>
+  </section>
+{% endblock %}

@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "accounts.apps.AccountsConfig",
     "home",
 ]
 
@@ -64,6 +65,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "django.template.context_processors.i18n",
+                "home.context_processors.site_context",
             ],
         },
     }
@@ -93,8 +95,17 @@ USE_TZ = True
 
 LANGUAGES = [
     ("en", "English"),
+    ("ar", "Arabic"),
+    ("de", "German"),
     ("es", "Español"),
+    ("fr", "French"),
+    ("id", "Indonesian"),
+    ("it", "Italian"),
+    ("pl", "Polish"),
     ("pt", "Português"),
+    ("ru", "Russian"),
+    ("sw", "Swahili"),
+    ("th", "Thai"),
 ]
 
 LOCALE_PATHS = [BASE_DIR / "locale"]
@@ -106,6 +117,19 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+LOGIN_URL = "accounts:login"
+LOGIN_REDIRECT_URL = "accounts:profile"
+LOGOUT_REDIRECT_URL = "home:home"
+
+EXTERNAL_PAYROLL_LOGIN_URL = os.environ.get(
+    "EXTERNAL_PAYROLL_LOGIN_URL",
+    "https://payroll.exactuspay.com/login",
+)
+BOOK_DEMO_EXTERNAL_URL = os.environ.get(
+    "BOOK_DEMO_EXTERNAL_URL",
+    "https://outlook.office.com/bookwithme/user/42af7574f874421f894f9f248bece5ed@exactuspay.com?anonymous&ismsaljsauthenabled&ep=plink",
+)
 
 
 # -----------------------------------------------------------------------------
@@ -120,11 +144,11 @@ EMAIL_USE_SSL = False
 
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "Antonio.Rocha@exactuspay.com")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+NO_REPLY_EMAIL = os.environ.get("NO_REPLY_EMAIL", "no-reply@exactuspay.com")
 
-# Safer default: match authenticated mailbox
 DEFAULT_FROM_EMAIL = os.environ.get(
     "DEFAULT_FROM_EMAIL",
-    EMAIL_HOST_USER,
+    NO_REPLY_EMAIL,
 )
 
 # Where demo requests should be delivered

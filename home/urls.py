@@ -18,11 +18,13 @@ urlpatterns = [
 
 
 
-    path('articles/br/overview/1', views.brazil_article_0001, name='brazil_article_0001'),
-    path('articles/br/overview/2', views.brazil_article_0002, name='brazil_article_0002'),
-    path('articles/br/overview/3', views.brazil_article_0003, name='brazil_article_0003'),
-    path('articles/br/overview/4', views.brazil_article_0004, name='brazil_article_0004'),
-    path('articles/br/overview/5', views.brazil_article_0005, name='brazil_article_0005'),
+    path('articles/br/overview/1/', views.brazil_article_0001, name='brazil_article_0001'),
+    path('articles/br/overview/2/', views.brazil_article_detail_view, {"article_id": 2}, name='brazil_article_0002'),
+    path('articles/br/overview/3/', views.brazil_article_detail_view, {"article_id": 3}, name='brazil_article_0003'),
+    path('articles/br/overview/4/', views.brazil_article_detail_view, {"article_id": 4}, name='brazil_article_0004'),
+    path('articles/br/overview/5/', views.brazil_article_detail_view, {"article_id": 5}, name='brazil_article_0005'),
+    path('resources/chile-payroll-guide/', views.chile_article_0001, name='chile_article_0001'),
+    path('resources/costa-rica-payroll-guide/', views.costa_rica_article_0001, name='costa_rica_article_0001'),
 
 
 

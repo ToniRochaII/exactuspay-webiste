@@ -1,0 +1,47 @@
+{% extends "articles/article_base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Hiring in Brazil: What Global Teams Should Check Before the First Payslip | ExactusPay" %}{% endblock %}
+{% block meta_description %}{% trans "Key pre-payroll checks for hiring in Brazil, from worker classification and documentation to payroll setup, onboarding controls, and approval readiness." %}{% endblock %}
+{% block canonical %}https://www.exactuspay.com/articles/br/overview/3/{% endblock %}
+{% block og_title %}{% trans "Hiring in Brazil: What Global Teams Should Check Before the First Payslip | ExactusPay" %}{% endblock %}
+{% block og_description %}{% trans "Key pre-payroll checks for hiring in Brazil, from worker classification and documentation to payroll setup, onboarding controls, and approval readiness." %}{% endblock %}
+{% block og_url %}https://www.exactuspay.com/articles/br/overview/3/{% endblock %}
+{% block twitter_title %}{% trans "Hiring in Brazil: What Global Teams Should Check Before the First Payslip | ExactusPay" %}{% endblock %}
+{% block twitter_description %}{% trans "Key pre-payroll checks for hiring in Brazil, from worker classification and documentation to payroll setup, onboarding controls, and approval readiness." %}{% endblock %}
+{% block article_heading %}{% trans "Hiring in Brazil: what to confirm before the first payroll run" %}{% endblock %}
+{% block article_intro %}{% trans "Most payroll problems in Brazil start before payroll. They begin with incomplete onboarding, weak worker classification, or missing ownership over local approvals and documentation." %}{% endblock %}
+{% block article_region %}{% trans "Brazil" %}{% endblock %}
+{% block article_summary %}
+  <div class="summary-card">
+    <h4>{% trans "Classification" %}</h4>
+    <p>{% trans "Confirm whether the engagement should be treated as formal employment and who owns that decision." %}</p>
+  </div>
+  <div class="summary-card">
+    <h4>{% trans "Onboarding data" %}</h4>
+    <p>{% trans "Collect tax, bank, contract, and personal data early enough for payroll setup and validation." %}</p>
+  </div>
+  <div class="summary-card">
+    <h4>{% trans "Approvals" %}</h4>
+    <p>{% trans "Use clear sign-off steps before the employee reaches the first live payroll cycle." %}</p>
+  </div>
+{% endblock %}
+{% block article_content %}
+  <section>
+    <h2>{% trans "1. Confirm the employment model" %}</h2>
+    <p>{% trans "Before onboarding begins, global teams should confirm the legal employing structure, the worker relationship, and which entity owns payroll compliance. That decision drives everything from contract language to tax registrations and operating controls." %}</p>
+  </section>
+  <section>
+    <h2>{% trans "2. Gather payroll-critical data early" %}</h2>
+    <p>{% trans "Payroll setup should not wait until the employee is already due to be paid. Core data such as start date, salary terms, bank details, tax information, and internal cost-centre mapping should be collected and checked before activation." %}</p>
+    <ul>
+      <li>{% trans "Validate the hire against approved compensation." %}</li>
+      <li>{% trans "Make sure local payroll and HR data match exactly." %}</li>
+      <li>{% trans "Capture approval evidence for audit and internal control." %}</li>
+    </ul>
+  </section>
+  <section>
+    <h2>{% trans "3. Avoid first-cycle exceptions" %}</h2>
+    <p>{% trans "First-cycle payroll errors create disproportionate trust issues. A clean first payslip depends on coordinated onboarding, clear cut-offs, and one final review of payroll master data before the worker enters the live cycle." %}</p>
+  </section>
+{% endblock %}

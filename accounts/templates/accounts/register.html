@@ -1,0 +1,43 @@
+{% extends "accounts/login.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Create Account | ExactusPay" %}{% endblock %}
+{% block meta_description %}{% trans "Create a Django account for ExactusPay website administration and profile management." %}{% endblock %}
+{% block canonical %}https://www.exactuspay.com/accounts/register/{% endblock %}
+
+{% block content %}
+  <section class="account-shell">
+    <div class="container">
+      <div class="account-card">
+        <div class="section-title">
+          <div class="subtitle">{% trans "Account" %}</div>
+          <h2>{% trans "Create your profile" %}</h2>
+          <p>{% trans "Set up a Django account for internal access, profile management, and language preferences." %}</p>
+        </div>
+
+        {% if messages %}
+          <div class="messages">
+            {% for message in messages %}
+              <div class="message">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        <form method="post">
+          {% csrf_token %}
+          {% for field in form %}
+            <div>
+              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+              {{ field }}
+              {{ field.help_text|safe }}
+              {{ field.errors }}
+            </div>
+          {% endfor %}
+          <button class="btn btn-primary" type="submit">
+            <i class="fas fa-user-plus"></i> {% trans "Create account" %}
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+{% endblock %}

@@ -1,9 +1,13 @@
-from django.shortcuts import render, redirect
-from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib import messages
+from django.core.mail import send_mail
+from django.http import Http404
+from django.shortcuts import redirect, render
 from django.utils.translation import gettext as _
 import logging
+
+from .article_library import BRAZIL_ARTICLES
+from .forms import DemoRequestForm
 
 logger = logging.getLogger(__name__)
 
@@ -29,28 +33,23 @@ def demo_request_view(request):
     if request.method != "POST":
         return redirect("home:demo")
 
-    first_name = request.POST.get("first_name", "").strip()
-    last_name = request.POST.get("last_name", "").strip()
-    email = request.POST.get("email", "").strip()
-    company = request.POST.get("company", "").strip()
-    employees = request.POST.get("employees", "").strip()
-    region = request.POST.get("region", "Not sure yet").strip()
-
-    if not all([first_name, last_name, email, company, employees]):
+    form = DemoRequestForm(request.POST)
+    if not form.is_valid():
         messages.error(request, _("Please fill out all required fields."))
         return redirect("home:demo")
 
-    subject = f"New Demo Request: {company} ({first_name} {last_name})"
+    demo_request = form.save()
+    subject = f"New Demo Request: {demo_request.company} ({demo_request.first_name} {demo_request.last_name})"
     email_body = f"""
 You have received a new demo request from the ExactusPay website.
 
 Details:
 -------------------------
-Name: {first_name} {last_name}
-Work Email: {email}
-Company: {company}
-Number of Employees: {employees}
-Expansion Region: {region}
+Name: {demo_request.first_name} {demo_request.last_name}
+Work Email: {demo_request.email}
+Company: {demo_request.company}
+Number of Employees: {demo_request.employees}
+Expansion Region: {demo_request.region}
 """
 
     try:
@@ -77,15 +76,17 @@ Expansion Region: {region}
 def brazil_article_0001(request):
     return render(request, 'articles/br/article_0001.html')
 
-def brazil_article_0002(request):
-    return render(request, 'articles/br/article_0002.html')
+def brazil_article_detail_view(request, article_id):
+    article = BRAZIL_ARTICLES.get(article_id)
+    if not article:
+        raise Http404("Article not found.")
 
-def brazil_article_0003(request):
-    return render(request, 'articles/br/article_0003.html')
+    return render(request, article["template_name"])
 
-def brazil_article_0004(request):
-    return render(request, 'articles/br/article_0004.html')
 
-def brazil_article_0005(request):
-    return render(request, 'articles/br/article_0005.html')
+def chile_article_0001(request):
+    return render(request, "articles/cl/article_0001.html")
 
+
+def costa_rica_article_0001(request):
+    return render(request, "articles/cr/article_0001.html")
