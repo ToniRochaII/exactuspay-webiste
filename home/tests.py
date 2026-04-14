@@ -46,8 +46,18 @@ class PublicPageTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, country.country_name)
-        self.assertContains(response, country.hero_intro)
         self.assertContains(response, country.flag_url)
+        self.assertContains(response, country.tax_year)
+
+    def test_localized_country_page_uses_translated_tax_year_and_generated_copy(self):
+        response = self.client.get("/th/countries/united-kingdom/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "6 เมษายน ถึง 5 เมษายน")
+        self.assertNotContains(
+            response,
+            "United Kingdom can be presented with a strong commercial summary first, then deeper payroll intelligence as implementation progresses.",
+        )
 
     def test_country_hub_includes_full_seeded_footprint(self):
         response = self.client.get(reverse("home:country_hub"))

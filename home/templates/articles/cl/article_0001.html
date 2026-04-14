@@ -1,4 +1,4 @@
-{% load i18n %}
+{% load i18n static %}
 {% get_current_language as LANGUAGE_CODE %}
 {% get_available_languages as LANGUAGES %}
 {% get_language_info_list for LANGUAGES as languages %}
@@ -68,13 +68,6 @@
     <meta name="application-name" content="ExactusPay" />
     <meta name="apple-mobile-web-app-title" content="ExactusPay" />
     <meta name="theme-color" content="#1f4b7a" />
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
 
     <link
       rel="stylesheet"
@@ -146,14 +139,7 @@
         scroll-behavior: smooth;
       }
       body {
-        font-family:
-          "Inter",
-          system-ui,
-          -apple-system,
-          Segoe UI,
-          Roboto,
-          Arial,
-          sans-serif;
+        font-family: "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
         background: var(--bg-primary);
         color: var(--text-primary);
         line-height: 1.6;
@@ -193,7 +179,7 @@
       h2,
       h3,
       h4 {
-        font-family: "Poppins", sans-serif;
+        font-family: "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
         font-weight: 800;
         line-height: 1.15;
       }
@@ -911,6 +897,7 @@
         }
       }
     </style>
+    <link rel="stylesheet" href="{% static 'css/site-header.css' %}">
 
     <script type="application/ld+json">
       {
@@ -934,7 +921,7 @@
 
         <ul class="nav-links">
           <li><a href="{% url 'home:home' %}">{% trans "Home" %}</a></li>
-          <li><a href="{% url 'home:features' %}">{% trans "Features" %}</a></li>
+          <li><a href="{% url 'home:features' %}">{% trans "Resources" %}</a></li>
           <li><a href="{% url 'home:platform' %}">{% trans "Platform" %}</a></li>
           <li><a href="{% url 'home:country_hub' %}">{% trans "Countries" %}</a></li>
           <li><a href="{% url 'home:security' %}">{% trans "Security" %}</a></li>
@@ -1003,7 +990,7 @@
       <div class="container">
         <ul class="mobile-links">
           <li><a href="{% url 'home:home' %}">{% trans "Home" %}</a></li>
-          <li><a href="{% url 'home:features' %}">{% trans "Features" %}</a></li>
+          <li><a href="{% url 'home:features' %}">{% trans "Resources" %}</a></li>
           <li><a href="{% url 'home:platform' %}">{% trans "Platform" %}</a></li>
           <li><a href="{% url 'home:country_hub' %}">{% trans "Countries" %}</a></li>
           <li><a href="{% url 'home:security' %}">{% trans "Security" %}</a></li>

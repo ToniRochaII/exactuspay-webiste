@@ -126,7 +126,7 @@ LOGOUT_REDIRECT_URL = "home:home"
 
 EXTERNAL_PAYROLL_LOGIN_URL = os.environ.get(
     "EXTERNAL_PAYROLL_LOGIN_URL",
-    "https://payroll.exactuspay.com/login",
+    "https://mypayroll.exactuspay.com",
 )
 BOOK_DEMO_EXTERNAL_URL = os.environ.get(
     "BOOK_DEMO_EXTERNAL_URL",

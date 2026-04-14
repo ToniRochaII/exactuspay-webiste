@@ -9,8 +9,11 @@ import logging
 from .article_library import BRAZIL_ARTICLES
 from .country_localization import (
     localize_country,
+    localized_content_sections,
+    localized_employer_considerations,
     localized_fact_items,
-    localized_nested_content,
+    localized_glance_cards,
+    localized_hero_highlights,
     localized_payroll_intelligence,
 )
 from .forms import DemoRequestForm
@@ -25,10 +28,10 @@ def _build_country_context(country: CountryProfile) -> dict:
         "country": localized_country,
         "country_facts": localized_fact_items(country),
         "payroll_intelligence": localized_payroll_intelligence(country),
-        "glance_cards": localized_nested_content(country.glance_cards or []),
-        "hero_highlights": localized_nested_content(country.hero_highlights or []),
-        "content_sections": localized_nested_content(country.content_sections or []),
-        "employer_considerations": localized_nested_content(country.employer_considerations or []),
+        "glance_cards": localized_glance_cards(country),
+        "hero_highlights": localized_hero_highlights(country),
+        "content_sections": localized_content_sections(country),
+        "employer_considerations": localized_employer_considerations(country),
     }
 
 def home_view(request):

@@ -57,10 +57,6 @@
     <meta name="apple-mobile-web-app-title" content="ExactusPay" />
     <meta name="theme-color" content="#1f4b7a" />
 
-    <!-- Performance -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
     {# CSS base (extraído do padrão repetido nas suas páginas) #}
@@ -105,7 +101,7 @@
       *{ margin:0; padding:0; box-sizing:border-box; }
       html{ scroll-behavior:smooth; }
       body{
-        font-family:'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        font-family: "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
         background: var(--bg-primary);
         color: var(--text-primary);
         line-height:1.6;
@@ -125,7 +121,7 @@
       .skip-link:focus{ top:16px; }
       :focus-visible{ outline:3px solid rgba(150,224,217,.92); outline-offset:3px; }
 
-      h1,h2,h3,h4{ font-family:'Poppins',sans-serif; font-weight:800; line-height:1.15; }
+      h1,h2,h3,h4{ font-family: "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, sans-serif; font-weight:800; line-height:1.15; }
       h1{
         font-size: clamp(2.1rem, 5vw, 4rem);
         margin-bottom: 18px;
@@ -359,6 +355,7 @@
         .footer-grid{ grid-template-columns: 1fr; }
       }
     </style>
+    <link rel="stylesheet" href="{% static 'css/site-header.css' %}">
 
     {% block head_extra %}{% endblock %}
   </head>
@@ -368,94 +365,158 @@
 
     <header>
       <div class="container nav-container">
-        <a class="sidebar-brand" href="{% url 'home:home' %}">ExactusPay</a>
+        <a href="{% url 'home:home' %}" class="logo">
+          <div class="sidebar-brand">ExactusPay</div>
+        </a>
 
-        <ul class="nav-links" aria-label="{% trans 'Primary navigation' %}">
-          <li><a href="{% url 'home:features' %}">{% trans "Features" %}</a></li>
+        <ul class="nav-links">
+          <li><a href="{% url 'home:home' %}">{% trans "Home" %}</a></li>
+          <li><a href="{% url 'home:features' %}">{% trans "Resources" %}</a></li>
           <li><a href="{% url 'home:platform' %}">{% trans "Platform" %}</a></li>
           <li><a href="{% url 'home:country_hub' %}">{% trans "Countries" %}</a></li>
-          <li><a href="{% url 'home:pricing' %}">{% trans "Pricing" %}</a></li>
           <li><a href="{% url 'home:security' %}">{% trans "Security" %}</a></li>
+          <li><a href="{% url 'home:pricing' %}">{% trans "Pricing" %}</a></li>
         </ul>
 
         <div class="nav-actions">
+          <button
+            class="menu-btn"
+            type="button"
+            aria-label="{% trans 'Open menu' %}"
+            aria-expanded="false"
+            aria-controls="mobileNav"
+          >
+            <i class="fas fa-bars"></i>
+          </button>
+
           {% if request.user.is_authenticated %}
             <a class="btn btn-secondary" href="{% url 'accounts:profile' %}">
-              <i class="fas fa-user"></i> {% trans "Profile" %}
+              {% trans "Profile" %}
             </a>
             <form action="{% url 'accounts:logout' %}" method="post">
               {% csrf_token %}
               <button class="btn btn-primary" type="submit">
-                <i class="fas fa-right-from-bracket"></i> {% trans "Log Out" %}
+                {% trans "Log Out" %}
               </button>
             </form>
           {% else %}
-            <a class="btn btn-secondary" href="{{ external_payroll_login_url }}">
-              <i class="fas fa-arrow-right-to-bracket"></i> {% trans "Log In" %}
-            </a>
-            <a class="btn btn-primary" href="{% url 'home:demo' %}">
-              <i class="fas fa-calendar-check"></i> {% trans "Request Demo" %}
-            </a>
+            <a class="btn btn-secondary" href="{{ external_payroll_login_url }}">{% trans "Log In" %}</a>
+            <a class="btn btn-primary" href="{% url 'home:demo' %}">{% trans "Request Demo" %}</a>
           {% endif %}
 
           <form class="lang-form" action="{% url 'set_language' %}" method="post">
             {% csrf_token %}
             <input type="hidden" name="next" value="{{ request.get_full_path }}">
-            <div class="lang-pill" aria-label="{% trans 'Select language' %}">
-              <i class="fas fa-globe"></i>
-              <select class="lang-select" name="language" onchange="window.switchSiteLanguage(this)">
-                {% for language in languages %}
-                  <option value="{{ language.code }}" {% if language.code == LANGUAGE_CODE %}selected{% endif %}>
-                    {{ language.name_local }}
-                  </option>
+            <div class="lang-pill" title="{% trans 'Language' %}">
+              <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="window.switchSiteLanguage(this)">
+                {% for lang in languages %}
+                  {% if lang.code == "pt" %}
+                    <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷 Português</option>
+                  {% elif lang.code == "en" %}
+                    <option value="en" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇬🇧 English</option>
+                  {% elif lang.code == "es" %}
+                    <option value="es" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇪🇸 Español</option>
+                  {% elif lang.code == "ru" %}
+                    <option value="ru" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇷🇺 Русский</option>
+                  {% elif lang.code == "ar" %}
+                    <option value="ar" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇸🇦 العربية</option>
+                  {% elif lang.code == "fr" %}
+                    <option value="fr" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇫🇷 Français</option>
+                  {% elif lang.code == "de" %}
+                    <option value="de" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇩🇪 Deutsch</option>
+                  {% elif lang.code == "pl" %}
+                    <option value="pl" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇵🇱 Polski</option>
+                  {% elif lang.code == "it" %}
+                    <option value="it" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇹 Italiano</option>
+                  {% elif lang.code == "id" %}
+                    <option value="id" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇩 Indonesian</option>
+                  {% elif lang.code == "th" %}
+                    <option value="th" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇭 ไทย</option>
+                  {% elif lang.code == "sw" %}
+                    <option value="sw" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇿 Swahili</option>
+                  {% elif lang.code == "ha" %}
+                    <option value="ha" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇳🇬 Hausa</option>
+                  {% else %}
+                    <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>{{ lang.code|upper }}</option>
+                  {% endif %}
                 {% endfor %}
               </select>
-              <span class="lang-caret"><i class="fas fa-chevron-down"></i></span>
+              <span class="lang-caret" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
             </div>
           </form>
         </div>
-
-        <button class="menu-btn" type="button" aria-label="{% trans 'Open menu' %}" aria-expanded="false">
-          <i class="fas fa-bars"></i>
-        </button>
       </div>
     </header>
 
-    <nav class="mobile-nav" id="mobileNav" aria-label="{% trans 'Mobile navigation' %}">
+    <nav id="mobileNav" class="mobile-nav" aria-label="{% trans 'Mobile navigation' %}">
       <div class="container">
         <ul class="mobile-links">
           <li><a href="{% url 'home:home' %}">{% trans "Home" %}</a></li>
-          <li><a href="{% url 'home:features' %}">{% trans "Features" %}</a></li>
+          <li><a href="{% url 'home:features' %}">{% trans "Resources" %}</a></li>
           <li><a href="{% url 'home:platform' %}">{% trans "Platform" %}</a></li>
           <li><a href="{% url 'home:country_hub' %}">{% trans "Countries" %}</a></li>
-          <li><a href="{% url 'home:pricing' %}">{% trans "Pricing" %}</a></li>
           <li><a href="{% url 'home:security' %}">{% trans "Security" %}</a></li>
-          {% if request.user.is_authenticated %}
-            <li><a href="{% url 'accounts:profile' %}">{% trans "Profile" %}</a></li>
-          {% else %}
-            <li><a href="{{ external_payroll_login_url }}">{% trans "Log In" %}</a></li>
-            <li><a href="{% url 'home:demo' %}">{% trans "Request Demo" %}</a></li>
-            <li><a href="{% url 'accounts:register' %}">{% trans "Create account" %}</a></li>
-          {% endif %}
+          <li><a href="{% url 'home:pricing' %}">{% trans "Pricing" %}</a></li>
         </ul>
 
-        <div class="mobile-lang">
-          <form class="lang-form" action="{% url 'set_language' %}" method="post">
-            {% csrf_token %}
-            <input type="hidden" name="next" value="{{ request.get_full_path }}">
-            <div class="lang-pill">
-              <i class="fas fa-globe"></i>
-              <select class="lang-select" name="language" onchange="window.switchSiteLanguage(this)">
-                {% for language in languages %}
-                  <option value="{{ language.code }}" {% if language.code == LANGUAGE_CODE %}selected{% endif %}>
-                    {{ language.name_local }}
-                  </option>
-                {% endfor %}
-              </select>
-              <span class="lang-caret"><i class="fas fa-chevron-down"></i></span>
-            </div>
-          </form>
+        <div class="mobile-actions">
+          {% if request.user.is_authenticated %}
+            <a href="{% url 'accounts:profile' %}" class="btn btn-secondary">{% trans "Profile" %}</a>
+            <form action="{% url 'accounts:logout' %}" method="post">
+              {% csrf_token %}
+              <button class="btn btn-primary" type="submit">{% trans "Log Out" %}</button>
+            </form>
+          {% else %}
+            <a href="{{ external_payroll_login_url }}" class="btn btn-secondary">{% trans "Log In" %}</a>
+            <a href="{% url 'home:demo' %}" class="btn btn-primary">{% trans "Request Demo" %}</a>
+          {% endif %}
         </div>
+
+        <form class="lang-form" action="{% url 'set_language' %}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.get_full_path }}">
+          <div class="lang-pill" title="{% trans 'Language' %}">
+            <select
+              class="lang-select"
+              name="language"
+              aria-label="{% trans 'Select language' %}"
+              onchange="window.switchSiteLanguage(this)"
+            >
+              {% for lang in languages %}
+                {% if lang.code == "pt" %}
+                  <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷 Português</option>
+                {% elif lang.code == "en" %}
+                  <option value="en" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇬🇧 English</option>
+                {% elif lang.code == "es" %}
+                  <option value="es" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇪🇸 Español</option>
+                {% elif lang.code == "ru" %}
+                  <option value="ru" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇷🇺 Русский</option>
+                {% elif lang.code == "ar" %}
+                  <option value="ar" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇸🇦 العربية</option>
+                {% elif lang.code == "fr" %}
+                  <option value="fr" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇫🇷 Français</option>
+                {% elif lang.code == "de" %}
+                  <option value="de" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇩🇪 Deutsch</option>
+                {% elif lang.code == "pl" %}
+                  <option value="pl" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇵🇱 Polski</option>
+                {% elif lang.code == "it" %}
+                  <option value="it" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇹 Italiano</option>
+                {% elif lang.code == "id" %}
+                  <option value="id" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇩 Indonesian</option>
+                {% elif lang.code == "th" %}
+                  <option value="th" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇭 ไทย</option>
+                {% elif lang.code == "sw" %}
+                  <option value="sw" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇿 Swahili</option>
+                {% elif lang.code == "ha" %}
+                  <option value="ha" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇳🇬 Hausa</option>
+                {% else %}
+                  <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>{{ lang.code|upper }}</option>
+                {% endif %}
+              {% endfor %}
+            </select>
+            <span class="lang-caret" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
+          </div>
+        </form>
       </div>
     </nav>
 
@@ -470,7 +531,7 @@
             <h4>ExactusPay</h4>
             <ul class="footer-links">
               <li><a href="{% url 'home:platform' %}"><i class="fas fa-layer-group"></i> {% trans "Platform" %}</a></li>
-              <li><a href="{% url 'home:features' %}"><i class="fas fa-bolt"></i> {% trans "Features" %}</a></li>
+              <li><a href="{% url 'home:features' %}"><i class="fas fa-bolt"></i> {% trans "Resources" %}</a></li>
               <li><a href="{% url 'home:pricing' %}"><i class="fas fa-tag"></i> {% trans "Pricing" %}</a></li>
               <li><a href="{% url 'home:security' %}"><i class="fas fa-shield-halved"></i> {% trans "Security" %}</a></li>
             </ul>
@@ -489,11 +550,11 @@
             <h4>{% trans "Company" %}</h4>
             <ul class="footer-links">
               <li><a href="{% url 'home:home' %}"><i class="fas fa-house"></i> {% trans "Home" %}</a></li>
-              <li><a href="{% url 'home:features' %}"><i class="fas fa-star"></i> {% trans "Features" %}</a></li>
+              <li><a href="{% url 'home:features' %}"><i class="fas fa-star"></i> {% trans "Resources" %}</a></li>
               {% if request.user.is_authenticated %}
                 <li><a href="{% url 'accounts:profile' %}"><i class="fas fa-id-card"></i> {% trans "Profile" %}</a></li>
               {% else %}
-                <li><a href="{% url 'accounts:login' %}"><i class="fas fa-id-card"></i> {% trans "Log In" %}</a></li>
+                <li><a href="{{ external_payroll_login_url }}"><i class="fas fa-id-card"></i> {% trans "Log In" %}</a></li>
               {% endif %}
             </ul>
           </div>
