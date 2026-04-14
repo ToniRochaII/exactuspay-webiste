@@ -30,7 +30,6 @@ msgid "profiles"
 msgstr ""
 
 #: accounts/templates/accounts/login.html:4
-#, fuzzy
 #| msgid "ExactusPay"
 msgid "Log In | ExactusPay"
 msgstr "ExactusPay"
@@ -81,7 +80,6 @@ msgid "Create one here"
 msgstr ""
 
 #: accounts/templates/accounts/profile.html:4
-#, fuzzy
 #| msgid "ExactusPay"
 msgid "Profile | ExactusPay"
 msgstr "ExactusPay"
@@ -109,7 +107,6 @@ msgid "Save profile"
 msgstr ""
 
 #: accounts/templates/accounts/profile.html:54 home/templates/base.html:388
-#, fuzzy
 #| msgid "Log In"
 msgid "Log Out"
 msgstr "เข้าสู่ระบบ"
@@ -144,7 +141,6 @@ msgid "Your account has been created."
 msgstr ""
 
 #: accounts/views.py:26
-#, fuzzy
 #| msgid "See ExactusPay in Action"
 msgid "Create Your ExactusPay Account"
 msgstr "ชม ExactusPay ในการทำงานจริง"
@@ -160,7 +156,6 @@ msgid "Your profile has been updated."
 msgstr ""
 
 #: accounts/views.py:46
-#, fuzzy
 #| msgid "ExactusPay"
 msgid "Your ExactusPay Profile"
 msgstr "ExactusPay"
@@ -182,7 +177,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/article_base.html:154
-#, fuzzy
 #| msgid "Countries"
 msgid "Country Guide"
 msgstr "ประเทศ"
@@ -210,13 +204,11 @@ msgid "Employer cost calculations"
 msgstr ""
 
 #: home/templates/articles/article_base.html:182
-#, fuzzy
 #| msgid "Local payroll expertise"
 msgid "Local payroll operations"
 msgstr "ความเชี่ยวชาญด้านการจ่ายเงินเดือนในท้องถิ่น"
 
 #: home/templates/articles/article_base.html:183
-#, fuzzy
 #| msgid "Compliance Guides"
 msgid "Compliance evidence trails"
 msgstr "คู่มือการปฏิบัติตามกฎระเบียบ"
@@ -416,7 +408,6 @@ msgid "That is where ExactusPay is redefining the global payroll landscape."
 msgstr ""
 
 #: home/templates/articles/br/article_0001.html:896
-#, fuzzy
 #| msgid "Smart Global Payroll Platform"
 msgid "A Smarter Approach to Global Payroll"
 msgstr "แพลตฟอร์มการจัดการเงินเดือนระดับโลกอัจฉริยะ"
@@ -442,7 +433,6 @@ msgid "What Makes ExactusPay Different?"
 msgstr ""
 
 #: home/templates/articles/br/article_0001.html:911
-#, fuzzy
 #| msgid "AI-Powered Compliance"
 msgid "AI-powered compliance"
 msgstr "การปฏิบัติตามกฎระเบียบที่ขับเคลื่อนด้วย AI"
@@ -454,7 +444,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/br/article_0001.html:915
-#, fuzzy
 #| msgid "Real-time Analytics"
 msgid "Real-time analytics"
 msgstr "การวิเคราะห์แบบเรียลไทม์"
@@ -477,7 +466,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/br/article_0001.html:923
-#, fuzzy
 #| msgid "Enterprise Security"
 msgid "Enterprise-grade security"
 msgstr "ความปลอดภัยระดับองค์กร"
@@ -544,7 +532,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/br/article_0001.html:965
-#, fuzzy
 #| msgid "Ready to Simplify Global Payroll?"
 msgid "Ready to Transform Your Global Payroll?"
 msgstr "พร้อมที่จะทำให้การทำเงินเดือนระดับโลกง่ายขึ้นหรือยัง?"
@@ -776,7 +763,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/br/article_0002.html:25
-#, fuzzy
 #| msgid "Multi-country standard"
 msgid "Control standard"
 msgstr "มาตรฐานหลายประเทศ"
@@ -838,7 +824,6 @@ msgid "Keep evidence of approvals and any post-payroll adjustments."
 msgstr ""
 
 #: home/templates/articles/br/article_0002.html:49
-#, fuzzy
 #| msgid "Standardised reports"
 msgid "3. Standardise reporting for headquarters"
 msgstr "รายงานมาตรฐาน"
@@ -994,7 +979,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/br/article_0004.html:21
-#, fuzzy
 #| msgid "Cost visibility"
 msgid "Visibility"
 msgstr "ความชัดเจนของต้นทุน"
@@ -1089,7 +1073,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/br/article_0005.html:21
-#, fuzzy
 #| msgid "Standards"
 msgid "Data standard"
 msgstr "มาตรฐาน"
@@ -1100,7 +1083,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/br/article_0005.html:25
-#, fuzzy
 #| msgid "Fast, reliable processing"
 msgid "Scalable process"
 msgstr "การประมวลผลที่รวดเร็วและเชื่อถือได้"
@@ -1175,7 +1157,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1075
-#, fuzzy
 #| msgid "Request a demo"
 msgid "Request a Personalized Demo"
 msgstr "ขอรับการสาธิต"
@@ -1185,7 +1166,6 @@ msgid "Read the Guide"
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1082
-#, fuzzy
 #| msgid "Security highlights"
 msgid "Guide highlights"
 msgstr "จุดเด่นด้านความปลอดภัย"
@@ -1203,7 +1183,6 @@ msgid "UF Calculations"
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1086
-#, fuzzy
 #| msgid "Compliance"
 msgid "SII Compliance"
 msgstr "การปฏิบัติตามกฎระเบียบ"
@@ -1224,7 +1203,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1110
-#, fuzzy
 #| msgid "Security highlights"
 msgid "Article highlights"
 msgstr "จุดเด่นด้านความปลอดภัย"
@@ -1238,7 +1216,6 @@ msgid "Focus: Compliance + Payroll"
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1115
-#, fuzzy
 #| msgid "Built for expansion"
 msgid "Built for audit-ready operations"
 msgstr "สร้างขึ้นเพื่อการขยายตัว"
@@ -1251,7 +1228,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1127
-#, fuzzy
 #| msgid "Key outcomes"
 msgid "Key context"
 msgstr "ผลลัพธ์ที่สำคัญ"
@@ -1477,7 +1453,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1320
-#, fuzzy
 #| msgid "Strategic payroll simulations"
 msgid "Predictive Payroll Simulations"
 msgstr "การจำลองเงินเดือนเชิงกลยุทธ์"
@@ -1489,7 +1464,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1325
-#, fuzzy
 #| msgid "AI-Powered Compliance"
 msgid "Zero-Error Compliance"
 msgstr "การปฏิบัติตามกฎระเบียบที่ขับเคลื่อนด้วย AI"
@@ -1501,7 +1475,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1330
-#, fuzzy
 #| msgid "Global-standardised reporting"
 msgid "Global-Standardized Reporting"
 msgstr "การรายงานมาตรฐานระดับโลก"
@@ -1524,7 +1497,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1340
-#, fuzzy
 #| msgid "Next steps"
 msgid "Next step"
 msgstr "ขั้นตอนต่อไป"
@@ -1542,7 +1514,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1353
-#, fuzzy
 #| msgid "Schedule Your Personal Demo"
 msgid "Request a Personalized Demo Today"
 msgstr "กำหนดเวลาการสาธิตส่วนตัวของคุณ"
@@ -1567,14 +1538,12 @@ msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1379
 #: home/templates/home/index.html:1102
-#, fuzzy
 #| msgid "Book a session"
 msgid "Book Demo"
 msgstr "จองเซสชัน"
 
 #: home/templates/articles/cl/article_0001.html:1382
 #: home/templates/home/demo.html:1342
-#, fuzzy
 #| msgid "Pricing"
 msgid "View Pricing"
 msgstr "ราคา"
@@ -1630,7 +1599,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/cr/article_0001.html:25
-#, fuzzy
 #| msgid "Regional expertise"
 msgid "Regional scale"
 msgstr "ความเชี่ยวชาญระดับภูมิภาค"
@@ -1683,7 +1651,6 @@ msgstr ""
 "แพลตฟอร์มการจัดการเงินเดือนและการปฏิบัติตามกฎระเบียบหลายประเทศ | ExactusPay"
 
 #: home/templates/base.html:373
-#, fuzzy
 #| msgid "Mobile navigation"
 msgid "Primary navigation"
 msgstr "การนำทางบนมือถือ"
@@ -1693,7 +1660,6 @@ msgid "Get started"
 msgstr ""
 
 #: home/templates/base.html:481
-#, fuzzy
 #| msgid "Pricing"
 msgid "See Pricing"
 msgstr "ราคา"
@@ -1721,7 +1687,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/home/demo.html:46 home/templates/home/demo.html:56
-#, fuzzy
 #| msgid "ExactusPay | Global Payroll Software"
 msgid "ExactusPay | Request a Global Payroll Demo"
 msgstr "ExactusPay | ซอฟต์แวร์การจัดการเงินเดือนระดับโลก"
@@ -1733,7 +1698,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/home/demo.html:59
-#, fuzzy
 #| msgid ""
 #| "ExactusPay | Global Payroll Software for Multi-Country Payroll & "
 #| "Compliance"
@@ -1755,7 +1719,6 @@ msgstr ""
 "พร้อมการปฏิบัติตามกฎระเบียบที่คาดการณ์ได้และมาตรฐานการรายงานสำหรับผู้บริหารที่เป็นหนึ่งเดียว"
 
 #: home/templates/home/demo.html:1156
-#, fuzzy
 #| msgid "What you'll see"
 msgid "What you’ll see"
 msgstr "สิ่งที่คุณจะได้เห็น"
@@ -1867,7 +1830,6 @@ msgid "The Tailored Walkthrough (30 mins)"
 msgstr "คำแนะนำแบบเจาะจง (30 นาที)"
 
 #: home/templates/home/demo.html:1218
-#, fuzzy
 #| msgid ""
 #| "No generic deck. We show country-specific examples, local tax logic, and "
 #| "the reporting you'll rely on."
@@ -1933,7 +1895,6 @@ msgid "Meet your team"
 msgstr "พบกับทีมของคุณ"
 
 #: home/templates/home/demo.html:1254
-#, fuzzy
 #| msgid ""
 #| "This isn't just software. You'll meet the support experts that operate as "
 #| "an extension of your team."
@@ -1952,7 +1913,6 @@ msgid "Schedule your personal walkthrough"
 msgstr "กำหนดเวลาคำแนะนำแบบส่วนตัวของคุณ"
 
 #: home/templates/home/demo.html:1265
-#, fuzzy
 #| msgid ""
 #| "Submit the form and we'll follow up quickly with the right session for "
 #| "your footprint."
@@ -2004,13 +1964,12 @@ msgid "Book My Session"
 msgstr "จองเซสชันของฉัน"
 
 #: home/templates/home/demo.html:1327
-#, fuzzy, python-format
+#, python-format
 #| msgid "No commitment required. 100% data privacy."
 msgid "No commitment required. 100%% data privacy."
 msgstr "ไม่มีข้อผูกมัด ความเป็นส่วนตัวของข้อมูล 100%"
 
 #: home/templates/home/demo.html:1338
-#, fuzzy
 #| msgid "Ready to Simplify Global Payroll?"
 msgid "Ready to bring global payroll under one roof?"
 msgstr "พร้อมที่จะทำให้การทำเงินเดือนระดับโลกง่ายขึ้นหรือยัง?"
@@ -2019,12 +1978,12 @@ msgstr "พร้อมที่จะทำให้การทำเงิน
 msgid ""
 "ExactusPay gives you a single source of truth, consistent reporting, and "
 "compliance-ready processes — without the typical complexity."
-msgstr ""
+msgstr "รับแหล่งข้อมูลจริงเพียงแหล่งเดียว รายงานที่เป็นมาตรฐาน และกระบวนการที่พร้อมด้านการปฏิบัติตามข้อกำหนด โดยไม่ต้องเผชิญกับความซับซ้อนแบบเดิมของระบบเงินเดือนระดับโลก"
 
 #: home/templates/home/demo.html:1401
 #, python-format
 msgid "© %(current_year)s ExactusPay. All rights reserved."
-msgstr ""
+msgstr "© %(current_year)s ExactusPay. สงวนลิขสิทธิ์"
 
 #: home/templates/home/features.html:724
 msgid "Features built for real global payroll"
@@ -2116,7 +2075,6 @@ msgstr ""
 "รันระบบเงินเดือนตามขนาดด้วยอินพุตที่มีโครงสร้าง การตรวจสอบอัตโนมัติ และการส่งออกที่เสถียร"
 
 #: home/templates/home/features.html:781
-#, fuzzy
 #| msgid "Enterprise Security"
 msgid "Enterprise security"
 msgstr "ความปลอดภัยระดับองค์กร"
@@ -2270,7 +2228,6 @@ msgid ""
 msgstr "รองรับหลายภาษาและ FX: ประสบการณ์ของพนักงานในท้องถิ่นทั่วทั้งสกุลเงินและภูมิภาค"
 
 #: home/templates/home/features.html:875
-#, fuzzy
 #| msgid "Ready to Simplify Global Payroll?"
 msgid "Ready to simplify global payroll?"
 msgstr "พร้อมที่จะทำให้การทำเงินเดือนระดับโลกง่ายขึ้นหรือยัง?"
@@ -2279,7 +2236,9 @@ msgstr "พร้อมที่จะทำให้การทำเงิน
 msgid ""
 "Standardise your reporting, reduce manual work, and stay compliant across "
 "markets — with one platform that scales."
-msgstr "ทำให้การรายงานของคุณเป็นมาตรฐาน ลดงานที่ต้องทำด้วยมือ และรักษาการปฏิบัติตามข้อกำหนดในทุกตลาดด้วยแพลตฟอร์มเดียวที่ขยายตัวได้"
+msgstr ""
+"ทำให้การรายงานของคุณเป็นมาตรฐาน ลดงานที่ต้องทำด้วยมือ "
+"และรักษาการปฏิบัติตามข้อกำหนดในทุกตลาดด้วยแพลตฟอร์มเดียวที่ขยายตัวได้"
 
 #: home/templates/home/features.html:878 home/templates/home/platform.html:1185
 msgid "Schedule a Demo"
@@ -2463,7 +2422,7 @@ msgid "All Systems Go"
 msgstr "ระบบทั้งหมดพร้อมใช้งาน"
 
 #: home/templates/home/index.html:1227
-#, fuzzy, python-format
+#, python-format
 #| msgid ""
 #| "100% compliance across all active jurisdictions with automated updates."
 msgid ""
@@ -2551,7 +2510,11 @@ msgid ""
 "well, but it still takes time to handle everything. With ExactusPay, it’s "
 "simple. They understand the local regulations perfectly and everything runs "
 "smoothly every month.\""
-msgstr "\"การบริหารบริษัทท่องเที่ยวในบราซิลหมายถึงการจัดการพนักงานตามฤดูกาลและทำให้มั่นใจว่าเงินเดือนถูกต้องเสมอ ฉันรู้ระบบเงินเดือนของบราซิลเป็นอย่างดี แต่ก็ยังต้องใช้เวลาในการจัดการทุกอย่าง ด้วย ExactusPay ทุกอย่างง่ายขึ้น พวกเขาเข้าใจกฎระเบียบท้องถิ่นอย่างสมบูรณ์และทุกอย่างดำเนินไปอย่างราบรื่นในทุกเดือน\""
+msgstr ""
+"\"การบริหารบริษัทท่องเที่ยวในบราซิลหมายถึงการจัดการพนักงานตามฤดูกาลและทำให้มั่นใจว่าเงินเดือนถูกต้องเสมอ "
+"ฉันรู้ระบบเงินเดือนของบราซิลเป็นอย่างดี แต่ก็ยังต้องใช้เวลาในการจัดการทุกอย่าง ด้วย ExactusPay "
+"ทุกอย่างง่ายขึ้น "
+"พวกเขาเข้าใจกฎระเบียบท้องถิ่นอย่างสมบูรณ์และทุกอย่างดำเนินไปอย่างราบรื่นในทุกเดือน\""
 
 #: home/templates/home/index.html:1299
 msgid "Jeorjes Costa"
@@ -2574,7 +2537,6 @@ msgstr ""
 "กำหนดเวลาการสาธิตแบบส่วนตัวเพื่อดูการทำงานของแพลตฟอร์มของเรา"
 
 #: home/templates/home/platform.html:20
-#, fuzzy
 #| msgid ""
 #| "Global Payroll Software | Multi-Country Payroll & Compliance Platform | "
 #| "ExactusPay"
@@ -2600,7 +2562,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/home/platform.html:40
-#, fuzzy
 #| msgid "A global payroll platform built for scale"
 msgid "ExactusPay | Global Payroll Platform Built for Scale"
 msgstr "แพลตฟอร์มการจัดการเงินเดือนระดับโลกที่สร้างขึ้นเพื่อการเติบโต"
@@ -2612,7 +2573,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/home/platform.html:47
-#, fuzzy
 #| msgid "ExactusPay | Global Payroll Software"
 msgid "ExactusPay | Global Payroll Platform"
 msgstr "ExactusPay | ซอฟต์แวร์การจัดการเงินเดือนระดับโลก"
@@ -2652,7 +2612,6 @@ msgid "Platform outcomes"
 msgstr "ผลลัพธ์ของแพลตฟอร์ม"
 
 #: home/templates/home/platform.html:998
-#, fuzzy
 #| msgid "Standardised reports"
 msgid "Standardised reporting"
 msgstr "รายงานมาตรฐาน"
@@ -2662,7 +2621,6 @@ msgid "TCOE visibility"
 msgstr "การมองเห็น TCOE (ต้นทุนรวมของการจ้างงาน)"
 
 #: home/templates/home/platform.html:1000
-#, fuzzy
 #| msgid "Audit-ready controls"
 msgid "Audit-ready"
 msgstr "การควบคุมที่พร้อมสำหรับการตรวจสอบ"
@@ -2751,7 +2709,6 @@ msgstr ""
 "ก่อนที่คุณจะจ้างพนักงานหรือเข้าสู่ตลาดใหม่ เปลี่ยนคำถาม “จะเกิดอะไรขึ้นถ้า?” ให้เป็นตัวเลขที่ชัดเจน"
 
 #: home/templates/home/platform.html:1068
-#, fuzzy
 #| msgid ""
 #| "Pre-hire modelling: price offers accurately with full employer cost "
 #| "breakdowns."
@@ -2763,7 +2720,6 @@ msgstr ""
 "เสนอราคาอย่างถูกต้องพร้อมแจกแจงต้นทุนของนายจ้างโดยละเอียด"
 
 #: home/templates/home/platform.html:1069
-#, fuzzy
 #| msgid ""
 #| "Scenario comparisons: assess markets and hiring strategies side-by-side."
 msgid ""
@@ -2772,7 +2728,6 @@ msgid ""
 msgstr "การเปรียบเทียบสถานการณ์: ประเมินตลาดและกลยุทธ์การจ้างงานเปรียบเทียบกัน"
 
 #: home/templates/home/platform.html:1070
-#, fuzzy
 #| msgid ""
 #| "Budget confidence: align Finance, HR, and leadership on one set of "
 #| "numbers."
@@ -2795,7 +2750,6 @@ msgstr ""
 "แอฟริกา และเอเชีย — ทำให้คุณพร้อมรับการตรวจสอบและรอดพ้นจากบทลงโทษที่หลีกเลี่ยงได้"
 
 #: home/templates/home/platform.html:1088
-#, fuzzy
 #| msgid ""
 #| "Regulation-aware rules: payroll logic tracks current statutory "
 #| "obligations."
@@ -2806,7 +2760,6 @@ msgstr ""
 "กฎเกณฑ์ที่คำนึงถึงระเบียบข้อบังคับ: ตรรกะของระบบเงินเดือนติดตามภาระผูกพันตามกฎหมายปัจจุบัน"
 
 #: home/templates/home/platform.html:1089
-#, fuzzy
 #| msgid "Reduced risk: validations and governance to prevent common errors."
 msgid ""
 "<strong>Reduced risk:</strong> validations and governance to prevent common "
@@ -2814,7 +2767,6 @@ msgid ""
 msgstr "ลดความเสี่ยง: มีการตรวจสอบความถูกต้องและการกำกับดูแลเพื่อป้องกันข้อผิดพลาดที่พบบ่อย"
 
 #: home/templates/home/platform.html:1090
-#, fuzzy
 #| msgid "Evidence trails: traceable calculations and changes support audits."
 msgid ""
 "<strong>Evidence trails:</strong> traceable calculations and changes support "
@@ -2837,7 +2789,6 @@ msgstr ""
 "โดยไม่ต้องกรอกข้อมูลใหม่ด้วยตนเองและลดความคลาดเคลื่อนในการดำเนินงาน"
 
 #: home/templates/home/platform.html:1108
-#, fuzzy
 #| msgid ""
 #| "Hire-to-pay pipeline: structured data exchange from onboarding to payment."
 msgid ""
@@ -2848,7 +2799,6 @@ msgstr ""
 "การแลกเปลี่ยนข้อมูลแบบมีโครงสร้างตั้งแต่การเริ่มงานไปจนถึงการชำระเงิน"
 
 #: home/templates/home/platform.html:1109
-#, fuzzy
 #| msgid ""
 #| "Operational consistency: one workflow across multiple countries/providers."
 msgid ""
@@ -2857,7 +2807,6 @@ msgid ""
 msgstr "ความสม่ำเสมอในการดำเนินงาน: ขั้นตอนการทำงานเดียวสำหรับหลายประเทศ/ผู้ให้บริการ"
 
 #: home/templates/home/platform.html:1110
-#, fuzzy
 #| msgid "Lower admin load: fewer handoffs and less spreadsheet work."
 msgid ""
 "<strong>Lower admin load:</strong> fewer handoffs and less spreadsheet work."
@@ -2878,7 +2827,6 @@ msgstr ""
 "พร้อมการเข้าถึงสลิปเงินเดือนและเอกสารในหลายภาษา"
 
 #: home/templates/home/platform.html:1128
-#, fuzzy
 #| msgid ""
 #| "FX handled centrally: exchange and payout workflows managed reliably."
 msgid ""
@@ -2889,7 +2837,6 @@ msgstr ""
 "ขั้นตอนการทำงานการแลกเปลี่ยนและการจ่ายเงินได้รับการจัดการอย่างเชื่อถือได้"
 
 #: home/templates/home/platform.html:1129
-#, fuzzy
 #| msgid ""
 #| "Local experience: multi-language portal for documents and payroll history."
 msgid ""
@@ -2898,7 +2845,6 @@ msgid ""
 msgstr "ประสบการณ์ท้องถิ่น: พอร์ทัลหลายภาษาสำหรับเอกสารและประวัติเงินเดือน"
 
 #: home/templates/home/platform.html:1130
-#, fuzzy
 #| msgid "Consistent standard: the same quality UX across every location."
 msgid ""
 "<strong>Consistent standard:</strong> the same quality UX across every "
@@ -2976,10 +2922,12 @@ msgstr "รวบรวมระบบเงินเดือนทั่วโ
 msgid ""
 "Get a single source of truth, standardised reporting, and compliance-ready "
 "processes — without the typical global payroll complexity."
-msgstr "รับแหล่งข้อมูลจริงเพียงแหล่งเดียว รายงานที่เป็นมาตรฐาน และกระบวนการที่พร้อมด้านการปฏิบัติตามข้อกำหนด โดยไม่ต้องเผชิญกับความซับซ้อนแบบเดิมของระบบเงินเดือนระดับโลก"
+msgstr ""
+"รับแหล่งข้อมูลจริงเพียงแหล่งเดียว รายงานที่เป็นมาตรฐาน "
+"และกระบวนการที่พร้อมด้านการปฏิบัติตามข้อกำหนด "
+"โดยไม่ต้องเผชิญกับความซับซ้อนแบบเดิมของระบบเงินเดือนระดับโลก"
 
 #: home/templates/home/pricing.html:20
-#, fuzzy
 #| msgid ""
 #| "Global Payroll Software | Multi-Country Payroll & Compliance Platform | "
 #| "ExactusPay"
@@ -2997,7 +2945,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/home/pricing.html:28
-#, fuzzy
 #| msgid ""
 #| "global payroll software, multi-country payroll, international payroll "
 #| "system, payroll compliance software, global payroll platform, payroll "
@@ -3017,7 +2964,6 @@ msgstr ""
 "การปฏิบัติตามกฎระเบียบเงินเดือนระหว่างประเทศ, แพลตฟอร์มเงินเดือนที่ปรับขนาดได้"
 
 #: home/templates/home/pricing.html:44 home/templates/home/pricing.html:54
-#, fuzzy
 #| msgid "ExactusPay | Global Payroll Software"
 msgid "ExactusPay | Global Payroll Pricing"
 msgstr "ExactusPay | ซอฟต์แวร์การจัดการเงินเดือนระดับโลก"
@@ -3082,7 +3028,6 @@ msgid "Country-Specific Rates"
 msgstr "อัตราเฉพาะประเทศ"
 
 #: home/templates/home/pricing.html:1101
-#, fuzzy
 #| msgid ""
 #| "Costs are adjusted based on the complexity of the local jurisdiction "
 #| "(e.g., LATAM vs. Asia), ensuring you only pay for the specific compliance "
@@ -3285,7 +3230,6 @@ msgid "Get Your Custom Quote"
 msgstr "รับใบเสนอราคาแบบเฉพาะกิจของคุณ"
 
 #: home/templates/home/pricing.html:1275
-#, fuzzy
 #| msgid ""
 #| "Because global expansion looks different for every company, we don't use "
 #| "a \"one size fits all\" price tag. To give you the most accurate and "
@@ -3595,7 +3539,6 @@ msgstr ""
 "จากนั้นเราจะร่างรูปแบบความปลอดภัยที่เหมาะสมสำหรับการดำเนินการเงินเดือนข้ามพรมแดนของคุณ"
 
 #: home/templates/home/security.html:1304
-#, fuzzy
 #| msgid "Request a demo"
 msgid "Request a Demo"
 msgstr "ขอรับการสาธิต"
@@ -3694,5 +3637,3 @@ msgstr ""
 
 #~ msgid "$9 | €8 | £7"
 #~ msgstr "$9 | €8 | £7"
-
-

@@ -417,7 +417,6 @@ msgid "That is where ExactusPay is redefining the global payroll landscape."
 msgstr ""
 
 #: home/templates/articles/br/article_0001.html:896
-#, fuzzy
 #| msgid "Smart Global Payroll Platform"
 msgid "A Smarter Approach to Global Payroll"
 msgstr "Plataforma Inteligente de Nómina Global"
@@ -443,7 +442,6 @@ msgid "What Makes ExactusPay Different?"
 msgstr ""
 
 #: home/templates/articles/br/article_0001.html:911
-#, fuzzy
 #| msgid "AI-Powered Compliance"
 msgid "AI-powered compliance"
 msgstr "Cumplimiento con IA"
@@ -455,7 +453,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/br/article_0001.html:915
-#, fuzzy
 #| msgid "Real-time Analytics"
 msgid "Real-time analytics"
 msgstr "Análisis en Tiempo Real"
@@ -478,7 +475,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/br/article_0001.html:923
-#, fuzzy
 #| msgid "Enterprise Security"
 msgid "Enterprise-grade security"
 msgstr "Seguridad Empresarial"
@@ -545,7 +541,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/br/article_0001.html:965
-#, fuzzy
 #| msgid "Ready to Simplify Global Payroll?"
 msgid "Ready to Transform Your Global Payroll?"
 msgstr "¿Listo para Simplificar la Nómina Global?"
@@ -777,7 +772,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/br/article_0002.html:25
-#, fuzzy
 #| msgid "Multi-country standard"
 msgid "Control standard"
 msgstr "Estándar multi-país"
@@ -839,7 +833,6 @@ msgid "Keep evidence of approvals and any post-payroll adjustments."
 msgstr ""
 
 #: home/templates/articles/br/article_0002.html:49
-#, fuzzy
 #| msgid "Standardised reports"
 msgid "3. Standardise reporting for headquarters"
 msgstr "Informes estandarizados"
@@ -995,7 +988,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/br/article_0004.html:21
-#, fuzzy
 #| msgid "Cost visibility"
 msgid "Visibility"
 msgstr "Visibilidad de costos"
@@ -1090,7 +1082,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/br/article_0005.html:21
-#, fuzzy
 #| msgid "Standards"
 msgid "Data standard"
 msgstr "Estándares"
@@ -1101,7 +1092,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/br/article_0005.html:25
-#, fuzzy
 #| msgid "Fast, reliable processing"
 msgid "Scalable process"
 msgstr "Procesamiento rápido y confiable"
@@ -1176,7 +1166,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1075
-#, fuzzy
 #| msgid "Request a demo"
 msgid "Request a Personalized Demo"
 msgstr "Solicite una demostración"
@@ -1186,7 +1175,6 @@ msgid "Read the Guide"
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1082
-#, fuzzy
 #| msgid "Security highlights"
 msgid "Guide highlights"
 msgstr "Aspectos destacados de seguridad"
@@ -1204,7 +1192,6 @@ msgid "UF Calculations"
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1086
-#, fuzzy
 #| msgid "Compliance"
 msgid "SII Compliance"
 msgstr "Cumplimiento"
@@ -1225,7 +1212,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1110
-#, fuzzy
 #| msgid "Security highlights"
 msgid "Article highlights"
 msgstr "Aspectos destacados de seguridad"
@@ -1239,7 +1225,6 @@ msgid "Focus: Compliance + Payroll"
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1115
-#, fuzzy
 #| msgid "Built for expansion"
 msgid "Built for audit-ready operations"
 msgstr "Construido para expansión"
@@ -1252,7 +1237,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1127
-#, fuzzy
 #| msgid "Key outcomes"
 msgid "Key context"
 msgstr "Resultados clave"
@@ -1478,7 +1462,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1320
-#, fuzzy
 #| msgid "Strategic payroll simulations"
 msgid "Predictive Payroll Simulations"
 msgstr "Simulaciones estratégicas de nómina"
@@ -1490,7 +1473,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1325
-#, fuzzy
 #| msgid "AI-Powered Compliance"
 msgid "Zero-Error Compliance"
 msgstr "Cumplimiento con IA"
@@ -1502,7 +1484,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1330
-#, fuzzy
 #| msgid "Global-standardised reporting"
 msgid "Global-Standardized Reporting"
 msgstr "Informes estandarizados globalmente"
@@ -1525,7 +1506,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1340
-#, fuzzy
 #| msgid "Next steps"
 msgid "Next step"
 msgstr "Próximos pasos"
@@ -1543,7 +1523,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1353
-#, fuzzy
 #| msgid "Schedule Your Personal Demo"
 msgid "Request a Personalized Demo Today"
 msgstr "Agende Su Demostración Personalizada"
@@ -1568,14 +1547,12 @@ msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1379
 #: home/templates/home/index.html:1102
-#, fuzzy
 #| msgid "Book a session"
 msgid "Book Demo"
 msgstr "Reservar una sesión"
 
 #: home/templates/articles/cl/article_0001.html:1382
 #: home/templates/home/demo.html:1342
-#, fuzzy
 #| msgid "Pricing"
 msgid "View Pricing"
 msgstr "Precios"
@@ -1631,7 +1608,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/cr/article_0001.html:25
-#, fuzzy
 #| msgid "Regional expertise"
 msgid "Regional scale"
 msgstr "Experiencia regional"
@@ -1684,7 +1660,6 @@ msgstr ""
 "ExactusPay"
 
 #: home/templates/base.html:373
-#, fuzzy
 #| msgid "Mobile navigation"
 msgid "Primary navigation"
 msgstr "Navegación móvil"
@@ -1694,7 +1669,6 @@ msgid "Get started"
 msgstr ""
 
 #: home/templates/base.html:481
-#, fuzzy
 #| msgid "Pricing"
 msgid "See Pricing"
 msgstr "Precios"
@@ -1722,7 +1696,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/home/demo.html:46 home/templates/home/demo.html:56
-#, fuzzy
 #| msgid "ExactusPay | Global Payroll Software"
 msgid "ExactusPay | Request a Global Payroll Demo"
 msgstr "ExactusPay | Software de Nómina Global"
@@ -1734,7 +1707,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/home/demo.html:59
-#, fuzzy
 #| msgid ""
 #| "ExactusPay | Global Payroll Software for Multi-Country Payroll & "
 #| "Compliance"
@@ -1755,7 +1727,6 @@ msgstr ""
 "con cumplimiento predecible y un estándar ejecutivo para informes."
 
 #: home/templates/home/demo.html:1156
-#, fuzzy
 #| msgid "What you'll see"
 msgid "What you’ll see"
 msgstr "Lo que verá"
@@ -1869,7 +1840,6 @@ msgid "The Tailored Walkthrough (30 mins)"
 msgstr "El Recorrido Personalizado (30 minutos)"
 
 #: home/templates/home/demo.html:1218
-#, fuzzy
 #| msgid ""
 #| "No generic deck. We show country-specific examples, local tax logic, and "
 #| "the reporting you'll rely on."
@@ -1937,7 +1907,6 @@ msgid "Meet your team"
 msgstr "Conozca a su equipo"
 
 #: home/templates/home/demo.html:1254
-#, fuzzy
 #| msgid ""
 #| "This isn't just software. You'll meet the support experts that operate as "
 #| "an extension of your team."
@@ -1957,7 +1926,6 @@ msgid "Schedule your personal walkthrough"
 msgstr "Agende su recorrido personalizado"
 
 #: home/templates/home/demo.html:1265
-#, fuzzy
 #| msgid ""
 #| "Submit the form and we'll follow up quickly with the right session for "
 #| "your footprint."
@@ -2013,13 +1981,12 @@ msgid "Book My Session"
 msgstr "Reservar Mi Sesión"
 
 #: home/templates/home/demo.html:1327
-#, fuzzy, python-format
+#, python-format
 #| msgid "No commitment required. 100% data privacy."
 msgid "No commitment required. 100%% data privacy."
 msgstr "Sin compromiso. 100% de privacidad de datos."
 
 #: home/templates/home/demo.html:1338
-#, fuzzy
 #| msgid "Ready to Simplify Global Payroll?"
 msgid "Ready to bring global payroll under one roof?"
 msgstr "¿Listo para Simplificar la Nómina Global?"
@@ -2028,12 +1995,12 @@ msgstr "¿Listo para Simplificar la Nómina Global?"
 msgid ""
 "ExactusPay gives you a single source of truth, consistent reporting, and "
 "compliance-ready processes — without the typical complexity."
-msgstr ""
+msgstr "Obtenga una única fuente de verdad, informes estandarizados y procesos listos para el cumplimiento, sin la complejidad habitual de la nómina global."
 
 #: home/templates/home/demo.html:1401
 #, python-format
 msgid "© %(current_year)s ExactusPay. All rights reserved."
-msgstr ""
+msgstr "© %(current_year)s ExactusPay. Todos los derechos reservados."
 
 #: home/templates/home/features.html:724
 msgid "Features built for real global payroll"
@@ -2132,7 +2099,6 @@ msgstr ""
 "automatizadas y exportaciones estables."
 
 #: home/templates/home/features.html:781
-#, fuzzy
 #| msgid "Enterprise Security"
 msgid "Enterprise security"
 msgstr "Seguridad Empresarial"
@@ -2194,7 +2160,6 @@ msgstr ""
 "impuestos del empleador, contribuciones legales y cargas locales."
 
 #: home/templates/home/features.html:818
-#, fuzzy
 #| msgid ""
 #| "Pre-hire forecasting: model offers with accurate employer-cost breakdowns."
 msgid ""
@@ -2204,7 +2169,6 @@ msgstr ""
 "del empleador."
 
 #: home/templates/home/features.html:819
-#, fuzzy
 #| msgid ""
 #| "Scenario planning: compare markets and hiring strategies side-by-side."
 msgid "Scenario planning: compare markets and hiring strategies side-by-side."
@@ -2213,7 +2177,6 @@ msgstr ""
 "lado a lado."
 
 #: home/templates/home/features.html:820
-#, fuzzy
 #| msgid "Budget certainty: align HR and Finance with one set of numbers."
 msgid "Budget certainty: align HR and Finance with one set of numbers."
 msgstr ""
@@ -2233,7 +2196,6 @@ msgstr ""
 "mantiene estable en todos los países y ciclos de nómina."
 
 #: home/templates/home/features.html:833
-#, fuzzy
 #| msgid ""
 #| "Single dashboard: central visibility across payroll and workforce data."
 msgid "Single dashboard: central visibility across payroll and workforce data."
@@ -2241,7 +2203,6 @@ msgstr ""
 "Panel único: visibilidad central de los datos de nómina y fuerza laboral."
 
 #: home/templates/home/features.html:834
-#, fuzzy
 #| msgid ""
 #| "Comparable outputs: consistent data definitions enable clean cross-"
 #| "country analysis."
@@ -2253,7 +2214,6 @@ msgstr ""
 "claros entre países."
 
 #: home/templates/home/features.html:835
-#, fuzzy
 #| msgid ""
 #| "Decision clarity: executive-grade insights into costs, trends, and "
 #| "exposure."
@@ -2276,7 +2236,6 @@ msgstr ""
 "gobernanza integradas, diseñadas para datos sensibles de nómina."
 
 #: home/templates/home/features.html:848
-#, fuzzy
 #| msgid ""
 #| "Legal logic: controls aligned to labour law and statutory requirements."
 msgid "Legal logic: controls aligned to labour law and statutory requirements."
@@ -2285,7 +2244,6 @@ msgstr ""
 "legales."
 
 #: home/templates/home/features.html:849
-#, fuzzy
 #| msgid "Error reduction: automation and guardrails minimise manual mistakes."
 msgid "Error reduction: automation and guardrails minimise manual mistakes."
 msgstr ""
@@ -2293,7 +2251,6 @@ msgstr ""
 "minimizan los errores manuales."
 
 #: home/templates/home/features.html:850
-#, fuzzy
 #| msgid ""
 #| "Audit-ready: traceable calculations and data controls support reviews."
 msgid "Audit-ready: traceable calculations and data controls support reviews."
@@ -2315,13 +2272,11 @@ msgstr ""
 "consistente."
 
 #: home/templates/home/features.html:863
-#, fuzzy
 #| msgid "HCM connectivity: integrate with tools like Workday and BambooHR."
 msgid "HCM connectivity: integrate with tools like Workday and BambooHR."
 msgstr "Conectividad HCM: intégrese con herramientas como Workday y BambooHR."
 
 #: home/templates/home/features.html:864
-#, fuzzy
 #| msgid ""
 #| "Scalable architecture: grow from mid-sized to global without rewiring "
 #| "operations."
@@ -2333,7 +2288,6 @@ msgstr ""
 "operaciones."
 
 #: home/templates/home/features.html:865
-#, fuzzy
 #| msgid ""
 #| "Multi-language & FX: localised employee experience across currencies and "
 #| "regions."
@@ -2345,7 +2299,6 @@ msgstr ""
 "monedas y regiones."
 
 #: home/templates/home/features.html:875
-#, fuzzy
 #| msgid "Ready to Simplify Global Payroll?"
 msgid "Ready to simplify global payroll?"
 msgstr "¿Listo para Simplificar la Nómina Global?"
@@ -2354,7 +2307,9 @@ msgstr "¿Listo para Simplificar la Nómina Global?"
 msgid ""
 "Standardise your reporting, reduce manual work, and stay compliant across "
 "markets — with one platform that scales."
-msgstr "Estandarice sus informes, reduzca el trabajo manual y mantenga el cumplimiento en todos los mercados, con una sola plataforma que escala."
+msgstr ""
+"Estandarice sus informes, reduzca el trabajo manual y mantenga el "
+"cumplimiento en todos los mercados, con una sola plataforma que escala."
 
 #: home/templates/home/features.html:878 home/templates/home/platform.html:1185
 msgid "Schedule a Demo"
@@ -2549,7 +2504,7 @@ msgid "All Systems Go"
 msgstr "Todos los Sistemas Operativos"
 
 #: home/templates/home/index.html:1227
-#, fuzzy, python-format
+#, python-format
 #| msgid ""
 #| "100% compliance across all active jurisdictions with automated updates."
 msgid ""
@@ -2651,7 +2606,12 @@ msgid ""
 "well, but it still takes time to handle everything. With ExactusPay, it’s "
 "simple. They understand the local regulations perfectly and everything runs "
 "smoothly every month.\""
-msgstr "\"Dirigir una empresa turística en Brasil significa gestionar personal estacional y asegurarse de que la nómina siempre sea correcta. Conozco bien el sistema de nómina brasileño, pero aun así lleva tiempo encargarse de todo. Con ExactusPay es sencillo. Entienden perfectamente la normativa local y todo funciona sin problemas cada mes.\""
+msgstr ""
+"\"Dirigir una empresa turística en Brasil significa gestionar personal "
+"estacional y asegurarse de que la nómina siempre sea correcta. Conozco bien "
+"el sistema de nómina brasileño, pero aun así lleva tiempo encargarse de "
+"todo. Con ExactusPay es sencillo. Entienden perfectamente la normativa local "
+"y todo funciona sin problemas cada mes.\""
 
 #: home/templates/home/index.html:1299
 msgid "Jeorjes Costa"
@@ -2675,7 +2635,6 @@ msgstr ""
 "nuestra plataforma en acción."
 
 #: home/templates/home/platform.html:20
-#, fuzzy
 #| msgid ""
 #| "Global Payroll Software | Multi-Country Payroll & Compliance Platform | "
 #| "ExactusPay"
@@ -2701,7 +2660,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/home/platform.html:40
-#, fuzzy
 #| msgid "A global payroll platform built for scale"
 msgid "ExactusPay | Global Payroll Platform Built for Scale"
 msgstr "Una plataforma de nómina global construida para escala"
@@ -2713,7 +2671,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/home/platform.html:47
-#, fuzzy
 #| msgid "ExactusPay | Global Payroll Software"
 msgid "ExactusPay | Global Payroll Platform"
 msgstr "ExactusPay | Software de Nómina Global"
@@ -2753,7 +2710,6 @@ msgid "Platform outcomes"
 msgstr "Resultados de la plataforma"
 
 #: home/templates/home/platform.html:998
-#, fuzzy
 #| msgid "Standardised reports"
 msgid "Standardised reporting"
 msgstr "Informes estandarizados"
@@ -2763,7 +2719,6 @@ msgid "TCOE visibility"
 msgstr "Visibilidad del Costo Total de Empleo"
 
 #: home/templates/home/platform.html:1000
-#, fuzzy
 #| msgid "Audit-ready controls"
 msgid "Audit-ready"
 msgstr "Controles listos para auditoría"
@@ -2855,7 +2810,6 @@ msgstr ""
 "Convierta preguntas de \"¿y si?\" en números claros."
 
 #: home/templates/home/platform.html:1068
-#, fuzzy
 #| msgid ""
 #| "Pre-hire modelling: price offers accurately with full employer cost "
 #| "breakdowns."
@@ -2867,7 +2821,6 @@ msgstr ""
 "desgloses completos de costos del empleador."
 
 #: home/templates/home/platform.html:1069
-#, fuzzy
 #| msgid ""
 #| "Scenario comparisons: assess markets and hiring strategies side-by-side."
 msgid ""
@@ -2878,7 +2831,6 @@ msgstr ""
 "lado a lado."
 
 #: home/templates/home/platform.html:1070
-#, fuzzy
 #| msgid ""
 #| "Budget confidence: align Finance, HR, and leadership on one set of "
 #| "numbers."
@@ -2904,7 +2856,6 @@ msgstr ""
 "auditoría y protegido de sanciones evitables."
 
 #: home/templates/home/platform.html:1088
-#, fuzzy
 #| msgid ""
 #| "Regulation-aware rules: payroll logic tracks current statutory "
 #| "obligations."
@@ -2916,7 +2867,6 @@ msgstr ""
 "obligaciones legales actuales."
 
 #: home/templates/home/platform.html:1089
-#, fuzzy
 #| msgid "Reduced risk: validations and governance to prevent common errors."
 msgid ""
 "<strong>Reduced risk:</strong> validations and governance to prevent common "
@@ -2925,7 +2875,6 @@ msgstr ""
 "Riesgo reducido: validaciones y gobernanza para prevenir errores comunes."
 
 #: home/templates/home/platform.html:1090
-#, fuzzy
 #| msgid "Evidence trails: traceable calculations and changes support audits."
 msgid ""
 "<strong>Evidence trails:</strong> traceable calculations and changes support "
@@ -2947,7 +2896,6 @@ msgstr ""
 "hasta el pago — sin reingreso manual y desvío operativo."
 
 #: home/templates/home/platform.html:1108
-#, fuzzy
 #| msgid ""
 #| "Hire-to-pay pipeline: structured data exchange from onboarding to payment."
 msgid ""
@@ -2958,7 +2906,6 @@ msgstr ""
 "incorporación hasta el pago."
 
 #: home/templates/home/platform.html:1109
-#, fuzzy
 #| msgid ""
 #| "Operational consistency: one workflow across multiple countries/providers."
 msgid ""
@@ -2968,7 +2915,6 @@ msgstr ""
 "Consistencia operativa: un flujo de trabajo en múltiples países/proveedores."
 
 #: home/templates/home/platform.html:1110
-#, fuzzy
 #| msgid "Lower admin load: fewer handoffs and less spreadsheet work."
 msgid ""
 "<strong>Lower admin load:</strong> fewer handoffs and less spreadsheet work."
@@ -2991,7 +2937,6 @@ msgstr ""
 "idioma a recibos de pago y documentos."
 
 #: home/templates/home/platform.html:1128
-#, fuzzy
 #| msgid ""
 #| "FX handled centrally: exchange and payout workflows managed reliably."
 msgid ""
@@ -3002,7 +2947,6 @@ msgstr ""
 "gestionados de manera confiable."
 
 #: home/templates/home/platform.html:1129
-#, fuzzy
 #| msgid ""
 #| "Local experience: multi-language portal for documents and payroll history."
 msgid ""
@@ -3012,7 +2956,6 @@ msgstr ""
 "Experiencia local: portal multi-idioma para documentos e historial de nómina."
 
 #: home/templates/home/platform.html:1130
-#, fuzzy
 #| msgid "Consistent standard: the same quality UX across every location."
 msgid ""
 "<strong>Consistent standard:</strong> the same quality UX across every "
@@ -3095,10 +3038,11 @@ msgstr "Reúna la nómina global bajo un mismo techo"
 msgid ""
 "Get a single source of truth, standardised reporting, and compliance-ready "
 "processes — without the typical global payroll complexity."
-msgstr "Obtenga una única fuente de verdad, informes estandarizados y procesos listos para el cumplimiento, sin la complejidad habitual de la nómina global."
+msgstr ""
+"Obtenga una única fuente de verdad, informes estandarizados y procesos "
+"listos para el cumplimiento, sin la complejidad habitual de la nómina global."
 
 #: home/templates/home/pricing.html:20
-#, fuzzy
 #| msgid ""
 #| "Global Payroll Software | Multi-Country Payroll & Compliance Platform | "
 #| "ExactusPay"
@@ -3116,7 +3060,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/home/pricing.html:28
-#, fuzzy
 #| msgid ""
 #| "global payroll software, multi-country payroll, international payroll "
 #| "system, payroll compliance software, global payroll platform, payroll "
@@ -3137,7 +3080,6 @@ msgstr ""
 "nómina internacional, plataforma de nómina escalable"
 
 #: home/templates/home/pricing.html:44 home/templates/home/pricing.html:54
-#, fuzzy
 #| msgid "ExactusPay | Global Payroll Software"
 msgid "ExactusPay | Global Payroll Pricing"
 msgstr "ExactusPay | Software de Nómina Global"
@@ -3203,7 +3145,6 @@ msgid "Country-Specific Rates"
 msgstr "Tarifas Específicas por País"
 
 #: home/templates/home/pricing.html:1101
-#, fuzzy
 #| msgid ""
 #| "Costs are adjusted based on the complexity of the local jurisdiction "
 #| "(e.g., LATAM vs. Asia), ensuring you only pay for the specific compliance "
@@ -3333,7 +3274,6 @@ msgid "Complex jurisdiction handling"
 msgstr "Manejo de jurisdicción compleja"
 
 #: home/templates/home/pricing.html:1214
-#, fuzzy
 #| msgid "Local payroll expertise"
 msgid "Local tax expertise"
 msgstr "Experiencia local en nómina"
@@ -3415,7 +3355,6 @@ msgid "Get Your Custom Quote"
 msgstr "Obtenga Su Cotización Personalizada"
 
 #: home/templates/home/pricing.html:1275
-#, fuzzy
 #| msgid ""
 #| "Because global expansion looks different for every company, we don't use "
 #| "a \"one size fits all\" price tag. To give you the most accurate and "
@@ -3736,7 +3675,6 @@ msgstr ""
 "para sus operaciones de nómina transfronterizas."
 
 #: home/templates/home/security.html:1304
-#, fuzzy
 #| msgid "Request a demo"
 msgid "Request a Demo"
 msgstr "Solicite una demostración"
@@ -3756,27 +3694,22 @@ msgid ""
 "There was a technical error sending your request. Please try again later."
 msgstr ""
 
-#, fuzzy
 #~| msgid "Live Dashboard"
 #~ msgid "Single dashboard:"
 #~ msgstr "Panel en Vivo"
 
-#, fuzzy
 #~| msgid "Audit-ready controls"
 #~ msgid "Audit-ready:"
 #~ msgstr "Controles listos para auditoría"
 
-#, fuzzy
 #~| msgid "Managed Service Connectivity"
 #~ msgid "HCM connectivity:"
 #~ msgstr "Conectividad de Servicio Gestionado"
 
-#, fuzzy
 #~| msgid "View Architecture"
 #~ msgid "Scalable architecture:"
 #~ msgstr "Ver Arquitectura"
 
-#, fuzzy
 #~| msgid "Multi-language support"
 #~ msgid "Multi-language & FX:"
 #~ msgstr "Soporte multi-idioma"
@@ -3861,5 +3794,3 @@ msgstr ""
 
 #~ msgid "$9 | €8 | £7"
 #~ msgstr "$9 | €8 | £7"
-
-

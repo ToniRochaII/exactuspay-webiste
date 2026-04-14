@@ -32,7 +32,6 @@ msgid "profiles"
 msgstr ""
 
 #: accounts/templates/accounts/login.html:4
-#, fuzzy
 #| msgid "ExactusPay"
 msgid "Log In | ExactusPay"
 msgstr "ExactusPay"
@@ -83,7 +82,6 @@ msgid "Create one here"
 msgstr ""
 
 #: accounts/templates/accounts/profile.html:4
-#, fuzzy
 #| msgid "ExactusPay"
 msgid "Profile | ExactusPay"
 msgstr "ExactusPay"
@@ -111,7 +109,6 @@ msgid "Save profile"
 msgstr ""
 
 #: accounts/templates/accounts/profile.html:54 home/templates/base.html:388
-#, fuzzy
 #| msgid "Log In"
 msgid "Log Out"
 msgstr "تسجيل الدخول"
@@ -146,7 +143,6 @@ msgid "Your account has been created."
 msgstr ""
 
 #: accounts/views.py:26
-#, fuzzy
 #| msgid "See ExactusPay in Action"
 msgid "Create Your ExactusPay Account"
 msgstr "شاهد ExactusPay أثناء العمل"
@@ -162,7 +158,6 @@ msgid "Your profile has been updated."
 msgstr ""
 
 #: accounts/views.py:46
-#, fuzzy
 #| msgid "ExactusPay"
 msgid "Your ExactusPay Profile"
 msgstr "ExactusPay"
@@ -184,7 +179,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/article_base.html:154
-#, fuzzy
 #| msgid "Countries"
 msgid "Country Guide"
 msgstr "دولة"
@@ -212,13 +206,11 @@ msgid "Employer cost calculations"
 msgstr ""
 
 #: home/templates/articles/article_base.html:182
-#, fuzzy
 #| msgid "Local payroll expertise"
 msgid "Local payroll operations"
 msgstr "خبرة محلية في الرواتب"
 
 #: home/templates/articles/article_base.html:183
-#, fuzzy
 #| msgid "Compliance Guides"
 msgid "Compliance evidence trails"
 msgstr "أدلة الامتثال"
@@ -418,7 +410,6 @@ msgid "That is where ExactusPay is redefining the global payroll landscape."
 msgstr ""
 
 #: home/templates/articles/br/article_0001.html:896
-#, fuzzy
 #| msgid "Smart Global Payroll Platform"
 msgid "A Smarter Approach to Global Payroll"
 msgstr "منصة الرواتب العالمية الذكية"
@@ -444,7 +435,6 @@ msgid "What Makes ExactusPay Different?"
 msgstr ""
 
 #: home/templates/articles/br/article_0001.html:911
-#, fuzzy
 #| msgid "AI-Powered Compliance"
 msgid "AI-powered compliance"
 msgstr "الامتثال المدعوم بالذكاء الاصطناعي"
@@ -456,7 +446,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/br/article_0001.html:915
-#, fuzzy
 #| msgid "Real-time Analytics"
 msgid "Real-time analytics"
 msgstr "تحليلات في الوقت الفعلي"
@@ -479,7 +468,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/br/article_0001.html:923
-#, fuzzy
 #| msgid "Enterprise Security"
 msgid "Enterprise-grade security"
 msgstr "أمان على مستوى المؤسسات"
@@ -546,7 +534,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/br/article_0001.html:965
-#, fuzzy
 #| msgid "Ready to Simplify Global Payroll?"
 msgid "Ready to Transform Your Global Payroll?"
 msgstr "هل أنت مستعد لتبسيط الرواتب العالمية؟"
@@ -780,7 +767,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/br/article_0002.html:25
-#, fuzzy
 #| msgid "Multi-country standard"
 msgid "Control standard"
 msgstr "معيار متعدد الدول"
@@ -842,7 +828,6 @@ msgid "Keep evidence of approvals and any post-payroll adjustments."
 msgstr ""
 
 #: home/templates/articles/br/article_0002.html:49
-#, fuzzy
 #| msgid "Standardised reports"
 msgid "3. Standardise reporting for headquarters"
 msgstr "تقارير موحدة"
@@ -998,7 +983,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/br/article_0004.html:21
-#, fuzzy
 #| msgid "Cost visibility"
 msgid "Visibility"
 msgstr "شفافية التكلفة"
@@ -1093,7 +1077,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/br/article_0005.html:21
-#, fuzzy
 #| msgid "Standards"
 msgid "Data standard"
 msgstr "المعايير"
@@ -1104,7 +1087,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/br/article_0005.html:25
-#, fuzzy
 #| msgid "Fast, reliable processing"
 msgid "Scalable process"
 msgstr "معالجة سريعة وموثوقة"
@@ -1179,7 +1161,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1075
-#, fuzzy
 #| msgid "Request a demo"
 msgid "Request a Personalized Demo"
 msgstr "طلب عرض توضيحي"
@@ -1189,7 +1170,6 @@ msgid "Read the Guide"
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1082
-#, fuzzy
 #| msgid "Security highlights"
 msgid "Guide highlights"
 msgstr "أبرز ملامح الأمان"
@@ -1207,7 +1187,6 @@ msgid "UF Calculations"
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1086
-#, fuzzy
 #| msgid "Compliance"
 msgid "SII Compliance"
 msgstr "الامتثال"
@@ -1228,7 +1207,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1110
-#, fuzzy
 #| msgid "Security highlights"
 msgid "Article highlights"
 msgstr "أبرز ملامح الأمان"
@@ -1242,7 +1220,6 @@ msgid "Focus: Compliance + Payroll"
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1115
-#, fuzzy
 #| msgid "Built for expansion"
 msgid "Built for audit-ready operations"
 msgstr "مصمم للتوسع"
@@ -1255,7 +1232,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1127
-#, fuzzy
 #| msgid "Key outcomes"
 msgid "Key context"
 msgstr "النتائج الرئيسية"
@@ -1481,7 +1457,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1320
-#, fuzzy
 #| msgid "Strategic payroll simulations"
 msgid "Predictive Payroll Simulations"
 msgstr "محاكاة الرواتب الاستراتيجية"
@@ -1493,7 +1468,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1325
-#, fuzzy
 #| msgid "AI-Powered Compliance"
 msgid "Zero-Error Compliance"
 msgstr "الامتثال المدعوم بالذكاء الاصطناعي"
@@ -1505,7 +1479,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1330
-#, fuzzy
 #| msgid "Global-standardised reporting"
 msgid "Global-Standardized Reporting"
 msgstr "تقارير موحدة عالميًا"
@@ -1528,7 +1501,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1340
-#, fuzzy
 #| msgid "Next steps"
 msgid "Next step"
 msgstr "الخطوات التالية"
@@ -1546,7 +1518,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1353
-#, fuzzy
 #| msgid "Schedule Your Personal Demo"
 msgid "Request a Personalized Demo Today"
 msgstr "جدولة العرض التوضيحي الشخصي الخاص بك"
@@ -1571,14 +1542,12 @@ msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1379
 #: home/templates/home/index.html:1102
-#, fuzzy
 #| msgid "Book a session"
 msgid "Book Demo"
 msgstr "احجز جلسة"
 
 #: home/templates/articles/cl/article_0001.html:1382
 #: home/templates/home/demo.html:1342
-#, fuzzy
 #| msgid "Pricing"
 msgid "View Pricing"
 msgstr "الأسعار"
@@ -1634,7 +1603,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/cr/article_0001.html:25
-#, fuzzy
 #| msgid "Regional expertise"
 msgid "Regional scale"
 msgstr "خبرة إقليمية"
@@ -1686,7 +1654,6 @@ msgstr ""
 "برنامج الرواتب العالمي | منصة رواتب متعددة الدول والامتثال | ExactusPay"
 
 #: home/templates/base.html:373
-#, fuzzy
 #| msgid "Mobile navigation"
 msgid "Primary navigation"
 msgstr "التنقل عبر الجوال"
@@ -1696,7 +1663,6 @@ msgid "Get started"
 msgstr ""
 
 #: home/templates/base.html:481
-#, fuzzy
 #| msgid "Pricing"
 msgid "See Pricing"
 msgstr "الأسعار"
@@ -1724,7 +1690,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/home/demo.html:46 home/templates/home/demo.html:56
-#, fuzzy
 #| msgid "ExactusPay | Global Payroll Software"
 msgid "ExactusPay | Request a Global Payroll Demo"
 msgstr "ExactusPay | برنامج الرواتب العالمي"
@@ -1736,7 +1701,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/home/demo.html:59
-#, fuzzy
 #| msgid ""
 #| "ExactusPay | Global Payroll Software for Multi-Country Payroll & "
 #| "Compliance"
@@ -1756,7 +1720,6 @@ msgstr ""
 "تنفيذي واحد لإعداد التقارير."
 
 #: home/templates/home/demo.html:1156
-#, fuzzy
 #| msgid "What you'll see"
 msgid "What you’ll see"
 msgstr "ما ستراه"
@@ -1869,7 +1832,6 @@ msgid "The Tailored Walkthrough (30 mins)"
 msgstr "الجولة الإرشادية المخصصة (30 دقيقة)"
 
 #: home/templates/home/demo.html:1218
-#, fuzzy
 #| msgid ""
 #| "No generic deck. We show country-specific examples, local tax logic, and "
 #| "the reporting you'll rely on."
@@ -1936,7 +1898,6 @@ msgid "Meet your team"
 msgstr "قابل فريقك"
 
 #: home/templates/home/demo.html:1254
-#, fuzzy
 #| msgid ""
 #| "This isn't just software. You'll meet the support experts that operate as "
 #| "an extension of your team."
@@ -1954,7 +1915,6 @@ msgid "Schedule your personal walkthrough"
 msgstr "جدولة جولتك الإرشادية الشخصية"
 
 #: home/templates/home/demo.html:1265
-#, fuzzy
 #| msgid ""
 #| "Submit the form and we'll follow up quickly with the right session for "
 #| "your footprint."
@@ -2008,13 +1968,12 @@ msgid "Book My Session"
 msgstr "احجز جلستي"
 
 #: home/templates/home/demo.html:1327
-#, fuzzy, python-format
+#, python-format
 #| msgid "No commitment required. 100% data privacy."
 msgid "No commitment required. 100%% data privacy."
 msgstr "لا يوجد التزام مطلوب. خصوصية البيانات 100%."
 
 #: home/templates/home/demo.html:1338
-#, fuzzy
 #| msgid "Ready to Simplify Global Payroll?"
 msgid "Ready to bring global payroll under one roof?"
 msgstr "هل أنت مستعد لتبسيط الرواتب العالمية؟"
@@ -2023,12 +1982,12 @@ msgstr "هل أنت مستعد لتبسيط الرواتب العالمية؟"
 msgid ""
 "ExactusPay gives you a single source of truth, consistent reporting, and "
 "compliance-ready processes — without the typical complexity."
-msgstr ""
+msgstr "احصل على مصدر واحد للحقيقة، وتقارير موحدة، وعمليات جاهزة للامتثال، من دون التعقيد المعتاد في الرواتب العالمية."
 
 #: home/templates/home/demo.html:1401
 #, python-format
 msgid "© %(current_year)s ExactusPay. All rights reserved."
-msgstr ""
+msgstr "© %(current_year)s ExactusPay. جميع الحقوق محفوظة."
 
 #: home/templates/home/features.html:724
 msgid "Features built for real global payroll"
@@ -2123,7 +2082,6 @@ msgstr ""
 "قم بتشغيل الرواتب على نطاق واسع بمدخلات منظمة، وفحوصات آلية، وتصديرات مستقرة."
 
 #: home/templates/home/features.html:781
-#, fuzzy
 #| msgid "Enterprise Security"
 msgid "Enterprise security"
 msgstr "أمان على مستوى المؤسسات"
@@ -2277,7 +2235,6 @@ msgid ""
 msgstr "لغات متعددة والعملات الأجنبية: تجربة موظف محلية عبر العملات والمناطق."
 
 #: home/templates/home/features.html:875
-#, fuzzy
 #| msgid "Ready to Simplify Global Payroll?"
 msgid "Ready to simplify global payroll?"
 msgstr "هل أنت مستعد لتبسيط الرواتب العالمية؟"
@@ -2286,7 +2243,9 @@ msgstr "هل أنت مستعد لتبسيط الرواتب العالمية؟"
 msgid ""
 "Standardise your reporting, reduce manual work, and stay compliant across "
 "markets — with one platform that scales."
-msgstr "وحّد تقاريرك، وقلّل العمل اليدوي، وابقَ ملتزمًا عبر الأسواق المختلفة، مع منصة تتوسع معك."
+msgstr ""
+"وحّد تقاريرك، وقلّل العمل اليدوي، وابقَ ملتزمًا عبر الأسواق المختلفة، مع منصة "
+"تتوسع معك."
 
 #: home/templates/home/features.html:878 home/templates/home/platform.html:1185
 msgid "Schedule a Demo"
@@ -2473,7 +2432,7 @@ msgid "All Systems Go"
 msgstr "جميع الأنظمة جاهزة"
 
 #: home/templates/home/index.html:1227
-#, fuzzy, python-format
+#, python-format
 #| msgid ""
 #| "100% compliance across all active jurisdictions with automated updates."
 msgid ""
@@ -2569,7 +2528,11 @@ msgid ""
 "well, but it still takes time to handle everything. With ExactusPay, it’s "
 "simple. They understand the local regulations perfectly and everything runs "
 "smoothly every month.\""
-msgstr "\"إدارة شركة سياحية في البرازيل تعني إدارة الموظفين الموسميين والتأكد من أن الرواتب صحيحة دائمًا. أنا أعرف نظام الرواتب البرازيلي جيدًا، لكنه ما زال يستغرق وقتًا للتعامل مع كل شيء. مع ExactusPay أصبح الأمر بسيطًا. إنهم يفهمون اللوائح المحلية تمامًا وكل شيء يسير بسلاسة كل شهر.\""
+msgstr ""
+"\"إدارة شركة سياحية في البرازيل تعني إدارة الموظفين الموسميين والتأكد من أن "
+"الرواتب صحيحة دائمًا. أنا أعرف نظام الرواتب البرازيلي جيدًا، لكنه ما زال "
+"يستغرق وقتًا للتعامل مع كل شيء. مع ExactusPay أصبح الأمر بسيطًا. إنهم يفهمون "
+"اللوائح المحلية تمامًا وكل شيء يسير بسلاسة كل شهر.\""
 
 #: home/templates/home/index.html:1299
 msgid "Jeorjes Costa"
@@ -2592,7 +2555,6 @@ msgstr ""
 "لديها. قم بجدولة عرض توضيحي مخصص لرؤية منصتنا أثناء العمل."
 
 #: home/templates/home/platform.html:20
-#, fuzzy
 #| msgid ""
 #| "Global Payroll Software | Multi-Country Payroll & Compliance Platform | "
 #| "ExactusPay"
@@ -2617,7 +2579,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/home/platform.html:40
-#, fuzzy
 #| msgid "A global payroll platform built for scale"
 msgid "ExactusPay | Global Payroll Platform Built for Scale"
 msgstr "منصة رواتب عالمية مصممة للتوسع"
@@ -2629,7 +2590,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/home/platform.html:47
-#, fuzzy
 #| msgid "ExactusPay | Global Payroll Software"
 msgid "ExactusPay | Global Payroll Platform"
 msgstr "ExactusPay | برنامج الرواتب العالمي"
@@ -2668,7 +2628,6 @@ msgid "Platform outcomes"
 msgstr "نتائج المنصة"
 
 #: home/templates/home/platform.html:998
-#, fuzzy
 #| msgid "Standardised reports"
 msgid "Standardised reporting"
 msgstr "تقارير موحدة"
@@ -2678,7 +2637,6 @@ msgid "TCOE visibility"
 msgstr "شفافية التكلفة الإجمالية للتوظيف"
 
 #: home/templates/home/platform.html:1000
-#, fuzzy
 #| msgid "Audit-ready controls"
 msgid "Audit-ready"
 msgstr "ضوابط جاهزة للتدقيق"
@@ -2768,7 +2726,6 @@ msgstr ""
 "إلى أرقام واضحة."
 
 #: home/templates/home/platform.html:1068
-#, fuzzy
 #| msgid ""
 #| "Pre-hire modelling: price offers accurately with full employer cost "
 #| "breakdowns."
@@ -2779,7 +2736,6 @@ msgstr ""
 "نمذجة ما قبل التوظيف: تسعير العروض بدقة مع تفصيل كامل لتكاليف صاحب العمل."
 
 #: home/templates/home/platform.html:1069
-#, fuzzy
 #| msgid ""
 #| "Scenario comparisons: assess markets and hiring strategies side-by-side."
 msgid ""
@@ -2788,7 +2744,6 @@ msgid ""
 msgstr "مقارنات السيناريوهات: تقييم الأسواق واستراتيجيات التوظيف جنبًا إلى جنب."
 
 #: home/templates/home/platform.html:1070
-#, fuzzy
 #| msgid ""
 #| "Budget confidence: align Finance, HR, and leadership on one set of "
 #| "numbers."
@@ -2814,7 +2769,6 @@ msgstr ""
 "التي يمكن تجنبها."
 
 #: home/templates/home/platform.html:1088
-#, fuzzy
 #| msgid ""
 #| "Regulation-aware rules: payroll logic tracks current statutory "
 #| "obligations."
@@ -2824,7 +2778,6 @@ msgid ""
 msgstr "قواعد مدركة للوائح: منطق الرواتب يتتبع الالتزامات القانونية الحالية."
 
 #: home/templates/home/platform.html:1089
-#, fuzzy
 #| msgid "Reduced risk: validations and governance to prevent common errors."
 msgid ""
 "<strong>Reduced risk:</strong> validations and governance to prevent common "
@@ -2832,7 +2785,6 @@ msgid ""
 msgstr "مخاطر مخفضة: عمليات التحقق والحوكمة لمنع الأخطاء الشائعة."
 
 #: home/templates/home/platform.html:1090
-#, fuzzy
 #| msgid "Evidence trails: traceable calculations and changes support audits."
 msgid ""
 "<strong>Evidence trails:</strong> traceable calculations and changes support "
@@ -2854,7 +2806,6 @@ msgstr ""
 "يدوي وانجراف تشغيلي."
 
 #: home/templates/home/platform.html:1108
-#, fuzzy
 #| msgid ""
 #| "Hire-to-pay pipeline: structured data exchange from onboarding to payment."
 msgid ""
@@ -2864,7 +2815,6 @@ msgstr ""
 "خط أنابيب من التوظيف إلى الدفع: تبادل بيانات منظم من الإعداد إلى الدفع."
 
 #: home/templates/home/platform.html:1109
-#, fuzzy
 #| msgid ""
 #| "Operational consistency: one workflow across multiple countries/providers."
 msgid ""
@@ -2873,7 +2823,6 @@ msgid ""
 msgstr "اتساق تشغيلي: سير عمل واحد عبر بلدان / مقدمي خدمات متعددين."
 
 #: home/templates/home/platform.html:1110
-#, fuzzy
 #| msgid "Lower admin load: fewer handoffs and less spreadsheet work."
 msgid ""
 "<strong>Lower admin load:</strong> fewer handoffs and less spreadsheet work."
@@ -2893,7 +2842,6 @@ msgstr ""
 "على تجربة محسنة ومحلية — مع وصول متعدد اللغات إلى قسائم الدفع والمستندات."
 
 #: home/templates/home/platform.html:1128
-#, fuzzy
 #| msgid ""
 #| "FX handled centrally: exchange and payout workflows managed reliably."
 msgid ""
@@ -2904,7 +2852,6 @@ msgstr ""
 "بشكل موثوق."
 
 #: home/templates/home/platform.html:1129
-#, fuzzy
 #| msgid ""
 #| "Local experience: multi-language portal for documents and payroll history."
 msgid ""
@@ -2913,7 +2860,6 @@ msgid ""
 msgstr "تجربة محلية: بوابة متعددة اللغات للمستندات وتاريخ الرواتب."
 
 #: home/templates/home/platform.html:1130
-#, fuzzy
 #| msgid "Consistent standard: the same quality UX across every location."
 msgid ""
 "<strong>Consistent standard:</strong> the same quality UX across every "
@@ -2991,10 +2937,11 @@ msgstr "اجمع الرواتب العالمية تحت سقف واحد"
 msgid ""
 "Get a single source of truth, standardised reporting, and compliance-ready "
 "processes — without the typical global payroll complexity."
-msgstr "احصل على مصدر واحد للحقيقة، وتقارير موحدة، وعمليات جاهزة للامتثال، من دون التعقيد المعتاد في الرواتب العالمية."
+msgstr ""
+"احصل على مصدر واحد للحقيقة، وتقارير موحدة، وعمليات جاهزة للامتثال، من دون "
+"التعقيد المعتاد في الرواتب العالمية."
 
 #: home/templates/home/pricing.html:20
-#, fuzzy
 #| msgid ""
 #| "Global Payroll Software | Multi-Country Payroll & Compliance Platform | "
 #| "ExactusPay"
@@ -3011,7 +2958,6 @@ msgid ""
 msgstr ""
 
 #: home/templates/home/pricing.html:28
-#, fuzzy
 #| msgid ""
 #| "global payroll software, multi-country payroll, international payroll "
 #| "system, payroll compliance software, global payroll platform, payroll "
@@ -3031,7 +2977,6 @@ msgstr ""
 "للتطوير"
 
 #: home/templates/home/pricing.html:44 home/templates/home/pricing.html:54
-#, fuzzy
 #| msgid "ExactusPay | Global Payroll Software"
 msgid "ExactusPay | Global Payroll Pricing"
 msgstr "ExactusPay | برنامج الرواتب العالمي"
@@ -3096,7 +3041,6 @@ msgid "Country-Specific Rates"
 msgstr "أسعار خاصة بكل بلد"
 
 #: home/templates/home/pricing.html:1101
-#, fuzzy
 #| msgid ""
 #| "Costs are adjusted based on the complexity of the local jurisdiction "
 #| "(e.g., LATAM vs. Asia), ensuring you only pay for the specific compliance "
@@ -3303,7 +3247,6 @@ msgid "Get Your Custom Quote"
 msgstr "احصل على عرض السعر المخصص الخاص بك"
 
 #: home/templates/home/pricing.html:1275
-#, fuzzy
 #| msgid ""
 #| "Because global expansion looks different for every company, we don't use "
 #| "a \"one size fits all\" price tag. To give you the most accurate and "
@@ -3615,7 +3558,6 @@ msgstr ""
 "بتخطيط وضع الأمان المناسب لعمليات الرواتب عبر الحدود الخاصة بك."
 
 #: home/templates/home/security.html:1304
-#, fuzzy
 #| msgid "Request a demo"
 msgid "Request a Demo"
 msgstr "طلب عرض توضيحي"
@@ -3712,5 +3654,3 @@ msgstr ""
 
 #~ msgid "$9 | €8 | £7"
 #~ msgstr "$9 | €8 | £7"
-
-
