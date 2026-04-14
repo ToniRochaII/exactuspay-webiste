@@ -7,6 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
 DEBUG = os.environ.get("DEBUG", "0") == "1"
+ON_RENDER = bool(os.environ.get("RENDER"))
 
 
 ALLOWED_HOSTS = [
@@ -116,8 +117,11 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = "/var/data/media" if os.environ.get("RENDER") else BASE_DIR / "media"
+MEDIA_URL = os.environ.get("MEDIA_URL", "/media/")
+MEDIA_ROOT = Path(os.environ.get("MEDIA_ROOT", "/var/data/media")) if ON_RENDER else BASE_DIR / "media"
+SERVE_MEDIA_FILES = DEBUG or ON_RENDER or os.environ.get("SERVE_MEDIA_FILES", "0") == "1"
+
+MEDIA_ROOT.mkdir(parents=True, exist_ok=True)
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
