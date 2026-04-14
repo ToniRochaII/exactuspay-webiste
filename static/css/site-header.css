@@ -102,10 +102,28 @@ header {
   padding: 0 24px 0 2px;
   outline: none;
   cursor: pointer;
+  font-family:
+    "Helvetica Neue Light",
+    "Helvetica Neue",
+    Helvetica,
+    Arial,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Noto Color Emoji",
+    sans-serif;
 }
 
 .lang-select option {
   color: #0f172a;
+  font-family:
+    "Helvetica Neue Light",
+    "Helvetica Neue",
+    Helvetica,
+    Arial,
+    "Apple Color Emoji",
+    "Segoe UI Emoji",
+    "Noto Color Emoji",
+    sans-serif;
 }
 
 .lang-caret {
