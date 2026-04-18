@@ -503,9 +503,9 @@ msgstr ""
 
 #: home/country_translation_inventory.py:67
 #, fuzzy
-#| msgid "40+"
+#| msgid "50+"
 msgid "4M+"
-msgstr "40+"
+msgstr "50+"
 
 #: home/country_translation_inventory.py:68
 msgid "5M+"
@@ -2779,7 +2779,7 @@ msgstr "Uma Abordagem Mais Inteligente para a Folha de Pagamento Global"
 #: home/templates/articles/br/article_0001.html:902
 msgid ""
 "ExactusPay provides a powerful AI-driven platform that enables organisations "
-"to manage payroll across more than 40 countries from a single unified "
+"to manage payroll across more than 50 countries from a single unified "
 "dashboard. Instead of juggling multiple systems, vendors, and compliance "
 "frameworks, businesses can centralise their operations and gain full "
 "visibility in real time."
@@ -4788,7 +4788,7 @@ msgstr "Plataforma Inteligente de Folha Global"
 #: home/templates/home/index.html:1097
 msgid ""
 "Streamline global workforce management with AI-driven compliance, real-time "
-"insights, and seamless payroll processing across 40+ countries."
+"insights, and seamless payroll processing across 50+ countries."
 msgstr ""
 "Simplifique a gestão global da força de trabalho com conformidade orientada "
 "por IA, insights em tempo real e processamento de folha contínuo em mais de "
@@ -4876,7 +4876,7 @@ msgstr "Cobertura Global"
 
 #: home/templates/home/index.html:1167
 msgid ""
-"Seamless payroll processing across 40+ countries with local compliance and "
+"Seamless payroll processing across 50+ countries with local compliance and "
 "tax expertise built-in."
 msgstr ""
 "Processamento de folha contínuo em mais de 40 países com conformidade local "
@@ -4924,7 +4924,7 @@ msgstr "Suporte a Múltiplas Moedas"
 
 #: home/templates/home/index.html:1198
 msgid ""
-"Process payments in 40+ currencies with automated forex management and "
+"Process payments in 50+ currencies with automated forex management and "
 "optimal exchange rates."
 msgstr ""
 "Processe pagamentos em mais de 40 moedas com gestão automatizada de câmbio e "

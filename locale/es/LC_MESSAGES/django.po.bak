@@ -649,7 +649,7 @@ msgstr "Plataforma Inteligente de Nómina Global"
 
 #: templates/home/index.html:29
 msgid ""
-"Streamline global workforce management with AI-driven compliance, real-time insights, and seamless payroll processing across 40+ countries."
+"Streamline global workforce management with AI-driven compliance, real-time insights, and seamless payroll processing across 50+ countries."
 msgstr ""
 "Optimice la gestión global de la fuerza laboral con cumplimiento impulsado por IA, información en tiempo real y procesamiento continuo de nómina en más de 40 países."
 
@@ -722,7 +722,7 @@ msgid "Global Coverage"
 msgstr "Cobertura Global"
 
 #: templates/home/index.html:82
-msgid "Seamless payroll processing across 40+ countries with local compliance and tax expertise built-in."
+msgid "Seamless payroll processing across 50+ countries with local compliance and tax expertise built-in."
 msgstr "Procesamiento continuo de nómina en más de 40 países con cumplimiento local y experiencia fiscal integrada."
 
 #: templates/home/index.html:86
@@ -750,7 +750,7 @@ msgid "Monitor payroll costs, compliance status, and operational metrics across 
 msgstr "Monitoree costos de nómina, estado de cumplimiento y métricas operativas en todas las regiones con paneles en vivo."
 
 #: templates/home/index.html:109
-msgid "Process payments in 40+ currencies with automated forex management and optimal exchange rates."
+msgid "Process payments in 50+ currencies with automated forex management and optimal exchange rates."
 msgstr "Procese pagos en más de 40 monedas con gestión automatizada de divisas y tipos de cambio óptimos."
 
 #: templates/home/index.html:113

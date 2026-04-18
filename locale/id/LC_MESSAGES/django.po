@@ -493,9 +493,9 @@ msgstr ""
 
 #: home/country_translation_inventory.py:67
 #, fuzzy
-#| msgid "40+"
+#| msgid "50+"
 msgid "4M+"
-msgstr "40+"
+msgstr "50+"
 
 #: home/country_translation_inventory.py:68
 msgid "5M+"
@@ -2752,7 +2752,7 @@ msgstr "Platform Penggajian Global Cerdas"
 #: home/templates/articles/br/article_0001.html:902
 msgid ""
 "ExactusPay provides a powerful AI-driven platform that enables organisations "
-"to manage payroll across more than 40 countries from a single unified "
+"to manage payroll across more than 50 countries from a single unified "
 "dashboard. Instead of juggling multiple systems, vendors, and compliance "
 "frameworks, businesses can centralise their operations and gain full "
 "visibility in real time."
@@ -4747,10 +4747,10 @@ msgstr "Platform Penggajian Global Cerdas"
 #: home/templates/home/index.html:1097
 msgid ""
 "Streamline global workforce management with AI-driven compliance, real-time "
-"insights, and seamless payroll processing across 40+ countries."
+"insights, and seamless payroll processing across 50+ countries."
 msgstr ""
 "Sederhanakan manajemen tenaga kerja global dengan kepatuhan berbasis AI, "
-"wawasan waktu nyata, dan pemrosesan penggajian yang mulus di 40+ negara."
+"wawasan waktu nyata, dan pemrosesan penggajian yang mulus di 50+ negara."
 
 #: home/templates/home/index.html:1112
 msgid "Accuracy Rate"
@@ -4834,10 +4834,10 @@ msgstr "Cakupan Global"
 
 #: home/templates/home/index.html:1167
 msgid ""
-"Seamless payroll processing across 40+ countries with local compliance and "
+"Seamless payroll processing across 50+ countries with local compliance and "
 "tax expertise built-in."
 msgstr ""
-"Pemrosesan penggajian yang mulus di 40+ negara dengan kepatuhan lokal dan "
+"Pemrosesan penggajian yang mulus di 50+ negara dengan kepatuhan lokal dan "
 "keahlian perpajakan yang terintegrasi."
 
 #: home/templates/home/index.html:1172
@@ -4882,10 +4882,10 @@ msgstr "Dukungan Multi-mata Uang"
 
 #: home/templates/home/index.html:1198
 msgid ""
-"Process payments in 40+ currencies with automated forex management and "
+"Process payments in 50+ currencies with automated forex management and "
 "optimal exchange rates."
 msgstr ""
-"Proses pembayaran dalam 40+ mata uang dengan manajemen forex otomatis dan "
+"Proses pembayaran dalam 50+ mata uang dengan manajemen forex otomatis dan "
 "nilai tukar optimal."
 
 #: home/templates/home/index.html:1202

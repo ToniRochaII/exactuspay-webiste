@@ -495,7 +495,7 @@ msgstr ""
 
 #: home/country_translation_inventory.py:67
 #, fuzzy
-#| msgid "40+"
+#| msgid "50+"
 msgid "4M+"
 msgstr "٤٠+"
 
@@ -2754,7 +2754,7 @@ msgstr "منصة الرواتب العالمية الذكية"
 #: home/templates/articles/br/article_0001.html:902
 msgid ""
 "ExactusPay provides a powerful AI-driven platform that enables organisations "
-"to manage payroll across more than 40 countries from a single unified "
+"to manage payroll across more than 50 countries from a single unified "
 "dashboard. Instead of juggling multiple systems, vendors, and compliance "
 "frameworks, businesses can centralise their operations and gain full "
 "visibility in real time."
@@ -4707,7 +4707,7 @@ msgstr "منصة الرواتب العالمية الذكية"
 #: home/templates/home/index.html:1097
 msgid ""
 "Streamline global workforce management with AI-driven compliance, real-time "
-"insights, and seamless payroll processing across 40+ countries."
+"insights, and seamless payroll processing across 50+ countries."
 msgstr ""
 "قم بتبسيط إدارة القوى العاملة العالمية من خلال الامتثال القائم على الذكاء "
 "الاصطناعي، والرؤى في الوقت الفعلي، ومعالجة الرواتب السلسة في أكثر من 40 دولة."
@@ -4791,7 +4791,7 @@ msgstr "تغطية عالمية"
 
 #: home/templates/home/index.html:1167
 msgid ""
-"Seamless payroll processing across 40+ countries with local compliance and "
+"Seamless payroll processing across 50+ countries with local compliance and "
 "tax expertise built-in."
 msgstr ""
 "معالجة رواتب سلسة في أكثر من 40 دولة مع خبرة امتثال وضرائب محلية مدمجة."
@@ -4837,7 +4837,7 @@ msgstr "دعم العملات المتعددة"
 
 #: home/templates/home/index.html:1198
 msgid ""
-"Process payments in 40+ currencies with automated forex management and "
+"Process payments in 50+ currencies with automated forex management and "
 "optimal exchange rates."
 msgstr ""
 "قم بمعالجة المدفوعات بأكثر من 40 عملة مع إدارة آلية للصرف الأجنبي وأسعار صرف "

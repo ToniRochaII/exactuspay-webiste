@@ -637,7 +637,7 @@ msgstr "Plataforma Inteligente de Folha de Pagamento Global"
 
 #: templates/home/index.html:29
 msgid ""
-"Streamline global workforce management with AI-driven compliance, real-time insights, and seamless payroll processing across 40+ countries."
+"Streamline global workforce management with AI-driven compliance, real-time insights, and seamless payroll processing across 50+ countries."
 msgstr ""
 "Simplifique a gestão global da força de trabalho com conformidade orientada por IA, insights em tempo real e processamento contínuo de folha de pagamento em mais de 40 países."
 
@@ -706,7 +706,7 @@ msgid "Global Coverage"
 msgstr "Cobertura Global"
 
 #: templates/home/index.html:82
-msgid "Seamless payroll processing across 40+ countries with local compliance and tax expertise built-in."
+msgid "Seamless payroll processing across 50+ countries with local compliance and tax expertise built-in."
 msgstr "Processamento contínuo de folha de pagamento em mais de 40 países com conformidade local e expertise tributária integrada."
 
 #: templates/home/index.html:86
@@ -734,7 +734,7 @@ msgid "Monitor payroll costs, compliance status, and operational metrics across 
 msgstr "Monitore custos de folha de pagamento, status de conformidade e métricas operacionais em todas as regiões com painéis ao vivo."
 
 #: templates/home/index.html:109
-msgid "Process payments in 40+ currencies with automated forex management and optimal exchange rates."
+msgid "Process payments in 50+ currencies with automated forex management and optimal exchange rates."
 msgstr "Processe pagamentos em mais de 40 moedas com gestão automatizada de câmbio e taxas de câmbio otimizadas."
 
 #: templates/home/index.html:113

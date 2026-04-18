@@ -493,9 +493,9 @@ msgstr ""
 
 #: home/country_translation_inventory.py:67
 #, fuzzy
-#| msgid "40+"
+#| msgid "50+"
 msgid "4M+"
-msgstr "40+"
+msgstr "50+"
 
 #: home/country_translation_inventory.py:68
 msgid "5M+"
@@ -2752,7 +2752,7 @@ msgstr "Plateforme de Paie Globale Intelligente"
 #: home/templates/articles/br/article_0001.html:902
 msgid ""
 "ExactusPay provides a powerful AI-driven platform that enables organisations "
-"to manage payroll across more than 40 countries from a single unified "
+"to manage payroll across more than 50 countries from a single unified "
 "dashboard. Instead of juggling multiple systems, vendors, and compliance "
 "frameworks, businesses can centralise their operations and gain full "
 "visibility in real time."
@@ -4754,7 +4754,7 @@ msgstr "Plateforme de Paie Globale Intelligente"
 #: home/templates/home/index.html:1097
 msgid ""
 "Streamline global workforce management with AI-driven compliance, real-time "
-"insights, and seamless payroll processing across 40+ countries."
+"insights, and seamless payroll processing across 50+ countries."
 msgstr ""
 "Optimisez la gestion mondiale de la main-d'œuvre grâce à la conformité basée "
 "sur l'IA, des informations en temps réel et un traitement de paie "
@@ -4842,7 +4842,7 @@ msgstr "Couverture mondiale"
 
 #: home/templates/home/index.html:1167
 msgid ""
-"Seamless payroll processing across 40+ countries with local compliance and "
+"Seamless payroll processing across 50+ countries with local compliance and "
 "tax expertise built-in."
 msgstr ""
 "Traitement de paie transparent dans plus de 40 pays avec une expertise "
@@ -4891,7 +4891,7 @@ msgstr "Support multi-devises"
 
 #: home/templates/home/index.html:1198
 msgid ""
-"Process payments in 40+ currencies with automated forex management and "
+"Process payments in 50+ currencies with automated forex management and "
 "optimal exchange rates."
 msgstr ""
 "Traitez les paiements dans plus de 40 devises avec une gestion automatisée "
