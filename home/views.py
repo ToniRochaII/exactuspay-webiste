@@ -7,6 +7,7 @@ from django.utils.translation import gettext as _
 import logging
 
 from .article_library import BRAZIL_ARTICLES
+from .country_catalog import get_country_catalog, get_country_from_catalog
 from .country_localization import (
     localize_country,
     localized_content_sections,
@@ -20,6 +21,10 @@ from .forms import DemoRequestForm
 from .models import CountryProfile
 
 logger = logging.getLogger(__name__)
+
+
+def _catalog_first_countries():
+    return list(get_country_catalog())
 
 
 def _build_country_context(country: CountryProfile) -> dict:
@@ -54,21 +59,26 @@ def demo_view(request):
 
 
 def country_hub_view(request):
-    countries = [localize_country(country) for country in CountryProfile.objects.filter(is_published=True)]
+    countries = [localize_country(country) for country in _catalog_first_countries()]
     return render(
         request,
         "countries/hub.html",
         {
             "countries": countries,
+            "country_count": len(countries),
+            "regions": sorted({country.region for country in countries if getattr(country, "region", "")}),
+            "currencies": sorted({country.pay_currency for country in countries if getattr(country, "pay_currency", "")}),
         },
     )
 
 
 def country_detail_view(request, slug):
-    try:
-        country = CountryProfile.objects.get(slug=slug, is_published=True)
-    except CountryProfile.DoesNotExist as exc:
-        raise Http404("Country profile not found.") from exc
+    country = get_country_from_catalog(slug)
+    if country is None:
+        try:
+            country = CountryProfile.objects.get(slug=slug, is_published=True)
+        except CountryProfile.DoesNotExist as exc:
+            raise Http404("Country profile not found.") from exc
 
     return render(
         request,

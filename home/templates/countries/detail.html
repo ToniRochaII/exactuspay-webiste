@@ -356,9 +356,9 @@
         </div>
 
         <aside class="country-hero-panel">
-          <h3>{% trans "Operate with country-level payroll confidence" %}</h3>
+          <h3>{% trans "Verified country reference" %}</h3>
           <p>
-            {% trans "Use one country page template across your footprint: local payroll context, employer facts, and platform-ready intelligence in one commercial format." %}
+            {% trans "This profile is designed as a practical employer reference. ExactusPay shows verified authority and payroll data points first and leaves unverified fields blank." %}
           </p>
 
           <div class="meta">
@@ -438,7 +438,7 @@
           <section class="country-section-card">
             <h2>{% trans "Payroll intelligence" %}</h2>
             <p class="section-lead">
-              {% trans "A structured view of the payroll details employers usually need first: pay rhythm, statutory themes, employment controls, and country-specific operating notes." %}
+              {% trans "A structured view of the payroll details employers usually need first, with authority mapping and payroll essentials shown only where ExactusPay could verify them." %}
             </p>
             {% if payroll_intelligence %}
               <div class="country-data-grid">
@@ -487,9 +487,9 @@
 
         <aside class="country-side-card">
           <div class="country-side-block">
-            <h3>{% trans "Why this structure works" %}</h3>
+            <h3>{% trans "How to use this page" %}</h3>
             <p class="note">
-              {% trans "The page combines commercial context, employer facts, and payroll detail in one reusable layout that can scale across ExactusPay markets." %}
+              {% trans "Use this profile as a first-pass employer reference for provider review, country onboarding, and internal payroll governance." %}
             </p>
           </div>
 
@@ -511,7 +511,7 @@
           <div class="country-side-block">
             <h3>{% trans "Need a country-specific walkthrough?" %}</h3>
             <p class="note">
-              {% trans "ExactusPay can turn market-by-market payroll complexity into one reporting standard, one operating model, and one executive view." %}
+              {% trans "If you need live implementation support, ExactusPay can map country requirements into one operating model before production payroll begins." %}
             </p>
             <a class="btn btn-primary" href="{% url 'home:demo' %}">
               <i class="fas fa-calendar-check"></i> {% trans "Book a session" %}
@@ -522,6 +522,5 @@
     </div>
   </section>
 {% endblock %}
-
 
 

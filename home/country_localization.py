@@ -352,7 +352,9 @@ def localize_country(country):
         iso_code=country.iso_code,
         country_name=translated_country_name,
         official_name=_translate_value(country.official_name),
+        region=_translate_value(getattr(country, "region", "")),
         flag_inline_svg=country.flag_inline_svg,
+        flag_inline_png=getattr(country, "flag_inline_png", ""),
         flag_url=country.flag_url,
         capital=_translate_value(country.capital),
         primary_languages=_translate_value(country.primary_languages),
@@ -373,17 +375,23 @@ def localize_country(country):
         minimum_wage_summary=_translate_value(country.minimum_wage_summary),
         seo_title=localized_seo_title,
         meta_keywords=_translate_value(country.meta_keywords),
+        tax_authority_name=_translate_value(getattr(country, "tax_authority_name", "")),
+        social_security_authority_name=_translate_value(getattr(country, "social_security_authority_name", "")),
+        authority_note=_translate_value(getattr(country, "authority_note", "")),
         last_reviewed_on=country.last_reviewed_on,
     )
 
     generated_intro = _build_country_intro(translated)
     generated_overview = _build_country_overview(translated)
-    meta_description = generated_intro or generated_overview or _translate_value(country.meta_description)
+    explicit_intro = _translate_value(country.hero_intro)
+    explicit_overview = _translate_value(country.overview)
+    explicit_meta_description = _translate_value(country.meta_description)
+    meta_description = explicit_meta_description or explicit_intro or explicit_overview or generated_intro or generated_overview
 
     return SimpleNamespace(
         **translated.__dict__,
-        hero_intro=generated_intro or _translate_value(country.hero_intro),
-        overview=generated_overview or generated_intro or _translate_value(country.overview) or _translate_value(country.hero_intro),
+        hero_intro=explicit_intro or generated_intro,
+        overview=explicit_overview or explicit_intro or generated_overview or generated_intro,
         meta_description=meta_description,
     )
 
@@ -428,6 +436,9 @@ def localized_nested_content(value):
 
 def localized_hero_highlights(country):
     translated = localize_country(country)
+    explicit_highlights = _translate_value(getattr(country, "hero_highlights", []) or [])
+    if explicit_highlights:
+        return explicit_highlights
     return _collect_pairs(
         (_("Payroll frequency"), translated.payroll_frequency),
         (_("Typical pay currency"), translated.pay_currency),
@@ -438,6 +449,9 @@ def localized_hero_highlights(country):
 
 def localized_glance_cards(country):
     translated = localize_country(country)
+    explicit_cards = _translate_value(getattr(country, "glance_cards", []) or [])
+    if explicit_cards:
+        return explicit_cards
     return [
         {
             "title": _("Key facts"),
@@ -477,6 +491,9 @@ def localized_glance_cards(country):
 
 def localized_content_sections(country):
     translated = localize_country(country)
+    explicit_sections = _translate_value(getattr(country, "content_sections", []) or [])
+    if explicit_sections:
+        return explicit_sections
     return [
         {
             "title": _("Payroll overview"),
@@ -542,6 +559,9 @@ def localized_content_sections(country):
 
 def localized_employer_considerations(country):
     translated = localize_country(country)
+    explicit_items = _translate_value(getattr(country, "employer_considerations", []) or [])
+    if explicit_items:
+        return explicit_items
     return _collect_pairs(
         (_("Payroll frequency"), translated.payroll_frequency),
         (_("Tax year"), translated.tax_year),

@@ -1,100 +1,242 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block title %}{% trans "Country Payroll Pages | ExactusPay" %}{% endblock %}
-{% block meta_description %}{% trans "Explore country payroll pages built by ExactusPay with employer facts, payroll intelligence, and country-level operating guidance." %}{% endblock %}
+{% block title %}{% trans "Country Payroll Directory | ExactusPay" %}{% endblock %}
+{% block meta_description %}{% trans "Review ExactusPay's country payroll directory with verified tax authority and social security authority references across key markets." %}{% endblock %}
 {% block canonical %}{{ request.build_absolute_uri }}{% endblock %}
-{% block og_title %}{% trans "Country Payroll Pages | ExactusPay" %}{% endblock %}
-{% block og_description %}{% trans "Explore country payroll pages built by ExactusPay with employer facts, payroll intelligence, and country-level operating guidance." %}{% endblock %}
+{% block og_title %}{% trans "Country Payroll Directory | ExactusPay" %}{% endblock %}
+{% block og_description %}{% trans "Review ExactusPay's country payroll directory with verified tax authority and social security authority references across key markets." %}{% endblock %}
 {% block og_url %}{{ request.build_absolute_uri }}{% endblock %}
-{% block twitter_title %}{% trans "Country Payroll Pages | ExactusPay" %}{% endblock %}
-{% block twitter_description %}{% trans "Explore country payroll pages built by ExactusPay with employer facts, payroll intelligence, and country-level operating guidance." %}{% endblock %}
+{% block twitter_title %}{% trans "Country Payroll Directory | ExactusPay" %}{% endblock %}
+{% block twitter_description %}{% trans "Review ExactusPay's country payroll directory with verified tax authority and social security authority references across key markets." %}{% endblock %}
 
 {% block extra_css %}
   .country-hub-hero {
-    padding: calc(var(--header-h) + 72px) 0 72px;
+    padding: calc(var(--header-h) + 72px) 0 64px;
     background:
-      radial-gradient(circle at top left, rgba(150, 224, 217, 0.22), transparent 22%),
-      linear-gradient(135deg, #07111f 0%, #163c61 60%, #1f4b7a 100%);
+      radial-gradient(circle at top left, rgba(150, 224, 217, 0.18), transparent 22%),
+      linear-gradient(135deg, #07111f 0%, #163c61 56%, #1f4b7a 100%);
   }
   .country-hub-hero p {
-    max-width: 760px;
+    max-width: 780px;
     color: rgba(255, 255, 255, 0.84);
   }
-  .country-hub-list {
+  .country-hub-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 24px;
+  }
+  .country-hub-stats span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: rgba(255, 255, 255, 0.94);
+    font-weight: 800;
+  }
+  .country-directory {
     padding: 72px 0 96px;
     background: var(--bg-secondary);
   }
-  .country-card-grid {
+  .country-directory-shell {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 20px;
   }
-  .country-card {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    padding: 24px;
+  .country-directory-toolbar,
+  .country-directory-filter-bar,
+  .country-directory-table-wrap,
+  .country-directory-empty {
     background: #fff;
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius-lg);
     box-shadow: var(--shadow-md);
   }
-  .country-card-top {
-    display: flex;
-    align-items: center;
-    gap: 14px;
+  .country-directory-toolbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(220px, 0.5fr) minmax(220px, 0.5fr) auto;
+    gap: 16px;
+    padding: 22px;
   }
-  .country-card-flag {
-    width: 58px;
-    height: 58px;
-    border-radius: 16px;
-    overflow: hidden;
-    border: 1px solid rgba(226, 232, 240, 0.95);
-    background: var(--bg-tertiary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-  .country-card-flag img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  .country-card-flag svg {
-    width: 100%;
-    height: 100%;
+  .country-directory-toolbar label {
     display: block;
+    margin-bottom: 8px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
   }
-  .country-card-flag span {
-    font-weight: 900;
-    color: var(--color-primary-solid);
+  .country-directory-toolbar input,
+  .country-directory-toolbar select {
+    width: 100%;
+    height: 52px;
+    border: 1px solid rgba(148, 163, 184, 0.32);
+    border-radius: 14px;
+    padding: 0 16px;
+    font: inherit;
+    color: var(--text-primary);
+    background: #fff;
   }
-  .country-card .meta {
+  .country-directory-toolbar .btn {
+    align-self: end;
+    height: 52px;
+    white-space: nowrap;
+  }
+  .country-directory-filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 22px;
+  }
+  .country-directory-filter-label {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+  .country-directory-chips {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
   }
-  .country-card .meta span {
+  .country-filter-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font: inherit;
+    font-weight: 800;
+    transition: 0.2s ease;
+  }
+  .country-filter-chip:hover,
+  .country-filter-chip.is-active {
+    border-color: rgba(31, 75, 122, 0.32);
+    background: rgba(31, 75, 122, 0.08);
+    color: var(--color-primary-solid);
+  }
+  .country-directory-table-wrap {
+    overflow-x: auto;
+  }
+  .country-directory-table {
+    width: 100%;
+    min-width: 980px;
+    border-collapse: collapse;
+  }
+  .country-directory-table th,
+  .country-directory-table td {
+    padding: 18px 20px;
+    vertical-align: top;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.9);
+    text-align: left;
+  }
+  .country-directory-table th {
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: rgba(248, 250, 252, 0.92);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+  .country-directory-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+  .country-directory-row[hidden] {
+    display: none;
+  }
+  .country-name-cell {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 220px;
+  }
+  .country-name-cell img {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid rgba(226, 232, 240, 0.95);
+    object-fit: cover;
+    background: var(--bg-tertiary);
+    flex-shrink: 0;
+  }
+  .country-name-cell .name {
+    font-weight: 800;
+    color: var(--text-primary);
+  }
+  .country-name-cell .official {
+    margin-top: 4px;
+    color: var(--text-muted);
+    font-size: 0.94rem;
+  }
+  .country-region-pill {
+    display: inline-flex;
+    align-items: center;
     padding: 8px 12px;
     border-radius: 999px;
     background: rgba(31, 75, 122, 0.08);
     color: var(--color-primary-solid);
+    font-size: 0.9rem;
     font-weight: 800;
-    font-size: 0.88rem;
   }
-  .country-card .btn {
-    margin-top: auto;
+  .country-directory-table .empty {
+    color: var(--text-muted);
   }
-  @media (max-width: 1024px) {
-    .country-card-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+  .country-directory-empty {
+    padding: 28px;
+    display: none;
   }
-  @media (max-width: 768px) {
-    .country-card-grid {
+  .country-directory-empty.is-visible {
+    display: block;
+  }
+  .country-directory-summary {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    color: var(--text-secondary);
+    font-weight: 700;
+  }
+  .country-directory-summary-text {
+    color: var(--text-secondary);
+  }
+  .country-directory-active-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .country-directory-active-filters span {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.06);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+  @media (max-width: 900px) {
+    .country-directory-toolbar {
       grid-template-columns: 1fr;
+    }
+    .country-directory-filter-bar,
+    .country-directory-summary {
+      align-items: flex-start;
+      justify-content: flex-start;
     }
   }
 {% endblock %}
@@ -103,57 +245,226 @@
   <section class="country-hub-hero">
     <div class="container">
       <div class="section-title" style="text-align:left; margin-bottom:0;">
-        <div class="subtitle" style="color: rgba(255,255,255,0.72);">{% trans "Country payroll pages" %}</div>
-        <h1>{% trans "Country-level payroll intelligence, built to scale" %}</h1>
+        <div class="subtitle" style="color: rgba(255,255,255,0.72);">{% trans "Country payroll directory" %}</div>
+        <h1>{% trans "Authority-first payroll reference across ExactusPay markets" %}</h1>
         <p>
-          {% trans "This hub uses one reusable ExactusPay structure for country pages: a strong hero, employer facts, payroll intelligence, and country-specific operating guidance." %}
+          {% trans "This directory prioritises verified tax authority and social security authority references, then adds payroll essentials only where ExactusPay could confirm them. If a field could not be verified reliably, it is intentionally left blank." %}
         </p>
       </div>
-    </div>
-  </section>
 
-  <section class="country-hub-list">
-    <div class="container">
-      <div class="country-card-grid">
-        {% for country in countries %}
-          <article class="country-card">
-            <div class="country-card-top">
-              <div class="country-card-flag">
-                {% if country.flag_inline_svg %}
-                  {{ country.flag_inline_svg }}
-                {% elif country.flag_url %}
-                  <img src="{{ country.flag_url }}" alt="{{ country.country_name }} flag" />
-                {% else %}
-                  <span>{{ country.iso_code }}</span>
-                {% endif %}
-              </div>
-              <div>
-                <h3 style="margin-bottom:4px;">{{ country.country_name }}</h3>
-                {% if country.official_name %}
-                  <p style="margin-bottom:0;">{{ country.official_name }}</p>
-                {% endif %}
-              </div>
-            </div>
-
-            <p>{{ country.hero_intro }}</p>
-
-            <div class="meta">
-              {% if country.payroll_frequency %}<span>{{ country.payroll_frequency }}</span>{% endif %}
-              {% if country.pay_currency %}<span>{{ country.pay_currency }}</span>{% endif %}
-              {% if country.primary_languages %}<span>{{ country.primary_languages }}</span>{% endif %}
-            </div>
-
-            <a class="btn btn-primary" href="{% url 'home:country_detail' slug=country.slug %}">
-              <i class="fas fa-arrow-right"></i> {% trans "View country page" %}
-            </a>
-          </article>
-        {% empty %}
-          <div class="country-card">
-            <h3>{% trans "No countries published yet" %}</h3>
-            <p>{% trans "Add country profiles in Django admin to populate this hub." %}</p>
-          </div>
-        {% endfor %}
+      <div class="country-hub-stats">
+        <span><i class="fas fa-globe"></i> {{ country_count }} {% trans "countries" %}</span>
+        <span><i class="fas fa-shield-halved"></i> {% trans "Tax authority mapping" %}</span>
+        <span><i class="fas fa-landmark"></i> {% trans "Social security mapping where verified" %}</span>
       </div>
     </div>
   </section>
+
+  <section class="country-directory">
+    <div class="container">
+      <div class="country-directory-shell">
+        <div class="country-directory-toolbar">
+          <div>
+            <label for="countrySearch">{% trans "Search countries" %}</label>
+            <input id="countrySearch" type="search" placeholder="{% trans 'Search by country, official name, ISO code, region, or currency' %}" />
+          </div>
+          <div>
+            <label for="regionFilter">{% trans "Region" %}</label>
+            <select id="regionFilter">
+              <option value="">{% trans "All regions" %}</option>
+              {% for region in regions %}
+                <option value="{{ region|lower }}">{{ region }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div>
+            <label for="currencyFilter">{% trans "Currency" %}</label>
+            <select id="currencyFilter">
+              <option value="">{% trans "All currencies" %}</option>
+              {% for currency in currencies %}
+                <option value="{{ currency|lower }}">{{ currency }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <button id="clearFilters" type="button" class="btn btn-secondary">
+            {% trans "Clear filters" %}
+          </button>
+        </div>
+
+        <div class="country-directory-filter-bar">
+          <div class="country-directory-filter-label">{% trans "Quick regions" %}</div>
+          <div class="country-directory-chips">
+            <button type="button" class="country-filter-chip is-active" data-region-chip="">
+              {% trans "All" %}
+            </button>
+            {% for region in regions %}
+              <button type="button" class="country-filter-chip" data-region-chip="{{ region|lower }}">
+                {{ region }}
+              </button>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="country-directory-summary">
+          <div class="country-directory-summary-text">
+            <span id="countryVisibleCount">{{ country_count }}</span> {% trans "profiles shown" %}
+          </div>
+          <div id="countryActiveFilters" class="country-directory-active-filters"></div>
+        </div>
+
+        <div class="country-directory-table-wrap">
+          <table class="country-directory-table" aria-label="{% trans 'Country payroll directory' %}">
+            <thead>
+              <tr>
+                <th>{% trans "Country" %}</th>
+                <th>{% trans "Region" %}</th>
+                <th>{% trans "Payroll currency" %}</th>
+                <th>{% trans "Profile" %}</th>
+              </tr>
+            </thead>
+            <tbody id="countryDirectoryRows">
+              {% for country in countries %}
+                <tr
+                  class="country-directory-row"
+                  data-name="{{ country.country_name|lower }}"
+                  data-official="{{ country.official_name|default:''|lower }}"
+                  data-iso="{{ country.iso_code|lower }}"
+                  data-region="{{ country.region|lower }}"
+                  data-currency="{{ country.pay_currency|default:''|lower }}"
+                  data-search="{{ country.country_name|lower }} {{ country.official_name|default:''|lower }} {{ country.iso_code|lower }} {{ country.region|lower }} {{ country.pay_currency|default:''|lower }}"
+                >
+                  <td>
+                    <div class="country-name-cell">
+                      {% if country.flag_url %}
+                        <img src="{{ country.flag_url }}" alt="{{ country.country_name }} flag" />
+                      {% endif %}
+                      <div>
+                        <div class="name">{{ country.country_name }}</div>
+                        {% if country.official_name %}
+                          <div class="official">{{ country.official_name }}</div>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="country-region-pill">{{ country.region }}</span></td>
+                  <td>{% if country.pay_currency %}{{ country.pay_currency }}{% else %}<span class="empty"></span>{% endif %}</td>
+                  <td>
+                    <a class="btn btn-primary" href="{% url 'home:country_detail' slug=country.slug %}">
+                      {% trans "Open" %}
+                    </a>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+        <div id="countryDirectoryEmpty" class="country-directory-empty">
+          <h3>{% trans "No matching country profiles" %}</h3>
+          <p>{% trans "Adjust the search term or region filter to see more markets." %}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}
+
+{% block extra_js %}
+  <script>
+    (() => {
+      const initCountryFilters = () => {
+        const searchInput = document.getElementById('countrySearch');
+        const regionFilter = document.getElementById('regionFilter');
+        const currencyFilter = document.getElementById('currencyFilter');
+        const clearFiltersButton = document.getElementById('clearFilters');
+        const regionChips = Array.from(document.querySelectorAll('[data-region-chip]'));
+        const rows = Array.from(document.querySelectorAll('.country-directory-row'));
+        const visibleCount = document.getElementById('countryVisibleCount');
+        const emptyState = document.getElementById('countryDirectoryEmpty');
+        const activeFilters = document.getElementById('countryActiveFilters');
+
+        if (!searchInput || !regionFilter || !currencyFilter || !clearFiltersButton || !rows.length || !visibleCount || !emptyState || !activeFilters) {
+          return;
+        }
+
+        const normalize = (value) => (value || '').trim().toLowerCase();
+
+        const syncRegionChips = () => {
+          const selectedRegion = normalize(regionFilter.value);
+          regionChips.forEach((chip) => {
+            chip.classList.toggle('is-active', normalize(chip.dataset.regionChip) === selectedRegion);
+          });
+        };
+
+        const updateActiveFilterBadges = (searchTerm, regionValue, currencyValue) => {
+          const badges = [];
+          if (searchTerm) {
+            badges.push(`Search: ${searchInput.value.trim()}`);
+          }
+          if (regionValue) {
+            badges.push(`Region: ${regionFilter.options[regionFilter.selectedIndex].text}`);
+          }
+          if (currencyValue) {
+            badges.push(`Currency: ${currencyFilter.options[currencyFilter.selectedIndex].text}`);
+          }
+
+          activeFilters.replaceChildren();
+          badges.forEach((badge) => {
+            const element = document.createElement('span');
+            element.textContent = badge;
+            activeFilters.appendChild(element);
+          });
+        };
+
+        const applyFilters = () => {
+          const searchTerm = normalize(searchInput.value);
+          const regionValue = normalize(regionFilter.value);
+          const currencyValue = normalize(currencyFilter.value);
+          let count = 0;
+
+          rows.forEach((row) => {
+            const haystack = row.dataset.search || '';
+            const matchesSearch = !searchTerm || haystack.includes(searchTerm);
+            const matchesRegion = !regionValue || normalize(row.dataset.region) === regionValue;
+            const matchesCurrency = !currencyValue || normalize(row.dataset.currency) === currencyValue;
+            const isVisible = matchesSearch && matchesRegion && matchesCurrency;
+
+            row.hidden = !isVisible;
+            if (isVisible) {
+              count += 1;
+            }
+          });
+
+          visibleCount.textContent = String(count);
+          emptyState.classList.toggle('is-visible', count === 0);
+          syncRegionChips();
+          updateActiveFilterBadges(searchTerm, regionValue, currencyValue);
+        };
+
+        searchInput.addEventListener('input', applyFilters);
+        regionFilter.addEventListener('change', applyFilters);
+        currencyFilter.addEventListener('change', applyFilters);
+        clearFiltersButton.addEventListener('click', () => {
+          searchInput.value = '';
+          regionFilter.value = '';
+          currencyFilter.value = '';
+          applyFilters();
+          searchInput.focus();
+        });
+        regionChips.forEach((chip) => {
+          chip.addEventListener('click', () => {
+            regionFilter.value = chip.dataset.regionChip || '';
+            applyFilters();
+          });
+        });
+
+        applyFilters();
+      };
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initCountryFilters);
+      } else {
+        initCountryFilters();
+      }
+    })();
+  </script>
 {% endblock %}
