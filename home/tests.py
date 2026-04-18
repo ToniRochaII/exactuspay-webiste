@@ -18,7 +18,6 @@ class PublicPageTests(TestCase):
             reverse("home:features"),
             reverse("home:platform"),
             reverse("home:security"),
-            reverse("home:pricing"),
             reverse("home:demo"),
             reverse("home:brazil_article_0001"),
             reverse("home:brazil_article_0002"),
@@ -40,40 +39,36 @@ class PublicPageTests(TestCase):
         response = self.client.get("/pt/features/")
         self.assertEqual(response.status_code, 200)
 
-    def test_country_page_uses_seeded_country_data(self):
-        country = CountryProfile.objects.get(slug="brazil")
-        response = self.client.get(reverse("home:country_detail", kwargs={"slug": country.slug}))
+    def test_country_page_uses_catalog_country_data(self):
+        response = self.client.get(reverse("home:country_detail", kwargs={"slug": "brazil"}))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, country.country_name)
-        self.assertContains(response, country.flag_url)
-        self.assertContains(response, country.tax_year)
+        self.assertContains(response, "Brazil")
+        self.assertContains(response, "/static/img/flags/br.png")
+        self.assertContains(response, "Secretariat of the Federal Revenue of Brazil")
 
     def test_localized_country_page_uses_translated_tax_year_and_generated_copy(self):
         response = self.client.get("/th/countries/united-kingdom/")
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "6 เมษายน ถึง 5 เมษายน")
-        self.assertNotContains(
-            response,
-            "United Kingdom can be presented with a strong commercial summary first, then deeper payroll intelligence as implementation progresses.",
-        )
 
-    def test_localized_country_page_translates_dynamic_payroll_labels(self):
-        response = self.client.get("/th/countries/brazil/")
+    def test_localized_catalog_country_page_renders_authority_content(self):
+        response = self.client.get("/th/countries/ireland/")
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "จุดเน้นทั่วไปของนายจ้าง")
-        self.assertContains(response, "การใช้งาน ExactusPay ในการนำไปใช้")
-        self.assertNotContains(response, "Typical employer focus")
-        self.assertNotContains(response, "ExactusPay implementation use")
+        self.assertContains(response, "Ireland")
+        self.assertContains(response, "Revenue Commissioners")
+        self.assertContains(response, "Department of Social Protection")
 
-    def test_country_hub_includes_full_seeded_footprint(self):
+    def test_country_hub_includes_curated_footprint(self):
         response = self.client.get(reverse("home:country_hub"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(CountryProfile.objects.filter(is_published=True).count(), 21)
+        self.assertContains(response, "52")
         self.assertContains(response, "Angola")
+        self.assertContains(response, "Brazil")
+        self.assertContains(response, "Ireland")
         self.assertContains(response, "United Arab Emirates")
 
 

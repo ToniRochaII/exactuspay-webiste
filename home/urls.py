@@ -10,7 +10,6 @@ urlpatterns = [
     path('features/', views.features_view, name='features'),
     path('platform/', views.platform_view, name='platform'),
     path('security/', views.security_view, name='security'),
-    path('pricing/', views.pricing_view, name='pricing'),
     path('demo/', views.demo_view, name='demo'),
 
     # This URL catches the form submission

@@ -51,9 +51,6 @@ def platform_view(request):
 def security_view(request):
     return render(request, 'home/security.html')
 
-def pricing_view(request):
-    return render(request, 'home/pricing.html')
-
 def demo_view(request):
     return render(request, 'home/demo.html')
 
