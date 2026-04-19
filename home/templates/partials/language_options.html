@@ -1,0 +1,3 @@
+{% for lang in public_languages %}
+  <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>{{ lang.flag }} {{ lang.label }}</option>
+{% endfor %}

@@ -1,7 +1,5 @@
 {% load i18n static %}
 {% get_current_language as LANGUAGE_CODE %}
-{% get_available_languages as LANGUAGES %}
-{% get_language_info_list for LANGUAGES as languages %}
 
 <!doctype html>
 <html lang="{{ LANGUAGE_CODE }}">
@@ -23,8 +21,8 @@
     <title>{% block title %}{% trans "Global Payroll Software | Multi-Country Payroll & Compliance Platform | ExactusPay" %}{% endblock %}</title>
 
     {# SEO default (pode sobrescrever por página) #}
-    <meta name="description" content="{% block meta_description %}ExactusPay is a powerful global payroll software delivering multi-country payroll, automated compliance, real-time workforce analytics, standardized reporting, and payroll simulations. Manage international payroll accurately, securely, and at scale from one intelligent platform.{% endblock %}" />
-    <meta name="keywords" content="{% block meta_keywords %}global payroll software, multi-country payroll, international payroll system, payroll compliance software, global payroll platform, payroll automation, payroll simulations, workforce analytics, multinational payroll management, cloud payroll solution, global HR payroll, payroll reporting software, international payroll compliance, scalable payroll platform{% endblock %}" />
+    <meta name="description" content="{% block meta_description %}{% blocktrans trimmed %}ExactusPay is a powerful global payroll software delivering multi-country payroll, automated compliance, real-time workforce analytics, standardized reporting, and payroll simulations. Manage international payroll accurately, securely, and at scale from one intelligent platform.{% endblocktrans %}{% endblock %}" />
+    <meta name="keywords" content="{% block meta_keywords %}{% trans "global payroll software, multi-country payroll, international payroll system, payroll compliance software, global payroll platform, payroll automation, payroll simulations, workforce analytics, multinational payroll management, cloud payroll solution, global HR payroll, payroll reporting software, international payroll compliance, scalable payroll platform" %}{% endblock %}" />
     <meta name="author" content="ExactusPay" />
     <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
     <meta name="googlebot" content="index, follow" />
@@ -41,16 +39,16 @@
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="{% block og_title %}ExactusPay | Global Payroll Software for Multi-Country Payroll & Compliance{% endblock %}" />
-    <meta property="og:description" content="{% block og_description %}Run global payroll with confidence. Automated compliance, payroll simulations, standardized reporting, and real-time analytics in one powerful multi-country payroll platform.{% endblock %}" />
+    <meta property="og:title" content="{% block og_title %}{% trans "ExactusPay | Global Payroll Software for Multi-Country Payroll & Compliance" %}{% endblock %}" />
+    <meta property="og:description" content="{% block og_description %}{% blocktrans trimmed %}Run global payroll with confidence. Automated compliance, payroll simulations, standardized reporting, and real-time analytics in one powerful multi-country payroll platform.{% endblocktrans %}{% endblock %}" />
     <meta property="og:url" content="{% block og_url %}https://www.exactuspay.com/{% endblock %}" />
     <meta property="og:image" content="{% block og_image %}https://www.exactuspay.com/static/img/og-exactuspay.png{% endblock %}" />
     <meta property="og:site_name" content="ExactusPay" />
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="{% block twitter_title %}ExactusPay | Global Payroll Software{% endblock %}" />
-    <meta name="twitter:description" content="{% block twitter_description %}Multi-country payroll, automated compliance, real-time workforce analytics, and payroll simulations—powered by ExactusPay.{% endblock %}" />
+    <meta name="twitter:title" content="{% block twitter_title %}{% trans "ExactusPay | Global Payroll Software" %}{% endblock %}" />
+    <meta name="twitter:description" content="{% block twitter_description %}{% trans "Multi-country payroll, automated compliance, real-time workforce analytics, and payroll simulations—powered by ExactusPay." %}{% endblock %}" />
     <meta name="twitter:image" content="{% block twitter_image %}https://www.exactuspay.com/static/img/og-exactuspay.png{% endblock %}" />
 
     <meta name="application-name" content="ExactusPay" />
@@ -407,37 +405,7 @@
             <input type="hidden" name="next" value="{{ request.get_full_path }}">
             <div class="lang-pill" title="{% trans 'Language' %}">
               <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="window.switchSiteLanguage(this)">
-                {% for lang in languages %}
-                  {% if lang.code == "pt" %}
-                    <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷 Português</option>
-                  {% elif lang.code == "en" %}
-                    <option value="en" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇬🇧 English</option>
-                  {% elif lang.code == "es" %}
-                    <option value="es" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇪🇸 Español</option>
-                  {% elif lang.code == "ru" %}
-                    <option value="ru" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇷🇺 Русский</option>
-                  {% elif lang.code == "ar" %}
-                    <option value="ar" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇸🇦 العربية</option>
-                  {% elif lang.code == "fr" %}
-                    <option value="fr" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇫🇷 Français</option>
-                  {% elif lang.code == "de" %}
-                    <option value="de" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇩🇪 Deutsch</option>
-                  {% elif lang.code == "pl" %}
-                    <option value="pl" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇵🇱 Polski</option>
-                  {% elif lang.code == "it" %}
-                    <option value="it" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇹 Italiano</option>
-                  {% elif lang.code == "id" %}
-                    <option value="id" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇩 Indonesian</option>
-                  {% elif lang.code == "th" %}
-                    <option value="th" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇭 ไทย</option>
-                  {% elif lang.code == "sw" %}
-                    <option value="sw" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇿 Swahili</option>
-                  {% elif lang.code == "ha" %}
-                    <option value="ha" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇳🇬 Hausa</option>
-                  {% else %}
-                    <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>{{ lang.code|upper }}</option>
-                  {% endif %}
-                {% endfor %}
+                {% include "partials/language_options.html" %}
               </select>
               <span class="lang-caret" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
             </div>
@@ -479,37 +447,7 @@
               aria-label="{% trans 'Select language' %}"
               onchange="window.switchSiteLanguage(this)"
             >
-              {% for lang in languages %}
-                {% if lang.code == "pt" %}
-                  <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷 Português</option>
-                {% elif lang.code == "en" %}
-                  <option value="en" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇬🇧 English</option>
-                {% elif lang.code == "es" %}
-                  <option value="es" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇪🇸 Español</option>
-                {% elif lang.code == "ru" %}
-                  <option value="ru" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇷🇺 Русский</option>
-                {% elif lang.code == "ar" %}
-                  <option value="ar" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇸🇦 العربية</option>
-                {% elif lang.code == "fr" %}
-                  <option value="fr" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇫🇷 Français</option>
-                {% elif lang.code == "de" %}
-                  <option value="de" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇩🇪 Deutsch</option>
-                {% elif lang.code == "pl" %}
-                  <option value="pl" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇵🇱 Polski</option>
-                {% elif lang.code == "it" %}
-                  <option value="it" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇹 Italiano</option>
-                {% elif lang.code == "id" %}
-                  <option value="id" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇮🇩 Indonesian</option>
-                {% elif lang.code == "th" %}
-                  <option value="th" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇭 ไทย</option>
-                {% elif lang.code == "sw" %}
-                  <option value="sw" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇹🇿 Swahili</option>
-                {% elif lang.code == "ha" %}
-                  <option value="ha" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇳🇬 Hausa</option>
-                {% else %}
-                  <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>{{ lang.code|upper }}</option>
-                {% endif %}
-              {% endfor %}
+                {% include "partials/language_options.html" %}
             </select>
             <span class="lang-caret" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
           </div>
