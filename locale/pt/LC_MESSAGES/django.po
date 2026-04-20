@@ -172,16 +172,16 @@ msgstr "Gira o perfil da sua conta ExactusPay e as preferências de idioma."
 #: home/context_processors.py:12 home/country_translation_inventory.py:170
 #| msgid "🇬🇧 English"
 msgid "English"
-msgstr "🇬🇧 Inglês"
+msgstr "Inglês"
 
 #: home/context_processors.py:13 home/country_translation_inventory.py:301
 #| msgid "24/7 Portuguese support"
 msgid "Portuguese"
-msgstr "Suporte em português 24/7"
+msgstr "Português"
 
 #: home/context_processors.py:14 home/country_translation_inventory.py:336
 msgid "Spanish"
-msgstr ""
+msgstr "Espanhol"
 
 #: home/country_localization.py:319 home/country_localization.py:334
 #: home/country_localization.py:418 home/country_localization.py:443
@@ -2589,7 +2589,7 @@ msgstr "Rastos de evidência de conformidade"
 #: home/templates/home/security.html:996 home/templates/home/security.html:1029
 #: home/templates/partials/navbar.html:18
 msgid "Request Demo"
-msgstr "Solicitar Demonstração"
+msgstr "Solicitar demonstração"
 
 #: home/templates/articles/br/article_0001.html:28
 #: home/templates/articles/br/article_0001.html:53
@@ -2830,7 +2830,7 @@ msgid ""
 msgstr ""
 "A ExactusPay oferece uma poderosa plataforma baseada em inteligência "
 "artificial que permite às organizações gerenciar a folha de pagamento em "
-"mais de 40 países a partir de um único painel unificado. Em vez de lidar com "
+"mais de 50 países a partir de um único painel unificado. Em vez de lidar com "
 "múltiplos sistemas, fornecedores e estruturas de conformidade, as empresas "
 "podem centralizar suas operações e obter visibilidade total em tempo real."
 
@@ -2967,7 +2967,7 @@ msgstr ""
 #: home/templates/articles/br/article_0001.html:905
 #: home/templates/home/demo.html:1285 home/templates/home/index.html:1250
 msgid "Schedule Demo"
-msgstr "Agendar Demonstração"
+msgstr "Agendar demonstração"
 
 #: home/templates/articles/br/article_0001.html:919
 #: home/templates/articles/cl/article_0001.html:1321
@@ -2975,7 +2975,7 @@ msgstr "Agendar Demonstração"
 #: home/templates/home/index.html:1264 home/templates/home/platform.html:1148
 #: home/templates/home/security.html:1242
 msgid "Global Payroll"
-msgstr "Folha Global"
+msgstr "Folha de pagamento global"
 
 #: home/templates/articles/br/article_0001.html:920
 #: home/templates/articles/cl/article_0001.html:1322
@@ -3947,7 +3947,7 @@ msgstr ""
 #: home/templates/articles/cl/article_0001.html:1304
 #: home/templates/home/index.html:1035
 msgid "Book Demo"
-msgstr "Agendar uma sessão"
+msgstr "Agendar demonstração"
 
 #: home/templates/articles/cr/article_0001.html:4
 #: home/templates/articles/cr/article_0001.html:7
@@ -4043,8 +4043,8 @@ msgid ""
 "Global Payroll Software | Multi-Country Payroll & Compliance Platform | "
 "ExactusPay"
 msgstr ""
-"Software de Folha Global | Plataforma de Folha de Pagamento e Conformidade "
-"Multi-País | ExactusPay"
+"Software global de folha de pagamento | Plataforma multipaís de folha de "
+"pagamento e conformidade | ExactusPay"
 
 #: home/templates/base.html:24
 msgid ""
@@ -4088,8 +4088,8 @@ msgstr ""
 msgid ""
 "ExactusPay | Global Payroll Software for Multi-Country Payroll & Compliance"
 msgstr ""
-"Software de Folha Global | Plataforma de Folha de Pagamento e Conformidade "
-"Multi-País | ExactusPay"
+"ExactusPay | Software global de folha de pagamento para operação multipaís "
+"e conformidade"
 
 #: home/templates/base.html:43
 msgid ""
@@ -4104,7 +4104,7 @@ msgstr ""
 #: home/templates/base.html:50
 #| msgid "ExactusPay | Global Payroll Platform"
 msgid "ExactusPay | Global Payroll Software"
-msgstr "ExactusPay | Software de Folha Global"
+msgstr "ExactusPay | Software global de folha de pagamento"
 
 #: home/templates/base.html:51
 msgid ""
@@ -4116,11 +4116,11 @@ msgstr ""
 
 #: home/templates/base.html:475
 msgid "Get started"
-msgstr ""
+msgstr "Comece agora"
 
 #: home/templates/base.html:496
 msgid "Social"
-msgstr ""
+msgstr "Redes sociais"
 
 #: home/templates/countries/detail.html:4
 #: home/templates/countries/detail.html:8
@@ -4284,78 +4284,78 @@ msgstr "Países"
 
 #: home/templates/countries/hub.html:257
 msgid "Tax authority mapping"
-msgstr ""
+msgstr "Mapeamento de autoridade fiscal"
 
 #: home/templates/countries/hub.html:258
 msgid "Social security mapping where verified"
-msgstr ""
+msgstr "Mapeamento de previdência social quando validado"
 
 #: home/templates/countries/hub.html:268
 #| msgid "Countries"
 msgid "Search countries"
-msgstr "Países"
+msgstr "Buscar países"
 
 #: home/templates/countries/hub.html:269
 msgid "Search by country, official name, ISO code, region, or currency"
-msgstr ""
+msgstr "Busque por país, nome oficial, código ISO, região ou moeda"
 
 #: home/templates/countries/hub.html:272 home/templates/countries/hub.html:320
 #| msgid "Regional scale"
 msgid "Region"
-msgstr "Expertise regional"
+msgstr "Região"
 
 #: home/templates/countries/hub.html:274
 msgid "All regions"
-msgstr ""
+msgstr "Todas as regiões"
 
 #: home/templates/countries/hub.html:283
 msgid "All currencies"
-msgstr ""
+msgstr "Todas as moedas"
 
 #: home/templates/countries/hub.html:290
 msgid "Clear filters"
-msgstr ""
+msgstr "Limpar filtros"
 
 #: home/templates/countries/hub.html:295
 msgid "Quick regions"
-msgstr ""
+msgstr "Regiões rápidas"
 
 #: home/templates/countries/hub.html:298
 msgid "All"
-msgstr ""
+msgstr "Todas"
 
 #: home/templates/countries/hub.html:310
 #| msgid "profiles"
 msgid "profiles shown"
-msgstr "perfis"
+msgstr "perfis exibidos"
 
 #: home/templates/countries/hub.html:319
 #| msgid "Countries"
 msgid "Country"
-msgstr "Países"
+msgstr "País"
 
 #: home/templates/countries/hub.html:321
 #| msgid "Payroll frequency"
 msgid "Payroll currency"
-msgstr "Frequência de payroll"
+msgstr "Moeda da folha"
 
 #: home/templates/countries/hub.html:353
 #| msgid "Open menu"
 msgid "Open"
-msgstr "Abrir menu"
+msgstr "Abrir"
 
 #: home/templates/countries/hub.html:363
 #| msgid "Log in to your profile"
 msgid "No matching country profiles"
-msgstr "Entre no seu perfil"
+msgstr "Nenhum perfil de país encontrado"
 
 #: home/templates/countries/hub.html:364
 msgid "Adjust the search term or region filter to see more markets."
-msgstr ""
+msgstr "Ajuste a busca ou o filtro de região para ver mais mercados."
 
 #: home/templates/home/demo.html:17
 msgid "Request a Global Payroll Demo | ExactusPay"
-msgstr ""
+msgstr "Solicite uma demonstração global de folha de pagamento | ExactusPay"
 
 #: home/templates/home/demo.html:20
 msgid ""
@@ -4363,6 +4363,9 @@ msgid ""
 "payroll, global compliance, reporting, and workforce cost visibility from "
 "one platform."
 msgstr ""
+"Agende uma demonstração personalizada da ExactusPay e veja como gerenciar "
+"folha de pagamento multipaís, conformidade global, relatórios e visibilidade "
+"de custos da força de trabalho em uma única plataforma."
 
 #: home/templates/home/demo.html:24
 msgid ""
@@ -4370,23 +4373,31 @@ msgid ""
 "payroll software demo, international payroll platform demo, payroll "
 "compliance demo, ExactusPay demo"
 msgstr ""
+"demonstração de folha de pagamento global, solicitar demonstração de folha, "
+"demonstração de folha multipaís, demonstração de software de folha, "
+"demonstração de plataforma internacional de folha, demonstração de "
+"conformidade de folha, demonstração ExactusPay"
 
 #: home/templates/home/demo.html:44 home/templates/home/demo.html:54
 msgid "ExactusPay | Request a Global Payroll Demo"
-msgstr "ExactusPay | Software de Folha Global"
+msgstr "ExactusPay | Solicite uma demonstração global de folha de pagamento"
 
 #: home/templates/home/demo.html:47
 msgid ""
 "Book a personalised demo to see ExactusPay simplify multi-country payroll, "
 "compliance, reporting, and workforce cost visibility."
 msgstr ""
+"Agende uma demonstração personalizada para ver como a ExactusPay simplifica "
+"a folha de pagamento multipaís, a conformidade, os relatórios e a "
+"visibilidade dos custos da força de trabalho."
 
 #: home/templates/home/demo.html:57
 msgid ""
 "See ExactusPay in action with a tailored demo for multi-country payroll, "
 "compliance, and reporting."
 msgstr ""
-"ExactusPay | Software de Folha Global para Folha Multi-País e Conformidade"
+"Veja a ExactusPay em ação com uma demonstração personalizada de folha de "
+"pagamento multipaís, conformidade e relatórios."
 
 #: home/templates/home/demo.html:1094
 msgid ""
@@ -4645,7 +4656,7 @@ msgstr "Sem compromisso. 100%% de privacidade de dados."
 
 #: home/templates/home/demo.html:1282
 msgid "Ready to bring global payroll under one roof?"
-msgstr "Pronto para Simplificar a Folha Global?"
+msgstr "Pronto para centralizar sua folha de pagamento global?"
 
 #: home/templates/home/demo.html:1283
 msgid ""
@@ -4657,7 +4668,7 @@ msgstr ""
 
 #: home/templates/home/demo.html:1286
 msgid "Book Consultation"
-msgstr ""
+msgstr "Agendar consultoria"
 
 #: home/templates/home/demo.html:1345
 #, python-format
@@ -4932,7 +4943,7 @@ msgstr ""
 
 #: home/templates/home/features.html:817
 msgid "Ready to simplify global payroll?"
-msgstr "Pronto para Simplificar a Folha Global?"
+msgstr "Pronto para simplificar a folha de pagamento global?"
 
 #: home/templates/home/features.html:818
 msgid ""
@@ -4944,11 +4955,11 @@ msgstr ""
 
 #: home/templates/home/features.html:820 home/templates/home/platform.html:1134
 msgid "Schedule a Demo"
-msgstr "Agendar uma Demonstração"
+msgstr "Agendar demonstração"
 
 #: home/templates/home/index.html:1024
 msgid "Smart Global Payroll Platform"
-msgstr "Plataforma Inteligente de Folha Global"
+msgstr "Plataforma inteligente global de folha de pagamento"
 
 #: home/templates/home/index.html:1027
 msgid ""
@@ -4956,16 +4967,16 @@ msgid ""
 "insights, and seamless payroll processing across 50+ countries."
 msgstr ""
 "Simplifique a gestão global da força de trabalho com conformidade orientada "
-"por IA, insights em tempo real e processamento de folha contínuo em mais de "
-"40 países."
+"por IA, insights em tempo real e processamento contínuo de folha de "
+"pagamento em 50+ países."
 
 #: home/templates/home/index.html:1042
 msgid "Accuracy Rate"
-msgstr "Taxa de Precisão"
+msgstr "Índice de precisão"
 
 #: home/templates/home/index.html:1050
 msgid "Hours Support"
-msgstr "Suporte 24 Horas"
+msgstr "Suporte 24 horas"
 
 #: home/templates/home/index.html:1054
 msgid "Compliance"
@@ -4973,23 +4984,23 @@ msgstr "Conformidade"
 
 #: home/templates/home/index.html:1064
 msgid "Powerful Features"
-msgstr "Recursos Poderosos"
+msgstr "Recursos avançados"
 
 #: home/templates/home/index.html:1065
 msgid "Designed for Global Scale"
-msgstr "Projetado para Escala Global"
+msgstr "Desenvolvida para escala global"
 
 #: home/templates/home/index.html:1066
 msgid ""
 "Everything you need to manage complex global payroll operations with "
 "confidence"
 msgstr ""
-"Tudo o que você precisa para gerenciar operações complexas de folha global "
-"com confiança"
+"Tudo de que você precisa para gerenciar operações complexas de folha de "
+"pagamento global com confiança"
 
 #: home/templates/home/index.html:1072
 msgid "AI-Powered Compliance"
-msgstr "Conformidade com IA"
+msgstr "Conformidade inteligente com IA"
 
 #: home/templates/home/index.html:1073
 msgid ""
@@ -5044,8 +5055,8 @@ msgid ""
 "Seamless payroll processing across 50+ countries with local compliance and "
 "tax expertise built-in."
 msgstr ""
-"Processamento de folha contínuo em mais de 40 países com conformidade local "
-"e expertise tributária integrada."
+"Processamento contínuo de folha de pagamento em 50+ países, com conformidade "
+"local e expertise tributária integradas."
 
 #: home/templates/home/index.html:1102
 msgid "Audit Trail"
@@ -5241,7 +5252,7 @@ msgstr ""
 
 #: home/templates/home/index.html:1243
 msgid "Ready to Simplify Global Payroll?"
-msgstr "Pronto para Simplificar a Folha Global?"
+msgstr "Pronto para simplificar a folha de pagamento global?"
 
 #: home/templates/home/index.html:1245
 msgid ""
@@ -5256,8 +5267,8 @@ msgstr ""
 msgid ""
 "Global Payroll Platform | Multi-Country Payroll Infrastructure | ExactusPay"
 msgstr ""
-"Software de Folha Global | Plataforma de Folha de Pagamento e Conformidade "
-"Multi-País | ExactusPay"
+"Software global de folha de pagamento | Infraestrutura de folha de "
+"pagamento multipaís | ExactusPay"
 
 #: home/templates/home/platform.html:19
 msgid ""
@@ -5283,10 +5294,13 @@ msgid ""
 "Run multi-country payroll with one platform for standardised reporting, "
 "total cost visibility, compliance, and operational control."
 msgstr ""
+"Execute a folha de pagamento multipaís em uma única plataforma, com "
+"relatórios padronizados, visibilidade do custo total, conformidade e "
+"controle operacional."
 
 #: home/templates/home/platform.html:45
 msgid "ExactusPay | Global Payroll Platform"
-msgstr "ExactusPay | Software de Folha Global"
+msgstr "ExactusPay | Plataforma global de folha de pagamento"
 
 #: home/templates/home/platform.html:46
 msgid ""

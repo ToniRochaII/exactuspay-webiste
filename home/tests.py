@@ -71,11 +71,36 @@ class PublicPageTests(TestCase):
         self.assertContains(response, "Ireland")
         self.assertContains(response, "United Arab Emirates")
 
+    def test_portuguese_homepage_uses_corrected_locale_strings(self):
+        response = self.client.get("/pt/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Português")
+        self.assertContains(response, "Espanhol")
+        self.assertContains(response, "50+ países")
+        self.assertContains(response, "Agendar demonstração")
+        self.assertNotContains(response, "Suporte em português 24/7")
+        self.assertNotContains(response, "mais de 40 países")
+        self.assertNotContains(response, "Software de Folha Global")
+
+    def test_portuguese_country_hub_uses_corrected_filter_labels(self):
+        response = self.client.get("/pt/countries/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Buscar países")
+        self.assertContains(response, "Região")
+        self.assertContains(response, "Todas as regiões")
+        self.assertContains(response, "Limpar filtros")
+        self.assertContains(response, "Nenhum perfil de país encontrado")
+
     def test_language_switcher_renders_supported_language_codes(self):
         response = self.client.get(reverse("home:home"))
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'const supportedLanguageCodes = ["en", "ar", "de", "es", "fr", "id", "it", "pl", "pt", "ru", "sw", "th"]')
+        self.assertContains(response, "العربية")
+        self.assertContains(response, "Deutsch")
+        self.assertContains(response, "ไทย")
 
     def test_localized_pages_do_not_show_default_english_nav_labels(self):
         response = self.client.get("/pt/")
