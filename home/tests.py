@@ -76,12 +76,13 @@ class PublicPageTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Português")
-        self.assertContains(response, "Espanhol")
+        self.assertContains(response, '<option value="es"')
         self.assertContains(response, "50+ países")
         self.assertContains(response, "Agendar demonstração")
         self.assertNotContains(response, "Suporte em português 24/7")
         self.assertNotContains(response, "mais de 40 países")
         self.assertNotContains(response, "Software de Folha Global")
+        self.assertNotContains(response, "Spanish")
 
     def test_portuguese_country_hub_uses_corrected_filter_labels(self):
         response = self.client.get("/pt/countries/")
@@ -98,9 +99,9 @@ class PublicPageTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'const supportedLanguageCodes = ["en", "ar", "de", "es", "fr", "id", "it", "pl", "pt", "ru", "sw", "th"]')
-        self.assertContains(response, "العربية")
-        self.assertContains(response, "Deutsch")
-        self.assertContains(response, "ไทย")
+        for language_code in ["ar", "de", "fr", "id", "it", "pl", "ru", "sw", "th"]:
+            with self.subTest(language_code=language_code):
+                self.assertContains(response, f'<option value="{language_code}"')
 
     def test_localized_pages_do_not_show_default_english_nav_labels(self):
         response = self.client.get("/pt/")
