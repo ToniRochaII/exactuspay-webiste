@@ -1320,7 +1320,7 @@
     </footer>
 
     <script>
-      const supportedLanguageCodes = [{% for lang in languages %}"{{ lang.code }}"{% if not forloop.last %}, {% endif %}{% endfor %}];
+      const supportedLanguageCodes = [{% for code in supported_language_codes %}"{{ code }}"{% if not forloop.last %}, {% endif %}{% endfor %}];
       const defaultLanguageCode = "en";
 
       window.switchSiteLanguage = function(select) {

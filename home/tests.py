@@ -71,6 +71,20 @@ class PublicPageTests(TestCase):
         self.assertContains(response, "Ireland")
         self.assertContains(response, "United Arab Emirates")
 
+    def test_language_switcher_renders_supported_language_codes(self):
+        response = self.client.get(reverse("home:home"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'const supportedLanguageCodes = ["en", "ar", "de", "es", "fr", "id", "it", "pl", "pt", "ru", "sw", "th"]')
+
+    def test_localized_pages_do_not_show_default_english_nav_labels(self):
+        response = self.client.get("/pt/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, "Request Demo")
+        self.assertNotContains(response, "Log In")
+        self.assertNotContains(response, "Countries")
+
 
 @override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
 class DemoRequestTests(TestCase):

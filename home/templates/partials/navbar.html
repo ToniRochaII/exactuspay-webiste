@@ -23,19 +23,7 @@
 
         <div class="lang-pill" title="{% trans 'Language' %}">
           <select class="lang-select" name="language" aria-label="{% trans 'Select language' %}" onchange="window.switchSiteLanguage(this)">
-            {% for lang in languages %}
-              {% if lang.code == "pt" %}
-                <option value="pt" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇧🇷</option>
-              {% elif lang.code == "es" %}
-                <option value="es" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇪🇸</option>
-              {% elif lang.code == "en" %}
-                <option value="en" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>🇬🇧</option>
-              {% else %}
-                <option value="{{ lang.code }}" {% if lang.code == LANGUAGE_CODE %}selected{% endif %}>
-                  {{ lang.code|upper }}
-                </option>
-              {% endif %}
-            {% endfor %}
+            {% include "partials/language_options.html" %}
           </select>
 
           <span class="lang-caret" aria-hidden="true">
