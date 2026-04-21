@@ -143,7 +143,7 @@ BOOK_DEMO_EXTERNAL_URL = os.environ.get(
 
 
 # -----------------------------------------------------------------------------
-# Email (Hostinger / ExtendCP SMTP)
+# Email (Microsoft 365 SMTP)
 # -----------------------------------------------------------------------------
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -153,12 +153,12 @@ EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "Antonio.Rocha@exactuspay.com")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
-NO_REPLY_EMAIL = os.environ.get("NO_REPLY_EMAIL", "no-reply@exactuspay.com")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "D0m0d3d0v0!")
 
+# Safer default: match authenticated mailbox
 DEFAULT_FROM_EMAIL = os.environ.get(
     "DEFAULT_FROM_EMAIL",
-    NO_REPLY_EMAIL,
+    EMAIL_HOST_USER,
 )
 
 # Where demo requests should be delivered
