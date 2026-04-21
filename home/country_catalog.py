@@ -3,7 +3,9 @@ from __future__ import annotations
 from datetime import date
 from types import SimpleNamespace
 
+from django.conf import settings
 from django.templatetags.static import static
+from django.utils.translation import gettext as _
 
 
 LAST_REVIEWED_ON = date(2026, 4, 18)
@@ -13,6 +15,13 @@ DEFAULT_EMPLOYER_CONSIDERATIONS = [
     "Validate withholding, contribution, and remittance ownership against the relevant authority.",
     "Keep country-level payroll calendars and statutory references under version control.",
 ]
+
+
+def _safe_static(path: str) -> str:
+    try:
+        return static(path)
+    except ValueError:
+        return f"{settings.STATIC_URL.rstrip('/')}/{path.lstrip('/')}"
 
 
 RAW_COUNTRIES = [
@@ -720,46 +729,50 @@ RAW_COUNTRIES = [
 def _build_authority_sentence(entry: dict) -> str:
     items = []
     if entry.get("tax_authority_name"):
-        items.append(f"Tax authority: {entry['tax_authority_name']}")
+        items.append(f"{_('Tax authority')}: {entry['tax_authority_name']}")
     if entry.get("social_security_authority_name"):
-        items.append(f"Social security authority: {entry['social_security_authority_name']}")
+        items.append(f"{_('Social security authority')}: {entry['social_security_authority_name']}")
     if not items:
-        return "Verified authority details are still being expanded for this market."
+        return _("Verified authority details are still being expanded for this market.")
     return ". ".join(items) + "."
 
 
 def _build_payroll_points(entry: dict) -> list[dict[str, str]]:
     items: list[dict[str, str]] = []
     if entry.get("tax_authority_name"):
-        items.append({"label": "Tax authority", "value": entry["tax_authority_name"]})
+        items.append({"label": _("Tax authority"), "value": entry["tax_authority_name"]})
     if entry.get("social_security_authority_name"):
-        items.append({"label": "Social security authority", "value": entry["social_security_authority_name"]})
+        items.append({"label": _("Social security authority"), "value": entry["social_security_authority_name"]})
     if entry.get("pay_currency"):
-        items.append({"label": "Payroll currency", "value": entry["pay_currency"]})
+        items.append({"label": _("Payroll currency"), "value": entry["pay_currency"]})
     if entry.get("tax_year"):
-        items.append({"label": "Tax year", "value": entry["tax_year"]})
+        items.append({"label": _("Tax year"), "value": entry["tax_year"]})
     if entry.get("authority_note"):
-        items.append({"label": "Coverage note", "value": entry["authority_note"]})
+        items.append({"label": _("Coverage note"), "value": entry["authority_note"]})
     return items
 
 
 def _build_glance_cards(entry: dict) -> list[dict[str, str]]:
     payroll_essentials = []
     if entry.get("pay_currency"):
-        payroll_essentials.append(f"Payroll currency: {entry['pay_currency']}")
+        payroll_essentials.append(f"{_('Payroll currency')}: {entry['pay_currency']}")
     if entry.get("tax_year"):
-        payroll_essentials.append(f"Tax year: {entry['tax_year']}")
+        payroll_essentials.append(f"{_('Tax year')}: {entry['tax_year']}")
 
-    payroll_body = ". ".join(payroll_essentials) + "." if payroll_essentials else "Only fields with a verified payroll reference are shown on this profile."
+    payroll_body = (
+        ". ".join(payroll_essentials) + "."
+        if payroll_essentials
+        else _("Only fields with a verified payroll reference are shown on this profile.")
+    )
 
     return [
         {
-            "title": "Verified authorities",
+            "title": _("Verified authorities"),
             "body": _build_authority_sentence(entry),
             "icon": "fa-building-shield",
         },
         {
-            "title": "Payroll essentials",
+            "title": _("Payroll essentials"),
             "body": payroll_body,
             "icon": "fa-file-invoice-dollar",
         },
@@ -818,6 +831,7 @@ def build_country_record(entry: dict, sort_order: int) -> SimpleNamespace:
 
     return SimpleNamespace(
         slug=entry["slug"],
+        is_generated_catalog=True,
         iso_code=entry["iso_code"],
         country_name=entry["country_name"],
         official_name=entry.get("official_name", ""),
@@ -826,7 +840,7 @@ def build_country_record(entry: dict, sort_order: int) -> SimpleNamespace:
             "core payroll references, and practical employer review points."
         ),
         overview=overview,
-        flag_url=static(f"img/flags/{entry['iso_code'].lower()}.png"),
+        flag_url=_safe_static(f"img/flags/{entry['iso_code'].lower()}.png"),
         flag_inline_svg="",
         flag_inline_png="",
         capital=entry.get("capital", ""),

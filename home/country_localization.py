@@ -4,6 +4,12 @@ from types import SimpleNamespace
 
 from django.utils.translation import get_language, gettext as _
 
+from .country_localization_data import (
+    COUNTRY_NAME_MAP as _COUNTRY_NAME_MAP,
+    OFFICIAL_NAME_MAP as _OFFICIAL_NAME_MAP,
+    REGION_NAME_MAP as _REGION_NAME_MAP,
+)
+
 
 _DICT_KEYS_TO_TRANSLATE = {
     "title",
@@ -12,268 +18,6 @@ _DICT_KEYS_TO_TRANSLATE = {
     "value",
     "note",
     "subtitle",
-}
-
-
-_COUNTRY_NAME_MAP = {
-    "ar": {
-        "AO": "أنغولا",
-        "AR": "الأرجنتين",
-        "BR": "البرازيل",
-        "CL": "تشيلي",
-        "CR": "كوستاريكا",
-        "ET": "إثيوبيا",
-        "GB": "المملكة المتحدة",
-        "NG": "نيجيريا",
-        "NL": "هولندا",
-        "PK": "باكستان",
-        "EG": "مصر",
-        "IN": "الهند",
-        "ID": "إندونيسيا",
-        "MA": "المغرب",
-        "PA": "بنما",
-        "PE": "بيرو",
-        "PH": "الفلبين",
-        "SA": "المملكة العربية السعودية",
-        "ZA": "جنوب أفريقيا",
-        "TR": "تركيا",
-        "AE": "الإمارات العربية المتحدة",
-    },
-    "de": {
-        "AO": "Angola",
-        "AR": "Argentinien",
-        "BR": "Brasilien",
-        "CL": "Chile",
-        "CR": "Costa Rica",
-        "ET": "Äthiopien",
-        "GB": "Vereinigtes Königreich",
-        "NG": "Nigeria",
-        "NL": "Niederlande",
-        "PK": "Pakistan",
-        "EG": "Ägypten",
-        "IN": "Indien",
-        "ID": "Indonesien",
-        "MA": "Marokko",
-        "PA": "Panama",
-        "PE": "Peru",
-        "PH": "Philippinen",
-        "SA": "Saudi-Arabien",
-        "ZA": "Südafrika",
-        "TR": "Türkei",
-        "AE": "Vereinigte Arabische Emirate",
-    },
-    "es": {
-        "AO": "Angola",
-        "AR": "Argentina",
-        "BR": "Brasil",
-        "CL": "Chile",
-        "CR": "Costa Rica",
-        "ET": "Etiopía",
-        "GB": "Reino Unido",
-        "NG": "Nigeria",
-        "NL": "Países Bajos",
-        "PK": "Pakistán",
-        "EG": "Egipto",
-        "IN": "India",
-        "ID": "Indonesia",
-        "MA": "Marruecos",
-        "PA": "Panamá",
-        "PE": "Perú",
-        "PH": "Filipinas",
-        "SA": "Arabia Saudita",
-        "ZA": "Sudáfrica",
-        "TR": "Turquía",
-        "AE": "Emiratos Árabes Unidos",
-    },
-    "fr": {
-        "AO": "Angola",
-        "AR": "Argentine",
-        "BR": "Brésil",
-        "CL": "Chili",
-        "CR": "Costa Rica",
-        "ET": "Éthiopie",
-        "GB": "Royaume-Uni",
-        "NG": "Nigéria",
-        "NL": "Pays-Bas",
-        "PK": "Pakistan",
-        "EG": "Égypte",
-        "IN": "Inde",
-        "ID": "Indonésie",
-        "MA": "Maroc",
-        "PA": "Panama",
-        "PE": "Pérou",
-        "PH": "Philippines",
-        "SA": "Arabie saoudite",
-        "ZA": "Afrique du Sud",
-        "TR": "Turquie",
-        "AE": "Émirats arabes unis",
-    },
-    "id": {
-        "AO": "Angola",
-        "AR": "Argentina",
-        "BR": "Brasil",
-        "CL": "Chili",
-        "CR": "Kosta Rika",
-        "ET": "Etiopia",
-        "GB": "Inggris Raya",
-        "NG": "Nigeria",
-        "NL": "Belanda",
-        "PK": "Pakistan",
-        "EG": "Mesir",
-        "IN": "India",
-        "ID": "Indonesia",
-        "MA": "Maroko",
-        "PA": "Panama",
-        "PE": "Peru",
-        "PH": "Filipina",
-        "SA": "Arab Saudi",
-        "ZA": "Afrika Selatan",
-        "TR": "Turki",
-        "AE": "Uni Emirat Arab",
-    },
-    "it": {
-        "AO": "Angola",
-        "AR": "Argentina",
-        "BR": "Brasile",
-        "CL": "Cile",
-        "CR": "Costa Rica",
-        "ET": "Etiopia",
-        "GB": "Regno Unito",
-        "NG": "Nigeria",
-        "NL": "Paesi Bassi",
-        "PK": "Pakistan",
-        "EG": "Egitto",
-        "IN": "India",
-        "ID": "Indonesia",
-        "MA": "Marocco",
-        "PA": "Panama",
-        "PE": "Perù",
-        "PH": "Filippine",
-        "SA": "Arabia Saudita",
-        "ZA": "Sudafrica",
-        "TR": "Turchia",
-        "AE": "Emirati Arabi Uniti",
-    },
-    "pl": {
-        "AO": "Angola",
-        "AR": "Argentyna",
-        "BR": "Brazylia",
-        "CL": "Chile",
-        "CR": "Kostaryka",
-        "ET": "Etiopia",
-        "GB": "Wielka Brytania",
-        "NG": "Nigeria",
-        "NL": "Niderlandy",
-        "PK": "Pakistan",
-        "EG": "Egipt",
-        "IN": "Indie",
-        "ID": "Indonezja",
-        "MA": "Maroko",
-        "PA": "Panama",
-        "PE": "Peru",
-        "PH": "Filipiny",
-        "PL": "Polska",
-        "SA": "Arabia Saudyjska",
-        "ZA": "Republika Południowej Afryki",
-        "TR": "Turcja",
-        "AE": "Zjednoczone Emiraty Arabskie",
-    },
-    "pt": {
-        "AO": "Angola",
-        "AR": "Argentina",
-        "BR": "Brasil",
-        "CL": "Chile",
-        "CR": "Costa Rica",
-        "ET": "Etiópia",
-        "GB": "Reino Unido",
-        "NG": "Nigéria",
-        "NL": "Países Baixos",
-        "PK": "Paquistão",
-        "EG": "Egito",
-        "IN": "Índia",
-        "ID": "Indonésia",
-        "MA": "Marrocos",
-        "PA": "Panamá",
-        "PE": "Peru",
-        "PH": "Filipinas",
-        "PL": "Polónia",
-        "SA": "Arábia Saudita",
-        "ZA": "África do Sul",
-        "TR": "Turquia",
-        "AE": "Emirados Árabes Unidos",
-    },
-    "ru": {
-        "AO": "Ангола",
-        "AR": "Аргентина",
-        "BR": "Бразилия",
-        "CL": "Чили",
-        "CR": "Коста-Рика",
-        "ET": "Эфиопия",
-        "GB": "Великобритания",
-        "NG": "Нигерия",
-        "NL": "Нидерланды",
-        "PK": "Пакистан",
-        "EG": "Египет",
-        "IN": "Индия",
-        "ID": "Индонезия",
-        "MA": "Марокко",
-        "PA": "Панама",
-        "PE": "Перу",
-        "PH": "Филиппины",
-        "PL": "Польша",
-        "SA": "Саудовская Аравия",
-        "ZA": "Южная Африка",
-        "TR": "Турция",
-        "AE": "Объединенные Арабские Эмираты",
-    },
-    "sw": {
-        "AO": "Angola",
-        "AR": "Argentina",
-        "BR": "Brazil",
-        "CL": "Chile",
-        "CR": "Costa Rica",
-        "ET": "Ethiopia",
-        "GB": "Ufalme wa Muungano",
-        "NG": "Nigeria",
-        "NL": "Uholanzi",
-        "PK": "Pakistan",
-        "EG": "Misri",
-        "IN": "India",
-        "ID": "Indonesia",
-        "MA": "Moroko",
-        "PA": "Panama",
-        "PE": "Peru",
-        "PH": "Ufilipino",
-        "PL": "Poland",
-        "SA": "Saudi Arabia",
-        "ZA": "Afrika Kusini",
-        "TR": "Uturuki",
-        "AE": "Falme za Kiarabu",
-    },
-    "th": {
-        "AO": "แองโกลา",
-        "AR": "อาร์เจนตินา",
-        "BR": "บราซิล",
-        "CL": "ชิลี",
-        "CR": "คอสตาริกา",
-        "ET": "เอธิโอเปีย",
-        "GB": "สหราชอาณาจักร",
-        "NG": "ไนจีเรีย",
-        "NL": "เนเธอร์แลนด์",
-        "PK": "ปากีสถาน",
-        "EG": "อียิปต์",
-        "IN": "อินเดีย",
-        "ID": "อินโดนีเซีย",
-        "MA": "โมร็อกโก",
-        "PA": "ปานามา",
-        "PE": "เปรู",
-        "PH": "ฟิลิปปินส์",
-        "PL": "โปแลนด์",
-        "SA": "ซาอุดีอาระเบีย",
-        "ZA": "แอฟริกาใต้",
-        "TR": "ตุรกี",
-        "AE": "สหรัฐอาหรับเอมิเรตส์",
-    },
 }
 
 
@@ -296,6 +40,16 @@ def _translate_value(value):
 def _localized_country_name(country):
     language = (get_language() or "").split("-")[0]
     return _COUNTRY_NAME_MAP.get(language, {}).get(country.iso_code, _translate_value(country.country_name))
+
+
+def _localized_official_name(country):
+    language = (get_language() or "").split("-")[0]
+    return _OFFICIAL_NAME_MAP.get(language, {}).get(country.iso_code, _translate_value(country.official_name))
+
+
+def _localized_region(region):
+    language = (get_language() or "").split("-")[0]
+    return _REGION_NAME_MAP.get(language, {}).get(region, _translate_value(region))
 
 
 def _format_pair(label, value):
@@ -344,6 +98,7 @@ def _build_country_overview(translated):
 
 
 def localize_country(country):
+    is_generated_catalog = getattr(country, "is_generated_catalog", False)
     translated_country_name = _localized_country_name(country)
     localized_seo_title = _translate_value(country.seo_title)
     default_seo_suffix = " Payroll Guide | Country Payroll Intelligence | ExactusPay"
@@ -351,13 +106,42 @@ def localize_country(country):
         localized_seo_title = _("%(country_name)s Payroll Guide | Country Payroll Intelligence | ExactusPay") % {
             "country_name": translated_country_name,
         }
+    elif is_generated_catalog and country.seo_title == f"{country.country_name} Payroll Guide | ExactusPay":
+        localized_seo_title = _("%(country_name)s Payroll Guide | ExactusPay") % {
+            "country_name": translated_country_name,
+        }
+
+    explicit_intro = _translate_value(country.hero_intro)
+    if is_generated_catalog and country.hero_intro.startswith("ExactusPay's "):
+        explicit_intro = _(
+            "ExactusPay's %(country_name)s payroll guide is structured around verified authorities, core payroll references, and practical employer review points."
+        ) % {"country_name": translated_country_name}
+
+    explicit_overview = _translate_value(country.overview)
+    if is_generated_catalog and country.overview.startswith("This ") and "verified employer reference points" in country.overview:
+        explicit_overview = _(
+            "This %(country_name)s payroll profile focuses on verified employer reference points. Where ExactusPay could confirm the main tax or social-security body, it is listed below. Fields without a reliable confirmation are intentionally left blank."
+        ) % {"country_name": translated_country_name}
+
+    explicit_meta_description = _translate_value(country.meta_description)
+    if is_generated_catalog and country.meta_description.startswith("Explore ExactusPay's "):
+        explicit_meta_description = _(
+            "Explore ExactusPay's %(country_name)s payroll guide with verified authority mapping and core employer reference points."
+        ) % {"country_name": translated_country_name}
+
+    localized_meta_keywords = _translate_value(country.meta_keywords)
+    if is_generated_catalog and country.meta_keywords.endswith(f", ExactusPay {country.country_name}"):
+        localized_meta_keywords = _(
+            "%(country_name)s payroll, %(country_name)s tax authority, %(country_name)s social security, ExactusPay %(country_name)s"
+        ) % {"country_name": translated_country_name}
 
     translated = SimpleNamespace(
         slug=country.slug,
+        is_generated_catalog=is_generated_catalog,
         iso_code=country.iso_code,
         country_name=translated_country_name,
-        official_name=_translate_value(country.official_name),
-        region=_translate_value(getattr(country, "region", "")),
+        official_name=_localized_official_name(country),
+        region=_localized_region(getattr(country, "region", "")),
         flag_inline_svg=country.flag_inline_svg,
         flag_inline_png=getattr(country, "flag_inline_png", ""),
         flag_url=country.flag_url,
@@ -379,7 +163,7 @@ def localize_country(country):
         termination_notice_summary=_translate_value(country.termination_notice_summary),
         minimum_wage_summary=_translate_value(country.minimum_wage_summary),
         seo_title=localized_seo_title,
-        meta_keywords=_translate_value(country.meta_keywords),
+        meta_keywords=localized_meta_keywords,
         tax_authority_name=_translate_value(getattr(country, "tax_authority_name", "")),
         social_security_authority_name=_translate_value(getattr(country, "social_security_authority_name", "")),
         authority_note=_translate_value(getattr(country, "authority_note", "")),
@@ -388,9 +172,6 @@ def localize_country(country):
 
     generated_intro = _build_country_intro(translated)
     generated_overview = _build_country_overview(translated)
-    explicit_intro = _translate_value(country.hero_intro)
-    explicit_overview = _translate_value(country.overview)
-    explicit_meta_description = _translate_value(country.meta_description)
     meta_description = explicit_meta_description or explicit_intro or explicit_overview or generated_intro or generated_overview
 
     return SimpleNamespace(
@@ -441,7 +222,9 @@ def localized_nested_content(value):
 
 def localized_hero_highlights(country):
     translated = localize_country(country)
-    explicit_highlights = _translate_value(getattr(country, "hero_highlights", []) or [])
+    explicit_highlights = []
+    if not getattr(country, "is_generated_catalog", False):
+        explicit_highlights = _translate_value(getattr(country, "hero_highlights", []) or [])
     if explicit_highlights:
         return explicit_highlights
     return _collect_pairs(
@@ -454,7 +237,9 @@ def localized_hero_highlights(country):
 
 def localized_glance_cards(country):
     translated = localize_country(country)
-    explicit_cards = _translate_value(getattr(country, "glance_cards", []) or [])
+    explicit_cards = []
+    if not getattr(country, "is_generated_catalog", False):
+        explicit_cards = _translate_value(getattr(country, "glance_cards", []) or [])
     if explicit_cards:
         return explicit_cards
     return [
@@ -496,7 +281,9 @@ def localized_glance_cards(country):
 
 def localized_content_sections(country):
     translated = localize_country(country)
-    explicit_sections = _translate_value(getattr(country, "content_sections", []) or [])
+    explicit_sections = []
+    if not getattr(country, "is_generated_catalog", False):
+        explicit_sections = _translate_value(getattr(country, "content_sections", []) or [])
     if explicit_sections:
         return explicit_sections
     return [
@@ -564,7 +351,9 @@ def localized_content_sections(country):
 
 def localized_employer_considerations(country):
     translated = localize_country(country)
-    explicit_items = _translate_value(getattr(country, "employer_considerations", []) or [])
+    explicit_items = []
+    if not getattr(country, "is_generated_catalog", False):
+        explicit_items = _translate_value(getattr(country, "employer_considerations", []) or [])
     if explicit_items:
         return explicit_items
     return _collect_pairs(

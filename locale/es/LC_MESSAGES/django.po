@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ExactusPay 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-19 10:18+0000\n"
+"POT-Creation-Date: 2026-04-21 02:51+0000\n"
 "PO-Revision-Date: 2026-02-19 10:00-0300\n"
 "Last-Translator: \n"
 "Language-Team: Spanish <es@exactuspay.com>\n"
@@ -31,7 +31,7 @@ msgstr "perfiles"
 
 #: accounts/templates/accounts/login.html:4
 msgid "Log In | ExactusPay"
-msgstr "Iniciar Sesión | ExactusPay"
+msgstr "Iniciar sesión | ExactusPay"
 
 #: accounts/templates/accounts/login.html:5
 msgid ""
@@ -117,7 +117,7 @@ msgstr "Cerrar Sesión"
 
 #: accounts/templates/accounts/register.html:4
 msgid "Create Account | ExactusPay"
-msgstr "Crear Cuenta | ExactusPay"
+msgstr "Crear cuenta | ExactusPay"
 
 #: accounts/templates/accounts/register.html:5
 msgid ""
@@ -170,159 +170,236 @@ msgstr "Su perfil de ExactusPay"
 #: accounts/views.py:47
 msgid "Manage your ExactusPay account profile and language preferences."
 msgstr ""
-"Gestione el perfil de su cuenta de ExactusPay y las preferencias de idioma."
+"Gestiona el perfil de tu cuenta ExactusPay y tus preferencias de idioma."
 
-#: home/context_processors.py:12 home/country_translation_inventory.py:170
-#| msgid "🇬🇧 English"
-msgid "English"
-msgstr "🇬🇧 Inglés"
+#: home/country_catalog.py:732 home/country_catalog.py:743
+#: home/country_translation_inventory.py:357
+#| msgid "Tax authority mapping"
+msgid "Tax authority"
+msgstr "Autoridad fiscal"
 
-#: home/context_processors.py:13 home/country_translation_inventory.py:301
-#| msgid "24/7 Portuguese support"
-msgid "Portuguese"
-msgstr "Soporte en portugués 24/7"
+#: home/country_catalog.py:734 home/country_catalog.py:745
+#: home/country_translation_inventory.py:371
+#| msgid "Tax and social security summary"
+msgid "Social security authority"
+msgstr "Autoridad de seguridad social"
 
-#: home/context_processors.py:14 home/country_translation_inventory.py:336
-msgid "Spanish"
-msgstr ""
+#: home/country_catalog.py:736 home/country_translation_inventory.py:369
+msgid "Verified authority details are still being expanded for this market."
+msgstr "Los detalles verificados de las autoridades de este mercado aún se están ampliando."
 
-#: home/country_localization.py:319 home/country_localization.py:334
-#: home/country_localization.py:418 home/country_localization.py:443
-#: home/country_localization.py:471 home/country_localization.py:502
-#: home/country_localization.py:566 home/models.py:169
+#: home/country_catalog.py:747 home/country_catalog.py:758
+#: home/country_translation_inventory.py:290
+#: home/templates/countries/hub.html:321
+msgid "Payroll currency"
+msgstr "Moneda de nómina"
+
+#: home/country_catalog.py:749 home/country_catalog.py:760
+#: home/country_localization.py:80 home/country_localization.py:95
+#: home/country_localization.py:206 home/country_localization.py:233
+#: home/country_localization.py:263 home/country_localization.py:296
+#: home/country_localization.py:331 home/country_localization.py:361
+#: home/models.py:173
+msgid "Tax year"
+msgstr "Año fiscal"
+
+#: home/country_catalog.py:751 home/country_translation_inventory.py:147
+#| msgid "Compliance notes"
+msgid "Coverage note"
+msgstr "Nota de cobertura"
+
+#: home/country_catalog.py:765 home/country_translation_inventory.py:370
+msgid ""
+"Only fields with a verified payroll reference are shown on this profile."
+msgstr "En este perfil solo se muestran campos con una referencia de nómina verificada."
+
+#: home/country_catalog.py:770 home/country_translation_inventory.py:368
+msgid "Verified authorities"
+msgstr "Autoridades verificadas"
+
+#: home/country_catalog.py:775 home/country_translation_inventory.py:291
+#| msgid "Payroll Analytics"
+msgid "Payroll essentials"
+msgstr "Elementos esenciales de nómina"
+
+#: home/country_localization.py:78 home/country_localization.py:93
+#: home/country_localization.py:204 home/country_localization.py:231
+#: home/country_localization.py:261 home/country_localization.py:294
+#: home/country_localization.py:360 home/models.py:171
 #: home/templates/countries/detail.html:371
 msgid "Payroll frequency"
 msgstr "Frecuencia de nómina"
 
-#: home/country_localization.py:320 home/country_localization.py:335
-#: home/country_localization.py:419 home/country_localization.py:444
-#: home/country_localization.py:472 home/country_localization.py:503
-#: home/country_localization.py:538 home/models.py:170
+#: home/country_localization.py:79 home/country_localization.py:94
+#: home/country_localization.py:205 home/country_localization.py:232
+#: home/country_localization.py:262 home/country_localization.py:295
+#: home/country_localization.py:330 home/models.py:172
 #: home/templates/countries/detail.html:377
 msgid "Typical pay currency"
 msgstr "Moneda habitual de pago"
 
-#: home/country_localization.py:321 home/country_localization.py:336
-#: home/country_localization.py:420 home/country_localization.py:445
-#: home/country_localization.py:473 home/country_localization.py:504
-#: home/country_localization.py:539 home/country_localization.py:567
-#: home/models.py:171
-msgid "Tax year"
-msgstr "Año fiscal"
-
-#: home/country_localization.py:328 home/country_localization.py:402
-#: home/country_localization.py:460 home/country_localization.py:546
-#: home/models.py:154
+#: home/country_localization.py:87 home/country_localization.py:188
+#: home/country_localization.py:250 home/country_localization.py:338
+#: home/models.py:156
 msgid "Official country name"
 msgstr "Nombre oficial del país"
 
-#: home/country_localization.py:329 home/country_localization.py:403
-#: home/country_localization.py:461 home/country_localization.py:547
-#: home/models.py:155
+#: home/country_localization.py:88 home/country_localization.py:189
+#: home/country_localization.py:251 home/country_localization.py:339
+#: home/models.py:157
 msgid "Capital"
 msgstr "Capital"
 
-#: home/country_localization.py:330 home/country_localization.py:404
-#: home/country_localization.py:462 home/country_localization.py:523
-#: home/country_localization.py:552 home/models.py:156
+#: home/country_localization.py:89 home/country_localization.py:190
+#: home/country_localization.py:252 home/country_localization.py:315
+#: home/country_localization.py:344 home/models.py:158
 msgid "Main language(s)"
 msgstr "Idioma(s) principal(es)"
 
-#: home/country_localization.py:331 home/country_localization.py:405
-#: home/models.py:157 home/templates/countries/hub.html:281
+#: home/country_localization.py:90 home/country_localization.py:191
+#: home/models.py:159 home/templates/countries/hub.html:281
 msgid "Currency"
 msgstr "Moneda"
 
-#: home/country_localization.py:346
-#| msgid "Profile | ExactusPay"
+#: home/country_localization.py:106
+#, fuzzy, python-format
+#| msgid ""
+#| "%(country_name)s Payroll Guide | Country Payroll Intelligence | ExactusPay"
 msgid ""
 "%(country_name)s Payroll Guide | Country Payroll Intelligence | ExactusPay"
-msgstr "Guía de nómina de %(country_name)s | ExactusPay"
+msgstr ""
+"Transformando la nómina global con precisión e inteligencia | ExactusPay"
 
-#: home/country_localization.py:406 home/country_localization.py:525
-#: home/models.py:158
+#: home/country_localization.py:110 home/templates/countries/detail.html:4
+#: home/templates/countries/detail.html:8
+#: home/templates/countries/detail.html:12
+#, fuzzy, python-format
+#| msgid "%(country_name)s Payroll Guide | ExactusPay"
+msgid "%(country_name)s Payroll Guide | ExactusPay"
+msgstr "Guía de Payroll de %(country_name)s | ExactusPay"
+
+#: home/country_localization.py:117
+#, python-format
+msgid ""
+"ExactusPay's %(country_name)s payroll guide is structured around verified "
+"authorities, core payroll references, and practical employer review points."
+msgstr ""
+"La guía de nómina de ExactusPay para %(country_name)s se estructura en torno "
+"a autoridades verificadas, referencias esenciales de nómina y puntos "
+"prácticos de revisión para empleadores."
+
+#: home/country_localization.py:123
+#, python-format
+msgid ""
+"This %(country_name)s payroll profile focuses on verified employer reference "
+"points. Where ExactusPay could confirm the main tax or social-security body, "
+"it is listed below. Fields without a reliable confirmation are intentionally "
+"left blank."
+msgstr ""
+"Este perfil de nómina de %(country_name)s se centra en puntos de referencia "
+"verificados para empleadores. Cuando ExactusPay pudo confirmar la autoridad "
+"fiscal o de seguridad social principal, se indica abajo. Los campos sin una "
+"confirmación fiable se dejan intencionadamente en blanco."
+
+#: home/country_localization.py:129
+#, python-format
+msgid ""
+"Explore ExactusPay's %(country_name)s payroll guide with verified authority "
+"mapping and core employer reference points."
+msgstr ""
+"Explore la guía de nómina de ExactusPay para %(country_name)s con el mapeo "
+"verificado de autoridades y puntos de referencia esenciales para empleadores."
+
+#: home/country_localization.py:135
+#, python-format
+msgid ""
+"%(country_name)s payroll, %(country_name)s tax authority, %(country_name)s "
+"social security, ExactusPay %(country_name)s"
+msgstr ""
+"payroll en %(country_name)s, autoridad tributaria de %(country_name)s, "
+"seguridad social de %(country_name)s, ExactusPay %(country_name)s"
+
+#: home/country_localization.py:192 home/country_localization.py:317
+#: home/models.py:160
 msgid "Population"
 msgstr "Población"
 
-#: home/country_localization.py:407 home/country_localization.py:509
-#: home/country_localization.py:553 home/models.py:159
+#: home/country_localization.py:193 home/country_localization.py:301
+#: home/country_localization.py:345 home/models.py:161
 msgid "Time zone(s)"
 msgstr "Zona(s) horaria(s)"
 
-#: home/country_localization.py:408 home/country_localization.py:524
-#: home/models.py:160
+#: home/country_localization.py:194 home/country_localization.py:316
+#: home/models.py:162
 msgid "International dialling code"
 msgstr "Código de marcación internacional"
 
-#: home/country_localization.py:409 home/country_localization.py:508
-#: home/country_localization.py:548 home/models.py:161
+#: home/country_localization.py:195 home/country_localization.py:300
+#: home/country_localization.py:340 home/models.py:163
 msgid "Date format"
 msgstr "Formato de fecha"
 
-#: home/country_localization.py:410 home/country_localization.py:510
-#: home/country_localization.py:554 home/models.py:162
+#: home/country_localization.py:196 home/country_localization.py:302
+#: home/country_localization.py:346 home/models.py:164
 msgid "Internet domain"
 msgstr "Dominio de internet"
 
-#: home/country_localization.py:421 home/country_localization.py:446
-#: home/country_localization.py:517 home/models.py:172
+#: home/country_localization.py:207 home/country_localization.py:234
+#: home/country_localization.py:309 home/models.py:174
 msgid "Standard working week"
 msgstr "Semana laboral estándar"
 
-#: home/country_localization.py:422 home/country_localization.py:518
-#: home/models.py:173
+#: home/country_localization.py:208 home/country_localization.py:310
+#: home/models.py:175
 msgid "Public holiday count"
 msgstr "Número de festivos"
 
-#: home/country_localization.py:423 home/country_localization.py:482
-#: home/country_localization.py:532 home/models.py:174
+#: home/country_localization.py:209 home/country_localization.py:272
+#: home/country_localization.py:324 home/models.py:176
 msgid "Common statutory elements"
 msgstr "Elementos legales comunes"
 
-#: home/country_localization.py:424 home/country_localization.py:483
-#: home/country_localization.py:533 home/country_localization.py:568
-#: home/models.py:175
+#: home/country_localization.py:210 home/country_localization.py:273
+#: home/country_localization.py:325 home/country_localization.py:362
+#: home/models.py:177
 msgid "Employer contribution summary"
 msgstr "Resumen de cotizaciones del empleador"
 
-#: home/country_localization.py:425 home/country_localization.py:484
-#: home/country_localization.py:519 home/country_localization.py:569
-#: home/models.py:176
+#: home/country_localization.py:211 home/country_localization.py:274
+#: home/country_localization.py:311 home/country_localization.py:363
+#: home/models.py:178
 msgid "Termination / notice highlights"
 msgstr "Puntos clave sobre despido / preaviso"
 
-#: home/country_localization.py:426 home/country_localization.py:534
-#: home/models.py:177
+#: home/country_localization.py:212 home/country_localization.py:326
+#: home/models.py:179
 msgid "Minimum wage indicator"
 msgstr "Indicador de salario mínimo"
 
-#: home/country_localization.py:457 home/templates/countries/detail.html:421
+#: home/country_localization.py:247 home/templates/countries/detail.html:421
 msgid "Key facts"
 msgstr "Datos clave"
 
-#: home/country_localization.py:468 home/templates/countries/detail.html:439
+#: home/country_localization.py:258 home/templates/countries/detail.html:439
 msgid "Payroll intelligence"
 msgstr "Inteligencia de nómina"
 
-#: home/country_localization.py:479 home/country_localization.py:543
+#: home/country_localization.py:269 home/country_localization.py:335
 #: home/country_translation_inventory.py:145
-#| msgid "Compliance Guides"
 msgid "Compliance notes"
-msgstr "Guías de Cumplimiento"
+msgstr "Notas de cumplimiento"
 
-#: home/country_localization.py:499 home/country_translation_inventory.py:287
-#| msgid "Country overview"
+#: home/country_localization.py:291 home/country_translation_inventory.py:289
 msgid "Payroll overview"
-msgstr "Resumen del país"
+msgstr "Resumen de nómina"
 
-#: home/country_localization.py:514 home/country_translation_inventory.py:169
-#| msgid "Country highlights"
+#: home/country_localization.py:306 home/country_translation_inventory.py:170
 msgid "Employment highlights"
-msgstr "Puntos clave del país"
+msgstr "Aspectos destacados del empleo"
 
-#: home/country_localization.py:529
+#: home/country_localization.py:321
 msgid "Tax and social security summary"
-msgstr ""
+msgstr "Resumen fiscal y de seguridad social"
 
 #: home/country_translation_inventory.py:4
 msgid "+20"
@@ -577,7 +654,6 @@ msgid "46M+"
 msgstr ""
 
 #: home/country_translation_inventory.py:67
-#| msgid "50+"
 msgid "4M+"
 msgstr "50+"
 
@@ -753,15 +829,15 @@ msgstr ""
 
 #: home/country_translation_inventory.py:100
 msgid "Add country-specific payroll logic without redesigning the template."
-msgstr ""
+msgstr "Añade lógica de nómina específica por país sin rediseñar la plantilla."
 
 #: home/country_translation_inventory.py:101
 msgid "Addis Ababa"
-msgstr ""
+msgstr "Adís Abeba"
 
 #: home/country_translation_inventory.py:102
 msgid "Amharic and regional languages"
-msgstr ""
+msgstr "Amárico y lenguas regionales"
 
 #: home/country_translation_inventory.py:103
 msgid "Amsterdam"
@@ -769,12 +845,12 @@ msgstr ""
 
 #: home/country_translation_inventory.py:104
 msgid "Angola"
-msgstr ""
+msgstr "Angola"
 
 #: home/country_translation_inventory.py:105
-#| msgid "Profile | ExactusPay"
 msgid "Angola Payroll Guide | Country Payroll Intelligence | ExactusPay"
-msgstr "Guía de nómina de %(country_name)s | ExactusPay"
+msgstr ""
+"Guía de nómina de Angola | Inteligencia de nómina por país | ExactusPay"
 
 #: home/country_translation_inventory.py:106
 msgid ""
@@ -804,7 +880,7 @@ msgstr ""
 
 #: home/country_translation_inventory.py:109
 msgid "Angolan kwanza (AOA)"
-msgstr ""
+msgstr "kwanza angoleño (AOA)"
 
 #: home/country_translation_inventory.py:110
 msgid "Ankara"
@@ -812,28 +888,28 @@ msgstr ""
 
 #: home/country_translation_inventory.py:111
 msgid "Arab Republic of Egypt"
-msgstr ""
+msgstr "República Árabe de Egipto"
 
 #: home/country_translation_inventory.py:112
 msgid "Arabic"
-msgstr ""
+msgstr "Árabe"
 
 #: home/country_translation_inventory.py:113
 msgid "Arabic and English widely used in business"
-msgstr ""
+msgstr "Árabe e inglés ampliamente utilizados en los negocios"
 
 #: home/country_translation_inventory.py:114
 msgid "Arabic, Amazigh, French widely used in business"
-msgstr ""
+msgstr "Árabe, amazigh y francés ampliamente utilizados en los negocios"
 
 #: home/country_translation_inventory.py:115
 msgid "Argentina"
-msgstr ""
+msgstr "Argentina"
 
 #: home/country_translation_inventory.py:116
-#| msgid "Profile | ExactusPay"
 msgid "Argentina Payroll Guide | Country Payroll Intelligence | ExactusPay"
-msgstr "Guía de nómina de %(country_name)s | ExactusPay"
+msgstr ""
+"Guía de nómina de Argentina | Inteligencia de nómina por país | ExactusPay"
 
 #: home/country_translation_inventory.py:117
 msgid ""
@@ -871,11 +947,11 @@ msgstr ""
 
 #: home/country_translation_inventory.py:121
 msgid "Argentine Republic"
-msgstr ""
+msgstr "República Argentina"
 
 #: home/country_translation_inventory.py:122
 msgid "Argentine peso (ARS)"
-msgstr ""
+msgstr "peso argentino (ARS)"
 
 #: home/country_translation_inventory.py:123
 msgid ""
@@ -897,12 +973,12 @@ msgstr ""
 #: home/templates/articles/br/article_0004.html:14
 #: home/templates/articles/br/article_0005.html:14
 msgid "Brazil"
-msgstr ""
+msgstr "Brasil"
 
 #: home/country_translation_inventory.py:127
-#| msgid "Profile | ExactusPay"
 msgid "Brazil Payroll Guide | Country Payroll Intelligence | ExactusPay"
-msgstr "Guía de nómina de %(country_name)s | ExactusPay"
+msgstr ""
+"Guía de nómina de Brasil | Inteligencia de nómina por país | ExactusPay"
 
 #: home/country_translation_inventory.py:128
 msgid ""
@@ -932,7 +1008,7 @@ msgstr ""
 
 #: home/country_translation_inventory.py:131
 msgid "Brazilian real (BRL)"
-msgstr ""
+msgstr "real brasileño (BRL)"
 
 #: home/country_translation_inventory.py:132
 msgid "Buenos Aires"
@@ -956,12 +1032,11 @@ msgstr "Ano natural o el periodo contable de 12 meses de la entidad"
 
 #: home/country_translation_inventory.py:137
 msgid "Chile"
-msgstr ""
+msgstr "Chile"
 
 #: home/country_translation_inventory.py:138
-#| msgid "Profile | ExactusPay"
 msgid "Chile Payroll Guide | Country Payroll Intelligence | ExactusPay"
-msgstr "Guía de nómina de %(country_name)s | ExactusPay"
+msgstr "Guía de nómina de Chile | Inteligencia de nómina por país | ExactusPay"
 
 #: home/country_translation_inventory.py:139
 msgid ""
@@ -987,10 +1062,11 @@ msgstr ""
 #: home/country_translation_inventory.py:141
 msgid "Chile payroll, payroll in Chile, country payroll page, ExactusPay Chile"
 msgstr ""
+"nómina Chile, nómina en Chile, página de nómina por país, ExactusPay Chile"
 
 #: home/country_translation_inventory.py:142
 msgid "Chilean peso (CLP)"
-msgstr ""
+msgstr "peso chileno (CLP)"
 
 #: home/country_translation_inventory.py:143
 msgid ""
@@ -1018,30 +1094,30 @@ msgstr ""
 "licencias pagadas y los elementos de nómina exigidos localmente en la capa "
 "de país de ExactusPay."
 
-#: home/country_translation_inventory.py:147
+#: home/country_translation_inventory.py:148
 #: home/templates/articles/cr/article_0001.html:14
 msgid "Costa Rica"
-msgstr ""
-
-#: home/country_translation_inventory.py:148
-#| msgid "Profile | ExactusPay"
-msgid "Costa Rica Payroll Guide | Country Payroll Intelligence | ExactusPay"
-msgstr "Guía de nómina de %(country_name)s | ExactusPay"
+msgstr "Costa Rica"
 
 #: home/country_translation_inventory.py:149
+msgid "Costa Rica Payroll Guide | Country Payroll Intelligence | ExactusPay"
+msgstr ""
+"Guía de nómina de Costa Rica | Inteligencia de nómina por país | ExactusPay"
+
+#: home/country_translation_inventory.py:150
 msgid ""
 "Costa Rica can be presented with a strong commercial summary first, then "
 "deeper payroll intelligence as implementation progresses."
 msgstr ""
 
-#: home/country_translation_inventory.py:150
+#: home/country_translation_inventory.py:151
 msgid ""
 "Costa Rica demonstrates the fallback behaviour of the template: when a "
 "country has core metadata and a few operational notes, the page still reads "
 "cleanly while the payroll dataset grows."
 msgstr ""
 
-#: home/country_translation_inventory.py:151
+#: home/country_translation_inventory.py:152
 #, fuzzy
 #| msgid ""
 #| "This hub uses one reusable ExactusPay structure for country pages: a "
@@ -1056,65 +1132,64 @@ msgstr ""
 "país: un hero sólido, datos para empleadores, inteligencia de nómina y "
 "orientación operativa específica por mercado."
 
-#: home/country_translation_inventory.py:152
+#: home/country_translation_inventory.py:153
 msgid ""
 "Costa Rica payroll, payroll in Costa Rica, country payroll page, ExactusPay "
 "Costa Rica"
 msgstr ""
 
-#: home/country_translation_inventory.py:153
-msgid "Costa Rican colon (CRC)"
-msgstr ""
-
 #: home/country_translation_inventory.py:154
-#| msgid "Country payroll pages"
+msgid "Costa Rican colon (CRC)"
+msgstr "colón costarricense (CRC)"
+
+#: home/country_translation_inventory.py:155
 msgid "Country-first payroll context"
 msgstr "Páginas de nómina por país"
 
-#: home/country_translation_inventory.py:155
+#: home/country_translation_inventory.py:156
 msgid "DD-MM-YYYY"
 msgstr ""
 
-#: home/country_translation_inventory.py:156
+#: home/country_translation_inventory.py:157
 msgid "DD.MM.YYYY"
 msgstr ""
 
-#: home/country_translation_inventory.py:157
+#: home/country_translation_inventory.py:158
 msgid "DD/MM/YYYY"
 msgstr ""
 
-#: home/country_translation_inventory.py:158
-msgid "Dutch"
-msgstr ""
-
 #: home/country_translation_inventory.py:159
+msgid "Dutch"
+msgstr "Neerlandés"
+
+#: home/country_translation_inventory.py:160
 msgid "EGP"
 msgstr ""
 
-#: home/country_translation_inventory.py:160
+#: home/country_translation_inventory.py:161
 msgid "ETB"
 msgstr ""
 
-#: home/country_translation_inventory.py:161
+#: home/country_translation_inventory.py:162
 msgid "EUR"
 msgstr ""
 
-#: home/country_translation_inventory.py:162
-msgid "Egypt"
-msgstr ""
-
 #: home/country_translation_inventory.py:163
-#| msgid "Profile | ExactusPay"
-msgid "Egypt Payroll Guide | Country Payroll Intelligence | ExactusPay"
-msgstr "Guía de nómina de %(country_name)s | ExactusPay"
+msgid "Egypt"
+msgstr "Egipto"
 
 #: home/country_translation_inventory.py:164
+msgid "Egypt Payroll Guide | Country Payroll Intelligence | ExactusPay"
+msgstr ""
+"Guía de nómina de Egipto | Inteligencia de nómina por país | ExactusPay"
+
+#: home/country_translation_inventory.py:165
 msgid ""
 "Egypt can be presented with a strong commercial summary first, then deeper "
 "payroll intelligence as implementation progresses."
 msgstr ""
 
-#: home/country_translation_inventory.py:165
+#: home/country_translation_inventory.py:166
 #, fuzzy
 #| msgid ""
 #| "This hub uses one reusable ExactusPay structure for country pages: a "
@@ -1129,15 +1204,16 @@ msgstr ""
 "país: un hero sólido, datos para empleadores, inteligencia de nómina y "
 "orientación operativa específica por mercado."
 
-#: home/country_translation_inventory.py:166
+#: home/country_translation_inventory.py:167
 msgid "Egypt payroll, payroll in Egypt, country payroll page, ExactusPay Egypt"
 msgstr ""
-
-#: home/country_translation_inventory.py:167
-msgid "Egyptian pound (EGP)"
-msgstr ""
+"nómina Egipto, nómina en Egipto, página de nómina por país, ExactusPay Egypt"
 
 #: home/country_translation_inventory.py:168
+msgid "Egyptian pound (EGP)"
+msgstr "libra egipcia (EGP)"
+
+#: home/country_translation_inventory.py:169
 msgid ""
 "Employer cost should be modeled through the live ExactusPay country data "
 "source because contribution logic can change over time."
@@ -1147,32 +1223,36 @@ msgstr ""
 "el tiempo."
 
 #: home/country_translation_inventory.py:171
-msgid "English and multiple official languages"
-msgstr ""
+msgid "English"
+msgstr "🇬🇧 Inglés"
 
 #: home/country_translation_inventory.py:172
+msgid "English and multiple official languages"
+msgstr "Inglés y múltiples idiomas oficiales"
+
+#: home/country_translation_inventory.py:173
 msgid ""
 "Entity fiscal year; returns generally filed within 120 days after year-end"
 msgstr ""
 "Ano fiscal de la entidad; las declaraciones suelen presentarse dentro de los "
 "120 dias posteriores al cierre"
 
-#: home/country_translation_inventory.py:173
-msgid "Ethiopia"
-msgstr ""
-
 #: home/country_translation_inventory.py:174
-#| msgid "Profile | ExactusPay"
-msgid "Ethiopia Payroll Guide | Country Payroll Intelligence | ExactusPay"
-msgstr "Guía de nómina de %(country_name)s | ExactusPay"
+msgid "Ethiopia"
+msgstr "Etiopía"
 
 #: home/country_translation_inventory.py:175
+msgid "Ethiopia Payroll Guide | Country Payroll Intelligence | ExactusPay"
+msgstr ""
+"Guía de nómina de Etiopía | Inteligencia de nómina por país | ExactusPay"
+
+#: home/country_translation_inventory.py:176
 msgid ""
 "Ethiopia can be presented with a strong commercial summary first, then "
 "deeper payroll intelligence as implementation progresses."
 msgstr ""
 
-#: home/country_translation_inventory.py:176
+#: home/country_translation_inventory.py:177
 #, fuzzy
 #| msgid ""
 #| "This hub uses one reusable ExactusPay structure for country pages: a "
@@ -1187,37 +1267,36 @@ msgstr ""
 "país: un hero sólido, datos para empleadores, inteligencia de nómina y "
 "orientación operativa específica por mercado."
 
-#: home/country_translation_inventory.py:177
+#: home/country_translation_inventory.py:178
 msgid ""
 "Ethiopia payroll, payroll in Ethiopia, country payroll page, ExactusPay "
 "Ethiopia"
 msgstr ""
 
-#: home/country_translation_inventory.py:178
-msgid "Ethiopian birr (ETB)"
-msgstr ""
-
 #: home/country_translation_inventory.py:179
-msgid "Euro (EUR)"
-msgstr ""
+msgid "Ethiopian birr (ETB)"
+msgstr "Birr etíope (ETB)"
 
 #: home/country_translation_inventory.py:180
+msgid "Euro (EUR)"
+msgstr "Euro (EUR)"
+
+#: home/country_translation_inventory.py:181
 msgid "ExactusPay implementation use"
 msgstr "Uso de ExactusPay en la implementación"
 
-#: home/country_translation_inventory.py:181
+#: home/country_translation_inventory.py:182
 msgid ""
 "ExactusPay positions Brazil as a control-heavy payroll market: one monthly "
 "rhythm, multiple statutory layers, and strong demand for evidence-backed "
 "reporting."
 msgstr ""
 
-#: home/country_translation_inventory.py:182
-#| msgid "See ExactusPay in Action"
+#: home/country_translation_inventory.py:183
 msgid "ExactusPay reporting standard"
 msgstr "Vea ExactusPay en Acción"
 
-#: home/country_translation_inventory.py:183
+#: home/country_translation_inventory.py:184
 #, fuzzy
 #| msgid ""
 #| "Explore country payroll pages built by ExactusPay with employer facts, "
@@ -1229,7 +1308,7 @@ msgstr ""
 "Explore las páginas de nómina por país de ExactusPay con datos para "
 "empleadores, inteligencia de nómina y orientación operativa por mercado."
 
-#: home/country_translation_inventory.py:184
+#: home/country_translation_inventory.py:185
 #, fuzzy
 #| msgid ""
 #| "Explore country payroll pages built by ExactusPay with employer facts, "
@@ -1241,7 +1320,7 @@ msgstr ""
 "Explore las páginas de nómina por país de ExactusPay con datos para "
 "empleadores, inteligencia de nómina y orientación operativa por mercado."
 
-#: home/country_translation_inventory.py:185
+#: home/country_translation_inventory.py:186
 #, fuzzy
 #| msgid ""
 #| "Explore country payroll pages built by ExactusPay with employer facts, "
@@ -1253,7 +1332,7 @@ msgstr ""
 "Explore las páginas de nómina por país de ExactusPay con datos para "
 "empleadores, inteligencia de nómina y orientación operativa por mercado."
 
-#: home/country_translation_inventory.py:186
+#: home/country_translation_inventory.py:187
 #, fuzzy
 #| msgid ""
 #| "Explore country payroll pages built by ExactusPay with employer facts, "
@@ -1265,7 +1344,7 @@ msgstr ""
 "Explore las páginas de nómina por país de ExactusPay con datos para "
 "empleadores, inteligencia de nómina y orientación operativa por mercado."
 
-#: home/country_translation_inventory.py:187
+#: home/country_translation_inventory.py:188
 #, fuzzy
 #| msgid ""
 #| "Explore country payroll pages built by ExactusPay with employer facts, "
@@ -1277,7 +1356,7 @@ msgstr ""
 "Explore las páginas de nómina por país de ExactusPay con datos para "
 "empleadores, inteligencia de nómina y orientación operativa por mercado."
 
-#: home/country_translation_inventory.py:188
+#: home/country_translation_inventory.py:189
 #, fuzzy
 #| msgid ""
 #| "Explore country payroll pages built by ExactusPay with employer facts, "
@@ -1289,7 +1368,7 @@ msgstr ""
 "Explore las páginas de nómina por país de ExactusPay con datos para "
 "empleadores, inteligencia de nómina y orientación operativa por mercado."
 
-#: home/country_translation_inventory.py:189
+#: home/country_translation_inventory.py:190
 #, fuzzy
 #| msgid ""
 #| "Explore country payroll pages built by ExactusPay with employer facts, "
@@ -1301,7 +1380,7 @@ msgstr ""
 "Explore las páginas de nómina por país de ExactusPay con datos para "
 "empleadores, inteligencia de nómina y orientación operativa por mercado."
 
-#: home/country_translation_inventory.py:190
+#: home/country_translation_inventory.py:191
 #, fuzzy
 #| msgid ""
 #| "Explore country payroll pages built by ExactusPay with employer facts, "
@@ -1313,7 +1392,7 @@ msgstr ""
 "Explore las páginas de nómina por país de ExactusPay con datos para "
 "empleadores, inteligencia de nómina y orientación operativa por mercado."
 
-#: home/country_translation_inventory.py:191
+#: home/country_translation_inventory.py:192
 #, fuzzy
 #| msgid ""
 #| "Explore country payroll pages built by ExactusPay with employer facts, "
@@ -1325,7 +1404,7 @@ msgstr ""
 "Explore las páginas de nómina por país de ExactusPay con datos para "
 "empleadores, inteligencia de nómina y orientación operativa por mercado."
 
-#: home/country_translation_inventory.py:192
+#: home/country_translation_inventory.py:193
 #, fuzzy
 #| msgid ""
 #| "Explore country payroll pages built by ExactusPay with employer facts, "
@@ -1337,7 +1416,7 @@ msgstr ""
 "Explore las páginas de nómina por país de ExactusPay con datos para "
 "empleadores, inteligencia de nómina y orientación operativa por mercado."
 
-#: home/country_translation_inventory.py:193
+#: home/country_translation_inventory.py:194
 #, fuzzy
 #| msgid ""
 #| "Explore country payroll pages built by ExactusPay with employer facts, "
@@ -1349,7 +1428,7 @@ msgstr ""
 "Explore las páginas de nómina por país de ExactusPay con datos para "
 "empleadores, inteligencia de nómina y orientación operativa por mercado."
 
-#: home/country_translation_inventory.py:194
+#: home/country_translation_inventory.py:195
 #, fuzzy
 #| msgid ""
 #| "Explore country payroll pages built by ExactusPay with employer facts, "
@@ -1361,7 +1440,7 @@ msgstr ""
 "Explore las páginas de nómina por país de ExactusPay con datos para "
 "empleadores, inteligencia de nómina y orientación operativa por mercado."
 
-#: home/country_translation_inventory.py:195
+#: home/country_translation_inventory.py:196
 #, fuzzy
 #| msgid ""
 #| "Explore country payroll pages built by ExactusPay with employer facts, "
@@ -1373,7 +1452,7 @@ msgstr ""
 "Explore las páginas de nómina por país de ExactusPay con datos para "
 "empleadores, inteligencia de nómina y orientación operativa por mercado."
 
-#: home/country_translation_inventory.py:196
+#: home/country_translation_inventory.py:197
 #, fuzzy
 #| msgid ""
 #| "Explore country payroll pages built by ExactusPay with employer facts, "
@@ -1385,7 +1464,7 @@ msgstr ""
 "Explore las páginas de nómina por país de ExactusPay con datos para "
 "empleadores, inteligencia de nómina y orientación operativa por mercado."
 
-#: home/country_translation_inventory.py:197
+#: home/country_translation_inventory.py:198
 #, fuzzy
 #| msgid ""
 #| "Explore country payroll pages built by ExactusPay with employer facts, "
@@ -1397,7 +1476,7 @@ msgstr ""
 "Explore las páginas de nómina por país de ExactusPay con datos para "
 "empleadores, inteligencia de nómina y orientación operativa por mercado."
 
-#: home/country_translation_inventory.py:198
+#: home/country_translation_inventory.py:199
 #, fuzzy
 #| msgid ""
 #| "Explore country payroll pages built by ExactusPay with employer facts, "
@@ -1409,7 +1488,7 @@ msgstr ""
 "Explore las páginas de nómina por país de ExactusPay con datos para "
 "empleadores, inteligencia de nómina y orientación operativa por mercado."
 
-#: home/country_translation_inventory.py:199
+#: home/country_translation_inventory.py:200
 #, fuzzy
 #| msgid ""
 #| "Explore country payroll pages built by ExactusPay with employer facts, "
@@ -1421,7 +1500,7 @@ msgstr ""
 "Explore las páginas de nómina por país de ExactusPay con datos para "
 "empleadores, inteligencia de nómina y orientación operativa por mercado."
 
-#: home/country_translation_inventory.py:200
+#: home/country_translation_inventory.py:201
 #, fuzzy
 #| msgid ""
 #| "Explore country payroll pages built by ExactusPay with employer facts, "
@@ -1433,7 +1512,7 @@ msgstr ""
 "Explore las páginas de nómina por país de ExactusPay con datos para "
 "empleadores, inteligencia de nómina y orientación operativa por mercado."
 
-#: home/country_translation_inventory.py:201
+#: home/country_translation_inventory.py:202
 #, fuzzy
 #| msgid ""
 #| "Explore country payroll pages built by ExactusPay with employer facts, "
@@ -1445,7 +1524,7 @@ msgstr ""
 "Explore las páginas de nómina por país de ExactusPay con datos para "
 "empleadores, inteligencia de nómina y orientación operativa por mercado."
 
-#: home/country_translation_inventory.py:202
+#: home/country_translation_inventory.py:203
 #, fuzzy
 #| msgid ""
 #| "Explore country payroll pages built by ExactusPay with employer facts, "
@@ -1457,7 +1536,7 @@ msgstr ""
 "Explore las páginas de nómina por país de ExactusPay con datos para "
 "empleadores, inteligencia de nómina y orientación operativa por mercado."
 
-#: home/country_translation_inventory.py:203
+#: home/country_translation_inventory.py:204
 #, fuzzy
 #| msgid ""
 #| "Explore country payroll pages built by ExactusPay with employer facts, "
@@ -1469,60 +1548,65 @@ msgstr ""
 "Explore las páginas de nómina por país de ExactusPay con datos para "
 "empleadores, inteligencia de nómina y orientación operativa por mercado."
 
-#: home/country_translation_inventory.py:204
-msgid "Federal Democratic Republic of Ethiopia"
-msgstr ""
-
 #: home/country_translation_inventory.py:205
-msgid "Federal Republic of Nigeria"
+msgid ""
+"Federal pension and social-security coverage applies primarily to UAE "
+"nationals and GCC nationals covered under the unified protection system."
 msgstr ""
 
 #: home/country_translation_inventory.py:206
-msgid "Federative Republic of Brazil"
-msgstr ""
+msgid "Federal Democratic Republic of Ethiopia"
+msgstr "República Democrática Federal de Etiopía"
 
 #: home/country_translation_inventory.py:207
+msgid "Federal Republic of Nigeria"
+msgstr "República Federal de Nigeria"
+
+#: home/country_translation_inventory.py:208
+msgid "Federative Republic of Brazil"
+msgstr "República Federativa de Brasil"
+
+#: home/country_translation_inventory.py:209
 msgid ""
 "Feed volatile indicators such as contributions, notice rules, and minimum "
 "wage from the live country data source."
 msgstr ""
 
-#: home/country_translation_inventory.py:208
+#: home/country_translation_inventory.py:210
 msgid "Filipino and English"
-msgstr ""
+msgstr "Filipino e inglés"
 
-#: home/country_translation_inventory.py:209
+#: home/country_translation_inventory.py:211
 msgid "GBP"
 msgstr ""
 
-#: home/country_translation_inventory.py:210
+#: home/country_translation_inventory.py:212
 msgid "Hindi, English, and regional languages"
-msgstr ""
+msgstr "Hindi, inglés y lenguas regionales"
 
-#: home/country_translation_inventory.py:211
+#: home/country_translation_inventory.py:213
 msgid "IDR"
 msgstr ""
 
-#: home/country_translation_inventory.py:212
+#: home/country_translation_inventory.py:214
 msgid "INR"
 msgstr ""
 
-#: home/country_translation_inventory.py:213
-msgid "India"
-msgstr ""
-
-#: home/country_translation_inventory.py:214
-#| msgid "Profile | ExactusPay"
-msgid "India Payroll Guide | Country Payroll Intelligence | ExactusPay"
-msgstr "Guía de nómina de %(country_name)s | ExactusPay"
-
 #: home/country_translation_inventory.py:215
+msgid "India"
+msgstr "India"
+
+#: home/country_translation_inventory.py:216
+msgid "India Payroll Guide | Country Payroll Intelligence | ExactusPay"
+msgstr "Guía de nómina de India | Inteligencia de nómina por país | ExactusPay"
+
+#: home/country_translation_inventory.py:217
 msgid ""
 "India can be presented with a strong commercial summary first, then deeper "
 "payroll intelligence as implementation progresses."
 msgstr ""
 
-#: home/country_translation_inventory.py:216
+#: home/country_translation_inventory.py:218
 #, fuzzy
 #| msgid ""
 #| "This hub uses one reusable ExactusPay structure for country pages: a "
@@ -1537,43 +1621,44 @@ msgstr ""
 "país: un hero sólido, datos para empleadores, inteligencia de nómina y "
 "orientación operativa específica por mercado."
 
-#: home/country_translation_inventory.py:217
+#: home/country_translation_inventory.py:219
 msgid ""
 "India is well suited to the ExactusPay country-page approach: high employer "
 "interest, strong need for payroll education, and room for richer data over "
 "time."
 msgstr ""
 
-#: home/country_translation_inventory.py:218
+#: home/country_translation_inventory.py:220
 msgid "India payroll, payroll in India, country payroll page, ExactusPay India"
 msgstr ""
-
-#: home/country_translation_inventory.py:219
-msgid "Indian rupee (INR)"
-msgstr ""
-
-#: home/country_translation_inventory.py:220
-msgid "Indonesia"
-msgstr ""
+"nómina India, nómina en India, página de nómina por país, ExactusPay India"
 
 #: home/country_translation_inventory.py:221
-#| msgid "Profile | ExactusPay"
-msgid "Indonesia Payroll Guide | Country Payroll Intelligence | ExactusPay"
-msgstr "Guía de nómina de %(country_name)s | ExactusPay"
+msgid "Indian rupee (INR)"
+msgstr "rupia india (INR)"
 
 #: home/country_translation_inventory.py:222
+msgid "Indonesia"
+msgstr "Indonesia"
+
+#: home/country_translation_inventory.py:223
+msgid "Indonesia Payroll Guide | Country Payroll Intelligence | ExactusPay"
+msgstr ""
+"Guía de nómina de Indonesia | Inteligencia de nómina por país | ExactusPay"
+
+#: home/country_translation_inventory.py:224
 msgid ""
 "Indonesia can be presented with a strong commercial summary first, then "
 "deeper payroll intelligence as implementation progresses."
 msgstr ""
 
-#: home/country_translation_inventory.py:223
+#: home/country_translation_inventory.py:225
 msgid ""
 "Indonesia illustrates how ExactusPay can use one country-page system to "
 "present local payroll context in a commercially strong but scalable format."
 msgstr ""
 
-#: home/country_translation_inventory.py:224
+#: home/country_translation_inventory.py:226
 #, fuzzy
 #| msgid ""
 #| "This hub uses one reusable ExactusPay structure for country pages: a "
@@ -1588,75 +1673,77 @@ msgstr ""
 "país: un hero sólido, datos para empleadores, inteligencia de nómina y "
 "orientación operativa específica por mercado."
 
-#: home/country_translation_inventory.py:225
+#: home/country_translation_inventory.py:227
 msgid ""
 "Indonesia payroll, payroll in Indonesia, country payroll page, ExactusPay "
 "Indonesia"
 msgstr ""
 
-#: home/country_translation_inventory.py:226
-msgid "Indonesian"
-msgstr ""
-
-#: home/country_translation_inventory.py:227
-msgid "Indonesian rupiah (IDR)"
-msgstr ""
-
 #: home/country_translation_inventory.py:228
-msgid "Islamabad"
-msgstr ""
+msgid "Indonesian"
+msgstr "indonesio"
 
 #: home/country_translation_inventory.py:229
-msgid "Islamic Republic of Pakistan"
-msgstr ""
+msgid "Indonesian rupiah (IDR)"
+msgstr "rupia indonesia (IDR)"
 
 #: home/country_translation_inventory.py:230
+msgid "Islamabad"
+msgstr "Islamabad"
+
+#: home/country_translation_inventory.py:231
+msgid "Islamic Republic of Pakistan"
+msgstr "República Islámica de Pakistán"
+
+#: home/country_translation_inventory.py:232
 msgid "Jakarta"
 msgstr ""
 
-#: home/country_translation_inventory.py:231
+#: home/country_translation_inventory.py:233
 msgid "Keep local payroll execution connected to one group reporting model."
 msgstr ""
+"Mantén la ejecución local de nómina conectada a un único modelo de reporting "
+"del grupo."
 
-#: home/country_translation_inventory.py:232
+#: home/country_translation_inventory.py:234
 msgid ""
 "Keep the country page stable while the underlying payroll data becomes "
 "richer over time."
 msgstr ""
 
-#: home/country_translation_inventory.py:233
-msgid "Kingdom of Morocco"
-msgstr ""
-
-#: home/country_translation_inventory.py:234
-msgid "Kingdom of Saudi Arabia"
-msgstr ""
-
 #: home/country_translation_inventory.py:235
-msgid "Kingdom of the Netherlands"
-msgstr ""
+msgid "Kingdom of Morocco"
+msgstr "Reino de Marruecos"
 
 #: home/country_translation_inventory.py:236
+msgid "Kingdom of Saudi Arabia"
+msgstr "Reino de Arabia Saudita"
+
+#: home/country_translation_inventory.py:237
+msgid "Kingdom of the Netherlands"
+msgstr "Reino de los Países Bajos"
+
+#: home/country_translation_inventory.py:238
 msgid "Lima"
 msgstr ""
 
-#: home/country_translation_inventory.py:237
+#: home/country_translation_inventory.py:239
 msgid "London"
-msgstr ""
+msgstr "Londres"
 
-#: home/country_translation_inventory.py:238
+#: home/country_translation_inventory.py:240
 msgid "Luanda"
 msgstr ""
 
-#: home/country_translation_inventory.py:239
+#: home/country_translation_inventory.py:241
 msgid "MAD"
 msgstr ""
 
-#: home/country_translation_inventory.py:240
+#: home/country_translation_inventory.py:242
 msgid "MM/DD/YYYY"
 msgstr ""
 
-#: home/country_translation_inventory.py:241
+#: home/country_translation_inventory.py:243
 msgid ""
 "Maintain from the ExactusPay country data feed because minimum wage "
 "indicators are time-sensitive."
@@ -1664,42 +1751,42 @@ msgstr ""
 "Manténgalo desde el feed de datos de país de ExactusPay porque los "
 "indicadores de salario mínimo son sensibles al tiempo."
 
-#: home/country_translation_inventory.py:242
+#: home/country_translation_inventory.py:244
 msgid "Manila"
 msgstr ""
 
-#: home/country_translation_inventory.py:243
+#: home/country_translation_inventory.py:245
 msgid "Monthly"
 msgstr "Mensual"
 
-#: home/country_translation_inventory.py:244
+#: home/country_translation_inventory.py:246
 msgid "Monthly or four-weekly cycles are common"
 msgstr "Los ciclos mensuales o de cuatro semanas son habituales"
 
-#: home/country_translation_inventory.py:245
+#: home/country_translation_inventory.py:247
 msgid "Monthly or weekly cycles are common"
 msgstr "Los ciclos mensuales o semanales son habituales"
 
-#: home/country_translation_inventory.py:246
-msgid "Moroccan dirham (MAD)"
-msgstr ""
-
-#: home/country_translation_inventory.py:247
-msgid "Morocco"
-msgstr ""
-
 #: home/country_translation_inventory.py:248
-#| msgid "Profile | ExactusPay"
-msgid "Morocco Payroll Guide | Country Payroll Intelligence | ExactusPay"
-msgstr "Guía de nómina de %(country_name)s | ExactusPay"
+msgid "Moroccan dirham (MAD)"
+msgstr "Dírham marroquí (MAD)"
 
 #: home/country_translation_inventory.py:249
+msgid "Morocco"
+msgstr "Marruecos"
+
+#: home/country_translation_inventory.py:250
+msgid "Morocco Payroll Guide | Country Payroll Intelligence | ExactusPay"
+msgstr ""
+"Guía de nómina de Marruecos | Inteligencia de nómina por país | ExactusPay"
+
+#: home/country_translation_inventory.py:251
 msgid ""
 "Morocco can be presented with a strong commercial summary first, then deeper "
 "payroll intelligence as implementation progresses."
 msgstr ""
 
-#: home/country_translation_inventory.py:250
+#: home/country_translation_inventory.py:252
 #, fuzzy
 #| msgid ""
 #| "This hub uses one reusable ExactusPay structure for country pages: a "
@@ -1714,35 +1801,36 @@ msgstr ""
 "país: un hero sólido, datos para empleadores, inteligencia de nómina y "
 "orientación operativa específica por mercado."
 
-#: home/country_translation_inventory.py:251
+#: home/country_translation_inventory.py:253
 msgid ""
 "Morocco payroll, payroll in Morocco, country payroll page, ExactusPay Morocco"
 msgstr ""
 
-#: home/country_translation_inventory.py:252
+#: home/country_translation_inventory.py:254
 msgid "NGN"
 msgstr ""
 
-#: home/country_translation_inventory.py:253
+#: home/country_translation_inventory.py:255
 msgid "National holidays plus state and municipal variations"
 msgstr "Festivos nacionales más variaciones estatales y municipales"
 
-#: home/country_translation_inventory.py:254
-msgid "Netherlands"
-msgstr ""
-
-#: home/country_translation_inventory.py:255
-#| msgid "Profile | ExactusPay"
-msgid "Netherlands Payroll Guide | Country Payroll Intelligence | ExactusPay"
-msgstr "Guía de nómina de %(country_name)s | ExactusPay"
-
 #: home/country_translation_inventory.py:256
+msgid "Netherlands"
+msgstr "Países Bajos"
+
+#: home/country_translation_inventory.py:257
+msgid "Netherlands Payroll Guide | Country Payroll Intelligence | ExactusPay"
+msgstr ""
+"Guía de nómina de los Países Bajos | Inteligencia de nómina por país | "
+"ExactusPay"
+
+#: home/country_translation_inventory.py:258
 msgid ""
 "Netherlands can be presented with a strong commercial summary first, then "
 "deeper payroll intelligence as implementation progresses."
 msgstr ""
 
-#: home/country_translation_inventory.py:257
+#: home/country_translation_inventory.py:259
 #, fuzzy
 #| msgid ""
 #| "This hub uses one reusable ExactusPay structure for country pages: a "
@@ -1757,39 +1845,39 @@ msgstr ""
 "país: un hero sólido, datos para empleadores, inteligencia de nómina y "
 "orientación operativa específica por mercado."
 
-#: home/country_translation_inventory.py:258
+#: home/country_translation_inventory.py:260
 msgid ""
 "Netherlands payroll, payroll in Netherlands, country payroll page, "
 "ExactusPay Netherlands"
 msgstr ""
 
-#: home/country_translation_inventory.py:259
+#: home/country_translation_inventory.py:261
 msgid "New Delhi"
 msgstr ""
 
-#: home/country_translation_inventory.py:260
-msgid "Nigeria"
-msgstr ""
-
-#: home/country_translation_inventory.py:261
-#| msgid "Profile | ExactusPay"
-msgid "Nigeria Payroll Guide | Country Payroll Intelligence | ExactusPay"
-msgstr "Guía de nómina de %(country_name)s | ExactusPay"
-
 #: home/country_translation_inventory.py:262
+msgid "Nigeria"
+msgstr "Nigeria"
+
+#: home/country_translation_inventory.py:263
+msgid "Nigeria Payroll Guide | Country Payroll Intelligence | ExactusPay"
+msgstr ""
+"Guía de nómina de Nigeria | Inteligencia de nómina por país | ExactusPay"
+
+#: home/country_translation_inventory.py:264
 msgid ""
 "Nigeria can be presented with a strong commercial summary first, then deeper "
 "payroll intelligence as implementation progresses."
 msgstr ""
 
-#: home/country_translation_inventory.py:263
+#: home/country_translation_inventory.py:265
 msgid ""
 "Nigeria is a strong example of why ExactusPay needs reusable country pages: "
 "local complexity, employer demand for clarity, and strong value in one "
 "reporting standard."
 msgstr ""
 
-#: home/country_translation_inventory.py:264
+#: home/country_translation_inventory.py:266
 #, fuzzy
 #| msgid ""
 #| "This hub uses one reusable ExactusPay structure for country pages: a "
@@ -1804,16 +1892,16 @@ msgstr ""
 "país: un hero sólido, datos para empleadores, inteligencia de nómina y "
 "orientación operativa específica por mercado."
 
-#: home/country_translation_inventory.py:265
+#: home/country_translation_inventory.py:267
 msgid ""
 "Nigeria payroll, payroll in Nigeria, country payroll page, ExactusPay Nigeria"
 msgstr ""
 
-#: home/country_translation_inventory.py:266
+#: home/country_translation_inventory.py:268
 msgid "Nigerian naira (NGN)"
-msgstr ""
+msgstr "naira nigeriana (NGN)"
 
-#: home/country_translation_inventory.py:267
+#: home/country_translation_inventory.py:269
 msgid ""
 "Notice, severance, and final-pay handling should be reviewed in the local "
 "ExactusPay compliance workflow before payroll changes go live."
@@ -1822,44 +1910,44 @@ msgstr ""
 "en el flujo local de cumplimiento de ExactusPay antes de que los cambios de "
 "nómina entren en producción."
 
-#: home/country_translation_inventory.py:268
+#: home/country_translation_inventory.py:270
 msgid "PAB / USD"
 msgstr ""
 
-#: home/country_translation_inventory.py:269
+#: home/country_translation_inventory.py:271
 msgid "PEN"
 msgstr ""
 
-#: home/country_translation_inventory.py:270
+#: home/country_translation_inventory.py:272
 msgid "PHP"
 msgstr ""
 
-#: home/country_translation_inventory.py:271
+#: home/country_translation_inventory.py:273
 msgid "PKR"
 msgstr ""
 
-#: home/country_translation_inventory.py:272
-msgid "Pakistan"
-msgstr ""
-
-#: home/country_translation_inventory.py:273
-#| msgid "Profile | ExactusPay"
-msgid "Pakistan Payroll Guide | Country Payroll Intelligence | ExactusPay"
-msgstr "Guía de nómina de %(country_name)s | ExactusPay"
-
 #: home/country_translation_inventory.py:274
+msgid "Pakistan"
+msgstr "Pakistán"
+
+#: home/country_translation_inventory.py:275
+msgid "Pakistan Payroll Guide | Country Payroll Intelligence | ExactusPay"
+msgstr ""
+"Guía de nómina de Pakistán | Inteligencia de nómina por país | ExactusPay"
+
+#: home/country_translation_inventory.py:276
 msgid ""
 "Pakistan benefits from the same reusable ExactusPay structure: facts first, "
 "payroll framing second, deeper market detail over time."
 msgstr ""
 
-#: home/country_translation_inventory.py:275
+#: home/country_translation_inventory.py:277
 msgid ""
 "Pakistan can be presented with a strong commercial summary first, then "
 "deeper payroll intelligence as implementation progresses."
 msgstr ""
 
-#: home/country_translation_inventory.py:276
+#: home/country_translation_inventory.py:278
 #, fuzzy
 #| msgid ""
 #| "This hub uses one reusable ExactusPay structure for country pages: a "
@@ -1874,42 +1962,42 @@ msgstr ""
 "país: un hero sólido, datos para empleadores, inteligencia de nómina y "
 "orientación operativa específica por mercado."
 
-#: home/country_translation_inventory.py:277
+#: home/country_translation_inventory.py:279
 msgid ""
 "Pakistan payroll, payroll in Pakistan, country payroll page, ExactusPay "
 "Pakistan"
 msgstr ""
 
-#: home/country_translation_inventory.py:278
-msgid "Pakistani rupee (PKR)"
-msgstr ""
-
-#: home/country_translation_inventory.py:279
-msgid "Panama"
-msgstr ""
-
 #: home/country_translation_inventory.py:280
+msgid "Pakistani rupee (PKR)"
+msgstr "Rupia pakistaní (PKR)"
+
+#: home/country_translation_inventory.py:281
+msgid "Panama"
+msgstr "Panamá"
+
+#: home/country_translation_inventory.py:282
 msgid "Panama City"
 msgstr ""
 
-#: home/country_translation_inventory.py:281
-#| msgid "Profile | ExactusPay"
+#: home/country_translation_inventory.py:283
 msgid "Panama Payroll Guide | Country Payroll Intelligence | ExactusPay"
-msgstr "Guía de nómina de %(country_name)s | ExactusPay"
+msgstr ""
+"Guía de nómina de Panamá | Inteligencia de nómina por país | ExactusPay"
 
-#: home/country_translation_inventory.py:282
+#: home/country_translation_inventory.py:284
 msgid ""
 "Panama can be presented with a strong commercial summary first, then deeper "
 "payroll intelligence as implementation progresses."
 msgstr ""
 
-#: home/country_translation_inventory.py:283
+#: home/country_translation_inventory.py:285
 msgid ""
 "Panama fits the ExactusPay reusable model well: short market introduction, "
 "payroll framing, and future expansion through platform-fed data points."
 msgstr ""
 
-#: home/country_translation_inventory.py:284
+#: home/country_translation_inventory.py:286
 #, fuzzy
 #| msgid ""
 #| "This hub uses one reusable ExactusPay structure for country pages: a "
@@ -1924,37 +2012,36 @@ msgstr ""
 "país: un hero sólido, datos para empleadores, inteligencia de nómina y "
 "orientación operativa específica por mercado."
 
-#: home/country_translation_inventory.py:285
+#: home/country_translation_inventory.py:287
 msgid ""
 "Panama payroll, payroll in Panama, country payroll page, ExactusPay Panama"
 msgstr ""
 
-#: home/country_translation_inventory.py:286
-msgid "Panamanian balboa (PAB) and US dollar (USD)"
-msgstr ""
-
 #: home/country_translation_inventory.py:288
+msgid "Panamanian balboa (PAB) and US dollar (USD)"
+msgstr "Balboa panameño (PAB) y dólar estadounidense (USD)"
+
+#: home/country_translation_inventory.py:292
 msgid "Peru"
-msgstr ""
+msgstr "Perú"
 
-#: home/country_translation_inventory.py:289
-#| msgid "Profile | ExactusPay"
+#: home/country_translation_inventory.py:293
 msgid "Peru Payroll Guide | Country Payroll Intelligence | ExactusPay"
-msgstr "Guía de nómina de %(country_name)s | ExactusPay"
+msgstr "Guía de nómina de Perú | Inteligencia de nómina por país | ExactusPay"
 
-#: home/country_translation_inventory.py:290
+#: home/country_translation_inventory.py:294
 msgid ""
 "Peru can be presented with a strong commercial summary first, then deeper "
 "payroll intelligence as implementation progresses."
 msgstr ""
 
-#: home/country_translation_inventory.py:291
+#: home/country_translation_inventory.py:295
 msgid ""
 "Peru demonstrates how ExactusPay can publish useful payroll market pages "
 "without waiting for every country feed to be fully populated."
 msgstr ""
 
-#: home/country_translation_inventory.py:292
+#: home/country_translation_inventory.py:296
 #, fuzzy
 #| msgid ""
 #| "This hub uses one reusable ExactusPay structure for country pages: a "
@@ -1969,34 +2056,35 @@ msgstr ""
 "país: un hero sólido, datos para empleadores, inteligencia de nómina y "
 "orientación operativa específica por mercado."
 
-#: home/country_translation_inventory.py:293
+#: home/country_translation_inventory.py:297
 msgid "Peru payroll, payroll in Peru, country payroll page, ExactusPay Peru"
 msgstr ""
-
-#: home/country_translation_inventory.py:294
-msgid "Peruvian sol (PEN)"
-msgstr ""
-
-#: home/country_translation_inventory.py:295
-msgid "Philippine peso (PHP)"
-msgstr ""
-
-#: home/country_translation_inventory.py:296
-msgid "Philippines"
-msgstr ""
-
-#: home/country_translation_inventory.py:297
-#| msgid "Profile | ExactusPay"
-msgid "Philippines Payroll Guide | Country Payroll Intelligence | ExactusPay"
-msgstr "Guía de nómina de %(country_name)s | ExactusPay"
+"nómina Perú, nómina en Perú, página de nómina por país, ExactusPay Peru"
 
 #: home/country_translation_inventory.py:298
+msgid "Peruvian sol (PEN)"
+msgstr "sol peruano (PEN)"
+
+#: home/country_translation_inventory.py:299
+msgid "Philippine peso (PHP)"
+msgstr "peso filipino (PHP)"
+
+#: home/country_translation_inventory.py:300
+msgid "Philippines"
+msgstr "Filipinas"
+
+#: home/country_translation_inventory.py:301
+msgid "Philippines Payroll Guide | Country Payroll Intelligence | ExactusPay"
+msgstr ""
+"Guía de nómina de Filipinas | Inteligencia de nómina por país | ExactusPay"
+
+#: home/country_translation_inventory.py:302
 msgid ""
 "Philippines can be presented with a strong commercial summary first, then "
 "deeper payroll intelligence as implementation progresses."
 msgstr ""
 
-#: home/country_translation_inventory.py:299
+#: home/country_translation_inventory.py:303
 #, fuzzy
 #| msgid ""
 #| "This hub uses one reusable ExactusPay structure for country pages: a "
@@ -2011,106 +2099,110 @@ msgstr ""
 "país: un hero sólido, datos para empleadores, inteligencia de nómina y "
 "orientación operativa específica por mercado."
 
-#: home/country_translation_inventory.py:300
+#: home/country_translation_inventory.py:304
 msgid ""
 "Philippines payroll, payroll in Philippines, country payroll page, "
 "ExactusPay Philippines"
 msgstr ""
 
-#: home/country_translation_inventory.py:302
-msgid "Pound sterling (GBP)"
-msgstr ""
-
-#: home/country_translation_inventory.py:303
-msgid "Pretoria, Cape Town, and Bloemfontein"
-msgstr ""
-
-#: home/country_translation_inventory.py:304
-msgid "Rabat"
-msgstr ""
-
 #: home/country_translation_inventory.py:305
-msgid "Ready for richer country feeds"
-msgstr ""
+msgid "Portuguese"
+msgstr "Soporte en portugués 24/7"
 
 #: home/country_translation_inventory.py:306
-msgid "Republic of Angola"
-msgstr ""
+msgid "Pound sterling (GBP)"
+msgstr "Libra esterlina (GBP)"
 
 #: home/country_translation_inventory.py:307
-msgid "Republic of Chile"
-msgstr ""
+msgid "Pretoria, Cape Town, and Bloemfontein"
+msgstr "Pretoria, Ciudad del Cabo y Bloemfontein"
 
 #: home/country_translation_inventory.py:308
-msgid "Republic of Costa Rica"
-msgstr ""
+msgid "Rabat"
+msgstr "Rabat"
 
 #: home/country_translation_inventory.py:309
-msgid "Republic of India"
-msgstr ""
+msgid "Ready for richer country feeds"
+msgstr "Listo para fuentes de países más completas"
 
 #: home/country_translation_inventory.py:310
-msgid "Republic of Indonesia"
-msgstr ""
+msgid "Republic of Angola"
+msgstr "República de Angola"
 
 #: home/country_translation_inventory.py:311
-msgid "Republic of Panama"
-msgstr ""
+msgid "Republic of Chile"
+msgstr "República de Chile"
 
 #: home/country_translation_inventory.py:312
-msgid "Republic of Peru"
-msgstr ""
+msgid "Republic of Costa Rica"
+msgstr "República de Costa Rica"
 
 #: home/country_translation_inventory.py:313
-msgid "Republic of South Africa"
-msgstr ""
+msgid "Republic of India"
+msgstr "República de India"
 
 #: home/country_translation_inventory.py:314
-msgid "Republic of Türkiye"
-msgstr ""
+msgid "Republic of Indonesia"
+msgstr "República de Indonesia"
 
 #: home/country_translation_inventory.py:315
-msgid "Republic of the Philippines"
-msgstr ""
+msgid "Republic of Panama"
+msgstr "República de Panamá"
 
 #: home/country_translation_inventory.py:316
+msgid "Republic of Peru"
+msgstr "República del Perú"
+
+#: home/country_translation_inventory.py:317
+msgid "Republic of South Africa"
+msgstr "República de Sudáfrica"
+
+#: home/country_translation_inventory.py:318
+msgid "Republic of Türkiye"
+msgstr "República de Turquía"
+
+#: home/country_translation_inventory.py:319
+msgid "Republic of the Philippines"
+msgstr "República de Filipinas"
+
+#: home/country_translation_inventory.py:320
 msgid "Riyadh"
 msgstr ""
 
-#: home/country_translation_inventory.py:317
+#: home/country_translation_inventory.py:321
 msgid "SAR"
 msgstr ""
 
-#: home/country_translation_inventory.py:318
+#: home/country_translation_inventory.py:322
 msgid "San Jose"
 msgstr ""
 
-#: home/country_translation_inventory.py:319
+#: home/country_translation_inventory.py:323
 msgid "Santiago"
 msgstr ""
 
-#: home/country_translation_inventory.py:320
+#: home/country_translation_inventory.py:324
 msgid "Saudi Arabia"
-msgstr ""
+msgstr "Arabia Saudita"
 
-#: home/country_translation_inventory.py:321
-#| msgid "Profile | ExactusPay"
+#: home/country_translation_inventory.py:325
 msgid "Saudi Arabia Payroll Guide | Country Payroll Intelligence | ExactusPay"
-msgstr "Guía de nómina de %(country_name)s | ExactusPay"
+msgstr ""
+"Guía de nómina de Arabia Saudí | Inteligencia de nómina por país | ExactusPay"
 
-#: home/country_translation_inventory.py:322
+#: home/country_translation_inventory.py:326
 msgid ""
 "Saudi Arabia benefits from a reusable country page that can support both "
 "commercial conversations and richer payroll implementation detail later."
 msgstr ""
 
-#: home/country_translation_inventory.py:323
+#: home/country_translation_inventory.py:327
 msgid ""
 "Saudi Arabia can be presented with a strong commercial summary first, then "
 "deeper payroll intelligence as implementation progresses."
 msgstr ""
 
-#: home/country_translation_inventory.py:324
+#: home/country_translation_inventory.py:328
 #, fuzzy
 #| msgid ""
 #| "This hub uses one reusable ExactusPay structure for country pages: a "
@@ -2125,49 +2217,47 @@ msgstr ""
 "país: un hero sólido, datos para empleadores, inteligencia de nómina y "
 "orientación operativa específica por mercado."
 
-#: home/country_translation_inventory.py:325
+#: home/country_translation_inventory.py:329
 msgid ""
 "Saudi Arabia payroll, payroll in Saudi Arabia, country payroll page, "
 "ExactusPay Saudi Arabia"
 msgstr ""
 
-#: home/country_translation_inventory.py:326
+#: home/country_translation_inventory.py:330
 msgid "Saudi riyal (SAR)"
-msgstr ""
+msgstr "rial saudí (SAR)"
 
-#: home/country_translation_inventory.py:327
-#| msgid "Scalable architecture:"
+#: home/country_translation_inventory.py:331
 msgid "Scalable ExactusPay structure"
 msgstr "Ver Arquitectura"
 
-#: home/country_translation_inventory.py:328
+#: home/country_translation_inventory.py:332
 msgid "Semi-monthly cycles are common"
 msgstr "Los ciclos quincenales son habituales"
 
-#: home/country_translation_inventory.py:329
-#| msgid "North America"
+#: home/country_translation_inventory.py:333
 msgid "South Africa"
 msgstr "América del Norte"
 
-#: home/country_translation_inventory.py:330
-#| msgid "Profile | ExactusPay"
+#: home/country_translation_inventory.py:334
 msgid "South Africa Payroll Guide | Country Payroll Intelligence | ExactusPay"
-msgstr "Guía de nómina de %(country_name)s | ExactusPay"
+msgstr ""
+"Guía de nómina de Sudáfrica | Inteligencia de nómina por país | ExactusPay"
 
-#: home/country_translation_inventory.py:331
+#: home/country_translation_inventory.py:335
 msgid ""
 "South Africa can be presented with a strong commercial summary first, then "
 "deeper payroll intelligence as implementation progresses."
 msgstr ""
 
-#: home/country_translation_inventory.py:332
+#: home/country_translation_inventory.py:336
 msgid ""
 "South Africa is a strong ExactusPay country-page candidate because it "
 "combines commercial importance, payroll process sensitivity, and reporting "
 "expectations."
 msgstr ""
 
-#: home/country_translation_inventory.py:333
+#: home/country_translation_inventory.py:337
 #, fuzzy
 #| msgid ""
 #| "This hub uses one reusable ExactusPay structure for country pages: a "
@@ -2182,96 +2272,112 @@ msgstr ""
 "país: un hero sólido, datos para empleadores, inteligencia de nómina y "
 "orientación operativa específica por mercado."
 
-#: home/country_translation_inventory.py:334
+#: home/country_translation_inventory.py:338
 msgid ""
 "South Africa payroll, payroll in South Africa, country payroll page, "
 "ExactusPay South Africa"
 msgstr ""
 
-#: home/country_translation_inventory.py:335
+#: home/country_translation_inventory.py:339
 msgid "South African rand (ZAR)"
+msgstr "rand sudafricano (ZAR)"
+
+#: home/country_translation_inventory.py:340
+msgid ""
+"South Africa payroll registrations can also extend beyond UIF depending on "
+"employer activity and compensation schemes."
 msgstr ""
 
-#: home/country_translation_inventory.py:337
+#: home/country_translation_inventory.py:341
+msgid "Spanish"
+msgstr "Español"
+
+#: home/country_translation_inventory.py:342
 msgid "Spanish, Quechua, and Aymara"
-msgstr ""
+msgstr "Español, quechua y aimara"
 
-#: home/country_translation_inventory.py:338
+#: home/country_translation_inventory.py:343
 msgid "TRY"
 msgstr ""
 
-#: home/country_translation_inventory.py:339
+#: home/country_translation_inventory.py:344
 msgid ""
 "The Angola profile is designed for ExactusPay's reusable country-page "
 "system: market facts, payroll framing, and a commercially useful summary "
 "that can deepen as platform data expands."
 msgstr ""
 
-#: home/country_translation_inventory.py:340
+#: home/country_translation_inventory.py:345
 msgid ""
 "The Egypt country page uses ExactusPay's standard structure to support "
 "market education, payroll positioning, and future data expansion."
 msgstr ""
 
-#: home/country_translation_inventory.py:341
+#: home/country_translation_inventory.py:346
 msgid ""
 "The Ethiopia country page gives ExactusPay a clean commercial entry point "
 "for market education while leaving room for deeper payroll detail over time."
 msgstr ""
 
-#: home/country_translation_inventory.py:342
+#: home/country_translation_inventory.py:347
 msgid ""
 "The ExactusPay Chile page balances commercial readability with operational "
 "relevance and is structured for employers who need an at-a-glance country "
 "summary first."
 msgstr ""
 
-#: home/country_translation_inventory.py:343
+#: home/country_translation_inventory.py:348
 msgid ""
 "The ExactusPay structure is designed to surface the employer questions that "
 "usually come first: pay rhythm, payroll ownership, statutory considerations, "
 "and reporting consistency."
 msgstr ""
 
-#: home/country_translation_inventory.py:344
+#: home/country_translation_inventory.py:349
 msgid ""
 "The Morocco profile gives ExactusPay a reusable market page with room for "
 "richer payroll and statutory content as internal data sources mature."
 msgstr ""
 
-#: home/country_translation_inventory.py:345
+#: home/country_translation_inventory.py:350
 msgid ""
 "The Netherlands profile gives ExactusPay a reusable way to present "
 "established-market payroll context without breaking the same layout used "
 "elsewhere."
 msgstr ""
 
-#: home/country_translation_inventory.py:346
+#: home/country_translation_inventory.py:351
 msgid ""
 "The Philippines page uses the ExactusPay structure to combine market "
 "context, payroll rhythm, and a scalable path toward richer payroll "
 "intelligence."
 msgstr ""
 
-#: home/country_translation_inventory.py:347
+#: home/country_translation_inventory.py:352
 msgid ""
 "The UAE country page extends the ExactusPay template into a commercially "
 "important market while keeping the same reusable layout and data contract."
 msgstr ""
 
-#: home/country_translation_inventory.py:348
+#: home/country_translation_inventory.py:353
 msgid ""
 "The United Kingdom profile fits buyers who want a recognisable market framed "
 "inside the same ExactusPay structure used across higher-growth regions."
 msgstr ""
 
-#: home/country_translation_inventory.py:349
+#: home/country_translation_inventory.py:354
 msgid ""
 "The same page design can support buyer education, SEO, and internal payroll "
 "reference across many markets."
 msgstr ""
 
-#: home/country_translation_inventory.py:350
+#: home/country_translation_inventory.py:355
+msgid ""
+"The Philippines runs separate payroll-linked agencies for social security, "
+"health insurance, and housing contributions."
+msgstr ""
+
+#: home/country_translation_inventory.py:356
 msgid ""
 "This page is an ExactusPay operating and go-to-market layer, not legal "
 "advice. Where country rules are time-sensitive, the expectation is that "
@@ -2279,22 +2385,22 @@ msgid ""
 "detail."
 msgstr ""
 
-#: home/country_translation_inventory.py:351
+#: home/country_translation_inventory.py:358
 msgid "Turkey"
-msgstr ""
+msgstr "Turquía"
 
-#: home/country_translation_inventory.py:352
-#| msgid "Profile | ExactusPay"
+#: home/country_translation_inventory.py:359
 msgid "Turkey Payroll Guide | Country Payroll Intelligence | ExactusPay"
-msgstr "Guía de nómina de %(country_name)s | ExactusPay"
+msgstr ""
+"Guía de nómina de Turquía | Inteligencia de nómina por país | ExactusPay"
 
-#: home/country_translation_inventory.py:353
+#: home/country_translation_inventory.py:360
 msgid ""
 "Turkey can be presented with a strong commercial summary first, then deeper "
 "payroll intelligence as implementation progresses."
 msgstr ""
 
-#: home/country_translation_inventory.py:354
+#: home/country_translation_inventory.py:361
 #, fuzzy
 #| msgid ""
 #| "This hub uses one reusable ExactusPay structure for country pages: a "
@@ -2309,127 +2415,168 @@ msgstr ""
 "país: un hero sólido, datos para empleadores, inteligencia de nómina y "
 "orientación operativa específica por mercado."
 
-#: home/country_translation_inventory.py:355
+#: home/country_translation_inventory.py:362
 msgid ""
 "Turkey payroll, payroll in Turkey, country payroll page, ExactusPay Turkey"
 msgstr ""
 
-#: home/country_translation_inventory.py:356
+#: home/country_translation_inventory.py:363
 msgid ""
 "Turkey works well in this reusable model because the page can support both "
 "commercial discovery and future payroll intelligence enrichment."
 msgstr ""
 
-#: home/country_translation_inventory.py:357
+#: home/country_translation_inventory.py:364
 msgid "Turkish"
-msgstr ""
+msgstr "Turco"
 
-#: home/country_translation_inventory.py:358
+#: home/country_translation_inventory.py:365
 msgid "Turkish lira (TRY)"
-msgstr ""
+msgstr "lira turca (TRY)"
 
-#: home/country_translation_inventory.py:359
+#: home/country_translation_inventory.py:366
 msgid "Typical employer focus"
 msgstr "Enfoque habitual del empleador"
 
-#: home/country_translation_inventory.py:360
+#: home/country_translation_inventory.py:367
 msgid "Typically 1 January to 31 December"
 msgstr "Normalmente del 1 de enero al 31 de diciembre"
 
-#: home/country_translation_inventory.py:361
-msgid "Typically around 44 hours"
-msgstr "Normalmente alrededor de 44 horas"
-
-#: home/country_translation_inventory.py:362
-msgid "Typically around 48 hours"
-msgstr "Normalmente alrededor de 48 horas"
-
-#: home/country_translation_inventory.py:363
-msgid "Typically monthly"
-msgstr "Normalmente mensual"
-
-#: home/country_translation_inventory.py:364
-msgid "UAE dirham (AED)"
-msgstr ""
-
-#: home/country_translation_inventory.py:365
-msgid "UTC+00:00 / UTC+01:00"
-msgstr ""
-
-#: home/country_translation_inventory.py:366
-msgid "UTC+01:00"
-msgstr ""
-
-#: home/country_translation_inventory.py:367
-msgid "UTC+01:00 / UTC+02:00"
-msgstr ""
-
-#: home/country_translation_inventory.py:368
-msgid "UTC+02:00"
-msgstr ""
-
-#: home/country_translation_inventory.py:369
-msgid "UTC+03:00"
-msgstr ""
-
-#: home/country_translation_inventory.py:370
-msgid "UTC+04:00"
-msgstr ""
-
-#: home/country_translation_inventory.py:371
-msgid "UTC+05:00"
-msgstr ""
-
 #: home/country_translation_inventory.py:372
-msgid "UTC+05:30"
+msgid ""
+"Canada Payroll Deductions rules are administered across tax, pension, and "
+"employment-insurance programmes."
 msgstr ""
 
 #: home/country_translation_inventory.py:373
-msgid "UTC+07:00 to UTC+09:00"
+msgid ""
+"India payroll social-security obligations are split across provident-fund "
+"and state-insurance bodies."
 msgstr ""
 
 #: home/country_translation_inventory.py:374
-msgid "UTC+08:00"
+msgid ""
+"Indonesia operates separate employment and health social-security "
+"institutions."
 msgstr ""
 
 #: home/country_translation_inventory.py:375
-msgid "UTC-03:00"
+msgid ""
+"Irish employers operate PAYE with PRSI remitted through Revenue and "
+"administered within the Department of Social Protection framework."
 msgstr ""
 
 #: home/country_translation_inventory.py:376
-msgid "UTC-04:00 with seasonal variation"
+msgid ""
+"Malaysia payroll contributions are administered through separate retirement-"
+"savings and social-insurance bodies."
 msgstr ""
 
 #: home/country_translation_inventory.py:377
-msgid "UTC-05:00"
+msgid ""
+"Peru payroll social-insurance and public-pension administration sit with "
+"separate institutions."
 msgstr ""
 
 #: home/country_translation_inventory.py:378
-msgid "UTC-05:00 to UTC-02:00"
-msgstr ""
+msgid ""
+"Swiss payroll withholding and social-insurance administration also run "
+"through cantonal and compensation-office structures."
+msgstr "La retención en nómina y la administración del seguro social en Suiza también se gestionan a través de estructuras cantonales y cajas de compensación."
 
 #: home/country_translation_inventory.py:379
+msgid "Typically around 44 hours"
+msgstr "Normalmente alrededor de 44 horas"
+
+#: home/country_translation_inventory.py:380
+msgid "Typically around 48 hours"
+msgstr "Normalmente alrededor de 48 horas"
+
+#: home/country_translation_inventory.py:381
+msgid "Typically monthly"
+msgstr "Normalmente mensual"
+
+#: home/country_translation_inventory.py:382
+msgid "UAE dirham (AED)"
+msgstr "dírham de los Emiratos Árabes Unidos (AED)"
+
+#: home/country_translation_inventory.py:383
+msgid "UTC+00:00 / UTC+01:00"
+msgstr ""
+
+#: home/country_translation_inventory.py:384
+msgid "UTC+01:00"
+msgstr ""
+
+#: home/country_translation_inventory.py:385
+msgid "UTC+01:00 / UTC+02:00"
+msgstr ""
+
+#: home/country_translation_inventory.py:386
+msgid "UTC+02:00"
+msgstr ""
+
+#: home/country_translation_inventory.py:387
+msgid "UTC+03:00"
+msgstr ""
+
+#: home/country_translation_inventory.py:388
+msgid "UTC+04:00"
+msgstr ""
+
+#: home/country_translation_inventory.py:389
+msgid "UTC+05:00"
+msgstr ""
+
+#: home/country_translation_inventory.py:390
+msgid "UTC+05:30"
+msgstr ""
+
+#: home/country_translation_inventory.py:391
+msgid "UTC+07:00 to UTC+09:00"
+msgstr "UTC+07:00 a UTC+09:00"
+
+#: home/country_translation_inventory.py:392
+msgid "UTC+08:00"
+msgstr ""
+
+#: home/country_translation_inventory.py:393
+msgid "UTC-03:00"
+msgstr ""
+
+#: home/country_translation_inventory.py:394
+msgid "UTC-04:00 with seasonal variation"
+msgstr "UTC-04:00 con variación estacional"
+
+#: home/country_translation_inventory.py:395
+msgid "UTC-05:00"
+msgstr ""
+
+#: home/country_translation_inventory.py:396
+msgid "UTC-05:00 to UTC-02:00"
+msgstr "UTC-05:00 a UTC-02:00"
+
+#: home/country_translation_inventory.py:397
 msgid "UTC-06:00"
 msgstr ""
 
-#: home/country_translation_inventory.py:380
+#: home/country_translation_inventory.py:398
 msgid "United Arab Emirates"
-msgstr ""
+msgstr "Emiratos Árabes Unidos"
 
-#: home/country_translation_inventory.py:381
-#| msgid "Profile | ExactusPay"
+#: home/country_translation_inventory.py:399
 msgid ""
 "United Arab Emirates Payroll Guide | Country Payroll Intelligence | "
 "ExactusPay"
 msgstr "Guía de nómina de %(country_name)s | ExactusPay"
 
-#: home/country_translation_inventory.py:382
+#: home/country_translation_inventory.py:400
 msgid ""
 "United Arab Emirates can be presented with a strong commercial summary "
 "first, then deeper payroll intelligence as implementation progresses."
 msgstr ""
 
-#: home/country_translation_inventory.py:383
+#: home/country_translation_inventory.py:401
 #, fuzzy
 #| msgid ""
 #| "This hub uses one reusable ExactusPay structure for country pages: a "
@@ -2444,29 +2591,29 @@ msgstr ""
 "país: un hero sólido, datos para empleadores, inteligencia de nómina y "
 "orientación operativa específica por mercado."
 
-#: home/country_translation_inventory.py:384
+#: home/country_translation_inventory.py:402
 msgid ""
 "United Arab Emirates payroll, payroll in United Arab Emirates, country "
 "payroll page, ExactusPay United Arab Emirates"
 msgstr ""
 
-#: home/country_translation_inventory.py:385
+#: home/country_translation_inventory.py:403
 msgid "United Kingdom"
-msgstr ""
+msgstr "Reino Unido"
 
-#: home/country_translation_inventory.py:386
-#| msgid "Profile | ExactusPay"
+#: home/country_translation_inventory.py:404
 msgid ""
 "United Kingdom Payroll Guide | Country Payroll Intelligence | ExactusPay"
-msgstr "Guía de nómina de %(country_name)s | ExactusPay"
+msgstr ""
+"Transformando la nómina global con precisión e inteligencia | ExactusPay"
 
-#: home/country_translation_inventory.py:387
+#: home/country_translation_inventory.py:405
 msgid ""
 "United Kingdom can be presented with a strong commercial summary first, then "
 "deeper payroll intelligence as implementation progresses."
 msgstr ""
 
-#: home/country_translation_inventory.py:388
+#: home/country_translation_inventory.py:406
 #, fuzzy
 #| msgid ""
 #| "This hub uses one reusable ExactusPay structure for country pages: a "
@@ -2481,54 +2628,55 @@ msgstr ""
 "país: un hero sólido, datos para empleadores, inteligencia de nómina y "
 "orientación operativa específica por mercado."
 
-#: home/country_translation_inventory.py:389
+#: home/country_translation_inventory.py:407
 msgid "United Kingdom of Great Britain and Northern Ireland"
-msgstr ""
+msgstr "Reino Unido de Gran Bretaña e Irlanda del Norte"
 
-#: home/country_translation_inventory.py:390
+#: home/country_translation_inventory.py:408
 msgid ""
 "United Kingdom payroll, payroll in United Kingdom, country payroll page, "
 "ExactusPay United Kingdom"
 msgstr ""
 
-#: home/country_translation_inventory.py:391
+#: home/country_translation_inventory.py:409
 msgid "Up to 44 hours"
 msgstr "Hasta 44 horas"
 
-#: home/country_translation_inventory.py:392
+#: home/country_translation_inventory.py:410
 msgid "Urdu and English"
-msgstr ""
+msgstr "Urdu e inglés"
 
-#: home/country_translation_inventory.py:393
+#: home/country_translation_inventory.py:411
 msgid "Use country-specific notes to reduce implementation ambiguity."
 msgstr ""
+"Usa notas específicas del país para reducir la ambigüedad de la "
+"implementación."
 
-#: home/country_translation_inventory.py:394
+#: home/country_translation_inventory.py:412
 msgid "Use the page in commercial conversations and SEO landing flows."
-msgstr ""
+msgstr "Usa la página en conversaciones comerciales y flujos de landing SEO."
 
-#: home/country_translation_inventory.py:395
+#: home/country_translation_inventory.py:413
 msgid ""
 "Use this profile to align payroll, HR, finance, and commercial teams on the "
 "country narrative."
 msgstr ""
 
-#: home/country_translation_inventory.py:396
+#: home/country_translation_inventory.py:414
 msgid "YYYY/MM/DD"
 msgstr ""
 
-#: home/country_translation_inventory.py:397
+#: home/country_translation_inventory.py:415
 msgid "ZAR"
 msgstr ""
 
-#: home/models.py:19 home/templates/home/demo.html:1255
+#: home/models.py:21 home/templates/home/demo.html:1255
 msgid "Not sure yet"
 msgstr "Aún no estoy seguro"
 
 #: home/templates/articles/article_base.html:4
 #: home/templates/articles/article_base.html:7
 #: home/templates/articles/article_base.html:10
-#| msgid "Your ExactusPay Profile"
 msgid "ExactusPay Article"
 msgstr "Su perfil de ExactusPay"
 
@@ -2599,6 +2747,7 @@ msgstr "Solicitar Demostración"
 #: home/templates/articles/br/article_0001.html:53
 msgid "Transforming Global Payroll with Precision & Intelligence | ExactusPay"
 msgstr ""
+"Transformando la nómina global con precisión e inteligencia | ExactusPay"
 
 #: home/templates/articles/br/article_0001.html:32
 msgid ""
@@ -2617,7 +2766,7 @@ msgstr ""
 #: home/templates/articles/br/article_0001.html:67
 #: home/templates/articles/br/article_0001.html:804
 msgid "Transforming Global Payroll with Precision & Intelligence"
-msgstr ""
+msgstr "Transformando la nómina global con precisión e inteligencia"
 
 #: home/templates/articles/br/article_0001.html:70
 msgid ""
@@ -2763,7 +2912,7 @@ msgstr "Navegación móvil"
 
 #: home/templates/articles/br/article_0001.html:803
 msgid "Insights"
-msgstr ""
+msgstr "Perspectivas"
 
 #: home/templates/articles/br/article_0001.html:806
 msgid ""
@@ -2773,7 +2922,7 @@ msgstr ""
 
 #: home/templates/articles/br/article_0001.html:815
 msgid "Article"
-msgstr ""
+msgstr "Artículo"
 
 #: home/templates/articles/br/article_0001.html:818
 msgid ""
@@ -2792,6 +2941,7 @@ msgstr ""
 #: home/templates/articles/br/article_0001.html:826
 msgid "That is where ExactusPay is redefining the global payroll landscape."
 msgstr ""
+"Ahí es donde ExactusPay está redefiniendo el panorama global de la nómina."
 
 #: home/templates/articles/br/article_0001.html:829
 msgid "A Smarter Approach to Global Payroll"
@@ -2815,7 +2965,7 @@ msgstr ""
 
 #: home/templates/articles/br/article_0001.html:839
 msgid "What Makes ExactusPay Different?"
-msgstr ""
+msgstr "¿Qué hace diferente a ExactusPay?"
 
 #: home/templates/articles/br/article_0001.html:844
 msgid "AI-powered compliance"
@@ -2859,7 +3009,7 @@ msgstr ""
 
 #: home/templates/articles/br/article_0001.html:862
 msgid "Why Global Payroll Needs to Evolve"
-msgstr ""
+msgstr "Por qué la nómina global debe evolucionar"
 
 #: home/templates/articles/br/article_0001.html:865
 msgid ""
@@ -2878,7 +3028,7 @@ msgstr ""
 
 #: home/templates/articles/br/article_0001.html:872
 msgid "Reducing Complexity, Improving Efficiency"
-msgstr ""
+msgstr "Reduciendo la complejidad, mejorando la eficiencia"
 
 #: home/templates/articles/br/article_0001.html:875
 msgid ""
@@ -2896,7 +3046,7 @@ msgstr ""
 
 #: home/templates/articles/br/article_0001.html:882
 msgid "The Future of Global Payroll Is Here"
-msgstr ""
+msgstr "El futuro de la nómina global ya está aquí"
 
 #: home/templates/articles/br/article_0001.html:885
 msgid ""
@@ -3086,6 +3236,7 @@ msgstr "Cumple con GDPR | Certificado SOC 2 Tipo II | ISO 27001"
 msgid ""
 "Payroll in Brazil: Core Employer Costs and Reporting Deadlines | ExactusPay"
 msgstr ""
+"Transformando la nómina global con precisión e inteligencia | ExactusPay"
 
 #: home/templates/articles/br/article_0002.html:5
 #: home/templates/articles/br/article_0002.html:8
@@ -3098,7 +3249,7 @@ msgstr ""
 
 #: home/templates/articles/br/article_0002.html:12
 msgid "Payroll in Brazil: employer cost, timing, and control points"
-msgstr ""
+msgstr "Nómina en Brasil: coste del empleador, calendario y puntos de control"
 
 #: home/templates/articles/br/article_0002.html:13
 msgid ""
@@ -3109,7 +3260,7 @@ msgstr ""
 
 #: home/templates/articles/br/article_0002.html:17
 msgid "Recurring cost"
-msgstr ""
+msgstr "Coste recurrente"
 
 #: home/templates/articles/br/article_0002.html:18
 msgid ""
@@ -3119,7 +3270,7 @@ msgstr ""
 
 #: home/templates/articles/br/article_0002.html:21
 msgid "Monthly cycle"
-msgstr ""
+msgstr "Ciclo mensual"
 
 #: home/templates/articles/br/article_0002.html:22
 msgid ""
@@ -3139,7 +3290,7 @@ msgstr ""
 
 #: home/templates/articles/br/article_0002.html:31
 msgid "1. Model the full employer cost, not just gross pay"
-msgstr ""
+msgstr "1. Modele el coste total del empleador, no solo el salario bruto"
 
 #: home/templates/articles/br/article_0002.html:32
 msgid ""
@@ -3163,10 +3314,11 @@ msgstr ""
 #: home/templates/articles/br/article_0002.html:36
 msgid "Country-level assumptions should feed one global cost model."
 msgstr ""
+"Los supuestos a nivel país deben alimentar un único modelo global de costes."
 
 #: home/templates/articles/br/article_0002.html:40
 msgid "2. Build the payroll calendar around statutory events"
-msgstr ""
+msgstr "2. Construya el calendario de nómina en torno a los hitos legales"
 
 #: home/templates/articles/br/article_0002.html:41
 msgid ""
@@ -3177,15 +3329,19 @@ msgstr ""
 
 #: home/templates/articles/br/article_0002.html:43
 msgid "Agree a cut-off for variable inputs and HR events."
-msgstr ""
+msgstr "Defina una fecha límite para las variables y los eventos de RR. HH."
 
 #: home/templates/articles/br/article_0002.html:44
 msgid "Validate employer and employee contribution outputs before filing."
 msgstr ""
+"Valida los resultados de las contribuciones del empleador y del empleado "
+"antes de presentar."
 
 #: home/templates/articles/br/article_0002.html:45
 msgid "Keep evidence of approvals and any post-payroll adjustments."
 msgstr ""
+"Conserva evidencia de las aprobaciones y de cualquier ajuste posterior a la "
+"nómina."
 
 #: home/templates/articles/br/article_0002.html:49
 msgid "3. Standardise reporting for headquarters"
@@ -3217,7 +3373,7 @@ msgstr ""
 
 #: home/templates/articles/br/article_0003.html:12
 msgid "Hiring in Brazil: what to confirm before the first payroll run"
-msgstr ""
+msgstr "Contratación en Brasil: qué confirmar antes del primer ciclo de nómina"
 
 #: home/templates/articles/br/article_0003.html:13
 msgid ""
@@ -3228,7 +3384,7 @@ msgstr ""
 
 #: home/templates/articles/br/article_0003.html:17
 msgid "Classification"
-msgstr ""
+msgstr "Clasificación"
 
 #: home/templates/articles/br/article_0003.html:18
 msgid ""
@@ -3238,7 +3394,7 @@ msgstr ""
 
 #: home/templates/articles/br/article_0003.html:21
 msgid "Onboarding data"
-msgstr ""
+msgstr "Datos de incorporación"
 
 #: home/templates/articles/br/article_0003.html:22
 msgid ""
@@ -3248,7 +3404,7 @@ msgstr ""
 
 #: home/templates/articles/br/article_0003.html:25
 msgid "Approvals"
-msgstr ""
+msgstr "Aprobaciones"
 
 #: home/templates/articles/br/article_0003.html:26
 msgid ""
@@ -3258,7 +3414,7 @@ msgstr ""
 
 #: home/templates/articles/br/article_0003.html:31
 msgid "1. Confirm the employment model"
-msgstr ""
+msgstr "1. Confirme el modelo de contratación"
 
 #: home/templates/articles/br/article_0003.html:32
 msgid ""
@@ -3270,7 +3426,7 @@ msgstr ""
 
 #: home/templates/articles/br/article_0003.html:35
 msgid "2. Gather payroll-critical data early"
-msgstr ""
+msgstr "2. Reúna pronto los datos críticos para la nómina"
 
 #: home/templates/articles/br/article_0003.html:36
 msgid ""
@@ -3282,19 +3438,20 @@ msgstr ""
 
 #: home/templates/articles/br/article_0003.html:38
 msgid "Validate the hire against approved compensation."
-msgstr ""
+msgstr "Valide la contratación frente a la compensación aprobada."
 
 #: home/templates/articles/br/article_0003.html:39
 msgid "Make sure local payroll and HR data match exactly."
 msgstr ""
+"Asegúrate de que los datos locales de nómina y RR. HH. coincidan exactamente."
 
 #: home/templates/articles/br/article_0003.html:40
 msgid "Capture approval evidence for audit and internal control."
-msgstr ""
+msgstr "Conserve evidencia de aprobación para auditoría y control interno."
 
 #: home/templates/articles/br/article_0003.html:44
 msgid "3. Avoid first-cycle exceptions"
-msgstr ""
+msgstr "3. Evite excepciones en el primer ciclo"
 
 #: home/templates/articles/br/article_0003.html:45
 msgid ""
@@ -3310,6 +3467,7 @@ msgid ""
 "Global Reporting for Brazil Payroll: Turning Local Outputs into Group "
 "Visibility | ExactusPay"
 msgstr ""
+"Transformando la nómina global con precisión e inteligencia | ExactusPay"
 
 #: home/templates/articles/br/article_0004.html:5
 #: home/templates/articles/br/article_0004.html:8
@@ -3322,7 +3480,7 @@ msgstr ""
 
 #: home/templates/articles/br/article_0004.html:12
 msgid "Reporting Brazil payroll to headquarters without losing local detail"
-msgstr ""
+msgstr "Informar la nómina de Brasil a la sede sin perder el detalle local"
 
 #: home/templates/articles/br/article_0004.html:13
 msgid ""
@@ -3333,7 +3491,7 @@ msgstr ""
 
 #: home/templates/articles/br/article_0004.html:17
 msgid "Local to global"
-msgstr ""
+msgstr "De lo local a lo global"
 
 #: home/templates/articles/br/article_0004.html:18
 msgid ""
@@ -3353,7 +3511,7 @@ msgstr ""
 
 #: home/templates/articles/br/article_0004.html:25
 msgid "Evidence"
-msgstr ""
+msgstr "Evidencia"
 
 #: home/templates/articles/br/article_0004.html:26
 msgid ""
@@ -3363,7 +3521,7 @@ msgstr ""
 
 #: home/templates/articles/br/article_0004.html:31
 msgid "1. Define the reporting standard first"
-msgstr ""
+msgstr "1. Defina primero el estándar de información"
 
 #: home/templates/articles/br/article_0004.html:32
 msgid ""
@@ -3375,7 +3533,7 @@ msgstr ""
 
 #: home/templates/articles/br/article_0004.html:35
 msgid "2. Track variance drivers explicitly"
-msgstr ""
+msgstr "2. Siga explícitamente los impulsores de variación"
 
 #: home/templates/articles/br/article_0004.html:36
 msgid ""
@@ -3387,7 +3545,7 @@ msgstr ""
 
 #: home/templates/articles/br/article_0004.html:39
 msgid "3. Keep local evidence linked to group numbers"
-msgstr ""
+msgstr "3. Mantenga la evidencia local vinculada a las cifras del grupo"
 
 #: home/templates/articles/br/article_0004.html:40
 msgid ""
@@ -3404,6 +3562,7 @@ msgid ""
 "Scaling Payroll in Brazil: Operating Principles for Multi-Entity and "
 "Regional Growth | ExactusPay"
 msgstr ""
+"Transformando la nómina global con precisión e inteligencia | ExactusPay"
 
 #: home/templates/articles/br/article_0005.html:5
 #: home/templates/articles/br/article_0005.html:8
@@ -3415,7 +3574,7 @@ msgstr ""
 
 #: home/templates/articles/br/article_0005.html:12
 msgid "Scaling payroll in Brazil without creating reporting fragmentation"
-msgstr ""
+msgstr "Escalar la nómina en Brasil sin crear fragmentación en los informes"
 
 #: home/templates/articles/br/article_0005.html:13
 msgid ""
@@ -3426,7 +3585,7 @@ msgstr ""
 
 #: home/templates/articles/br/article_0005.html:17
 msgid "Control model"
-msgstr ""
+msgstr "Modelo de control"
 
 #: home/templates/articles/br/article_0005.html:18
 msgid ""
@@ -3455,7 +3614,7 @@ msgstr ""
 
 #: home/templates/articles/br/article_0005.html:31
 msgid "1. Separate local execution from group governance"
-msgstr ""
+msgstr "1. Separe la ejecución local de la gobernanza del grupo"
 
 #: home/templates/articles/br/article_0005.html:32
 msgid ""
@@ -3467,7 +3626,7 @@ msgstr ""
 
 #: home/templates/articles/br/article_0005.html:35
 msgid "2. Reduce dependency on manual reconciliation"
-msgstr ""
+msgstr "2. Reduzca la dependencia de la conciliación manual"
 
 #: home/templates/articles/br/article_0005.html:36
 msgid ""
@@ -3479,7 +3638,7 @@ msgstr ""
 
 #: home/templates/articles/br/article_0005.html:39
 msgid "3. Build for expansion, not just the current headcount"
-msgstr ""
+msgstr "3. Diseñe para la expansión, no solo para la plantilla actual"
 
 #: home/templates/articles/br/article_0005.html:40
 msgid ""
@@ -3491,7 +3650,7 @@ msgstr ""
 #: home/templates/articles/cl/article_0001.html:12
 #: home/templates/articles/cl/article_0001.html:42
 msgid "How to Set Up a Business and Run Payroll in Chile | ExactusPay"
-msgstr ""
+msgstr "Cómo crear una empresa y gestionar la nómina en Chile | ExactusPay"
 
 #: home/templates/articles/cl/article_0001.html:17
 msgid ""
@@ -3508,9 +3667,10 @@ msgid ""
 msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:56
-#| msgid "Profile | ExactusPay"
 msgid "Chile Payroll Guide | ExactusPay"
-msgstr "Guía de nómina de %(country_name)s | ExactusPay"
+msgstr ""
+"Guía de Payroll de Chile | ExactusPayTransformando la nómina global con "
+"precisión e inteligencia | ExactusPay"
 
 #: home/templates/articles/cl/article_0001.html:59
 msgid ""
@@ -3525,7 +3685,7 @@ msgstr "Saltar al contenido"
 
 #: home/templates/articles/cl/article_0001.html:990
 msgid "How to Set Up a Business and Run Payroll in Chile"
-msgstr ""
+msgstr "Cómo constituir una empresa y gestionar la nómina en Chile"
 
 #: home/templates/articles/cl/article_0001.html:992
 msgid ""
@@ -3540,7 +3700,7 @@ msgstr "Solicite una demostración"
 
 #: home/templates/articles/cl/article_0001.html:1003
 msgid "Read the Guide"
-msgstr ""
+msgstr "Leer la guía"
 
 #: home/templates/articles/cl/article_0001.html:1007
 msgid "Guide highlights"
@@ -3548,15 +3708,15 @@ msgstr "Aspectos destacados de seguridad"
 
 #: home/templates/articles/cl/article_0001.html:1008
 msgid "Entity Setup"
-msgstr ""
+msgstr "Constitución de la entidad"
 
 #: home/templates/articles/cl/article_0001.html:1009
 msgid "Legal Gratification"
-msgstr ""
+msgstr "Gratificación legal"
 
 #: home/templates/articles/cl/article_0001.html:1010
 msgid "UF Calculations"
-msgstr ""
+msgstr "Cálculos en UF"
 
 #: home/templates/articles/cl/article_0001.html:1011
 msgid "SII Compliance"
@@ -3564,11 +3724,13 @@ msgstr "Cumplimiento"
 
 #: home/templates/articles/cl/article_0001.html:1023
 msgid "Chile Expansion Guide"
-msgstr ""
+msgstr "Guía de expansión en Chile"
 
 #: home/templates/articles/cl/article_0001.html:1025
 msgid "Entity Setup + Payroll Compliance (UF, SII, AFP, FONASA/ISAPRE)"
 msgstr ""
+"Constitución de entidad + cumplimiento de nómina (UF, SII, AFP, FONASA/"
+"ISAPRE)"
 
 #: home/templates/articles/cl/article_0001.html:1028
 msgid ""
@@ -3583,11 +3745,11 @@ msgstr "Aspectos destacados de seguridad"
 
 #: home/templates/articles/cl/article_0001.html:1037
 msgid "Country: Chile (CL)"
-msgstr ""
+msgstr "País: Chile (CL)"
 
 #: home/templates/articles/cl/article_0001.html:1038
 msgid "Focus: Compliance + Payroll"
-msgstr ""
+msgstr "Enfoque: cumplimiento + nómina"
 
 #: home/templates/articles/cl/article_0001.html:1040
 msgid "Built for audit-ready operations"
@@ -3606,7 +3768,7 @@ msgstr "Resultados clave"
 
 #: home/templates/articles/cl/article_0001.html:1054
 msgid "What makes Chile unique?"
-msgstr ""
+msgstr "¿Qué hace único a Chile?"
 
 #: home/templates/articles/cl/article_0001.html:1055
 msgid ""
@@ -3617,7 +3779,7 @@ msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1062
 msgid "Part 1: Setting Up a Business Entity in Chile"
-msgstr ""
+msgstr "Parte 1: Constitución de una entidad empresarial en Chile"
 
 #: home/templates/articles/cl/article_0001.html:1064
 msgid ""
@@ -3628,7 +3790,7 @@ msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1070
 msgid "1) Choose Your Legal Structure"
-msgstr ""
+msgstr "1) Elija su estructura jurídica"
 
 #: home/templates/articles/cl/article_0001.html:1072
 #, python-format
@@ -3641,7 +3803,7 @@ msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1079
 msgid "2) Register the Company"
-msgstr ""
+msgstr "2) Registre la empresa"
 
 #: home/templates/articles/cl/article_0001.html:1081
 msgid ""
@@ -3654,7 +3816,7 @@ msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1088
 msgid "3) Obtain Your Tax ID (RUT) with the SII"
-msgstr ""
+msgstr "3) Obtenga su identificación fiscal (RUT) ante el SII"
 
 #: home/templates/articles/cl/article_0001.html:1090
 msgid ""
@@ -3666,7 +3828,7 @@ msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1096
 msgid "4) Open a Corporate Bank Account"
-msgstr ""
+msgstr "4) Abra una cuenta bancaria corporativa"
 
 #: home/templates/articles/cl/article_0001.html:1098
 msgid ""
@@ -3677,7 +3839,7 @@ msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1104
 msgid "5) Secure a Municipal License (Patente Municipal)"
-msgstr ""
+msgstr "5) Obtenga una licencia municipal (Patente Municipal)"
 
 #: home/templates/articles/cl/article_0001.html:1106
 msgid ""
@@ -3688,7 +3850,7 @@ msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1112
 msgid "Part 2: Navigating Payroll & Employment Laws in Chile"
-msgstr ""
+msgstr "Parte 2: Navegar la nómina y las leyes laborales en Chile"
 
 #: home/templates/articles/cl/article_0001.html:1114
 msgid ""
@@ -3699,7 +3861,7 @@ msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1120
 msgid "1) Mandatory Employer Contributions"
-msgstr ""
+msgstr "1) Contribuciones obligatorias del empleador"
 
 #: home/templates/articles/cl/article_0001.html:1122
 #, python-format
@@ -3711,7 +3873,7 @@ msgstr ""
 #: home/templates/articles/cl/article_0001.html:1131
 #: home/templates/articles/cl/article_0001.html:1196
 msgid "Unemployment Insurance (AFC)"
-msgstr ""
+msgstr "Seguro de cesantía (AFC)"
 
 #: home/templates/articles/cl/article_0001.html:1133
 #, python-format
@@ -3722,7 +3884,7 @@ msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1142
 msgid "Survivor & Disability Insurance (SIS)"
-msgstr ""
+msgstr "Seguro de invalidez y sobrevivencia (SIS)"
 
 #: home/templates/articles/cl/article_0001.html:1144
 #, python-format
@@ -3733,7 +3895,7 @@ msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1153
 msgid "Work Accident & Disease Insurance (Mutual)"
-msgstr ""
+msgstr "Seguro de accidentes y enfermedades laborales (Mutual)"
 
 #: home/templates/articles/cl/article_0001.html:1155
 #, python-format
@@ -3744,7 +3906,7 @@ msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1163
 msgid "2) Employee Deductions (Withholdings)"
-msgstr ""
+msgstr "2) Deducciones del empleado (retenciones)"
 
 #: home/templates/articles/cl/article_0001.html:1165
 #, python-format
@@ -3755,16 +3917,17 @@ msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1174
 msgid "Pension Fund (AFP)"
-msgstr ""
+msgstr "Fondo de pensiones (AFP)"
 
 #: home/templates/articles/cl/article_0001.html:1176
 #, python-format
 msgid "10%% paid to the private pension administrator chosen by the employee."
 msgstr ""
+"10%% pagado al administrador privado de pensiones elegido por el empleado."
 
 #: home/templates/articles/cl/article_0001.html:1185
 msgid "Health Insurance (FONASA or ISAPRE)"
-msgstr ""
+msgstr "Seguro de salud (FONASA o ISAPRE)"
 
 #: home/templates/articles/cl/article_0001.html:1187
 #, python-format
@@ -3775,11 +3938,11 @@ msgstr ""
 #: home/templates/articles/cl/article_0001.html:1198
 #, python-format
 msgid "0.6%% for permanent employees (employee portion)."
-msgstr ""
+msgstr "0,6%% para empleados permanentes (parte del empleado)."
 
 #: home/templates/articles/cl/article_0001.html:1207
 msgid "Income Tax"
-msgstr ""
+msgstr "Impuesto sobre la renta"
 
 #: home/templates/articles/cl/article_0001.html:1209
 #, python-format
@@ -3790,7 +3953,7 @@ msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1217
 msgid "3) Legal Gratification (Profit Sharing)"
-msgstr ""
+msgstr "3) Gratificación legal (participación en utilidades)"
 
 #: home/templates/articles/cl/article_0001.html:1219
 #, python-format
@@ -3803,7 +3966,7 @@ msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1225
 msgid "Part 3: The Danger of Vendor Bloat"
-msgstr ""
+msgstr "Parte 3: El peligro de la proliferación de proveedores"
 
 #: home/templates/articles/cl/article_0001.html:1227
 msgid ""
@@ -3816,7 +3979,7 @@ msgstr ""
 
 #: home/templates/articles/cl/article_0001.html:1234
 msgid "Part 4: How ExactusPay Accelerates Your Expansion"
-msgstr ""
+msgstr "Parte 4: Cómo ExactusPay acelera su expansión"
 
 #: home/templates/articles/cl/article_0001.html:1236
 msgid ""
@@ -3870,7 +4033,7 @@ msgstr "Próximos pasos"
 
 #: home/templates/articles/cl/article_0001.html:1267
 msgid "Ready to scale without the complexity?"
-msgstr ""
+msgstr "¿Listo para escalar sin complejidad?"
 
 #: home/templates/articles/cl/article_0001.html:1268
 msgid ""
@@ -3911,7 +4074,7 @@ msgstr "Reservar una sesión"
 #: home/templates/articles/cr/article_0001.html:7
 #: home/templates/articles/cr/article_0001.html:10
 msgid "How to Run Payroll in Costa Rica | ExactusPay"
-msgstr ""
+msgstr "Cómo gestionar la nómina en Costa Rica | ExactusPay"
 
 #: home/templates/articles/cr/article_0001.html:5
 #: home/templates/articles/cr/article_0001.html:8
@@ -3925,6 +4088,8 @@ msgstr ""
 #: home/templates/articles/cr/article_0001.html:12
 msgid "How to run payroll in Costa Rica with stronger control from day one"
 msgstr ""
+"Cómo gestionar la nómina en Costa Rica con un control más sólido desde el "
+"primer día"
 
 #: home/templates/articles/cr/article_0001.html:13
 msgid ""
@@ -3935,7 +4100,7 @@ msgstr ""
 
 #: home/templates/articles/cr/article_0001.html:17
 msgid "Entity readiness"
-msgstr ""
+msgstr "Preparación de la entidad"
 
 #: home/templates/articles/cr/article_0001.html:18
 msgid ""
@@ -3945,7 +4110,7 @@ msgstr ""
 
 #: home/templates/articles/cr/article_0001.html:21
 msgid "Payroll discipline"
-msgstr ""
+msgstr "Disciplina de nómina"
 
 #: home/templates/articles/cr/article_0001.html:22
 msgid ""
@@ -3960,10 +4125,11 @@ msgstr "Experiencia regional"
 #: home/templates/articles/cr/article_0001.html:26
 msgid "Translate local outputs into one reporting standard across LATAM."
 msgstr ""
+"Traduce las salidas locales a un único estándar de reporting en toda LATAM."
 
 #: home/templates/articles/cr/article_0001.html:31
 msgid "1. Start with the local operating model"
-msgstr ""
+msgstr "1. Empiece por el modelo operativo local"
 
 #: home/templates/articles/cr/article_0001.html:32
 msgid ""
@@ -3975,6 +4141,7 @@ msgstr ""
 #: home/templates/articles/cr/article_0001.html:35
 msgid "2. Protect payroll quality with stronger input controls"
 msgstr ""
+"2. Proteja la calidad de la nómina con controles de entrada más sólidos"
 
 #: home/templates/articles/cr/article_0001.html:36
 msgid ""
@@ -3986,7 +4153,7 @@ msgstr ""
 
 #: home/templates/articles/cr/article_0001.html:39
 msgid "3. Report Costa Rica in the same language as the rest of the group"
-msgstr ""
+msgstr "3. Informe Costa Rica en el mismo lenguaje que el resto del grupo"
 
 #: home/templates/articles/cr/article_0001.html:40
 msgid ""
@@ -4060,7 +4227,6 @@ msgstr ""
 "una potente plataforma de nómina multi-país."
 
 #: home/templates/base.html:50
-#| msgid "ExactusPay | Global Payroll Platform"
 msgid "ExactusPay | Global Payroll Software"
 msgstr "ExactusPay | Software de Nómina Global"
 
@@ -4074,21 +4240,14 @@ msgstr ""
 
 #: home/templates/base.html:475
 msgid "Get started"
-msgstr ""
+msgstr "Comenzar"
 
 #: home/templates/base.html:496
 msgid "Social"
-msgstr ""
-
-#: home/templates/countries/detail.html:4
-#: home/templates/countries/detail.html:8
-#: home/templates/countries/detail.html:12
-#| msgid "Profile | ExactusPay"
-msgid "%(country_name)s Payroll Guide | ExactusPay"
-msgstr "Guía de nómina de %(country_name)s | ExactusPay"
+msgstr "Social"
 
 #: home/templates/countries/detail.html:21
-#| msgid "Country Guide"
+#, python-format
 msgid "%(country_name)s payroll guide"
 msgstr "guía de nómina de %(country_name)s"
 
@@ -4106,9 +4265,8 @@ msgid "Country highlights"
 msgstr "Puntos clave del país"
 
 #: home/templates/countries/detail.html:359
-#| msgid "View country page"
 msgid "Verified country reference"
-msgstr "Ver página del país"
+msgstr "Referencia verificada del país"
 
 #: home/templates/countries/detail.html:361
 msgid ""
@@ -4116,6 +4274,9 @@ msgid ""
 "verified authority and payroll data points first and leaves unverified "
 "fields blank."
 msgstr ""
+"Este perfil está diseñado como una referencia práctica para empleadores. "
+"ExactusPay muestra primero los datos verificados de autoridades y nómina, y "
+"deja en blanco los campos no verificados."
 
 #: home/templates/countries/detail.html:366
 msgid "Country code"
@@ -4132,23 +4293,18 @@ msgstr "Resumen del país"
 #: home/templates/countries/detail.html:433
 msgid "Country metadata can be added as ExactusPay expands this profile."
 msgstr ""
-"Los metadatos del país pueden añadirse a medida que ExactusPay amplía este "
+"Se pueden añadir metadatos del país a medida que ExactusPay amplía este "
 "perfil."
 
 #: home/templates/countries/detail.html:441
-#, fuzzy
-#| msgid ""
-#| "A structured view of the payroll details employers usually need first: "
-#| "pay rhythm, statutory themes, employment controls, and country-specific "
-#| "operating notes."
 msgid ""
 "A structured view of the payroll details employers usually need first, with "
 "authority mapping and payroll essentials shown only where ExactusPay could "
 "verify them."
 msgstr ""
 "Una vista estructurada de los datos de nómina que los empleadores suelen "
-"necesitar primero: ritmo de pago, temas legales, controles de empleo y notas "
-"operativas específicas del país."
+"necesitar primero, con el mapeo de autoridades y los elementos esenciales de "
+"nómina solo cuando ExactusPay pudo verificarlos."
 
 #: home/templates/countries/detail.html:457
 msgid ""
@@ -4156,7 +4312,7 @@ msgid ""
 "record provides country-specific data points."
 msgstr ""
 "La inteligencia de nómina puede mostrarse en cuanto el feed de la plataforma "
-"o el registro de contenido aporte datos específicos del país."
+"o el registro de contenido proporcione datos específicos del país."
 
 #: home/templates/countries/detail.html:463
 msgid "Employer guidance"
@@ -4172,13 +4328,15 @@ msgstr ""
 
 #: home/templates/countries/detail.html:490
 msgid "How to use this page"
-msgstr ""
+msgstr "Cómo usar esta página"
 
 #: home/templates/countries/detail.html:492
 msgid ""
 "Use this profile as a first-pass employer reference for provider review, "
 "country onboarding, and internal payroll governance."
 msgstr ""
+"Use este perfil como una referencia inicial para revisar proveedores, "
+"incorporar el país y gobernar internamente la nómina."
 
 #: home/templates/countries/detail.html:497
 msgid "Key employer considerations"
@@ -4201,6 +4359,9 @@ msgid ""
 "If you need live implementation support, ExactusPay can map country "
 "requirements into one operating model before production payroll begins."
 msgstr ""
+"Si necesita apoyo de implementación en vivo, ExactusPay puede integrar los "
+"requisitos del país en un único modelo operativo antes de iniciar la nómina "
+"en producción."
 
 #: home/templates/countries/detail.html:517 home/templates/home/demo.html:1101
 msgid "Book a session"
@@ -4208,9 +4369,8 @@ msgstr "Reservar una sesión"
 
 #: home/templates/countries/hub.html:4 home/templates/countries/hub.html:7
 #: home/templates/countries/hub.html:10
-#| msgid "Country Payroll Pages | ExactusPay"
 msgid "Country Payroll Directory | ExactusPay"
-msgstr "Páginas de nómina por país | ExactusPay"
+msgstr "Directorio de nómina por país | ExactusPay"
 
 #: home/templates/countries/hub.html:5 home/templates/countries/hub.html:8
 #: home/templates/countries/hub.html:11
@@ -4220,13 +4380,13 @@ msgid ""
 msgstr ""
 
 #: home/templates/countries/hub.html:248 home/templates/countries/hub.html:316
-#| msgid "Country payroll pages"
 msgid "Country payroll directory"
 msgstr "Páginas de nómina por país"
 
 #: home/templates/countries/hub.html:249
 msgid "Authority-first payroll reference across ExactusPay markets"
 msgstr ""
+"Referencia de nómina centrada en autoridades en los mercados de ExactusPay"
 
 #: home/templates/countries/hub.html:251
 msgid ""
@@ -4237,84 +4397,73 @@ msgid ""
 msgstr ""
 
 #: home/templates/countries/hub.html:256
-#| msgid "Countries"
 msgid "countries"
 msgstr "Países"
 
 #: home/templates/countries/hub.html:257
 msgid "Tax authority mapping"
-msgstr ""
+msgstr "Mapeo de autoridades fiscales"
 
 #: home/templates/countries/hub.html:258
 msgid "Social security mapping where verified"
-msgstr ""
+msgstr "Mapeo de seguridad social cuando está verificado"
 
 #: home/templates/countries/hub.html:268
-#| msgid "Countries"
 msgid "Search countries"
 msgstr "Países"
 
 #: home/templates/countries/hub.html:269
 msgid "Search by country, official name, ISO code, region, or currency"
-msgstr ""
+msgstr "Busque por país, nombre oficial, código ISO, región o moneda"
 
 #: home/templates/countries/hub.html:272 home/templates/countries/hub.html:320
-#| msgid "Regional scale"
 msgid "Region"
 msgstr "Experiencia regional"
 
 #: home/templates/countries/hub.html:274
 msgid "All regions"
-msgstr ""
+msgstr "Todas las regiones"
 
 #: home/templates/countries/hub.html:283
 msgid "All currencies"
-msgstr ""
+msgstr "Todas las monedas"
 
 #: home/templates/countries/hub.html:290
 msgid "Clear filters"
-msgstr ""
+msgstr "Limpiar filtros"
 
 #: home/templates/countries/hub.html:295
 msgid "Quick regions"
-msgstr ""
+msgstr "Regiones rápidas"
 
 #: home/templates/countries/hub.html:298
 msgid "All"
-msgstr ""
+msgstr "Todo"
 
 #: home/templates/countries/hub.html:310
-#| msgid "profiles"
 msgid "profiles shown"
 msgstr "perfiles"
 
 #: home/templates/countries/hub.html:319
-#| msgid "Countries"
 msgid "Country"
 msgstr "Países"
 
-#: home/templates/countries/hub.html:321
-#| msgid "Payroll frequency"
-msgid "Payroll currency"
-msgstr "Frecuencia de nómina"
-
 #: home/templates/countries/hub.html:353
-#| msgid "Open menu"
 msgid "Open"
 msgstr "Abrir menú"
 
 #: home/templates/countries/hub.html:363
-#| msgid "Log in to your profile"
 msgid "No matching country profiles"
 msgstr "Inicie sesión en su perfil"
 
 #: home/templates/countries/hub.html:364
 msgid "Adjust the search term or region filter to see more markets."
 msgstr ""
+"Ajusta el término de búsqueda o el filtro de región para ver más mercados."
 
 #: home/templates/home/demo.html:17
 msgid "Request a Global Payroll Demo | ExactusPay"
-msgstr ""
+msgstr "Solicita una demo de nómina global | ExactusPay"
 
 #: home/templates/home/demo.html:20
 msgid ""
@@ -4616,7 +4765,7 @@ msgstr ""
 
 #: home/templates/home/demo.html:1286
 msgid "Book Consultation"
-msgstr ""
+msgstr "Reservar consulta"
 
 #: home/templates/home/demo.html:1345
 #, python-format
@@ -4671,8 +4820,8 @@ msgstr "Capacidades"
 
 #: home/templates/home/features.html:693
 msgid "Everything teams need to run payroll with confidence"
-msgstr "Todo lo que los equipos necesitan para gestionar la nómina con confianza"
-"Todo lo que los equipos necesitan para ejecutar la nómina con confianza"
+msgstr ""
+"Todo lo que los equipos necesitan para gestionar la nómina con confianza"
 
 #: home/templates/home/features.html:695
 msgid ""
@@ -4789,14 +4938,14 @@ msgstr ""
 #: home/templates/home/features.html:761
 msgid "Scenario planning: compare markets and hiring strategies side-by-side."
 msgstr ""
-"Planificación de escenarios: compare mercados y estrategias de contratación "
+"Planificación de escenarios: compara mercados y estrategias de contratación "
 "lado a lado."
 
 #: home/templates/home/features.html:762
 msgid "Budget certainty: align HR and Finance with one set of numbers."
 msgstr ""
-"Certidumbre presupuestaria: alinee RRHH y Finanzas con un conjunto de "
-"números."
+"Certeza presupuestaria: alinea RR. HH. y Finanzas con un solo conjunto de "
+"cifras."
 
 #: home/templates/home/features.html:770
 msgid "Global-standardised reporting"
@@ -4812,8 +4961,7 @@ msgstr ""
 
 #: home/templates/home/features.html:775
 msgid "Single dashboard: central visibility across payroll and workforce data."
-msgstr ""
-"Panel único: visibilidad central de los datos de nómina y fuerza laboral."
+msgstr "Panel único: visibilidad central sobre nómina y datos de la plantilla."
 
 #: home/templates/home/features.html:776
 msgid ""
@@ -4845,20 +4993,20 @@ msgstr ""
 #: home/templates/home/features.html:790
 msgid "Legal logic: controls aligned to labour law and statutory requirements."
 msgstr ""
-"Lógica legal: controles alineados con la legislación laboral y requisitos "
-"legales."
+"Lógica legal: controles alineados con la legislación laboral y los "
+"requisitos estatutarios."
 
 #: home/templates/home/features.html:791
 msgid "Error reduction: automation and guardrails minimise manual mistakes."
 msgstr ""
-"Reducción de errores: la automatización y las barreras de protección "
-"minimizan los errores manuales."
+"Reducción de errores: la automatización y las salvaguardas minimizan los "
+"fallos manuales."
 
 #: home/templates/home/features.html:792
 msgid "Audit-ready: traceable calculations and data controls support reviews."
 msgstr ""
-"Listo para auditoría: cálculos trazables y controles de datos apoyan las "
-"revisiones."
+"Listo para auditoría: los cálculos rastreables y los controles de datos "
+"respaldan las revisiones."
 
 #: home/templates/home/features.html:800
 msgid "Integrations & connectivity"
@@ -4875,7 +5023,7 @@ msgstr ""
 
 #: home/templates/home/features.html:805
 msgid "HCM connectivity: integrate with tools like Workday and BambooHR."
-msgstr "Conectividad HCM: intégrese con herramientas como Workday y BambooHR."
+msgstr "Conectividad HCM: integra herramientas como Workday y BambooHR."
 
 #: home/templates/home/features.html:806
 msgid ""
@@ -5111,7 +5259,7 @@ msgstr "Listo para Lote"
 
 #: home/templates/home/index.html:1173
 msgid "Process payments in multiple currencies with automated reconciliation."
-msgstr "Procese pagos en múltiples monedas con conciliación automatizada."
+msgstr "Procesa pagos en múltiples monedas con conciliación automatizada."
 
 #: home/templates/home/index.html:1185
 msgid "Bank-Grade Protection"
@@ -5143,9 +5291,9 @@ msgstr "Autenticación Multifactor"
 
 #: home/templates/home/index.html:1198
 msgid "Enterprise-grade MFA with biometric options for all user access levels."
-msgstr "MFA de nivel empresarial con opciones biométricas para todos los niveles de acceso de usuario."
+msgstr ""
 "MFA de nivel empresarial con opciones biométricas para todos los niveles de "
-"acceso de usuario."
+"acceso de usuarios."
 
 #: home/templates/home/index.html:1202
 msgid "SOC 2 Certified"
@@ -5218,8 +5366,9 @@ msgstr ""
 msgid ""
 "Global Payroll Platform | Multi-Country Payroll Infrastructure | ExactusPay"
 msgstr ""
-"Software de Nómina Global | Plataforma de Nómina y Cumplimiento Multi-País | "
-"ExactusPay"
+"Transformando la nómina global con precisión e inteligencia | "
+"ExactusPaySoftware de Nómina Global | Plataforma de Nómina y Cumplimiento "
+"Multi-País | ExactusPay"
 
 #: home/templates/home/platform.html:19
 msgid ""
@@ -5835,8 +5984,8 @@ msgstr "Orientación para reconocer intentos de phishing e ingeniería social."
 
 #: home/templates/home/security.html:1193
 msgid "Credential hygiene best practices for admins and payroll operators."
-msgstr "Mejores prácticas de higiene de credenciales para administradores y operadores de nómina."
-"Mejores prácticas de higiene de credenciales para administradores y "
+msgstr ""
+"Buenas prácticas de higiene de credenciales para administradores y "
 "operadores de nómina."
 
 #: home/templates/home/security.html:1194
@@ -5876,8 +6025,8 @@ msgstr "Cultura de seguridad"
 
 #: home/templates/home/security.html:1209
 msgid "Shared responsibility—your team + our platform + our experts."
-msgstr "Responsabilidad compartida — su equipo + nuestra plataforma + nuestros expertos."
-"Responsabilidad compartida—su equipo + nuestra plataforma + nuestros "
+msgstr ""
+"Responsabilidad compartida: tu equipo + nuestra plataforma + nuestros "
 "expertos."
 
 #: home/templates/home/security.html:1220
@@ -5900,7 +6049,7 @@ msgstr "Solicite una demostración"
 
 #: home/views.py:92
 msgid "Please fill out all required fields."
-msgstr ""
+msgstr "Por favor, completa todos los campos obligatorios."
 
 #: home/views.py:119
 msgid ""
@@ -6274,3 +6423,6 @@ msgstr ""
 
 #~ msgid "$9 | €8 | £7"
 #~ msgstr "$9 | €8 | £7"
+
+
+

@@ -98,12 +98,12 @@ LANGUAGES = [
     ("en", "English"),
     ("ar", "Arabic"),
     ("de", "German"),
-    ("es", "Español"),
+    ("es", "Spanish"),
     ("fr", "French"),
     ("id", "Indonesian"),
     ("it", "Italian"),
     ("pl", "Polish"),
-    ("pt", "Português"),
+    ("pt", "Portuguese"),
     ("ru", "Russian"),
     ("sw", "Swahili"),
     ("th", "Thai"),
@@ -115,7 +115,11 @@ LOCALE_PATHS = [BASE_DIR / "locale"]
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATICFILES_STORAGE = (
+    "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    if ON_RENDER
+    else "whitenoise.storage.CompressedStaticFilesStorage"
+)
 
 MEDIA_URL = os.environ.get("MEDIA_URL", "/media/")
 render_media_root = Path(os.environ.get("MEDIA_ROOT", "/var/data/media"))
