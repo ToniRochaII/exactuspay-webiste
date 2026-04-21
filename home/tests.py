@@ -182,11 +182,12 @@ class PublicPageTests(TestCase):
         response = self.client.get(reverse("home:country_hub"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "53")
+        self.assertContains(response, "54")
         self.assertContains(response, "angola")
         self.assertContains(response, "brazil")
         self.assertContains(response, "ireland")
         self.assertContains(response, "poland")
+        self.assertContains(response, "united-kingdom")
         self.assertContains(response, "united-arab-emirates")
 
     def test_poland_country_page_uses_catalog_country_data(self):
@@ -196,6 +197,13 @@ class PublicPageTests(TestCase):
         self.assertContains(response, "/static/img/flags/pl.png")
         self.assertContains(response, "National Revenue Administration (KAS)")
         self.assertContains(response, "Social Insurance Institution (ZUS)")
+
+    def test_united_kingdom_country_page_uses_catalog_country_data(self):
+        response = self.client.get(reverse("home:country_detail", kwargs={"slug": "united-kingdom"}))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "/static/img/flags/gb.png")
+        self.assertContains(response, "HM Revenue &amp; Customs (HMRC)")
 
     def test_portuguese_homepage_uses_corrected_locale_strings(self):
         response = self.client.get("/pt/")
