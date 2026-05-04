@@ -353,6 +353,7 @@
       }
     </style>
     <link rel="stylesheet" href="{% static 'css/site-header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/site-footer.css' %}">
 
     {% block head_extra %}{% endblock %}
   </head>
@@ -459,54 +460,7 @@
       {% block content %}{% endblock %}
     </main>
 
-    <footer>
-      <div class="container">
-        <div class="footer-grid">
-          <div class="footer-col">
-            <h4>ExactusPay</h4>
-            <ul class="footer-links">
-              <li><a href="{% url 'home:platform' %}"><i class="fas fa-layer-group"></i> {% trans "Platform" %}</a></li>
-              <li><a href="{% url 'home:features' %}"><i class="fas fa-bolt"></i> {% trans "Resources" %}</a></li>
-              <li><a href="{% url 'home:security' %}"><i class="fas fa-shield-halved"></i> {% trans "Security" %}</a></li>
-            </ul>
-          </div>
-
-          <div class="footer-col">
-            <h4>{% trans "Get started" %}</h4>
-            <ul class="footer-links">
-              <li><a href="{% url 'home:demo' %}"><i class="fas fa-calendar-check"></i> {% trans "Request Demo" %}</a></li>
-              <li><a href="{% url 'accounts:register' %}"><i class="fas fa-user-plus"></i> {% trans "Create account" %}</a></li>
-            </ul>
-          </div>
-
-          <div class="footer-col">
-            <h4>{% trans "Company" %}</h4>
-            <ul class="footer-links">
-              <li><a href="{% url 'home:home' %}"><i class="fas fa-house"></i> {% trans "Home" %}</a></li>
-              <li><a href="{% url 'home:features' %}"><i class="fas fa-star"></i> {% trans "Resources" %}</a></li>
-              {% if request.user.is_authenticated %}
-                <li><a href="{% url 'accounts:profile' %}"><i class="fas fa-id-card"></i> {% trans "Profile" %}</a></li>
-              {% else %}
-                <li><a href="{{ external_payroll_login_url }}"><i class="fas fa-id-card"></i> {% trans "Log In" %}</a></li>
-              {% endif %}
-            </ul>
-          </div>
-
-          <div class="footer-col">
-            <h4>{% trans "Social" %}</h4>
-            <div class="social-links">
-              <a href="https://www.linkedin.com/company/exactuspay" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-            </div>
-          </div>
-        </div>
-
-        <div class="footer-bottom">
-          <div class="copyright">
-            © {% now "Y" %} ExactusPay. {% trans "All rights reserved." %}
-          </div>
-        </div>
-      </div>
-    </footer>
+    {% include "partials/footer.html" %}
 
     <script defer>
       const supportedLanguageCodes = [{% for code in supported_language_codes %}"{{ code }}"{% if not forloop.last %}, {% endif %}{% endfor %}];

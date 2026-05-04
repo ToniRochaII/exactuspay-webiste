@@ -1,0 +1,59 @@
+{% load i18n %}
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>ExactusPay</h4>
+        <ul class="footer-links">
+          <li><a href="{% url 'home:platform' %}"><i class="fas fa-layer-group"></i> {% trans "Platform" %}</a></li>
+          <li><a href="{% url 'home:features' %}"><i class="fas fa-bolt"></i> {% trans "Resources" %}</a></li>
+          <li><a href="{% url 'home:security' %}"><i class="fas fa-shield-halved"></i> {% trans "Security" %}</a></li>
+          <li><a href="{% url 'home:country_hub' %}"><i class="fas fa-globe"></i> {% trans "Countries" %}</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>{% trans "Get started" %}</h4>
+        <ul class="footer-links">
+          <li><a href="{% url 'home:demo' %}"><i class="fas fa-calendar-check"></i> {% trans "Request Demo" %}</a></li>
+          <li><a href="{% url 'accounts:register' %}"><i class="fas fa-user-plus"></i> {% trans "Create account" %}</a></li>
+          {% if request.user.is_authenticated %}
+            <li><a href="{% url 'accounts:profile' %}"><i class="fas fa-id-card"></i> {% trans "Profile" %}</a></li>
+          {% else %}
+            <li><a href="{{ external_payroll_login_url }}"><i class="fas fa-right-to-bracket"></i> {% trans "Log In" %}</a></li>
+          {% endif %}
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>{% trans "Company" %}</h4>
+        <ul class="footer-links">
+          <li><a href="{% url 'home:home' %}"><i class="fas fa-house"></i> {% trans "Home" %}</a></li>
+          <li><a href="{% url 'home:features' %}"><i class="fas fa-star"></i> {% trans "Resources" %}</a></li>
+          <li><a href="{% url 'home:platform' %}"><i class="fas fa-chart-line"></i> {% trans "Global Payroll" %}</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>{% trans "Contact" %}</h4>
+        <ul class="footer-links">
+          <li><a href="mailto:info@exactuspay.com"><i class="fas fa-envelope"></i> info@exactuspay.com</a></li>
+          <li><a href="tel:+442033551324"><i class="fas fa-phone"></i> +44 (0) 20 3355 1324</a></li>
+          <li><a href="https://www.linkedin.com/company/exactuspay" aria-label="LinkedIn"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div>
+        <a href="{% url 'home:home' %}" class="logo" style="text-decoration:none;">
+          <div class="sidebar-brand" style="color:#fff; font-size:22px;">ExactusPay</div>
+        </a>
+        <div class="copyright">
+          © {% now "Y" %} ExactusPay. {% trans "All rights reserved." %}<br>
+          <small style="color: rgba(255,255,255,0.6);">{% trans "GDPR Compliant | SOC 2 Type II Certified | ISO 27001" %}</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
