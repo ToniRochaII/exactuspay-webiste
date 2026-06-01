@@ -12,3 +12,4 @@ venv/
 .venv/
 staticfiles/
 media/
+outputs/

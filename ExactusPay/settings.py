@@ -1,12 +1,17 @@
 from __future__ import annotations
 
 import os
+import sys
 from pathlib import Path
 
+from ExactusPay.runtime_config import build_email_config, env_bool, load_env_file
+
+
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_env_file(env_path=BASE_DIR / ".env")
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-secret-key")
-DEBUG = os.environ.get("DEBUG", "0") == "1"
+DEBUG = env_bool("DEBUG", False)
 ON_RENDER = bool(os.environ.get("RENDER"))
 
 
@@ -36,6 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "anymail",
     "accounts.apps.AccountsConfig",
     "home",
 ]
@@ -143,29 +149,14 @@ BOOK_DEMO_EXTERNAL_URL = os.environ.get(
 
 
 # -----------------------------------------------------------------------------
-# Email (Microsoft 365 SMTP)
+# Email (Resend via django-anymail)
 # -----------------------------------------------------------------------------
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.office365.com")
-EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
+locals().update(build_email_config(debug=DEBUG, environ=os.environ, argv=sys.argv))
+EMAIL_TIMEOUT = 20
 
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "Antonio.Rocha@exactuspay.com")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "D0m0d3d0v0!")
-
-# Safer default: match authenticated mailbox
-DEFAULT_FROM_EMAIL = os.environ.get(
-    "DEFAULT_FROM_EMAIL",
-    EMAIL_HOST_USER,
-)
-
-# Where demo requests should be delivered
+# Internal recipient for demo-request notifications (not the Resend sender address).
 DEMO_REQUEST_TO_EMAIL = os.environ.get(
     "DEMO_REQUEST_TO_EMAIL",
     "Antonio.Rocha@exactuspay.com",
 )
-
-SERVER_EMAIL = DEFAULT_FROM_EMAIL
-EMAIL_TIMEOUT = 20
