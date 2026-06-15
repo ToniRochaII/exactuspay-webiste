@@ -10,9 +10,8 @@ urlpatterns = [
     path('features/', views.features_view, name='features'),
     path('platform/', views.platform_view, name='platform'),
     path('security/', views.security_view, name='security'),
+    path('demo/thankyou/', views.demo_thankyou_view, name='demo_thankyou'),
     path('demo/', views.demo_view, name='demo'),
-
-    # This URL catches the form submission
     path('demo-request/', views.demo_request_view, name='demo_request'),
 
 

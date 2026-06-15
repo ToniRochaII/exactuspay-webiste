@@ -51,8 +51,17 @@ def platform_view(request):
 def security_view(request):
     return render(request, 'home/security.html')
 
+DEMO_REQUEST_SESSION_KEY = "demo_request_submitted"
+
+
 def demo_view(request):
     return render(request, 'home/demo.html')
+
+
+def demo_thankyou_view(request):
+    if not request.session.pop(DEMO_REQUEST_SESSION_KEY, False):
+        return redirect("home:demo")
+    return render(request, "home/demo_thankyou.html")
 
 
 def country_hub_view(request):
@@ -114,18 +123,11 @@ Expansion Region: {demo_request.region}
             recipient_list=[settings.DEMO_REQUEST_TO_EMAIL],
             fail_silently=False,
         )
-        messages.success(
-            request,
-            _("Thank you! Your demo request has been sent successfully. We will contact you soon.")
-        )
     except Exception:
-        logger.exception("Failed to send demo request email")
-        messages.error(
-            request,
-            _("There was a technical error sending your request. Please try again later.")
-        )
+        logger.exception("Failed to send demo request email for demo request pk=%s", demo_request.pk)
 
-    return redirect("home:demo")
+    request.session[DEMO_REQUEST_SESSION_KEY] = True
+    return redirect("home:demo_thankyou")
 
 def brazil_article_0001(request):
     return render(request, 'articles/br/article_0001.html')

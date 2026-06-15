@@ -355,10 +355,23 @@ class DemoRequestTests(TestCase):
             follow=True,
         )
 
-        self.assertRedirects(response, reverse("home:demo"))
+        self.assertRedirects(response, reverse("home:demo_thankyou"))
         self.assertEqual(DemoRequest.objects.count(), 1)
         self.assertEqual(len(mail.outbox), 1)
-        self.assertContains(response, "Thank you!")
+        self.assertContains(response, "Thank you for your request")
+
+    def test_demo_thankyou_requires_successful_submission(self):
+        response = self.client.get(reverse("home:demo_thankyou"))
+        self.assertRedirects(response, reverse("home:demo"))
+
+    def test_invalid_demo_request_stays_on_demo_page(self):
+        response = self.client.post(
+            reverse("home:demo_request"),
+            {"first_name": "Ana"},
+            follow=True,
+        )
+        self.assertRedirects(response, reverse("home:demo"))
+        self.assertEqual(DemoRequest.objects.count(), 0)
 
 
 class AccountTests(TestCase):
