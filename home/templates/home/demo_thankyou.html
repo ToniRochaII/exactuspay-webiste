@@ -1,114 +1,1087 @@
-{% extends "base.html" %}
-{% load i18n %}
+{% load i18n static %}
+{% get_current_language as LANGUAGE_CODE %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+  <head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-W3BKGDBG');</script>
+    <!-- End Google Tag Manager -->
 
-{% block title %}{% trans "Thank You | Demo Request Received | ExactusPay" %}{% endblock %}
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XTL69YL5WC"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag("js", new Date());
+      gtag("config", "G-XTL69YL5WC");
+    </script>
 
-{% block meta_description %}{% trans "Thank you for requesting an ExactusPay demo. Our team will contact you shortly to schedule your personalised walkthrough." %}{% endblock %}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
 
-{% block canonical %}https://www.exactuspay.com/demo/thankyou/{% endblock %}
-{% block og_url %}https://www.exactuspay.com/demo/thankyou/{% endblock %}
-{% block og_title %}{% trans "Thank You | ExactusPay Demo Request Received" %}{% endblock %}
-{% block og_description %}{% blocktrans trimmed %}Your demo request was received. We will be in touch soon to schedule your personalised ExactusPay walkthrough.{% endblocktrans %}{% endblock %}
-{% block twitter_title %}{% trans "Thank You | ExactusPay Demo Request Received" %}{% endblock %}
-{% block twitter_description %}{% trans "Your demo request was received. We will contact you shortly." %}{% endblock %}
+    <title>{% trans "Thank You | Demo Request Received | ExactusPay" %}</title>
+    <meta
+      name="description"
+      content="{% trans 'Thank you for requesting an ExactusPay demo. Our team will contact you shortly to schedule your personalised walkthrough.' %}"
+    />
+    <link rel="canonical" href="https://www.exactuspay.com/demo/thankyou/" />
+    <meta name="theme-color" content="#1f4b7a" />
 
-{% block head_extra %}
-  <meta name="robots" content="noindex, nofollow" />
-{% endblock %}
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
 
-{% block extra_css %}
-  <style>
-    .thankyou-section {
-      min-height: calc(100vh - 220px);
-      display: flex;
-      align-items: center;
-      padding: 80px 0 120px;
-      background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
-    }
-
-    .thankyou-card {
-      max-width: 720px;
-      margin: 0 auto;
-      text-align: center;
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: 24px;
-      padding: 56px 40px;
-      box-shadow: var(--shadow-lg);
-    }
-
-    .thankyou-icon {
-      width: 88px;
-      height: 88px;
-      margin: 0 auto 28px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      background: #dcfce7;
-      color: #166534;
-      font-size: 2.4rem;
-    }
-
-    .thankyou-card h1 {
-      font-size: clamp(2rem, 4vw, 2.6rem);
-      line-height: 1.2;
-      margin-bottom: 16px;
-      color: var(--text-primary);
-    }
-
-    .thankyou-card p {
-      color: var(--text-secondary);
-      font-size: 1.125rem;
-      margin-bottom: 12px;
-    }
-
-    .thankyou-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      justify-content: center;
-      margin-top: 32px;
-    }
-
-    @media (max-width: 640px) {
-      .thankyou-card {
-        padding: 40px 24px;
+    <style>
+      :root {
+        --color-primary-solid: rgb(31, 75, 122);
+        --color-secondary-solid: rgb(71, 84, 128);
+        --gradient-midnight: linear-gradient(90deg, #000814 0%, #1f4b7a 100%);
+        --bg-primary: #ffffff;
+        --bg-secondary: #f8fafc;
+        --bg-tertiary: #f1f5f9;
+        --bg-card: #ffffff;
+        --text-primary: #0f172a;
+        --text-secondary: #475569;
+        --text-muted: #64748b;
+        --shadow-md: 0 4px 16px rgba(31, 75, 122, 0.08);
+        --shadow-lg: 0 10px 40px rgba(31, 75, 122, 0.1);
+        --shadow-xl: 0 20px 60px rgba(31, 75, 122, 0.12);
+        --border-radius-lg: 24px;
+        --border-color: rgba(226, 232, 240, 0.8);
+        --mint: #96e0d9;
       }
-    }
-  </style>
-{% endblock %}
 
-{% block content %}
-  <section class="thankyou-section">
-    <div class="container">
-      <div class="thankyou-card">
-        <div class="thankyou-icon" aria-hidden="true">
-          <i class="fas fa-check"></i>
-        </div>
-        <h1>{% trans "Thank you for your request" %}</h1>
-        <p>
-          {% trans "Your demo request has been sent successfully. A member of our team will contact you soon to schedule your personalised walkthrough." %}
-        </p>
-        <p>{% trans "We look forward to showing you how ExactusPay simplifies global payroll." %}</p>
-        <div class="thankyou-actions">
-          <a href="{% url 'home:home' %}" class="btn btn-primary btn-lg">
-            <i class="fas fa-home"></i> {% trans "Back to Home" %}
-          </a>
-          <a href="{% url 'home:platform' %}" class="btn btn-secondary btn-lg">
-            <i class="fas fa-layer-group"></i> {% trans "Explore the Platform" %}
-          </a>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+
+      .container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      .logo {
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      h1, h2, h3 {
+        font-family: "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-weight: 800;
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+      }
+
+      h1 {
+        font-size: clamp(2.4rem, 5vw, 3.6rem);
+        margin-bottom: 22px;
+        background: linear-gradient(135deg, #ffffff, #f0f9ff);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      h2 {
+        font-size: clamp(2rem, 4vw, 3rem);
+        margin-bottom: 18px;
+        color: var(--text-primary);
+      }
+
+      h3 {
+        font-size: 1.55rem;
+        margin-bottom: 12px;
+        color: var(--text-primary);
+      }
+
+      p {
+        color: var(--text-secondary);
+        font-size: 1.05rem;
+        margin-bottom: 22px;
+      }
+
+      .section-title {
+        text-align: center;
+        margin-bottom: 56px;
+      }
+
+      .section-title .subtitle {
+        color: var(--color-secondary-solid);
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        margin-bottom: 14px;
+        font-size: 13px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px 32px;
+        border-radius: 40px;
+        font-weight: 800;
+        font-size: 16px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        gap: 10px;
+        white-space: nowrap;
+      }
+
+      .btn-primary {
+        background: var(--color-primary-solid);
+        color: #fff;
+        box-shadow: 0 8px 20px rgba(31, 75, 122, 0.2);
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-xl);
+        background: #0f3a5e;
+      }
+
+      .btn-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+      }
+
+      .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-3px);
+      }
+
+      .btn-outline {
+        background: transparent;
+        border: 2px solid rgba(255, 255, 255, 0.85);
+        color: #fff;
+      }
+
+      .btn-outline:hover {
+        background: rgba(255, 255, 255, 0.12);
+        transform: translateY(-3px);
+      }
+
+      .btn-cta-primary {
+        background: #fff;
+        color: var(--color-primary-solid);
+      }
+
+      .btn-cta-secondary {
+        background: transparent;
+        color: #fff;
+        border: 2px solid #fff;
+      }
+
+      .btn-cta-secondary:hover {
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-3px);
+      }
+
+      .btn-lg {
+        padding: 18px 42px;
+        font-size: 18px;
+      }
+
+      header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        background: var(--gradient-midnight);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 18px 0;
+        transition: all 0.3s ease;
+      }
+
+      .nav-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .sidebar-brand {
+        color: #fff;
+        display: block;
+        font-size: 1.6rem;
+        font-weight: 800;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 36px;
+        list-style: none;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+      }
+
+      .nav-links a {
+        color: rgba(255, 255, 255, 0.85);
+        text-decoration: none;
+        font-weight: 650;
+        transition: all 0.3s;
+        position: relative;
+        padding: 8px 0;
+      }
+
+      .nav-links a::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--mint);
+        transition: width 0.3s ease;
+      }
+
+      .nav-links a:hover,
+      .nav-links a.active {
+        color: #fff;
+      }
+
+      .nav-links a:hover::after,
+      .nav-links a.active::after {
+        width: 100%;
+      }
+
+      .nav-actions {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .nav-actions .btn {
+        font-size: 0.9rem;
+        padding: 10px 20px;
+        font-weight: 700;
+      }
+
+      .lang-form {
+        display: flex;
+        align-items: center;
+      }
+
+      .lang-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+      }
+
+      .lang-select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background: transparent;
+        border: none;
+        color: rgba(255, 255, 255, 0.92);
+        font-weight: 600;
+        font-size: 0.9rem;
+        line-height: 1;
+        padding: 0 24px 0 2px;
+        outline: none;
+        cursor: pointer;
+      }
+
+      .lang-select option {
+        color: #0f172a;
+      }
+
+      .lang-caret {
+        margin-left: -18px;
+        pointer-events: none;
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 0.75rem;
+      }
+
+      .menu-btn {
+        display: none;
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+
+      .mobile-nav {
+        display: none;
+        position: fixed;
+        top: 76px;
+        left: 0;
+        width: 100%;
+        background: rgba(0, 8, 20, 0.96);
+        backdrop-filter: blur(14px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        z-index: 999;
+        padding: 16px 0;
+      }
+
+      .mobile-nav.open {
+        display: block;
+      }
+
+      .mobile-nav .container {
+        display: grid;
+        gap: 14px;
+      }
+
+      .mobile-links {
+        list-style: none;
+        display: grid;
+        gap: 10px;
+        margin: 0;
+        padding: 0;
+      }
+
+      .mobile-links a {
+        display: block;
+        padding: 12px 14px;
+        border-radius: 14px;
+        text-decoration: none;
+        color: rgba(255, 255, 255, 0.92);
+        font-weight: 650;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .mobile-links a:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+      }
+
+      .mobile-actions {
+        display: grid;
+        gap: 10px;
+        margin-top: 6px;
+      }
+
+      .mobile-actions .btn {
+        width: 100%;
+      }
+
+      footer {
+        background: var(--gradient-midnight);
+        padding: 80px 0 40px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 40px;
+        margin-bottom: 60px;
+      }
+
+      .footer-col h4 {
+        color: #fff;
+        margin-bottom: 24px;
+        font-size: 18px;
+      }
+
+      .footer-links {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      .footer-links li {
+        margin-bottom: 14px;
+      }
+
+      .footer-links a {
+        color: rgba(255, 255, 255, 0.82);
+        text-decoration: none;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.95rem;
+      }
+
+      .footer-links a:hover {
+        color: var(--mint);
+        transform: translateX(5px);
+      }
+
+      .footer-bottom {
+        padding-top: 40px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+
+      .copyright {
+        color: rgba(255, 255, 255, 0.65);
+        font-size: 14px;
+      }
+
+      section {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.8s ease-out;
+      }
+
+      section.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .hero {
+        padding: 180px 0 120px;
+        background: linear-gradient(180deg, #ffffff 0%, var(--bg-secondary) 100%);
+        border-bottom: 1px solid var(--border-color);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(circle at 18% 18%, rgba(150, 224, 217, 0.28), transparent 42%),
+          radial-gradient(circle at 82% 8%, rgba(31, 75, 122, 0.06), transparent 36%);
+        pointer-events: none;
+      }
+
+      .hero-content {
+        max-width: 900px;
+        margin: 0 auto;
+        text-align: center;
+        position: relative;
+        z-index: 2;
+      }
+
+      .hero h1 {
+        background: linear-gradient(135deg, var(--color-primary-solid), #2563eb);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .success-icon {
+        width: 96px;
+        height: 96px;
+        border-radius: 50%;
+        margin: 0 auto 28px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, var(--mint), #10b981);
+        color: #fff;
+        font-size: 2.5rem;
+        box-shadow: 0 16px 40px rgba(16, 185, 129, 0.35);
+      }
+
+      .hero-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        border-radius: 999px;
+        background: #ecfdf5;
+        border: 1px solid #bbf7d0;
+        color: #166534;
+        font-weight: 800;
+        font-size: 0.85rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin-bottom: 22px;
+      }
+
+      .hero p {
+        font-size: 1.25rem;
+        margin-bottom: 26px;
+        color: var(--text-secondary);
+        max-width: 760px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero-actions {
+        display: flex;
+        gap: 18px;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 10px;
+      }
+
+      .hero-pills {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 34px;
+      }
+
+      .hero .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: #fff;
+        border: 1px solid var(--border-color);
+        color: var(--text-secondary);
+        font-weight: 850;
+        font-size: 0.92rem;
+        box-shadow: var(--shadow-sm);
+      }
+
+      .hero .pill:nth-child(1) i { color: #3b82f6; }
+      .hero .pill:nth-child(2) i { color: #10b981; }
+      .hero .pill:nth-child(3) i { color: #f59e0b; }
+
+      .hero .btn-outline {
+        background: transparent;
+        border: 2px solid var(--color-primary-solid);
+        color: var(--color-primary-solid);
+      }
+
+      .hero .btn-outline:hover {
+        background: rgba(31, 75, 122, 0.06);
+        transform: translateY(-3px);
+      }
+
+      .next {
+        padding: 110px 0;
+        background: var(--gradient-midnight);
+      }
+
+      .next .section-title h2,
+      .next .section-title .subtitle {
+        color: #fff;
+      }
+
+      .next .section-title p {
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .next .section-title .subtitle {
+        color: rgba(255, 255, 255, 0.85);
+      }
+
+      .timeline {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 22px;
+        margin-top: 40px;
+      }
+
+      .step {
+        background: #fff;
+        border-radius: var(--border-radius-lg);
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-md);
+        padding: 34px 26px;
+        transition: all 0.35s ease;
+        height: 100%;
+      }
+
+      .step:hover {
+        transform: translateY(-8px);
+        box-shadow: var(--shadow-xl);
+        border-color: rgba(31, 75, 122, 0.18);
+      }
+
+      .step-badge {
+        width: 54px;
+        height: 54px;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 950;
+        margin-bottom: 14px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .timeline .step:nth-child(1) .step-badge { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+      .timeline .step:nth-child(2) .step-badge { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }
+      .timeline .step:nth-child(3) .step-badge { background: linear-gradient(135deg, #10b981, #059669); }
+
+      .step p {
+        margin-bottom: 0;
+        font-size: 1.02rem;
+      }
+
+      .explore {
+        padding: 110px 0;
+        background: var(--bg-primary);
+      }
+
+      .cards-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        margin-top: 40px;
+      }
+
+      .info-card {
+        background: var(--bg-card);
+        border-radius: var(--border-radius-lg);
+        padding: 38px 28px;
+        border: 1px solid var(--border-color);
+        box-shadow: var(--shadow-md);
+        transition: all 0.35s ease;
+        height: 100%;
+        text-decoration: none;
+        display: block;
+        color: inherit;
+      }
+
+      .info-card:hover {
+        transform: translateY(-8px);
+        border-color: rgba(31, 75, 122, 0.35);
+        box-shadow: var(--shadow-xl);
+      }
+
+      .info-icon {
+        width: 64px;
+        height: 64px;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 26px;
+        margin-bottom: 18px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .cards-3 .info-card:nth-child(1) .info-icon { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+      .cards-3 .info-card:nth-child(2) .info-icon { background: linear-gradient(135deg, #10b981, #059669); }
+      .cards-3 .info-card:nth-child(3) .info-icon { background: linear-gradient(135deg, #f59e0b, #d97706); }
+
+      .info-card p {
+        font-size: 1.02rem;
+        margin-bottom: 0;
+      }
+
+      .card-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 18px;
+        color: var(--color-primary-solid);
+        font-weight: 800;
+        font-size: 0.95rem;
+      }
+
+      .cta {
+        padding: 120px 0;
+        background: var(--gradient-midnight);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .cta-content {
+        max-width: 850px;
+        margin: 0 auto;
+        text-align: center;
+        position: relative;
+        z-index: 2;
+      }
+
+      .cta h2 {
+        color: #fff;
+        margin-bottom: 18px;
+      }
+
+      .cta p {
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 1.2rem;
+        margin-bottom: 36px;
+      }
+
+      .cta-actions {
+        display: flex;
+        gap: 18px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      @media (max-width: 1024px) {
+        .timeline,
+        .cards-3 {
+          grid-template-columns: 1fr;
+        }
+
+        .footer-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (max-width: 860px) {
+        .nav-links {
+          display: none;
+        }
+
+        .nav-actions .btn {
+          display: none;
+        }
+
+        .lang-form {
+          display: none;
+        }
+
+        .menu-btn {
+          display: inline-flex;
+        }
+
+        header {
+          padding: 12px 0;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .hero {
+          padding: 150px 0 90px;
+        }
+
+        .hero-actions,
+        .cta-actions {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .btn {
+          width: 100%;
+          max-width: 420px;
+          justify-content: center;
+        }
+
+        .footer-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="{% static 'css/site-header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/site-footer.css' %}">
+  </head>
+
+  <body>
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W3BKGDBG"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+    <header>
+      <div class="container nav-container">
+        <a href="{% url 'home:home' %}" class="logo">
+          <div class="sidebar-brand">ExactusPay</div>
+        </a>
+
+        <ul class="nav-links">
+          <li><a href="{% url 'home:home' %}">{% trans "Home" %}</a></li>
+          <li><a href="{% url 'home:features' %}">{% trans "Resources" %}</a></li>
+          <li><a href="{% url 'home:platform' %}">{% trans "Platform" %}</a></li>
+          <li><a href="{% url 'home:country_hub' %}">{% trans "Countries" %}</a></li>
+          <li><a href="{% url 'home:security' %}">{% trans "Security" %}</a></li>
+        </ul>
+
+        <div class="nav-actions">
+          <button
+            class="menu-btn"
+            type="button"
+            aria-label="{% trans 'Open menu' %}"
+            aria-expanded="false"
+            aria-controls="mobileNav"
+          >
+            <i class="fas fa-bars"></i>
+          </button>
+
+          <a href="{{ external_payroll_login_url }}" class="btn btn-secondary">{% trans "Log In" %}</a>
+          <a href="{% url 'home:demo' %}" class="btn btn-primary">{% trans "Request Demo" %}</a>
+
+          <form class="lang-form" action="{% url 'set_language' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            <div class="lang-pill" title="{% trans 'Language' %}">
+              <select
+                class="lang-select"
+                name="language"
+                aria-label="{% trans 'Select language' %}"
+                onchange="window.switchSiteLanguage(this)"
+              >
+                {% include "partials/language_options.html" %}
+              </select>
+              <span class="lang-caret" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
+            </div>
+          </form>
         </div>
       </div>
-    </div>
-  </section>
-{% endblock %}
+    </header>
 
-{% block extra_js %}
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({
-      event: "demo_request_complete",
-      form_name: "demo_request",
-    });
-  </script>
-{% endblock %}
+    <nav id="mobileNav" class="mobile-nav" aria-label="{% trans 'Mobile navigation' %}">
+      <div class="container">
+        <ul class="mobile-links">
+          <li><a href="{% url 'home:home' %}">{% trans "Home" %}</a></li>
+          <li><a href="{% url 'home:features' %}">{% trans "Resources" %}</a></li>
+          <li><a href="{% url 'home:platform' %}">{% trans "Platform" %}</a></li>
+          <li><a href="{% url 'home:country_hub' %}">{% trans "Countries" %}</a></li>
+          <li><a href="{% url 'home:security' %}">{% trans "Security" %}</a></li>
+        </ul>
+
+        <div class="mobile-actions">
+          <a href="{{ external_payroll_login_url }}" class="btn btn-secondary">{% trans "Log In" %}</a>
+          <a href="{% url 'home:demo' %}" class="btn btn-primary">{% trans "Request Demo" %}</a>
+        </div>
+
+        <form class="lang-form" action="{% url 'set_language' %}" method="post">
+          {% csrf_token %}
+          <input type="hidden" name="next" value="{{ request.get_full_path }}">
+          <div class="lang-pill" title="{% trans 'Language' %}">
+            <select
+              class="lang-select"
+              name="language"
+              aria-label="{% trans 'Select language' %}"
+              onchange="window.switchSiteLanguage(this)"
+            >
+              {% include "partials/language_options.html" %}
+            </select>
+            <span class="lang-caret" aria-hidden="true"><i class="fas fa-chevron-down"></i></span>
+          </div>
+        </form>
+      </div>
+    </nav>
+
+    <main>
+      <section class="hero">
+        <div class="container">
+          <div class="hero-content">
+            <div class="success-icon" aria-hidden="true">
+              <i class="fas fa-check"></i>
+            </div>
+            <div class="hero-eyebrow">
+              <i class="fas fa-circle-check"></i> {% trans "Request received" %}
+            </div>
+            <h1>{% trans "Thank you for your request" %}</h1>
+            <p>
+              {% trans "Your demo request has been sent successfully. A member of our team will contact you soon to schedule your personalised walkthrough." %}
+            </p>
+
+            <div class="hero-actions">
+              <a href="{{ book_demo_external_url }}" class="btn btn-primary btn-lg">
+                <i class="fas fa-calendar-check"></i> {% trans "Book a session now" %}
+              </a>
+              <a href="{% url 'home:home' %}" class="btn btn-outline btn-lg">
+                <i class="fas fa-home"></i> {% trans "Back to Home" %}
+              </a>
+            </div>
+
+            <div class="hero-pills" aria-label="{% trans 'What to expect' %}">
+              <span class="pill"><i class="fas fa-clock"></i> {% trans "Response within 1 business day" %}</span>
+              <span class="pill"><i class="fas fa-user-check"></i> {% trans "Personalised walkthrough" %}</span>
+              <span class="pill"><i class="fas fa-lock"></i> {% trans "No commitment required" %}</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="next" id="next">
+        <div class="container">
+          <div class="section-title">
+            <div class="subtitle">{% trans "Next steps" %}</div>
+            <h2>{% trans "What happens after you submit" %}</h2>
+            <p>{% trans "We keep it efficient and relevant — you leave with a plan, not a pile of slides." %}</p>
+          </div>
+
+          <div class="timeline">
+            <div class="step">
+              <div class="step-badge">1</div>
+              <h3>{% trans "The Discovery (15 mins)" %}</h3>
+              <p>{% trans "We map your footprint (entities, contractors, EORs) and identify friction points across your target regions." %}</p>
+            </div>
+
+            <div class="step">
+              <div class="step-badge">2</div>
+              <h3>{% trans "The Tailored Walkthrough (30 mins)" %}</h3>
+              <p>{% trans "No generic deck. We show country-specific examples, local tax logic, and the reporting you’ll rely on." %}</p>
+            </div>
+
+            <div class="step">
+              <div class="step-badge">3</div>
+              <h3>{% trans "The Strategic Blueprint" %}</h3>
+              <p>{% trans "You leave with a pricing estimate, transition timeline, and a simulation output for your next hire." %}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="explore" id="explore">
+        <div class="container">
+          <div class="section-title">
+            <div class="subtitle">{% trans "While you wait" %}</div>
+            <h2>{% trans "Explore ExactusPay" %}</h2>
+            <p>{% trans "Get familiar with the platform, countries we support, and the security standards behind every payroll run." %}</p>
+          </div>
+
+          <div class="cards-3">
+            <a href="{% url 'home:platform' %}" class="info-card">
+              <div class="info-icon"><i class="fas fa-layer-group"></i></div>
+              <h3>{% trans "Platform overview" %}</h3>
+              <p>{% trans "See how multi-country payroll, compliance, and reporting come together in one executive standard." %}</p>
+              <span class="card-link">{% trans "View platform" %} <i class="fas fa-arrow-right"></i></span>
+            </a>
+
+            <a href="{% url 'home:country_hub' %}" class="info-card">
+              <div class="info-icon"><i class="fas fa-globe"></i></div>
+              <h3>{% trans "Country coverage" %}</h3>
+              <p>{% trans "Browse payroll intelligence for LATAM, Africa, Asia, and beyond — built for expansion teams." %}</p>
+              <span class="card-link">{% trans "Browse countries" %} <i class="fas fa-arrow-right"></i></span>
+            </a>
+
+            <a href="{% url 'home:security' %}" class="info-card">
+              <div class="info-icon"><i class="fas fa-shield-halved"></i></div>
+              <h3>{% trans "Security & compliance" %}</h3>
+              <p>{% trans "Learn about the audit-ready controls, certifications, and governance that protect your workforce data." %}</p>
+              <span class="card-link">{% trans "Learn more" %} <i class="fas fa-arrow-right"></i></span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="cta">
+        <div class="container">
+          <div class="cta-content">
+            <h2>{% trans "We look forward to meeting you" %}</h2>
+            <p>{% trans "ExactusPay gives you a single source of truth, consistent reporting, and compliance-ready processes — without the typical complexity." %}</p>
+            <div class="cta-actions">
+              <a href="{% url 'home:platform' %}" class="btn btn-cta-primary btn-lg">
+                <i class="fas fa-layer-group"></i> {% trans "Explore the Platform" %}
+              </a>
+              <a href="{% url 'home:features' %}" class="btn btn-cta-secondary btn-lg">
+                <i class="fas fa-book-open"></i> {% trans "View Resources" %}
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    {% include "partials/footer.html" %}
+
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: "demo_request_complete",
+        form_name: "demo_request",
+      });
+    </script>
+
+    <script>
+      const supportedLanguageCodes = [{% for code in supported_language_codes %}"{{ code }}"{% if not forloop.last %}, {% endif %}{% endfor %}];
+      const defaultLanguageCode = "en";
+
+      window.switchSiteLanguage = function(select) {
+        if (!select || !select.form) return;
+
+        const currentPath = window.location.pathname || "/";
+        const currentQuery = window.location.search || "";
+        const currentHash = window.location.hash || "";
+        const hadTrailingSlash = currentPath.endsWith("/");
+        const segments = currentPath.split("/").filter(Boolean);
+        const neutralSegments = segments.length && supportedLanguageCodes.includes(segments[0])
+          ? segments.slice(1)
+          : segments;
+
+        let neutralPath = neutralSegments.length ? `/${neutralSegments.join("/")}` : "/";
+        if (neutralSegments.length && hadTrailingSlash) neutralPath += "/";
+
+        const targetPath = select.value === defaultLanguageCode
+          ? neutralPath
+          : `/${select.value}${neutralPath === "/" ? "/" : neutralPath}`;
+
+        const nextInput = select.form.querySelector('input[name="next"]');
+        if (nextInput) nextInput.value = `${targetPath}${currentQuery}${currentHash}`;
+
+        select.form.submit();
+      };
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("visible");
+              }
+            });
+          },
+          { threshold: 0.1 }
+        );
+
+        document.querySelectorAll("section").forEach((section) => observer.observe(section));
+
+        const btn = document.querySelector(".menu-btn");
+        const mobileNav = document.getElementById("mobileNav");
+
+        const closeMobileNav = () => {
+          if (!mobileNav || !btn) return;
+          mobileNav.classList.remove("open");
+          btn.setAttribute("aria-expanded", "false");
+          btn.innerHTML = '<i class="fas fa-bars"></i>';
+        };
+
+        if (btn && mobileNav) {
+          btn.addEventListener("click", () => {
+            const isOpen = mobileNav.classList.toggle("open");
+            btn.setAttribute("aria-expanded", String(isOpen));
+            btn.innerHTML = isOpen
+              ? '<i class="fas fa-times"></i>'
+              : '<i class="fas fa-bars"></i>';
+          });
+
+          document.addEventListener("click", (e) => {
+            if (!mobileNav.classList.contains("open")) return;
+            const target = e.target;
+            if (!mobileNav.contains(target) && !btn.contains(target)) {
+              closeMobileNav();
+            }
+          });
+
+          mobileNav.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", closeMobileNav);
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
