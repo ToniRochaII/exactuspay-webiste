@@ -1,7 +1,3 @@
-website
-/website
-website/
-ExactusPay.zip
 __pycache__/
 *.py[cod]
 *.sqlite3
@@ -13,3 +9,4 @@ venv/
 staticfiles/
 media/
 outputs/
+.qodo/
