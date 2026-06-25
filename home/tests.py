@@ -8,6 +8,8 @@ from pathlib import Path
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core import mail
+
+
 from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils import translation
@@ -15,7 +17,11 @@ from django.utils import translation
 from accounts.models import Profile
 from home.context_processors import site_context
 from home.country_catalog import get_country_catalog
-from home.country_localization_data import COUNTRY_NAME_MAP, OFFICIAL_NAME_MAP, REGION_NAME_MAP
+from home.country_localization_data import (
+    COUNTRY_NAME_MAP,
+    OFFICIAL_NAME_MAP,
+    REGION_NAME_MAP,
+)
 from home.models import CountryProfile, DemoRequest
 
 User = get_user_model()
@@ -103,13 +109,19 @@ def _entry_msgstr(entry: str) -> str | None:
 @lru_cache(maxsize=None)
 def _translation_audit_exemptions() -> frozenset[str]:
     exemptions = set(TRANSLATION_AUDIT_ALLOWLIST)
-    exemptions.update(country.capital for country in get_country_catalog() if getattr(country, "capital", ""))
+    exemptions.update(
+        country.capital
+        for country in get_country_catalog()
+        if getattr(country, "capital", "")
+    )
     return frozenset(exemptions)
 
 
 @lru_cache(maxsize=None)
 def _untranslated_msgids(locale: str) -> tuple[str, ...]:
-    locale_path = Path(settings.BASE_DIR) / "locale" / locale / "LC_MESSAGES" / "django.po"
+    locale_path = (
+        Path(settings.BASE_DIR) / "locale" / locale / "LC_MESSAGES" / "django.po"
+    )
     text = locale_path.read_text(encoding="utf-8")
     entries = re.split(r"\n\n(?=#:|#,|msgid )", text)
     msgids = []
@@ -158,7 +170,9 @@ class PublicPageTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_country_page_uses_catalog_country_data(self):
-        response = self.client.get(reverse("home:country_detail", kwargs={"slug": "brazil"}))
+        response = self.client.get(
+            reverse("home:country_detail", kwargs={"slug": "brazil"})
+        )
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Brazil")
@@ -191,7 +205,9 @@ class PublicPageTests(TestCase):
         self.assertContains(response, "united-arab-emirates")
 
     def test_poland_country_page_uses_catalog_country_data(self):
-        response = self.client.get(reverse("home:country_detail", kwargs={"slug": "poland"}))
+        response = self.client.get(
+            reverse("home:country_detail", kwargs={"slug": "poland"})
+        )
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "/static/img/flags/pl.png")
@@ -199,7 +215,9 @@ class PublicPageTests(TestCase):
         self.assertContains(response, "Social Insurance Institution (ZUS)")
 
     def test_united_kingdom_country_page_uses_catalog_country_data(self):
-        response = self.client.get(reverse("home:country_detail", kwargs={"slug": "united-kingdom"}))
+        response = self.client.get(
+            reverse("home:country_detail", kwargs={"slug": "united-kingdom"})
+        )
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "/static/img/flags/gb.png")
@@ -266,7 +284,9 @@ class PublicPageTests(TestCase):
             with self.subTest(locale=locale, field="region"):
                 self.assertIn(REGION_NAME_MAP[locale]["Asia-Pacific"], rendered)
 
-    def test_switzerland_country_page_localizes_shared_country_copy_for_all_public_locales(self):
+    def test_switzerland_country_page_localizes_shared_country_copy_for_all_public_locales(
+        self,
+    ):
         for locale in _public_locale_codes():
             response = self.client.get(f"/{locale}/countries/switzerland/")
             rendered = html.unescape(response.content.decode("utf-8"))
